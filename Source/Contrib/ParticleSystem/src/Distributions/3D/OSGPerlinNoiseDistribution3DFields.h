@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,75 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGDistribution3DFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class PerlinNoiseDistribution3D;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! PerlinNoiseDistribution3DPtr
+OSG_GEN_CONTAINERPTR(PerlinNoiseDistribution3D);
 
-typedef FCPtr<Distribution3DPtr, PerlinNoiseDistribution3D> PerlinNoiseDistribution3DPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpParticleSystemFieldTraits
+/*! \ingroup GrpContribParticleSystemFieldTraits
+    \ingroup GrpLibOSGContribParticleSystem
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<PerlinNoiseDistribution3DPtr> : 
-    public FieldTraitsRecurseMapper<PerlinNoiseDistribution3DPtr, true>
+struct FieldTraits<PerlinNoiseDistribution3D *> :
+    public FieldTraitsFCPtrBase<PerlinNoiseDistribution3D *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFPerlinNoiseDistribution3DPtr"; }
-    static const char *getMName(void) { return "MFPerlinNoiseDistribution3DPtr"; }
+    typedef FieldTraits<PerlinNoiseDistribution3D *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFPerlinNoiseDistribution3DPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFPerlinNoiseDistribution3DPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<PerlinNoiseDistribution3DPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<PerlinNoiseDistribution3D *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecPerlinNoiseDistribution3DPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<PerlinNoiseDistribution3D *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecPerlinNoiseDistribution3DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PerlinNoiseDistribution3D *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakPerlinNoiseDistribution3DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PerlinNoiseDistribution3D *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdPerlinNoiseDistribution3DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PerlinNoiseDistribution3D *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecPerlinNoiseDistribution3DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PerlinNoiseDistribution3D *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecPerlinNoiseDistribution3DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PerlinNoiseDistribution3D *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakPerlinNoiseDistribution3DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PerlinNoiseDistribution3D *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdPerlinNoiseDistribution3DPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<PerlinNoiseDistribution3D *,
+                      RecordedRefCountPolicy  > SFRecPerlinNoiseDistribution3DPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<PerlinNoiseDistribution3D *,
+                      UnrecordedRefCountPolicy> SFUnrecPerlinNoiseDistribution3DPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<PerlinNoiseDistribution3D *,
+                      WeakRefCountPolicy      > SFWeakPerlinNoiseDistribution3DPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<PerlinNoiseDistribution3D *,
+                      NoRefCountPolicy        > SFUncountedPerlinNoiseDistribution3DPtr;
 
-typedef SField<PerlinNoiseDistribution3DPtr> SFPerlinNoiseDistribution3DPtr;
-#endif
 
-#ifndef OSG_COMPILEPERLINNOISEDISTRIBUTION3DINST
-OSG_DLLEXPORT_DECL1(SField, PerlinNoiseDistribution3DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<PerlinNoiseDistribution3D *,
+                      RecordedRefCountPolicy  > MFRecPerlinNoiseDistribution3DPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<PerlinNoiseDistribution3D *,
+                      UnrecordedRefCountPolicy> MFUnrecPerlinNoiseDistribution3DPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<PerlinNoiseDistribution3D *,
+                      WeakRefCountPolicy      > MFWeakPerlinNoiseDistribution3DPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<PerlinNoiseDistribution3D *,
+                      NoRefCountPolicy        > MFUncountedPerlinNoiseDistribution3DPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldMulti */
 
-typedef MField<PerlinNoiseDistribution3DPtr> MFPerlinNoiseDistribution3DPtr;
-#endif
 
-#ifndef OSG_COMPILEPERLINNOISEDISTRIBUTION3DINST
-OSG_DLLEXPORT_DECL1(MField, PerlinNoiseDistribution3DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFRecPerlinNoiseDistribution3DPtr : 
+    public PointerSField<PerlinNoiseDistribution3D *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUnrecPerlinNoiseDistribution3DPtr : 
+    public PointerSField<PerlinNoiseDistribution3D *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFWeakPerlinNoiseDistribution3DPtr :
+    public PointerSField<PerlinNoiseDistribution3D *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUncountedPerlinNoiseDistribution3DPtr :
+    public PointerSField<PerlinNoiseDistribution3D *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFRecPerlinNoiseDistribution3DPtr :
+    public PointerMField<PerlinNoiseDistribution3D *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUnrecPerlinNoiseDistribution3DPtr :
+    public PointerMField<PerlinNoiseDistribution3D *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFWeakPerlinNoiseDistribution3DPtr :
+    public PointerMField<PerlinNoiseDistribution3D *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUncountedPerlinNoiseDistribution3DPtr :
+    public PointerMField<PerlinNoiseDistribution3D *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

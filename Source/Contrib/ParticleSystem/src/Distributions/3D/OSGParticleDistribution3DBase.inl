@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,80 +55,66 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &ParticleDistribution3DBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ParticleDistribution3DBase::getClassTypeId(void) 
+OSG::UInt32 ParticleDistribution3DBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-ParticleDistribution3DPtr ParticleDistribution3DBase::create(void) 
-{
-    ParticleDistribution3DPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = ParticleDistribution3DPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-ParticleDistribution3DPtr ParticleDistribution3DBase::createEmpty(void) 
-{ 
-    ParticleDistribution3DPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 ParticleDistribution3DBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ParticleDistribution3D::_sfSystem field.
-inline
-const SFParticleSystemPtr *ParticleDistribution3DBase::getSFSystem(void) const
-{
-    return &_sfSystem;
-}
-
-//! Get the ParticleDistribution3D::_sfSystem field.
-inline
-SFParticleSystemPtr *ParticleDistribution3DBase::editSFSystem(void)
-{
-    return &_sfSystem;
-}
-
 
 //! Get the value of the ParticleDistribution3D::_sfSystem field.
 inline
-ParticleSystemPtr &ParticleDistribution3DBase::editSystem(void)
-{
-    return _sfSystem.getValue();
-}
-
-//! Get the value of the ParticleDistribution3D::_sfSystem field.
-inline
-const ParticleSystemPtr &ParticleDistribution3DBase::getSystem(void) const
+ParticleSystem * ParticleDistribution3DBase::getSystem(void) const
 {
     return _sfSystem.getValue();
 }
 
 //! Set the value of the ParticleDistribution3D::_sfSystem field.
 inline
-void ParticleDistribution3DBase::setSystem(const ParticleSystemPtr &value)
+void ParticleDistribution3DBase::setSystem(ParticleSystem * const value)
 {
+    editSField(SystemFieldMask);
+
     _sfSystem.setValue(value);
 }
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void ParticleDistribution3DBase::execSync (      ParticleDistribution3DBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (SystemFieldMask & whichField))
+        _sfSystem.syncWith(pFrom->_sfSystem);
+}
+#endif
+
+
+inline
+const Char8 *ParticleDistribution3DBase::getClassname(void)
+{
+    return "ParticleDistribution3D";
+}
+
+
+OSG_GEN_CONTAINERPTR(ParticleDistribution3D);
+
 OSG_END_NAMESPACE
+

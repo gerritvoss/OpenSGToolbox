@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,106 +55,31 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &QuadParticleSystemDrawerBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 QuadParticleSystemDrawerBase::getClassTypeId(void) 
+OSG::UInt32 QuadParticleSystemDrawerBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-QuadParticleSystemDrawerPtr QuadParticleSystemDrawerBase::create(void) 
-{
-    QuadParticleSystemDrawerPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = QuadParticleSystemDrawerPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-QuadParticleSystemDrawerPtr QuadParticleSystemDrawerBase::createEmpty(void) 
-{ 
-    QuadParticleSystemDrawerPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 QuadParticleSystemDrawerBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the QuadParticleSystemDrawer::_sfQuadSizeScaling field.
-inline
-SFVec2f *QuadParticleSystemDrawerBase::getSFQuadSizeScaling(void)
-{
-    return &_sfQuadSizeScaling;
-}
-
-//! Get the QuadParticleSystemDrawer::_sfUseImageSizeRatio field.
-inline
-SFBool *QuadParticleSystemDrawerBase::getSFUseImageSizeRatio(void)
-{
-    return &_sfUseImageSizeRatio;
-}
-
-//! Get the QuadParticleSystemDrawer::_sfNormalSource field.
-inline
-SFUInt32 *QuadParticleSystemDrawerBase::getSFNormalSource(void)
-{
-    return &_sfNormalSource;
-}
-
-//! Get the QuadParticleSystemDrawer::_sfNormal field.
-inline
-SFVec3f *QuadParticleSystemDrawerBase::getSFNormal(void)
-{
-    return &_sfNormal;
-}
-
-//! Get the QuadParticleSystemDrawer::_sfUpSource field.
-inline
-SFUInt32 *QuadParticleSystemDrawerBase::getSFUpSource(void)
-{
-    return &_sfUpSource;
-}
-
-//! Get the QuadParticleSystemDrawer::_sfUp field.
-inline
-SFVec3f *QuadParticleSystemDrawerBase::getSFUp(void)
-{
-    return &_sfUp;
-}
-
-//! Get the QuadParticleSystemDrawer::_sfUseNormalAsObjectSpaceRotation field.
-inline
-SFBool *QuadParticleSystemDrawerBase::getSFUseNormalAsObjectSpaceRotation(void)
-{
-    return &_sfUseNormalAsObjectSpaceRotation;
-}
-
-//! Get the QuadParticleSystemDrawer::_sfTwist field.
-inline
-SFReal32 *QuadParticleSystemDrawerBase::getSFTwist(void)
-{
-    return &_sfTwist;
-}
-
-
 //! Get the value of the QuadParticleSystemDrawer::_sfQuadSizeScaling field.
+
 inline
-Vec2f &QuadParticleSystemDrawerBase::getQuadSizeScaling(void)
+Vec2f &QuadParticleSystemDrawerBase::editQuadSizeScaling(void)
 {
+    editSField(QuadSizeScalingFieldMask);
+
     return _sfQuadSizeScaling.getValue();
 }
 
@@ -171,55 +94,67 @@ const Vec2f &QuadParticleSystemDrawerBase::getQuadSizeScaling(void) const
 inline
 void QuadParticleSystemDrawerBase::setQuadSizeScaling(const Vec2f &value)
 {
+    editSField(QuadSizeScalingFieldMask);
+
     _sfQuadSizeScaling.setValue(value);
 }
-
 //! Get the value of the QuadParticleSystemDrawer::_sfUseImageSizeRatio field.
+
 inline
-bool &QuadParticleSystemDrawerBase::getUseImageSizeRatio(void)
+bool &QuadParticleSystemDrawerBase::editUseImageSizeRatio(void)
 {
+    editSField(UseImageSizeRatioFieldMask);
+
     return _sfUseImageSizeRatio.getValue();
 }
 
 //! Get the value of the QuadParticleSystemDrawer::_sfUseImageSizeRatio field.
 inline
-const bool &QuadParticleSystemDrawerBase::getUseImageSizeRatio(void) const
+      bool  QuadParticleSystemDrawerBase::getUseImageSizeRatio(void) const
 {
     return _sfUseImageSizeRatio.getValue();
 }
 
 //! Set the value of the QuadParticleSystemDrawer::_sfUseImageSizeRatio field.
 inline
-void QuadParticleSystemDrawerBase::setUseImageSizeRatio(const bool &value)
+void QuadParticleSystemDrawerBase::setUseImageSizeRatio(const bool value)
 {
+    editSField(UseImageSizeRatioFieldMask);
+
     _sfUseImageSizeRatio.setValue(value);
 }
-
 //! Get the value of the QuadParticleSystemDrawer::_sfNormalSource field.
+
 inline
-UInt32 &QuadParticleSystemDrawerBase::getNormalSource(void)
+UInt32 &QuadParticleSystemDrawerBase::editNormalSource(void)
 {
+    editSField(NormalSourceFieldMask);
+
     return _sfNormalSource.getValue();
 }
 
 //! Get the value of the QuadParticleSystemDrawer::_sfNormalSource field.
 inline
-const UInt32 &QuadParticleSystemDrawerBase::getNormalSource(void) const
+      UInt32  QuadParticleSystemDrawerBase::getNormalSource(void) const
 {
     return _sfNormalSource.getValue();
 }
 
 //! Set the value of the QuadParticleSystemDrawer::_sfNormalSource field.
 inline
-void QuadParticleSystemDrawerBase::setNormalSource(const UInt32 &value)
+void QuadParticleSystemDrawerBase::setNormalSource(const UInt32 value)
 {
+    editSField(NormalSourceFieldMask);
+
     _sfNormalSource.setValue(value);
 }
-
 //! Get the value of the QuadParticleSystemDrawer::_sfNormal field.
+
 inline
-Vec3f &QuadParticleSystemDrawerBase::getNormal(void)
+Vec3f &QuadParticleSystemDrawerBase::editNormal(void)
 {
+    editSField(NormalFieldMask);
+
     return _sfNormal.getValue();
 }
 
@@ -234,34 +169,42 @@ const Vec3f &QuadParticleSystemDrawerBase::getNormal(void) const
 inline
 void QuadParticleSystemDrawerBase::setNormal(const Vec3f &value)
 {
+    editSField(NormalFieldMask);
+
     _sfNormal.setValue(value);
 }
-
 //! Get the value of the QuadParticleSystemDrawer::_sfUpSource field.
+
 inline
-UInt32 &QuadParticleSystemDrawerBase::getUpSource(void)
+UInt32 &QuadParticleSystemDrawerBase::editUpSource(void)
 {
+    editSField(UpSourceFieldMask);
+
     return _sfUpSource.getValue();
 }
 
 //! Get the value of the QuadParticleSystemDrawer::_sfUpSource field.
 inline
-const UInt32 &QuadParticleSystemDrawerBase::getUpSource(void) const
+      UInt32  QuadParticleSystemDrawerBase::getUpSource(void) const
 {
     return _sfUpSource.getValue();
 }
 
 //! Set the value of the QuadParticleSystemDrawer::_sfUpSource field.
 inline
-void QuadParticleSystemDrawerBase::setUpSource(const UInt32 &value)
+void QuadParticleSystemDrawerBase::setUpSource(const UInt32 value)
 {
+    editSField(UpSourceFieldMask);
+
     _sfUpSource.setValue(value);
 }
-
 //! Get the value of the QuadParticleSystemDrawer::_sfUp field.
+
 inline
-Vec3f &QuadParticleSystemDrawerBase::getUp(void)
+Vec3f &QuadParticleSystemDrawerBase::editUp(void)
 {
+    editSField(UpFieldMask);
+
     return _sfUp.getValue();
 }
 
@@ -276,53 +219,107 @@ const Vec3f &QuadParticleSystemDrawerBase::getUp(void) const
 inline
 void QuadParticleSystemDrawerBase::setUp(const Vec3f &value)
 {
+    editSField(UpFieldMask);
+
     _sfUp.setValue(value);
 }
-
 //! Get the value of the QuadParticleSystemDrawer::_sfUseNormalAsObjectSpaceRotation field.
+
 inline
-bool &QuadParticleSystemDrawerBase::getUseNormalAsObjectSpaceRotation(void)
+bool &QuadParticleSystemDrawerBase::editUseNormalAsObjectSpaceRotation(void)
 {
+    editSField(UseNormalAsObjectSpaceRotationFieldMask);
+
     return _sfUseNormalAsObjectSpaceRotation.getValue();
 }
 
 //! Get the value of the QuadParticleSystemDrawer::_sfUseNormalAsObjectSpaceRotation field.
 inline
-const bool &QuadParticleSystemDrawerBase::getUseNormalAsObjectSpaceRotation(void) const
+      bool  QuadParticleSystemDrawerBase::getUseNormalAsObjectSpaceRotation(void) const
 {
     return _sfUseNormalAsObjectSpaceRotation.getValue();
 }
 
 //! Set the value of the QuadParticleSystemDrawer::_sfUseNormalAsObjectSpaceRotation field.
 inline
-void QuadParticleSystemDrawerBase::setUseNormalAsObjectSpaceRotation(const bool &value)
+void QuadParticleSystemDrawerBase::setUseNormalAsObjectSpaceRotation(const bool value)
 {
+    editSField(UseNormalAsObjectSpaceRotationFieldMask);
+
     _sfUseNormalAsObjectSpaceRotation.setValue(value);
 }
-
 //! Get the value of the QuadParticleSystemDrawer::_sfTwist field.
+
 inline
-Real32 &QuadParticleSystemDrawerBase::getTwist(void)
+Real32 &QuadParticleSystemDrawerBase::editTwist(void)
 {
+    editSField(TwistFieldMask);
+
     return _sfTwist.getValue();
 }
 
 //! Get the value of the QuadParticleSystemDrawer::_sfTwist field.
 inline
-const Real32 &QuadParticleSystemDrawerBase::getTwist(void) const
+      Real32  QuadParticleSystemDrawerBase::getTwist(void) const
 {
     return _sfTwist.getValue();
 }
 
 //! Set the value of the QuadParticleSystemDrawer::_sfTwist field.
 inline
-void QuadParticleSystemDrawerBase::setTwist(const Real32 &value)
+void QuadParticleSystemDrawerBase::setTwist(const Real32 value)
 {
+    editSField(TwistFieldMask);
+
     _sfTwist.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void QuadParticleSystemDrawerBase::execSync (      QuadParticleSystemDrawerBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGQUADPARTICLESYSTEMDRAWERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (QuadSizeScalingFieldMask & whichField))
+        _sfQuadSizeScaling.syncWith(pFrom->_sfQuadSizeScaling);
+
+    if(FieldBits::NoField != (UseImageSizeRatioFieldMask & whichField))
+        _sfUseImageSizeRatio.syncWith(pFrom->_sfUseImageSizeRatio);
+
+    if(FieldBits::NoField != (NormalSourceFieldMask & whichField))
+        _sfNormalSource.syncWith(pFrom->_sfNormalSource);
+
+    if(FieldBits::NoField != (NormalFieldMask & whichField))
+        _sfNormal.syncWith(pFrom->_sfNormal);
+
+    if(FieldBits::NoField != (UpSourceFieldMask & whichField))
+        _sfUpSource.syncWith(pFrom->_sfUpSource);
+
+    if(FieldBits::NoField != (UpFieldMask & whichField))
+        _sfUp.syncWith(pFrom->_sfUp);
+
+    if(FieldBits::NoField != (UseNormalAsObjectSpaceRotationFieldMask & whichField))
+        _sfUseNormalAsObjectSpaceRotation.syncWith(pFrom->_sfUseNormalAsObjectSpaceRotation);
+
+    if(FieldBits::NoField != (TwistFieldMask & whichField))
+        _sfTwist.syncWith(pFrom->_sfTwist);
+}
+#endif
+
+
+inline
+const Char8 *QuadParticleSystemDrawerBase::getClassname(void)
+{
+    return "QuadParticleSystemDrawer";
+}
+
+
+OSG_GEN_CONTAINERPTR(QuadParticleSystemDrawer);
+
+OSG_END_NAMESPACE
 

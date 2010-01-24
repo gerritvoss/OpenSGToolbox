@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,142 +58,178 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include <OpenSG/OSGAttachmentContainer.h> // Parent
+#include "OSGAttachmentContainer.h" // Parent
 
-#include <OpenSG/OSGNodeFields.h> // Beacon type
-#include <OpenSG/OSGPnt3fFields.h> // InternalPositions type
-#include <OpenSG/OSGPnt3fFields.h> // InternalSecPositions type
-#include <OpenSG/OSGVec3fFields.h> // InternalNormals type
-#include <OpenSG/OSGColor4fFields.h> // InternalColors type
-#include <OpenSG/OSGVec3fFields.h> // InternalSizes type
-#include <OpenSG/OSGTimeFields.h> // InternalLifespans type
-#include <OpenSG/OSGTimeFields.h> // InternalAges type
-#include <OpenSG/OSGVec3fFields.h> // InternalVelocities type
-#include <OpenSG/OSGVec3fFields.h> // InternalSecVelocities type
-#include <OpenSG/OSGVec3fFields.h> // InternalAccelerations type
-#include <OpenSG/Toolbox/OSGStringToUInt32MapType.h> // InternalAttributes type
-#include <OpenSG/OSGUInt32Fields.h> // MaxParticles type
-#include <OpenSG/OSGBoolFields.h> // Dynamic type
-#include <OpenSG/OSGBoolFields.h> // UpdateSecAttribs type
-#include <OpenSG/OSGTimeFields.h> // LastElapsedTime type
-#include "ParticleSystem/ParticleGenerators/OSGParticleGeneratorFields.h" // Generators type
-#include "ParticleSystem/ParticleAffectors/OSGParticleAffectorFields.h" // Affectors type
-#include "ParticleSystem/ParticleSystemAffectors/OSGParticleSystemAffectorFields.h" // SystemAffectors type
-#include <OpenSG/OSGDynamicVolumeFields.h> // Volume type
-#include <OpenSG/OSGVec3fFields.h> // MaxParticleSize type
+#include "OSGNodeFields.h"              // Beacon type
+#include "OSGVecFields.h"               // InternalPositions type
+#include "OSGBaseFields.h"              // InternalColors type
+#include "OSGStringToUInt32MapFields.h" // InternalAttributes type
+#include "OSGSysFields.h"               // MaxParticles type
+#include "OSGParticleGeneratorFields.h" // Generators type
+#include "OSGParticleAffectorFields.h"  // Affectors type
+#include "OSGParticleSystemAffectorFields.h" // SystemAffectors type
 
 #include "OSGParticleSystemFields.h"
-#include <OpenSG/Toolbox/OSGEventProducer.h>
-#include <OpenSG/Toolbox/OSGEventProducerType.h>
-#include <OpenSG/Toolbox/OSGMethodDescription.h>
-#include <OpenSG/Toolbox/OSGEventProducerPtrType.h>
+
+//Event Producer Headers
+#include "OSGEventProducer.h"
+#include "OSGEventProducerType.h"
+#include "OSGMethodDescription.h"
+#include "OSGEventProducerPtrType.h"
+
 
 OSG_BEGIN_NAMESPACE
 
 class ParticleSystem;
-class BinaryDataHandler;
 
 //! \brief ParticleSystem Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentContainer
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemBase : public AttachmentContainer
 {
-  private:
-
-    typedef AttachmentContainer    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ParticleSystemPtr  Ptr;
+    typedef AttachmentContainer Inherited;
+    typedef AttachmentContainer ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(ParticleSystem);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        BeaconFieldId                = Inherited::NextFieldId,
-        InternalPositionsFieldId     = BeaconFieldId                + 1,
-        InternalSecPositionsFieldId  = InternalPositionsFieldId     + 1,
-        InternalNormalsFieldId       = InternalSecPositionsFieldId  + 1,
-        InternalColorsFieldId        = InternalNormalsFieldId       + 1,
-        InternalSizesFieldId         = InternalColorsFieldId        + 1,
-        InternalLifespansFieldId     = InternalSizesFieldId         + 1,
-        InternalAgesFieldId          = InternalLifespansFieldId     + 1,
-        InternalVelocitiesFieldId    = InternalAgesFieldId          + 1,
-        InternalSecVelocitiesFieldId = InternalVelocitiesFieldId    + 1,
+        BeaconFieldId = Inherited::NextFieldId,
+        InternalPositionsFieldId = BeaconFieldId + 1,
+        InternalSecPositionsFieldId = InternalPositionsFieldId + 1,
+        InternalNormalsFieldId = InternalSecPositionsFieldId + 1,
+        InternalColorsFieldId = InternalNormalsFieldId + 1,
+        InternalSizesFieldId = InternalColorsFieldId + 1,
+        InternalLifespansFieldId = InternalSizesFieldId + 1,
+        InternalAgesFieldId = InternalLifespansFieldId + 1,
+        InternalVelocitiesFieldId = InternalAgesFieldId + 1,
+        InternalSecVelocitiesFieldId = InternalVelocitiesFieldId + 1,
         InternalAccelerationsFieldId = InternalSecVelocitiesFieldId + 1,
-        InternalAttributesFieldId    = InternalAccelerationsFieldId + 1,
-        MaxParticlesFieldId          = InternalAttributesFieldId    + 1,
-        DynamicFieldId               = MaxParticlesFieldId          + 1,
-        UpdateSecAttribsFieldId      = DynamicFieldId               + 1,
-        LastElapsedTimeFieldId       = UpdateSecAttribsFieldId      + 1,
-        GeneratorsFieldId            = LastElapsedTimeFieldId       + 1,
-        AffectorsFieldId             = GeneratorsFieldId            + 1,
-        SystemAffectorsFieldId       = AffectorsFieldId             + 1,
-        VolumeFieldId                = SystemAffectorsFieldId       + 1,
-        MaxParticleSizeFieldId       = VolumeFieldId                + 1,
-        EventProducerFieldId         = MaxParticleSizeFieldId       + 1,
-        NextFieldId                  = EventProducerFieldId         + 1
+        InternalAttributesFieldId = InternalAccelerationsFieldId + 1,
+        MaxParticlesFieldId = InternalAttributesFieldId + 1,
+        DynamicFieldId = MaxParticlesFieldId + 1,
+        UpdateSecAttribsFieldId = DynamicFieldId + 1,
+        LastElapsedTimeFieldId = UpdateSecAttribsFieldId + 1,
+        GeneratorsFieldId = LastElapsedTimeFieldId + 1,
+        AffectorsFieldId = GeneratorsFieldId + 1,
+        SystemAffectorsFieldId = AffectorsFieldId + 1,
+        VolumeFieldId = SystemAffectorsFieldId + 1,
+        MaxParticleSizeFieldId = VolumeFieldId + 1,
+        EventProducerFieldId = MaxParticleSizeFieldId + 1,
+        NextFieldId = EventProducerFieldId + 1
     };
 
-    static const OSG::BitVector BeaconFieldMask;
-    static const OSG::BitVector InternalPositionsFieldMask;
-    static const OSG::BitVector InternalSecPositionsFieldMask;
-    static const OSG::BitVector InternalNormalsFieldMask;
-    static const OSG::BitVector InternalColorsFieldMask;
-    static const OSG::BitVector InternalSizesFieldMask;
-    static const OSG::BitVector InternalLifespansFieldMask;
-    static const OSG::BitVector InternalAgesFieldMask;
-    static const OSG::BitVector InternalVelocitiesFieldMask;
-    static const OSG::BitVector InternalSecVelocitiesFieldMask;
-    static const OSG::BitVector InternalAccelerationsFieldMask;
-    static const OSG::BitVector InternalAttributesFieldMask;
-    static const OSG::BitVector MaxParticlesFieldMask;
-    static const OSG::BitVector DynamicFieldMask;
-    static const OSG::BitVector UpdateSecAttribsFieldMask;
-    static const OSG::BitVector LastElapsedTimeFieldMask;
-    static const OSG::BitVector GeneratorsFieldMask;
-    static const OSG::BitVector AffectorsFieldMask;
-    static const OSG::BitVector SystemAffectorsFieldMask;
-    static const OSG::BitVector VolumeFieldMask;
-    static const OSG::BitVector MaxParticleSizeFieldMask;
-    static const OSG::BitVector EventProducerFieldMask;
-
+    static const OSG::BitVector BeaconFieldMask =
+        (TypeTraits<BitVector>::One << BeaconFieldId);
+    static const OSG::BitVector InternalPositionsFieldMask =
+        (TypeTraits<BitVector>::One << InternalPositionsFieldId);
+    static const OSG::BitVector InternalSecPositionsFieldMask =
+        (TypeTraits<BitVector>::One << InternalSecPositionsFieldId);
+    static const OSG::BitVector InternalNormalsFieldMask =
+        (TypeTraits<BitVector>::One << InternalNormalsFieldId);
+    static const OSG::BitVector InternalColorsFieldMask =
+        (TypeTraits<BitVector>::One << InternalColorsFieldId);
+    static const OSG::BitVector InternalSizesFieldMask =
+        (TypeTraits<BitVector>::One << InternalSizesFieldId);
+    static const OSG::BitVector InternalLifespansFieldMask =
+        (TypeTraits<BitVector>::One << InternalLifespansFieldId);
+    static const OSG::BitVector InternalAgesFieldMask =
+        (TypeTraits<BitVector>::One << InternalAgesFieldId);
+    static const OSG::BitVector InternalVelocitiesFieldMask =
+        (TypeTraits<BitVector>::One << InternalVelocitiesFieldId);
+    static const OSG::BitVector InternalSecVelocitiesFieldMask =
+        (TypeTraits<BitVector>::One << InternalSecVelocitiesFieldId);
+    static const OSG::BitVector InternalAccelerationsFieldMask =
+        (TypeTraits<BitVector>::One << InternalAccelerationsFieldId);
+    static const OSG::BitVector InternalAttributesFieldMask =
+        (TypeTraits<BitVector>::One << InternalAttributesFieldId);
+    static const OSG::BitVector MaxParticlesFieldMask =
+        (TypeTraits<BitVector>::One << MaxParticlesFieldId);
+    static const OSG::BitVector DynamicFieldMask =
+        (TypeTraits<BitVector>::One << DynamicFieldId);
+    static const OSG::BitVector UpdateSecAttribsFieldMask =
+        (TypeTraits<BitVector>::One << UpdateSecAttribsFieldId);
+    static const OSG::BitVector LastElapsedTimeFieldMask =
+        (TypeTraits<BitVector>::One << LastElapsedTimeFieldId);
+    static const OSG::BitVector GeneratorsFieldMask =
+        (TypeTraits<BitVector>::One << GeneratorsFieldId);
+    static const OSG::BitVector AffectorsFieldMask =
+        (TypeTraits<BitVector>::One << AffectorsFieldId);
+    static const OSG::BitVector SystemAffectorsFieldMask =
+        (TypeTraits<BitVector>::One << SystemAffectorsFieldId);
+    static const OSG::BitVector VolumeFieldMask =
+        (TypeTraits<BitVector>::One << VolumeFieldId);
+    static const OSG::BitVector MaxParticleSizeFieldMask =
+        (TypeTraits<BitVector>::One << MaxParticleSizeFieldId);
+    static const OSG::BitVector EventProducerFieldMask =
+        (TypeTraits<BitVector>::One << EventProducerFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecNodePtr    SFBeaconType;
+    typedef MFPnt3f           MFInternalPositionsType;
+    typedef MFPnt3f           MFInternalSecPositionsType;
+    typedef MFVec3f           MFInternalNormalsType;
+    typedef MFColor4f         MFInternalColorsType;
+    typedef MFVec3f           MFInternalSizesType;
+    typedef MFTime            MFInternalLifespansType;
+    typedef MFTime            MFInternalAgesType;
+    typedef MFVec3f           MFInternalVelocitiesType;
+    typedef MFVec3f           MFInternalSecVelocitiesType;
+    typedef MFVec3f           MFInternalAccelerationsType;
+    typedef MFStringToUInt32Map MFInternalAttributesType;
+    typedef SFUInt32          SFMaxParticlesType;
+    typedef SFBool            SFDynamicType;
+    typedef SFBool            SFUpdateSecAttribsType;
+    typedef SFTime            SFLastElapsedTimeType;
+    typedef MFUnrecParticleGeneratorPtr MFGeneratorsType;
+    typedef MFUnrecParticleAffectorPtr MFAffectorsType;
+    typedef MFUnrecParticleSystemAffectorPtr MFSystemAffectorsType;
+    typedef SFBoxVolume       SFVolumeType;
+    typedef SFVec3f           SFMaxParticleSizeType;
+    typedef SFEventProducerPtr          SFEventProducerType;
 
     enum
     {
-        SystemUpdatedMethodId     = 1,
-        VolumeChangedMethodId     = SystemUpdatedMethodId     + 1,
-        ParticleGeneratedMethodId = VolumeChangedMethodId     + 1,
-        ParticleKilledMethodId    = ParticleGeneratedMethodId + 1,
-        ParticleStolenMethodId    = ParticleKilledMethodId    + 1,
-        NextMethodId              = ParticleStolenMethodId    + 1
+        SystemUpdatedMethodId = 1,
+        VolumeChangedMethodId = SystemUpdatedMethodId + 1,
+        ParticleGeneratedMethodId = VolumeChangedMethodId + 1,
+        ParticleKilledMethodId = ParticleGeneratedMethodId + 1,
+        ParticleStolenMethodId = ParticleKilledMethodId + 1,
+        NextProducedMethodId = ParticleStolenMethodId + 1
     };
 
-
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
-    static const  EventProducerType  &getProducerClassType  (void); 
-    static        UInt32              getProducerClassTypeId(void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
+    static const  EventProducerType  &getProducerClassType  (void);
+    static        UInt32              getProducerClassTypeId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -202,97 +238,106 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+            const SFUnrecNodePtr      *getSFBeacon         (void) const;
+                  SFUnrecNodePtr      *editSFBeacon         (void);
 
-           SFNodePtr           *editSFBeacon         (void);
-     const SFNodePtr           *getSFBeacon         (void) const;
-     const MFPnt3f             *getMFInternalPositions(void) const;
+                  SFUInt32            *editSFMaxParticles   (void);
+            const SFUInt32            *getSFMaxParticles    (void) const;
 
-           SFUInt32            *editSFMaxParticles   (void);
-     const SFUInt32            *getSFMaxParticles   (void) const;
+                  SFBool              *editSFDynamic        (void);
+            const SFBool              *getSFDynamic         (void) const;
 
-           SFBool              *editSFDynamic        (void);
-     const SFBool              *getSFDynamic        (void) const;
+                  SFBool              *editSFUpdateSecAttribs(void);
+            const SFBool              *getSFUpdateSecAttribs (void) const;
 
-           SFBool              *editSFUpdateSecAttribs(void);
-     const SFBool              *getSFUpdateSecAttribs(void) const;
+                  SFTime              *editSFLastElapsedTime(void);
+            const SFTime              *getSFLastElapsedTime (void) const;
+            const MFUnrecParticleGeneratorPtr *getMFGenerators     (void) const;
+                  MFUnrecParticleGeneratorPtr *editMFGenerators     (void);
+            const MFUnrecParticleAffectorPtr *getMFAffectors      (void) const;
+                  MFUnrecParticleAffectorPtr *editMFAffectors      (void);
+            const MFUnrecParticleSystemAffectorPtr *getMFSystemAffectors(void) const;
+                  MFUnrecParticleSystemAffectorPtr *editMFSystemAffectors(void);
 
-           SFTime              *editSFLastElapsedTime(void);
-     const SFTime              *getSFLastElapsedTime(void) const;
+            const SFBoxVolume         *getSFVolume          (void) const;
 
-           MFParticleGeneratorPtr *editMFGenerators     (void);
-     const MFParticleGeneratorPtr *getMFGenerators     (void) const;
-
-           MFParticleAffectorPtr *editMFAffectors      (void);
-     const MFParticleAffectorPtr *getMFAffectors      (void) const;
-
-           MFParticleSystemAffectorPtr *editMFSystemAffectors(void);
-     const MFParticleSystemAffectorPtr *getMFSystemAffectors(void) const;
-     const SFDynamicVolume     *getSFVolume         (void) const;
-     const SFVec3f             *getSFMaxParticleSize(void) const;
+            const SFVec3f             *getSFMaxParticleSize (void) const;
 
 
-           NodePtr             &editBeacon         (void);
-     const NodePtr             &getBeacon         (void) const;
+                  Node * getBeacon         (void) const;
 
-           UInt32              &editMaxParticles   (void);
-     const UInt32              &getMaxParticles   (void) const;
+                  UInt32              &editMaxParticles   (void);
+                  UInt32               getMaxParticles    (void) const;
 
-           bool                &editDynamic        (void);
-     const bool                &getDynamic        (void) const;
+                  bool                &editDynamic        (void);
+                  bool                 getDynamic         (void) const;
 
-           bool                &editUpdateSecAttribs(void);
-     const bool                &getUpdateSecAttribs(void) const;
+                  bool                &editUpdateSecAttribs(void);
+                  bool                 getUpdateSecAttribs (void) const;
 
-           Time                &editLastElapsedTime(void);
-     const Time                &getLastElapsedTime(void) const;
+                  Time                &editLastElapsedTime(void);
+            const Time                &getLastElapsedTime (void) const;
 
-     const DynamicVolume       &getVolume         (void) const;
+                  ParticleGenerator * getGenerators     (const UInt32 index) const;
 
-     const Vec3f               &getMaxParticleSize(void) const;
+                  ParticleAffector * getAffectors      (const UInt32 index) const;
 
-     const Pnt3f               &getInternalPositions(const UInt32 index) const;
+                  ParticleSystemAffector * getSystemAffectors(const UInt32 index) const;
 
+            const BoxVolume           &getVolume          (void) const;
 
-
-
-
-
-
-
-
-
-
-           ParticleGeneratorPtr &editGenerators     (const UInt32 index);
-     const ParticleGeneratorPtr &getGenerators     (const UInt32 index) const;
-#ifndef OSG_2_PREP
-           MFParticleGeneratorPtr &getGenerators     (void);
-     const MFParticleGeneratorPtr &getGenerators     (void) const;
-#endif
-
-           ParticleAffectorPtr &editAffectors      (const UInt32 index);
-     const ParticleAffectorPtr &getAffectors      (const UInt32 index) const;
-#ifndef OSG_2_PREP
-           MFParticleAffectorPtr &getAffectors      (void);
-     const MFParticleAffectorPtr &getAffectors      (void) const;
-#endif
-
-           ParticleSystemAffectorPtr &editSystemAffectors(const UInt32 index);
-     const ParticleSystemAffectorPtr &getSystemAffectors(const UInt32 index) const;
-#ifndef OSG_2_PREP
-           MFParticleSystemAffectorPtr &getSystemAffectors(void);
-     const MFParticleSystemAffectorPtr &getSystemAffectors(void) const;
-#endif
+            const Vec3f               &getMaxParticleSize (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setBeacon         ( const NodePtr &value );
-     void setMaxParticles   ( const UInt32 &value );
-     void setDynamic        ( const bool &value );
-     void setUpdateSecAttribs( const bool &value );
-     void setLastElapsedTime( const Time &value );
+            void setBeacon         (Node * const value);
+            void setMaxParticles   (const UInt32 value);
+            void setDynamic        (const bool value);
+            void setUpdateSecAttribs(const bool value);
+            void setLastElapsedTime(const Time &value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    void pushToGenerators           (ParticleGenerator * const value   );
+    void assignGenerators          (const MFUnrecParticleGeneratorPtr &value);
+    void removeFromGenerators (UInt32               uiIndex );
+    void removeObjFromGenerators(ParticleGenerator * const value   );
+    void clearGenerators            (void                         );
+
+    void pushToAffectors           (ParticleAffector * const value   );
+    void assignAffectors          (const MFUnrecParticleAffectorPtr &value);
+    void removeFromAffectors (UInt32               uiIndex );
+    void removeObjFromAffectors(ParticleAffector * const value   );
+    void clearAffectors             (void                         );
+
+    void pushToSystemAffectors           (ParticleSystemAffector * const value   );
+    void assignSystemAffectors          (const MFUnrecParticleSystemAffectorPtr &value);
+    void removeFromSystemAffectors (UInt32               uiIndex );
+    void removeObjFromSystemAffectors(ParticleSystemAffector * const value   );
+    void clearSystemAffectors            (void                         );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Binary Access                              */
+    /*! \{                                                                 */
+
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -300,86 +345,96 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
-    EventConnection attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
-    bool isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const;
-    UInt32 getNumActivitiesAttached(UInt32 ProducedEventId) const;
-    ActivityPtr getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const;
-    void detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
-    UInt32 getNumProducedEvents(void) const;
-    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
+
+    EventConnection          attachActivity             (ActivityRefPtr TheActivity,
+                                                         UInt32 ProducedEventId);
+    bool                     isActivityAttached         (ActivityRefPtr TheActivity,
+                                                         UInt32 ProducedEventId) const;
+    UInt32                   getNumActivitiesAttached   (UInt32 ProducedEventId) const;
+    ActivityRefPtr           getAttachedActivity        (UInt32 ProducedEventId,
+                                                         UInt32 ActivityIndex) const;
+    void                     detachActivity             (ActivityRefPtr TheActivity,
+                                                         UInt32 ProducedEventId);
+    UInt32                   getNumProducedEvents       (void) const;
+    const MethodDescription *getProducedEventDescription(const std::string &ProducedEventName) const;
     const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
-    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
+    UInt32                   getProducedEventId         (const std::string &ProducedEventName) const;
 
     SFEventProducerPtr *editSFEventProducer(void);
-    EventProducerPtr &editEventProducer(void);
+    EventProducerPtr   &editEventProducer  (void);
 
     /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
-    /*! \{                                                                 */
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Binary Access                              */
-    /*! \{                                                                 */
-
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-
-
-    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  ParticleSystemPtr      create          (void); 
-    static  ParticleSystemPtr      createEmpty     (void); 
+    static  ParticleSystemTransitPtr  create          (void);
+    static  ParticleSystem           *createEmpty     (void);
+
+    static  ParticleSystemTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  ParticleSystem            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  ParticleSystemTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Event Producer                            */
+    /*! \{                                                                 */
     EventProducer _Producer;
 
+    /*! \}                                                                 */
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFNodePtr           _sfBeacon;
-    MFPnt3f             _mfInternalPositions;
-    MFPnt3f             _mfInternalSecPositions;
-    MFVec3f             _mfInternalNormals;
-    MFColor4f           _mfInternalColors;
-    MFVec3f             _mfInternalSizes;
-    MFTime              _mfInternalLifespans;
-    MFTime              _mfInternalAges;
-    MFVec3f             _mfInternalVelocities;
-    MFVec3f             _mfInternalSecVelocities;
-    MFVec3f             _mfInternalAccelerations;
-    MFStringToUInt32Map   _mfInternalAttributes;
-    SFUInt32            _sfMaxParticles;
-    SFBool              _sfDynamic;
-    SFBool              _sfUpdateSecAttribs;
-    SFTime              _sfLastElapsedTime;
-    MFParticleGeneratorPtr   _mfGenerators;
-    MFParticleAffectorPtr   _mfAffectors;
-    MFParticleSystemAffectorPtr   _mfSystemAffectors;
-    SFDynamicVolume     _sfVolume;
-    SFVec3f             _sfMaxParticleSize;
+    SFUnrecNodePtr    _sfBeacon;
+    MFPnt3f           _mfInternalPositions;
+    MFPnt3f           _mfInternalSecPositions;
+    MFVec3f           _mfInternalNormals;
+    MFColor4f         _mfInternalColors;
+    MFVec3f           _mfInternalSizes;
+    MFTime            _mfInternalLifespans;
+    MFTime            _mfInternalAges;
+    MFVec3f           _mfInternalVelocities;
+    MFVec3f           _mfInternalSecVelocities;
+    MFVec3f           _mfInternalAccelerations;
+    MFStringToUInt32Map _mfInternalAttributes;
+    SFUInt32          _sfMaxParticles;
+    SFBool            _sfDynamic;
+    SFBool            _sfUpdateSecAttribs;
+    SFTime            _sfLastElapsedTime;
+    MFUnrecParticleGeneratorPtr _mfGenerators;
+    MFUnrecParticleAffectorPtr _mfAffectors;
+    MFUnrecParticleSystemAffectorPtr _mfSystemAffectors;
+    SFBoxVolume       _sfVolume;
+    SFVec3f           _sfMaxParticleSize;
+    SFEventProducerPtr _sfEventProducer;
 
     /*! \}                                                                 */
-    SFEventProducerPtr _sfEventProducer;
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -392,174 +447,216 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ParticleSystemBase(void); 
+    virtual ~ParticleSystemBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const ParticleSystem *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleBeacon          (void) const;
+    EditFieldHandlePtr editHandleBeacon         (void);
+    GetFieldHandlePtr  getHandleInternalPositions (void) const;
+    EditFieldHandlePtr editHandleInternalPositions(void);
+    GetFieldHandlePtr  getHandleInternalSecPositions (void) const;
+    EditFieldHandlePtr editHandleInternalSecPositions(void);
+    GetFieldHandlePtr  getHandleInternalNormals (void) const;
+    EditFieldHandlePtr editHandleInternalNormals(void);
+    GetFieldHandlePtr  getHandleInternalColors  (void) const;
+    EditFieldHandlePtr editHandleInternalColors (void);
+    GetFieldHandlePtr  getHandleInternalSizes   (void) const;
+    EditFieldHandlePtr editHandleInternalSizes  (void);
+    GetFieldHandlePtr  getHandleInternalLifespans (void) const;
+    EditFieldHandlePtr editHandleInternalLifespans(void);
+    GetFieldHandlePtr  getHandleInternalAges    (void) const;
+    EditFieldHandlePtr editHandleInternalAges   (void);
+    GetFieldHandlePtr  getHandleInternalVelocities (void) const;
+    EditFieldHandlePtr editHandleInternalVelocities(void);
+    GetFieldHandlePtr  getHandleInternalSecVelocities (void) const;
+    EditFieldHandlePtr editHandleInternalSecVelocities(void);
+    GetFieldHandlePtr  getHandleInternalAccelerations (void) const;
+    EditFieldHandlePtr editHandleInternalAccelerations(void);
+    GetFieldHandlePtr  getHandleInternalAttributes (void) const;
+    EditFieldHandlePtr editHandleInternalAttributes(void);
+    GetFieldHandlePtr  getHandleMaxParticles    (void) const;
+    EditFieldHandlePtr editHandleMaxParticles   (void);
+    GetFieldHandlePtr  getHandleDynamic         (void) const;
+    EditFieldHandlePtr editHandleDynamic        (void);
+    GetFieldHandlePtr  getHandleUpdateSecAttribs (void) const;
+    EditFieldHandlePtr editHandleUpdateSecAttribs(void);
+    GetFieldHandlePtr  getHandleLastElapsedTime (void) const;
+    EditFieldHandlePtr editHandleLastElapsedTime(void);
+    GetFieldHandlePtr  getHandleGenerators      (void) const;
+    EditFieldHandlePtr editHandleGenerators     (void);
+    GetFieldHandlePtr  getHandleAffectors       (void) const;
+    EditFieldHandlePtr editHandleAffectors      (void);
+    GetFieldHandlePtr  getHandleSystemAffectors (void) const;
+    EditFieldHandlePtr editHandleSystemAffectors(void);
+    GetFieldHandlePtr  getHandleVolume          (void) const;
+    EditFieldHandlePtr editHandleVolume         (void);
+    GetFieldHandlePtr  getHandleMaxParticleSize (void) const;
+    EditFieldHandlePtr editHandleMaxParticleSize(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFPnt3f             *editMFInternalPositions(void);
-           MFPnt3f             *editMFInternalSecPositions(void);
-     const MFPnt3f             *getMFInternalSecPositions(void) const;
-           MFVec3f             *editMFInternalNormals(void);
-     const MFVec3f             *getMFInternalNormals(void) const;
-           MFColor4f           *editMFInternalColors (void);
-     const MFColor4f           *getMFInternalColors (void) const;
-           MFVec3f             *editMFInternalSizes  (void);
-     const MFVec3f             *getMFInternalSizes  (void) const;
-           MFTime              *editMFInternalLifespans(void);
-     const MFTime              *getMFInternalLifespans(void) const;
-           MFTime              *editMFInternalAges   (void);
-     const MFTime              *getMFInternalAges   (void) const;
-           MFVec3f             *editMFInternalVelocities(void);
-     const MFVec3f             *getMFInternalVelocities(void) const;
-           MFVec3f             *editMFInternalSecVelocities(void);
-     const MFVec3f             *getMFInternalSecVelocities(void) const;
-           MFVec3f             *editMFInternalAccelerations(void);
-     const MFVec3f             *getMFInternalAccelerations(void) const;
-           MFStringToUInt32Map *editMFInternalAttributes(void);
-     const MFStringToUInt32Map *getMFInternalAttributes(void) const;
-           SFDynamicVolume     *editSFVolume         (void);
-           SFVec3f             *editSFMaxParticleSize(void);
 
-           DynamicVolume       &editVolume         (void);
-           Vec3f               &editMaxParticleSize(void);
-           Pnt3f               &editInternalPositions(UInt32 index);
-#ifndef OSG_2_PREP
-           MFPnt3f             &getInternalPositions(void);
-     const MFPnt3f             &getInternalPositions(void) const;
-#endif
-           Pnt3f               &editInternalSecPositions(UInt32 index);
-#ifndef OSG_2_PREP
-           MFPnt3f             &getInternalSecPositions(void);
-     const MFPnt3f             &getInternalSecPositions(void) const;
-#endif
-     const Pnt3f               &getInternalSecPositions(UInt32 index) const;
-           Vec3f               &editInternalNormals(UInt32 index);
-#ifndef OSG_2_PREP
-           MFVec3f             &getInternalNormals(void);
-     const MFVec3f             &getInternalNormals(void) const;
-#endif
-     const Vec3f               &getInternalNormals(UInt32 index) const;
-           Color4f             &editInternalColors (UInt32 index);
-#ifndef OSG_2_PREP
-           MFColor4f           &getInternalColors (void);
-     const MFColor4f           &getInternalColors (void) const;
-#endif
-     const Color4f             &getInternalColors (UInt32 index) const;
-           Vec3f               &editInternalSizes  (UInt32 index);
-#ifndef OSG_2_PREP
-           MFVec3f             &getInternalSizes  (void);
-     const MFVec3f             &getInternalSizes  (void) const;
-#endif
-     const Vec3f               &getInternalSizes  (UInt32 index) const;
-           Time                &editInternalLifespans(UInt32 index);
-#ifndef OSG_2_PREP
-           MFTime              &getInternalLifespans(void);
-     const MFTime              &getInternalLifespans(void) const;
-#endif
-     const Time                &getInternalLifespans(UInt32 index) const;
-           Time                &editInternalAges   (UInt32 index);
-#ifndef OSG_2_PREP
-           MFTime              &getInternalAges   (void);
-     const MFTime              &getInternalAges   (void) const;
-#endif
-     const Time                &getInternalAges   (UInt32 index) const;
-           Vec3f               &editInternalVelocities(UInt32 index);
-#ifndef OSG_2_PREP
-           MFVec3f             &getInternalVelocities(void);
-     const MFVec3f             &getInternalVelocities(void) const;
-#endif
-     const Vec3f               &getInternalVelocities(UInt32 index) const;
-           Vec3f               &editInternalSecVelocities(UInt32 index);
-#ifndef OSG_2_PREP
-           MFVec3f             &getInternalSecVelocities(void);
-     const MFVec3f             &getInternalSecVelocities(void) const;
-#endif
-     const Vec3f               &getInternalSecVelocities(UInt32 index) const;
-           Vec3f               &editInternalAccelerations(UInt32 index);
-#ifndef OSG_2_PREP
-           MFVec3f             &getInternalAccelerations(void);
-     const MFVec3f             &getInternalAccelerations(void) const;
-#endif
-     const Vec3f               &getInternalAccelerations(UInt32 index) const;
-           StringToUInt32Map   &editInternalAttributes(UInt32 index);
-#ifndef OSG_2_PREP
-           MFStringToUInt32Map &getInternalAttributes(void);
-     const MFStringToUInt32Map &getInternalAttributes(void) const;
-#endif
-     const StringToUInt32Map   &getInternalAttributes(UInt32 index) const;
+                  MFPnt3f             *editMFInternalPositions(void);
+            const MFPnt3f             *getMFInternalPositions (void) const;
+
+                  MFPnt3f             *editMFInternalSecPositions(void);
+            const MFPnt3f             *getMFInternalSecPositions (void) const;
+
+                  MFVec3f             *editMFInternalNormals(void);
+            const MFVec3f             *getMFInternalNormals (void) const;
+
+                  MFColor4f           *editMFInternalColors (void);
+            const MFColor4f           *getMFInternalColors  (void) const;
+
+                  MFVec3f             *editMFInternalSizes  (void);
+            const MFVec3f             *getMFInternalSizes   (void) const;
+
+                  MFTime              *editMFInternalLifespans(void);
+            const MFTime              *getMFInternalLifespans (void) const;
+
+                  MFTime              *editMFInternalAges   (void);
+            const MFTime              *getMFInternalAges    (void) const;
+
+                  MFVec3f             *editMFInternalVelocities(void);
+            const MFVec3f             *getMFInternalVelocities (void) const;
+
+                  MFVec3f             *editMFInternalSecVelocities(void);
+            const MFVec3f             *getMFInternalSecVelocities (void) const;
+
+                  MFVec3f             *editMFInternalAccelerations(void);
+            const MFVec3f             *getMFInternalAccelerations (void) const;
+
+                  MFStringToUInt32Map *editMFInternalAttributes(void);
+            const MFStringToUInt32Map *getMFInternalAttributes (void) const;
+
+                  SFBoxVolume         *editSFVolume         (void);
+
+                  SFVec3f             *editSFMaxParticleSize(void);
+
+
+                  Pnt3f               &editInternalPositions(const UInt32 index);
+            const Pnt3f               &getInternalPositions (const UInt32 index) const;
+
+                  Pnt3f               &editInternalSecPositions(const UInt32 index);
+            const Pnt3f               &getInternalSecPositions (const UInt32 index) const;
+
+                  Vec3f               &editInternalNormals(const UInt32 index);
+            const Vec3f               &getInternalNormals (const UInt32 index) const;
+
+                  Color4f             &editInternalColors (const UInt32 index);
+            const Color4f             &getInternalColors  (const UInt32 index) const;
+
+                  Vec3f               &editInternalSizes  (const UInt32 index);
+            const Vec3f               &getInternalSizes   (const UInt32 index) const;
+
+                  Time                &editInternalLifespans(const UInt32 index);
+            const Time                &getInternalLifespans (const UInt32 index) const;
+
+                  Time                &editInternalAges   (const UInt32 index);
+            const Time                &getInternalAges    (const UInt32 index) const;
+
+                  Vec3f               &editInternalVelocities(const UInt32 index);
+            const Vec3f               &getInternalVelocities (const UInt32 index) const;
+
+                  Vec3f               &editInternalSecVelocities(const UInt32 index);
+            const Vec3f               &getInternalSecVelocities (const UInt32 index) const;
+
+                  Vec3f               &editInternalAccelerations(const UInt32 index);
+            const Vec3f               &getInternalAccelerations (const UInt32 index) const;
+
+                  StringToUInt32Map   &editInternalAttributes(const UInt32 index);
+            const StringToUInt32Map   &getInternalAttributes (const UInt32 index) const;
+
+                  BoxVolume           &editVolume         (void);
+
+                  Vec3f               &editMaxParticleSize(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setVolume         (const DynamicVolume &value);
-     void setMaxParticleSize(const Vec3f &value);
+            void setVolume         (const BoxVolume &value);
+            void setMaxParticleSize(const Vec3f &value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ParticleSystemBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      ParticleSystemBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      ParticleSystemBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
+    /*---------------------------------------------------------------------*/
     static MethodDescription   *_methodDesc[];
     static EventProducerType _producerType;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const ParticleSystemBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef ParticleSystemBase *ParticleSystemBaseP;
-
-typedef osgIF<ParticleSystemBase::isNodeCore,
-              CoredNodePtr<ParticleSystem>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ParticleSystemNodePtr;
-
-typedef RefPtr<ParticleSystemPtr> ParticleSystemRefPtr;
 
 OSG_END_NAMESPACE
 

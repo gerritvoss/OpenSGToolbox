@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,75 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGParticleAffectorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class RandomMovementParticleAffector;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! RandomMovementParticleAffectorPtr
+OSG_GEN_CONTAINERPTR(RandomMovementParticleAffector);
 
-typedef FCPtr<ParticleAffectorPtr, RandomMovementParticleAffector> RandomMovementParticleAffectorPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpParticleSystemFieldTraits
+/*! \ingroup GrpContribParticleSystemFieldTraits
+    \ingroup GrpLibOSGContribParticleSystem
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<RandomMovementParticleAffectorPtr> : 
-    public FieldTraitsRecurseMapper<RandomMovementParticleAffectorPtr, true>
+struct FieldTraits<RandomMovementParticleAffector *> :
+    public FieldTraitsFCPtrBase<RandomMovementParticleAffector *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFRandomMovementParticleAffectorPtr"; }
-    static const char *getMName(void) { return "MFRandomMovementParticleAffectorPtr"; }
+    typedef FieldTraits<RandomMovementParticleAffector *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFRandomMovementParticleAffectorPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFRandomMovementParticleAffectorPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<RandomMovementParticleAffectorPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<RandomMovementParticleAffector *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecRandomMovementParticleAffectorPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<RandomMovementParticleAffector *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecRandomMovementParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RandomMovementParticleAffector *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakRandomMovementParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RandomMovementParticleAffector *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdRandomMovementParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RandomMovementParticleAffector *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecRandomMovementParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RandomMovementParticleAffector *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecRandomMovementParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RandomMovementParticleAffector *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakRandomMovementParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RandomMovementParticleAffector *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdRandomMovementParticleAffectorPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<RandomMovementParticleAffector *,
+                      RecordedRefCountPolicy  > SFRecRandomMovementParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<RandomMovementParticleAffector *,
+                      UnrecordedRefCountPolicy> SFUnrecRandomMovementParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<RandomMovementParticleAffector *,
+                      WeakRefCountPolicy      > SFWeakRandomMovementParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<RandomMovementParticleAffector *,
+                      NoRefCountPolicy        > SFUncountedRandomMovementParticleAffectorPtr;
 
-typedef SField<RandomMovementParticleAffectorPtr> SFRandomMovementParticleAffectorPtr;
-#endif
 
-#ifndef OSG_COMPILERANDOMMOVEMENTPARTICLEAFFECTORINST
-OSG_DLLEXPORT_DECL1(SField, RandomMovementParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<RandomMovementParticleAffector *,
+                      RecordedRefCountPolicy  > MFRecRandomMovementParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<RandomMovementParticleAffector *,
+                      UnrecordedRefCountPolicy> MFUnrecRandomMovementParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<RandomMovementParticleAffector *,
+                      WeakRefCountPolicy      > MFWeakRandomMovementParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<RandomMovementParticleAffector *,
+                      NoRefCountPolicy        > MFUncountedRandomMovementParticleAffectorPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldMulti */
 
-typedef MField<RandomMovementParticleAffectorPtr> MFRandomMovementParticleAffectorPtr;
-#endif
 
-#ifndef OSG_COMPILERANDOMMOVEMENTPARTICLEAFFECTORINST
-OSG_DLLEXPORT_DECL1(MField, RandomMovementParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFRecRandomMovementParticleAffectorPtr : 
+    public PointerSField<RandomMovementParticleAffector *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUnrecRandomMovementParticleAffectorPtr : 
+    public PointerSField<RandomMovementParticleAffector *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFWeakRandomMovementParticleAffectorPtr :
+    public PointerSField<RandomMovementParticleAffector *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUncountedRandomMovementParticleAffectorPtr :
+    public PointerSField<RandomMovementParticleAffector *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFRecRandomMovementParticleAffectorPtr :
+    public PointerMField<RandomMovementParticleAffector *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUnrecRandomMovementParticleAffectorPtr :
+    public PointerMField<RandomMovementParticleAffector *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFWeakRandomMovementParticleAffectorPtr :
+    public PointerMField<RandomMovementParticleAffector *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUncountedRandomMovementParticleAffectorPtr :
+    public PointerMField<RandomMovementParticleAffector *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

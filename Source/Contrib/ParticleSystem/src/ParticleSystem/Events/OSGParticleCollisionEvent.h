@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,48 +42,50 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGParticleCollisionEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ParticleCollisionEvent class. See \ref 
-           PageParticleSystemParticleCollisionEvent for a description.
+/*! \brief ParticleCollisionEvent class. See \ref
+           PageContribParticleSystemParticleCollisionEvent for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleCollisionEvent : public ParticleCollisionEventBase
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleCollisionEvent : public ParticleCollisionEventBase
 {
-  private:
-
-    typedef ParticleCollisionEventBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef ParticleCollisionEventBase Inherited;
+    typedef ParticleCollisionEvent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    static ParticleCollisionEventPtr create(  FieldContainerPtr Source,
-                                            Time TimeStamp,
-                                            ParticleSystemPtr PrimarySystem,
-                                            UInt32 PrimaryIndex,
-                                            ParticleSystemPtr SecondarySystem,
-                                            UInt32 SecondaryIndex); 
+    static ParticleCollisionEventTransitPtr create(  FieldContainerRefPtr Source,
+                                                     Time TimeStamp,
+                                                     ParticleSystemRefPtr PrimarySystem,
+                                                     UInt32 PrimaryIndex,
+                                                     ParticleSystemRefPtr SecondarySystem,
+                                                     UInt32 SecondaryIndex); 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ParticleCollisionEventBase.
@@ -100,26 +102,32 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleCollisionEvent : public ParticleC
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ParticleCollisionEvent(void); 
+    virtual ~ParticleCollisionEvent(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ParticleCollisionEventBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ParticleCollisionEvent &source);
 };
 
 typedef ParticleCollisionEvent *ParticleCollisionEventP;
 
 OSG_END_NAMESPACE
+
+#include "OSGParticleSystem.h"
 
 #include "OSGParticleCollisionEventBase.inl"
 #include "OSGParticleCollisionEvent.inl"

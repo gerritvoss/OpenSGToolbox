@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,106 +55,56 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &GravityParticleAffectorBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 GravityParticleAffectorBase::getClassTypeId(void) 
+OSG::UInt32 GravityParticleAffectorBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-GravityParticleAffectorPtr GravityParticleAffectorBase::create(void) 
-{
-    GravityParticleAffectorPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = GravityParticleAffectorPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-GravityParticleAffectorPtr GravityParticleAffectorBase::createEmpty(void) 
-{ 
-    GravityParticleAffectorPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 GravityParticleAffectorBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the GravityParticleAffector::_sfMagnitude field.
-inline
-SFReal32 *GravityParticleAffectorBase::getSFMagnitude(void)
-{
-    return &_sfMagnitude;
-}
-
-//! Get the GravityParticleAffector::_sfDirection field.
-inline
-SFVec3f *GravityParticleAffectorBase::getSFDirection(void)
-{
-    return &_sfDirection;
-}
-
-//! Get the GravityParticleAffector::_sfAttenuation field.
-inline
-SFReal32 *GravityParticleAffectorBase::getSFAttenuation(void)
-{
-    return &_sfAttenuation;
-}
-
-//! Get the GravityParticleAffector::_sfMaxDistance field.
-inline
-SFReal32 *GravityParticleAffectorBase::getSFMaxDistance(void)
-{
-    return &_sfMaxDistance;
-}
-
-//! Get the GravityParticleAffector::_sfBeacon field.
-inline
-SFNodePtr *GravityParticleAffectorBase::getSFBeacon(void)
-{
-    return &_sfBeacon;
-}
-
-
 //! Get the value of the GravityParticleAffector::_sfMagnitude field.
+
 inline
-Real32 &GravityParticleAffectorBase::getMagnitude(void)
+Real32 &GravityParticleAffectorBase::editMagnitude(void)
 {
+    editSField(MagnitudeFieldMask);
+
     return _sfMagnitude.getValue();
 }
 
 //! Get the value of the GravityParticleAffector::_sfMagnitude field.
 inline
-const Real32 &GravityParticleAffectorBase::getMagnitude(void) const
+      Real32  GravityParticleAffectorBase::getMagnitude(void) const
 {
     return _sfMagnitude.getValue();
 }
 
 //! Set the value of the GravityParticleAffector::_sfMagnitude field.
 inline
-void GravityParticleAffectorBase::setMagnitude(const Real32 &value)
+void GravityParticleAffectorBase::setMagnitude(const Real32 value)
 {
+    editSField(MagnitudeFieldMask);
+
     _sfMagnitude.setValue(value);
 }
-
 //! Get the value of the GravityParticleAffector::_sfDirection field.
+
 inline
-Vec3f &GravityParticleAffectorBase::getDirection(void)
+Vec3f &GravityParticleAffectorBase::editDirection(void)
 {
+    editSField(DirectionFieldMask);
+
     return _sfDirection.getValue();
 }
 
@@ -171,74 +119,114 @@ const Vec3f &GravityParticleAffectorBase::getDirection(void) const
 inline
 void GravityParticleAffectorBase::setDirection(const Vec3f &value)
 {
+    editSField(DirectionFieldMask);
+
     _sfDirection.setValue(value);
 }
-
 //! Get the value of the GravityParticleAffector::_sfAttenuation field.
+
 inline
-Real32 &GravityParticleAffectorBase::getAttenuation(void)
+Real32 &GravityParticleAffectorBase::editAttenuation(void)
 {
+    editSField(AttenuationFieldMask);
+
     return _sfAttenuation.getValue();
 }
 
 //! Get the value of the GravityParticleAffector::_sfAttenuation field.
 inline
-const Real32 &GravityParticleAffectorBase::getAttenuation(void) const
+      Real32  GravityParticleAffectorBase::getAttenuation(void) const
 {
     return _sfAttenuation.getValue();
 }
 
 //! Set the value of the GravityParticleAffector::_sfAttenuation field.
 inline
-void GravityParticleAffectorBase::setAttenuation(const Real32 &value)
+void GravityParticleAffectorBase::setAttenuation(const Real32 value)
 {
+    editSField(AttenuationFieldMask);
+
     _sfAttenuation.setValue(value);
 }
-
 //! Get the value of the GravityParticleAffector::_sfMaxDistance field.
+
 inline
-Real32 &GravityParticleAffectorBase::getMaxDistance(void)
+Real32 &GravityParticleAffectorBase::editMaxDistance(void)
 {
+    editSField(MaxDistanceFieldMask);
+
     return _sfMaxDistance.getValue();
 }
 
 //! Get the value of the GravityParticleAffector::_sfMaxDistance field.
 inline
-const Real32 &GravityParticleAffectorBase::getMaxDistance(void) const
+      Real32  GravityParticleAffectorBase::getMaxDistance(void) const
 {
     return _sfMaxDistance.getValue();
 }
 
 //! Set the value of the GravityParticleAffector::_sfMaxDistance field.
 inline
-void GravityParticleAffectorBase::setMaxDistance(const Real32 &value)
+void GravityParticleAffectorBase::setMaxDistance(const Real32 value)
 {
+    editSField(MaxDistanceFieldMask);
+
     _sfMaxDistance.setValue(value);
 }
 
 //! Get the value of the GravityParticleAffector::_sfBeacon field.
 inline
-NodePtr &GravityParticleAffectorBase::getBeacon(void)
-{
-    return _sfBeacon.getValue();
-}
-
-//! Get the value of the GravityParticleAffector::_sfBeacon field.
-inline
-const NodePtr &GravityParticleAffectorBase::getBeacon(void) const
+Node * GravityParticleAffectorBase::getBeacon(void) const
 {
     return _sfBeacon.getValue();
 }
 
 //! Set the value of the GravityParticleAffector::_sfBeacon field.
 inline
-void GravityParticleAffectorBase::setBeacon(const NodePtr &value)
+void GravityParticleAffectorBase::setBeacon(Node * const value)
 {
+    editSField(BeaconFieldMask);
+
     _sfBeacon.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void GravityParticleAffectorBase::execSync (      GravityParticleAffectorBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGGRAVITYPARTICLEAFFECTORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (MagnitudeFieldMask & whichField))
+        _sfMagnitude.syncWith(pFrom->_sfMagnitude);
+
+    if(FieldBits::NoField != (DirectionFieldMask & whichField))
+        _sfDirection.syncWith(pFrom->_sfDirection);
+
+    if(FieldBits::NoField != (AttenuationFieldMask & whichField))
+        _sfAttenuation.syncWith(pFrom->_sfAttenuation);
+
+    if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
+        _sfMaxDistance.syncWith(pFrom->_sfMaxDistance);
+
+    if(FieldBits::NoField != (BeaconFieldMask & whichField))
+        _sfBeacon.syncWith(pFrom->_sfBeacon);
+}
+#endif
+
+
+inline
+const Char8 *GravityParticleAffectorBase::getClassname(void)
+{
+    return "GravityParticleAffector";
+}
+
+
+OSG_GEN_CONTAINERPTR(GravityParticleAffector);
+
+OSG_END_NAMESPACE
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,261 +50,531 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILETURBULENCEPARTICLEAFFECTORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+#include "Distributions/1D/OSGPerlinNoiseDistribution1D.h"   // InterpolationType default header
+
+#include "OSGPerlinNoiseDistribution1D.h" // PerlinDistribution Class
+#include "OSGNode.h"                    // Beacon Class
 
 #include "OSGTurbulenceParticleAffectorBase.h"
 #include "OSGTurbulenceParticleAffector.h"
 
-#include <Distributions/1D/OSGPerlinNoiseDistribution1D.h>   // InterpolationType default header
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  TurbulenceParticleAffectorBase::PerlinDistributionFieldMask = 
-    (TypeTraits<BitVector>::One << TurbulenceParticleAffectorBase::PerlinDistributionFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  TurbulenceParticleAffectorBase::AmplitudeFieldMask = 
-    (TypeTraits<BitVector>::One << TurbulenceParticleAffectorBase::AmplitudeFieldId);
+/*! \class OSG::TurbulenceParticleAffector
+    
+ */
 
-const OSG::BitVector  TurbulenceParticleAffectorBase::InterpolationTypeFieldMask = 
-    (TypeTraits<BitVector>::One << TurbulenceParticleAffectorBase::InterpolationTypeFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  TurbulenceParticleAffectorBase::PhaseFieldMask = 
-    (TypeTraits<BitVector>::One << TurbulenceParticleAffectorBase::PhaseFieldId);
-
-const OSG::BitVector  TurbulenceParticleAffectorBase::PersistanceFieldMask = 
-    (TypeTraits<BitVector>::One << TurbulenceParticleAffectorBase::PersistanceFieldId);
-
-const OSG::BitVector  TurbulenceParticleAffectorBase::FrequencyFieldMask = 
-    (TypeTraits<BitVector>::One << TurbulenceParticleAffectorBase::FrequencyFieldId);
-
-const OSG::BitVector  TurbulenceParticleAffectorBase::OctavesFieldMask = 
-    (TypeTraits<BitVector>::One << TurbulenceParticleAffectorBase::OctavesFieldId);
-
-const OSG::BitVector  TurbulenceParticleAffectorBase::BeaconFieldMask = 
-    (TypeTraits<BitVector>::One << TurbulenceParticleAffectorBase::BeaconFieldId);
-
-const OSG::BitVector  TurbulenceParticleAffectorBase::AttenuationFieldMask = 
-    (TypeTraits<BitVector>::One << TurbulenceParticleAffectorBase::AttenuationFieldId);
-
-const OSG::BitVector  TurbulenceParticleAffectorBase::MaxDistanceFieldMask = 
-    (TypeTraits<BitVector>::One << TurbulenceParticleAffectorBase::MaxDistanceFieldId);
-
-const OSG::BitVector TurbulenceParticleAffectorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var PerlinNoiseDistribution1DPtr TurbulenceParticleAffectorBase::_sfPerlinDistribution
+/*! \var PerlinNoiseDistribution1D * TurbulenceParticleAffectorBase::_sfPerlinDistribution
     
 */
+
 /*! \var Real32          TurbulenceParticleAffectorBase::_sfAmplitude
     
 */
+
 /*! \var UInt32          TurbulenceParticleAffectorBase::_sfInterpolationType
     
 */
+
 /*! \var Vec3f           TurbulenceParticleAffectorBase::_sfPhase
     
 */
+
 /*! \var Real32          TurbulenceParticleAffectorBase::_sfPersistance
     
 */
+
 /*! \var Real32          TurbulenceParticleAffectorBase::_sfFrequency
     
 */
+
 /*! \var UInt32          TurbulenceParticleAffectorBase::_sfOctaves
     
 */
-/*! \var NodePtr         TurbulenceParticleAffectorBase::_sfBeacon
+
+/*! \var Node *          TurbulenceParticleAffectorBase::_sfBeacon
     
 */
+
 /*! \var Real32          TurbulenceParticleAffectorBase::_sfAttenuation
     
 */
+
 /*! \var Real32          TurbulenceParticleAffectorBase::_sfMaxDistance
     
 */
 
-//! TurbulenceParticleAffector description
 
-FieldDescription *TurbulenceParticleAffectorBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<TurbulenceParticleAffector *>::_type("TurbulenceParticleAffectorPtr", "ParticleAffectorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(TurbulenceParticleAffector *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           TurbulenceParticleAffector *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           TurbulenceParticleAffector *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void TurbulenceParticleAffectorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFPerlinNoiseDistribution1DPtr::getClassType(), 
-                     "PerlinDistribution", 
-                     PerlinDistributionFieldId, PerlinDistributionFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TurbulenceParticleAffectorBase::editSFPerlinDistribution)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Amplitude", 
-                     AmplitudeFieldId, AmplitudeFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TurbulenceParticleAffectorBase::editSFAmplitude)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "InterpolationType", 
-                     InterpolationTypeFieldId, InterpolationTypeFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TurbulenceParticleAffectorBase::editSFInterpolationType)),
-    new FieldDescription(SFVec3f::getClassType(), 
-                     "Phase", 
-                     PhaseFieldId, PhaseFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TurbulenceParticleAffectorBase::editSFPhase)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Persistance", 
-                     PersistanceFieldId, PersistanceFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TurbulenceParticleAffectorBase::editSFPersistance)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Frequency", 
-                     FrequencyFieldId, FrequencyFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TurbulenceParticleAffectorBase::editSFFrequency)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "Octaves", 
-                     OctavesFieldId, OctavesFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TurbulenceParticleAffectorBase::editSFOctaves)),
-    new FieldDescription(SFNodePtr::getClassType(), 
-                     "Beacon", 
-                     BeaconFieldId, BeaconFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TurbulenceParticleAffectorBase::editSFBeacon)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Attenuation", 
-                     AttenuationFieldId, AttenuationFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TurbulenceParticleAffectorBase::editSFAttenuation)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "MaxDistance", 
-                     MaxDistanceFieldId, MaxDistanceFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TurbulenceParticleAffectorBase::editSFMaxDistance))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType TurbulenceParticleAffectorBase::_type(
-    "TurbulenceParticleAffector",
-    "ParticleAffector",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&TurbulenceParticleAffectorBase::createEmpty),
+    pDesc = new SFUnrecPerlinNoiseDistribution1DPtr::Description(
+        SFUnrecPerlinNoiseDistribution1DPtr::getClassType(),
+        "PerlinDistribution",
+        "",
+        PerlinDistributionFieldId, PerlinDistributionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TurbulenceParticleAffector::editHandlePerlinDistribution),
+        static_cast<FieldGetMethodSig >(&TurbulenceParticleAffector::getHandlePerlinDistribution));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Amplitude",
+        "",
+        AmplitudeFieldId, AmplitudeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TurbulenceParticleAffector::editHandleAmplitude),
+        static_cast<FieldGetMethodSig >(&TurbulenceParticleAffector::getHandleAmplitude));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "InterpolationType",
+        "",
+        InterpolationTypeFieldId, InterpolationTypeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TurbulenceParticleAffector::editHandleInterpolationType),
+        static_cast<FieldGetMethodSig >(&TurbulenceParticleAffector::getHandleInterpolationType));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFVec3f::Description(
+        SFVec3f::getClassType(),
+        "Phase",
+        "",
+        PhaseFieldId, PhaseFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TurbulenceParticleAffector::editHandlePhase),
+        static_cast<FieldGetMethodSig >(&TurbulenceParticleAffector::getHandlePhase));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Persistance",
+        "",
+        PersistanceFieldId, PersistanceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TurbulenceParticleAffector::editHandlePersistance),
+        static_cast<FieldGetMethodSig >(&TurbulenceParticleAffector::getHandlePersistance));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Frequency",
+        "",
+        FrequencyFieldId, FrequencyFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TurbulenceParticleAffector::editHandleFrequency),
+        static_cast<FieldGetMethodSig >(&TurbulenceParticleAffector::getHandleFrequency));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "Octaves",
+        "",
+        OctavesFieldId, OctavesFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TurbulenceParticleAffector::editHandleOctaves),
+        static_cast<FieldGetMethodSig >(&TurbulenceParticleAffector::getHandleOctaves));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecNodePtr::Description(
+        SFUnrecNodePtr::getClassType(),
+        "Beacon",
+        "",
+        BeaconFieldId, BeaconFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TurbulenceParticleAffector::editHandleBeacon),
+        static_cast<FieldGetMethodSig >(&TurbulenceParticleAffector::getHandleBeacon));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Attenuation",
+        "",
+        AttenuationFieldId, AttenuationFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TurbulenceParticleAffector::editHandleAttenuation),
+        static_cast<FieldGetMethodSig >(&TurbulenceParticleAffector::getHandleAttenuation));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "MaxDistance",
+        "",
+        MaxDistanceFieldId, MaxDistanceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TurbulenceParticleAffector::editHandleMaxDistance),
+        static_cast<FieldGetMethodSig >(&TurbulenceParticleAffector::getHandleMaxDistance));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+TurbulenceParticleAffectorBase::TypeObject TurbulenceParticleAffectorBase::_type(
+    TurbulenceParticleAffectorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&TurbulenceParticleAffectorBase::createEmptyLocal),
     TurbulenceParticleAffector::initMethod,
-    _desc,
-    sizeof(_desc));
+    TurbulenceParticleAffector::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&TurbulenceParticleAffector::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"TurbulenceParticleAffector\"\n"
+    "\tparent=\"ParticleAffector\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com), Daniel Guilliams           \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"PerlinDistribution\"\n"
+    "\t\ttype=\"PerlinNoiseDistribution1D\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Amplitude\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"3.000\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InterpolationType\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"PerlinNoiseDistribution1D::LINEAR\"\n"
+    "\t\tdefaultHeader=\"Distributions/1D/OSGPerlinNoiseDistribution1D.h\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\t\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Phase\"\n"
+    "\t\ttype=\"Vec3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Persistance\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.25f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Frequency\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Octaves\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"4\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Beacon\"\n"
+    "\t\ttype=\"Node\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Attenuation\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MaxDistance\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"-1.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(TurbulenceParticleAffectorBase, TurbulenceParticleAffectorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &TurbulenceParticleAffectorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &TurbulenceParticleAffectorBase::getType(void) const 
+FieldContainerType &TurbulenceParticleAffectorBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr TurbulenceParticleAffectorBase::shallowCopy(void) const 
-{ 
-    TurbulenceParticleAffectorPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const TurbulenceParticleAffector *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 TurbulenceParticleAffectorBase::getContainerSize(void) const 
-{ 
-    return sizeof(TurbulenceParticleAffector); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TurbulenceParticleAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &TurbulenceParticleAffectorBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<TurbulenceParticleAffectorBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void TurbulenceParticleAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 TurbulenceParticleAffectorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((TurbulenceParticleAffectorBase *) &other, whichField, sInfo);
+    return sizeof(TurbulenceParticleAffector);
 }
-void TurbulenceParticleAffectorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the TurbulenceParticleAffector::_sfPerlinDistribution field.
+const SFUnrecPerlinNoiseDistribution1DPtr *TurbulenceParticleAffectorBase::getSFPerlinDistribution(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfPerlinDistribution;
 }
 
-void TurbulenceParticleAffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecPerlinNoiseDistribution1DPtr *TurbulenceParticleAffectorBase::editSFPerlinDistribution(void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(PerlinDistributionFieldMask);
 
+    return &_sfPerlinDistribution;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-TurbulenceParticleAffectorBase::TurbulenceParticleAffectorBase(void) :
-    _sfPerlinDistribution     (PerlinNoiseDistribution1DPtr(NullFC)), 
-    _sfAmplitude              (Real32(3.000)), 
-    _sfInterpolationType      (UInt32(PerlinNoiseDistribution1D::LINEAR)), 
-    _sfPhase                  (Vec3f(0.0,0.0,0.0)), 
-    _sfPersistance            (Real32(0.25f)), 
-    _sfFrequency              (Real32(1.0f)), 
-    _sfOctaves                (UInt32(4)), 
-    _sfBeacon                 (NodePtr(NullFC)), 
-    _sfAttenuation            (Real32(1.0)), 
-    _sfMaxDistance            (Real32(-1.0f)), 
-    Inherited() 
+SFReal32 *TurbulenceParticleAffectorBase::editSFAmplitude(void)
 {
+    editSField(AmplitudeFieldMask);
+
+    return &_sfAmplitude;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-TurbulenceParticleAffectorBase::TurbulenceParticleAffectorBase(const TurbulenceParticleAffectorBase &source) :
-    _sfPerlinDistribution     (source._sfPerlinDistribution     ), 
-    _sfAmplitude              (source._sfAmplitude              ), 
-    _sfInterpolationType      (source._sfInterpolationType      ), 
-    _sfPhase                  (source._sfPhase                  ), 
-    _sfPersistance            (source._sfPersistance            ), 
-    _sfFrequency              (source._sfFrequency              ), 
-    _sfOctaves                (source._sfOctaves                ), 
-    _sfBeacon                 (source._sfBeacon                 ), 
-    _sfAttenuation            (source._sfAttenuation            ), 
-    _sfMaxDistance            (source._sfMaxDistance            ), 
-    Inherited                 (source)
+const SFReal32 *TurbulenceParticleAffectorBase::getSFAmplitude(void) const
 {
+    return &_sfAmplitude;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-TurbulenceParticleAffectorBase::~TurbulenceParticleAffectorBase(void)
+SFUInt32 *TurbulenceParticleAffectorBase::editSFInterpolationType(void)
 {
+    editSField(InterpolationTypeFieldMask);
+
+    return &_sfInterpolationType;
 }
+
+const SFUInt32 *TurbulenceParticleAffectorBase::getSFInterpolationType(void) const
+{
+    return &_sfInterpolationType;
+}
+
+
+SFVec3f *TurbulenceParticleAffectorBase::editSFPhase(void)
+{
+    editSField(PhaseFieldMask);
+
+    return &_sfPhase;
+}
+
+const SFVec3f *TurbulenceParticleAffectorBase::getSFPhase(void) const
+{
+    return &_sfPhase;
+}
+
+
+SFReal32 *TurbulenceParticleAffectorBase::editSFPersistance(void)
+{
+    editSField(PersistanceFieldMask);
+
+    return &_sfPersistance;
+}
+
+const SFReal32 *TurbulenceParticleAffectorBase::getSFPersistance(void) const
+{
+    return &_sfPersistance;
+}
+
+
+SFReal32 *TurbulenceParticleAffectorBase::editSFFrequency(void)
+{
+    editSField(FrequencyFieldMask);
+
+    return &_sfFrequency;
+}
+
+const SFReal32 *TurbulenceParticleAffectorBase::getSFFrequency(void) const
+{
+    return &_sfFrequency;
+}
+
+
+SFUInt32 *TurbulenceParticleAffectorBase::editSFOctaves(void)
+{
+    editSField(OctavesFieldMask);
+
+    return &_sfOctaves;
+}
+
+const SFUInt32 *TurbulenceParticleAffectorBase::getSFOctaves(void) const
+{
+    return &_sfOctaves;
+}
+
+
+//! Get the TurbulenceParticleAffector::_sfBeacon field.
+const SFUnrecNodePtr *TurbulenceParticleAffectorBase::getSFBeacon(void) const
+{
+    return &_sfBeacon;
+}
+
+SFUnrecNodePtr      *TurbulenceParticleAffectorBase::editSFBeacon         (void)
+{
+    editSField(BeaconFieldMask);
+
+    return &_sfBeacon;
+}
+
+SFReal32 *TurbulenceParticleAffectorBase::editSFAttenuation(void)
+{
+    editSField(AttenuationFieldMask);
+
+    return &_sfAttenuation;
+}
+
+const SFReal32 *TurbulenceParticleAffectorBase::getSFAttenuation(void) const
+{
+    return &_sfAttenuation;
+}
+
+
+SFReal32 *TurbulenceParticleAffectorBase::editSFMaxDistance(void)
+{
+    editSField(MaxDistanceFieldMask);
+
+    return &_sfMaxDistance;
+}
+
+const SFReal32 *TurbulenceParticleAffectorBase::getSFMaxDistance(void) const
+{
+    return &_sfMaxDistance;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 TurbulenceParticleAffectorBase::getBinSize(const BitVector &whichField)
+UInt32 TurbulenceParticleAffectorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -312,58 +582,48 @@ UInt32 TurbulenceParticleAffectorBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfPerlinDistribution.getBinSize();
     }
-
     if(FieldBits::NoField != (AmplitudeFieldMask & whichField))
     {
         returnValue += _sfAmplitude.getBinSize();
     }
-
     if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
     {
         returnValue += _sfInterpolationType.getBinSize();
     }
-
     if(FieldBits::NoField != (PhaseFieldMask & whichField))
     {
         returnValue += _sfPhase.getBinSize();
     }
-
     if(FieldBits::NoField != (PersistanceFieldMask & whichField))
     {
         returnValue += _sfPersistance.getBinSize();
     }
-
     if(FieldBits::NoField != (FrequencyFieldMask & whichField))
     {
         returnValue += _sfFrequency.getBinSize();
     }
-
     if(FieldBits::NoField != (OctavesFieldMask & whichField))
     {
         returnValue += _sfOctaves.getBinSize();
     }
-
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
     {
         returnValue += _sfBeacon.getBinSize();
     }
-
     if(FieldBits::NoField != (AttenuationFieldMask & whichField))
     {
         returnValue += _sfAttenuation.getBinSize();
     }
-
     if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
     {
         returnValue += _sfMaxDistance.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void TurbulenceParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void TurbulenceParticleAffectorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -371,57 +631,46 @@ void TurbulenceParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfPerlinDistribution.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (AmplitudeFieldMask & whichField))
     {
         _sfAmplitude.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
     {
         _sfInterpolationType.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (PhaseFieldMask & whichField))
     {
         _sfPhase.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (PersistanceFieldMask & whichField))
     {
         _sfPersistance.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FrequencyFieldMask & whichField))
     {
         _sfFrequency.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (OctavesFieldMask & whichField))
     {
         _sfOctaves.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
     {
         _sfBeacon.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (AttenuationFieldMask & whichField))
     {
         _sfAttenuation.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
     {
         _sfMaxDistance.copyToBin(pMem);
     }
-
-
 }
 
-void TurbulenceParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void TurbulenceParticleAffectorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -429,161 +678,515 @@ void TurbulenceParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfPerlinDistribution.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (AmplitudeFieldMask & whichField))
     {
         _sfAmplitude.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
     {
         _sfInterpolationType.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (PhaseFieldMask & whichField))
     {
         _sfPhase.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (PersistanceFieldMask & whichField))
     {
         _sfPersistance.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FrequencyFieldMask & whichField))
     {
         _sfFrequency.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (OctavesFieldMask & whichField))
     {
         _sfOctaves.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
     {
         _sfBeacon.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (AttenuationFieldMask & whichField))
     {
         _sfAttenuation.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
     {
         _sfMaxDistance.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TurbulenceParticleAffectorBase::executeSyncImpl(      TurbulenceParticleAffectorBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+TurbulenceParticleAffectorTransitPtr TurbulenceParticleAffectorBase::createLocal(BitVector bFlags)
 {
+    TurbulenceParticleAffectorTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (PerlinDistributionFieldMask & whichField))
-        _sfPerlinDistribution.syncWith(pOther->_sfPerlinDistribution);
+        fc = dynamic_pointer_cast<TurbulenceParticleAffector>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (AmplitudeFieldMask & whichField))
-        _sfAmplitude.syncWith(pOther->_sfAmplitude);
-
-    if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
-        _sfInterpolationType.syncWith(pOther->_sfInterpolationType);
-
-    if(FieldBits::NoField != (PhaseFieldMask & whichField))
-        _sfPhase.syncWith(pOther->_sfPhase);
-
-    if(FieldBits::NoField != (PersistanceFieldMask & whichField))
-        _sfPersistance.syncWith(pOther->_sfPersistance);
-
-    if(FieldBits::NoField != (FrequencyFieldMask & whichField))
-        _sfFrequency.syncWith(pOther->_sfFrequency);
-
-    if(FieldBits::NoField != (OctavesFieldMask & whichField))
-        _sfOctaves.syncWith(pOther->_sfOctaves);
-
-    if(FieldBits::NoField != (BeaconFieldMask & whichField))
-        _sfBeacon.syncWith(pOther->_sfBeacon);
-
-    if(FieldBits::NoField != (AttenuationFieldMask & whichField))
-        _sfAttenuation.syncWith(pOther->_sfAttenuation);
-
-    if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
-        _sfMaxDistance.syncWith(pOther->_sfMaxDistance);
-
-
-}
-#else
-void TurbulenceParticleAffectorBase::executeSyncImpl(      TurbulenceParticleAffectorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (PerlinDistributionFieldMask & whichField))
-        _sfPerlinDistribution.syncWith(pOther->_sfPerlinDistribution);
-
-    if(FieldBits::NoField != (AmplitudeFieldMask & whichField))
-        _sfAmplitude.syncWith(pOther->_sfAmplitude);
-
-    if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
-        _sfInterpolationType.syncWith(pOther->_sfInterpolationType);
-
-    if(FieldBits::NoField != (PhaseFieldMask & whichField))
-        _sfPhase.syncWith(pOther->_sfPhase);
-
-    if(FieldBits::NoField != (PersistanceFieldMask & whichField))
-        _sfPersistance.syncWith(pOther->_sfPersistance);
-
-    if(FieldBits::NoField != (FrequencyFieldMask & whichField))
-        _sfFrequency.syncWith(pOther->_sfFrequency);
-
-    if(FieldBits::NoField != (OctavesFieldMask & whichField))
-        _sfOctaves.syncWith(pOther->_sfOctaves);
-
-    if(FieldBits::NoField != (BeaconFieldMask & whichField))
-        _sfBeacon.syncWith(pOther->_sfBeacon);
-
-    if(FieldBits::NoField != (AttenuationFieldMask & whichField))
-        _sfAttenuation.syncWith(pOther->_sfAttenuation);
-
-    if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
-        _sfMaxDistance.syncWith(pOther->_sfMaxDistance);
-
-
-
+    return fc;
 }
 
-void TurbulenceParticleAffectorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+TurbulenceParticleAffectorTransitPtr TurbulenceParticleAffectorBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    TurbulenceParticleAffectorTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<TurbulenceParticleAffector>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+TurbulenceParticleAffectorTransitPtr TurbulenceParticleAffectorBase::create(void)
+{
+    TurbulenceParticleAffectorTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<TurbulenceParticleAffector>(tmpPtr);
+    }
+
+    return fc;
+}
+
+TurbulenceParticleAffector *TurbulenceParticleAffectorBase::createEmptyLocal(BitVector bFlags)
+{
+    TurbulenceParticleAffector *returnValue;
+
+    newPtr<TurbulenceParticleAffector>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+TurbulenceParticleAffector *TurbulenceParticleAffectorBase::createEmpty(void)
+{
+    TurbulenceParticleAffector *returnValue;
+
+    newPtr<TurbulenceParticleAffector>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr TurbulenceParticleAffectorBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    TurbulenceParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const TurbulenceParticleAffector *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TurbulenceParticleAffectorBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    TurbulenceParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const TurbulenceParticleAffector *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TurbulenceParticleAffectorBase::shallowCopy(void) const
+{
+    TurbulenceParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const TurbulenceParticleAffector *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+TurbulenceParticleAffectorBase::TurbulenceParticleAffectorBase(void) :
+    Inherited(),
+    _sfPerlinDistribution     (NULL),
+    _sfAmplitude              (Real32(3.000)),
+    _sfInterpolationType      (UInt32(PerlinNoiseDistribution1D::LINEAR)),
+    _sfPhase                  (Vec3f(0.0,0.0,0.0)),
+    _sfPersistance            (Real32(0.25f)),
+    _sfFrequency              (Real32(1.0f)),
+    _sfOctaves                (UInt32(4)),
+    _sfBeacon                 (NULL),
+    _sfAttenuation            (Real32(1.0)),
+    _sfMaxDistance            (Real32(-1.0f))
+{
+}
+
+TurbulenceParticleAffectorBase::TurbulenceParticleAffectorBase(const TurbulenceParticleAffectorBase &source) :
+    Inherited(source),
+    _sfPerlinDistribution     (NULL),
+    _sfAmplitude              (source._sfAmplitude              ),
+    _sfInterpolationType      (source._sfInterpolationType      ),
+    _sfPhase                  (source._sfPhase                  ),
+    _sfPersistance            (source._sfPersistance            ),
+    _sfFrequency              (source._sfFrequency              ),
+    _sfOctaves                (source._sfOctaves                ),
+    _sfBeacon                 (NULL),
+    _sfAttenuation            (source._sfAttenuation            ),
+    _sfMaxDistance            (source._sfMaxDistance            )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+TurbulenceParticleAffectorBase::~TurbulenceParticleAffectorBase(void)
+{
+}
+
+void TurbulenceParticleAffectorBase::onCreate(const TurbulenceParticleAffector *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        TurbulenceParticleAffector *pThis = static_cast<TurbulenceParticleAffector *>(this);
+
+        pThis->setPerlinDistribution(source->getPerlinDistribution());
+
+        pThis->setBeacon(source->getBeacon());
+    }
+}
+
+GetFieldHandlePtr TurbulenceParticleAffectorBase::getHandlePerlinDistribution (void) const
+{
+    SFUnrecPerlinNoiseDistribution1DPtr::GetHandlePtr returnValue(
+        new  SFUnrecPerlinNoiseDistribution1DPtr::GetHandle(
+             &_sfPerlinDistribution,
+             this->getType().getFieldDesc(PerlinDistributionFieldId),
+             const_cast<TurbulenceParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TurbulenceParticleAffectorBase::editHandlePerlinDistribution(void)
+{
+    SFUnrecPerlinNoiseDistribution1DPtr::EditHandlePtr returnValue(
+        new  SFUnrecPerlinNoiseDistribution1DPtr::EditHandle(
+             &_sfPerlinDistribution,
+             this->getType().getFieldDesc(PerlinDistributionFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TurbulenceParticleAffector::setPerlinDistribution,
+                    static_cast<TurbulenceParticleAffector *>(this), _1));
+
+    editSField(PerlinDistributionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TurbulenceParticleAffectorBase::getHandleAmplitude       (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfAmplitude,
+             this->getType().getFieldDesc(AmplitudeFieldId),
+             const_cast<TurbulenceParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TurbulenceParticleAffectorBase::editHandleAmplitude      (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfAmplitude,
+             this->getType().getFieldDesc(AmplitudeFieldId),
+             this));
+
+
+    editSField(AmplitudeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TurbulenceParticleAffectorBase::getHandleInterpolationType (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfInterpolationType,
+             this->getType().getFieldDesc(InterpolationTypeFieldId),
+             const_cast<TurbulenceParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TurbulenceParticleAffectorBase::editHandleInterpolationType(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfInterpolationType,
+             this->getType().getFieldDesc(InterpolationTypeFieldId),
+             this));
+
+
+    editSField(InterpolationTypeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TurbulenceParticleAffectorBase::getHandlePhase           (void) const
+{
+    SFVec3f::GetHandlePtr returnValue(
+        new  SFVec3f::GetHandle(
+             &_sfPhase,
+             this->getType().getFieldDesc(PhaseFieldId),
+             const_cast<TurbulenceParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TurbulenceParticleAffectorBase::editHandlePhase          (void)
+{
+    SFVec3f::EditHandlePtr returnValue(
+        new  SFVec3f::EditHandle(
+             &_sfPhase,
+             this->getType().getFieldDesc(PhaseFieldId),
+             this));
+
+
+    editSField(PhaseFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TurbulenceParticleAffectorBase::getHandlePersistance     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfPersistance,
+             this->getType().getFieldDesc(PersistanceFieldId),
+             const_cast<TurbulenceParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TurbulenceParticleAffectorBase::editHandlePersistance    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfPersistance,
+             this->getType().getFieldDesc(PersistanceFieldId),
+             this));
+
+
+    editSField(PersistanceFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TurbulenceParticleAffectorBase::getHandleFrequency       (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfFrequency,
+             this->getType().getFieldDesc(FrequencyFieldId),
+             const_cast<TurbulenceParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TurbulenceParticleAffectorBase::editHandleFrequency      (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfFrequency,
+             this->getType().getFieldDesc(FrequencyFieldId),
+             this));
+
+
+    editSField(FrequencyFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TurbulenceParticleAffectorBase::getHandleOctaves         (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfOctaves,
+             this->getType().getFieldDesc(OctavesFieldId),
+             const_cast<TurbulenceParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TurbulenceParticleAffectorBase::editHandleOctaves        (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfOctaves,
+             this->getType().getFieldDesc(OctavesFieldId),
+             this));
+
+
+    editSField(OctavesFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TurbulenceParticleAffectorBase::getHandleBeacon          (void) const
+{
+    SFUnrecNodePtr::GetHandlePtr returnValue(
+        new  SFUnrecNodePtr::GetHandle(
+             &_sfBeacon,
+             this->getType().getFieldDesc(BeaconFieldId),
+             const_cast<TurbulenceParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TurbulenceParticleAffectorBase::editHandleBeacon         (void)
+{
+    SFUnrecNodePtr::EditHandlePtr returnValue(
+        new  SFUnrecNodePtr::EditHandle(
+             &_sfBeacon,
+             this->getType().getFieldDesc(BeaconFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TurbulenceParticleAffector::setBeacon,
+                    static_cast<TurbulenceParticleAffector *>(this), _1));
+
+    editSField(BeaconFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TurbulenceParticleAffectorBase::getHandleAttenuation     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfAttenuation,
+             this->getType().getFieldDesc(AttenuationFieldId),
+             const_cast<TurbulenceParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TurbulenceParticleAffectorBase::editHandleAttenuation    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfAttenuation,
+             this->getType().getFieldDesc(AttenuationFieldId),
+             this));
+
+
+    editSField(AttenuationFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TurbulenceParticleAffectorBase::getHandleMaxDistance     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMaxDistance,
+             this->getType().getFieldDesc(MaxDistanceFieldId),
+             const_cast<TurbulenceParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TurbulenceParticleAffectorBase::editHandleMaxDistance    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMaxDistance,
+             this->getType().getFieldDesc(MaxDistanceFieldId),
+             this));
+
+
+    editSField(MaxDistanceFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void TurbulenceParticleAffectorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    TurbulenceParticleAffector *pThis = static_cast<TurbulenceParticleAffector *>(this);
+
+    pThis->execSync(static_cast<TurbulenceParticleAffector *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *TurbulenceParticleAffectorBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    TurbulenceParticleAffector *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const TurbulenceParticleAffector *>(pRefAspect),
+                  dynamic_cast<const TurbulenceParticleAffector *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TurbulenceParticleAffectorPtr>::_type("TurbulenceParticleAffectorPtr", "ParticleAffectorPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(TurbulenceParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(TurbulenceParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+void TurbulenceParticleAffectorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<TurbulenceParticleAffector *>(this)->setPerlinDistribution(NULL);
+
+    static_cast<TurbulenceParticleAffector *>(this)->setBeacon(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-

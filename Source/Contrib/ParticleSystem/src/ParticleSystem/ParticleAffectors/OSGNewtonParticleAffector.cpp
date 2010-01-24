@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                 Authors: David Kabala , Daniel Guilliams                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,27 +40,23 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGMatrix.h>
-#include <OpenSG/OSGQuaternion.h>
+#include <OSGConfig.h>
 
 #include "OSGNewtonParticleAffector.h"
-#include "ParticleSystem/OSGParticleSystem.h"
+#include "OSGMatrix.h"
+#include "OSGQuaternion.h"
+
+#include "OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::NewtonParticleAffector
-
-*/
+// Documentation for this class is emitted in the
+// OSGNewtonParticleAffectorBase.cpp file.
+// To modify it, please change the .fcd file (OSGNewtonParticleAffector.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -70,8 +66,13 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void NewtonParticleAffector::initMethod (void)
+void NewtonParticleAffector::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -79,35 +80,37 @@ void NewtonParticleAffector::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool NewtonParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps)
+bool NewtonParticleAffector::affect(ParticleSystemRefPtr System, Int32 ParticleIndex, const Time& elps)
 {
-		// getting affector's translation.  No affect is applied if the beacon cannot be found
-	if(getBeacon() != NullFC)
-	{
-		Matrix BeaconToWorld(getBeacon()->getToWorld());
-		Vec3f translation, tmp;
-		Quaternion tmp2;
-		BeaconToWorld.getTransform(translation,tmp2,tmp,tmp2);
+    // getting affector's translation.  No affect is applied if the beacon cannot be found
+    if(getBeacon() != NULL)
+    {
+        Matrix BeaconToWorld(getBeacon()->getToWorld());
+        Vec3f translation, tmp;
+        Quaternion tmp2;
+        BeaconToWorld.getTransform(translation,tmp2,tmp,tmp2);
 
-		//distance from affector to particle
-		Pnt3f particlePos = System->getPosition(ParticleIndex);
-		Real32 distanceFromAffector = particlePos.dist(Pnt3f(translation.x(),translation.y(),translation.z())); 
+        //distance from affector to particle
+        Pnt3f particlePos = System->getPosition(ParticleIndex);
+        Real32 distanceFromAffector = particlePos.dist(Pnt3f(translation.x(),translation.y(),translation.z())); 
 
-		//only affect the particle if it is in range
-		if((getMaxDistance() < 0.0 && distanceFromAffector >= getMinDistance()) 
-			|| (distanceFromAffector <= getMaxDistance() && distanceFromAffector >= getMinDistance())) 
-		{	
-			// get direction from particle to the affector
-			Vec3f newtonianForce(particlePos.x() - translation.x(), particlePos.y() - translation.y(), particlePos.z() - translation.z());
-			newtonianForce.normalize();
-			// computing velocity change due to field
-			newtonianForce *= ((-getMagnitude()/getParticleMass()) * elps)/osg::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax());
-			// set new particle velocity
-			System->setVelocity(newtonianForce + System->getVelocity(ParticleIndex),ParticleIndex);
-		}
-	}
+        //only affect the particle if it is in range
+        if((getMaxDistance() < 0.0 && distanceFromAffector >= getMinDistance()) 
+           || (distanceFromAffector <= getMaxDistance() && distanceFromAffector >= getMinDistance())) 
+        {	
+            // get direction from particle to the affector
+            Vec3f newtonianForce(particlePos.x() - translation.x(), particlePos.y() - translation.y(), particlePos.z() - translation.z());
+            newtonianForce.normalize();
+            // computing velocity change due to field
+            newtonianForce = newtonianForce *
+                (((-getMagnitude()/getParticleMass()) *
+                  elps)/OSG::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax()));
+            // set new particle velocity
+            System->setVelocity(newtonianForce + System->getVelocity(ParticleIndex),ParticleIndex);
+        }
+    }
 
-	return false;
+    return false;
 }
 
 /*-------------------------------------------------------------------------*\
@@ -132,41 +135,17 @@ NewtonParticleAffector::~NewtonParticleAffector(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void NewtonParticleAffector::changed(BitVector whichField, UInt32 origin)
+void NewtonParticleAffector::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void NewtonParticleAffector::dump(      UInt32    , 
+void NewtonParticleAffector::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump NewtonParticleAffector NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGNEWTONPARTICLEAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGNEWTONPARTICLEAFFECTORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGNEWTONPARTICLEAFFECTORFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

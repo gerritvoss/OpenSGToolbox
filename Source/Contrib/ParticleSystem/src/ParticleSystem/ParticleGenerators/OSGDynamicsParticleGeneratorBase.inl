@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,404 +55,256 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &DynamicsParticleGeneratorBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 DynamicsParticleGeneratorBase::getClassTypeId(void) 
+OSG::UInt32 DynamicsParticleGeneratorBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
+    return _type.getId();
+}
 
+inline
+OSG::UInt16 DynamicsParticleGeneratorBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
+}
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the DynamicsParticleGenerator::_sfPositionDistribution field.
-inline
-const SFDistribution3DPtr *DynamicsParticleGeneratorBase::getSFPositionDistribution(void) const
-{
-    return &_sfPositionDistribution;
-}
-
-//! Get the DynamicsParticleGenerator::_sfPositionDistribution field.
-inline
-SFDistribution3DPtr *DynamicsParticleGeneratorBase::editSFPositionDistribution(void)
-{
-    return &_sfPositionDistribution;
-}
-
-//! Get the DynamicsParticleGenerator::_sfSecPositionDistribution field.
-inline
-const SFDistribution3DPtr *DynamicsParticleGeneratorBase::getSFSecPositionDistribution(void) const
-{
-    return &_sfSecPositionDistribution;
-}
-
-//! Get the DynamicsParticleGenerator::_sfSecPositionDistribution field.
-inline
-SFDistribution3DPtr *DynamicsParticleGeneratorBase::editSFSecPositionDistribution(void)
-{
-    return &_sfSecPositionDistribution;
-}
-
-//! Get the DynamicsParticleGenerator::_sfNormalDistribution field.
-inline
-const SFDistribution3DPtr *DynamicsParticleGeneratorBase::getSFNormalDistribution(void) const
-{
-    return &_sfNormalDistribution;
-}
-
-//! Get the DynamicsParticleGenerator::_sfNormalDistribution field.
-inline
-SFDistribution3DPtr *DynamicsParticleGeneratorBase::editSFNormalDistribution(void)
-{
-    return &_sfNormalDistribution;
-}
-
-//! Get the DynamicsParticleGenerator::_sfColorDistribution field.
-inline
-const SFDistribution3DPtr *DynamicsParticleGeneratorBase::getSFColorDistribution(void) const
-{
-    return &_sfColorDistribution;
-}
-
-//! Get the DynamicsParticleGenerator::_sfColorDistribution field.
-inline
-SFDistribution3DPtr *DynamicsParticleGeneratorBase::editSFColorDistribution(void)
-{
-    return &_sfColorDistribution;
-}
-
-//! Get the DynamicsParticleGenerator::_sfTransparencyDistribution field.
-inline
-const SFDistribution1DPtr *DynamicsParticleGeneratorBase::getSFTransparencyDistribution(void) const
-{
-    return &_sfTransparencyDistribution;
-}
-
-//! Get the DynamicsParticleGenerator::_sfTransparencyDistribution field.
-inline
-SFDistribution1DPtr *DynamicsParticleGeneratorBase::editSFTransparencyDistribution(void)
-{
-    return &_sfTransparencyDistribution;
-}
-
-//! Get the DynamicsParticleGenerator::_sfSizeDistribution field.
-inline
-const SFDistribution3DPtr *DynamicsParticleGeneratorBase::getSFSizeDistribution(void) const
-{
-    return &_sfSizeDistribution;
-}
-
-//! Get the DynamicsParticleGenerator::_sfSizeDistribution field.
-inline
-SFDistribution3DPtr *DynamicsParticleGeneratorBase::editSFSizeDistribution(void)
-{
-    return &_sfSizeDistribution;
-}
-
-//! Get the DynamicsParticleGenerator::_sfLifespanDistribution field.
-inline
-const SFDistribution1DPtr *DynamicsParticleGeneratorBase::getSFLifespanDistribution(void) const
-{
-    return &_sfLifespanDistribution;
-}
-
-//! Get the DynamicsParticleGenerator::_sfLifespanDistribution field.
-inline
-SFDistribution1DPtr *DynamicsParticleGeneratorBase::editSFLifespanDistribution(void)
-{
-    return &_sfLifespanDistribution;
-}
-
-//! Get the DynamicsParticleGenerator::_sfAgeDistribution field.
-inline
-const SFDistribution1DPtr *DynamicsParticleGeneratorBase::getSFAgeDistribution(void) const
-{
-    return &_sfAgeDistribution;
-}
-
-//! Get the DynamicsParticleGenerator::_sfAgeDistribution field.
-inline
-SFDistribution1DPtr *DynamicsParticleGeneratorBase::editSFAgeDistribution(void)
-{
-    return &_sfAgeDistribution;
-}
-
-//! Get the DynamicsParticleGenerator::_sfVelocityDistribution field.
-inline
-const SFDistribution3DPtr *DynamicsParticleGeneratorBase::getSFVelocityDistribution(void) const
-{
-    return &_sfVelocityDistribution;
-}
-
-//! Get the DynamicsParticleGenerator::_sfVelocityDistribution field.
-inline
-SFDistribution3DPtr *DynamicsParticleGeneratorBase::editSFVelocityDistribution(void)
-{
-    return &_sfVelocityDistribution;
-}
-
-//! Get the DynamicsParticleGenerator::_sfSecVelocityDistribution field.
-inline
-const SFDistribution3DPtr *DynamicsParticleGeneratorBase::getSFSecVelocityDistribution(void) const
-{
-    return &_sfSecVelocityDistribution;
-}
-
-//! Get the DynamicsParticleGenerator::_sfSecVelocityDistribution field.
-inline
-SFDistribution3DPtr *DynamicsParticleGeneratorBase::editSFSecVelocityDistribution(void)
-{
-    return &_sfSecVelocityDistribution;
-}
-
-//! Get the DynamicsParticleGenerator::_sfAccelerationDistribution field.
-inline
-const SFDistribution3DPtr *DynamicsParticleGeneratorBase::getSFAccelerationDistribution(void) const
-{
-    return &_sfAccelerationDistribution;
-}
-
-//! Get the DynamicsParticleGenerator::_sfAccelerationDistribution field.
-inline
-SFDistribution3DPtr *DynamicsParticleGeneratorBase::editSFAccelerationDistribution(void)
-{
-    return &_sfAccelerationDistribution;
-}
-
 
 //! Get the value of the DynamicsParticleGenerator::_sfPositionDistribution field.
 inline
-Distribution3DPtr &DynamicsParticleGeneratorBase::editPositionDistribution(void)
-{
-    return _sfPositionDistribution.getValue();
-}
-
-//! Get the value of the DynamicsParticleGenerator::_sfPositionDistribution field.
-inline
-const Distribution3DPtr &DynamicsParticleGeneratorBase::getPositionDistribution(void) const
+Distribution3D * DynamicsParticleGeneratorBase::getPositionDistribution(void) const
 {
     return _sfPositionDistribution.getValue();
 }
 
 //! Set the value of the DynamicsParticleGenerator::_sfPositionDistribution field.
 inline
-void DynamicsParticleGeneratorBase::setPositionDistribution(const Distribution3DPtr &value)
+void DynamicsParticleGeneratorBase::setPositionDistribution(Distribution3D * const value)
 {
+    editSField(PositionDistributionFieldMask);
+
     _sfPositionDistribution.setValue(value);
 }
 
 //! Get the value of the DynamicsParticleGenerator::_sfSecPositionDistribution field.
 inline
-Distribution3DPtr &DynamicsParticleGeneratorBase::editSecPositionDistribution(void)
-{
-    return _sfSecPositionDistribution.getValue();
-}
-
-//! Get the value of the DynamicsParticleGenerator::_sfSecPositionDistribution field.
-inline
-const Distribution3DPtr &DynamicsParticleGeneratorBase::getSecPositionDistribution(void) const
+Distribution3D * DynamicsParticleGeneratorBase::getSecPositionDistribution(void) const
 {
     return _sfSecPositionDistribution.getValue();
 }
 
 //! Set the value of the DynamicsParticleGenerator::_sfSecPositionDistribution field.
 inline
-void DynamicsParticleGeneratorBase::setSecPositionDistribution(const Distribution3DPtr &value)
+void DynamicsParticleGeneratorBase::setSecPositionDistribution(Distribution3D * const value)
 {
+    editSField(SecPositionDistributionFieldMask);
+
     _sfSecPositionDistribution.setValue(value);
 }
 
 //! Get the value of the DynamicsParticleGenerator::_sfNormalDistribution field.
 inline
-Distribution3DPtr &DynamicsParticleGeneratorBase::editNormalDistribution(void)
-{
-    return _sfNormalDistribution.getValue();
-}
-
-//! Get the value of the DynamicsParticleGenerator::_sfNormalDistribution field.
-inline
-const Distribution3DPtr &DynamicsParticleGeneratorBase::getNormalDistribution(void) const
+Distribution3D * DynamicsParticleGeneratorBase::getNormalDistribution(void) const
 {
     return _sfNormalDistribution.getValue();
 }
 
 //! Set the value of the DynamicsParticleGenerator::_sfNormalDistribution field.
 inline
-void DynamicsParticleGeneratorBase::setNormalDistribution(const Distribution3DPtr &value)
+void DynamicsParticleGeneratorBase::setNormalDistribution(Distribution3D * const value)
 {
+    editSField(NormalDistributionFieldMask);
+
     _sfNormalDistribution.setValue(value);
 }
 
 //! Get the value of the DynamicsParticleGenerator::_sfColorDistribution field.
 inline
-Distribution3DPtr &DynamicsParticleGeneratorBase::editColorDistribution(void)
-{
-    return _sfColorDistribution.getValue();
-}
-
-//! Get the value of the DynamicsParticleGenerator::_sfColorDistribution field.
-inline
-const Distribution3DPtr &DynamicsParticleGeneratorBase::getColorDistribution(void) const
+Distribution3D * DynamicsParticleGeneratorBase::getColorDistribution(void) const
 {
     return _sfColorDistribution.getValue();
 }
 
 //! Set the value of the DynamicsParticleGenerator::_sfColorDistribution field.
 inline
-void DynamicsParticleGeneratorBase::setColorDistribution(const Distribution3DPtr &value)
+void DynamicsParticleGeneratorBase::setColorDistribution(Distribution3D * const value)
 {
+    editSField(ColorDistributionFieldMask);
+
     _sfColorDistribution.setValue(value);
 }
 
 //! Get the value of the DynamicsParticleGenerator::_sfTransparencyDistribution field.
 inline
-Distribution1DPtr &DynamicsParticleGeneratorBase::editTransparencyDistribution(void)
-{
-    return _sfTransparencyDistribution.getValue();
-}
-
-//! Get the value of the DynamicsParticleGenerator::_sfTransparencyDistribution field.
-inline
-const Distribution1DPtr &DynamicsParticleGeneratorBase::getTransparencyDistribution(void) const
+Distribution1D * DynamicsParticleGeneratorBase::getTransparencyDistribution(void) const
 {
     return _sfTransparencyDistribution.getValue();
 }
 
 //! Set the value of the DynamicsParticleGenerator::_sfTransparencyDistribution field.
 inline
-void DynamicsParticleGeneratorBase::setTransparencyDistribution(const Distribution1DPtr &value)
+void DynamicsParticleGeneratorBase::setTransparencyDistribution(Distribution1D * const value)
 {
+    editSField(TransparencyDistributionFieldMask);
+
     _sfTransparencyDistribution.setValue(value);
 }
 
 //! Get the value of the DynamicsParticleGenerator::_sfSizeDistribution field.
 inline
-Distribution3DPtr &DynamicsParticleGeneratorBase::editSizeDistribution(void)
-{
-    return _sfSizeDistribution.getValue();
-}
-
-//! Get the value of the DynamicsParticleGenerator::_sfSizeDistribution field.
-inline
-const Distribution3DPtr &DynamicsParticleGeneratorBase::getSizeDistribution(void) const
+Distribution3D * DynamicsParticleGeneratorBase::getSizeDistribution(void) const
 {
     return _sfSizeDistribution.getValue();
 }
 
 //! Set the value of the DynamicsParticleGenerator::_sfSizeDistribution field.
 inline
-void DynamicsParticleGeneratorBase::setSizeDistribution(const Distribution3DPtr &value)
+void DynamicsParticleGeneratorBase::setSizeDistribution(Distribution3D * const value)
 {
+    editSField(SizeDistributionFieldMask);
+
     _sfSizeDistribution.setValue(value);
 }
 
 //! Get the value of the DynamicsParticleGenerator::_sfLifespanDistribution field.
 inline
-Distribution1DPtr &DynamicsParticleGeneratorBase::editLifespanDistribution(void)
-{
-    return _sfLifespanDistribution.getValue();
-}
-
-//! Get the value of the DynamicsParticleGenerator::_sfLifespanDistribution field.
-inline
-const Distribution1DPtr &DynamicsParticleGeneratorBase::getLifespanDistribution(void) const
+Distribution1D * DynamicsParticleGeneratorBase::getLifespanDistribution(void) const
 {
     return _sfLifespanDistribution.getValue();
 }
 
 //! Set the value of the DynamicsParticleGenerator::_sfLifespanDistribution field.
 inline
-void DynamicsParticleGeneratorBase::setLifespanDistribution(const Distribution1DPtr &value)
+void DynamicsParticleGeneratorBase::setLifespanDistribution(Distribution1D * const value)
 {
+    editSField(LifespanDistributionFieldMask);
+
     _sfLifespanDistribution.setValue(value);
 }
 
 //! Get the value of the DynamicsParticleGenerator::_sfAgeDistribution field.
 inline
-Distribution1DPtr &DynamicsParticleGeneratorBase::editAgeDistribution(void)
-{
-    return _sfAgeDistribution.getValue();
-}
-
-//! Get the value of the DynamicsParticleGenerator::_sfAgeDistribution field.
-inline
-const Distribution1DPtr &DynamicsParticleGeneratorBase::getAgeDistribution(void) const
+Distribution1D * DynamicsParticleGeneratorBase::getAgeDistribution(void) const
 {
     return _sfAgeDistribution.getValue();
 }
 
 //! Set the value of the DynamicsParticleGenerator::_sfAgeDistribution field.
 inline
-void DynamicsParticleGeneratorBase::setAgeDistribution(const Distribution1DPtr &value)
+void DynamicsParticleGeneratorBase::setAgeDistribution(Distribution1D * const value)
 {
+    editSField(AgeDistributionFieldMask);
+
     _sfAgeDistribution.setValue(value);
 }
 
 //! Get the value of the DynamicsParticleGenerator::_sfVelocityDistribution field.
 inline
-Distribution3DPtr &DynamicsParticleGeneratorBase::editVelocityDistribution(void)
-{
-    return _sfVelocityDistribution.getValue();
-}
-
-//! Get the value of the DynamicsParticleGenerator::_sfVelocityDistribution field.
-inline
-const Distribution3DPtr &DynamicsParticleGeneratorBase::getVelocityDistribution(void) const
+Distribution3D * DynamicsParticleGeneratorBase::getVelocityDistribution(void) const
 {
     return _sfVelocityDistribution.getValue();
 }
 
 //! Set the value of the DynamicsParticleGenerator::_sfVelocityDistribution field.
 inline
-void DynamicsParticleGeneratorBase::setVelocityDistribution(const Distribution3DPtr &value)
+void DynamicsParticleGeneratorBase::setVelocityDistribution(Distribution3D * const value)
 {
+    editSField(VelocityDistributionFieldMask);
+
     _sfVelocityDistribution.setValue(value);
 }
 
 //! Get the value of the DynamicsParticleGenerator::_sfSecVelocityDistribution field.
 inline
-Distribution3DPtr &DynamicsParticleGeneratorBase::editSecVelocityDistribution(void)
-{
-    return _sfSecVelocityDistribution.getValue();
-}
-
-//! Get the value of the DynamicsParticleGenerator::_sfSecVelocityDistribution field.
-inline
-const Distribution3DPtr &DynamicsParticleGeneratorBase::getSecVelocityDistribution(void) const
+Distribution3D * DynamicsParticleGeneratorBase::getSecVelocityDistribution(void) const
 {
     return _sfSecVelocityDistribution.getValue();
 }
 
 //! Set the value of the DynamicsParticleGenerator::_sfSecVelocityDistribution field.
 inline
-void DynamicsParticleGeneratorBase::setSecVelocityDistribution(const Distribution3DPtr &value)
+void DynamicsParticleGeneratorBase::setSecVelocityDistribution(Distribution3D * const value)
 {
+    editSField(SecVelocityDistributionFieldMask);
+
     _sfSecVelocityDistribution.setValue(value);
 }
 
 //! Get the value of the DynamicsParticleGenerator::_sfAccelerationDistribution field.
 inline
-Distribution3DPtr &DynamicsParticleGeneratorBase::editAccelerationDistribution(void)
-{
-    return _sfAccelerationDistribution.getValue();
-}
-
-//! Get the value of the DynamicsParticleGenerator::_sfAccelerationDistribution field.
-inline
-const Distribution3DPtr &DynamicsParticleGeneratorBase::getAccelerationDistribution(void) const
+Distribution3D * DynamicsParticleGeneratorBase::getAccelerationDistribution(void) const
 {
     return _sfAccelerationDistribution.getValue();
 }
 
 //! Set the value of the DynamicsParticleGenerator::_sfAccelerationDistribution field.
 inline
-void DynamicsParticleGeneratorBase::setAccelerationDistribution(const Distribution3DPtr &value)
+void DynamicsParticleGeneratorBase::setAccelerationDistribution(Distribution3D * const value)
 {
+    editSField(AccelerationDistributionFieldMask);
+
     _sfAccelerationDistribution.setValue(value);
 }
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void DynamicsParticleGeneratorBase::execSync (      DynamicsParticleGeneratorBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (PositionDistributionFieldMask & whichField))
+        _sfPositionDistribution.syncWith(pFrom->_sfPositionDistribution);
+
+    if(FieldBits::NoField != (SecPositionDistributionFieldMask & whichField))
+        _sfSecPositionDistribution.syncWith(pFrom->_sfSecPositionDistribution);
+
+    if(FieldBits::NoField != (NormalDistributionFieldMask & whichField))
+        _sfNormalDistribution.syncWith(pFrom->_sfNormalDistribution);
+
+    if(FieldBits::NoField != (ColorDistributionFieldMask & whichField))
+        _sfColorDistribution.syncWith(pFrom->_sfColorDistribution);
+
+    if(FieldBits::NoField != (TransparencyDistributionFieldMask & whichField))
+        _sfTransparencyDistribution.syncWith(pFrom->_sfTransparencyDistribution);
+
+    if(FieldBits::NoField != (SizeDistributionFieldMask & whichField))
+        _sfSizeDistribution.syncWith(pFrom->_sfSizeDistribution);
+
+    if(FieldBits::NoField != (LifespanDistributionFieldMask & whichField))
+        _sfLifespanDistribution.syncWith(pFrom->_sfLifespanDistribution);
+
+    if(FieldBits::NoField != (AgeDistributionFieldMask & whichField))
+        _sfAgeDistribution.syncWith(pFrom->_sfAgeDistribution);
+
+    if(FieldBits::NoField != (VelocityDistributionFieldMask & whichField))
+        _sfVelocityDistribution.syncWith(pFrom->_sfVelocityDistribution);
+
+    if(FieldBits::NoField != (SecVelocityDistributionFieldMask & whichField))
+        _sfSecVelocityDistribution.syncWith(pFrom->_sfSecVelocityDistribution);
+
+    if(FieldBits::NoField != (AccelerationDistributionFieldMask & whichField))
+        _sfAccelerationDistribution.syncWith(pFrom->_sfAccelerationDistribution);
+}
+#endif
+
+
+inline
+const Char8 *DynamicsParticleGeneratorBase::getClassname(void)
+{
+    return "DynamicsParticleGenerator";
+}
+
+
+OSG_GEN_CONTAINERPTR(DynamicsParticleGenerator);
+
 OSG_END_NAMESPACE
+

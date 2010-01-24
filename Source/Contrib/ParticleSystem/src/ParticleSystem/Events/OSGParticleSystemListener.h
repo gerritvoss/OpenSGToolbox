@@ -31,25 +31,25 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/Toolbox/OSGEventListener.h>
+#include "OSGEventListener.h"
 #include "OSGParticleSystemEvent.h"
 #include "OSGParticleEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemListener : public EventListener
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemListener : public EventListener
 {
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void systemUpdated(const ParticleSystemEventPtr e) = 0;
-   virtual void volumeChanged(const ParticleSystemEventPtr e) = 0;
-   virtual void particleGenerated(const ParticleEventPtr e) = 0;
-   virtual void particleKilled(const ParticleEventPtr e) = 0;
-   virtual void particleStolen(const ParticleEventPtr e) = 0;
+   virtual void systemUpdated(const ParticleSystemEventUnrecPtr e) = 0;
+   virtual void volumeChanged(const ParticleSystemEventUnrecPtr e) = 0;
+   virtual void particleGenerated(const ParticleEventUnrecPtr e) = 0;
+   virtual void particleKilled(const ParticleEventUnrecPtr e) = 0;
+   virtual void particleStolen(const ParticleEventUnrecPtr e) = 0;
 };
 
 typedef ParticleSystemListener* ParticleSystemListenerPtr;

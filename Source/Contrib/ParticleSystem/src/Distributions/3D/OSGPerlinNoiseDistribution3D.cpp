@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Dynamics                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGPerlinNoiseDistribution3D.h"
-#include <OpenSG/Toolbox/OSGPerlinNoise.h>
+#include "OSGPerlinNoise.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::PerlinNoiseDistribution3D
-A PerlinNoiseDistribution3D. 	
-*/
+// Documentation for this class is emitted in the
+// OSGPerlinNoiseDistribution3DBase.cpp file.
+// To modify it, please change the .fcd file (OSGPerlinNoiseDistribution3D.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -68,9 +63,19 @@ A PerlinNoiseDistribution3D.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void PerlinNoiseDistribution3D::initMethod (void)
+void PerlinNoiseDistribution3D::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
+
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
 
 Vec3f PerlinNoiseDistribution3D::generate(void) const
 {
@@ -81,10 +86,6 @@ Real32 PerlinNoiseDistribution3D::generate(Pnt3f t) const
 {
 	return calcPerlinNoise(t,getAmplitude(),getFrequency(),getPhase(),getPersistance(),getOctaves(),getInterpolationType(),getUseSmoothing());
 }
-
-/***************************************************************************\
- *                           Instance methods                              *
-\***************************************************************************/
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -108,16 +109,17 @@ PerlinNoiseDistribution3D::~PerlinNoiseDistribution3D(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void PerlinNoiseDistribution3D::changed(BitVector whichField, UInt32 origin)
+void PerlinNoiseDistribution3D::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void PerlinNoiseDistribution3D::dump(      UInt32    , 
+void PerlinNoiseDistribution3D::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump PerlinNoiseDistribution3D NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

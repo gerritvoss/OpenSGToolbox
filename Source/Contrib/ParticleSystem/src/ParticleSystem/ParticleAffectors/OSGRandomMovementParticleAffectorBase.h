@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,82 +58,99 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGParticleAffector.h" // Parent
 
-#include <OpenSG/OSGUInt32Fields.h> // AttributeAffected type
-#include "Distributions/1D/OSGPerlinNoiseDistribution1DFields.h" // PerlinDistribution type
-#include <OpenSG/OSGReal32Fields.h> // Amplitude type
-#include <OpenSG/OSGUInt32Fields.h> // InterpolationType type
-#include <OpenSG/OSGVec3fFields.h> // Phase type
-#include <OpenSG/OSGReal32Fields.h> // Persistance type
-#include <OpenSG/OSGReal32Fields.h> // Frequency type
-#include <OpenSG/OSGUInt32Fields.h> // Octaves type
+#include "OSGSysFields.h"               // AttributeAffected type
+#include "OSGPerlinNoiseDistribution1DFields.h" // PerlinDistribution type
+#include "OSGVecFields.h"               // Phase type
 
 #include "OSGRandomMovementParticleAffectorFields.h"
+
+
 OSG_BEGIN_NAMESPACE
 
 class RandomMovementParticleAffector;
-class BinaryDataHandler;
 
 //! \brief RandomMovementParticleAffector Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING RandomMovementParticleAffectorBase : public ParticleAffector
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING RandomMovementParticleAffectorBase : public ParticleAffector
 {
-  private:
-
-    typedef ParticleAffector    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef RandomMovementParticleAffectorPtr  Ptr;
+    typedef ParticleAffector Inherited;
+    typedef ParticleAffector ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(RandomMovementParticleAffector);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        AttributeAffectedFieldId  = Inherited::NextFieldId,
-        PerlinDistributionFieldId = AttributeAffectedFieldId  + 1,
-        AmplitudeFieldId          = PerlinDistributionFieldId + 1,
-        InterpolationTypeFieldId  = AmplitudeFieldId          + 1,
-        PhaseFieldId              = InterpolationTypeFieldId  + 1,
-        PersistanceFieldId        = PhaseFieldId              + 1,
-        FrequencyFieldId          = PersistanceFieldId        + 1,
-        OctavesFieldId            = FrequencyFieldId          + 1,
-        NextFieldId               = OctavesFieldId            + 1
+        AttributeAffectedFieldId = Inherited::NextFieldId,
+        PerlinDistributionFieldId = AttributeAffectedFieldId + 1,
+        AmplitudeFieldId = PerlinDistributionFieldId + 1,
+        InterpolationTypeFieldId = AmplitudeFieldId + 1,
+        PhaseFieldId = InterpolationTypeFieldId + 1,
+        PersistanceFieldId = PhaseFieldId + 1,
+        FrequencyFieldId = PersistanceFieldId + 1,
+        OctavesFieldId = FrequencyFieldId + 1,
+        NextFieldId = OctavesFieldId + 1
     };
 
-    static const OSG::BitVector AttributeAffectedFieldMask;
-    static const OSG::BitVector PerlinDistributionFieldMask;
-    static const OSG::BitVector AmplitudeFieldMask;
-    static const OSG::BitVector InterpolationTypeFieldMask;
-    static const OSG::BitVector PhaseFieldMask;
-    static const OSG::BitVector PersistanceFieldMask;
-    static const OSG::BitVector FrequencyFieldMask;
-    static const OSG::BitVector OctavesFieldMask;
+    static const OSG::BitVector AttributeAffectedFieldMask =
+        (TypeTraits<BitVector>::One << AttributeAffectedFieldId);
+    static const OSG::BitVector PerlinDistributionFieldMask =
+        (TypeTraits<BitVector>::One << PerlinDistributionFieldId);
+    static const OSG::BitVector AmplitudeFieldMask =
+        (TypeTraits<BitVector>::One << AmplitudeFieldId);
+    static const OSG::BitVector InterpolationTypeFieldMask =
+        (TypeTraits<BitVector>::One << InterpolationTypeFieldId);
+    static const OSG::BitVector PhaseFieldMask =
+        (TypeTraits<BitVector>::One << PhaseFieldId);
+    static const OSG::BitVector PersistanceFieldMask =
+        (TypeTraits<BitVector>::One << PersistanceFieldId);
+    static const OSG::BitVector FrequencyFieldMask =
+        (TypeTraits<BitVector>::One << FrequencyFieldId);
+    static const OSG::BitVector OctavesFieldMask =
+        (TypeTraits<BitVector>::One << OctavesFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUInt32          SFAttributeAffectedType;
+    typedef SFUnrecPerlinNoiseDistribution1DPtr SFPerlinDistributionType;
+    typedef SFReal32          SFAmplitudeType;
+    typedef SFUInt32          SFInterpolationTypeType;
+    typedef SFVec3f           SFPhaseType;
+    typedef SFReal32          SFPersistanceType;
+    typedef SFReal32          SFFrequencyType;
+    typedef SFUInt32          SFOctavesType;
 
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -143,66 +160,70 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RandomMovementParticleAffectorBase : publ
     /*! \{                                                                 */
 
 
-           SFUInt32            *editSFAttributeAffected(void);
-     const SFUInt32            *getSFAttributeAffected(void) const;
+                  SFUInt32            *editSFAttributeAffected(void);
+            const SFUInt32            *getSFAttributeAffected (void) const;
 
-           SFReal32            *editSFAmplitude      (void);
-     const SFReal32            *getSFAmplitude      (void) const;
+                  SFReal32            *editSFAmplitude      (void);
+            const SFReal32            *getSFAmplitude       (void) const;
 
-           SFUInt32            *editSFInterpolationType(void);
-     const SFUInt32            *getSFInterpolationType(void) const;
+                  SFUInt32            *editSFInterpolationType(void);
+            const SFUInt32            *getSFInterpolationType (void) const;
 
-           SFVec3f             *editSFPhase          (void);
-     const SFVec3f             *getSFPhase          (void) const;
+                  SFVec3f             *editSFPhase          (void);
+            const SFVec3f             *getSFPhase           (void) const;
 
-           SFReal32            *editSFPersistance    (void);
-     const SFReal32            *getSFPersistance    (void) const;
+                  SFReal32            *editSFPersistance    (void);
+            const SFReal32            *getSFPersistance     (void) const;
 
-           SFReal32            *editSFFrequency      (void);
-     const SFReal32            *getSFFrequency      (void) const;
+                  SFReal32            *editSFFrequency      (void);
+            const SFReal32            *getSFFrequency       (void) const;
 
-           SFUInt32            *editSFOctaves        (void);
-     const SFUInt32            *getSFOctaves        (void) const;
-
-
-           UInt32              &editAttributeAffected(void);
-     const UInt32              &getAttributeAffected(void) const;
+                  SFUInt32            *editSFOctaves        (void);
+            const SFUInt32            *getSFOctaves         (void) const;
 
 
-           Real32              &editAmplitude      (void);
-     const Real32              &getAmplitude      (void) const;
+                  UInt32              &editAttributeAffected(void);
+                  UInt32               getAttributeAffected (void) const;
 
-           UInt32              &editInterpolationType(void);
-     const UInt32              &getInterpolationType(void) const;
+                  Real32              &editAmplitude      (void);
+                  Real32               getAmplitude       (void) const;
 
-           Vec3f               &editPhase          (void);
-     const Vec3f               &getPhase          (void) const;
+                  UInt32              &editInterpolationType(void);
+                  UInt32               getInterpolationType (void) const;
 
-           Real32              &editPersistance    (void);
-     const Real32              &getPersistance    (void) const;
+                  Vec3f               &editPhase          (void);
+            const Vec3f               &getPhase           (void) const;
 
-           Real32              &editFrequency      (void);
-     const Real32              &getFrequency      (void) const;
+                  Real32              &editPersistance    (void);
+                  Real32               getPersistance     (void) const;
 
-           UInt32              &editOctaves        (void);
-     const UInt32              &getOctaves        (void) const;
+                  Real32              &editFrequency      (void);
+                  Real32               getFrequency       (void) const;
+
+                  UInt32              &editOctaves        (void);
+                  UInt32               getOctaves         (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setAttributeAffected( const UInt32 &value );
-     void setAmplitude      ( const Real32 &value );
-     void setInterpolationType( const UInt32 &value );
-     void setPhase          ( const Vec3f &value );
-     void setPersistance    ( const Real32 &value );
-     void setFrequency      ( const Real32 &value );
-     void setOctaves        ( const UInt32 &value );
+            void setAttributeAffected(const UInt32 value);
+            void setAmplitude      (const Real32 value);
+            void setInterpolationType(const UInt32 value);
+            void setPhase          (const Vec3f &value);
+            void setPersistance    (const Real32 value);
+            void setFrequency      (const Real32 value);
+            void setOctaves        (const UInt32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -210,45 +231,63 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RandomMovementParticleAffectorBase : publ
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  RandomMovementParticleAffectorPtr      create          (void); 
-    static  RandomMovementParticleAffectorPtr      createEmpty     (void); 
+    static  RandomMovementParticleAffectorTransitPtr  create          (void);
+    static  RandomMovementParticleAffector           *createEmpty     (void);
+
+    static  RandomMovementParticleAffectorTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  RandomMovementParticleAffector            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  RandomMovementParticleAffectorTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUInt32            _sfAttributeAffected;
-    SFPerlinNoiseDistribution1DPtr   _sfPerlinDistribution;
-    SFReal32            _sfAmplitude;
-    SFUInt32            _sfInterpolationType;
-    SFVec3f             _sfPhase;
-    SFReal32            _sfPersistance;
-    SFReal32            _sfFrequency;
-    SFUInt32            _sfOctaves;
+    SFUInt32          _sfAttributeAffected;
+    SFUnrecPerlinNoiseDistribution1DPtr _sfPerlinDistribution;
+    SFReal32          _sfAmplitude;
+    SFUInt32          _sfInterpolationType;
+    SFVec3f           _sfPhase;
+    SFReal32          _sfPersistance;
+    SFReal32          _sfFrequency;
+    SFUInt32          _sfOctaves;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -263,84 +302,116 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RandomMovementParticleAffectorBase : publ
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~RandomMovementParticleAffectorBase(void); 
+    virtual ~RandomMovementParticleAffectorBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const RandomMovementParticleAffector *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleAttributeAffected (void) const;
+    EditFieldHandlePtr editHandleAttributeAffected(void);
+    GetFieldHandlePtr  getHandlePerlinDistribution (void) const;
+    EditFieldHandlePtr editHandlePerlinDistribution(void);
+    GetFieldHandlePtr  getHandleAmplitude       (void) const;
+    EditFieldHandlePtr editHandleAmplitude      (void);
+    GetFieldHandlePtr  getHandleInterpolationType (void) const;
+    EditFieldHandlePtr editHandleInterpolationType(void);
+    GetFieldHandlePtr  getHandlePhase           (void) const;
+    EditFieldHandlePtr editHandlePhase          (void);
+    GetFieldHandlePtr  getHandlePersistance     (void) const;
+    EditFieldHandlePtr editHandlePersistance    (void);
+    GetFieldHandlePtr  getHandleFrequency       (void) const;
+    EditFieldHandlePtr editHandleFrequency      (void);
+    GetFieldHandlePtr  getHandleOctaves         (void) const;
+    EditFieldHandlePtr editHandleOctaves        (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFPerlinNoiseDistribution1DPtr *editSFPerlinDistribution(void);
-     const SFPerlinNoiseDistribution1DPtr *getSFPerlinDistribution(void) const;
+            const SFUnrecPerlinNoiseDistribution1DPtr *getSFPerlinDistribution (void) const;
+                  SFUnrecPerlinNoiseDistribution1DPtr *editSFPerlinDistribution(void);
 
-           PerlinNoiseDistribution1DPtr &editPerlinDistribution(void);
-     const PerlinNoiseDistribution1DPtr &getPerlinDistribution(void) const;
+
+                  PerlinNoiseDistribution1D * getPerlinDistribution(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setPerlinDistribution(const PerlinNoiseDistribution1DPtr &value);
+            void setPerlinDistribution(PerlinNoiseDistribution1D * const value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      RandomMovementParticleAffectorBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      RandomMovementParticleAffectorBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      RandomMovementParticleAffectorBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const RandomMovementParticleAffectorBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef RandomMovementParticleAffectorBase *RandomMovementParticleAffectorBaseP;
-
-typedef osgIF<RandomMovementParticleAffectorBase::isNodeCore,
-              CoredNodePtr<RandomMovementParticleAffector>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet RandomMovementParticleAffectorNodePtr;
-
-typedef RefPtr<RandomMovementParticleAffectorPtr> RandomMovementParticleAffectorRefPtr;
 
 OSG_END_NAMESPACE
 

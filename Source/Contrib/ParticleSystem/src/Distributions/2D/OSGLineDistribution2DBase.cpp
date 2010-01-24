@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,156 +50,207 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILELINEDISTRIBUTION2DINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGLineDistribution2DBase.h"
 #include "OSGLineDistribution2D.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  LineDistribution2DBase::Point1FieldMask = 
-    (TypeTraits<BitVector>::One << LineDistribution2DBase::Point1FieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  LineDistribution2DBase::Point2FieldMask = 
-    (TypeTraits<BitVector>::One << LineDistribution2DBase::Point2FieldId);
+/*! \class OSG::LineDistribution2D
+    An LineDistribution2D.
+ */
 
-const OSG::BitVector LineDistribution2DBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Pnt2f           LineDistribution2DBase::_sfPoint1
     
 */
+
 /*! \var Pnt2f           LineDistribution2DBase::_sfPoint2
     
 */
 
-//! LineDistribution2D description
 
-FieldDescription *LineDistribution2DBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<LineDistribution2D *>::_type("LineDistribution2DPtr", "Distribution2DPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(LineDistribution2D *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           LineDistribution2D *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           LineDistribution2D *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void LineDistribution2DBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFPnt2f::getClassType(), 
-                     "Point1", 
-                     Point1FieldId, Point1FieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&LineDistribution2DBase::editSFPoint1)),
-    new FieldDescription(SFPnt2f::getClassType(), 
-                     "Point2", 
-                     Point2FieldId, Point2FieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&LineDistribution2DBase::editSFPoint2))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType LineDistribution2DBase::_type(
-    "LineDistribution2D",
-    "Distribution2D",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&LineDistribution2DBase::createEmpty),
+    pDesc = new SFPnt2f::Description(
+        SFPnt2f::getClassType(),
+        "Point1",
+        "",
+        Point1FieldId, Point1FieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&LineDistribution2D::editHandlePoint1),
+        static_cast<FieldGetMethodSig >(&LineDistribution2D::getHandlePoint1));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFPnt2f::Description(
+        SFPnt2f::getClassType(),
+        "Point2",
+        "",
+        Point2FieldId, Point2FieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&LineDistribution2D::editHandlePoint2),
+        static_cast<FieldGetMethodSig >(&LineDistribution2D::getHandlePoint2));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+LineDistribution2DBase::TypeObject LineDistribution2DBase::_type(
+    LineDistribution2DBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&LineDistribution2DBase::createEmptyLocal),
     LineDistribution2D::initMethod,
-    _desc,
-    sizeof(_desc));
+    LineDistribution2D::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&LineDistribution2D::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"LineDistribution2D\"\n"
+    "\tparent=\"Distribution2D\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "An LineDistribution2D.\n"
+    "\t<Field\n"
+    "\t\tname=\"Point1\"\n"
+    "\t\ttype=\"Pnt2f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Point2\"\n"
+    "\t\ttype=\"Pnt2f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "An LineDistribution2D.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(LineDistribution2DBase, LineDistribution2DPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &LineDistribution2DBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &LineDistribution2DBase::getType(void) const 
+FieldContainerType &LineDistribution2DBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr LineDistribution2DBase::shallowCopy(void) const 
-{ 
-    LineDistribution2DPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const LineDistribution2D *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 LineDistribution2DBase::getContainerSize(void) const 
-{ 
-    return sizeof(LineDistribution2D); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void LineDistribution2DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &LineDistribution2DBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<LineDistribution2DBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void LineDistribution2DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 LineDistribution2DBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((LineDistribution2DBase *) &other, whichField, sInfo);
+    return sizeof(LineDistribution2D);
 }
-void LineDistribution2DBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFPnt2f *LineDistribution2DBase::editSFPoint1(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(Point1FieldMask);
+
+    return &_sfPoint1;
 }
 
-void LineDistribution2DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFPnt2f *LineDistribution2DBase::getSFPoint1(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfPoint1;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-LineDistribution2DBase::LineDistribution2DBase(void) :
-    _sfPoint1                 (Pnt2f(0.0,0.0)), 
-    _sfPoint2                 (Pnt2f(1.0,1.0)), 
-    Inherited() 
+SFPnt2f *LineDistribution2DBase::editSFPoint2(void)
 {
+    editSField(Point2FieldMask);
+
+    return &_sfPoint2;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-LineDistribution2DBase::LineDistribution2DBase(const LineDistribution2DBase &source) :
-    _sfPoint1                 (source._sfPoint1                 ), 
-    _sfPoint2                 (source._sfPoint2                 ), 
-    Inherited                 (source)
+const SFPnt2f *LineDistribution2DBase::getSFPoint2(void) const
 {
+    return &_sfPoint2;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-LineDistribution2DBase::~LineDistribution2DBase(void)
-{
-}
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 LineDistribution2DBase::getBinSize(const BitVector &whichField)
+UInt32 LineDistribution2DBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -207,18 +258,16 @@ UInt32 LineDistribution2DBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfPoint1.getBinSize();
     }
-
     if(FieldBits::NoField != (Point2FieldMask & whichField))
     {
         returnValue += _sfPoint2.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void LineDistribution2DBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void LineDistribution2DBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -226,17 +275,14 @@ void LineDistribution2DBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfPoint1.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (Point2FieldMask & whichField))
     {
         _sfPoint2.copyToBin(pMem);
     }
-
-
 }
 
-void LineDistribution2DBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void LineDistribution2DBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -244,73 +290,244 @@ void LineDistribution2DBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfPoint1.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (Point2FieldMask & whichField))
     {
         _sfPoint2.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void LineDistribution2DBase::executeSyncImpl(      LineDistribution2DBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+LineDistribution2DTransitPtr LineDistribution2DBase::createLocal(BitVector bFlags)
 {
+    LineDistribution2DTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (Point1FieldMask & whichField))
-        _sfPoint1.syncWith(pOther->_sfPoint1);
+        fc = dynamic_pointer_cast<LineDistribution2D>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (Point2FieldMask & whichField))
-        _sfPoint2.syncWith(pOther->_sfPoint2);
-
-
-}
-#else
-void LineDistribution2DBase::executeSyncImpl(      LineDistribution2DBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (Point1FieldMask & whichField))
-        _sfPoint1.syncWith(pOther->_sfPoint1);
-
-    if(FieldBits::NoField != (Point2FieldMask & whichField))
-        _sfPoint2.syncWith(pOther->_sfPoint2);
-
-
-
+    return fc;
 }
 
-void LineDistribution2DBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+LineDistribution2DTransitPtr LineDistribution2DBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    LineDistribution2DTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<LineDistribution2D>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+LineDistribution2DTransitPtr LineDistribution2DBase::create(void)
+{
+    LineDistribution2DTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<LineDistribution2D>(tmpPtr);
+    }
+
+    return fc;
+}
+
+LineDistribution2D *LineDistribution2DBase::createEmptyLocal(BitVector bFlags)
+{
+    LineDistribution2D *returnValue;
+
+    newPtr<LineDistribution2D>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+LineDistribution2D *LineDistribution2DBase::createEmpty(void)
+{
+    LineDistribution2D *returnValue;
+
+    newPtr<LineDistribution2D>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr LineDistribution2DBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    LineDistribution2D *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const LineDistribution2D *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr LineDistribution2DBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    LineDistribution2D *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const LineDistribution2D *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr LineDistribution2DBase::shallowCopy(void) const
+{
+    LineDistribution2D *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const LineDistribution2D *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+LineDistribution2DBase::LineDistribution2DBase(void) :
+    Inherited(),
+    _sfPoint1                 (Pnt2f(0.0,0.0)),
+    _sfPoint2                 (Pnt2f(1.0,1.0))
+{
+}
+
+LineDistribution2DBase::LineDistribution2DBase(const LineDistribution2DBase &source) :
+    Inherited(source),
+    _sfPoint1                 (source._sfPoint1                 ),
+    _sfPoint2                 (source._sfPoint2                 )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+LineDistribution2DBase::~LineDistribution2DBase(void)
+{
+}
+
+
+GetFieldHandlePtr LineDistribution2DBase::getHandlePoint1          (void) const
+{
+    SFPnt2f::GetHandlePtr returnValue(
+        new  SFPnt2f::GetHandle(
+             &_sfPoint1,
+             this->getType().getFieldDesc(Point1FieldId),
+             const_cast<LineDistribution2DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr LineDistribution2DBase::editHandlePoint1         (void)
+{
+    SFPnt2f::EditHandlePtr returnValue(
+        new  SFPnt2f::EditHandle(
+             &_sfPoint1,
+             this->getType().getFieldDesc(Point1FieldId),
+             this));
+
+
+    editSField(Point1FieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr LineDistribution2DBase::getHandlePoint2          (void) const
+{
+    SFPnt2f::GetHandlePtr returnValue(
+        new  SFPnt2f::GetHandle(
+             &_sfPoint2,
+             this->getType().getFieldDesc(Point2FieldId),
+             const_cast<LineDistribution2DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr LineDistribution2DBase::editHandlePoint2         (void)
+{
+    SFPnt2f::EditHandlePtr returnValue(
+        new  SFPnt2f::EditHandle(
+             &_sfPoint2,
+             this->getType().getFieldDesc(Point2FieldId),
+             this));
+
+
+    editSField(Point2FieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void LineDistribution2DBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    LineDistribution2D *pThis = static_cast<LineDistribution2D *>(this);
+
+    pThis->execSync(static_cast<LineDistribution2D *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *LineDistribution2DBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    LineDistribution2D *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const LineDistribution2D *>(pRefAspect),
+                  dynamic_cast<const LineDistribution2D *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<LineDistribution2DPtr>::_type("LineDistribution2DPtr", "Distribution2DPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(LineDistribution2DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(LineDistribution2DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+void LineDistribution2DBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

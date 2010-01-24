@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,61 +58,69 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGDistribution3D.h" // Parent
 
-#include <OpenSG/OSGGeometryFields.h> // Volume type
+#include "OSGGeometryFields.h"          // Volume type
 
 #include "OSGGeoVolumeDistribution3DFields.h"
+
+
 OSG_BEGIN_NAMESPACE
 
 class GeoVolumeDistribution3D;
-class BinaryDataHandler;
 
 //! \brief GeoVolumeDistribution3D Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeoVolumeDistribution3DBase : public Distribution3D
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING GeoVolumeDistribution3DBase : public Distribution3D
 {
-  private:
-
-    typedef Distribution3D    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef GeoVolumeDistribution3DPtr  Ptr;
+    typedef Distribution3D Inherited;
+    typedef Distribution3D ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(GeoVolumeDistribution3D);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
         VolumeFieldId = Inherited::NextFieldId,
-        NextFieldId   = VolumeFieldId + 1
+        NextFieldId = VolumeFieldId + 1
     };
 
-    static const OSG::BitVector VolumeFieldMask;
+    static const OSG::BitVector VolumeFieldMask =
+        (TypeTraits<BitVector>::One << VolumeFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecGeometryPtr SFVolumeType;
 
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -121,24 +129,27 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeoVolumeDistribution3DBase : public Dist
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+            const SFUnrecGeometryPtr  *getSFVolume         (void) const;
+                  SFUnrecGeometryPtr  *editSFVolume         (void);
 
-           SFGeometryPtr       *editSFVolume         (void);
-     const SFGeometryPtr       *getSFVolume         (void) const;
 
-
-           GeometryPtr         &editVolume         (void);
-     const GeometryPtr         &getVolume         (void) const;
+                  Geometry * getVolume         (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setVolume         ( const GeometryPtr &value );
+            void setVolume         (Geometry * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -146,38 +157,56 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeoVolumeDistribution3DBase : public Dist
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  GeoVolumeDistribution3DPtr      create          (void); 
-    static  GeoVolumeDistribution3DPtr      createEmpty     (void); 
+    static  GeoVolumeDistribution3DTransitPtr  create          (void);
+    static  GeoVolumeDistribution3D           *createEmpty     (void);
+
+    static  GeoVolumeDistribution3DTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  GeoVolumeDistribution3D            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  GeoVolumeDistribution3DTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFGeometryPtr       _sfVolume;
+    SFUnrecGeometryPtr _sfVolume;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -192,66 +221,79 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeoVolumeDistribution3DBase : public Dist
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~GeoVolumeDistribution3DBase(void); 
+    virtual ~GeoVolumeDistribution3DBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const GeoVolumeDistribution3D *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleVolume          (void) const;
+    EditFieldHandlePtr editHandleVolume         (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      GeoVolumeDistribution3DBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      GeoVolumeDistribution3DBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      GeoVolumeDistribution3DBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const GeoVolumeDistribution3DBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef GeoVolumeDistribution3DBase *GeoVolumeDistribution3DBaseP;
-
-typedef osgIF<GeoVolumeDistribution3DBase::isNodeCore,
-              CoredNodePtr<GeoVolumeDistribution3D>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet GeoVolumeDistribution3DNodePtr;
-
-typedef RefPtr<GeoVolumeDistribution3DPtr> GeoVolumeDistribution3DRefPtr;
 
 OSG_END_NAMESPACE
 

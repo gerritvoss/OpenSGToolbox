@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGParticleAffectorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class AirParticleAffector;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! AirParticleAffectorPtr
+OSG_GEN_CONTAINERPTR(AirParticleAffector);
 
-typedef FCPtr<ParticleAffectorPtr, AirParticleAffector> AirParticleAffectorPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpParticleSystemFieldTraits
+/*! \ingroup GrpContribParticleSystemFieldTraits
+    \ingroup GrpLibOSGContribParticleSystem
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<AirParticleAffectorPtr> : 
-    public FieldTraitsRecurseMapper<AirParticleAffectorPtr, true>
+struct FieldTraits<AirParticleAffector *> :
+    public FieldTraitsFCPtrBase<AirParticleAffector *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFAirParticleAffectorPtr"; }
-    static const char *getMName(void) { return "MFAirParticleAffectorPtr"; }
+    typedef FieldTraits<AirParticleAffector *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFAirParticleAffectorPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFAirParticleAffectorPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<AirParticleAffectorPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<AirParticleAffector *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecAirParticleAffectorPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<AirParticleAffector *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecAirParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AirParticleAffector *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakAirParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AirParticleAffector *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdAirParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AirParticleAffector *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecAirParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AirParticleAffector *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecAirParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AirParticleAffector *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakAirParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AirParticleAffector *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdAirParticleAffectorPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<AirParticleAffector *,
+                      RecordedRefCountPolicy  > SFRecAirParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<AirParticleAffector *,
+                      UnrecordedRefCountPolicy> SFUnrecAirParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<AirParticleAffector *,
+                      WeakRefCountPolicy      > SFWeakAirParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<AirParticleAffector *,
+                      NoRefCountPolicy        > SFUncountedAirParticleAffectorPtr;
 
-typedef SField<AirParticleAffectorPtr> SFAirParticleAffectorPtr;
-#endif
 
-#ifndef OSG_COMPILEAIRPARTICLEAFFECTORINST
-OSG_DLLEXPORT_DECL1(SField, AirParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<AirParticleAffector *,
+                      RecordedRefCountPolicy  > MFRecAirParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<AirParticleAffector *,
+                      UnrecordedRefCountPolicy> MFUnrecAirParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<AirParticleAffector *,
+                      WeakRefCountPolicy      > MFWeakAirParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<AirParticleAffector *,
+                      NoRefCountPolicy        > MFUncountedAirParticleAffectorPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldMulti */
 
-typedef MField<AirParticleAffectorPtr> MFAirParticleAffectorPtr;
-#endif
 
-#ifndef OSG_COMPILEAIRPARTICLEAFFECTORINST
-OSG_DLLEXPORT_DECL1(MField, AirParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFRecAirParticleAffectorPtr : 
+    public PointerSField<AirParticleAffector *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUnrecAirParticleAffectorPtr : 
+    public PointerSField<AirParticleAffector *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFWeakAirParticleAffectorPtr :
+    public PointerSField<AirParticleAffector *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUncountedAirParticleAffectorPtr :
+    public PointerSField<AirParticleAffector *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFRecAirParticleAffectorPtr :
+    public PointerMField<AirParticleAffector *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUnrecAirParticleAffectorPtr :
+    public PointerMField<AirParticleAffector *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFWeakAirParticleAffectorPtr :
+    public PointerMField<AirParticleAffector *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUncountedAirParticleAffectorPtr :
+    public PointerMField<AirParticleAffector *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGAIRPARTICLEAFFECTORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGAIRPARTICLEAFFECTORFIELDS_H_ */

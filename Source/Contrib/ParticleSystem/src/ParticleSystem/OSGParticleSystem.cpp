@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,31 +40,26 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGIntersectAction.h>
+#include <OSGConfig.h>
 
 #include "OSGParticleSystem.h"
-#include "ParticleSystem/Events/OSGParticleEvent.h"
-#include <OpenSG/Input/OSGWindowEventProducer.h>
-#include "ParticleSystem/ParticleAffectors/OSGParticleAffector.h"
-#include "ParticleSystem/ParticleSystemAffectors/OSGParticleSystemAffector.h"
-#include "ParticleSystem/ParticleGenerators/OSGParticleGenerator.h"
+#include "OSGParticleEvent.h"
+#include "OSGWindowEventProducer.h"
+#include "OSGParticleAffector.h"
+#include "OSGParticleSystemAffector.h"
+#include "OSGParticleGenerator.h"
+#include "OSGIntersectAction.h"
 #include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::ParticleSystem
-
-*/
+// Documentation for this class is emitted in the
+// OSGParticleSystemBase.cpp file.
+// To modify it, please change the .fcd file (OSGParticleSystem.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -85,21 +80,26 @@ const OSG::BitVector  ParticleSystem::InternalParticlesFieldMask =
 
 StatElemDesc<StatIntElem> ParticleSystem::statNParticles("NParticles", 
                                                       "number of particles");
+
 StatElemDesc<StatTimeElem> ParticleSystem::statParticleSystemUpdate("ParticleUpdateTime", 
                                                       "time for particle system updates");
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ParticleSystem::initMethod (void)
+void ParticleSystem::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-
 
 EventConnection ParticleSystem::addParticleSystemListener(ParticleSystemListenerPtr Listener)
 {
@@ -124,10 +124,10 @@ void ParticleSystem::removeParticleSystemListener(ParticleSystemListenerPtr List
 }
 
 //Particle to Geometry Intersection
-std::vector<UInt32> ParticleSystem::intersect(const NodePtr CollisionNode, bool sort, NodePtr Beacon) const
+std::vector<UInt32> ParticleSystem::intersect(const NodeRefPtr CollisionNode, bool sort, NodeRefPtr Beacon) const
 {
     //Get all of the particles that collide with the geometries volume
-    DynamicVolume Vol;
+    BoxVolume Vol;
     CollisionNode->getWorldVolume(Vol);
     std::vector<UInt32> IndexesToTest = intersect(Vol, 0.0f, Beacon);
 
@@ -139,14 +139,14 @@ std::vector<UInt32> ParticleSystem::intersect(const NodePtr CollisionNode, bool 
     
 	Real32 HitT(0.0f);
 
-    DynamicVolume BeaconWorldVol;
+    BoxVolume BeaconWorldVol;
     Matrix BeaconToWorld;
     
     //If the Beacon node given to this function is Null
-    if(Beacon == NullFC)
+    if(Beacon == NULL)
     {
         //If the Beacon node attached to this particle system is Null
-        if(getBeacon() == NullFC)
+        if(getBeacon() == NULL)
         {
             BeaconToWorld.setIdentity();
             BeaconWorldVol.setInfinite(true);
@@ -183,25 +183,25 @@ std::vector<UInt32> ParticleSystem::intersect(const NodePtr CollisionNode, bool 
 
     if(sort)
     {
-        //std::sort(Result.begin(), Result.end(), ParticlePositionSort(ParticleSystemPtr(this), Ray.getPosition()));
+        //std::sort(Result.begin(), Result.end(), ParticlePositionSort(ParticleSystemRefPtr(this), Ray.getPosition()));
     }
     return Result;
 }
 
 //Particle to Line Segment intersection
-std::vector<UInt32> ParticleSystem::intersect(const Pnt3f& p1, const Pnt3f& p2, Real32 IntersectionDistance, NodePtr Beacon) const
+std::vector<UInt32> ParticleSystem::intersect(const Pnt3f& p1, const Pnt3f& p2, Real32 IntersectionDistance, NodeRefPtr Beacon) const
 {
     std::vector<UInt32> Result;
 
-    DynamicVolume BeaconWorldVol;
+    BoxVolume BeaconWorldVol;
     Matrix BeaconToWorld;
 
     
     //If the Beacon node given to this function is Null
-    if(Beacon == NullFC)
+    if(Beacon == NULL)
     {
         //If the Beacon node attached to this particle system is Null
-        if(getBeacon() == NullFC)
+        if(getBeacon() == NULL)
         {
             BeaconToWorld.setIdentity();
             BeaconWorldVol.setInfinite(true);
@@ -233,8 +233,8 @@ std::vector<UInt32> ParticleSystem::intersect(const Pnt3f& p1, const Pnt3f& p2, 
     //BeaconWorldVol.extendBy(BeaconWorldVol.getMin() - Vec3f(IntersectionDistance, IntersectionDistance, IntersectionDistance));
     //BeaconWorldVol.extendBy(BeaconWorldVol.getMax() + Vec3f(IntersectionDistance, IntersectionDistance, IntersectionDistance));
     //if(
-        //(BeaconWorldVol.getType() == DynamicVolume::BOX_VOLUME && Ray.intersect(static_cast<const BoxVolume&>(BeaconWorldVol.getInstance()),EnterVol,ExitVol)) ||
-        //(BeaconWorldVol.getType() == DynamicVolume::SPHERE_VOLUME && Ray.intersect(static_cast<const SphereVolume&>(BeaconWorldVol.getInstance()),EnterVol,ExitVol))
+        //(BeaconWorldVol.getType() == BoxVolume::BOX_VOLUME && Ray.intersect(static_cast<const BoxVolume&>(BeaconWorldVol.getInstance()),EnterVol,ExitVol)) ||
+        //(BeaconWorldVol.getType() == BoxVolume::SPHERE_VOLUME && Ray.intersect(static_cast<const SphereVolume&>(BeaconWorldVol.getInstance()),EnterVol,ExitVol))
         //)
     //{
     //Point on Line Segment
@@ -267,20 +267,20 @@ std::vector<UInt32> ParticleSystem::intersect(const Pnt3f& p1, const Pnt3f& p2, 
     return Result;
 }
 
-std::vector<UInt32> ParticleSystem::intersect(const Volume& Vol, Real32 IntersectionDistance, NodePtr Beacon) const
+std::vector<UInt32> ParticleSystem::intersect(const Volume& Vol, Real32 IntersectionDistance, NodeRefPtr Beacon) const
 {
     std::vector<UInt32> Result;
 
-    DynamicVolume BeaconWorldVol, TestVolume;
+    BoxVolume BeaconWorldVol, TestVolume;
     TestVolume.extendBy(Vol);
     Matrix BeaconToWorld;
 
     
     //If the Beacon node given to this function is Null
-    if(Beacon == NullFC)
+    if(Beacon == NULL)
     {
         //If the Beacon node attached to this particle system is Null
-        if(getBeacon() == NullFC)
+        if(getBeacon() == NULL)
         {
             BeaconToWorld.setIdentity();
             BeaconWorldVol.setInfinite(true);
@@ -324,19 +324,19 @@ std::vector<UInt32> ParticleSystem::intersect(const Volume& Vol, Real32 Intersec
     return Result;
 }
 
-std::vector<UInt32> ParticleSystem::intersect(const Line& Ray, Real32 MinDistFromRay, Real32 MinDistFromRayOrigin, bool sort, NodePtr Beacon) const
+std::vector<UInt32> ParticleSystem::intersect(const Line& Ray, Real32 MinDistFromRay, Real32 MinDistFromRayOrigin, bool sort, NodeRefPtr Beacon) const
 {
     std::vector<UInt32> Result;
 
-    DynamicVolume BeaconWorldVol;
+    BoxVolume BeaconWorldVol;
     Matrix BeaconToWorld;
 
     
     //If the Beacon node given to this function is Null
-    if(Beacon == NullFC)
+    if(Beacon == NULL)
     {
         //If the Beacon node attached to this particle system is Null
-        if(getBeacon() == NullFC)
+        if(getBeacon() == NULL)
         {
             BeaconToWorld.setIdentity();
             BeaconWorldVol.setInfinite(true);
@@ -366,10 +366,7 @@ std::vector<UInt32> ParticleSystem::intersect(const Line& Ray, Real32 MinDistFro
     //with the IntersectionDistance from the line
     BeaconWorldVol.extendBy(BeaconWorldVol.getMin() - Vec3f(MinDistFromRay, MinDistFromRay, MinDistFromRay));
     BeaconWorldVol.extendBy(BeaconWorldVol.getMax() + Vec3f(MinDistFromRay, MinDistFromRay, MinDistFromRay));
-    if(
-        (BeaconWorldVol.getType() == DynamicVolume::BOX_VOLUME && Ray.intersect(static_cast<const BoxVolume&>(BeaconWorldVol.getInstance()),EnterVol,ExitVol)) ||
-        (BeaconWorldVol.getType() == DynamicVolume::SPHERE_VOLUME && Ray.intersect(static_cast<const SphereVolume&>(BeaconWorldVol.getInstance()),EnterVol,ExitVol))
-        )
+    if(Ray.intersect(BeaconWorldVol,EnterVol,ExitVol))
     {
         Real32 t(0.0f);
         //For each particle
@@ -394,7 +391,7 @@ std::vector<UInt32> ParticleSystem::intersect(const Line& Ray, Real32 MinDistFro
     if(sort)
     {
         BeaconToWorld.invert();
-        std::sort(Result.begin(), Result.end(), ParticlePositionSort(ParticleSystemPtr(this), BeaconToWorld*Ray.getPosition()));
+        std::sort(Result.begin(), Result.end(), ParticlePositionSort(this, BeaconToWorld*Ray.getPosition()));
     }
 
     return Result;
@@ -402,251 +399,251 @@ std::vector<UInt32> ParticleSystem::intersect(const Line& Ray, Real32 MinDistFro
 
 void ParticleSystem::addAndExpandSecPositions(const Pnt3f& SecPosition)
 {
-	if(getInternalSecPositions().size() == 0)
+	if(getMFInternalSecPositions()->size() == 0)
 	{
-		getInternalSecPositions().push_back(SecPosition);
+		editMFInternalSecPositions()->push_back(SecPosition);
 	}
-	else if(getInternalSecPositions().size() == 1)
+	else if(getMFInternalSecPositions()->size() == 1)
 	{
-		if(getInternalSecPositions()[0] != SecPosition)
+		if(getInternalSecPositions(0) != SecPosition)
 		{
 			//Expand to Positions size-1
-			for(UInt32 i(0) ; i<getInternalPositions().size()-1 ; ++i)
+			for(UInt32 i(0) ; i<getMFInternalPositions()->size()-1 ; ++i)
 			{
-				getInternalSecPositions().push_back(getInternalSecPositions()[0]);
+				editMFInternalSecPositions()->push_back(getInternalSecPositions(0));
 			}
 
-			getInternalSecPositions().push_back(SecPosition);
+			editMFInternalSecPositions()->push_back(SecPosition);
 		}
 	}
 	else
 	{
-		getInternalSecPositions().push_back(SecPosition);
+		editMFInternalSecPositions()->push_back(SecPosition);
 	}
 }
 
 void ParticleSystem::addAndExpandNormals(const Vec3f& Normal)
 {
-	if(getInternalNormals().size() == 0)
+	if(getMFInternalNormals()->size() == 0)
 	{
-		getInternalNormals().push_back(Normal);
+		editMFInternalNormals()->push_back(Normal);
 	}
-	else if(getInternalNormals().size() == 1)
+	else if(getMFInternalNormals()->size() == 1)
 	{
-		if(getInternalNormals()[0] != Normal)
+		if(getInternalNormals(0) != Normal)
 		{
 			//Expand to Positions size-1
-			for(UInt32 i(0) ; i<getInternalPositions().size()-1 ; ++i)
+			for(UInt32 i(0) ; i<getMFInternalPositions()->size()-1 ; ++i)
 			{
-				getInternalNormals().push_back(getInternalNormals()[0]);
+				editMFInternalNormals()->push_back(getInternalNormals(0));
 			}
 
-			getInternalNormals().push_back(Normal);
+			editMFInternalNormals()->push_back(Normal);
 		}
 	}
 	else
 	{
-		getInternalNormals().push_back(Normal);
+		editMFInternalNormals()->push_back(Normal);
 	}
 }
 
 void ParticleSystem::addAndExpandColors(const Color4f& Color)
 {
-	if(getInternalColors().size() == 0)
+	if(getMFInternalColors()->size() == 0)
 	{
-		getInternalColors().push_back(Color);
+		editMFInternalColors()->push_back(Color);
 	}
-	else if(getInternalColors().size() == 1)
+	else if(getMFInternalColors()->size() == 1)
 	{
-		if(getInternalColors()[0] != Color)
+		if(getInternalColors(0) != Color)
 		{
 			//Expand to Positions size-1
-			for(UInt32 i(0) ; i<getInternalPositions().size()-1 ; ++i)
+			for(UInt32 i(0) ; i<getMFInternalPositions()->size()-1 ; ++i)
 			{
-				getInternalColors().push_back(getInternalColors()[0]);
+				editMFInternalColors()->push_back(getInternalColors(0));
 			}
 
-			getInternalColors().push_back(Color);
+			editMFInternalColors()->push_back(Color);
 		}
 	}
 	else
 	{
-		getInternalColors().push_back(Color);
+		editMFInternalColors()->push_back(Color);
 	}
 }
 
 void ParticleSystem::addAndExpandSizes(const Vec3f& Size)
 {
-	if(getInternalSizes().size() == 0)
+	if(getMFInternalSizes()->size() == 0)
 	{
-		getInternalSizes().push_back(Size);
+		editMFInternalSizes()->push_back(Size);
 	}
-	else if(getInternalSizes().size() == 1)
+	else if(getMFInternalSizes()->size() == 1)
 	{
-		if(getInternalSizes()[0] != Size)
+		if(getInternalSizes(0) != Size)
 		{
 			//Expand to Positions size-1
-			for(UInt32 i(0) ; i<getInternalPositions().size()-1 ; ++i)
+			for(UInt32 i(0) ; i<getMFInternalPositions()->size()-1 ; ++i)
 			{
-				getInternalSizes().push_back(getInternalSizes()[0]);
+				editMFInternalSizes()->push_back(getInternalSizes(0));
 			}
 
-			getInternalSizes().push_back(Size);
+			editMFInternalSizes()->push_back(Size);
 		}
 	}
 	else
 	{
-		getInternalSizes().push_back(Size);
+		editMFInternalSizes()->push_back(Size);
 	}
 }
 
 void ParticleSystem::addAndExpandLifespans(Real32 Lifespan)
 {
-	if(getInternalLifespans().size() == 0)
+	if(getMFInternalLifespans()->size() == 0)
 	{
-		getInternalLifespans().push_back(Lifespan);
+		editMFInternalLifespans()->push_back(Lifespan);
 	}
-	else if(getInternalLifespans().size() == 1)
+	else if(getMFInternalLifespans()->size() == 1)
 	{
-		if(getInternalLifespans()[0] != Lifespan)
+		if(getInternalLifespans(0) != Lifespan)
 		{
 			//Expand to Positions size-1
-			for(UInt32 i(0) ; i<getInternalPositions().size()-1 ; ++i)
+			for(UInt32 i(0) ; i<getMFInternalPositions()->size()-1 ; ++i)
 			{
-				getInternalLifespans().push_back(getInternalLifespans()[0]);
+				editMFInternalLifespans()->push_back(getInternalLifespans(0));
 			}
 
-			getInternalLifespans().push_back(Lifespan);
+			editMFInternalLifespans()->push_back(Lifespan);
 		}
 	}
 	else
 	{
-		getInternalLifespans().push_back(Lifespan);
+		editMFInternalLifespans()->push_back(Lifespan);
 	}
 }
 
 void ParticleSystem::addAndExpandAges(Real32 Age)
 {
-	if(getInternalAges().size() == 0)
+	if(getMFInternalAges()->size() == 0)
 	{
-		getInternalAges().push_back(Age);
+		editMFInternalAges()->push_back(Age);
 	}
-	else if(getInternalAges().size() == 1)
+	else if(getMFInternalAges()->size() == 1)
 	{
-		if(getInternalAges()[0] != Age)
+		if(getInternalAges(0) != Age)
 		{
 			//Expand to Positions size-1
-			for(UInt32 i(0) ; i<getInternalPositions().size()-1 ; ++i)
+			for(UInt32 i(0) ; i<getMFInternalPositions()->size()-1 ; ++i)
 			{
-				getInternalAges().push_back(getInternalAges()[0]);
+				editMFInternalAges()->push_back(getInternalAges(0));
 			}
 
-			getInternalAges().push_back(Age);
+			editMFInternalAges()->push_back(Age);
 		}
 	}
 	else
 	{
-		getInternalAges().push_back(Age);
+		editMFInternalAges()->push_back(Age);
 	}
 }
 
 void ParticleSystem::addAndExpandVelocities(const Vec3f& Velocity)
 {
-	if(getInternalVelocities().size() == 0)
+	if(getMFInternalVelocities()->size() == 0)
 	{
-		getInternalVelocities().push_back(Velocity);
+		editMFInternalVelocities()->push_back(Velocity);
 	}
-	else if(getInternalVelocities().size() == 1)
+	else if(getMFInternalVelocities()->size() == 1)
 	{
-		if(getInternalVelocities()[0] != Velocity)
+		if(getInternalVelocities(0) != Velocity)
 		{
 			//Expand to Positions size-1
-			for(UInt32 i(0) ; i<getInternalPositions().size()-1 ; ++i)
+			for(UInt32 i(0) ; i<getMFInternalPositions()->size()-1 ; ++i)
 			{
-				getInternalVelocities().push_back(getInternalVelocities()[0]);
+				editMFInternalVelocities()->push_back(getInternalVelocities(0));
 			}
 
-			getInternalVelocities().push_back(Velocity);
+			editMFInternalVelocities()->push_back(Velocity);
 		}
 	}
 	else
 	{
-		getInternalVelocities().push_back(Velocity);
+		editMFInternalVelocities()->push_back(Velocity);
 	}
 }
 
 void ParticleSystem::addAndExpandSecVelocities(const Vec3f& SecVelocity)
 {
-	if(getInternalSecVelocities().size() == 0)
+	if(getMFInternalSecVelocities()->size() == 0)
 	{
-		getInternalSecVelocities().push_back(SecVelocity);
+		editMFInternalSecVelocities()->push_back(SecVelocity);
 	}
-	else if(getInternalSecVelocities().size() == 1)
+	else if(getMFInternalSecVelocities()->size() == 1)
 	{
-		if(getInternalSecVelocities()[0] != SecVelocity)
+		if(getInternalSecVelocities(0) != SecVelocity)
 		{
 			//Expand to Positions size-1
-			for(UInt32 i(0) ; i<getInternalPositions().size()-1 ; ++i)
+			for(UInt32 i(0) ; i<getMFInternalPositions()->size()-1 ; ++i)
 			{
-				getInternalSecVelocities().push_back(getInternalSecVelocities()[0]);
+				editMFInternalSecVelocities()->push_back(getInternalSecVelocities(0));
 			}
 
-			getInternalSecVelocities().push_back(SecVelocity);
+			editMFInternalSecVelocities()->push_back(SecVelocity);
 		}
 	}
 	else
 	{
-		getInternalSecVelocities().push_back(SecVelocity);
+		editMFInternalSecVelocities()->push_back(SecVelocity);
 	}
 }
 
 void ParticleSystem::addAndExpandAccelerations(const Vec3f& Acceleration)
 {
-	if(getInternalAccelerations().size() == 0)
+	if(getMFInternalAccelerations()->size() == 0)
 	{
-		getInternalAccelerations().push_back(Acceleration);
+		editMFInternalAccelerations()->push_back(Acceleration);
 	}
-	else if(getInternalAccelerations().size() == 1)
+	else if(getMFInternalAccelerations()->size() == 1)
 	{
-		if(getInternalAccelerations()[0] != Acceleration)
+		if(getInternalAccelerations(0) != Acceleration)
 		{
 			//Expand to Positions size-1
-			for(UInt32 i(0) ; i<getInternalPositions().size()-1 ; ++i)
+			for(UInt32 i(0) ; i<getMFInternalPositions()->size()-1 ; ++i)
 			{
-				getInternalAccelerations().push_back(getInternalAccelerations()[0]);
+				editMFInternalAccelerations()->push_back(getInternalAccelerations(0));
 			}
 
-			getInternalAccelerations().push_back(Acceleration);
+			editMFInternalAccelerations()->push_back(Acceleration);
 		}
 	}
 	else
 	{
-		getInternalAccelerations().push_back(Acceleration);
+		editMFInternalAccelerations()->push_back(Acceleration);
 	}
 }
 
 void ParticleSystem::addAndExpandAttributes(const StringToUInt32Map& AttributeMap)
 {
-	if(getInternalAttributes().size() == 0)
+	if(getMFInternalAttributes()->size() == 0)
 	{
-		getInternalAttributes().push_back(AttributeMap);
+		editMFInternalAttributes()->push_back(AttributeMap);
 	}
-	else if(getInternalAttributes().size() == 1)
+	else if(getMFInternalAttributes()->size() == 1)
 	{
-		if(getInternalAttributes()[0] != AttributeMap)
+		if(getInternalAttributes(0) != AttributeMap)
 		{
 			//Expand to Positions size-1
-			for(UInt32 i(0) ; i<getInternalPositions().size()-1 ; ++i)
+			for(UInt32 i(0) ; i<getMFInternalPositions()->size()-1 ; ++i)
 			{
-				getInternalAttributes().push_back(getInternalAttributes()[0]);
+				editMFInternalAttributes()->push_back(getInternalAttributes(0));
 			}
 
-			getInternalAttributes().push_back(AttributeMap);
+			editMFInternalAttributes()->push_back(AttributeMap);
 		}
 	}
 	else
 	{
-		getInternalAttributes().push_back(AttributeMap);
+		editMFInternalAttributes()->push_back(AttributeMap);
 	}
 }
 
@@ -709,20 +706,20 @@ bool ParticleSystem::killParticle(UInt32 Index, bool KillNextUpdate)
 
 void ParticleSystem::removePosition(UInt32 Index)
 {
-    getInternalPositions()[Index] = getInternalPositions().back();
-    getInternalPositions().erase(--getInternalPositions().end());
+    editInternalPositions(Index) = getMFInternalPositions()->back();
+    editMFInternalPositions()->erase(--editMFInternalPositions()->end());
 }
 
 void ParticleSystem::removeSecPosition(UInt32 Index)
 {
     if(getNumSecPositions() > 1)
     {
-        getInternalSecPositions()[Index] = getInternalSecPositions().back();
-        getInternalSecPositions().erase(--getInternalSecPositions().end());
+        editInternalSecPositions(Index) = getMFInternalSecPositions()->back();
+        editMFInternalSecPositions()->erase(--editMFInternalSecPositions()->end());
     }
     else if(getNumParticles() == 0)
     {
-        getInternalSecPositions().clear();
+        editMFInternalSecPositions()->clear();
     }
 }
 
@@ -730,12 +727,12 @@ void ParticleSystem::removeNormal(UInt32 Index)
 {
     if(getNumNormals() > 1)
     {
-        getInternalNormals()[Index] = getInternalNormals().back();
-        getInternalNormals().erase(--getInternalNormals().end());
+        editInternalNormals(Index) = getMFInternalNormals()->back();
+        editMFInternalNormals()->erase(--editMFInternalNormals()->end());
     }
     else if(getNumParticles() == 0)
     {
-        getInternalNormals().clear();
+        editMFInternalNormals()->clear();
     }
 }
 
@@ -743,12 +740,12 @@ void ParticleSystem::removeColor(UInt32 Index)
 {
     if(getNumColors() > 1)
     {
-        getInternalColors()[Index] = getInternalColors().back();
-        getInternalColors().erase(--getInternalColors().end());
+        editInternalColors(Index) = getMFInternalColors()->back();
+        editMFInternalColors()->erase(--editMFInternalColors()->end());
     }
     else if(getNumParticles() == 0)
     {
-        getInternalColors().clear();
+        editMFInternalColors()->clear();
     }
 }
 
@@ -756,12 +753,12 @@ void ParticleSystem::removeSize(UInt32 Index)
 {
     if(getNumSizes() > 1)
     {
-        getInternalSizes()[Index] = getInternalSizes().back();
-        getInternalSizes().erase(--getInternalSizes().end());
+        editInternalSizes(Index) = getMFInternalSizes()->back();
+        editMFInternalSizes()->erase(--editMFInternalSizes()->end());
     }
     else if(getNumParticles() == 0)
     {
-        getInternalSizes().clear();
+        editMFInternalSizes()->clear();
     }
 }
 
@@ -769,12 +766,12 @@ void ParticleSystem::removeLifespan(UInt32 Index)
 {
     if(getNumLifespans() > 1)
     {
-        getInternalLifespans()[Index] = getInternalLifespans().back();
-        getInternalLifespans().erase(--getInternalLifespans().end());
+        editInternalLifespans(Index) = getMFInternalLifespans()->back();
+        editMFInternalLifespans()->erase(--editMFInternalLifespans()->end());
     }
     else if(getNumParticles() == 0)
     {
-        getInternalLifespans().clear();
+        editMFInternalLifespans()->clear();
     }
 }
 
@@ -782,12 +779,12 @@ void ParticleSystem::removeAge(UInt32 Index)
 {
     if(getNumAges() > 1)
     {
-        getInternalAges()[Index] = getInternalAges().back();
-        getInternalAges().erase(--getInternalAges().end());
+        editInternalAges(Index) = getMFInternalAges()->back();
+        editMFInternalAges()->erase(--editMFInternalAges()->end());
     }
     else if(getNumParticles() == 0)
     {
-        getInternalAges().clear();
+        editMFInternalAges()->clear();
     }
 }
 
@@ -795,12 +792,12 @@ void ParticleSystem::removeVelocity(UInt32 Index)
 {
     if(getNumVelocities() > 1)
     {
-        getInternalVelocities()[Index] = getInternalVelocities().back();
-        getInternalVelocities().erase(--getInternalVelocities().end());
+        editInternalVelocities(Index) = getMFInternalVelocities()->back();
+        editMFInternalVelocities()->erase(--editMFInternalVelocities()->end());
     }
     else if(getNumParticles() == 0)
     {
-        getInternalVelocities().clear();
+        editMFInternalVelocities()->clear();
     }
 }
 
@@ -808,12 +805,12 @@ void ParticleSystem::removeSecVelocity(UInt32 Index)
 {
     if(getNumSecVelocities() > 1)
     {
-        getInternalSecVelocities()[Index] = getInternalSecVelocities().back();
-        getInternalSecVelocities().erase(--getInternalSecVelocities().end());
+        editInternalSecVelocities(Index) = getMFInternalSecVelocities()->back();
+        editMFInternalSecVelocities()->erase(--editMFInternalSecVelocities()->end());
     }
     else if(getNumParticles() == 0)
     {
-        getInternalSecVelocities().clear();
+        editMFInternalSecVelocities()->clear();
     }
 }
 
@@ -821,12 +818,12 @@ void ParticleSystem::removeAcceleration(UInt32 Index)
 {
     if(getNumAccelerations() > 1)
     {
-        getInternalAccelerations()[Index] = getInternalAccelerations().back();
-        getInternalAccelerations().erase(--getInternalAccelerations().end());
+        editInternalAccelerations(Index) = getMFInternalAccelerations()->back();
+        editMFInternalAccelerations()->erase(--editMFInternalAccelerations()->end());
     }
     else if(getNumParticles() == 0)
     {
-        getInternalAccelerations().clear();
+        editMFInternalAccelerations()->clear();
     }
 }
 
@@ -834,12 +831,12 @@ void ParticleSystem::removeAttributes(UInt32 Index)
 {
     if(getNumAttributes() > 1)
     {
-        getInternalAttributes()[Index] = getInternalAttributes().back();
-        getInternalAttributes().erase(--getInternalAttributes().end());
+        editInternalAttributes(Index) = getMFInternalAttributes()->back();
+        editMFInternalAttributes()->erase(--editMFInternalAttributes()->end());
     }
     else if(getNumParticles() == 0)
     {
-        getInternalAttributes().clear();
+        editMFInternalAttributes()->clear();
     }
 }
 
@@ -861,7 +858,6 @@ bool ParticleSystem::addParticle(const Pnt3f& Position,
 		return false;
 	}
 
-	beginEditCP(ParticleSystemPtr(this), ParticleSystem::InternalParticlesFieldMask);
 
 		addAndExpandSecPositions(SecPosition);
 		addAndExpandNormals(Normal);
@@ -876,23 +872,22 @@ bool ParticleSystem::addParticle(const Pnt3f& Position,
 		addAndExpandAttributes(Attributes);
 
         //Apply the accumulated velocity and acceleration onto the position
-		getInternalPositions().push_back(Position + Velocity*Age + Acceleration*Age*Age);
-	endEditCP(ParticleSystemPtr(this), ParticleSystem::InternalParticlesFieldMask);
+		editMFInternalPositions()->push_back(Position + Velocity*Age + Acceleration*Age*Age);
 
     //Affect Particles with Affectors
-    for(UInt32 j(0) ; j<getAffectors().size(); ++j)
+    for(UInt32 j(0) ; j<getMFAffectors()->size(); ++j)
     {
-        getAffectors(j)->affect(ParticleSystemPtr(this), getInternalPositions().size()-1, Age);
+        getAffectors(j)->affect(ParticleSystemRefPtr(this), getMFInternalPositions()->size()-1, Age);
         
     }
 
     //If not currently updating the whole system, then update the volume
     if(!_isUpdating)
     {
-        extendVolumeByParticle(getInternalPositions().size()-1);
+        extendVolumeByParticle(getMFInternalPositions()->size()-1);
     }
 
-    produceParticleGenerated(getInternalPositions().size()-1);
+    produceParticleGenerated(getMFInternalPositions()->size()-1);
 
 	return true;
 }
@@ -957,7 +952,7 @@ bool ParticleSystem::addWorldSpaceParticle(const Pnt3f& Position,
                      const StringToUInt32Map& Attributes)
 {
 	// behavior for this method is undefined if the beacon is not present
-	if(getBeacon() == NullFC)
+	if(getBeacon() == NULL)
 	{	// no beacon, so we can't do anything to convert the particle
 		// to local particle system space
 		return false;
@@ -1007,133 +1002,133 @@ const Vec3f ParticleSystem::getVelocityChange(const UInt32& Index) const
 
 const Pnt3f& ParticleSystem::getSecPosition(const UInt32& Index) const
 {
-	if(Index < getInternalSecPositions().getSize())
+	if(Index < getMFInternalSecPositions()->size())
 	{
-		return getInternalSecPositions()[Index];
+		return getInternalSecPositions(Index);
 	}
 	else
 	{
-		return getInternalSecPositions()[0];
+		return getInternalSecPositions(0);
 	}
 }
 
 const Vec3f& ParticleSystem::getNormal(const UInt32& Index) const
 {
-	if(Index < getInternalNormals().getSize())
+	if(Index < getMFInternalNormals()->size())
 	{
-		return getInternalNormals()[Index];
+		return getInternalNormals(Index);
 	}
 	else
 	{
-		return getInternalNormals()[0];
+		return getInternalNormals(0);
 	}
 }
 
 const Color4f& ParticleSystem::getColor(const UInt32& Index) const
 {
-	if(Index < getInternalColors().getSize())
+	if(Index < getMFInternalColors()->size())
 	{
-		return getInternalColors()[Index];
+		return getInternalColors(Index);
 	}
 	else
 	{
-		return getInternalColors()[0];
+		return getInternalColors(0);
 	}
 }
 
 const Vec3f& ParticleSystem::getSize(const UInt32& Index) const
 {
-	if(Index < getInternalSizes().getSize())
+	if(Index < getMFInternalSizes()->size())
 	{
-		return getInternalSizes()[Index];
+		return getInternalSizes(Index);
 	}
 	else
 	{
-		return getInternalSizes()[0];
+		return getInternalSizes(0);
 	}
 }
 
 Real32 ParticleSystem::getLifespan(const UInt32& Index) const
 {
-	if(Index < getInternalLifespans().getSize())
+	if(Index < getMFInternalLifespans()->size())
 	{
-		return getInternalLifespans()[Index];
+		return getInternalLifespans(Index);
 	}
 	else
 	{
-		return getInternalLifespans()[0];
+		return getInternalLifespans(0);
 	}
 }
 
 Real32 ParticleSystem::getAge(const UInt32& Index) const
 {
-	if(Index < getInternalAges().getSize())
+	if(Index < getMFInternalAges()->size())
 	{
-		return getInternalAges()[Index];
+		return getInternalAges(Index);
 	}
 	else
 	{
-		return getInternalAges()[0];
+		return getInternalAges(0);
 	}
 }
 
 const Vec3f& ParticleSystem::getVelocity(const UInt32& Index) const
 {
-	if(Index < getInternalVelocities().getSize())
+	if(Index < getMFInternalVelocities()->size())
 	{
-		return getInternalVelocities()[Index];
+		return getInternalVelocities(Index);
 	}
 	else
 	{
-		return getInternalVelocities()[0];
+		return getInternalVelocities(0);
 	}
 }
 
 const Vec3f& ParticleSystem::getSecVelocity(const UInt32& Index) const
 {
-	if(Index < getInternalSecVelocities().getSize())
+	if(Index < getMFInternalSecVelocities()->size())
 	{
-		return getInternalSecVelocities()[Index];
+		return getInternalSecVelocities(Index);
 	}
 	else
 	{
-		return getInternalSecVelocities()[0];
+		return getInternalSecVelocities(0);
 	}
 }
 
 const Vec3f& ParticleSystem::getAcceleration(const UInt32& Index) const
 {
-	if(Index < getInternalAccelerations().getSize())
+	if(Index < getMFInternalAccelerations()->size())
 	{
-		return getInternalAccelerations()[Index];
+		return getInternalAccelerations(Index);
 	}
 	else
 	{
-		return getInternalAccelerations()[0];
+		return getInternalAccelerations(0);
 	}
 }
 
 const StringToUInt32Map& ParticleSystem::getAttributes(const UInt32& Index) const
 {
-	if(Index < getInternalAttributes().getSize())
+	if(Index < getMFInternalAttributes()->size())
 	{
-		return getInternalAttributes()[Index];
+		return getInternalAttributes(Index);
 	}
 	else 
 	{
-		return getInternalAttributes()[0];
+		return getInternalAttributes(0);
 	}
 }
 
 UInt32 ParticleSystem::getAttribute(const UInt32& Index, const std::string& AttributeKey) const
 {
-	if(Index < getInternalAttributes().getSize())
+	if(Index < getMFInternalAttributes()->size())
 	{
-		return getInternalAttributes()[Index].find(AttributeKey)->second;
+		return getInternalAttributes(Index).find(AttributeKey)->second;
 	}
 	else
 	{
-		return getInternalAttributes()[0].find(AttributeKey)->second;
+		return getInternalAttributes(0).find(AttributeKey)->second;
 	}
 }
 
@@ -1141,25 +1136,25 @@ void ParticleSystem::setSecPosition(const Pnt3f& SecPosition, const UInt32& Inde
 {
 	if(getNumSecPositions() > 1)
 	{
-		getInternalSecPositions()[Index] = SecPosition;
+		editInternalSecPositions(Index) = SecPosition;
 	}
 	else if(getNumSecPositions() == 1)
 	{
 		if(getNumParticles() > 1)
 		{
-			if(getInternalSecPositions()[0] != SecPosition)
+			if(getInternalSecPositions(0) != SecPosition)
 			{
 				//Expand to Positions size-1
 				for(UInt32 i(0) ; i<getNumParticles()-1 ; ++i)
 				{
-					getInternalSecPositions().push_back(getInternalSecPositions()[0]);
+					editMFInternalSecPositions()->push_back(getInternalSecPositions(0));
 				}
-				getInternalSecPositions()[Index] = SecPosition;
+				editInternalSecPositions(Index) = SecPosition;
 			}
 		}
 		else
 		{
-			getInternalSecPositions()[Index] = SecPosition;
+			editInternalSecPositions(Index) = SecPosition;
 		}
 	}
 }
@@ -1168,25 +1163,25 @@ void ParticleSystem::setNormal(const Vec3f& Normal, const UInt32& Index)
 {
 	if(getNumNormals() > 1)
 	{
-		getInternalNormals()[Index] = Normal;
+		editInternalNormals(Index) = Normal;
 	}
 	else if(getNumNormals() == 1)
 	{
 		if(getNumParticles() > 1)
 		{
-			if(getInternalNormals()[0] != Normal)
+			if(getInternalNormals(0) != Normal)
 			{
 				//Expand to Positions size-1
 				for(UInt32 i(0) ; i<getNumParticles()-1 ; ++i)
 				{
-					getInternalNormals().push_back(getInternalNormals()[0]);
+					editMFInternalNormals()->push_back(getInternalNormals(0));
 				}
-				getInternalNormals()[Index] = Normal;
+				editInternalNormals(Index) = Normal;
 			}
 		}
 		else
 		{
-			getInternalNormals()[Index] = Normal;
+			editInternalNormals(Index) = Normal;
 		}
 	}
 }
@@ -1194,25 +1189,25 @@ void ParticleSystem::setColor(const Color4f& Color, const UInt32& Index)
 {
 	if(getNumColors() > 1)
 	{
-		getInternalColors()[Index] = Color;
+		editInternalColors(Index) = Color;
 	}
 	else if(getNumColors() == 1)
 	{
 		if(getNumParticles() > 1)
 		{
-			if(getInternalColors()[0] != Color)
+			if(getInternalColors(0) != Color)
 			{
 				//Expand to Positions size-1
 				for(UInt32 i(0) ; i<getNumParticles()-1 ; ++i)
 				{
-					getInternalColors().push_back(getInternalColors()[0]);
+					editMFInternalColors()->push_back(getInternalColors(0));
 				}
-				getInternalColors()[Index] = Color;
+				editInternalColors(Index) = Color;
 			}
 		}
 		else
 		{
-			getInternalColors()[Index] = Color;
+			editInternalColors(Index) = Color;
 		}
 	}
 }
@@ -1222,25 +1217,25 @@ void ParticleSystem::setSize(const Vec3f& Size, const UInt32& Index)
 {
 	if(getNumSizes() > 1)
 	{
-		getInternalSizes()[Index] = Size;
+		editInternalSizes(Index) = Size;
 	}
 	else if(getNumSizes() == 1)
 	{
 		if(getNumParticles() > 1)
 		{
-			if(getInternalSizes()[0] != Size)
+			if(getInternalSizes(0) != Size)
 			{
 				//Expand to Positions size-1
 				for(UInt32 i(0) ; i<getNumParticles()-1 ; ++i)
 				{
-					getInternalSizes().push_back(getInternalSizes()[0]);
+					editMFInternalSizes()->push_back(getInternalSizes(0));
 				}
-				getInternalSizes()[Index] = Size;
+				editInternalSizes(Index) = Size;
 			}
 		}
 		else
 		{
-			getInternalSizes()[Index] = Size;
+			editInternalSizes(Index) = Size;
 		}
 	}
 }
@@ -1248,25 +1243,25 @@ void ParticleSystem::setLifespan(const Time& Lifespan, const UInt32& Index)
 {
 	if(getNumLifespans() > 1)
 	{
-		getInternalLifespans()[Index] = Lifespan;
+		editInternalLifespans(Index) = Lifespan;
 	}
 	else if(getNumLifespans() == 1)
 	{
 		if(getNumParticles() > 1)
 		{
-			if(getInternalLifespans()[0] != Lifespan)
+			if(getInternalLifespans(0) != Lifespan)
 			{
 				//Expand to Positions size-1
 				for(UInt32 i(0) ; i<getNumParticles()-1 ; ++i)
 				{
-					getInternalLifespans().push_back(getInternalLifespans()[0]);
+					editMFInternalLifespans()->push_back(getInternalLifespans(0));
 				}
-				getInternalLifespans()[Index] = Lifespan;
+				editInternalLifespans(Index) = Lifespan;
 			}
 		}
 		else
 		{
-			getInternalLifespans()[Index] = Lifespan;
+			editInternalLifespans(Index) = Lifespan;
 		}
 	}
 }
@@ -1275,25 +1270,25 @@ void ParticleSystem::setAge(const Time& Age, const UInt32& Index)
 {
 	if(getNumAges() > 1)
 	{
-		getInternalAges()[Index] = Age;
+		editInternalAges(Index) = Age;
 	}
 	else if(getNumAges() == 1)
 	{
 		if(getNumParticles() > 1)
 		{
-			if(getInternalAges()[0] != Age)
+			if(getInternalAges(0) != Age)
 			{
 				//Expand to Positions size-1
 				for(UInt32 i(0) ; i<getNumParticles()-1 ; ++i)
 				{
-					getInternalAges().push_back(getInternalAges()[0]);
+					editMFInternalAges()->push_back(getInternalAges(0));
 				}
-				getInternalAges()[Index] = Age;
+				editInternalAges(Index) = Age;
 			}
 		}
 		else
 		{
-			getInternalAges()[Index] = Age;
+			editInternalAges(Index) = Age;
 		}
 	}
 }
@@ -1302,25 +1297,25 @@ void ParticleSystem::setVelocity(const Vec3f& Velocity, const UInt32& Index)
 {
 	if(getNumVelocities() > 1)
 	{
-		getInternalVelocities()[Index] = Velocity;
+		editInternalVelocities(Index) = Velocity;
 	}
 	else if(getNumVelocities() == 1)
 	{
 		if(getNumParticles() > 1)
 		{
-			if(getInternalVelocities()[0] != Velocity)
+			if(getInternalVelocities(0) != Velocity)
 			{
 				//Expand to Positions size-1
 				for(UInt32 i(0) ; i<getNumParticles()-1 ; ++i)
 				{
-					getInternalVelocities().push_back(getInternalVelocities()[0]);
+					editMFInternalVelocities()->push_back(getInternalVelocities(0));
 				}
-				getInternalVelocities()[Index] = Velocity;
+				editInternalVelocities(Index) = Velocity;
 			}
 		}
 		else
 		{
-			getInternalVelocities()[Index] = Velocity;
+			editInternalVelocities(Index) = Velocity;
 		}
 	}
 }
@@ -1329,25 +1324,25 @@ void ParticleSystem::setSecVelocity(const Vec3f& SecVelocity, const UInt32& Inde
 {
 	if(getNumSecVelocities() > 1)
 	{
-		getInternalSecVelocities()[Index] = SecVelocity;
+		editInternalSecVelocities(Index) = SecVelocity;
 	}
 	else if(getNumSecVelocities() == 1)
 	{
 		if(getNumParticles() > 1)
 		{
-			if(getInternalSecVelocities()[0] != SecVelocity)
+			if(getInternalSecVelocities(0) != SecVelocity)
 			{
 				//Expand to Positions size-1
 				for(UInt32 i(0) ; i<getNumParticles()-1 ; ++i)
 				{
-					getInternalSecVelocities().push_back(getInternalSecVelocities()[0]);
+					editMFInternalSecVelocities()->push_back(getInternalSecVelocities(0));
 				}
-				getInternalSecVelocities()[Index] = SecVelocity;
+				editInternalSecVelocities(Index) = SecVelocity;
 			}
 		}
 		else
 		{
-			getInternalSecVelocities()[Index] = SecVelocity;
+			editInternalSecVelocities(Index) = SecVelocity;
 		}
 	}
 }
@@ -1356,25 +1351,25 @@ void ParticleSystem::setAcceleration(const Vec3f& Acceleration, const UInt32& In
 {
 	if(getNumAccelerations() > 1)
 	{
-		getInternalAccelerations()[Index] = Acceleration;
+		editInternalAccelerations(Index) = Acceleration;
 	}
 	else if(getNumAccelerations() == 1)
 	{
 		if(getNumParticles() > 1)
 		{
-			if(getInternalAccelerations()[0] != Acceleration)
+			if(getInternalAccelerations(0) != Acceleration)
 			{
 				//Expand to Positions size-1
 				for(UInt32 i(0) ; i<getNumParticles()-1 ; ++i)
 				{
-					getInternalAccelerations().push_back(getInternalAccelerations()[0]);
+					editMFInternalAccelerations()->push_back(getInternalAccelerations(0));
 				}
-				getInternalAccelerations()[Index] = Acceleration;
+				editInternalAccelerations(Index) = Acceleration;
 			}
 		}
 		else
 		{
-			getInternalAccelerations()[Index] = Acceleration;
+			editInternalAccelerations(Index) = Acceleration;
 		}
 	}
 }
@@ -1383,25 +1378,25 @@ void ParticleSystem::setAttributes(const StringToUInt32Map& Attributes, const UI
 {
 	if(getNumAttributes() > 1)
 	{
-		getInternalAttributes()[Index] = Attributes;
+		editInternalAttributes(Index) = Attributes;
 	}
 	else if(getNumAttributes() == 1)
 	{
 		if(getNumParticles() > 1)
 		{
-			//if(getInternalAttributes()[0] != Attributes)
+			//if(getInternalAttributes(0) != Attributes)
 			//{
 				//Expand to Positions size-1
 				for(UInt32 i(0) ; i<getNumParticles()-1 ; ++i)
 				{
-					getInternalAttributes().push_back(getInternalAttributes()[0]);
+					editMFInternalAttributes()->push_back(getInternalAttributes(0));
 				}
-				getInternalAttributes()[Index] = Attributes;
+				editInternalAttributes(Index) = Attributes;
 			//}
 		}
 		else
 		{
-			getInternalAttributes()[Index] = Attributes;
+			editInternalAttributes(Index) = Attributes;
 		}
 	}
 }
@@ -1410,25 +1405,25 @@ void ParticleSystem::setAttribute(const std::string& AttributeKey, UInt32 Attrib
 {
 	if(getNumAttributes() > 1)
 	{
-		getInternalAttributes()[Index][AttributeKey] = AttributeValue;
+		editInternalAttributes(Index)[AttributeKey] = AttributeValue;
 	}
 	else if(getNumAttributes() == 1)
 	{
 		if(getNumParticles() > 1)
 		{
-			if(getInternalAttributes()[0][AttributeKey] != AttributeValue)
+			if(editInternalAttributes(0)[AttributeKey] != AttributeValue)
 			{
 				//Expand to Positions size-1
 				for(UInt32 i(0) ; i<getNumParticles()-1 ; ++i)
 				{
-					getInternalAttributes().push_back(getInternalAttributes()[0]);
+					editMFInternalAttributes()->push_back(getInternalAttributes(0));
 				}
-				getInternalAttributes()[Index][AttributeKey] = AttributeValue;
+				editInternalAttributes(Index)[AttributeKey] = AttributeValue;
 			}
 		}
 		else
 		{
-			getInternalAttributes()[Index][AttributeKey] = AttributeValue;
+			editInternalAttributes(Index)[AttributeKey] = AttributeValue;
 		}
 	}
 }
@@ -1449,25 +1444,21 @@ void ParticleSystem::internalKillParticles()
 void ParticleSystem::extendVolumeByParticle(UInt32 ParticleIndex)
 {
     UInt32 NumParticles(getNumParticles());
-    DynamicVolume PrevVolume(getVolume());
+    BoxVolume NewVolume(getVolume());
 
-    beginEditCP(ParticleSystemPtr(this), VolumeFieldMask | MaxParticleSizeFieldMask);
 
-    editVolume().extendBy(getPosition(ParticleIndex));
-    editMaxParticleSize().setValues(osgMax(getMaxParticleSize().x(),getSize(ParticleIndex).x()),
-                                    osgMax(getMaxParticleSize().y(),getSize(ParticleIndex).y()),
-                                    osgMax(getMaxParticleSize().z(),getSize(ParticleIndex).z())
-                                    );
+    NewVolume.extendBy(getPosition(ParticleIndex));
+    Vec3f NewMaxSize(osgMax(getMaxParticleSize().x(),getSize(ParticleIndex).x()),
+                     osgMax(getMaxParticleSize().y(),getSize(ParticleIndex).y()),
+                     osgMax(getMaxParticleSize().z(),getSize(ParticleIndex).z())
+                    );
 
     if(NumParticles > 0)
     {
-        if(PrevVolume != getVolume() || !getMaxParticleSize().isZero())
+        if(getVolume() != NewVolume || NewMaxSize != getMaxParticleSize())
         {
-            endEditCP(ParticleSystemPtr(this), VolumeFieldMask | MaxParticleSizeFieldMask);
-        }
-        else
-        {
-            endEditNotChangedCP(ParticleSystemPtr(this), VolumeFieldMask | MaxParticleSizeFieldMask);
+            setVolume(NewVolume);
+            setMaxParticleSize(NewMaxSize);
         }
     }
 }
@@ -1475,31 +1466,26 @@ void ParticleSystem::extendVolumeByParticle(UInt32 ParticleIndex)
 void ParticleSystem::updateVolume(void)
 {
     UInt32 NumParticles(getNumParticles());
-    DynamicVolume PrevVolume(getVolume());
 
-    beginEditCP(ParticleSystemPtr(this), VolumeFieldMask | MaxParticleSizeFieldMask);
+    BoxVolume NewVolume;
+    Vec3f NewMaxSize(0.0f,0.0f,0.0f);
 
-    setVolume(DynamicVolume());
-    setMaxParticleSize(Vec3f(0.0f,0.0f,0.0f));
 
     for(UInt32 i(0) ; i<NumParticles ; ++i)
     {
-        editVolume().extendBy(getPosition(i));
-        editMaxParticleSize().setValues(osgMax(getMaxParticleSize().x(),getSize(i).x()),
-                                        osgMax(getMaxParticleSize().y(),getSize(i).y()),
-                                        osgMax(getMaxParticleSize().z(),getSize(i).z())
-                                        );
+        NewVolume.extendBy(getPosition(i));
+        NewMaxSize.setValues(osgMax(NewMaxSize.x(),getSize(i).x()),
+                             osgMax(NewMaxSize.y(),getSize(i).y()),
+                             osgMax(NewMaxSize.z(),getSize(i).z())
+                            );
     }
 
     if(NumParticles > 0)
     {
-        if(PrevVolume != getVolume() || !getMaxParticleSize().isZero())
+        if(getVolume() != NewVolume || NewMaxSize != getMaxParticleSize())
         {
-            endEditCP(ParticleSystemPtr(this), VolumeFieldMask | MaxParticleSizeFieldMask);
-        }
-        else
-        {
-            endEditNotChangedCP(ParticleSystemPtr(this), VolumeFieldMask | MaxParticleSizeFieldMask);
+            setVolume(NewVolume);
+            setMaxParticleSize(NewMaxSize);
         }
     }
 }
@@ -1508,17 +1494,14 @@ void ParticleSystem::update(const Time& elps)
 {
 
     //Loop through all of the particles
-    DynamicVolume PrevVolume(getVolume());
+    BoxVolume PrevVolume(getVolume());
 
 	_isUpdating = true;
 
     UInt32 NumParticles(getNumParticles());
-    if(NumParticles > 0)
-    {
-        beginEditCP(ParticleSystemPtr(this), VolumeFieldMask | MaxParticleSizeFieldMask);
-            setVolume(DynamicVolume());
-            setMaxParticleSize(Vec3f(0.0f,0.0f,0.0f));
-    }
+
+    BoxVolume NewVolume;
+    Vec3f NewMaxSize(0.0f,0.0f,0.0f);
 
 	bool AdvanceIterator(true);
     for(UInt32 i(0) ; i<NumParticles; ++i)
@@ -1546,9 +1529,9 @@ void ParticleSystem::update(const Time& elps)
 		setVelocity(getVelocity(i) + getAcceleration(i)*elps,i);
 
 		//Affect Particles with Affectors
-		for(UInt32 j(0) ; j<getAffectors().size(); ++j)
+		for(UInt32 j(0) ; j<getMFAffectors()->size(); ++j)
 		{
-			if(getAffectors(j)->affect(ParticleSystemPtr(this), i, elps))
+			if(getAffectors(j)->affect(ParticleSystemRefPtr(this), i, elps))
 			{
 				killParticle(i);
 				continue;
@@ -1556,22 +1539,20 @@ void ParticleSystem::update(const Time& elps)
 			
 		}
 
-        editVolume().extendBy(getPosition(i));
-        editMaxParticleSize().setValues(osgMax(getMaxParticleSize().x(),getSize(i).x()),
-                                        osgMax(getMaxParticleSize().y(),getSize(i).y()),
-                                        osgMax(getMaxParticleSize().z(),getSize(i).z())
-                                        );
+        NewVolume.extendBy(getPosition(i));
+        NewMaxSize.setValues(osgMax(NewMaxSize.x(),getSize(i).x()),
+                             osgMax(NewMaxSize.y(),getSize(i).y()),
+                             osgMax(NewMaxSize.z(),getSize(i).z())
+                            );
     }
 
 	//Generate Particles with Generators
-	UInt32 NumGenerators(getGenerators().size());
+	UInt32 NumGenerators(getMFGenerators()->size());
 	for(UInt32 j(0) ; j<NumGenerators; )
 	{
-		if(getGenerators()[j]->generate(ParticleSystemPtr(this), elps))
+		if(getGenerators(j)->generate(ParticleSystemRefPtr(this), elps))
 		{
-			beginEditCP(ParticleSystemPtr(this), GeneratorsFieldMask);
-				getGenerators().erase(std::find(getGenerators().begin(), getGenerators().end(), getGenerators()[j])); 
-			endEditCP(ParticleSystemPtr(this), GeneratorsFieldMask);
+            removeFromGenerators(j); 
 			--NumGenerators;
 		}
 		else
@@ -1582,9 +1563,9 @@ void ParticleSystem::update(const Time& elps)
     //Update the Generated Particles by there age
     
 	//Affect Particles with System Affectors
-	for(UInt32 j(0) ; j<getSystemAffectors().size(); ++j)
+	for(UInt32 j(0) ; j<getMFSystemAffectors()->size(); ++j)
 	{
-		getSystemAffectors(j)->affect(ParticleSystemPtr(this), elps);
+		getSystemAffectors(j)->affect(ParticleSystemRefPtr(this), elps);
 	}
 
 	_isUpdating = false;
@@ -1592,13 +1573,10 @@ void ParticleSystem::update(const Time& elps)
 
     if(NumParticles > 0)
     {
-        if(PrevVolume != getVolume() || !getMaxParticleSize().isZero())
+        if(getVolume() != NewVolume || NewMaxSize != getMaxParticleSize())
         {
-            endEditCP(ParticleSystemPtr(this), VolumeFieldMask | MaxParticleSizeFieldMask);
-        }
-        else
-        {
-            endEditNotChangedCP(ParticleSystemPtr(this), VolumeFieldMask | MaxParticleSizeFieldMask);
+            setVolume(NewVolume);
+            setMaxParticleSize(NewMaxSize);
         }
     }
 
@@ -1609,7 +1587,7 @@ void ParticleSystem::produceParticleGenerated(Int32 Index)
 {
     if(_ParticleSystemListeners.size() > 0 || getNumActivitiesAttached(ParticleGeneratedMethodId)>0)
     {
-        const ParticleEventPtr TheEvent = ParticleEvent::create( ParticleSystemPtr(this), getSystemTime(),
+        const ParticleEventUnrecPtr TheEvent = ParticleEvent::create( ParticleSystemRefPtr(this), getSystemTime(),
                 Index,
                 getPosition(Index),
                 getSecPosition(Index),
@@ -1647,7 +1625,7 @@ void ParticleSystem::produceParticleKilled(Int32 Index,
 										 const Vec3f& Acceleration,
                                          const StringToUInt32Map& Attributes)
 {
-   const ParticleEventPtr TheEvent = ParticleEvent::create( ParticleSystemPtr(this), getSystemTime(), Index, Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Attributes );
+   const ParticleEventUnrecPtr TheEvent = ParticleEvent::create( ParticleSystemRefPtr(this), getSystemTime(), Index, Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Attributes );
    ParticleSystemListenerSetItor NextItor;
    for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)
    {
@@ -1672,7 +1650,7 @@ void ParticleSystem::produceParticleStolen(Int32 Index,
 										 const Vec3f& Acceleration,
                                          const StringToUInt32Map& Attributes)
 {
-   const ParticleEventPtr TheEvent = ParticleEvent::create( ParticleSystemPtr(this), getSystemTime(), Index, Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Attributes );
+   const ParticleEventUnrecPtr TheEvent = ParticleEvent::create( ParticleSystemRefPtr(this), getSystemTime(), Index, Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Attributes );
 
    ParticleSystemListenerSetItor NextItor;
    for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)
@@ -1687,7 +1665,7 @@ void ParticleSystem::produceParticleStolen(Int32 Index,
 
 void ParticleSystem::produceSystemUpdated()
 {
-   const ParticleSystemEventPtr TheEvent = ParticleSystemEvent::create( ParticleSystemPtr(this), getSystemTime());
+   const ParticleSystemEventUnrecPtr TheEvent = ParticleSystemEvent::create( ParticleSystemRefPtr(this), getSystemTime());
    ParticleSystemListenerSetItor NextItor;
    for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)
    {
@@ -1701,7 +1679,7 @@ void ParticleSystem::produceSystemUpdated()
 
 void ParticleSystem::produceVolumeChanged()
 {
-   const ParticleSystemEventPtr TheEvent = ParticleSystemEvent::create( ParticleSystemPtr(this), getSystemTime());
+   const ParticleSystemEventUnrecPtr TheEvent = ParticleSystemEvent::create( ParticleSystemRefPtr(this), getSystemTime());
    ParticleSystemListenerSetItor NextItor;
    for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)
    {
@@ -1713,9 +1691,9 @@ void ParticleSystem::produceVolumeChanged()
    _Producer.produceEvent(VolumeChangedMethodId,TheEvent);
 }
 
-bool ParticleSystem::attachUpdateListener(WindowEventProducerPtr UpdateProducer)
+bool ParticleSystem::attachUpdateListener(WindowEventProducerRefPtr UpdateProducer)
 {
-    if(UpdateProducer == NullFC)
+    if(UpdateProducer == NULL)
     {
         return false;
     }
@@ -1725,19 +1703,18 @@ bool ParticleSystem::attachUpdateListener(WindowEventProducerPtr UpdateProducer)
     return true;
 }
 
-void ParticleSystem::dettachUpdateListener(WindowEventProducerPtr UpdateProducer)
+void ParticleSystem::dettachUpdateListener(WindowEventProducerRefPtr UpdateProducer)
 {
-    if(UpdateProducer != NullFC)
+    if(UpdateProducer != NULL)
     {
         UpdateProducer->removeUpdateListener(&_SystemUpdateListener);
     }
 }
 
-void ParticleSystem::eventProduced(const EventPtr EventDetails, UInt32 ProducedEventId)
+void ParticleSystem::eventProduced(const EventUnrecPtr EventDetails, UInt32 ProducedEventId)
 {
-    update(UpdateEventPtr::dcast(EventDetails)->getElapsedTime());
+    update(dynamic_pointer_cast<UpdateEvent>(EventDetails)->getElapsedTime());
 }
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -1748,6 +1725,7 @@ ParticleSystem::ParticleSystem(void) :
     Inherited(),
     _SystemUpdateListener(this),
     _isUpdating(false)
+
 {
 }
 
@@ -1755,6 +1733,7 @@ ParticleSystem::ParticleSystem(const ParticleSystem &source) :
     Inherited(source),
     _SystemUpdateListener(this),
     _isUpdating(false)
+
 {
 }
 
@@ -1764,9 +1743,11 @@ ParticleSystem::~ParticleSystem(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void ParticleSystem::changed(BitVector whichField, UInt32 origin)
+void ParticleSystem::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 
     if(whichField & VolumeFieldMask)
     {
@@ -1779,49 +1760,49 @@ void ParticleSystem::changed(BitVector whichField, UInt32 origin)
 
         if(getNumParticles() > 0)
         {
-            if(getInternalSecPositions().size() == 0)
+            if(getMFInternalSecPositions()->size() == 0)
             {
                 addAndExpandSecPositions(Pnt3f(0.0f,0.0f,0.0f));
             }
             
-            if(getInternalNormals().size() == 0)
+            if(getMFInternalNormals()->size() == 0)
             {
                 addAndExpandNormals(Vec3f(0.0f,0.0f,1.0f));
             }
             
-            if(getInternalColors().size() == 0)
+            if(getMFInternalColors()->size() == 0)
             {
                 addAndExpandColors(Color4f(1.0f,1.0f,1.0f,1.0f));
             }
             
-            if(getInternalSizes().size() == 0)
+            if(getMFInternalSizes()->size() == 0)
             {
                 addAndExpandSizes(Vec3f(1.0f,1.0f,1.0f));
             }
             
-            if(getInternalLifespans().size() == 0)
+            if(getMFInternalLifespans()->size() == 0)
             {
                 addAndExpandLifespans(-1.0f);
             }
             
-            if(getInternalAges().size() == 0)
+            if(getMFInternalAges()->size() == 0)
             {
                 addAndExpandAges(0.0f);
             }
-            if(getInternalVelocities().size() == 0)
+            if(getMFInternalVelocities()->size() == 0)
             {
                 addAndExpandVelocities(Vec3f(0.0f,0.0f,0.0f));
             }
-            if(getInternalSecVelocities().size() == 0)
+            if(getMFInternalSecVelocities()->size() == 0)
             {
                 addAndExpandSecVelocities(Vec3f(0.0f,0.0f,0.0f));
             }
-            if(getInternalAccelerations().size() == 0)
+            if(getMFInternalAccelerations()->size() == 0)
             {
                 addAndExpandAccelerations(Vec3f(0.0f,0.0f,0.0f));
             }
 
-            if(getInternalAttributes().size() == 0)
+            if(getMFInternalAttributes()->size() == 0)
             {
                 addAndExpandAttributes(StringToUInt32Map());
             }
@@ -1833,20 +1814,19 @@ void ParticleSystem::changed(BitVector whichField, UInt32 origin)
 
 }
 
-void ParticleSystem::dump(      UInt32    , 
+void ParticleSystem::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump ParticleSystem NI" << std::endl;
 }
 
-/*----------------------------- internal classes ----------------------------*/
-void ParticleSystem::SystemUpdateListener::update(const UpdateEventPtr e)
+void ParticleSystem::SystemUpdateListener::update(const UpdateEventUnrecPtr e)
 {
     _System->update(e->getElapsedTime());
 }
 
 
-ParticleSystem::ParticlePositionSort::ParticlePositionSort(ParticleSystemPtr System, const Pnt3f& Pos) : _System(System), _Pos(Pos)
+ParticleSystem::ParticlePositionSort::ParticlePositionSort(const ParticleSystem* System, const Pnt3f& Pos) : _System(System), _Pos(Pos)
 {
 }
 
@@ -1856,5 +1836,3 @@ bool ParticleSystem::ParticlePositionSort::operator()(const UInt32& Left, const 
 }
 
 OSG_END_NAMESPACE
-
-

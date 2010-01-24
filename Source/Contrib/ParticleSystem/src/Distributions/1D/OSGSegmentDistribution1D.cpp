@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Dynamics                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,23 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGSegmentDistribution1D.h"
-#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
+#include "OSGRandomPoolManager.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::SegmentDistribution1D
-An SegmentDistribution1D. 	
-*/
+// Documentation for this class is emitted in the
+// OSGSegmentDistribution1DBase.cpp file.
+// To modify it, please change the .fcd file (OSGSegmentDistribution1D.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -66,8 +63,13 @@ An SegmentDistribution1D.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void SegmentDistribution1D::initMethod (void)
+void SegmentDistribution1D::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -102,16 +104,17 @@ SegmentDistribution1D::~SegmentDistribution1D(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void SegmentDistribution1D::changed(BitVector whichField, UInt32 origin)
+void SegmentDistribution1D::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void SegmentDistribution1D::dump(      UInt32    , 
+void SegmentDistribution1D::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump SegmentDistribution1D NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

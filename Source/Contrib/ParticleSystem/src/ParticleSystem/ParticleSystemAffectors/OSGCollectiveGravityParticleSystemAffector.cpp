@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGCollectiveGravityParticleSystemAffector.h"
-#include "ParticleSystem/OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::CollectiveGravityParticleSystemAffector
-
-*/
+// Documentation for this class is emitted in the
+// OSGCollectiveGravityParticleSystemAffectorBase.cpp file.
+// To modify it, please change the .fcd file (OSGCollectiveGravityParticleSystemAffector.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -68,8 +62,13 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void CollectiveGravityParticleSystemAffector::initMethod (void)
+void CollectiveGravityParticleSystemAffector::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -77,7 +76,7 @@ void CollectiveGravityParticleSystemAffector::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void CollectiveGravityParticleSystemAffector::affect(ParticleSystemPtr System, const Time& elps)
+void CollectiveGravityParticleSystemAffector::affect(ParticleSystemRefPtr System, const Time& elps)
 {
 	Vec3f Force,Ftotal,LineSegment,Acceleration;
 	Real32 DistanceSquared;
@@ -86,10 +85,10 @@ void CollectiveGravityParticleSystemAffector::affect(ParticleSystemPtr System, c
 	//calculate Center Mass of all particles
 	for(UInt32 i(0); i < System->getNumParticles(); ++i)
 	{
-		CenterMass = CenterMass + System->getPosition(i);
+		CenterMass = CenterMass + System->getPosition(i).subZero();
 	}
 
-	CenterMass*=1.0/System->getNumParticles();
+	CenterMass*=1.0f/System->getNumParticles();
 	
 	for(UInt32 i(0); i < System->getNumParticles(); ++i)
 	{
@@ -102,7 +101,7 @@ void CollectiveGravityParticleSystemAffector::affect(ParticleSystemPtr System, c
 		}
 		else
 		{
-			Force.setValues(0.0,0.0,0.0);
+			Force.setValues(0.0f,0.0f,0.0f);
 		}
 		Acceleration = 1.0f/getParticleMass() * Force;
 		System->setAcceleration(Acceleration,i);
@@ -133,41 +132,17 @@ CollectiveGravityParticleSystemAffector::~CollectiveGravityParticleSystemAffecto
 
 /*----------------------------- class specific ----------------------------*/
 
-void CollectiveGravityParticleSystemAffector::changed(BitVector whichField, UInt32 origin)
+void CollectiveGravityParticleSystemAffector::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void CollectiveGravityParticleSystemAffector::dump(      UInt32    , 
+void CollectiveGravityParticleSystemAffector::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump CollectiveGravityParticleSystemAffector NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGCOLLECTIVEGRAVITYPARTICLESYSTEMAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCOLLECTIVEGRAVITYPARTICLESYSTEMAFFECTORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCOLLECTIVEGRAVITYPARTICLESYSTEMAFFECTORFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

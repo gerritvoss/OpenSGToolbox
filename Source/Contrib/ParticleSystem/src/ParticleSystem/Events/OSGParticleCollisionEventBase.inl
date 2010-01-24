@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,185 +55,141 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &ParticleCollisionEventBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ParticleCollisionEventBase::getClassTypeId(void) 
+OSG::UInt32 ParticleCollisionEventBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-ParticleCollisionEventPtr ParticleCollisionEventBase::create(void) 
-{
-    ParticleCollisionEventPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = ParticleCollisionEventPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-ParticleCollisionEventPtr ParticleCollisionEventBase::createEmpty(void) 
-{ 
-    ParticleCollisionEventPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 ParticleCollisionEventBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ParticleCollisionEvent::_sfPrimarySystem field.
-inline
-const SFParticleSystemPtr *ParticleCollisionEventBase::getSFPrimarySystem(void) const
-{
-    return &_sfPrimarySystem;
-}
-
-//! Get the ParticleCollisionEvent::_sfPrimarySystem field.
-inline
-SFParticleSystemPtr *ParticleCollisionEventBase::editSFPrimarySystem(void)
-{
-    return &_sfPrimarySystem;
-}
-
-//! Get the ParticleCollisionEvent::_sfPrimaryParticleIndex field.
-inline
-const SFUInt32 *ParticleCollisionEventBase::getSFPrimaryParticleIndex(void) const
-{
-    return &_sfPrimaryParticleIndex;
-}
-
-//! Get the ParticleCollisionEvent::_sfPrimaryParticleIndex field.
-inline
-SFUInt32 *ParticleCollisionEventBase::editSFPrimaryParticleIndex(void)
-{
-    return &_sfPrimaryParticleIndex;
-}
-
-//! Get the ParticleCollisionEvent::_sfSecondarySystem field.
-inline
-const SFParticleSystemPtr *ParticleCollisionEventBase::getSFSecondarySystem(void) const
-{
-    return &_sfSecondarySystem;
-}
-
-//! Get the ParticleCollisionEvent::_sfSecondarySystem field.
-inline
-SFParticleSystemPtr *ParticleCollisionEventBase::editSFSecondarySystem(void)
-{
-    return &_sfSecondarySystem;
-}
-
-//! Get the ParticleCollisionEvent::_sfSecondaryParticleIndex field.
-inline
-const SFUInt32 *ParticleCollisionEventBase::getSFSecondaryParticleIndex(void) const
-{
-    return &_sfSecondaryParticleIndex;
-}
-
-//! Get the ParticleCollisionEvent::_sfSecondaryParticleIndex field.
-inline
-SFUInt32 *ParticleCollisionEventBase::editSFSecondaryParticleIndex(void)
-{
-    return &_sfSecondaryParticleIndex;
-}
-
 
 //! Get the value of the ParticleCollisionEvent::_sfPrimarySystem field.
 inline
-ParticleSystemPtr &ParticleCollisionEventBase::editPrimarySystem(void)
-{
-    return _sfPrimarySystem.getValue();
-}
-
-//! Get the value of the ParticleCollisionEvent::_sfPrimarySystem field.
-inline
-const ParticleSystemPtr &ParticleCollisionEventBase::getPrimarySystem(void) const
+ParticleSystem * ParticleCollisionEventBase::getPrimarySystem(void) const
 {
     return _sfPrimarySystem.getValue();
 }
 
 //! Set the value of the ParticleCollisionEvent::_sfPrimarySystem field.
 inline
-void ParticleCollisionEventBase::setPrimarySystem(const ParticleSystemPtr &value)
+void ParticleCollisionEventBase::setPrimarySystem(ParticleSystem * const value)
 {
+    editSField(PrimarySystemFieldMask);
+
     _sfPrimarySystem.setValue(value);
 }
-
 //! Get the value of the ParticleCollisionEvent::_sfPrimaryParticleIndex field.
+
 inline
 UInt32 &ParticleCollisionEventBase::editPrimaryParticleIndex(void)
 {
+    editSField(PrimaryParticleIndexFieldMask);
+
     return _sfPrimaryParticleIndex.getValue();
 }
 
 //! Get the value of the ParticleCollisionEvent::_sfPrimaryParticleIndex field.
 inline
-const UInt32 &ParticleCollisionEventBase::getPrimaryParticleIndex(void) const
+      UInt32  ParticleCollisionEventBase::getPrimaryParticleIndex(void) const
 {
     return _sfPrimaryParticleIndex.getValue();
 }
 
 //! Set the value of the ParticleCollisionEvent::_sfPrimaryParticleIndex field.
 inline
-void ParticleCollisionEventBase::setPrimaryParticleIndex(const UInt32 &value)
+void ParticleCollisionEventBase::setPrimaryParticleIndex(const UInt32 value)
 {
+    editSField(PrimaryParticleIndexFieldMask);
+
     _sfPrimaryParticleIndex.setValue(value);
 }
 
 //! Get the value of the ParticleCollisionEvent::_sfSecondarySystem field.
 inline
-ParticleSystemPtr &ParticleCollisionEventBase::editSecondarySystem(void)
-{
-    return _sfSecondarySystem.getValue();
-}
-
-//! Get the value of the ParticleCollisionEvent::_sfSecondarySystem field.
-inline
-const ParticleSystemPtr &ParticleCollisionEventBase::getSecondarySystem(void) const
+ParticleSystem * ParticleCollisionEventBase::getSecondarySystem(void) const
 {
     return _sfSecondarySystem.getValue();
 }
 
 //! Set the value of the ParticleCollisionEvent::_sfSecondarySystem field.
 inline
-void ParticleCollisionEventBase::setSecondarySystem(const ParticleSystemPtr &value)
+void ParticleCollisionEventBase::setSecondarySystem(ParticleSystem * const value)
 {
+    editSField(SecondarySystemFieldMask);
+
     _sfSecondarySystem.setValue(value);
 }
-
 //! Get the value of the ParticleCollisionEvent::_sfSecondaryParticleIndex field.
+
 inline
 UInt32 &ParticleCollisionEventBase::editSecondaryParticleIndex(void)
 {
+    editSField(SecondaryParticleIndexFieldMask);
+
     return _sfSecondaryParticleIndex.getValue();
 }
 
 //! Get the value of the ParticleCollisionEvent::_sfSecondaryParticleIndex field.
 inline
-const UInt32 &ParticleCollisionEventBase::getSecondaryParticleIndex(void) const
+      UInt32  ParticleCollisionEventBase::getSecondaryParticleIndex(void) const
 {
     return _sfSecondaryParticleIndex.getValue();
 }
 
 //! Set the value of the ParticleCollisionEvent::_sfSecondaryParticleIndex field.
 inline
-void ParticleCollisionEventBase::setSecondaryParticleIndex(const UInt32 &value)
+void ParticleCollisionEventBase::setSecondaryParticleIndex(const UInt32 value)
 {
+    editSField(SecondaryParticleIndexFieldMask);
+
     _sfSecondaryParticleIndex.setValue(value);
 }
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void ParticleCollisionEventBase::execSync (      ParticleCollisionEventBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (PrimarySystemFieldMask & whichField))
+        _sfPrimarySystem.syncWith(pFrom->_sfPrimarySystem);
+
+    if(FieldBits::NoField != (PrimaryParticleIndexFieldMask & whichField))
+        _sfPrimaryParticleIndex.syncWith(pFrom->_sfPrimaryParticleIndex);
+
+    if(FieldBits::NoField != (SecondarySystemFieldMask & whichField))
+        _sfSecondarySystem.syncWith(pFrom->_sfSecondarySystem);
+
+    if(FieldBits::NoField != (SecondaryParticleIndexFieldMask & whichField))
+        _sfSecondaryParticleIndex.syncWith(pFrom->_sfSecondaryParticleIndex);
+}
+#endif
+
+
+inline
+const Char8 *ParticleCollisionEventBase::getClassname(void)
+{
+    return "ParticleCollisionEvent";
+}
+
+
+OSG_GEN_CONTAINERPTR(ParticleCollisionEvent);
+
 OSG_END_NAMESPACE
+

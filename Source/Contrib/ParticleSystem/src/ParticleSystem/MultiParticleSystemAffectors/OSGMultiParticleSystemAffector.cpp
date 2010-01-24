@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGMultiParticleSystemAffector.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::MultiParticleSystemAffector
-
-*/
+// Documentation for this class is emitted in the
+// OSGMultiParticleSystemAffectorBase.cpp file.
+// To modify it, please change the .fcd file (OSGMultiParticleSystemAffector.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,8 +62,13 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void MultiParticleSystemAffector::initMethod (void)
+void MultiParticleSystemAffector::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -98,41 +98,17 @@ MultiParticleSystemAffector::~MultiParticleSystemAffector(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void MultiParticleSystemAffector::changed(BitVector whichField, UInt32 origin)
+void MultiParticleSystemAffector::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void MultiParticleSystemAffector::dump(      UInt32    , 
+void MultiParticleSystemAffector::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump MultiParticleSystemAffector NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGMULTIPARTICLESYSTEMAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGMULTIPARTICLESYSTEMAFFECTORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGMULTIPARTICLESYSTEMAFFECTORFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

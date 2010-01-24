@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,86 +58,102 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGParticleSystemDrawer.h" // Parent
 
-#include <OpenSG/OSGReal32Fields.h> // Radius type
-#include <OpenSG/OSGUInt32Fields.h> // Segments type
-#include <OpenSG/OSGUInt32Fields.h> // NormalSource type
-#include <OpenSG/OSGVec3fFields.h> // Normal type
-#include <OpenSG/OSGUInt32Fields.h> // UpSource type
-#include <OpenSG/OSGVec3fFields.h> // Up type
-#include <OpenSG/OSGBoolFields.h> // UseNormalAsObjectSpaceRotation type
-#include <OpenSG/OSGReal32Fields.h> // CenterAlpha type
-#include <OpenSG/OSGReal32Fields.h> // EdgeAlpha type
+#include "OSGSysFields.h"               // Radius type
+#include "OSGVecFields.h"               // Normal type
 
 #include "OSGDiscParticleSystemDrawerFields.h"
+
 
 OSG_BEGIN_NAMESPACE
 
 class DiscParticleSystemDrawer;
-class BinaryDataHandler;
 
 //! \brief DiscParticleSystemDrawer Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING DiscParticleSystemDrawerBase : public ParticleSystemDrawer
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DiscParticleSystemDrawerBase : public ParticleSystemDrawer
 {
-  private:
-
-    typedef ParticleSystemDrawer    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef DiscParticleSystemDrawerPtr  Ptr;
+    typedef ParticleSystemDrawer Inherited;
+    typedef ParticleSystemDrawer ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(DiscParticleSystemDrawer);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        RadiusFieldId                         = Inherited::NextFieldId,
-        SegmentsFieldId                       = RadiusFieldId                         + 1,
-        NormalSourceFieldId                   = SegmentsFieldId                       + 1,
-        NormalFieldId                         = NormalSourceFieldId                   + 1,
-        UpSourceFieldId                       = NormalFieldId                         + 1,
-        UpFieldId                             = UpSourceFieldId                       + 1,
-        UseNormalAsObjectSpaceRotationFieldId = UpFieldId                             + 1,
-        CenterAlphaFieldId                    = UseNormalAsObjectSpaceRotationFieldId + 1,
-        EdgeAlphaFieldId                      = CenterAlphaFieldId                    + 1,
-        NextFieldId                           = EdgeAlphaFieldId                      + 1
+        RadiusFieldId = Inherited::NextFieldId,
+        SegmentsFieldId = RadiusFieldId + 1,
+        NormalSourceFieldId = SegmentsFieldId + 1,
+        NormalFieldId = NormalSourceFieldId + 1,
+        UpSourceFieldId = NormalFieldId + 1,
+        UpFieldId = UpSourceFieldId + 1,
+        UseNormalAsObjectSpaceRotationFieldId = UpFieldId + 1,
+        CenterAlphaFieldId = UseNormalAsObjectSpaceRotationFieldId + 1,
+        EdgeAlphaFieldId = CenterAlphaFieldId + 1,
+        NextFieldId = EdgeAlphaFieldId + 1
     };
 
-    static const OSG::BitVector RadiusFieldMask;
-    static const OSG::BitVector SegmentsFieldMask;
-    static const OSG::BitVector NormalSourceFieldMask;
-    static const OSG::BitVector NormalFieldMask;
-    static const OSG::BitVector UpSourceFieldMask;
-    static const OSG::BitVector UpFieldMask;
-    static const OSG::BitVector UseNormalAsObjectSpaceRotationFieldMask;
-    static const OSG::BitVector CenterAlphaFieldMask;
-    static const OSG::BitVector EdgeAlphaFieldMask;
+    static const OSG::BitVector RadiusFieldMask =
+        (TypeTraits<BitVector>::One << RadiusFieldId);
+    static const OSG::BitVector SegmentsFieldMask =
+        (TypeTraits<BitVector>::One << SegmentsFieldId);
+    static const OSG::BitVector NormalSourceFieldMask =
+        (TypeTraits<BitVector>::One << NormalSourceFieldId);
+    static const OSG::BitVector NormalFieldMask =
+        (TypeTraits<BitVector>::One << NormalFieldId);
+    static const OSG::BitVector UpSourceFieldMask =
+        (TypeTraits<BitVector>::One << UpSourceFieldId);
+    static const OSG::BitVector UpFieldMask =
+        (TypeTraits<BitVector>::One << UpFieldId);
+    static const OSG::BitVector UseNormalAsObjectSpaceRotationFieldMask =
+        (TypeTraits<BitVector>::One << UseNormalAsObjectSpaceRotationFieldId);
+    static const OSG::BitVector CenterAlphaFieldMask =
+        (TypeTraits<BitVector>::One << CenterAlphaFieldId);
+    static const OSG::BitVector EdgeAlphaFieldMask =
+        (TypeTraits<BitVector>::One << EdgeAlphaFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFReal32          SFRadiusType;
+    typedef SFUInt32          SFSegmentsType;
+    typedef SFUInt32          SFNormalSourceType;
+    typedef SFVec3f           SFNormalType;
+    typedef SFUInt32          SFUpSourceType;
+    typedef SFVec3f           SFUpType;
+    typedef SFBool            SFUseNormalAsObjectSpaceRotationType;
+    typedef SFReal32          SFCenterAlphaType;
+    typedef SFReal32          SFEdgeAlphaType;
 
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -146,53 +162,80 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DiscParticleSystemDrawerBase : public Par
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *getSFRadius         (void);
-           SFUInt32            *getSFSegments       (void);
-           SFUInt32            *getSFNormalSource   (void);
-           SFVec3f             *getSFNormal         (void);
-           SFUInt32            *getSFUpSource       (void);
-           SFVec3f             *getSFUp             (void);
-           SFBool              *getSFUseNormalAsObjectSpaceRotation(void);
-           SFReal32            *getSFCenterAlpha    (void);
-           SFReal32            *getSFEdgeAlpha      (void);
 
-           Real32              &getRadius         (void);
-     const Real32              &getRadius         (void) const;
-           UInt32              &getSegments       (void);
-     const UInt32              &getSegments       (void) const;
-           UInt32              &getNormalSource   (void);
-     const UInt32              &getNormalSource   (void) const;
-           Vec3f               &getNormal         (void);
-     const Vec3f               &getNormal         (void) const;
-           UInt32              &getUpSource       (void);
-     const UInt32              &getUpSource       (void) const;
-           Vec3f               &getUp             (void);
-     const Vec3f               &getUp             (void) const;
-           bool                &getUseNormalAsObjectSpaceRotation(void);
-     const bool                &getUseNormalAsObjectSpaceRotation(void) const;
-           Real32              &getCenterAlpha    (void);
-     const Real32              &getCenterAlpha    (void) const;
-           Real32              &getEdgeAlpha      (void);
-     const Real32              &getEdgeAlpha      (void) const;
+                  SFReal32            *editSFRadius         (void);
+            const SFReal32            *getSFRadius          (void) const;
+
+                  SFUInt32            *editSFSegments       (void);
+            const SFUInt32            *getSFSegments        (void) const;
+
+                  SFUInt32            *editSFNormalSource   (void);
+            const SFUInt32            *getSFNormalSource    (void) const;
+
+                  SFVec3f             *editSFNormal         (void);
+            const SFVec3f             *getSFNormal          (void) const;
+
+                  SFUInt32            *editSFUpSource       (void);
+            const SFUInt32            *getSFUpSource        (void) const;
+
+                  SFVec3f             *editSFUp             (void);
+            const SFVec3f             *getSFUp              (void) const;
+
+                  SFBool              *editSFUseNormalAsObjectSpaceRotation(void);
+            const SFBool              *getSFUseNormalAsObjectSpaceRotation (void) const;
+
+                  SFReal32            *editSFCenterAlpha    (void);
+            const SFReal32            *getSFCenterAlpha     (void) const;
+
+                  SFReal32            *editSFEdgeAlpha      (void);
+            const SFReal32            *getSFEdgeAlpha       (void) const;
+
+
+                  Real32              &editRadius         (void);
+                  Real32               getRadius          (void) const;
+
+                  UInt32              &editSegments       (void);
+                  UInt32               getSegments        (void) const;
+
+                  UInt32              &editNormalSource   (void);
+                  UInt32               getNormalSource    (void) const;
+
+                  Vec3f               &editNormal         (void);
+            const Vec3f               &getNormal          (void) const;
+
+                  UInt32              &editUpSource       (void);
+                  UInt32               getUpSource        (void) const;
+
+                  Vec3f               &editUp             (void);
+            const Vec3f               &getUp              (void) const;
+
+                  bool                &editUseNormalAsObjectSpaceRotation(void);
+                  bool                 getUseNormalAsObjectSpaceRotation (void) const;
+
+                  Real32              &editCenterAlpha    (void);
+                  Real32               getCenterAlpha     (void) const;
+
+                  Real32              &editEdgeAlpha      (void);
+                  Real32               getEdgeAlpha       (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setRadius         ( const Real32 &value );
-     void setSegments       ( const UInt32 &value );
-     void setNormalSource   ( const UInt32 &value );
-     void setNormal         ( const Vec3f &value );
-     void setUpSource       ( const UInt32 &value );
-     void setUp             ( const Vec3f &value );
-     void setUseNormalAsObjectSpaceRotation( const bool &value );
-     void setCenterAlpha    ( const Real32 &value );
-     void setEdgeAlpha      ( const Real32 &value );
+            void setRadius         (const Real32 value);
+            void setSegments       (const UInt32 value);
+            void setNormalSource   (const UInt32 value);
+            void setNormal         (const Vec3f &value);
+            void setUpSource       (const UInt32 value);
+            void setUp             (const Vec3f &value);
+            void setUseNormalAsObjectSpaceRotation(const bool value);
+            void setCenterAlpha    (const Real32 value);
+            void setEdgeAlpha      (const Real32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -200,46 +243,64 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DiscParticleSystemDrawerBase : public Par
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  DiscParticleSystemDrawerPtr      create          (void); 
-    static  DiscParticleSystemDrawerPtr      createEmpty     (void); 
+    static  DiscParticleSystemDrawerTransitPtr  create          (void);
+    static  DiscParticleSystemDrawer           *createEmpty     (void);
+
+    static  DiscParticleSystemDrawerTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  DiscParticleSystemDrawer            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  DiscParticleSystemDrawerTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFReal32            _sfRadius;
-    SFUInt32            _sfSegments;
-    SFUInt32            _sfNormalSource;
-    SFVec3f             _sfNormal;
-    SFUInt32            _sfUpSource;
-    SFVec3f             _sfUp;
-    SFBool              _sfUseNormalAsObjectSpaceRotation;
-    SFReal32            _sfCenterAlpha;
-    SFReal32            _sfEdgeAlpha;
+    SFReal32          _sfRadius;
+    SFUInt32          _sfSegments;
+    SFUInt32          _sfNormalSource;
+    SFVec3f           _sfNormal;
+    SFUInt32          _sfUpSource;
+    SFVec3f           _sfUp;
+    SFBool            _sfUseNormalAsObjectSpaceRotation;
+    SFReal32          _sfCenterAlpha;
+    SFReal32          _sfEdgeAlpha;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -254,69 +315,95 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DiscParticleSystemDrawerBase : public Par
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DiscParticleSystemDrawerBase(void); 
+    virtual ~DiscParticleSystemDrawerBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleRadius          (void) const;
+    EditFieldHandlePtr editHandleRadius         (void);
+    GetFieldHandlePtr  getHandleSegments        (void) const;
+    EditFieldHandlePtr editHandleSegments       (void);
+    GetFieldHandlePtr  getHandleNormalSource    (void) const;
+    EditFieldHandlePtr editHandleNormalSource   (void);
+    GetFieldHandlePtr  getHandleNormal          (void) const;
+    EditFieldHandlePtr editHandleNormal         (void);
+    GetFieldHandlePtr  getHandleUpSource        (void) const;
+    EditFieldHandlePtr editHandleUpSource       (void);
+    GetFieldHandlePtr  getHandleUp              (void) const;
+    EditFieldHandlePtr editHandleUp             (void);
+    GetFieldHandlePtr  getHandleUseNormalAsObjectSpaceRotation (void) const;
+    EditFieldHandlePtr editHandleUseNormalAsObjectSpaceRotation(void);
+    GetFieldHandlePtr  getHandleCenterAlpha     (void) const;
+    EditFieldHandlePtr editHandleCenterAlpha    (void);
+    GetFieldHandlePtr  getHandleEdgeAlpha       (void) const;
+    EditFieldHandlePtr editHandleEdgeAlpha      (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      DiscParticleSystemDrawerBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      DiscParticleSystemDrawerBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      DiscParticleSystemDrawerBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const DiscParticleSystemDrawerBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef DiscParticleSystemDrawerBase *DiscParticleSystemDrawerBaseP;
 
-typedef osgIF<DiscParticleSystemDrawerBase::isNodeCore,
-              CoredNodePtr<DiscParticleSystemDrawer>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet DiscParticleSystemDrawerNodePtr;
-
-typedef RefPtr<DiscParticleSystemDrawerPtr> DiscParticleSystemDrawerRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGDISCPARTICLESYSTEMDRAWERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGDISCPARTICLESYSTEMDRAWERBASE_H_ */

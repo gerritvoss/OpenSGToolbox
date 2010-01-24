@@ -3,18 +3,21 @@
 <FieldContainer
 	name="TriDistribution2D"
 	parent="Distribution2D"
-	library="ParticleSystem"
-	pointerfieldtypes="both"
+    library="ContribParticleSystem"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 An TriangleDistribution2D.
 	<Field
 		name="Point1"
 		type="Pnt2f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,0.0"
@@ -24,6 +27,7 @@ An TriangleDistribution2D.
 	<Field
 		name="Point2"
 		type="Pnt2f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1.0,0.0"
@@ -33,6 +37,7 @@ An TriangleDistribution2D.
 	<Field
 		name="Point3"
 		type="Pnt2f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,1.0"
@@ -42,10 +47,11 @@ An TriangleDistribution2D.
 	<Field
 		name="SurfaceOrEdge"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="TriangleDistribution2D::SURFACE"
+		defaultValue="TriDistribution2D::SURFACE"
 	>
 	</Field>
 </FieldContainer>

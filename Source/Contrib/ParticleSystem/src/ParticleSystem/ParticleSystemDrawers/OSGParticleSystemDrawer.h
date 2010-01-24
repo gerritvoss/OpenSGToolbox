@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,49 +42,60 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
-
 #include "OSGParticleSystemDrawerBase.h"
-#include "ParticleSystem/OSGParticleSystemFields.h"
-#include <OpenSG/OSGAction.h>
-#include <OpenSG/OSGDrawAction.h>
-#include <OpenSG/OSGUInt32Fields.h>
+#include "OSGParticleSystem.h"
+#include "OSGAction.h"
+#include "OSGRenderAction.h"
+#include "OSGDrawableStatsAttachment.h"
+#include "OSGSysMFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ParticleSystemDrawer class. See \ref 
-           PageParticleSystemParticleSystemDrawer for a description.
+/*! \brief ParticleSystemDrawer class. See \ref
+           PageContribParticleSystemParticleSystemDrawer for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemDrawer : public ParticleSystemDrawerBase
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemDrawer : public ParticleSystemDrawerBase
 {
-  private:
-
-    typedef ParticleSystemDrawerBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef ParticleSystemDrawerBase Inherited;
+    typedef ParticleSystemDrawer     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual Action::ResultE draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort) = 0;
-	virtual void adjustVolume(ParticleSystemPtr System, Volume & volume);
+
+	virtual Action::ResultE draw(DrawEnv *pEnv,
+                                 ParticleSystemUnrecPtr System,
+                                 const MFUInt32& Sort) = 0;
+
+	virtual void adjustVolume(ParticleSystemUnrecPtr System, Volume & volume);
+
+    virtual void fill(DrawableStatsAttachment *pStat,
+                      ParticleSystemUnrecPtr System,
+                      const MFUInt32& Sort) = 0;
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ParticleSystemDrawerBase.
@@ -101,20 +112,24 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemDrawer : public ParticleSys
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ParticleSystemDrawer(void); 
+    virtual ~ParticleSystemDrawer(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ParticleSystemDrawerBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ParticleSystemDrawer &source);
 };
 
@@ -124,7 +139,5 @@ OSG_END_NAMESPACE
 
 #include "OSGParticleSystemDrawerBase.inl"
 #include "OSGParticleSystemDrawer.inl"
-
-#define OSGPARTICLESYSTEMDRAWER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGPARTICLESYSTEMDRAWER_H_ */

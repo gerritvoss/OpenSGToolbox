@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGParticleGeneratorDecoratorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class RateParticleDecorator;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! RateParticleDecoratorPtr
+OSG_GEN_CONTAINERPTR(RateParticleDecorator);
 
-typedef FCPtr<ParticleGeneratorDecoratorPtr, RateParticleDecorator> RateParticleDecoratorPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpParticleSystemFieldTraits
+/*! \ingroup GrpContribParticleSystemFieldTraits
+    \ingroup GrpLibOSGContribParticleSystem
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<RateParticleDecoratorPtr> : 
-    public FieldTraitsRecurseMapper<RateParticleDecoratorPtr, true>
+struct FieldTraits<RateParticleDecorator *> :
+    public FieldTraitsFCPtrBase<RateParticleDecorator *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFRateParticleDecoratorPtr"; }
-    static const char *getMName(void) { return "MFRateParticleDecoratorPtr"; }
+    typedef FieldTraits<RateParticleDecorator *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFRateParticleDecoratorPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFRateParticleDecoratorPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<RateParticleDecoratorPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<RateParticleDecorator *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecRateParticleDecoratorPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<RateParticleDecorator *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecRateParticleDecoratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RateParticleDecorator *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakRateParticleDecoratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RateParticleDecorator *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdRateParticleDecoratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RateParticleDecorator *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecRateParticleDecoratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RateParticleDecorator *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecRateParticleDecoratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RateParticleDecorator *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakRateParticleDecoratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RateParticleDecorator *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdRateParticleDecoratorPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<RateParticleDecorator *,
+                      RecordedRefCountPolicy  > SFRecRateParticleDecoratorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<RateParticleDecorator *,
+                      UnrecordedRefCountPolicy> SFUnrecRateParticleDecoratorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<RateParticleDecorator *,
+                      WeakRefCountPolicy      > SFWeakRateParticleDecoratorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<RateParticleDecorator *,
+                      NoRefCountPolicy        > SFUncountedRateParticleDecoratorPtr;
 
-typedef SField<RateParticleDecoratorPtr> SFRateParticleDecoratorPtr;
-#endif
 
-#ifndef OSG_COMPILERATEPARTICLEDECORATORINST
-OSG_DLLEXPORT_DECL1(SField, RateParticleDecoratorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<RateParticleDecorator *,
+                      RecordedRefCountPolicy  > MFRecRateParticleDecoratorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<RateParticleDecorator *,
+                      UnrecordedRefCountPolicy> MFUnrecRateParticleDecoratorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<RateParticleDecorator *,
+                      WeakRefCountPolicy      > MFWeakRateParticleDecoratorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<RateParticleDecorator *,
+                      NoRefCountPolicy        > MFUncountedRateParticleDecoratorPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldMulti */
 
-typedef MField<RateParticleDecoratorPtr> MFRateParticleDecoratorPtr;
-#endif
 
-#ifndef OSG_COMPILERATEPARTICLEDECORATORINST
-OSG_DLLEXPORT_DECL1(MField, RateParticleDecoratorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFRecRateParticleDecoratorPtr : 
+    public PointerSField<RateParticleDecorator *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUnrecRateParticleDecoratorPtr : 
+    public PointerSField<RateParticleDecorator *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFWeakRateParticleDecoratorPtr :
+    public PointerSField<RateParticleDecorator *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUncountedRateParticleDecoratorPtr :
+    public PointerSField<RateParticleDecorator *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFRecRateParticleDecoratorPtr :
+    public PointerMField<RateParticleDecorator *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUnrecRateParticleDecoratorPtr :
+    public PointerMField<RateParticleDecorator *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFWeakRateParticleDecoratorPtr :
+    public PointerMField<RateParticleDecorator *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUncountedRateParticleDecoratorPtr :
+    public PointerMField<RateParticleDecorator *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGRATEPARTICLEDECORATORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGRATEPARTICLEDECORATORFIELDS_H_ */

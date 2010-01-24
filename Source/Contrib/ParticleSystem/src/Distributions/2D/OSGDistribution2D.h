@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,43 +42,47 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGDistribution2DBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Distribution2D class. See \ref 
-           PageParticleSystemDistribution2D for a description.
+/*! \brief Distribution2D class. See \ref
+           PageContribParticleSystemDistribution2D for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING Distribution2D : public Distribution2DBase
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING Distribution2D : public Distribution2DBase
 {
-  private:
-
-    typedef Distribution2DBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef Distribution2DBase Inherited;
+    typedef Distribution2D     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
     virtual Vec2f generate(void) const = 0;
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in Distribution2DBase.
@@ -95,20 +99,24 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING Distribution2D : public Distribution2DBas
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Distribution2D(void); 
+    virtual ~Distribution2D(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class Distribution2DBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const Distribution2D &source);
 };
 

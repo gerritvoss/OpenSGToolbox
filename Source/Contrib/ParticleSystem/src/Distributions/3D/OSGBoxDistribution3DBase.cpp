@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,169 +50,247 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEBOXDISTRIBUTION3DINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGBoxDistribution3DBase.h"
 #include "OSGBoxDistribution3D.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  BoxDistribution3DBase::MinPointFieldMask = 
-    (TypeTraits<BitVector>::One << BoxDistribution3DBase::MinPointFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  BoxDistribution3DBase::MaxPointFieldMask = 
-    (TypeTraits<BitVector>::One << BoxDistribution3DBase::MaxPointFieldId);
+/*! \class OSG::BoxDistribution3D
+    An BoxDistribution3D.
+ */
 
-const OSG::BitVector  BoxDistribution3DBase::SurfaceOrVolumeFieldMask = 
-    (TypeTraits<BitVector>::One << BoxDistribution3DBase::SurfaceOrVolumeFieldId);
-
-const OSG::BitVector BoxDistribution3DBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Pnt3f           BoxDistribution3DBase::_sfMinPoint
     
 */
+
 /*! \var Pnt3f           BoxDistribution3DBase::_sfMaxPoint
     
 */
+
 /*! \var UInt32          BoxDistribution3DBase::_sfSurfaceOrVolume
     
 */
 
-//! BoxDistribution3D description
 
-FieldDescription *BoxDistribution3DBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<BoxDistribution3D *>::_type("BoxDistribution3DPtr", "Distribution3DPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(BoxDistribution3D *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           BoxDistribution3D *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           BoxDistribution3D *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void BoxDistribution3DBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFPnt3f::getClassType(), 
-                     "MinPoint", 
-                     MinPointFieldId, MinPointFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&BoxDistribution3DBase::editSFMinPoint)),
-    new FieldDescription(SFPnt3f::getClassType(), 
-                     "MaxPoint", 
-                     MaxPointFieldId, MaxPointFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&BoxDistribution3DBase::editSFMaxPoint)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "SurfaceOrVolume", 
-                     SurfaceOrVolumeFieldId, SurfaceOrVolumeFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&BoxDistribution3DBase::editSFSurfaceOrVolume))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType BoxDistribution3DBase::_type(
-    "BoxDistribution3D",
-    "Distribution3D",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&BoxDistribution3DBase::createEmpty),
+    pDesc = new SFPnt3f::Description(
+        SFPnt3f::getClassType(),
+        "MinPoint",
+        "",
+        MinPointFieldId, MinPointFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&BoxDistribution3D::editHandleMinPoint),
+        static_cast<FieldGetMethodSig >(&BoxDistribution3D::getHandleMinPoint));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFPnt3f::Description(
+        SFPnt3f::getClassType(),
+        "MaxPoint",
+        "",
+        MaxPointFieldId, MaxPointFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&BoxDistribution3D::editHandleMaxPoint),
+        static_cast<FieldGetMethodSig >(&BoxDistribution3D::getHandleMaxPoint));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "SurfaceOrVolume",
+        "",
+        SurfaceOrVolumeFieldId, SurfaceOrVolumeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&BoxDistribution3D::editHandleSurfaceOrVolume),
+        static_cast<FieldGetMethodSig >(&BoxDistribution3D::getHandleSurfaceOrVolume));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+BoxDistribution3DBase::TypeObject BoxDistribution3DBase::_type(
+    BoxDistribution3DBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&BoxDistribution3DBase::createEmptyLocal),
     BoxDistribution3D::initMethod,
-    _desc,
-    sizeof(_desc));
+    BoxDistribution3D::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&BoxDistribution3D::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"BoxDistribution3D\"\n"
+    "\tparent=\"Distribution3D\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "An BoxDistribution3D.\n"
+    "\t<Field\n"
+    "\t\tname=\"MinPoint\"\n"
+    "\t\ttype=\"Pnt3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MaxPoint\"\n"
+    "\t\ttype=\"Pnt3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1.0,1.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SurfaceOrVolume\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"BoxDistribution3D::VOLUME\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "An BoxDistribution3D.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(BoxDistribution3DBase, BoxDistribution3DPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &BoxDistribution3DBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &BoxDistribution3DBase::getType(void) const 
+FieldContainerType &BoxDistribution3DBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr BoxDistribution3DBase::shallowCopy(void) const 
-{ 
-    BoxDistribution3DPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const BoxDistribution3D *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 BoxDistribution3DBase::getContainerSize(void) const 
-{ 
-    return sizeof(BoxDistribution3D); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void BoxDistribution3DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &BoxDistribution3DBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<BoxDistribution3DBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void BoxDistribution3DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 BoxDistribution3DBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((BoxDistribution3DBase *) &other, whichField, sInfo);
+    return sizeof(BoxDistribution3D);
 }
-void BoxDistribution3DBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFPnt3f *BoxDistribution3DBase::editSFMinPoint(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(MinPointFieldMask);
+
+    return &_sfMinPoint;
 }
 
-void BoxDistribution3DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFPnt3f *BoxDistribution3DBase::getSFMinPoint(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfMinPoint;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-BoxDistribution3DBase::BoxDistribution3DBase(void) :
-    _sfMinPoint               (Pnt3f(0.0,0.0,0.0)), 
-    _sfMaxPoint               (Pnt3f(1.0,1.0,1.0)), 
-    _sfSurfaceOrVolume        (UInt32(BoxDistribution3D::VOLUME)), 
-    Inherited() 
+SFPnt3f *BoxDistribution3DBase::editSFMaxPoint(void)
 {
+    editSField(MaxPointFieldMask);
+
+    return &_sfMaxPoint;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-BoxDistribution3DBase::BoxDistribution3DBase(const BoxDistribution3DBase &source) :
-    _sfMinPoint               (source._sfMinPoint               ), 
-    _sfMaxPoint               (source._sfMaxPoint               ), 
-    _sfSurfaceOrVolume        (source._sfSurfaceOrVolume        ), 
-    Inherited                 (source)
+const SFPnt3f *BoxDistribution3DBase::getSFMaxPoint(void) const
 {
+    return &_sfMaxPoint;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-BoxDistribution3DBase::~BoxDistribution3DBase(void)
+SFUInt32 *BoxDistribution3DBase::editSFSurfaceOrVolume(void)
 {
+    editSField(SurfaceOrVolumeFieldMask);
+
+    return &_sfSurfaceOrVolume;
 }
+
+const SFUInt32 *BoxDistribution3DBase::getSFSurfaceOrVolume(void) const
+{
+    return &_sfSurfaceOrVolume;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 BoxDistribution3DBase::getBinSize(const BitVector &whichField)
+UInt32 BoxDistribution3DBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -220,23 +298,20 @@ UInt32 BoxDistribution3DBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfMinPoint.getBinSize();
     }
-
     if(FieldBits::NoField != (MaxPointFieldMask & whichField))
     {
         returnValue += _sfMaxPoint.getBinSize();
     }
-
     if(FieldBits::NoField != (SurfaceOrVolumeFieldMask & whichField))
     {
         returnValue += _sfSurfaceOrVolume.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void BoxDistribution3DBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void BoxDistribution3DBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -244,22 +319,18 @@ void BoxDistribution3DBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfMinPoint.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxPointFieldMask & whichField))
     {
         _sfMaxPoint.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SurfaceOrVolumeFieldMask & whichField))
     {
         _sfSurfaceOrVolume.copyToBin(pMem);
     }
-
-
 }
 
-void BoxDistribution3DBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void BoxDistribution3DBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -267,84 +338,275 @@ void BoxDistribution3DBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfMinPoint.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxPointFieldMask & whichField))
     {
         _sfMaxPoint.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SurfaceOrVolumeFieldMask & whichField))
     {
         _sfSurfaceOrVolume.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void BoxDistribution3DBase::executeSyncImpl(      BoxDistribution3DBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+BoxDistribution3DTransitPtr BoxDistribution3DBase::createLocal(BitVector bFlags)
 {
+    BoxDistribution3DTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (MinPointFieldMask & whichField))
-        _sfMinPoint.syncWith(pOther->_sfMinPoint);
+        fc = dynamic_pointer_cast<BoxDistribution3D>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (MaxPointFieldMask & whichField))
-        _sfMaxPoint.syncWith(pOther->_sfMaxPoint);
-
-    if(FieldBits::NoField != (SurfaceOrVolumeFieldMask & whichField))
-        _sfSurfaceOrVolume.syncWith(pOther->_sfSurfaceOrVolume);
-
-
-}
-#else
-void BoxDistribution3DBase::executeSyncImpl(      BoxDistribution3DBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (MinPointFieldMask & whichField))
-        _sfMinPoint.syncWith(pOther->_sfMinPoint);
-
-    if(FieldBits::NoField != (MaxPointFieldMask & whichField))
-        _sfMaxPoint.syncWith(pOther->_sfMaxPoint);
-
-    if(FieldBits::NoField != (SurfaceOrVolumeFieldMask & whichField))
-        _sfSurfaceOrVolume.syncWith(pOther->_sfSurfaceOrVolume);
-
-
-
+    return fc;
 }
 
-void BoxDistribution3DBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+BoxDistribution3DTransitPtr BoxDistribution3DBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    BoxDistribution3DTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<BoxDistribution3D>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+BoxDistribution3DTransitPtr BoxDistribution3DBase::create(void)
+{
+    BoxDistribution3DTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<BoxDistribution3D>(tmpPtr);
+    }
+
+    return fc;
+}
+
+BoxDistribution3D *BoxDistribution3DBase::createEmptyLocal(BitVector bFlags)
+{
+    BoxDistribution3D *returnValue;
+
+    newPtr<BoxDistribution3D>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+BoxDistribution3D *BoxDistribution3DBase::createEmpty(void)
+{
+    BoxDistribution3D *returnValue;
+
+    newPtr<BoxDistribution3D>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr BoxDistribution3DBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    BoxDistribution3D *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const BoxDistribution3D *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr BoxDistribution3DBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    BoxDistribution3D *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const BoxDistribution3D *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr BoxDistribution3DBase::shallowCopy(void) const
+{
+    BoxDistribution3D *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const BoxDistribution3D *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+BoxDistribution3DBase::BoxDistribution3DBase(void) :
+    Inherited(),
+    _sfMinPoint               (Pnt3f(0.0,0.0,0.0)),
+    _sfMaxPoint               (Pnt3f(1.0,1.0,1.0)),
+    _sfSurfaceOrVolume        (UInt32(BoxDistribution3D::VOLUME))
+{
+}
+
+BoxDistribution3DBase::BoxDistribution3DBase(const BoxDistribution3DBase &source) :
+    Inherited(source),
+    _sfMinPoint               (source._sfMinPoint               ),
+    _sfMaxPoint               (source._sfMaxPoint               ),
+    _sfSurfaceOrVolume        (source._sfSurfaceOrVolume        )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+BoxDistribution3DBase::~BoxDistribution3DBase(void)
+{
+}
+
+
+GetFieldHandlePtr BoxDistribution3DBase::getHandleMinPoint        (void) const
+{
+    SFPnt3f::GetHandlePtr returnValue(
+        new  SFPnt3f::GetHandle(
+             &_sfMinPoint,
+             this->getType().getFieldDesc(MinPointFieldId),
+             const_cast<BoxDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr BoxDistribution3DBase::editHandleMinPoint       (void)
+{
+    SFPnt3f::EditHandlePtr returnValue(
+        new  SFPnt3f::EditHandle(
+             &_sfMinPoint,
+             this->getType().getFieldDesc(MinPointFieldId),
+             this));
+
+
+    editSField(MinPointFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr BoxDistribution3DBase::getHandleMaxPoint        (void) const
+{
+    SFPnt3f::GetHandlePtr returnValue(
+        new  SFPnt3f::GetHandle(
+             &_sfMaxPoint,
+             this->getType().getFieldDesc(MaxPointFieldId),
+             const_cast<BoxDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr BoxDistribution3DBase::editHandleMaxPoint       (void)
+{
+    SFPnt3f::EditHandlePtr returnValue(
+        new  SFPnt3f::EditHandle(
+             &_sfMaxPoint,
+             this->getType().getFieldDesc(MaxPointFieldId),
+             this));
+
+
+    editSField(MaxPointFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr BoxDistribution3DBase::getHandleSurfaceOrVolume (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfSurfaceOrVolume,
+             this->getType().getFieldDesc(SurfaceOrVolumeFieldId),
+             const_cast<BoxDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr BoxDistribution3DBase::editHandleSurfaceOrVolume(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfSurfaceOrVolume,
+             this->getType().getFieldDesc(SurfaceOrVolumeFieldId),
+             this));
+
+
+    editSField(SurfaceOrVolumeFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void BoxDistribution3DBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    BoxDistribution3D *pThis = static_cast<BoxDistribution3D *>(this);
+
+    pThis->execSync(static_cast<BoxDistribution3D *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *BoxDistribution3DBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    BoxDistribution3D *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const BoxDistribution3D *>(pRefAspect),
+                  dynamic_cast<const BoxDistribution3D *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<BoxDistribution3DPtr>::_type("BoxDistribution3DPtr", "Distribution3DPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(BoxDistribution3DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(BoxDistribution3DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+void BoxDistribution3DBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

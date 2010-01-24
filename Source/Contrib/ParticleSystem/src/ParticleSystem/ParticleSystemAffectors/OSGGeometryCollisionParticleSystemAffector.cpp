@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,26 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGGeometryCollisionParticleSystemAffector.h"
-#include "ParticleSystem/OSGParticleSystem.h"
-#include "ParticleSystem/ParticleAffectors/OSGParticleAffector.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::GeometryCollisionParticleSystemAffector
-s 
-*/
+// Documentation for this class is emitted in the
+// OSGGeometryCollisionParticleSystemAffectorBase.cpp file.
+// To modify it, please change the .fcd file (OSGGeometryCollisionParticleSystemAffector.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -69,16 +62,19 @@ s
  *                           Class methods                                 *
 \***************************************************************************/
 
-void GeometryCollisionParticleSystemAffector::initMethod (void)
+void GeometryCollisionParticleSystemAffector::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-
-
 
 void GeometryCollisionParticleSystemAffector::removeParticleGeometryCollisionListener(ParticleGeometryCollisionListenerPtr Listener)
 {
@@ -89,16 +85,18 @@ void GeometryCollisionParticleSystemAffector::removeParticleGeometryCollisionLis
    }
 }
 
-void GeometryCollisionParticleSystemAffector::produceCollision(ParticleSystemPtr System, Int32 ParticleIndex, IntersectAction* Action)
+void GeometryCollisionParticleSystemAffector::produceCollision(ParticleSystemRefPtr System, Int32 ParticleIndex, IntersectAction* Action)
 {
-   const ParticleGeometryCollisionEventPtr TheCollisionEvent = ParticleGeometryCollisionEvent::create( GeometryCollisionParticleSystemAffectorPtr(this),
-           getSystemTime(),Action->getHitT(),
-           Action->getHitObject(),
-           Action->getHitTriangle(),
-           Action->getHitNormal(),
-           Action->getHitPoint(),
-           System,
-           ParticleIndex );
+    const ParticleGeometryCollisionEventUnrecPtr TheCollisionEvent =
+        ParticleGeometryCollisionEvent::create(GeometryCollisionParticleSystemAffectorRefPtr(this),
+                                               getSystemTime(),Action->getHitT(),
+                                               Action->getHitObject(),
+                                               Action->getHitTriangle(),
+                                               Action->getHitNormal(),
+                                               Action->getHitPoint(),
+                                               System,
+                                               ParticleIndex );
+
    ParticleGeometryCollisionListenerSetItor NextItor;
    for(ParticleGeometryCollisionListenerSetItor SetItor(_ParticleGeometryCollisionListeners.begin()) ; SetItor != _ParticleGeometryCollisionListeners.end() ;)
    {
@@ -110,7 +108,7 @@ void GeometryCollisionParticleSystemAffector::produceCollision(ParticleSystemPtr
    _Producer.produceEvent(ParticleCollisionMethodId,TheCollisionEvent);
 }
 
-void GeometryCollisionParticleSystemAffector::affect(ParticleSystemPtr System, const Time& elps)
+void GeometryCollisionParticleSystemAffector::affect(ParticleSystemRefPtr System, const Time& elps)
 {
 	UInt32 NumParticles(System->getNumParticles());
 	
@@ -134,9 +132,9 @@ void GeometryCollisionParticleSystemAffector::affect(ParticleSystemPtr System, c
 			if(HitT > 0.0f && HitT*HitT<ParticlePos.dist2(ParticleSecPos))
 			{
 				produceCollision(System, i, iAct);
-                for(UInt32 j(0) ; j<getCollisionAffectors().size(); ++j)
+                for(UInt32 j(0) ; j<getMFCollisionAffectors()->size(); ++j)
                 {
-                    getCollisionAffectors()[i]->affect(System,i,elps);
+                    getCollisionAffectors(i)->affect(System,i,elps);
                 }
 			}
 		}
@@ -165,16 +163,17 @@ GeometryCollisionParticleSystemAffector::~GeometryCollisionParticleSystemAffecto
 
 /*----------------------------- class specific ----------------------------*/
 
-void GeometryCollisionParticleSystemAffector::changed(BitVector whichField, UInt32 origin)
+void GeometryCollisionParticleSystemAffector::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void GeometryCollisionParticleSystemAffector::dump(      UInt32    , 
+void GeometryCollisionParticleSystemAffector::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump GeometryCollisionParticleSystemAffector NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

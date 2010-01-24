@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,143 +50,167 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILESEGMENTDISTRIBUTION1DINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGSegmentDistribution1DBase.h"
 #include "OSGSegmentDistribution1D.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  SegmentDistribution1DBase::SegmentFieldMask = 
-    (TypeTraits<BitVector>::One << SegmentDistribution1DBase::SegmentFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector SegmentDistribution1DBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::SegmentDistribution1D
+    An SegmentDistribution1D.
+ */
 
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Vec2f           SegmentDistribution1DBase::_sfSegment
     
 */
 
-//! SegmentDistribution1D description
 
-FieldDescription *SegmentDistribution1DBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<SegmentDistribution1D *>::_type("SegmentDistribution1DPtr", "Distribution1DPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(SegmentDistribution1D *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           SegmentDistribution1D *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           SegmentDistribution1D *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void SegmentDistribution1DBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFVec2f::getClassType(), 
-                     "Segment", 
-                     SegmentFieldId, SegmentFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&SegmentDistribution1DBase::editSFSegment))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType SegmentDistribution1DBase::_type(
-    "SegmentDistribution1D",
-    "Distribution1D",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&SegmentDistribution1DBase::createEmpty),
+    pDesc = new SFVec2f::Description(
+        SFVec2f::getClassType(),
+        "Segment",
+        "",
+        SegmentFieldId, SegmentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SegmentDistribution1D::editHandleSegment),
+        static_cast<FieldGetMethodSig >(&SegmentDistribution1D::getHandleSegment));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+SegmentDistribution1DBase::TypeObject SegmentDistribution1DBase::_type(
+    SegmentDistribution1DBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&SegmentDistribution1DBase::createEmptyLocal),
     SegmentDistribution1D::initMethod,
-    _desc,
-    sizeof(_desc));
+    SegmentDistribution1D::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&SegmentDistribution1D::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"SegmentDistribution1D\"\n"
+    "\tparent=\"Distribution1D\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "An SegmentDistribution1D.\n"
+    "\t<Field\n"
+    "\t\tname=\"Segment\"\n"
+    "\t\ttype=\"Vec2f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "An SegmentDistribution1D.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(SegmentDistribution1DBase, SegmentDistribution1DPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &SegmentDistribution1DBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &SegmentDistribution1DBase::getType(void) const 
+FieldContainerType &SegmentDistribution1DBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr SegmentDistribution1DBase::shallowCopy(void) const 
-{ 
-    SegmentDistribution1DPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const SegmentDistribution1D *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 SegmentDistribution1DBase::getContainerSize(void) const 
-{ 
-    return sizeof(SegmentDistribution1D); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void SegmentDistribution1DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &SegmentDistribution1DBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<SegmentDistribution1DBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void SegmentDistribution1DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 SegmentDistribution1DBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((SegmentDistribution1DBase *) &other, whichField, sInfo);
+    return sizeof(SegmentDistribution1D);
 }
-void SegmentDistribution1DBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFVec2f *SegmentDistribution1DBase::editSFSegment(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(SegmentFieldMask);
+
+    return &_sfSegment;
 }
 
-void SegmentDistribution1DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFVec2f *SegmentDistribution1DBase::getSFSegment(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-SegmentDistribution1DBase::SegmentDistribution1DBase(void) :
-    _sfSegment                (Vec2f(0.0,1.0)), 
-    Inherited() 
-{
+    return &_sfSegment;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-SegmentDistribution1DBase::SegmentDistribution1DBase(const SegmentDistribution1DBase &source) :
-    _sfSegment                (source._sfSegment                ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-SegmentDistribution1DBase::~SegmentDistribution1DBase(void)
-{
-}
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 SegmentDistribution1DBase::getBinSize(const BitVector &whichField)
+UInt32 SegmentDistribution1DBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -195,12 +219,11 @@ UInt32 SegmentDistribution1DBase::getBinSize(const BitVector &whichField)
         returnValue += _sfSegment.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void SegmentDistribution1DBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void SegmentDistribution1DBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -208,12 +231,10 @@ void SegmentDistribution1DBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfSegment.copyToBin(pMem);
     }
-
-
 }
 
-void SegmentDistribution1DBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void SegmentDistribution1DBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -221,62 +242,213 @@ void SegmentDistribution1DBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfSegment.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void SegmentDistribution1DBase::executeSyncImpl(      SegmentDistribution1DBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+SegmentDistribution1DTransitPtr SegmentDistribution1DBase::createLocal(BitVector bFlags)
 {
+    SegmentDistribution1DTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (SegmentFieldMask & whichField))
-        _sfSegment.syncWith(pOther->_sfSegment);
+        fc = dynamic_pointer_cast<SegmentDistribution1D>(tmpPtr);
+    }
 
-
-}
-#else
-void SegmentDistribution1DBase::executeSyncImpl(      SegmentDistribution1DBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (SegmentFieldMask & whichField))
-        _sfSegment.syncWith(pOther->_sfSegment);
-
-
-
+    return fc;
 }
 
-void SegmentDistribution1DBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+SegmentDistribution1DTransitPtr SegmentDistribution1DBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    SegmentDistribution1DTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<SegmentDistribution1D>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+SegmentDistribution1DTransitPtr SegmentDistribution1DBase::create(void)
+{
+    SegmentDistribution1DTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<SegmentDistribution1D>(tmpPtr);
+    }
+
+    return fc;
+}
+
+SegmentDistribution1D *SegmentDistribution1DBase::createEmptyLocal(BitVector bFlags)
+{
+    SegmentDistribution1D *returnValue;
+
+    newPtr<SegmentDistribution1D>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+SegmentDistribution1D *SegmentDistribution1DBase::createEmpty(void)
+{
+    SegmentDistribution1D *returnValue;
+
+    newPtr<SegmentDistribution1D>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr SegmentDistribution1DBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    SegmentDistribution1D *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const SegmentDistribution1D *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr SegmentDistribution1DBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    SegmentDistribution1D *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const SegmentDistribution1D *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr SegmentDistribution1DBase::shallowCopy(void) const
+{
+    SegmentDistribution1D *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const SegmentDistribution1D *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+SegmentDistribution1DBase::SegmentDistribution1DBase(void) :
+    Inherited(),
+    _sfSegment                (Vec2f(0.0,1.0))
+{
+}
+
+SegmentDistribution1DBase::SegmentDistribution1DBase(const SegmentDistribution1DBase &source) :
+    Inherited(source),
+    _sfSegment                (source._sfSegment                )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+SegmentDistribution1DBase::~SegmentDistribution1DBase(void)
+{
+}
+
+
+GetFieldHandlePtr SegmentDistribution1DBase::getHandleSegment         (void) const
+{
+    SFVec2f::GetHandlePtr returnValue(
+        new  SFVec2f::GetHandle(
+             &_sfSegment,
+             this->getType().getFieldDesc(SegmentFieldId),
+             const_cast<SegmentDistribution1DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SegmentDistribution1DBase::editHandleSegment        (void)
+{
+    SFVec2f::EditHandlePtr returnValue(
+        new  SFVec2f::EditHandle(
+             &_sfSegment,
+             this->getType().getFieldDesc(SegmentFieldId),
+             this));
+
+
+    editSField(SegmentFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void SegmentDistribution1DBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    SegmentDistribution1D *pThis = static_cast<SegmentDistribution1D *>(this);
+
+    pThis->execSync(static_cast<SegmentDistribution1D *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *SegmentDistribution1DBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    SegmentDistribution1D *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const SegmentDistribution1D *>(pRefAspect),
+                  dynamic_cast<const SegmentDistribution1D *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<SegmentDistribution1DPtr>::_type("SegmentDistribution1DPtr", "Distribution1DPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(SegmentDistribution1DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(SegmentDistribution1DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+void SegmentDistribution1DBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

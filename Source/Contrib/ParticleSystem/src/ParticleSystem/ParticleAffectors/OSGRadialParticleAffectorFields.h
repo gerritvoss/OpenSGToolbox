@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGParticleAffectorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class RadialParticleAffector;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! RadialParticleAffectorPtr
+OSG_GEN_CONTAINERPTR(RadialParticleAffector);
 
-typedef FCPtr<ParticleAffectorPtr, RadialParticleAffector> RadialParticleAffectorPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpParticleSystemFieldTraits
+/*! \ingroup GrpContribParticleSystemFieldTraits
+    \ingroup GrpLibOSGContribParticleSystem
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<RadialParticleAffectorPtr> : 
-    public FieldTraitsRecurseMapper<RadialParticleAffectorPtr, true>
+struct FieldTraits<RadialParticleAffector *> :
+    public FieldTraitsFCPtrBase<RadialParticleAffector *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFRadialParticleAffectorPtr"; }
-    static const char *getMName(void) { return "MFRadialParticleAffectorPtr"; }
+    typedef FieldTraits<RadialParticleAffector *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFRadialParticleAffectorPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFRadialParticleAffectorPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<RadialParticleAffectorPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<RadialParticleAffector *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecRadialParticleAffectorPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<RadialParticleAffector *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecRadialParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RadialParticleAffector *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakRadialParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RadialParticleAffector *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdRadialParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RadialParticleAffector *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecRadialParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RadialParticleAffector *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecRadialParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RadialParticleAffector *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakRadialParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RadialParticleAffector *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdRadialParticleAffectorPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<RadialParticleAffector *,
+                      RecordedRefCountPolicy  > SFRecRadialParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<RadialParticleAffector *,
+                      UnrecordedRefCountPolicy> SFUnrecRadialParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<RadialParticleAffector *,
+                      WeakRefCountPolicy      > SFWeakRadialParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<RadialParticleAffector *,
+                      NoRefCountPolicy        > SFUncountedRadialParticleAffectorPtr;
 
-typedef SField<RadialParticleAffectorPtr> SFRadialParticleAffectorPtr;
-#endif
 
-#ifndef OSG_COMPILERADIALPARTICLEAFFECTORINST
-OSG_DLLEXPORT_DECL1(SField, RadialParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<RadialParticleAffector *,
+                      RecordedRefCountPolicy  > MFRecRadialParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<RadialParticleAffector *,
+                      UnrecordedRefCountPolicy> MFUnrecRadialParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<RadialParticleAffector *,
+                      WeakRefCountPolicy      > MFWeakRadialParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<RadialParticleAffector *,
+                      NoRefCountPolicy        > MFUncountedRadialParticleAffectorPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldMulti */
 
-typedef MField<RadialParticleAffectorPtr> MFRadialParticleAffectorPtr;
-#endif
 
-#ifndef OSG_COMPILERADIALPARTICLEAFFECTORINST
-OSG_DLLEXPORT_DECL1(MField, RadialParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFRecRadialParticleAffectorPtr : 
+    public PointerSField<RadialParticleAffector *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUnrecRadialParticleAffectorPtr : 
+    public PointerSField<RadialParticleAffector *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFWeakRadialParticleAffectorPtr :
+    public PointerSField<RadialParticleAffector *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUncountedRadialParticleAffectorPtr :
+    public PointerSField<RadialParticleAffector *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFRecRadialParticleAffectorPtr :
+    public PointerMField<RadialParticleAffector *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUnrecRadialParticleAffectorPtr :
+    public PointerMField<RadialParticleAffector *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFWeakRadialParticleAffectorPtr :
+    public PointerMField<RadialParticleAffector *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUncountedRadialParticleAffectorPtr :
+    public PointerMField<RadialParticleAffector *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGRADIALPARTICLEAFFECTORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGRADIALPARTICLEAFFECTORFIELDS_H_ */

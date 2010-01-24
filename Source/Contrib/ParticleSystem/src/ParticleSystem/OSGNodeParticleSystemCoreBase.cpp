@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,234 +50,552 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILENODEPARTICLESYSTEMCOREINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGParticleSystem.h"          // System Class
+#include "OSGNode.h"                    // PrototypeNode Class
 
 #include "OSGNodeParticleSystemCoreBase.h"
 #include "OSGNodeParticleSystemCore.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  NodeParticleSystemCoreBase::SystemFieldMask = 
-    (TypeTraits<BitVector>::One << NodeParticleSystemCoreBase::SystemFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  NodeParticleSystemCoreBase::PrototypeNodeFieldMask = 
-    (TypeTraits<BitVector>::One << NodeParticleSystemCoreBase::PrototypeNodeFieldId);
+/*! \class OSG::NodeParticleSystemCore
+    
+ */
 
-const OSG::BitVector  NodeParticleSystemCoreBase::SizeScalingFieldMask = 
-    (TypeTraits<BitVector>::One << NodeParticleSystemCoreBase::SizeScalingFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  NodeParticleSystemCoreBase::ParticleNodesFieldMask = 
-    (TypeTraits<BitVector>::One << NodeParticleSystemCoreBase::ParticleNodesFieldId);
-
-const OSG::BitVector  NodeParticleSystemCoreBase::NormalSourceFieldMask = 
-    (TypeTraits<BitVector>::One << NodeParticleSystemCoreBase::NormalSourceFieldId);
-
-const OSG::BitVector  NodeParticleSystemCoreBase::NormalFieldMask = 
-    (TypeTraits<BitVector>::One << NodeParticleSystemCoreBase::NormalFieldId);
-
-const OSG::BitVector  NodeParticleSystemCoreBase::UpSourceFieldMask = 
-    (TypeTraits<BitVector>::One << NodeParticleSystemCoreBase::UpSourceFieldId);
-
-const OSG::BitVector  NodeParticleSystemCoreBase::UpFieldMask = 
-    (TypeTraits<BitVector>::One << NodeParticleSystemCoreBase::UpFieldId);
-
-const OSG::BitVector NodeParticleSystemCoreBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var ParticleSystemPtr NodeParticleSystemCoreBase::_sfSystem
+/*! \var ParticleSystem * NodeParticleSystemCoreBase::_sfSystem
     
 */
-/*! \var NodePtr         NodeParticleSystemCoreBase::_sfPrototypeNode
+
+/*! \var Node *          NodeParticleSystemCoreBase::_sfPrototypeNode
     PrototypeNode is the node that clones are made of for each particle.
 */
+
 /*! \var Vec3f           NodeParticleSystemCoreBase::_sfSizeScaling
     This value is used to scale the size of the particle and apply that size to the transformation of the node for that particle.
 */
-/*! \var NodePtr         NodeParticleSystemCoreBase::_mfParticleNodes
+
+/*! \var Node *          NodeParticleSystemCoreBase::_mfParticleNodes
     
 */
+
 /*! \var UInt32          NodeParticleSystemCoreBase::_sfNormalSource
-    This enum is used to determine what is used for the direction of the line.    NORMAL_POSITION_CHANGE uses the diference between Position and SecPosition.    NORMAL_VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.    NORMAL_VELOCITY uses the velocity.    NORMAL_ACCELERATION uses the acceleration.    NORMAL_PARTICLE_NORMAL uses the normal of the particle.    NORMAL_VIEW_DIRECTION uses the z axis of the view space.    NORMAL_VIEW_POSITION uses the the direction from the particle to the view position.    NORMAL_STATIC uses the normal of this drawer.
+    This enum is used to determine what is used for the direction of the line.
+    NORMAL_POSITION_CHANGE uses the diference between Position and SecPosition.
+    NORMAL_VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.
+    NORMAL_VELOCITY uses the velocity.
+    NORMAL_ACCELERATION uses the acceleration.
+    NORMAL_PARTICLE_NORMAL uses the normal of the particle.
+    NORMAL_VIEW_DIRECTION uses the z axis of the view space.
+    NORMAL_VIEW_POSITION uses the the direction from the particle to the view position.
+    NORMAL_STATIC uses the normal of this drawer.
 */
+
 /*! \var Vec3f           NodeParticleSystemCoreBase::_sfNormal
     The direction to use as Normal when aligning particles.  This is only used if the NormalSource is STATIC.
 */
+
 /*! \var UInt32          NodeParticleSystemCoreBase::_sfUpSource
-    This enum is used to determine what is used for the direction of the line.    UP_POSITION_CHANGE uses the diference between Position and SecPosition.    UP_VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.    UP_VELOCITY uses the velocity.    UP_ACCELERATION uses the acceleration.    UP_PARTICLE_NORMAL uses the normal of the particle.    UP_VIEW_DIRECTION uses the y axis of the view space.    UP_STATIC uses the normal of this drawer.
+    This enum is used to determine what is used for the direction of the line.
+    UP_POSITION_CHANGE uses the diference between Position and SecPosition.
+    UP_VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.
+    UP_VELOCITY uses the velocity.
+    UP_ACCELERATION uses the acceleration.
+    UP_PARTICLE_NORMAL uses the normal of the particle.
+    UP_VIEW_DIRECTION uses the y axis of the view space.
+    UP_STATIC uses the normal of this drawer.
 */
+
 /*! \var Vec3f           NodeParticleSystemCoreBase::_sfUp
     The direction to use as Up when aligning particles.  This is only used if the UpSource is STATIC.
 */
 
-//! NodeParticleSystemCore description
 
-FieldDescription *NodeParticleSystemCoreBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<NodeParticleSystemCore *>::_type("NodeParticleSystemCorePtr", "GroupPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(NodeParticleSystemCore *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           NodeParticleSystemCore *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           NodeParticleSystemCore *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void NodeParticleSystemCoreBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFParticleSystemPtr::getClassType(), 
-                     "System", 
-                     SystemFieldId, SystemFieldMask,
-                     false,
-                     (FieldAccessMethod) &NodeParticleSystemCoreBase::getSFSystem),
-    new FieldDescription(SFNodePtr::getClassType(), 
-                     "PrototypeNode", 
-                     PrototypeNodeFieldId, PrototypeNodeFieldMask,
-                     false,
-                     (FieldAccessMethod) &NodeParticleSystemCoreBase::getSFPrototypeNode),
-    new FieldDescription(SFVec3f::getClassType(), 
-                     "SizeScaling", 
-                     SizeScalingFieldId, SizeScalingFieldMask,
-                     false,
-                     (FieldAccessMethod) &NodeParticleSystemCoreBase::getSFSizeScaling),
-    new FieldDescription(MFNodePtr::getClassType(), 
-                     "ParticleNodes", 
-                     ParticleNodesFieldId, ParticleNodesFieldMask,
-                     false,
-                     (FieldAccessMethod) &NodeParticleSystemCoreBase::getMFParticleNodes),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "NormalSource", 
-                     NormalSourceFieldId, NormalSourceFieldMask,
-                     false,
-                     (FieldAccessMethod) &NodeParticleSystemCoreBase::getSFNormalSource),
-    new FieldDescription(SFVec3f::getClassType(), 
-                     "Normal", 
-                     NormalFieldId, NormalFieldMask,
-                     false,
-                     (FieldAccessMethod) &NodeParticleSystemCoreBase::getSFNormal),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "UpSource", 
-                     UpSourceFieldId, UpSourceFieldMask,
-                     false,
-                     (FieldAccessMethod) &NodeParticleSystemCoreBase::getSFUpSource),
-    new FieldDescription(SFVec3f::getClassType(), 
-                     "Up", 
-                     UpFieldId, UpFieldMask,
-                     false,
-                     (FieldAccessMethod) &NodeParticleSystemCoreBase::getSFUp)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType NodeParticleSystemCoreBase::_type(
-    "NodeParticleSystemCore",
-    "Group",
-    NULL,
-    (PrototypeCreateF) &NodeParticleSystemCoreBase::createEmpty,
+    pDesc = new SFUnrecParticleSystemPtr::Description(
+        SFUnrecParticleSystemPtr::getClassType(),
+        "System",
+        "",
+        SystemFieldId, SystemFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&NodeParticleSystemCore::editHandleSystem),
+        static_cast<FieldGetMethodSig >(&NodeParticleSystemCore::getHandleSystem));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecNodePtr::Description(
+        SFUnrecNodePtr::getClassType(),
+        "PrototypeNode",
+        "PrototypeNode is the node that clones are made of for each particle.\n",
+        PrototypeNodeFieldId, PrototypeNodeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&NodeParticleSystemCore::editHandlePrototypeNode),
+        static_cast<FieldGetMethodSig >(&NodeParticleSystemCore::getHandlePrototypeNode));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFVec3f::Description(
+        SFVec3f::getClassType(),
+        "SizeScaling",
+        "This value is used to scale the size of the particle and apply that size to the transformation of the node for that particle.\n",
+        SizeScalingFieldId, SizeScalingFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&NodeParticleSystemCore::editHandleSizeScaling),
+        static_cast<FieldGetMethodSig >(&NodeParticleSystemCore::getHandleSizeScaling));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFUnrecNodePtr::Description(
+        MFUnrecNodePtr::getClassType(),
+        "ParticleNodes",
+        "",
+        ParticleNodesFieldId, ParticleNodesFieldMask,
+        true,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&NodeParticleSystemCore::editHandleParticleNodes),
+        static_cast<FieldGetMethodSig >(&NodeParticleSystemCore::getHandleParticleNodes));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "NormalSource",
+        "This enum is used to determine what is used for the direction of the line.\n"
+        "NORMAL_POSITION_CHANGE uses the diference between Position and SecPosition.\n"
+        "NORMAL_VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.\n"
+        "NORMAL_VELOCITY uses the velocity.\n"
+        "NORMAL_ACCELERATION uses the acceleration.\n"
+        "NORMAL_PARTICLE_NORMAL uses the normal of the particle.\n"
+        "NORMAL_VIEW_DIRECTION uses the z axis of the view space.\n"
+        "NORMAL_VIEW_POSITION uses the the direction from the particle to the view position.\n"
+        "NORMAL_STATIC uses the normal of this drawer.\n",
+        NormalSourceFieldId, NormalSourceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&NodeParticleSystemCore::editHandleNormalSource),
+        static_cast<FieldGetMethodSig >(&NodeParticleSystemCore::getHandleNormalSource));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFVec3f::Description(
+        SFVec3f::getClassType(),
+        "Normal",
+        "The direction to use as Normal when aligning particles.  This is only used if the NormalSource is STATIC.\n",
+        NormalFieldId, NormalFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&NodeParticleSystemCore::editHandleNormal),
+        static_cast<FieldGetMethodSig >(&NodeParticleSystemCore::getHandleNormal));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "UpSource",
+        "This enum is used to determine what is used for the direction of the line.\n"
+        "UP_POSITION_CHANGE uses the diference between Position and SecPosition.\n"
+        "UP_VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.\n"
+        "UP_VELOCITY uses the velocity.\n"
+        "UP_ACCELERATION uses the acceleration.\n"
+        "UP_PARTICLE_NORMAL uses the normal of the particle.\n"
+        "UP_VIEW_DIRECTION uses the y axis of the view space.\n"
+        "UP_STATIC uses the normal of this drawer.\n",
+        UpSourceFieldId, UpSourceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&NodeParticleSystemCore::editHandleUpSource),
+        static_cast<FieldGetMethodSig >(&NodeParticleSystemCore::getHandleUpSource));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFVec3f::Description(
+        SFVec3f::getClassType(),
+        "Up",
+        "The direction to use as Up when aligning particles.  This is only used if the UpSource is STATIC.\n",
+        UpFieldId, UpFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&NodeParticleSystemCore::editHandleUp),
+        static_cast<FieldGetMethodSig >(&NodeParticleSystemCore::getHandleUp));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+NodeParticleSystemCoreBase::TypeObject NodeParticleSystemCoreBase::_type(
+    NodeParticleSystemCoreBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&NodeParticleSystemCoreBase::createEmptyLocal),
     NodeParticleSystemCore::initMethod,
-    _desc,
-    sizeof(_desc));
+    NodeParticleSystemCore::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&NodeParticleSystemCore::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"NodeParticleSystemCore\"\n"
+    "\tparent=\"Group\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"System\"\n"
+    "\t\ttype=\"ParticleSystem\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"PrototypeNode\"\n"
+    "\t\ttype=\"Node\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\tPrototypeNode is the node that clones are made of for each particle.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SizeScaling\"\n"
+    "\t\ttype=\"Vec3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1.0,1.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\tThis value is used to scale the size of the particle and apply that size to the transformation of the node for that particle.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ParticleNodes\"\n"
+    "\t\ttype=\"Node\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\tdefaultValue=\"\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"NormalSource\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NodeParticleSystemCore::NORMAL_PARTICLE_NORMAL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\tThis enum is used to determine what is used for the direction of the line.\n"
+    "   NORMAL_POSITION_CHANGE uses the diference between Position and SecPosition.\n"
+    "   NORMAL_VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.\n"
+    "   NORMAL_VELOCITY uses the velocity.\n"
+    "   NORMAL_ACCELERATION uses the acceleration.\n"
+    "   NORMAL_PARTICLE_NORMAL uses the normal of the particle.\n"
+    "   NORMAL_VIEW_DIRECTION uses the z axis of the view space.\n"
+    "   NORMAL_VIEW_POSITION uses the the direction from the particle to the view position.\n"
+    "   NORMAL_STATIC uses the normal of this drawer.\n"
+    "\t</Field>\n"
+    "   <Field\n"
+    "\t\tname=\"Normal\"\n"
+    "\t\ttype=\"Vec3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1.0,0.0,0.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   The direction to use as Normal when aligning particles.  This is only used if the NormalSource is STATIC.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"UpSource\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NodeParticleSystemCore::UP_VIEW_DIRECTION\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\tThis enum is used to determine what is used for the direction of the line.\n"
+    "   UP_POSITION_CHANGE uses the diference between Position and SecPosition.\n"
+    "   UP_VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.\n"
+    "   UP_VELOCITY uses the velocity.\n"
+    "   UP_ACCELERATION uses the acceleration.\n"
+    "   UP_PARTICLE_NORMAL uses the normal of the particle.\n"
+    "   UP_VIEW_DIRECTION uses the y axis of the view space.\n"
+    "   UP_STATIC uses the normal of this drawer.\n"
+    "\t</Field>\n"
+    "   <Field\n"
+    "\t\tname=\"Up\"\n"
+    "\t\ttype=\"Vec3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,1.0,0.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   The direction to use as Up when aligning particles.  This is only used if the UpSource is STATIC.\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(NodeParticleSystemCoreBase, NodeParticleSystemCorePtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &NodeParticleSystemCoreBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &NodeParticleSystemCoreBase::getType(void) const 
+FieldContainerType &NodeParticleSystemCoreBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr NodeParticleSystemCoreBase::shallowCopy(void) const 
-{ 
-    NodeParticleSystemCorePtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const NodeParticleSystemCore *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 NodeParticleSystemCoreBase::getContainerSize(void) const 
-{ 
-    return sizeof(NodeParticleSystemCore); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void NodeParticleSystemCoreBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &NodeParticleSystemCoreBase::getType(void) const
 {
-    this->executeSyncImpl((NodeParticleSystemCoreBase *) &other, whichField);
+    return _type;
 }
-#else
-void NodeParticleSystemCoreBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 NodeParticleSystemCoreBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((NodeParticleSystemCoreBase *) &other, whichField, sInfo);
+    return sizeof(NodeParticleSystemCore);
 }
-void NodeParticleSystemCoreBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the NodeParticleSystemCore::_sfSystem field.
+const SFUnrecParticleSystemPtr *NodeParticleSystemCoreBase::getSFSystem(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfSystem;
 }
 
-void NodeParticleSystemCoreBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecParticleSystemPtr *NodeParticleSystemCoreBase::editSFSystem         (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(SystemFieldMask);
 
-    _mfParticleNodes.terminateShare(uiAspect, this->getContainerSize());
+    return &_sfSystem;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-NodeParticleSystemCoreBase::NodeParticleSystemCoreBase(void) :
-    _sfSystem                 (ParticleSystemPtr(NullFC)), 
-    _sfPrototypeNode          (NodePtr(NullFC)), 
-    _sfSizeScaling            (Vec3f(1.0,1.0,1.0)), 
-    _mfParticleNodes          (), 
-    _sfNormalSource           (UInt32(NodeParticleSystemCore::NORMAL_PARTICLE_NORMAL)), 
-    _sfNormal                 (Vec3f(1.0,0.0,0.0)), 
-    _sfUpSource               (UInt32(NodeParticleSystemCore::UP_VIEW_DIRECTION)), 
-    _sfUp                     (Vec3f(0.0,1.0,0.0)), 
-    Inherited() 
+//! Get the NodeParticleSystemCore::_sfPrototypeNode field.
+const SFUnrecNodePtr *NodeParticleSystemCoreBase::getSFPrototypeNode(void) const
 {
+    return &_sfPrototypeNode;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-NodeParticleSystemCoreBase::NodeParticleSystemCoreBase(const NodeParticleSystemCoreBase &source) :
-    _sfSystem                 (source._sfSystem                 ), 
-    _sfPrototypeNode          (source._sfPrototypeNode          ), 
-    _sfSizeScaling            (source._sfSizeScaling            ), 
-    _mfParticleNodes          (source._mfParticleNodes          ), 
-    _sfNormalSource           (source._sfNormalSource           ), 
-    _sfNormal                 (source._sfNormal                 ), 
-    _sfUpSource               (source._sfUpSource               ), 
-    _sfUp                     (source._sfUp                     ), 
-    Inherited                 (source)
+SFUnrecNodePtr      *NodeParticleSystemCoreBase::editSFPrototypeNode  (void)
 {
+    editSField(PrototypeNodeFieldMask);
+
+    return &_sfPrototypeNode;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-NodeParticleSystemCoreBase::~NodeParticleSystemCoreBase(void)
+SFVec3f *NodeParticleSystemCoreBase::editSFSizeScaling(void)
 {
+    editSField(SizeScalingFieldMask);
+
+    return &_sfSizeScaling;
 }
+
+const SFVec3f *NodeParticleSystemCoreBase::getSFSizeScaling(void) const
+{
+    return &_sfSizeScaling;
+}
+
+
+//! Get the NodeParticleSystemCore::_mfParticleNodes field.
+const MFUnrecNodePtr *NodeParticleSystemCoreBase::getMFParticleNodes(void) const
+{
+    return &_mfParticleNodes;
+}
+
+MFUnrecNodePtr      *NodeParticleSystemCoreBase::editMFParticleNodes  (void)
+{
+    editMField(ParticleNodesFieldMask, _mfParticleNodes);
+
+    return &_mfParticleNodes;
+}
+
+SFUInt32 *NodeParticleSystemCoreBase::editSFNormalSource(void)
+{
+    editSField(NormalSourceFieldMask);
+
+    return &_sfNormalSource;
+}
+
+const SFUInt32 *NodeParticleSystemCoreBase::getSFNormalSource(void) const
+{
+    return &_sfNormalSource;
+}
+
+
+SFVec3f *NodeParticleSystemCoreBase::editSFNormal(void)
+{
+    editSField(NormalFieldMask);
+
+    return &_sfNormal;
+}
+
+const SFVec3f *NodeParticleSystemCoreBase::getSFNormal(void) const
+{
+    return &_sfNormal;
+}
+
+
+SFUInt32 *NodeParticleSystemCoreBase::editSFUpSource(void)
+{
+    editSField(UpSourceFieldMask);
+
+    return &_sfUpSource;
+}
+
+const SFUInt32 *NodeParticleSystemCoreBase::getSFUpSource(void) const
+{
+    return &_sfUpSource;
+}
+
+
+SFVec3f *NodeParticleSystemCoreBase::editSFUp(void)
+{
+    editSField(UpFieldMask);
+
+    return &_sfUp;
+}
+
+const SFVec3f *NodeParticleSystemCoreBase::getSFUp(void) const
+{
+    return &_sfUp;
+}
+
+
+
+
+void NodeParticleSystemCoreBase::pushToParticleNodes(Node * const value)
+{
+    editMField(ParticleNodesFieldMask, _mfParticleNodes);
+
+    _mfParticleNodes.push_back(value);
+}
+
+void NodeParticleSystemCoreBase::assignParticleNodes(const MFUnrecNodePtr    &value)
+{
+    MFUnrecNodePtr   ::const_iterator elemIt  =
+        value.begin();
+    MFUnrecNodePtr   ::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<NodeParticleSystemCore *>(this)->clearParticleNodes();
+
+    while(elemIt != elemEnd)
+    {
+        this->pushToParticleNodes(*elemIt);
+
+        ++elemIt;
+    }
+}
+
+void NodeParticleSystemCoreBase::removeFromParticleNodes(UInt32 uiIndex)
+{
+    if(uiIndex < _mfParticleNodes.size())
+    {
+        editMField(ParticleNodesFieldMask, _mfParticleNodes);
+
+        _mfParticleNodes.erase(uiIndex);
+    }
+}
+
+void NodeParticleSystemCoreBase::removeObjFromParticleNodes(Node * const value)
+{
+    Int32 iElemIdx = _mfParticleNodes.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(ParticleNodesFieldMask, _mfParticleNodes);
+
+        _mfParticleNodes.erase(iElemIdx);
+    }
+}
+void NodeParticleSystemCoreBase::clearParticleNodes(void)
+{
+    editMField(ParticleNodesFieldMask, _mfParticleNodes);
+
+
+    _mfParticleNodes.clear();
+}
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 NodeParticleSystemCoreBase::getBinSize(const BitVector &whichField)
+UInt32 NodeParticleSystemCoreBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -285,48 +603,40 @@ UInt32 NodeParticleSystemCoreBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfSystem.getBinSize();
     }
-
     if(FieldBits::NoField != (PrototypeNodeFieldMask & whichField))
     {
         returnValue += _sfPrototypeNode.getBinSize();
     }
-
     if(FieldBits::NoField != (SizeScalingFieldMask & whichField))
     {
         returnValue += _sfSizeScaling.getBinSize();
     }
-
     if(FieldBits::NoField != (ParticleNodesFieldMask & whichField))
     {
         returnValue += _mfParticleNodes.getBinSize();
     }
-
     if(FieldBits::NoField != (NormalSourceFieldMask & whichField))
     {
         returnValue += _sfNormalSource.getBinSize();
     }
-
     if(FieldBits::NoField != (NormalFieldMask & whichField))
     {
         returnValue += _sfNormal.getBinSize();
     }
-
     if(FieldBits::NoField != (UpSourceFieldMask & whichField))
     {
         returnValue += _sfUpSource.getBinSize();
     }
-
     if(FieldBits::NoField != (UpFieldMask & whichField))
     {
         returnValue += _sfUp.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void NodeParticleSystemCoreBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void NodeParticleSystemCoreBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -334,47 +644,38 @@ void NodeParticleSystemCoreBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfSystem.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (PrototypeNodeFieldMask & whichField))
     {
         _sfPrototypeNode.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SizeScalingFieldMask & whichField))
     {
         _sfSizeScaling.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ParticleNodesFieldMask & whichField))
     {
         _mfParticleNodes.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (NormalSourceFieldMask & whichField))
     {
         _sfNormalSource.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (NormalFieldMask & whichField))
     {
         _sfNormal.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (UpSourceFieldMask & whichField))
     {
         _sfUpSource.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (UpFieldMask & whichField))
     {
         _sfUp.copyToBin(pMem);
     }
-
-
 }
 
-void NodeParticleSystemCoreBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void NodeParticleSystemCoreBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -382,162 +683,479 @@ void NodeParticleSystemCoreBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfSystem.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (PrototypeNodeFieldMask & whichField))
     {
         _sfPrototypeNode.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SizeScalingFieldMask & whichField))
     {
         _sfSizeScaling.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ParticleNodesFieldMask & whichField))
     {
         _mfParticleNodes.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (NormalSourceFieldMask & whichField))
     {
         _sfNormalSource.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (NormalFieldMask & whichField))
     {
         _sfNormal.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (UpSourceFieldMask & whichField))
     {
         _sfUpSource.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (UpFieldMask & whichField))
     {
         _sfUp.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void NodeParticleSystemCoreBase::executeSyncImpl(      NodeParticleSystemCoreBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+NodeParticleSystemCoreTransitPtr NodeParticleSystemCoreBase::createLocal(BitVector bFlags)
 {
+    NodeParticleSystemCoreTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (SystemFieldMask & whichField))
-        _sfSystem.syncWith(pOther->_sfSystem);
+        fc = dynamic_pointer_cast<NodeParticleSystemCore>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (PrototypeNodeFieldMask & whichField))
-        _sfPrototypeNode.syncWith(pOther->_sfPrototypeNode);
-
-    if(FieldBits::NoField != (SizeScalingFieldMask & whichField))
-        _sfSizeScaling.syncWith(pOther->_sfSizeScaling);
-
-    if(FieldBits::NoField != (ParticleNodesFieldMask & whichField))
-        _mfParticleNodes.syncWith(pOther->_mfParticleNodes);
-
-    if(FieldBits::NoField != (NormalSourceFieldMask & whichField))
-        _sfNormalSource.syncWith(pOther->_sfNormalSource);
-
-    if(FieldBits::NoField != (NormalFieldMask & whichField))
-        _sfNormal.syncWith(pOther->_sfNormal);
-
-    if(FieldBits::NoField != (UpSourceFieldMask & whichField))
-        _sfUpSource.syncWith(pOther->_sfUpSource);
-
-    if(FieldBits::NoField != (UpFieldMask & whichField))
-        _sfUp.syncWith(pOther->_sfUp);
-
-
-}
-#else
-void NodeParticleSystemCoreBase::executeSyncImpl(      NodeParticleSystemCoreBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (SystemFieldMask & whichField))
-        _sfSystem.syncWith(pOther->_sfSystem);
-
-    if(FieldBits::NoField != (PrototypeNodeFieldMask & whichField))
-        _sfPrototypeNode.syncWith(pOther->_sfPrototypeNode);
-
-    if(FieldBits::NoField != (SizeScalingFieldMask & whichField))
-        _sfSizeScaling.syncWith(pOther->_sfSizeScaling);
-
-    if(FieldBits::NoField != (NormalSourceFieldMask & whichField))
-        _sfNormalSource.syncWith(pOther->_sfNormalSource);
-
-    if(FieldBits::NoField != (NormalFieldMask & whichField))
-        _sfNormal.syncWith(pOther->_sfNormal);
-
-    if(FieldBits::NoField != (UpSourceFieldMask & whichField))
-        _sfUpSource.syncWith(pOther->_sfUpSource);
-
-    if(FieldBits::NoField != (UpFieldMask & whichField))
-        _sfUp.syncWith(pOther->_sfUp);
-
-
-    if(FieldBits::NoField != (ParticleNodesFieldMask & whichField))
-        _mfParticleNodes.syncWith(pOther->_mfParticleNodes, sInfo);
-
-
+    return fc;
 }
 
-void NodeParticleSystemCoreBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+NodeParticleSystemCoreTransitPtr NodeParticleSystemCoreBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    NodeParticleSystemCoreTransitPtr fc;
 
-    if(FieldBits::NoField != (ParticleNodesFieldMask & whichField))
-        _mfParticleNodes.beginEdit(uiAspect, uiContainerSize);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
+        fc = dynamic_pointer_cast<NodeParticleSystemCore>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+NodeParticleSystemCoreTransitPtr NodeParticleSystemCoreBase::create(void)
+{
+    NodeParticleSystemCoreTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<NodeParticleSystemCore>(tmpPtr);
+    }
+
+    return fc;
+}
+
+NodeParticleSystemCore *NodeParticleSystemCoreBase::createEmptyLocal(BitVector bFlags)
+{
+    NodeParticleSystemCore *returnValue;
+
+    newPtr<NodeParticleSystemCore>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+NodeParticleSystemCore *NodeParticleSystemCoreBase::createEmpty(void)
+{
+    NodeParticleSystemCore *returnValue;
+
+    newPtr<NodeParticleSystemCore>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr NodeParticleSystemCoreBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    NodeParticleSystemCore *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const NodeParticleSystemCore *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr NodeParticleSystemCoreBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    NodeParticleSystemCore *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const NodeParticleSystemCore *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr NodeParticleSystemCoreBase::shallowCopy(void) const
+{
+    NodeParticleSystemCore *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const NodeParticleSystemCore *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+NodeParticleSystemCoreBase::NodeParticleSystemCoreBase(void) :
+    Inherited(),
+    _sfSystem                 (NULL),
+    _sfPrototypeNode          (NULL),
+    _sfSizeScaling            (Vec3f(1.0,1.0,1.0)),
+    _mfParticleNodes          (),
+    _sfNormalSource           (UInt32(NodeParticleSystemCore::NORMAL_PARTICLE_NORMAL)),
+    _sfNormal                 (Vec3f(1.0,0.0,0.0)),
+    _sfUpSource               (UInt32(NodeParticleSystemCore::UP_VIEW_DIRECTION)),
+    _sfUp                     (Vec3f(0.0,1.0,0.0))
+{
+}
+
+NodeParticleSystemCoreBase::NodeParticleSystemCoreBase(const NodeParticleSystemCoreBase &source) :
+    Inherited(source),
+    _sfSystem                 (NULL),
+    _sfPrototypeNode          (NULL),
+    _sfSizeScaling            (source._sfSizeScaling            ),
+    _mfParticleNodes          (),
+    _sfNormalSource           (source._sfNormalSource           ),
+    _sfNormal                 (source._sfNormal                 ),
+    _sfUpSource               (source._sfUpSource               ),
+    _sfUp                     (source._sfUp                     )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+NodeParticleSystemCoreBase::~NodeParticleSystemCoreBase(void)
+{
+}
+
+void NodeParticleSystemCoreBase::onCreate(const NodeParticleSystemCore *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        NodeParticleSystemCore *pThis = static_cast<NodeParticleSystemCore *>(this);
+
+        pThis->setSystem(source->getSystem());
+
+        pThis->setPrototypeNode(source->getPrototypeNode());
+
+        MFUnrecNodePtr::const_iterator ParticleNodesIt  =
+            source->_mfParticleNodes.begin();
+        MFUnrecNodePtr::const_iterator ParticleNodesEnd =
+            source->_mfParticleNodes.end  ();
+
+        while(ParticleNodesIt != ParticleNodesEnd)
+        {
+            pThis->pushToParticleNodes(*ParticleNodesIt);
+
+            ++ParticleNodesIt;
+        }
+    }
+}
+
+GetFieldHandlePtr NodeParticleSystemCoreBase::getHandleSystem          (void) const
+{
+    SFUnrecParticleSystemPtr::GetHandlePtr returnValue(
+        new  SFUnrecParticleSystemPtr::GetHandle(
+             &_sfSystem,
+             this->getType().getFieldDesc(SystemFieldId),
+             const_cast<NodeParticleSystemCoreBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr NodeParticleSystemCoreBase::editHandleSystem         (void)
+{
+    SFUnrecParticleSystemPtr::EditHandlePtr returnValue(
+        new  SFUnrecParticleSystemPtr::EditHandle(
+             &_sfSystem,
+             this->getType().getFieldDesc(SystemFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&NodeParticleSystemCore::setSystem,
+                    static_cast<NodeParticleSystemCore *>(this), _1));
+
+    editSField(SystemFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr NodeParticleSystemCoreBase::getHandlePrototypeNode   (void) const
+{
+    SFUnrecNodePtr::GetHandlePtr returnValue(
+        new  SFUnrecNodePtr::GetHandle(
+             &_sfPrototypeNode,
+             this->getType().getFieldDesc(PrototypeNodeFieldId),
+             const_cast<NodeParticleSystemCoreBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr NodeParticleSystemCoreBase::editHandlePrototypeNode  (void)
+{
+    SFUnrecNodePtr::EditHandlePtr returnValue(
+        new  SFUnrecNodePtr::EditHandle(
+             &_sfPrototypeNode,
+             this->getType().getFieldDesc(PrototypeNodeFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&NodeParticleSystemCore::setPrototypeNode,
+                    static_cast<NodeParticleSystemCore *>(this), _1));
+
+    editSField(PrototypeNodeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr NodeParticleSystemCoreBase::getHandleSizeScaling     (void) const
+{
+    SFVec3f::GetHandlePtr returnValue(
+        new  SFVec3f::GetHandle(
+             &_sfSizeScaling,
+             this->getType().getFieldDesc(SizeScalingFieldId),
+             const_cast<NodeParticleSystemCoreBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr NodeParticleSystemCoreBase::editHandleSizeScaling    (void)
+{
+    SFVec3f::EditHandlePtr returnValue(
+        new  SFVec3f::EditHandle(
+             &_sfSizeScaling,
+             this->getType().getFieldDesc(SizeScalingFieldId),
+             this));
+
+
+    editSField(SizeScalingFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr NodeParticleSystemCoreBase::getHandleParticleNodes   (void) const
+{
+    MFUnrecNodePtr::GetHandlePtr returnValue(
+        new  MFUnrecNodePtr::GetHandle(
+             &_mfParticleNodes,
+             this->getType().getFieldDesc(ParticleNodesFieldId),
+             const_cast<NodeParticleSystemCoreBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr NodeParticleSystemCoreBase::editHandleParticleNodes  (void)
+{
+    MFUnrecNodePtr::EditHandlePtr returnValue(
+        new  MFUnrecNodePtr::EditHandle(
+             &_mfParticleNodes,
+             this->getType().getFieldDesc(ParticleNodesFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&NodeParticleSystemCore::pushToParticleNodes,
+                    static_cast<NodeParticleSystemCore *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&NodeParticleSystemCore::removeFromParticleNodes,
+                    static_cast<NodeParticleSystemCore *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&NodeParticleSystemCore::removeObjFromParticleNodes,
+                    static_cast<NodeParticleSystemCore *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&NodeParticleSystemCore::clearParticleNodes,
+                    static_cast<NodeParticleSystemCore *>(this)));
+
+    editMField(ParticleNodesFieldMask, _mfParticleNodes);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr NodeParticleSystemCoreBase::getHandleNormalSource    (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfNormalSource,
+             this->getType().getFieldDesc(NormalSourceFieldId),
+             const_cast<NodeParticleSystemCoreBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr NodeParticleSystemCoreBase::editHandleNormalSource   (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfNormalSource,
+             this->getType().getFieldDesc(NormalSourceFieldId),
+             this));
+
+
+    editSField(NormalSourceFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr NodeParticleSystemCoreBase::getHandleNormal          (void) const
+{
+    SFVec3f::GetHandlePtr returnValue(
+        new  SFVec3f::GetHandle(
+             &_sfNormal,
+             this->getType().getFieldDesc(NormalFieldId),
+             const_cast<NodeParticleSystemCoreBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr NodeParticleSystemCoreBase::editHandleNormal         (void)
+{
+    SFVec3f::EditHandlePtr returnValue(
+        new  SFVec3f::EditHandle(
+             &_sfNormal,
+             this->getType().getFieldDesc(NormalFieldId),
+             this));
+
+
+    editSField(NormalFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr NodeParticleSystemCoreBase::getHandleUpSource        (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfUpSource,
+             this->getType().getFieldDesc(UpSourceFieldId),
+             const_cast<NodeParticleSystemCoreBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr NodeParticleSystemCoreBase::editHandleUpSource       (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfUpSource,
+             this->getType().getFieldDesc(UpSourceFieldId),
+             this));
+
+
+    editSField(UpSourceFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr NodeParticleSystemCoreBase::getHandleUp              (void) const
+{
+    SFVec3f::GetHandlePtr returnValue(
+        new  SFVec3f::GetHandle(
+             &_sfUp,
+             this->getType().getFieldDesc(UpFieldId),
+             const_cast<NodeParticleSystemCoreBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr NodeParticleSystemCoreBase::editHandleUp             (void)
+{
+    SFVec3f::EditHandlePtr returnValue(
+        new  SFVec3f::EditHandle(
+             &_sfUp,
+             this->getType().getFieldDesc(UpFieldId),
+             this));
+
+
+    editSField(UpFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void NodeParticleSystemCoreBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    NodeParticleSystemCore *pThis = static_cast<NodeParticleSystemCore *>(this);
+
+    pThis->execSync(static_cast<NodeParticleSystemCore *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *NodeParticleSystemCoreBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    NodeParticleSystemCore *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const NodeParticleSystemCore *>(pRefAspect),
+                  dynamic_cast<const NodeParticleSystemCore *>(this));
+
+    return returnValue;
+}
+#endif
+
+void NodeParticleSystemCoreBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<NodeParticleSystemCore *>(this)->setSystem(NULL);
+
+    static_cast<NodeParticleSystemCore *>(this)->setPrototypeNode(NULL);
+
+    static_cast<NodeParticleSystemCore *>(this)->clearParticleNodes();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<NodeParticleSystemCorePtr>::_type("NodeParticleSystemCorePtr", "GroupPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(NodeParticleSystemCorePtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(NodeParticleSystemCorePtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGNODEPARTICLESYSTEMCOREBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGNODEPARTICLESYSTEMCOREBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGNODEPARTICLESYSTEMCOREFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

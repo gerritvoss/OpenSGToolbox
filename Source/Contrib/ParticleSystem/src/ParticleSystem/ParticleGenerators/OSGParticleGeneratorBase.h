@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,64 +58,74 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include <OpenSG/OSGAttachmentContainer.h> // Parent
+#include "OSGAttachmentContainer.h" // Parent
 
-#include <OpenSG/OSGNodeFields.h> // Beacon type
-#include <OpenSG/OSGBoolFields.h> // GenerateInWorldSpace type
+#include "OSGNodeFields.h"              // Beacon type
+#include "OSGSysFields.h"               // GenerateInWorldSpace type
 
 #include "OSGParticleGeneratorFields.h"
+
+
 OSG_BEGIN_NAMESPACE
 
 class ParticleGenerator;
-class BinaryDataHandler;
 
 //! \brief ParticleGenerator Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeneratorBase : public AttachmentContainer
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleGeneratorBase : public AttachmentContainer
 {
-  private:
-
-    typedef AttachmentContainer    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ParticleGeneratorPtr  Ptr;
+    typedef AttachmentContainer Inherited;
+    typedef AttachmentContainer ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(ParticleGenerator);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        BeaconFieldId               = Inherited::NextFieldId,
-        GenerateInWorldSpaceFieldId = BeaconFieldId               + 1,
-        NextFieldId                 = GenerateInWorldSpaceFieldId + 1
+        BeaconFieldId = Inherited::NextFieldId,
+        GenerateInWorldSpaceFieldId = BeaconFieldId + 1,
+        NextFieldId = GenerateInWorldSpaceFieldId + 1
     };
 
-    static const OSG::BitVector BeaconFieldMask;
-    static const OSG::BitVector GenerateInWorldSpaceFieldMask;
+    static const OSG::BitVector BeaconFieldMask =
+        (TypeTraits<BitVector>::One << BeaconFieldId);
+    static const OSG::BitVector GenerateInWorldSpaceFieldMask =
+        (TypeTraits<BitVector>::One << GenerateInWorldSpaceFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecNodePtr    SFBeaconType;
+    typedef SFBool            SFGenerateInWorldSpaceType;
 
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -124,31 +134,34 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeneratorBase : public Attachment
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+            const SFUnrecNodePtr      *getSFBeacon         (void) const;
+                  SFUnrecNodePtr      *editSFBeacon         (void);
 
-    virtual       SFNodePtr           *editSFBeacon         (void);
-    virtual const SFNodePtr           *getSFBeacon         (void) const;
-
-    virtual       SFBool              *editSFGenerateInWorldSpace(void);
-    virtual const SFBool              *getSFGenerateInWorldSpace(void) const;
+                  SFBool              *editSFGenerateInWorldSpace(void);
+            const SFBool              *getSFGenerateInWorldSpace (void) const;
 
 
-    virtual       NodePtr             &editBeacon         (void);
-    virtual const NodePtr             &getBeacon         (void) const;
+                  Node * getBeacon         (void) const;
 
-    virtual       bool                &editGenerateInWorldSpace(void);
-    virtual const bool                &getGenerateInWorldSpace(void) const;
+                  bool                &editGenerateInWorldSpace(void);
+                  bool                 getGenerateInWorldSpace (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-    virtual void setBeacon         ( const NodePtr &value );
-    virtual void setGenerateInWorldSpace( const bool &value );
+            void setBeacon         (Node * const value);
+            void setGenerateInWorldSpace(const bool value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -156,23 +169,30 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeneratorBase : public Attachment
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFNodePtr           _sfBeacon;
-    SFBool              _sfGenerateInWorldSpace;
+    SFUnrecNodePtr    _sfBeacon;
+    SFBool            _sfGenerateInWorldSpace;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -187,66 +207,76 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeneratorBase : public Attachment
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ParticleGeneratorBase(void); 
+    virtual ~ParticleGeneratorBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const ParticleGenerator *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleBeacon          (void) const;
+    EditFieldHandlePtr editHandleBeacon         (void);
+    GetFieldHandlePtr  getHandleGenerateInWorldSpace (void) const;
+    EditFieldHandlePtr editHandleGenerateInWorldSpace(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ParticleGeneratorBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      ParticleGeneratorBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      ParticleGeneratorBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const ParticleGeneratorBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef ParticleGeneratorBase *ParticleGeneratorBaseP;
-
-typedef osgIF<ParticleGeneratorBase::isNodeCore,
-              CoredNodePtr<ParticleGenerator>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ParticleGeneratorNodePtr;
-
-typedef RefPtr<ParticleGeneratorPtr> ParticleGeneratorRefPtr;
 
 OSG_END_NAMESPACE
 

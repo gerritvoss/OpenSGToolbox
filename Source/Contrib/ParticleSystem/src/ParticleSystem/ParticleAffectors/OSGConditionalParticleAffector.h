@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,47 +42,56 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGConditionalParticleAffectorBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ConditionalParticleAffector class. See \ref 
-           PageParticleSystemConditionalParticleAffector for a description.
+/*! \brief ConditionalParticleAffector class. See \ref
+           PageContribParticleSystemConditionalParticleAffector for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ConditionalParticleAffector : public ConditionalParticleAffectorBase
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ConditionalParticleAffector : public ConditionalParticleAffectorBase
 {
-  private:
-
-    typedef ConditionalParticleAffectorBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
-  public:
 
-	enum Conditional{EQUALS = 1, NOT_EQUAL = 2, LESS_THAN = 3, GREATER_THAN = 4, LESS_THAN_EQUAL = 5, GREATER_THAN_EQUAL = 6 };
+  public:
+	enum Conditional
+    {
+        EQUALS             = 1,
+        NOT_EQUAL          = 2,
+        LESS_THAN          = 3,
+        GREATER_THAN       = 4,
+        LESS_THAN_EQUAL    = 5,
+        GREATER_THAN_EQUAL = 6
+    };
+
+    typedef ConditionalParticleAffectorBase Inherited;
+    typedef ConditionalParticleAffector     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
-	virtual bool affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps);
+	virtual bool affect(ParticleSystemRefPtr System, Int32 ParticleIndex, const Time& elps);
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ConditionalParticleAffectorBase.
@@ -99,20 +108,24 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ConditionalParticleAffector : public Cond
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ConditionalParticleAffector(void); 
+    virtual ~ConditionalParticleAffector(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ConditionalParticleAffectorBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ConditionalParticleAffector &source);
 };
 

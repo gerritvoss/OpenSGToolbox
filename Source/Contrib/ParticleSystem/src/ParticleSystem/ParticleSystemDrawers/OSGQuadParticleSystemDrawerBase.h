@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,83 +58,98 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGParticleSystemDrawer.h" // Parent
 
-#include <OpenSG/OSGVec2fFields.h> // QuadSizeScaling type
-#include <OpenSG/OSGBoolFields.h> // UseImageSizeRatio type
-#include <OpenSG/OSGUInt32Fields.h> // NormalSource type
-#include <OpenSG/OSGVec3fFields.h> // Normal type
-#include <OpenSG/OSGUInt32Fields.h> // UpSource type
-#include <OpenSG/OSGVec3fFields.h> // Up type
-#include <OpenSG/OSGBoolFields.h> // UseNormalAsObjectSpaceRotation type
-#include <OpenSG/OSGReal32Fields.h> // Twist type
+#include "OSGVecFields.h"               // QuadSizeScaling type
+#include "OSGSysFields.h"               // UseImageSizeRatio type
 
 #include "OSGQuadParticleSystemDrawerFields.h"
+
 
 OSG_BEGIN_NAMESPACE
 
 class QuadParticleSystemDrawer;
-class BinaryDataHandler;
 
 //! \brief QuadParticleSystemDrawer Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING QuadParticleSystemDrawerBase : public ParticleSystemDrawer
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING QuadParticleSystemDrawerBase : public ParticleSystemDrawer
 {
-  private:
-
-    typedef ParticleSystemDrawer    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef QuadParticleSystemDrawerPtr  Ptr;
+    typedef ParticleSystemDrawer Inherited;
+    typedef ParticleSystemDrawer ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(QuadParticleSystemDrawer);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        QuadSizeScalingFieldId                = Inherited::NextFieldId,
-        UseImageSizeRatioFieldId              = QuadSizeScalingFieldId                + 1,
-        NormalSourceFieldId                   = UseImageSizeRatioFieldId              + 1,
-        NormalFieldId                         = NormalSourceFieldId                   + 1,
-        UpSourceFieldId                       = NormalFieldId                         + 1,
-        UpFieldId                             = UpSourceFieldId                       + 1,
-        UseNormalAsObjectSpaceRotationFieldId = UpFieldId                             + 1,
-        TwistFieldId                          = UseNormalAsObjectSpaceRotationFieldId + 1,
-        NextFieldId                           = TwistFieldId                          + 1
+        QuadSizeScalingFieldId = Inherited::NextFieldId,
+        UseImageSizeRatioFieldId = QuadSizeScalingFieldId + 1,
+        NormalSourceFieldId = UseImageSizeRatioFieldId + 1,
+        NormalFieldId = NormalSourceFieldId + 1,
+        UpSourceFieldId = NormalFieldId + 1,
+        UpFieldId = UpSourceFieldId + 1,
+        UseNormalAsObjectSpaceRotationFieldId = UpFieldId + 1,
+        TwistFieldId = UseNormalAsObjectSpaceRotationFieldId + 1,
+        NextFieldId = TwistFieldId + 1
     };
 
-    static const OSG::BitVector QuadSizeScalingFieldMask;
-    static const OSG::BitVector UseImageSizeRatioFieldMask;
-    static const OSG::BitVector NormalSourceFieldMask;
-    static const OSG::BitVector NormalFieldMask;
-    static const OSG::BitVector UpSourceFieldMask;
-    static const OSG::BitVector UpFieldMask;
-    static const OSG::BitVector UseNormalAsObjectSpaceRotationFieldMask;
-    static const OSG::BitVector TwistFieldMask;
+    static const OSG::BitVector QuadSizeScalingFieldMask =
+        (TypeTraits<BitVector>::One << QuadSizeScalingFieldId);
+    static const OSG::BitVector UseImageSizeRatioFieldMask =
+        (TypeTraits<BitVector>::One << UseImageSizeRatioFieldId);
+    static const OSG::BitVector NormalSourceFieldMask =
+        (TypeTraits<BitVector>::One << NormalSourceFieldId);
+    static const OSG::BitVector NormalFieldMask =
+        (TypeTraits<BitVector>::One << NormalFieldId);
+    static const OSG::BitVector UpSourceFieldMask =
+        (TypeTraits<BitVector>::One << UpSourceFieldId);
+    static const OSG::BitVector UpFieldMask =
+        (TypeTraits<BitVector>::One << UpFieldId);
+    static const OSG::BitVector UseNormalAsObjectSpaceRotationFieldMask =
+        (TypeTraits<BitVector>::One << UseNormalAsObjectSpaceRotationFieldId);
+    static const OSG::BitVector TwistFieldMask =
+        (TypeTraits<BitVector>::One << TwistFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFVec2f           SFQuadSizeScalingType;
+    typedef SFBool            SFUseImageSizeRatioType;
+    typedef SFUInt32          SFNormalSourceType;
+    typedef SFVec3f           SFNormalType;
+    typedef SFUInt32          SFUpSourceType;
+    typedef SFVec3f           SFUpType;
+    typedef SFBool            SFUseNormalAsObjectSpaceRotationType;
+    typedef SFReal32          SFTwistType;
 
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -143,49 +158,73 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING QuadParticleSystemDrawerBase : public Par
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFVec2f             *getSFQuadSizeScaling(void);
-           SFBool              *getSFUseImageSizeRatio(void);
-           SFUInt32            *getSFNormalSource   (void);
-           SFVec3f             *getSFNormal         (void);
-           SFUInt32            *getSFUpSource       (void);
-           SFVec3f             *getSFUp             (void);
-           SFBool              *getSFUseNormalAsObjectSpaceRotation(void);
-           SFReal32            *getSFTwist          (void);
 
-           Vec2f               &getQuadSizeScaling(void);
-     const Vec2f               &getQuadSizeScaling(void) const;
-           bool                &getUseImageSizeRatio(void);
-     const bool                &getUseImageSizeRatio(void) const;
-           UInt32              &getNormalSource   (void);
-     const UInt32              &getNormalSource   (void) const;
-           Vec3f               &getNormal         (void);
-     const Vec3f               &getNormal         (void) const;
-           UInt32              &getUpSource       (void);
-     const UInt32              &getUpSource       (void) const;
-           Vec3f               &getUp             (void);
-     const Vec3f               &getUp             (void) const;
-           bool                &getUseNormalAsObjectSpaceRotation(void);
-     const bool                &getUseNormalAsObjectSpaceRotation(void) const;
-           Real32              &getTwist          (void);
-     const Real32              &getTwist          (void) const;
+                  SFVec2f             *editSFQuadSizeScaling(void);
+            const SFVec2f             *getSFQuadSizeScaling (void) const;
+
+                  SFBool              *editSFUseImageSizeRatio(void);
+            const SFBool              *getSFUseImageSizeRatio (void) const;
+
+                  SFUInt32            *editSFNormalSource   (void);
+            const SFUInt32            *getSFNormalSource    (void) const;
+
+                  SFVec3f             *editSFNormal         (void);
+            const SFVec3f             *getSFNormal          (void) const;
+
+                  SFUInt32            *editSFUpSource       (void);
+            const SFUInt32            *getSFUpSource        (void) const;
+
+                  SFVec3f             *editSFUp             (void);
+            const SFVec3f             *getSFUp              (void) const;
+
+                  SFBool              *editSFUseNormalAsObjectSpaceRotation(void);
+            const SFBool              *getSFUseNormalAsObjectSpaceRotation (void) const;
+
+                  SFReal32            *editSFTwist          (void);
+            const SFReal32            *getSFTwist           (void) const;
+
+
+                  Vec2f               &editQuadSizeScaling(void);
+            const Vec2f               &getQuadSizeScaling (void) const;
+
+                  bool                &editUseImageSizeRatio(void);
+                  bool                 getUseImageSizeRatio (void) const;
+
+                  UInt32              &editNormalSource   (void);
+                  UInt32               getNormalSource    (void) const;
+
+                  Vec3f               &editNormal         (void);
+            const Vec3f               &getNormal          (void) const;
+
+                  UInt32              &editUpSource       (void);
+                  UInt32               getUpSource        (void) const;
+
+                  Vec3f               &editUp             (void);
+            const Vec3f               &getUp              (void) const;
+
+                  bool                &editUseNormalAsObjectSpaceRotation(void);
+                  bool                 getUseNormalAsObjectSpaceRotation (void) const;
+
+                  Real32              &editTwist          (void);
+                  Real32               getTwist           (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setQuadSizeScaling( const Vec2f &value );
-     void setUseImageSizeRatio( const bool &value );
-     void setNormalSource   ( const UInt32 &value );
-     void setNormal         ( const Vec3f &value );
-     void setUpSource       ( const UInt32 &value );
-     void setUp             ( const Vec3f &value );
-     void setUseNormalAsObjectSpaceRotation( const bool &value );
-     void setTwist          ( const Real32 &value );
+            void setQuadSizeScaling(const Vec2f &value);
+            void setUseImageSizeRatio(const bool value);
+            void setNormalSource   (const UInt32 value);
+            void setNormal         (const Vec3f &value);
+            void setUpSource       (const UInt32 value);
+            void setUp             (const Vec3f &value);
+            void setUseNormalAsObjectSpaceRotation(const bool value);
+            void setTwist          (const Real32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -193,45 +232,63 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING QuadParticleSystemDrawerBase : public Par
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  QuadParticleSystemDrawerPtr      create          (void); 
-    static  QuadParticleSystemDrawerPtr      createEmpty     (void); 
+    static  QuadParticleSystemDrawerTransitPtr  create          (void);
+    static  QuadParticleSystemDrawer           *createEmpty     (void);
+
+    static  QuadParticleSystemDrawerTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  QuadParticleSystemDrawer            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  QuadParticleSystemDrawerTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFVec2f             _sfQuadSizeScaling;
-    SFBool              _sfUseImageSizeRatio;
-    SFUInt32            _sfNormalSource;
-    SFVec3f             _sfNormal;
-    SFUInt32            _sfUpSource;
-    SFVec3f             _sfUp;
-    SFBool              _sfUseNormalAsObjectSpaceRotation;
-    SFReal32            _sfTwist;
+    SFVec2f           _sfQuadSizeScaling;
+    SFBool            _sfUseImageSizeRatio;
+    SFUInt32          _sfNormalSource;
+    SFVec3f           _sfNormal;
+    SFUInt32          _sfUpSource;
+    SFVec3f           _sfUp;
+    SFBool            _sfUseNormalAsObjectSpaceRotation;
+    SFReal32          _sfTwist;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -246,69 +303,93 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING QuadParticleSystemDrawerBase : public Par
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~QuadParticleSystemDrawerBase(void); 
+    virtual ~QuadParticleSystemDrawerBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleQuadSizeScaling (void) const;
+    EditFieldHandlePtr editHandleQuadSizeScaling(void);
+    GetFieldHandlePtr  getHandleUseImageSizeRatio (void) const;
+    EditFieldHandlePtr editHandleUseImageSizeRatio(void);
+    GetFieldHandlePtr  getHandleNormalSource    (void) const;
+    EditFieldHandlePtr editHandleNormalSource   (void);
+    GetFieldHandlePtr  getHandleNormal          (void) const;
+    EditFieldHandlePtr editHandleNormal         (void);
+    GetFieldHandlePtr  getHandleUpSource        (void) const;
+    EditFieldHandlePtr editHandleUpSource       (void);
+    GetFieldHandlePtr  getHandleUp              (void) const;
+    EditFieldHandlePtr editHandleUp             (void);
+    GetFieldHandlePtr  getHandleUseNormalAsObjectSpaceRotation (void) const;
+    EditFieldHandlePtr editHandleUseNormalAsObjectSpaceRotation(void);
+    GetFieldHandlePtr  getHandleTwist           (void) const;
+    EditFieldHandlePtr editHandleTwist          (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      QuadParticleSystemDrawerBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      QuadParticleSystemDrawerBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      QuadParticleSystemDrawerBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const QuadParticleSystemDrawerBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef QuadParticleSystemDrawerBase *QuadParticleSystemDrawerBaseP;
 
-typedef osgIF<QuadParticleSystemDrawerBase::isNodeCore,
-              CoredNodePtr<QuadParticleSystemDrawer>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet QuadParticleSystemDrawerNodePtr;
-
-typedef RefPtr<QuadParticleSystemDrawerPtr> QuadParticleSystemDrawerRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGQUADPARTICLESYSTEMDRAWERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGQUADPARTICLESYSTEMDRAWERBASE_H_ */

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,148 +55,63 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &NodeParticleSystemCoreBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 NodeParticleSystemCoreBase::getClassTypeId(void) 
+OSG::UInt32 NodeParticleSystemCoreBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-NodeParticleSystemCorePtr NodeParticleSystemCoreBase::create(void) 
-{
-    NodeParticleSystemCorePtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = NodeParticleSystemCorePtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-NodeParticleSystemCorePtr NodeParticleSystemCoreBase::createEmpty(void) 
-{ 
-    NodeParticleSystemCorePtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 NodeParticleSystemCoreBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the NodeParticleSystemCore::_sfSystem field.
-inline
-SFParticleSystemPtr *NodeParticleSystemCoreBase::getSFSystem(void)
-{
-    return &_sfSystem;
-}
-
-//! Get the NodeParticleSystemCore::_sfPrototypeNode field.
-inline
-SFNodePtr *NodeParticleSystemCoreBase::getSFPrototypeNode(void)
-{
-    return &_sfPrototypeNode;
-}
-
-//! Get the NodeParticleSystemCore::_sfSizeScaling field.
-inline
-SFVec3f *NodeParticleSystemCoreBase::getSFSizeScaling(void)
-{
-    return &_sfSizeScaling;
-}
-
-//! Get the NodeParticleSystemCore::_mfParticleNodes field.
-inline
-MFNodePtr *NodeParticleSystemCoreBase::getMFParticleNodes(void)
-{
-    return &_mfParticleNodes;
-}
-
-//! Get the NodeParticleSystemCore::_sfNormalSource field.
-inline
-SFUInt32 *NodeParticleSystemCoreBase::getSFNormalSource(void)
-{
-    return &_sfNormalSource;
-}
-
-//! Get the NodeParticleSystemCore::_sfNormal field.
-inline
-SFVec3f *NodeParticleSystemCoreBase::getSFNormal(void)
-{
-    return &_sfNormal;
-}
-
-//! Get the NodeParticleSystemCore::_sfUpSource field.
-inline
-SFUInt32 *NodeParticleSystemCoreBase::getSFUpSource(void)
-{
-    return &_sfUpSource;
-}
-
-//! Get the NodeParticleSystemCore::_sfUp field.
-inline
-SFVec3f *NodeParticleSystemCoreBase::getSFUp(void)
-{
-    return &_sfUp;
-}
-
 
 //! Get the value of the NodeParticleSystemCore::_sfSystem field.
 inline
-ParticleSystemPtr &NodeParticleSystemCoreBase::getSystem(void)
-{
-    return _sfSystem.getValue();
-}
-
-//! Get the value of the NodeParticleSystemCore::_sfSystem field.
-inline
-const ParticleSystemPtr &NodeParticleSystemCoreBase::getSystem(void) const
+ParticleSystem * NodeParticleSystemCoreBase::getSystem(void) const
 {
     return _sfSystem.getValue();
 }
 
 //! Set the value of the NodeParticleSystemCore::_sfSystem field.
 inline
-void NodeParticleSystemCoreBase::setSystem(const ParticleSystemPtr &value)
+void NodeParticleSystemCoreBase::setSystem(ParticleSystem * const value)
 {
+    editSField(SystemFieldMask);
+
     _sfSystem.setValue(value);
 }
 
 //! Get the value of the NodeParticleSystemCore::_sfPrototypeNode field.
 inline
-NodePtr &NodeParticleSystemCoreBase::getPrototypeNode(void)
-{
-    return _sfPrototypeNode.getValue();
-}
-
-//! Get the value of the NodeParticleSystemCore::_sfPrototypeNode field.
-inline
-const NodePtr &NodeParticleSystemCoreBase::getPrototypeNode(void) const
+Node * NodeParticleSystemCoreBase::getPrototypeNode(void) const
 {
     return _sfPrototypeNode.getValue();
 }
 
 //! Set the value of the NodeParticleSystemCore::_sfPrototypeNode field.
 inline
-void NodeParticleSystemCoreBase::setPrototypeNode(const NodePtr &value)
+void NodeParticleSystemCoreBase::setPrototypeNode(Node * const value)
 {
+    editSField(PrototypeNodeFieldMask);
+
     _sfPrototypeNode.setValue(value);
 }
-
 //! Get the value of the NodeParticleSystemCore::_sfSizeScaling field.
+
 inline
-Vec3f &NodeParticleSystemCoreBase::getSizeScaling(void)
+Vec3f &NodeParticleSystemCoreBase::editSizeScaling(void)
 {
+    editSField(SizeScalingFieldMask);
+
     return _sfSizeScaling.getValue();
 }
 
@@ -213,34 +126,42 @@ const Vec3f &NodeParticleSystemCoreBase::getSizeScaling(void) const
 inline
 void NodeParticleSystemCoreBase::setSizeScaling(const Vec3f &value)
 {
+    editSField(SizeScalingFieldMask);
+
     _sfSizeScaling.setValue(value);
 }
-
 //! Get the value of the NodeParticleSystemCore::_sfNormalSource field.
+
 inline
-UInt32 &NodeParticleSystemCoreBase::getNormalSource(void)
+UInt32 &NodeParticleSystemCoreBase::editNormalSource(void)
 {
+    editSField(NormalSourceFieldMask);
+
     return _sfNormalSource.getValue();
 }
 
 //! Get the value of the NodeParticleSystemCore::_sfNormalSource field.
 inline
-const UInt32 &NodeParticleSystemCoreBase::getNormalSource(void) const
+      UInt32  NodeParticleSystemCoreBase::getNormalSource(void) const
 {
     return _sfNormalSource.getValue();
 }
 
 //! Set the value of the NodeParticleSystemCore::_sfNormalSource field.
 inline
-void NodeParticleSystemCoreBase::setNormalSource(const UInt32 &value)
+void NodeParticleSystemCoreBase::setNormalSource(const UInt32 value)
 {
+    editSField(NormalSourceFieldMask);
+
     _sfNormalSource.setValue(value);
 }
-
 //! Get the value of the NodeParticleSystemCore::_sfNormal field.
+
 inline
-Vec3f &NodeParticleSystemCoreBase::getNormal(void)
+Vec3f &NodeParticleSystemCoreBase::editNormal(void)
 {
+    editSField(NormalFieldMask);
+
     return _sfNormal.getValue();
 }
 
@@ -255,34 +176,42 @@ const Vec3f &NodeParticleSystemCoreBase::getNormal(void) const
 inline
 void NodeParticleSystemCoreBase::setNormal(const Vec3f &value)
 {
+    editSField(NormalFieldMask);
+
     _sfNormal.setValue(value);
 }
-
 //! Get the value of the NodeParticleSystemCore::_sfUpSource field.
+
 inline
-UInt32 &NodeParticleSystemCoreBase::getUpSource(void)
+UInt32 &NodeParticleSystemCoreBase::editUpSource(void)
 {
+    editSField(UpSourceFieldMask);
+
     return _sfUpSource.getValue();
 }
 
 //! Get the value of the NodeParticleSystemCore::_sfUpSource field.
 inline
-const UInt32 &NodeParticleSystemCoreBase::getUpSource(void) const
+      UInt32  NodeParticleSystemCoreBase::getUpSource(void) const
 {
     return _sfUpSource.getValue();
 }
 
 //! Set the value of the NodeParticleSystemCore::_sfUpSource field.
 inline
-void NodeParticleSystemCoreBase::setUpSource(const UInt32 &value)
+void NodeParticleSystemCoreBase::setUpSource(const UInt32 value)
 {
+    editSField(UpSourceFieldMask);
+
     _sfUpSource.setValue(value);
 }
-
 //! Get the value of the NodeParticleSystemCore::_sfUp field.
+
 inline
-Vec3f &NodeParticleSystemCoreBase::getUp(void)
+Vec3f &NodeParticleSystemCoreBase::editUp(void)
 {
+    editSField(UpFieldMask);
+
     return _sfUp.getValue();
 }
 
@@ -297,32 +226,67 @@ const Vec3f &NodeParticleSystemCoreBase::getUp(void) const
 inline
 void NodeParticleSystemCoreBase::setUp(const Vec3f &value)
 {
+    editSField(UpFieldMask);
+
     _sfUp.setValue(value);
 }
 
-
 //! Get the value of the \a index element the NodeParticleSystemCore::_mfParticleNodes field.
 inline
-NodePtr &NodeParticleSystemCoreBase::getParticleNodes(const UInt32 index)
+Node * NodeParticleSystemCoreBase::getParticleNodes(const UInt32 index) const
 {
     return _mfParticleNodes[index];
 }
 
-//! Get the NodeParticleSystemCore::_mfParticleNodes field.
+
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-MFNodePtr &NodeParticleSystemCoreBase::getParticleNodes(void)
+void NodeParticleSystemCoreBase::execSync (      NodeParticleSystemCoreBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfParticleNodes;
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (SystemFieldMask & whichField))
+        _sfSystem.syncWith(pFrom->_sfSystem);
+
+    if(FieldBits::NoField != (PrototypeNodeFieldMask & whichField))
+        _sfPrototypeNode.syncWith(pFrom->_sfPrototypeNode);
+
+    if(FieldBits::NoField != (SizeScalingFieldMask & whichField))
+        _sfSizeScaling.syncWith(pFrom->_sfSizeScaling);
+
+    if(FieldBits::NoField != (ParticleNodesFieldMask & whichField))
+        _mfParticleNodes.syncWith(pFrom->_mfParticleNodes,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (NormalSourceFieldMask & whichField))
+        _sfNormalSource.syncWith(pFrom->_sfNormalSource);
+
+    if(FieldBits::NoField != (NormalFieldMask & whichField))
+        _sfNormal.syncWith(pFrom->_sfNormal);
+
+    if(FieldBits::NoField != (UpSourceFieldMask & whichField))
+        _sfUpSource.syncWith(pFrom->_sfUpSource);
+
+    if(FieldBits::NoField != (UpFieldMask & whichField))
+        _sfUp.syncWith(pFrom->_sfUp);
+}
+#endif
+
+
+inline
+const Char8 *NodeParticleSystemCoreBase::getClassname(void)
+{
+    return "NodeParticleSystemCore";
 }
 
-//! Get the NodeParticleSystemCore::_mfParticleNodes field.
-inline
-const MFNodePtr &NodeParticleSystemCoreBase::getParticleNodes(void) const
-{
-    return _mfParticleNodes;
-}
+
+OSG_GEN_CONTAINERPTR(NodeParticleSystemCore);
 
 OSG_END_NAMESPACE
-
-#define OSGNODEPARTICLESYSTEMCOREBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,75 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGDistribution3DFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class GeoSurfaceDistribution3D;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! GeoSurfaceDistribution3DPtr
+OSG_GEN_CONTAINERPTR(GeoSurfaceDistribution3D);
 
-typedef FCPtr<Distribution3DPtr, GeoSurfaceDistribution3D> GeoSurfaceDistribution3DPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpParticleSystemFieldTraits
+/*! \ingroup GrpContribParticleSystemFieldTraits
+    \ingroup GrpLibOSGContribParticleSystem
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<GeoSurfaceDistribution3DPtr> : 
-    public FieldTraitsRecurseMapper<GeoSurfaceDistribution3DPtr, true>
+struct FieldTraits<GeoSurfaceDistribution3D *> :
+    public FieldTraitsFCPtrBase<GeoSurfaceDistribution3D *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFGeoSurfaceDistribution3DPtr"; }
-    static const char *getMName(void) { return "MFGeoSurfaceDistribution3DPtr"; }
+    typedef FieldTraits<GeoSurfaceDistribution3D *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFGeoSurfaceDistribution3DPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFGeoSurfaceDistribution3DPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<GeoSurfaceDistribution3DPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<GeoSurfaceDistribution3D *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecGeoSurfaceDistribution3DPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<GeoSurfaceDistribution3D *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecGeoSurfaceDistribution3DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GeoSurfaceDistribution3D *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakGeoSurfaceDistribution3DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GeoSurfaceDistribution3D *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdGeoSurfaceDistribution3DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GeoSurfaceDistribution3D *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecGeoSurfaceDistribution3DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GeoSurfaceDistribution3D *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecGeoSurfaceDistribution3DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GeoSurfaceDistribution3D *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakGeoSurfaceDistribution3DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GeoSurfaceDistribution3D *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdGeoSurfaceDistribution3DPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<GeoSurfaceDistribution3D *,
+                      RecordedRefCountPolicy  > SFRecGeoSurfaceDistribution3DPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<GeoSurfaceDistribution3D *,
+                      UnrecordedRefCountPolicy> SFUnrecGeoSurfaceDistribution3DPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<GeoSurfaceDistribution3D *,
+                      WeakRefCountPolicy      > SFWeakGeoSurfaceDistribution3DPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<GeoSurfaceDistribution3D *,
+                      NoRefCountPolicy        > SFUncountedGeoSurfaceDistribution3DPtr;
 
-typedef SField<GeoSurfaceDistribution3DPtr> SFGeoSurfaceDistribution3DPtr;
-#endif
 
-#ifndef OSG_COMPILEGEOSURFACEDISTRIBUTION3DINST
-OSG_DLLEXPORT_DECL1(SField, GeoSurfaceDistribution3DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<GeoSurfaceDistribution3D *,
+                      RecordedRefCountPolicy  > MFRecGeoSurfaceDistribution3DPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<GeoSurfaceDistribution3D *,
+                      UnrecordedRefCountPolicy> MFUnrecGeoSurfaceDistribution3DPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<GeoSurfaceDistribution3D *,
+                      WeakRefCountPolicy      > MFWeakGeoSurfaceDistribution3DPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<GeoSurfaceDistribution3D *,
+                      NoRefCountPolicy        > MFUncountedGeoSurfaceDistribution3DPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldMulti */
 
-typedef MField<GeoSurfaceDistribution3DPtr> MFGeoSurfaceDistribution3DPtr;
-#endif
 
-#ifndef OSG_COMPILEGEOSURFACEDISTRIBUTION3DINST
-OSG_DLLEXPORT_DECL1(MField, GeoSurfaceDistribution3DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFRecGeoSurfaceDistribution3DPtr : 
+    public PointerSField<GeoSurfaceDistribution3D *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUnrecGeoSurfaceDistribution3DPtr : 
+    public PointerSField<GeoSurfaceDistribution3D *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFWeakGeoSurfaceDistribution3DPtr :
+    public PointerSField<GeoSurfaceDistribution3D *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUncountedGeoSurfaceDistribution3DPtr :
+    public PointerSField<GeoSurfaceDistribution3D *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFRecGeoSurfaceDistribution3DPtr :
+    public PointerMField<GeoSurfaceDistribution3D *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUnrecGeoSurfaceDistribution3DPtr :
+    public PointerMField<GeoSurfaceDistribution3D *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFWeakGeoSurfaceDistribution3DPtr :
+    public PointerMField<GeoSurfaceDistribution3D *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUncountedGeoSurfaceDistribution3DPtr :
+    public PointerMField<GeoSurfaceDistribution3D *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

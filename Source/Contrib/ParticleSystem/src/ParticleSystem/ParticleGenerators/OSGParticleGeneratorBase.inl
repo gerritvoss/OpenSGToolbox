@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,15 +55,94 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &ParticleGeneratorBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ParticleGeneratorBase::getClassTypeId(void) 
+OSG::UInt32 ParticleGeneratorBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
+    return _type.getId();
+}
 
+inline
+OSG::UInt16 ParticleGeneratorBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
+}
+
+/*------------------------------ get -----------------------------------*/
+
+
+//! Get the value of the ParticleGenerator::_sfBeacon field.
+inline
+Node * ParticleGeneratorBase::getBeacon(void) const
+{
+    return _sfBeacon.getValue();
+}
+
+//! Set the value of the ParticleGenerator::_sfBeacon field.
+inline
+void ParticleGeneratorBase::setBeacon(Node * const value)
+{
+    editSField(BeaconFieldMask);
+
+    _sfBeacon.setValue(value);
+}
+//! Get the value of the ParticleGenerator::_sfGenerateInWorldSpace field.
+
+inline
+bool &ParticleGeneratorBase::editGenerateInWorldSpace(void)
+{
+    editSField(GenerateInWorldSpaceFieldMask);
+
+    return _sfGenerateInWorldSpace.getValue();
+}
+
+//! Get the value of the ParticleGenerator::_sfGenerateInWorldSpace field.
+inline
+      bool  ParticleGeneratorBase::getGenerateInWorldSpace(void) const
+{
+    return _sfGenerateInWorldSpace.getValue();
+}
+
+//! Set the value of the ParticleGenerator::_sfGenerateInWorldSpace field.
+inline
+void ParticleGeneratorBase::setGenerateInWorldSpace(const bool value)
+{
+    editSField(GenerateInWorldSpaceFieldMask);
+
+    _sfGenerateInWorldSpace.setValue(value);
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void ParticleGeneratorBase::execSync (      ParticleGeneratorBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (BeaconFieldMask & whichField))
+        _sfBeacon.syncWith(pFrom->_sfBeacon);
+
+    if(FieldBits::NoField != (GenerateInWorldSpaceFieldMask & whichField))
+        _sfGenerateInWorldSpace.syncWith(pFrom->_sfGenerateInWorldSpace);
+}
+#endif
+
+
+inline
+const Char8 *ParticleGeneratorBase::getClassname(void)
+{
+    return "ParticleGenerator";
+}
+
+
+OSG_GEN_CONTAINERPTR(ParticleGenerator);
 
 OSG_END_NAMESPACE
+

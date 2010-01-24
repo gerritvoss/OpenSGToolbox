@@ -1,5 +1,5 @@
 
-OSG_ADD_PROJECT("OSGContribGUI")
+OSG_ADD_PROJECT("OSGContribParticleSystem")
 OSG_SELECT_PROJECT()
 
 ##############################################################################
@@ -22,8 +22,6 @@ SET(${PROJECT_NAME}_DEP_TEST_OSG_LIB )
 # SET(${PROJECT_NAME}_DEP_TEST_LIBDIR)
 # SET(${PROJECT_NAME}_DEP_TEST_INCDIR OSG_GLUT_INC_DIR)
 
-OSG_ADD_GLUTPACKAGE(TRUE)
-
 # dependencies - Additional
 # SET(${PROJECT_NAME}_DEP_ADD_INCDIR)
 
@@ -36,23 +34,24 @@ OSG_STORE_PROJECT_DEPENDENCIES()
 ##############################################################################
 
 OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src")
-#OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/Utils")
-#OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/ParticleSystem")
-#OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/ParticleSystem/Dynamics")
-#OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/ParticleSystem/Events")
-#OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/ParticleSystem/MultipleParticleSystemAffectors")
-#OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/ParticleSystem/ParticleAffectors")
-#OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/ParticleSystem/ParticleGenerators")
-#OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/ParticleSystem/ParticleGenerators")
-#OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/ParticleSystem/ParticleSystemAffectors")
-#OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/ParticleSystem/ParticleSystemDrawers")
-#OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/Distributions")
-#OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/Distributions/1D")
-#OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/Distributions/2D")
-#OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/Distributions/3D")
+
+OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/ParticleSystem/Events")
+OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/ParticleSystem/MultipleParticleSystemAffectors")
+OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/ParticleSystem/ParticleSystemAffectors")
+OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/ParticleSystem/ParticleSystemDrawers")
+OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/ParticleSystem/ParticleGenerators")
+OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/ParticleSystem/ParticleAffectors")
+OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/ParticleSystem")
+
+OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/Utils")
+
+OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/Distributions")
+OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/Distributions/1D")
+OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/Distributions/2D")
+OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/Distributions/3D")
 
 ##############################################################################
 # setup build
 ##############################################################################
 
-OSG_SETUP_PROJECT("OSG_COMPILECONTRIBGUILIB")
+OSG_SETUP_PROJECT("OSG_COMPILECONTRIBPARTICLESYSTEMLIB")

@@ -3,18 +3,21 @@
 <FieldContainer
 	name="SegmentSetDistribution1D"
 	parent="Distribution1D"
-	library="ParticleSystem"
-	pointerfieldtypes="both"
+    library="ContribParticleSystem"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 An SegmentSetDistribution1D.
 	<Field
 		name="Segment"
 		type="Vec2f"
+        category="data"
 		cardinality="multi"
 		visibility="external"
 		access="public"
@@ -23,6 +26,7 @@ An SegmentSetDistribution1D.
 	<Field
 		name="TotalLength"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="protected"

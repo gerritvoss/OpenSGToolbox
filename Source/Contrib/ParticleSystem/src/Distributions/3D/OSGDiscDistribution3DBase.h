@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,85 +58,102 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGDistribution3D.h" // Parent
 
-#include <OpenSG/OSGPnt3fFields.h> // Center type
-#include <OpenSG/OSGVec3fFields.h> // Normal type
-#include <OpenSG/OSGVec3fFields.h> // Tangent type
-#include <OpenSG/OSGVec3fFields.h> // Binormal type
-#include <OpenSG/OSGReal32Fields.h> // InnerRadius type
-#include <OpenSG/OSGReal32Fields.h> // OuterRadius type
-#include <OpenSG/OSGReal32Fields.h> // MinTheta type
-#include <OpenSG/OSGReal32Fields.h> // MaxTheta type
-#include <OpenSG/OSGUInt32Fields.h> // SurfaceOrEdge type
+#include "OSGVecFields.h"               // Center type
+#include "OSGSysFields.h"               // InnerRadius type
 
 #include "OSGDiscDistribution3DFields.h"
+
+
 OSG_BEGIN_NAMESPACE
 
 class DiscDistribution3D;
-class BinaryDataHandler;
 
 //! \brief DiscDistribution3D Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING DiscDistribution3DBase : public Distribution3D
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DiscDistribution3DBase : public Distribution3D
 {
-  private:
-
-    typedef Distribution3D    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef DiscDistribution3DPtr  Ptr;
+    typedef Distribution3D Inherited;
+    typedef Distribution3D ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(DiscDistribution3D);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        CenterFieldId        = Inherited::NextFieldId,
-        NormalFieldId        = CenterFieldId        + 1,
-        TangentFieldId       = NormalFieldId        + 1,
-        BinormalFieldId      = TangentFieldId       + 1,
-        InnerRadiusFieldId   = BinormalFieldId      + 1,
-        OuterRadiusFieldId   = InnerRadiusFieldId   + 1,
-        MinThetaFieldId      = OuterRadiusFieldId   + 1,
-        MaxThetaFieldId      = MinThetaFieldId      + 1,
-        SurfaceOrEdgeFieldId = MaxThetaFieldId      + 1,
-        NextFieldId          = SurfaceOrEdgeFieldId + 1
+        CenterFieldId = Inherited::NextFieldId,
+        NormalFieldId = CenterFieldId + 1,
+        TangentFieldId = NormalFieldId + 1,
+        BinormalFieldId = TangentFieldId + 1,
+        InnerRadiusFieldId = BinormalFieldId + 1,
+        OuterRadiusFieldId = InnerRadiusFieldId + 1,
+        MinThetaFieldId = OuterRadiusFieldId + 1,
+        MaxThetaFieldId = MinThetaFieldId + 1,
+        SurfaceOrEdgeFieldId = MaxThetaFieldId + 1,
+        NextFieldId = SurfaceOrEdgeFieldId + 1
     };
 
-    static const OSG::BitVector CenterFieldMask;
-    static const OSG::BitVector NormalFieldMask;
-    static const OSG::BitVector TangentFieldMask;
-    static const OSG::BitVector BinormalFieldMask;
-    static const OSG::BitVector InnerRadiusFieldMask;
-    static const OSG::BitVector OuterRadiusFieldMask;
-    static const OSG::BitVector MinThetaFieldMask;
-    static const OSG::BitVector MaxThetaFieldMask;
-    static const OSG::BitVector SurfaceOrEdgeFieldMask;
+    static const OSG::BitVector CenterFieldMask =
+        (TypeTraits<BitVector>::One << CenterFieldId);
+    static const OSG::BitVector NormalFieldMask =
+        (TypeTraits<BitVector>::One << NormalFieldId);
+    static const OSG::BitVector TangentFieldMask =
+        (TypeTraits<BitVector>::One << TangentFieldId);
+    static const OSG::BitVector BinormalFieldMask =
+        (TypeTraits<BitVector>::One << BinormalFieldId);
+    static const OSG::BitVector InnerRadiusFieldMask =
+        (TypeTraits<BitVector>::One << InnerRadiusFieldId);
+    static const OSG::BitVector OuterRadiusFieldMask =
+        (TypeTraits<BitVector>::One << OuterRadiusFieldId);
+    static const OSG::BitVector MinThetaFieldMask =
+        (TypeTraits<BitVector>::One << MinThetaFieldId);
+    static const OSG::BitVector MaxThetaFieldMask =
+        (TypeTraits<BitVector>::One << MaxThetaFieldId);
+    static const OSG::BitVector SurfaceOrEdgeFieldMask =
+        (TypeTraits<BitVector>::One << SurfaceOrEdgeFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFPnt3f           SFCenterType;
+    typedef SFVec3f           SFNormalType;
+    typedef SFVec3f           SFTangentType;
+    typedef SFVec3f           SFBinormalType;
+    typedef SFReal32          SFInnerRadiusType;
+    typedef SFReal32          SFOuterRadiusType;
+    typedef SFReal32          SFMinThetaType;
+    typedef SFReal32          SFMaxThetaType;
+    typedef SFUInt32          SFSurfaceOrEdgeType;
 
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -146,69 +163,65 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DiscDistribution3DBase : public Distribut
     /*! \{                                                                 */
 
 
-           SFPnt3f             *editSFCenter         (void);
-     const SFPnt3f             *getSFCenter         (void) const;
+                  SFPnt3f             *editSFCenter         (void);
+            const SFPnt3f             *getSFCenter          (void) const;
 
-           SFVec3f             *editSFNormal         (void);
-     const SFVec3f             *getSFNormal         (void) const;
-     const SFVec3f             *getSFBinormal       (void) const;
+                  SFVec3f             *editSFNormal         (void);
+            const SFVec3f             *getSFNormal          (void) const;
 
-           SFReal32            *editSFInnerRadius    (void);
-     const SFReal32            *getSFInnerRadius    (void) const;
+                  SFReal32            *editSFInnerRadius    (void);
+            const SFReal32            *getSFInnerRadius     (void) const;
 
-           SFReal32            *editSFOuterRadius    (void);
-     const SFReal32            *getSFOuterRadius    (void) const;
+                  SFReal32            *editSFOuterRadius    (void);
+            const SFReal32            *getSFOuterRadius     (void) const;
 
-           SFReal32            *editSFMinTheta       (void);
-     const SFReal32            *getSFMinTheta       (void) const;
+                  SFReal32            *editSFMinTheta       (void);
+            const SFReal32            *getSFMinTheta        (void) const;
 
-           SFReal32            *editSFMaxTheta       (void);
-     const SFReal32            *getSFMaxTheta       (void) const;
+                  SFReal32            *editSFMaxTheta       (void);
+            const SFReal32            *getSFMaxTheta        (void) const;
 
-           SFUInt32            *editSFSurfaceOrEdge  (void);
-     const SFUInt32            *getSFSurfaceOrEdge  (void) const;
-
-
-           Pnt3f               &editCenter         (void);
-     const Pnt3f               &getCenter         (void) const;
-
-           Vec3f               &editNormal         (void);
-     const Vec3f               &getNormal         (void) const;
+                  SFUInt32            *editSFSurfaceOrEdge  (void);
+            const SFUInt32            *getSFSurfaceOrEdge   (void) const;
 
 
-     const Vec3f               &getBinormal       (void) const;
+                  Pnt3f               &editCenter         (void);
+            const Pnt3f               &getCenter          (void) const;
 
-           Real32              &editInnerRadius    (void);
-     const Real32              &getInnerRadius    (void) const;
+                  Vec3f               &editNormal         (void);
+            const Vec3f               &getNormal          (void) const;
 
-           Real32              &editOuterRadius    (void);
-     const Real32              &getOuterRadius    (void) const;
+                  Real32              &editInnerRadius    (void);
+                  Real32               getInnerRadius     (void) const;
 
-           Real32              &editMinTheta       (void);
-     const Real32              &getMinTheta       (void) const;
+                  Real32              &editOuterRadius    (void);
+                  Real32               getOuterRadius     (void) const;
 
-           Real32              &editMaxTheta       (void);
-     const Real32              &getMaxTheta       (void) const;
+                  Real32              &editMinTheta       (void);
+                  Real32               getMinTheta        (void) const;
 
-           UInt32              &editSurfaceOrEdge  (void);
-     const UInt32              &getSurfaceOrEdge  (void) const;
+                  Real32              &editMaxTheta       (void);
+                  Real32               getMaxTheta        (void) const;
+
+                  UInt32              &editSurfaceOrEdge  (void);
+                  UInt32               getSurfaceOrEdge   (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setCenter         ( const Pnt3f &value );
-     void setNormal         ( const Vec3f &value );
-     void setInnerRadius    ( const Real32 &value );
-     void setOuterRadius    ( const Real32 &value );
-     void setMinTheta       ( const Real32 &value );
-     void setMaxTheta       ( const Real32 &value );
-     void setSurfaceOrEdge  ( const UInt32 &value );
+            void setCenter         (const Pnt3f &value);
+            void setNormal         (const Vec3f &value);
+            void setInnerRadius    (const Real32 value);
+            void setOuterRadius    (const Real32 value);
+            void setMinTheta       (const Real32 value);
+            void setMaxTheta       (const Real32 value);
+            void setSurfaceOrEdge  (const UInt32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -216,46 +229,64 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DiscDistribution3DBase : public Distribut
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  DiscDistribution3DPtr      create          (void); 
-    static  DiscDistribution3DPtr      createEmpty     (void); 
+    static  DiscDistribution3DTransitPtr  create          (void);
+    static  DiscDistribution3D           *createEmpty     (void);
+
+    static  DiscDistribution3DTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  DiscDistribution3D            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  DiscDistribution3DTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFPnt3f             _sfCenter;
-    SFVec3f             _sfNormal;
-    SFVec3f             _sfTangent;
-    SFVec3f             _sfBinormal;
-    SFReal32            _sfInnerRadius;
-    SFReal32            _sfOuterRadius;
-    SFReal32            _sfMinTheta;
-    SFReal32            _sfMaxTheta;
-    SFUInt32            _sfSurfaceOrEdge;
+    SFPnt3f           _sfCenter;
+    SFVec3f           _sfNormal;
+    SFVec3f           _sfTangent;
+    SFVec3f           _sfBinormal;
+    SFReal32          _sfInnerRadius;
+    SFReal32          _sfOuterRadius;
+    SFReal32          _sfMinTheta;
+    SFReal32          _sfMaxTheta;
+    SFUInt32          _sfSurfaceOrEdge;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -270,87 +301,126 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DiscDistribution3DBase : public Distribut
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DiscDistribution3DBase(void); 
+    virtual ~DiscDistribution3DBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleCenter          (void) const;
+    EditFieldHandlePtr editHandleCenter         (void);
+    GetFieldHandlePtr  getHandleNormal          (void) const;
+    EditFieldHandlePtr editHandleNormal         (void);
+    GetFieldHandlePtr  getHandleTangent         (void) const;
+    EditFieldHandlePtr editHandleTangent        (void);
+    GetFieldHandlePtr  getHandleBinormal        (void) const;
+    EditFieldHandlePtr editHandleBinormal       (void);
+    GetFieldHandlePtr  getHandleInnerRadius     (void) const;
+    EditFieldHandlePtr editHandleInnerRadius    (void);
+    GetFieldHandlePtr  getHandleOuterRadius     (void) const;
+    EditFieldHandlePtr editHandleOuterRadius    (void);
+    GetFieldHandlePtr  getHandleMinTheta        (void) const;
+    EditFieldHandlePtr editHandleMinTheta       (void);
+    GetFieldHandlePtr  getHandleMaxTheta        (void) const;
+    EditFieldHandlePtr editHandleMaxTheta       (void);
+    GetFieldHandlePtr  getHandleSurfaceOrEdge   (void) const;
+    EditFieldHandlePtr editHandleSurfaceOrEdge  (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFVec3f             *editSFTangent        (void);
-     const SFVec3f             *getSFTangent        (void) const;
-           SFVec3f             *editSFBinormal       (void);
 
-           Vec3f               &editTangent        (void);
-     const Vec3f               &getTangent        (void) const;
-           Vec3f               &editBinormal       (void);
+                  SFVec3f             *editSFTangent        (void);
+            const SFVec3f             *getSFTangent         (void) const;
+
+                  SFVec3f             *editSFBinormal       (void);
+            const SFVec3f             *getSFBinormal        (void) const;
+
+
+                  Vec3f               &editTangent        (void);
+            const Vec3f               &getTangent         (void) const;
+
+                  Vec3f               &editBinormal       (void);
+            const Vec3f               &getBinormal        (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setTangent        (const Vec3f &value);
-     void setBinormal       (const Vec3f &value);
+            void setTangent        (const Vec3f &value);
+            void setBinormal       (const Vec3f &value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      DiscDistribution3DBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      DiscDistribution3DBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      DiscDistribution3DBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const DiscDistribution3DBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef DiscDistribution3DBase *DiscDistribution3DBaseP;
-
-typedef osgIF<DiscDistribution3DBase::isNodeCore,
-              CoredNodePtr<DiscDistribution3D>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet DiscDistribution3DNodePtr;
-
-typedef RefPtr<DiscDistribution3DPtr> DiscDistribution3DRefPtr;
 
 OSG_END_NAMESPACE
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,56 +42,58 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGParticleEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ParticleEvent class. See \ref 
-           PageParticleSystemParticleEvent for a description.
+/*! \brief ParticleEvent class. See \ref
+           PageContribParticleSystemParticleEvent for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleEvent : public ParticleEventBase
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleEvent : public ParticleEventBase
 {
-  private:
-
-    typedef ParticleEventBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef ParticleEventBase Inherited;
+    typedef ParticleEvent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    static ParticleEventPtr create( FieldContainerPtr Source,
-                                             Time TimeStamp,
-                                             Int32 Index,
-                                             const Pnt3f& Position,
-                                             const Pnt3f& SecPosition,
-                                             const Vec3f& Normal,
-                                             const Color4f& Color,
-                                             const Vec3f& Size,
-                                             Real32 Lifespan,
-                                             Real32 Age,
-                                             const Vec3f& Velocity,
-                                             const Vec3f& SecVelocity,
-                                             const Vec3f& Acceleration,
-                                             const StringToUInt32Map& Attributes);
+    static ParticleEventTransitPtr create( FieldContainerRefPtr Source,
+                                           Time TimeStamp,
+                                           Int32 Index,
+                                           const Pnt3f& Position,
+                                           const Pnt3f& SecPosition,
+                                           const Vec3f& Normal,
+                                           const Color4f& Color,
+                                           const Vec3f& Size,
+                                           Real32 Lifespan,
+                                           Real32 Age,
+                                           const Vec3f& Velocity,
+                                           const Vec3f& SecVelocity,
+                                           const Vec3f& Acceleration,
+                                           const StringToUInt32Map& Attributes);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ParticleEventBase.
@@ -108,20 +110,24 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleEvent : public ParticleEventBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ParticleEvent(void); 
+    virtual ~ParticleEvent(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ParticleEventBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ParticleEvent &source);
 };
 

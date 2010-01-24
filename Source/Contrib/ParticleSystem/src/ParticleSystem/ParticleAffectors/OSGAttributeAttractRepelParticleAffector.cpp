@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGAttributeAttractRepelParticleAffector.h"
-#include "ParticleSystem/OSGParticleSystem.h"
+#include "OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::AttributeAttractRepelParticleAffector
-l 	
-*/
+// Documentation for this class is emitted in the
+// OSGAttributeAttractRepelParticleAffectorBase.cpp file.
+// To modify it, please change the .fcd file (OSGAttributeAttractRepelParticleAffector.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -68,8 +63,13 @@ l
  *                           Class methods                                 *
 \***************************************************************************/
 
-void AttributeAttractRepelParticleAffector::initMethod (void)
+void AttributeAttractRepelParticleAffector::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -77,31 +77,32 @@ void AttributeAttractRepelParticleAffector::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool AttributeAttractRepelParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps)
+bool AttributeAttractRepelParticleAffector::affect(ParticleSystemRefPtr System, Int32 ParticleIndex, const Time& elps)
 {
-	if(System != NullFC)
-	{
-		Vec3f Displacement(System->getSecPosition(ParticleIndex) - System->getPosition(ParticleIndex) );
+    if(System != NULL)
+    {
+        Vec3f Displacement(System->getSecPosition(ParticleIndex) - System->getPosition(ParticleIndex) );
 
-		Real32 Distance(Displacement.squareLength());
+        Real32 Distance(Displacement.squareLength());
 
-		if((Distance > getMinDistance()*getMinDistance()) &&
-		(Distance < getMaxDistance()*getMaxDistance()))
-		{
-			Distance = osgsqrt(Distance);
-			Displacement.normalize();
+        if((Distance > getMinDistance()*getMinDistance()) &&
+           (Distance < getMaxDistance()*getMaxDistance()))
+        {
+            Distance = osgSqrt(Distance);
+            Displacement.normalize();
 
-			Real32 t((getQuadratic() * (Distance*Distance) + getLinear() * Distance + getConstant())*elps);
-			if(t > Distance)
-			{
-				t=Distance;
-			}
+            Real32 t((getQuadratic() * (Distance*Distance) + getLinear() * Distance + getConstant())*elps);
+            if(t > Distance)
+            {
+                t=Distance;
+            }
 
-			System->setPosition(System->getPosition(ParticleIndex) + (Displacement * t),ParticleIndex) ;
-		}
-	}
-	return false;
+            System->setPosition(System->getPosition(ParticleIndex) + (Displacement * t),ParticleIndex) ;
+        }
+    }
+    return false;
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -124,41 +125,17 @@ AttributeAttractRepelParticleAffector::~AttributeAttractRepelParticleAffector(vo
 
 /*----------------------------- class specific ----------------------------*/
 
-void AttributeAttractRepelParticleAffector::changed(BitVector whichField, UInt32 origin)
+void AttributeAttractRepelParticleAffector::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void AttributeAttractRepelParticleAffector::dump(      UInt32    , 
+void AttributeAttractRepelParticleAffector::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump AttributeAttractRepelParticleAffector NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGATTRIBUTEATTRACTREPELPARTICLEAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGATTRIBUTEATTRACTREPELPARTICLEAFFECTORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGATTRIBUTEATTRACTREPELPARTICLEAFFECTORFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

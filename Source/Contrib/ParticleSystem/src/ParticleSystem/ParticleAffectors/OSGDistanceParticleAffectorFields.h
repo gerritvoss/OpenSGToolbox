@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGParticleAffectorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class DistanceParticleAffector;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! DistanceParticleAffectorPtr
+OSG_GEN_CONTAINERPTR(DistanceParticleAffector);
 
-typedef FCPtr<ParticleAffectorPtr, DistanceParticleAffector> DistanceParticleAffectorPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpParticleSystemFieldTraits
+/*! \ingroup GrpContribParticleSystemFieldTraits
+    \ingroup GrpLibOSGContribParticleSystem
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<DistanceParticleAffectorPtr> : 
-    public FieldTraitsRecurseMapper<DistanceParticleAffectorPtr, true>
+struct FieldTraits<DistanceParticleAffector *> :
+    public FieldTraitsFCPtrBase<DistanceParticleAffector *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFDistanceParticleAffectorPtr"; }
-    static const char *getMName(void) { return "MFDistanceParticleAffectorPtr"; }
+    typedef FieldTraits<DistanceParticleAffector *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFDistanceParticleAffectorPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFDistanceParticleAffectorPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<DistanceParticleAffectorPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<DistanceParticleAffector *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecDistanceParticleAffectorPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<DistanceParticleAffector *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecDistanceParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DistanceParticleAffector *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakDistanceParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DistanceParticleAffector *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdDistanceParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DistanceParticleAffector *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecDistanceParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DistanceParticleAffector *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecDistanceParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DistanceParticleAffector *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakDistanceParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DistanceParticleAffector *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdDistanceParticleAffectorPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<DistanceParticleAffector *,
+                      RecordedRefCountPolicy  > SFRecDistanceParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<DistanceParticleAffector *,
+                      UnrecordedRefCountPolicy> SFUnrecDistanceParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<DistanceParticleAffector *,
+                      WeakRefCountPolicy      > SFWeakDistanceParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<DistanceParticleAffector *,
+                      NoRefCountPolicy        > SFUncountedDistanceParticleAffectorPtr;
 
-typedef SField<DistanceParticleAffectorPtr> SFDistanceParticleAffectorPtr;
-#endif
 
-#ifndef OSG_COMPILEDISTANCEPARTICLEAFFECTORINST
-OSG_DLLEXPORT_DECL1(SField, DistanceParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<DistanceParticleAffector *,
+                      RecordedRefCountPolicy  > MFRecDistanceParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<DistanceParticleAffector *,
+                      UnrecordedRefCountPolicy> MFUnrecDistanceParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<DistanceParticleAffector *,
+                      WeakRefCountPolicy      > MFWeakDistanceParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<DistanceParticleAffector *,
+                      NoRefCountPolicy        > MFUncountedDistanceParticleAffectorPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldMulti */
 
-typedef MField<DistanceParticleAffectorPtr> MFDistanceParticleAffectorPtr;
-#endif
 
-#ifndef OSG_COMPILEDISTANCEPARTICLEAFFECTORINST
-OSG_DLLEXPORT_DECL1(MField, DistanceParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFRecDistanceParticleAffectorPtr : 
+    public PointerSField<DistanceParticleAffector *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUnrecDistanceParticleAffectorPtr : 
+    public PointerSField<DistanceParticleAffector *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFWeakDistanceParticleAffectorPtr :
+    public PointerSField<DistanceParticleAffector *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUncountedDistanceParticleAffectorPtr :
+    public PointerSField<DistanceParticleAffector *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFRecDistanceParticleAffectorPtr :
+    public PointerMField<DistanceParticleAffector *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUnrecDistanceParticleAffectorPtr :
+    public PointerMField<DistanceParticleAffector *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFWeakDistanceParticleAffectorPtr :
+    public PointerMField<DistanceParticleAffector *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUncountedDistanceParticleAffectorPtr :
+    public PointerMField<DistanceParticleAffector *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGDISTANCEPARTICLEAFFECTORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGDISTANCEPARTICLEAFFECTORFIELDS_H_ */

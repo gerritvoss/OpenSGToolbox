@@ -31,20 +31,20 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/Toolbox/OSGEventListener.h>
+#include "OSGEventListener.h"
 #include "OSGParticleGeometryCollisionEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeometryCollisionListener : public EventListener
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleGeometryCollisionListener : public EventListener
 {
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void particleCollision(const ParticleGeometryCollisionEventPtr ColE) = 0;
+   virtual void particleCollision(const ParticleGeometryCollisionEventUnrecPtr ColE) = 0;
 };
 
 typedef ParticleGeometryCollisionListener* ParticleGeometryCollisionListenerPtr;

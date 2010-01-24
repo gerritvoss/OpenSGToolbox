@@ -3,18 +3,21 @@
 <FieldContainer
 	name="TriDistribution3D"
 	parent="Distribution3D"
-	library="ParticleSystem"
-	pointerfieldtypes="both"
+    library="ContribParticleSystem"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 An TriDistribution3D.
 	<Field
 		name="Point1"
 		type="Pnt3f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,0.0,0.0"
@@ -24,6 +27,7 @@ An TriDistribution3D.
 	<Field
 		name="Point2"
 		type="Pnt3f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1.0,0.0,0.0"
@@ -33,6 +37,7 @@ An TriDistribution3D.
 	<Field
 		name="Point3"
 		type="Pnt3f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,1.0,0.0"
@@ -42,6 +47,7 @@ An TriDistribution3D.
 	<Field
 		name="SurfaceOrEdge"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"

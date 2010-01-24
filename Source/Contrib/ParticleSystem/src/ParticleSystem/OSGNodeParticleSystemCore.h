@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,61 +42,70 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
-
 #include "OSGNodeParticleSystemCoreBase.h"
-#include "ParticleSystem/Events/OSGParticleSystemListener.h"
+#include "OSGParticleSystemListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief NodeParticleSystemCore class. See \ref 
-           PageParticleSystemNodeParticleSystemCore for a description.
+/*! \brief NodeParticleSystemCore class. See \ref
+           PageContribParticleSystemNodeParticleSystemCore for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemCore : public NodeParticleSystemCoreBase
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING NodeParticleSystemCore : public NodeParticleSystemCoreBase
 {
-  private:
-
-    typedef NodeParticleSystemCoreBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
-  public:
-      enum NormalSource {NORMAL_POSITION_CHANGE = 0,
-                         NORMAL_VELOCITY_CHANGE = 1,
-                         NORMAL_VELOCITY = 2,
-                         NORMAL_ACCELERATION = 3,
-                         NORMAL_PARTICLE_NORMAL = 4,
-                         NORMAL_VIEW_DIRECTION = 5,
-                         NORMAL_VIEW_POSITION = 6,
-                         NORMAL_STATIC = 7};
 
-      enum UpSource {UP_POSITION_CHANGE = 0,
-                     UP_VELOCITY_CHANGE = 1,
-                     UP_VELOCITY = 2,
-                     UP_ACCELERATION = 3,
-                     UP_PARTICLE_NORMAL = 4,
-                     UP_VIEW_DIRECTION = 5,
-                     UP_STATIC = 6};
+  public:
+    enum NormalSource 
+    {
+        NORMAL_POSITION_CHANGE = 0,
+        NORMAL_VELOCITY_CHANGE = 1,
+        NORMAL_VELOCITY        = 2,
+        NORMAL_ACCELERATION    = 3,
+        NORMAL_PARTICLE_NORMAL = 4,
+        NORMAL_VIEW_DIRECTION  = 5,
+        NORMAL_VIEW_POSITION   = 6,
+        NORMAL_STATIC          = 7
+    };
+
+    enum UpSource
+    {
+        UP_POSITION_CHANGE = 0,
+        UP_VELOCITY_CHANGE = 1,
+        UP_VELOCITY        = 2,
+        UP_ACCELERATION    = 3,
+        UP_PARTICLE_NORMAL = 4,
+        UP_VIEW_DIRECTION  = 5,
+        UP_STATIC          = 6
+    };
+
+    typedef NodeParticleSystemCoreBase Inherited;
+    typedef NodeParticleSystemCore     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
 	void updateNodes(void);
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in NodeParticleSystemCoreBase.
@@ -113,39 +122,45 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemCore : public NodeParti
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~NodeParticleSystemCore(void); 
+    virtual ~NodeParticleSystemCore(void);
 
     /*! \}                                                                 */
-    
-	class SystemUpdateListener : public ParticleSystemListener
-	{
-	public:
-		SystemUpdateListener(NodeParticleSystemCorePtr TheCore);
-       virtual void systemUpdated(const ParticleSystemEventPtr e);
-       virtual void volumeChanged(const ParticleSystemEventPtr e);
-       virtual void particleGenerated(const ParticleEventPtr e);
-       virtual void particleKilled(const ParticleEventPtr e);
-       virtual void particleStolen(const ParticleEventPtr e);
-	private:
-		NodeParticleSystemCorePtr _Core;
-	};
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
 
-	friend class SystemUpdateListener;
+    static void initMethod(InitPhase ePhase);
 
-	SystemUpdateListener _SystemUpdateListener;
+    /*! \}                                                                 */
 
-	Vec3f getNodeNormal(ParticleSystemPtr System, UInt32 Index);
-	Vec3f getNodeUpDir(ParticleSystemPtr System, UInt32 Index);
+    class SystemUpdateListener : public ParticleSystemListener
+    {
+      public:
+        SystemUpdateListener(NodeParticleSystemCoreRefPtr TheCore);
+        virtual void systemUpdated(const ParticleSystemEventUnrecPtr e);
+        virtual void volumeChanged(const ParticleSystemEventUnrecPtr e);
+        virtual void particleGenerated(const ParticleEventUnrecPtr e);
+        virtual void particleKilled(const ParticleEventUnrecPtr e);
+        virtual void particleStolen(const ParticleEventUnrecPtr e);
+      private:
+        NodeParticleSystemCoreRefPtr _Core;
+    };
+
+    friend class SystemUpdateListener;
+
+    SystemUpdateListener _SystemUpdateListener;
+
+    Vec3f getNodeNormal(ParticleSystemRefPtr System, UInt32 Index);
+    Vec3f getNodeUpDir(ParticleSystemRefPtr System, UInt32 Index);
+
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class NodeParticleSystemCoreBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const NodeParticleSystemCore &source);
 };
 
@@ -153,9 +168,10 @@ typedef NodeParticleSystemCore *NodeParticleSystemCoreP;
 
 OSG_END_NAMESPACE
 
+#include "OSGParticleSystem.h"
+#include "OSGNode.h"
+
 #include "OSGNodeParticleSystemCoreBase.inl"
 #include "OSGNodeParticleSystemCore.inl"
-
-#define OSGNODEPARTICLESYSTEMCORE_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGNODEPARTICLESYSTEMCORE_H_ */

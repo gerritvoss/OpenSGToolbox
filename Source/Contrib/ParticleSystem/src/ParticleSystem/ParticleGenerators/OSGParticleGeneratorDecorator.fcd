@@ -3,22 +3,24 @@
 <FieldContainer
 	name="ParticleGeneratorDecorator"
 	parent="ParticleGenerator"
-	library="ParticleSystem"
-	pointerfieldtypes="both"
+    library="ContribParticleSystem"
+    pointerfieldtypes="both"
 	structure="abstract"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com), Daniel Guilliams           "
 >
 	<Field
 		name="Decoratee"
-		type="ParticleGeneratorPtr"
+		type="ParticleGenerator"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="NullFC"
-            header="OSGParticleGeneratorFields.h"
+		defaultValue="NULL"
 	>
 	</Field>
 </FieldContainer>

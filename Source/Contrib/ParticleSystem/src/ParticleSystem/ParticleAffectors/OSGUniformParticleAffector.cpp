@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                 Authors: David Kabala , Daniel Guilliams                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,27 +40,23 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGMatrix.h>
-#include <OpenSG/OSGQuaternion.h>
+#include <OSGConfig.h>
 
 #include "OSGUniformParticleAffector.h"
-#include "ParticleSystem/OSGParticleSystem.h"
+#include "OSGMatrix.h"
+#include "OSGQuaternion.h"
+
+#include "OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::UniformParticleAffector
-
-*/
+// Documentation for this class is emitted in the
+// OSGUniformParticleAffectorBase.cpp file.
+// To modify it, please change the .fcd file (OSGUniformParticleAffector.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -70,8 +66,13 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void UniformParticleAffector::initMethod (void)
+void UniformParticleAffector::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -79,10 +80,10 @@ void UniformParticleAffector::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool UniformParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps)
+bool UniformParticleAffector::affect(ParticleSystemRefPtr System, Int32 ParticleIndex, const Time& elps)
 {
 	// getting affector's translation.  No affect is applied if the beacon cannot be found
-	if(getBeacon() != NullFC)
+	if(getBeacon() != NULL)
 	{
 		Matrix BeaconToWorld(getBeacon()->getToWorld());
 		Vec3f translation, tmp;
@@ -97,7 +98,8 @@ bool UniformParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleInd
 			// calculate affect of feild
 			Vec3f force(getDirection());
 			force.normalize();
-			force *= ((getMagnitude()/getParticleMass()) * elps)/(osg::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax()));
+			force = force * (((getMagnitude()/getParticleMass()) *
+                              elps)/(OSG::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax())));
 			// set new particle velocity
 			System->setVelocity(force + System->getVelocity(ParticleIndex),ParticleIndex);
 		}
@@ -128,41 +130,17 @@ UniformParticleAffector::~UniformParticleAffector(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void UniformParticleAffector::changed(BitVector whichField, UInt32 origin)
+void UniformParticleAffector::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void UniformParticleAffector::dump(      UInt32    , 
+void UniformParticleAffector::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump UniformParticleAffector NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGUNIFORMPARTICLEAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGUNIFORMPARTICLEAFFECTORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGUNIFORMPARTICLEAFFECTORFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

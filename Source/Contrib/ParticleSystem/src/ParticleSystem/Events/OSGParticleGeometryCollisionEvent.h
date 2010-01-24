@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,51 +42,55 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGParticleGeometryCollisionEventBase.h"
+#include "OSGNode.h"
+#include "OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ParticleGeometryCollisionEvent class. See \ref 
-           PageParticleSystemParticleGeometryCollisionEvent for a description.
+/*! \brief ParticleGeometryCollisionEvent class. See \ref
+           PageContribParticleSystemParticleGeometryCollisionEvent for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeometryCollisionEvent : public ParticleGeometryCollisionEventBase
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleGeometryCollisionEvent : public ParticleGeometryCollisionEventBase
 {
-  private:
-
-    typedef ParticleGeometryCollisionEventBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef ParticleGeometryCollisionEventBase Inherited;
+    typedef ParticleGeometryCollisionEvent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    static ParticleGeometryCollisionEventPtr create(  FieldContainerPtr Source,
-                                            Time TimeStamp,
-                                            Real32 HitT,
-                                            NodePtr HitNode,
-                                            Int32 HitPolygonIndex,
-                                            Vec3f HitNormal,
-                                            Pnt3f HitPoint,
-                                            ParticleSystemPtr System,
-                                            UInt32 Index); 
+    static ParticleGeometryCollisionEventTransitPtr create(FieldContainerRefPtr Source,
+                                                           Time TimeStamp,
+                                                           Real32 HitT,
+                                                           NodeRefPtr HitNode,
+                                                           Int32 HitPolygonIndex,
+                                                           Vec3f HitNormal,
+                                                           Pnt3f HitPoint,
+                                                           ParticleSystemRefPtr System,
+                                                           UInt32 Index); 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ParticleGeometryCollisionEventBase.
@@ -103,20 +107,24 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeometryCollisionEvent : public P
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ParticleGeometryCollisionEvent(void); 
+    virtual ~ParticleGeometryCollisionEvent(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ParticleGeometryCollisionEventBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ParticleGeometryCollisionEvent &source);
 };
 

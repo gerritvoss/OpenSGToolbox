@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,64 +55,31 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &SegmentDistribution1DBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 SegmentDistribution1DBase::getClassTypeId(void) 
+OSG::UInt32 SegmentDistribution1DBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-SegmentDistribution1DPtr SegmentDistribution1DBase::create(void) 
-{
-    SegmentDistribution1DPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = SegmentDistribution1DPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-SegmentDistribution1DPtr SegmentDistribution1DBase::createEmpty(void) 
-{ 
-    SegmentDistribution1DPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 SegmentDistribution1DBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the SegmentDistribution1D::_sfSegment field.
-inline
-const SFVec2f *SegmentDistribution1DBase::getSFSegment(void) const
-{
-    return &_sfSegment;
-}
-
-//! Get the SegmentDistribution1D::_sfSegment field.
-inline
-SFVec2f *SegmentDistribution1DBase::editSFSegment(void)
-{
-    return &_sfSegment;
-}
-
-
 //! Get the value of the SegmentDistribution1D::_sfSegment field.
+
 inline
 Vec2f &SegmentDistribution1DBase::editSegment(void)
 {
+    editSField(SegmentFieldMask);
+
     return _sfSegment.getValue();
 }
 
@@ -129,8 +94,36 @@ const Vec2f &SegmentDistribution1DBase::getSegment(void) const
 inline
 void SegmentDistribution1DBase::setSegment(const Vec2f &value)
 {
+    editSField(SegmentFieldMask);
+
     _sfSegment.setValue(value);
 }
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void SegmentDistribution1DBase::execSync (      SegmentDistribution1DBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (SegmentFieldMask & whichField))
+        _sfSegment.syncWith(pFrom->_sfSegment);
+}
+#endif
+
+
+inline
+const Char8 *SegmentDistribution1DBase::getClassname(void)
+{
+    return "SegmentDistribution1D";
+}
+
+
+OSG_GEN_CONTAINERPTR(SegmentDistribution1D);
+
 OSG_END_NAMESPACE
+

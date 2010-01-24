@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Dynamics                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,21 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGQuaternion.h>
+#include <OSGConfig.h>
 
 #include "OSGConeDistribution3D.h"
-#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
+#include "OSGQuaternion.h"
+#include "OSGRandomPoolManager.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::ConeDistribution3D
-An BoxDistribution3D. 	
-*/
+// Documentation for this class is emitted in the
+// OSGConeDistribution3DBase.cpp file.
+// To modify it, please change the .fcd file (OSGConeDistribution3D.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,8 +64,13 @@ An BoxDistribution3D.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ConeDistribution3D::initMethod (void)
+void ConeDistribution3D::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -79,7 +81,7 @@ void ConeDistribution3D::initMethod (void)
 Vec3f ConeDistribution3D:: generate(void) const
 {
 	
-	Vec3f Result = getPosition();
+	Vec3f Result = getPosition().subZero();
 	Real32 radius = 0.0;
 	
 	switch(getSurfaceOrVolume())
@@ -103,7 +105,7 @@ Vec3f ConeDistribution3D:: generate(void) const
 	Real32 theta = (getSpread() > 0.0) ? RandomPoolManager::getRandomReal32(0,getSpread()/2) : 0.0;
 	Real32 phi = (getSpread() > 0.0) ? RandomPoolManager::getRandomReal32(getMinTheta(),getMaxTheta()) : 0.0;
 
-	Vec3f SpherePoint( osgcos(phi)*osgsin(theta)*radius, osgsin(theta)*osgsin(phi)*radius, osgcos(theta)*radius );
+	Vec3f SpherePoint( osgCos(phi)*osgSin(theta)*radius, osgSin(theta)*osgSin(phi)*radius, osgCos(theta)*radius );
 
 	Quaternion DirectionRotation(Vec3f(0.0f,0.0f,1.0f), normal);
 	DirectionRotation.multVec(SpherePoint, SpherePoint);
@@ -112,6 +114,7 @@ Vec3f ConeDistribution3D:: generate(void) const
 
 	return Result;
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -134,16 +137,17 @@ ConeDistribution3D::~ConeDistribution3D(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void ConeDistribution3D::changed(BitVector whichField, UInt32 origin)
+void ConeDistribution3D::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void ConeDistribution3D::dump(      UInt32    , 
+void ConeDistribution3D::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump ConeDistribution3D NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

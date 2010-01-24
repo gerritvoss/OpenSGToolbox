@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,75 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGDistribution1DFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class SegmentDistribution1D;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! SegmentDistribution1DPtr
+OSG_GEN_CONTAINERPTR(SegmentDistribution1D);
 
-typedef FCPtr<Distribution1DPtr, SegmentDistribution1D> SegmentDistribution1DPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpParticleSystemFieldTraits
+/*! \ingroup GrpContribParticleSystemFieldTraits
+    \ingroup GrpLibOSGContribParticleSystem
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<SegmentDistribution1DPtr> : 
-    public FieldTraitsRecurseMapper<SegmentDistribution1DPtr, true>
+struct FieldTraits<SegmentDistribution1D *> :
+    public FieldTraitsFCPtrBase<SegmentDistribution1D *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFSegmentDistribution1DPtr"; }
-    static const char *getMName(void) { return "MFSegmentDistribution1DPtr"; }
+    typedef FieldTraits<SegmentDistribution1D *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFSegmentDistribution1DPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFSegmentDistribution1DPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<SegmentDistribution1DPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<SegmentDistribution1D *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecSegmentDistribution1DPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<SegmentDistribution1D *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecSegmentDistribution1DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SegmentDistribution1D *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakSegmentDistribution1DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SegmentDistribution1D *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdSegmentDistribution1DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SegmentDistribution1D *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecSegmentDistribution1DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SegmentDistribution1D *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecSegmentDistribution1DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SegmentDistribution1D *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakSegmentDistribution1DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SegmentDistribution1D *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdSegmentDistribution1DPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<SegmentDistribution1D *,
+                      RecordedRefCountPolicy  > SFRecSegmentDistribution1DPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<SegmentDistribution1D *,
+                      UnrecordedRefCountPolicy> SFUnrecSegmentDistribution1DPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<SegmentDistribution1D *,
+                      WeakRefCountPolicy      > SFWeakSegmentDistribution1DPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<SegmentDistribution1D *,
+                      NoRefCountPolicy        > SFUncountedSegmentDistribution1DPtr;
 
-typedef SField<SegmentDistribution1DPtr> SFSegmentDistribution1DPtr;
-#endif
 
-#ifndef OSG_COMPILESEGMENTDISTRIBUTION1DINST
-OSG_DLLEXPORT_DECL1(SField, SegmentDistribution1DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<SegmentDistribution1D *,
+                      RecordedRefCountPolicy  > MFRecSegmentDistribution1DPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<SegmentDistribution1D *,
+                      UnrecordedRefCountPolicy> MFUnrecSegmentDistribution1DPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<SegmentDistribution1D *,
+                      WeakRefCountPolicy      > MFWeakSegmentDistribution1DPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<SegmentDistribution1D *,
+                      NoRefCountPolicy        > MFUncountedSegmentDistribution1DPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldMulti */
 
-typedef MField<SegmentDistribution1DPtr> MFSegmentDistribution1DPtr;
-#endif
 
-#ifndef OSG_COMPILESEGMENTDISTRIBUTION1DINST
-OSG_DLLEXPORT_DECL1(MField, SegmentDistribution1DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFRecSegmentDistribution1DPtr : 
+    public PointerSField<SegmentDistribution1D *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUnrecSegmentDistribution1DPtr : 
+    public PointerSField<SegmentDistribution1D *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFWeakSegmentDistribution1DPtr :
+    public PointerSField<SegmentDistribution1D *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUncountedSegmentDistribution1DPtr :
+    public PointerSField<SegmentDistribution1D *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFRecSegmentDistribution1DPtr :
+    public PointerMField<SegmentDistribution1D *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUnrecSegmentDistribution1DPtr :
+    public PointerMField<SegmentDistribution1D *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFWeakSegmentDistribution1DPtr :
+    public PointerMField<SegmentDistribution1D *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUncountedSegmentDistribution1DPtr :
+    public PointerMField<SegmentDistribution1D *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

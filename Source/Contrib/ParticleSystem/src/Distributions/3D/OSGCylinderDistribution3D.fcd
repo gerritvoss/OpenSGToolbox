@@ -3,18 +3,21 @@
 <FieldContainer
 	name="CylinderDistribution3D"
 	parent="Distribution3D"
-	library="ParticleSystem"
-	pointerfieldtypes="both"
+    library="ContribParticleSystem"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 An CylinderDistribution3D.
 	<Field
 		name="Height"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1.0"
@@ -24,6 +27,7 @@ An CylinderDistribution3D.
 	<Field
 		name="Center"
 		type="Pnt3f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,0.0,0.0"
@@ -33,6 +37,7 @@ An CylinderDistribution3D.
 	<Field
 		name="Normal"
 		type="Vec3f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,0.0,1.0"
@@ -42,6 +47,7 @@ An CylinderDistribution3D.
 	<Field
 		name="Tangent"
 		type="Vec3f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,1.0,0.0"
@@ -51,6 +57,7 @@ An CylinderDistribution3D.
 	<Field
 		name="Binormal"
 		type="Vec3f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1.0,0.0,0.0"
@@ -60,6 +67,7 @@ An CylinderDistribution3D.
 	<Field
 		name="InnerRadius"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0"
@@ -69,6 +77,7 @@ An CylinderDistribution3D.
 	<Field
 		name="OuterRadius"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1.0"
@@ -78,6 +87,7 @@ An CylinderDistribution3D.
 	<Field
 		name="MinTheta"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0"
@@ -87,6 +97,7 @@ An CylinderDistribution3D.
 	<Field
 		name="MaxTheta"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="6.28319"
@@ -96,6 +107,7 @@ An CylinderDistribution3D.
 	<Field
 		name="SurfaceOrVolume"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"

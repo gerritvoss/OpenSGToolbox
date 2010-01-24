@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,160 +55,150 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &RadialParticleAffectorBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 RadialParticleAffectorBase::getClassTypeId(void) 
+OSG::UInt32 RadialParticleAffectorBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-RadialParticleAffectorPtr RadialParticleAffectorBase::create(void) 
-{
-    RadialParticleAffectorPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = RadialParticleAffectorPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-RadialParticleAffectorPtr RadialParticleAffectorBase::createEmpty(void) 
-{ 
-    RadialParticleAffectorPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 RadialParticleAffectorBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the RadialParticleAffector::_sfMagnitude field.
-inline
-SFReal32 *RadialParticleAffectorBase::getSFMagnitude(void)
-{
-    return &_sfMagnitude;
-}
-
-//! Get the RadialParticleAffector::_sfAttenuation field.
-inline
-SFReal32 *RadialParticleAffectorBase::getSFAttenuation(void)
-{
-    return &_sfAttenuation;
-}
-
-//! Get the RadialParticleAffector::_sfMaxDistance field.
-inline
-SFReal32 *RadialParticleAffectorBase::getSFMaxDistance(void)
-{
-    return &_sfMaxDistance;
-}
-
-//! Get the RadialParticleAffector::_sfBeacon field.
-inline
-SFNodePtr *RadialParticleAffectorBase::getSFBeacon(void)
-{
-    return &_sfBeacon;
-}
-
-
 //! Get the value of the RadialParticleAffector::_sfMagnitude field.
+
 inline
-Real32 &RadialParticleAffectorBase::getMagnitude(void)
+Real32 &RadialParticleAffectorBase::editMagnitude(void)
 {
+    editSField(MagnitudeFieldMask);
+
     return _sfMagnitude.getValue();
 }
 
 //! Get the value of the RadialParticleAffector::_sfMagnitude field.
 inline
-const Real32 &RadialParticleAffectorBase::getMagnitude(void) const
+      Real32  RadialParticleAffectorBase::getMagnitude(void) const
 {
     return _sfMagnitude.getValue();
 }
 
 //! Set the value of the RadialParticleAffector::_sfMagnitude field.
 inline
-void RadialParticleAffectorBase::setMagnitude(const Real32 &value)
+void RadialParticleAffectorBase::setMagnitude(const Real32 value)
 {
+    editSField(MagnitudeFieldMask);
+
     _sfMagnitude.setValue(value);
 }
-
 //! Get the value of the RadialParticleAffector::_sfAttenuation field.
+
 inline
-Real32 &RadialParticleAffectorBase::getAttenuation(void)
+Real32 &RadialParticleAffectorBase::editAttenuation(void)
 {
+    editSField(AttenuationFieldMask);
+
     return _sfAttenuation.getValue();
 }
 
 //! Get the value of the RadialParticleAffector::_sfAttenuation field.
 inline
-const Real32 &RadialParticleAffectorBase::getAttenuation(void) const
+      Real32  RadialParticleAffectorBase::getAttenuation(void) const
 {
     return _sfAttenuation.getValue();
 }
 
 //! Set the value of the RadialParticleAffector::_sfAttenuation field.
 inline
-void RadialParticleAffectorBase::setAttenuation(const Real32 &value)
+void RadialParticleAffectorBase::setAttenuation(const Real32 value)
 {
+    editSField(AttenuationFieldMask);
+
     _sfAttenuation.setValue(value);
 }
-
 //! Get the value of the RadialParticleAffector::_sfMaxDistance field.
+
 inline
-Real32 &RadialParticleAffectorBase::getMaxDistance(void)
+Real32 &RadialParticleAffectorBase::editMaxDistance(void)
 {
+    editSField(MaxDistanceFieldMask);
+
     return _sfMaxDistance.getValue();
 }
 
 //! Get the value of the RadialParticleAffector::_sfMaxDistance field.
 inline
-const Real32 &RadialParticleAffectorBase::getMaxDistance(void) const
+      Real32  RadialParticleAffectorBase::getMaxDistance(void) const
 {
     return _sfMaxDistance.getValue();
 }
 
 //! Set the value of the RadialParticleAffector::_sfMaxDistance field.
 inline
-void RadialParticleAffectorBase::setMaxDistance(const Real32 &value)
+void RadialParticleAffectorBase::setMaxDistance(const Real32 value)
 {
+    editSField(MaxDistanceFieldMask);
+
     _sfMaxDistance.setValue(value);
 }
 
 //! Get the value of the RadialParticleAffector::_sfBeacon field.
 inline
-NodePtr &RadialParticleAffectorBase::getBeacon(void)
-{
-    return _sfBeacon.getValue();
-}
-
-//! Get the value of the RadialParticleAffector::_sfBeacon field.
-inline
-const NodePtr &RadialParticleAffectorBase::getBeacon(void) const
+Node * RadialParticleAffectorBase::getBeacon(void) const
 {
     return _sfBeacon.getValue();
 }
 
 //! Set the value of the RadialParticleAffector::_sfBeacon field.
 inline
-void RadialParticleAffectorBase::setBeacon(const NodePtr &value)
+void RadialParticleAffectorBase::setBeacon(Node * const value)
 {
+    editSField(BeaconFieldMask);
+
     _sfBeacon.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void RadialParticleAffectorBase::execSync (      RadialParticleAffectorBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGRADIALPARTICLEAFFECTORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (MagnitudeFieldMask & whichField))
+        _sfMagnitude.syncWith(pFrom->_sfMagnitude);
+
+    if(FieldBits::NoField != (AttenuationFieldMask & whichField))
+        _sfAttenuation.syncWith(pFrom->_sfAttenuation);
+
+    if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
+        _sfMaxDistance.syncWith(pFrom->_sfMaxDistance);
+
+    if(FieldBits::NoField != (BeaconFieldMask & whichField))
+        _sfBeacon.syncWith(pFrom->_sfBeacon);
+}
+#endif
+
+
+inline
+const Char8 *RadialParticleAffectorBase::getClassname(void)
+{
+    return "RadialParticleAffector";
+}
+
+
+OSG_GEN_CONTAINERPTR(RadialParticleAffector);
+
+OSG_END_NAMESPACE
 

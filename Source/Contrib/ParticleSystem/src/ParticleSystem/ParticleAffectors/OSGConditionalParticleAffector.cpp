@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGConditionalParticleAffector.h"
-#include "ParticleSystem/OSGParticleSystem.h"
+#include "OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::ConditionalParticleAffector
-
-*/
+// Documentation for this class is emitted in the
+// OSGConditionalParticleAffectorBase.cpp file.
+// To modify it, please change the .fcd file (OSGConditionalParticleAffector.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -68,8 +63,13 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ConditionalParticleAffector::initMethod (void)
+void ConditionalParticleAffector::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -77,62 +77,60 @@ void ConditionalParticleAffector::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool ConditionalParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps)
+bool ConditionalParticleAffector::affect(ParticleSystemRefPtr System, Int32 ParticleIndex, const Time& elps)
 {
-	bool returnStatus(false), runAffectors(false);
+    bool returnStatus(false), runAffectors(false);
 
-	UInt8 Operator(getConditionalOperator());
-	switch(getConditionalOperator())
-	{
-	case 1: // equals
-		if(System->getAttribute(ParticleIndex,getConditionalAttribute()) == getConditionalValue()) 
-			runAffectors = true;
-		break;
+    UInt8 Operator(getConditionalOperator());
+    switch(getConditionalOperator())
+    {
+        case 1: // equals
+            if(System->getAttribute(ParticleIndex,getConditionalAttribute()) == getConditionalValue()) 
+                runAffectors = true;
+            break;
 
-	case 2: // not equal
-		if(System->getAttribute(ParticleIndex,getConditionalAttribute()) != getConditionalValue()) 
-			runAffectors = true;
-		break;
+        case 2: // not equal
+            if(System->getAttribute(ParticleIndex,getConditionalAttribute()) != getConditionalValue()) 
+                runAffectors = true;
+            break;
 
-	case 3: // less than
-		if(System->getAttribute(ParticleIndex,getConditionalAttribute()) < getConditionalValue()) 
-			runAffectors = true;
-		break;
+        case 3: // less than
+            if(System->getAttribute(ParticleIndex,getConditionalAttribute()) < getConditionalValue()) 
+                runAffectors = true;
+            break;
 
-	case 4: // greater than
-		if(System->getAttribute(ParticleIndex,getConditionalAttribute()) > getConditionalValue()) 
-			runAffectors = true;
-		break;
+        case 4: // greater than
+            if(System->getAttribute(ParticleIndex,getConditionalAttribute()) > getConditionalValue()) 
+                runAffectors = true;
+            break;
 
-	case 5: // less than or equal
-		if(System->getAttribute(ParticleIndex,getConditionalAttribute()) <= getConditionalValue()) 
-			runAffectors = true;
-		break;
+        case 5: // less than or equal
+            if(System->getAttribute(ParticleIndex,getConditionalAttribute()) <= getConditionalValue()) 
+                runAffectors = true;
+            break;
 
-	case 6: // greater than or equal
-		if(System->getAttribute(ParticleIndex,getConditionalAttribute()) >= getConditionalValue()) 
-			runAffectors = true;
-		break;
+        case 6: // greater than or equal
+            if(System->getAttribute(ParticleIndex,getConditionalAttribute()) >= getConditionalValue()) 
+                runAffectors = true;
+            break;
 
-	default: // error
-		returnStatus = false;
-		runAffectors = false;
-		break;
-	}
+        default: // error
+            returnStatus = false;
+            runAffectors = false;
+            break;
+    }
 
-	if(runAffectors)
-	{
-		for(unsigned int i(0); i < getAffectors().size();i++)
-		{
-			if(getAffectors(i)->affect(System,ParticleIndex,elps))
-				returnStatus = true;
-		}
-	}
+    if(runAffectors)
+    {
+        for(unsigned int i(0); i < getMFAffectors()->size();i++)
+        {
+            if(getAffectors(i)->affect(System,ParticleIndex,elps))
+                returnStatus = true;
+        }
+    }
 
-	return returnStatus;
+    return returnStatus;
 }
-
-
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -156,17 +154,17 @@ ConditionalParticleAffector::~ConditionalParticleAffector(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void ConditionalParticleAffector::changed(BitVector whichField, UInt32 origin)
+void ConditionalParticleAffector::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void ConditionalParticleAffector::dump(      UInt32    , 
+void ConditionalParticleAffector::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump ConditionalParticleAffector NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

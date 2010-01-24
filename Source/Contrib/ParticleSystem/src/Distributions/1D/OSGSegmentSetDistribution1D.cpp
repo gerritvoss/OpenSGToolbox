@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Dynamics                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,23 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGSegmentSetDistribution1D.h"
-#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
+#include "OSGRandomPoolManager.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::SegmentSetDistribution1D
-An SegmentSetDistribution1D. 	
-*/
+// Documentation for this class is emitted in the
+// OSGSegmentSetDistribution1DBase.cpp file.
+// To modify it, please change the .fcd file (OSGSegmentSetDistribution1D.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -66,8 +63,13 @@ An SegmentSetDistribution1D.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void SegmentSetDistribution1D::initMethod (void)
+void SegmentSetDistribution1D::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -78,19 +80,20 @@ void SegmentSetDistribution1D::initMethod (void)
 Real32 SegmentSetDistribution1D::generate(void) const
 {
     Real32 PickSegment(RandomPoolManager::getRandomReal32(0.0,1.0));
-    Real32 CumLength(0.0);
+    Real32 CummLength(0.0);
 
-    for(UInt32 i(0) ; i< getSegment().size() ; ++i)
+    for(UInt32 i(0) ; i< getMFSegment()->size() ; ++i)
     {
-        CumLength += osgabs(getSegment()[i][1] - getSegment()[i][0]);
-        if(PickSegment < CumLength/getTotalLength())
+        CummLength += osgAbs(getSegment(i)[1] - getSegment(i)[0]);
+        if(PickSegment < CummLength/getTotalLength())
         {
-            return RandomPoolManager::getRandomReal32(getSegment()[i][0],getSegment()[i][1]);
+            return RandomPoolManager::getRandomReal32(getSegment(i)[0],getSegment(i)[1]);
         }
     }
 
     return 0.0f;
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -113,28 +116,17 @@ SegmentSetDistribution1D::~SegmentSetDistribution1D(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void SegmentSetDistribution1D::changed(BitVector whichField, UInt32 origin)
+void SegmentSetDistribution1D::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
-
-    if(whichField & SegmentFieldMask)
-    {
-        Real32 TotalLength(0.0);
-        for(UInt32 i(0) ; i< getSegment().size() ; ++i)
-        {
-            TotalLength += osgabs(getSegment()[i][1] - getSegment()[i][0]);
-        }
-        beginEditCP(SegmentSetDistribution1DPtr(this), TotalLengthFieldMask);
-            setTotalLength(TotalLength);
-        endEditCP(SegmentSetDistribution1DPtr(this), TotalLengthFieldMask);
-    }
+    Inherited::changed(whichField, origin, details);
 }
 
-void SegmentSetDistribution1D::dump(      UInt32    , 
+void SegmentSetDistribution1D::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump SegmentSetDistribution1D NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,28 +40,23 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGCamera.h>
-#include <OpenSG/Toolbox/OSGMathUtils.h>
-#include <OpenSG/OSGQuaternion.h>
-#include "ParticleSystem/OSGParticleSystem.h"
+#include <OSGConfig.h>
 
 #include "OSGDistanceParticleAffector.h"
+#include "OSGCamera.h"
+#include "OSGMatrixUtility.h"
+#include "OSGQuaternion.h"
+#include "OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::DistanceParticleAffector
-
-*/
+// Documentation for this class is emitted in the
+// OSGDistanceParticleAffectorBase.cpp file.
+// To modify it, please change the .fcd file (OSGDistanceParticleAffector.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -71,8 +66,13 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DistanceParticleAffector::initMethod (void)
+void DistanceParticleAffector::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -80,50 +80,48 @@ void DistanceParticleAffector::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-
-bool DistanceParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps)
+bool DistanceParticleAffector::affect(ParticleSystemRefPtr System, Int32 ParticleIndex, const Time& elps)
 {
-	if(System != NullFC && getParticleSystemNode() != NullFC)
-	{
-		Vec3f Displacement;
+    if(System != NULL && getParticleSystemNode() != NULL)
+    {
+        Vec3f Displacement;
 
-		Matrix PSystemNodeMat(getParticleSystemNode()->getToWorld());
-		Pnt3f ParticlePositionInWorldSpace = PSystemNodeMat * System->getPosition(ParticleIndex);
+        Matrix PSystemNodeMat(getParticleSystemNode()->getToWorld());
+        Pnt3f ParticlePositionInWorldSpace = PSystemNodeMat * System->getPosition(ParticleIndex);
 
-		Pnt3f NodePositionInWorldSpace;
+        Pnt3f NodePositionInWorldSpace;
 
-		//Calculate the Distance
-		switch(getDistanceFromSource())
-		{
-		case DISTANCE_FROM_NODE:
-			if(getDistanceFromNode() != NullFC)
-			{
-				//DynamicVolume Vol;
-				//getDistanceFromNode()->getWorldVolume(Vol);
-				//Vol.getCenter(NodePositionInWorldSpace);
-				NodePositionInWorldSpace = getDistanceFromNode()->getToWorld() * Pnt3f(0.0,0.0,0.0);
-			}
-			break;
-		case DISTANCE_FROM_CAMERA:
-			if(getDistanceFromCamera() != NullFC)
-			{
-				Matrix m;
-				getDistanceFromCamera()->getViewing(m,1,1);
-				getPFromViewMat(NodePositionInWorldSpace,m);
-			}
-		default:
-			break;
-		}
+        //Calculate the Distance
+        switch(getDistanceFromSource())
+        {
+            case DISTANCE_FROM_NODE:
+                if(getDistanceFromNode() != NULL)
+                {
+                    //DynamicVolume Vol;
+                    //getDistanceFromNode()->getWorldVolume(Vol);
+                    //Vol.getCenter(NodePositionInWorldSpace);
+                    NodePositionInWorldSpace = getDistanceFromNode()->getToWorld() * Pnt3f(0.0,0.0,0.0);
+                }
+                break;
+            case DISTANCE_FROM_CAMERA:
+                if(getDistanceFromCamera() != NULL)
+                {
+                    Matrix m;
+                    getDistanceFromCamera()->getViewing(m,1,1);
+                    getPFromViewMat(NodePositionInWorldSpace,m);
+                }
+            default:
+                break;
+        }
 
-		Displacement = (NodePositionInWorldSpace - ParticlePositionInWorldSpace);
+        Displacement = (NodePositionInWorldSpace - ParticlePositionInWorldSpace);
 
-
-		return affect(System, ParticleIndex, elps, Displacement);
-	}
-	else
-	{
-		return false;
-	}
+        return affect(System, ParticleIndex, elps, Displacement);
+    }
+    else
+    {
+        return false;
+    }
 }
 
 /*-------------------------------------------------------------------------*\
@@ -148,41 +146,17 @@ DistanceParticleAffector::~DistanceParticleAffector(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void DistanceParticleAffector::changed(BitVector whichField, UInt32 origin)
+void DistanceParticleAffector::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void DistanceParticleAffector::dump(      UInt32    , 
+void DistanceParticleAffector::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump DistanceParticleAffector NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGDISTANCEPARTICLEAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDISTANCEPARTICLEAFFECTORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDISTANCEPARTICLEAFFECTORFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

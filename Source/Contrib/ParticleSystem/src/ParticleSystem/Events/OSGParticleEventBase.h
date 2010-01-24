@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,94 +58,116 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h> // Parent
+#include "OSGEvent.h" // Parent
 
-#include <OpenSG/OSGInt32Fields.h> // ParticleIndex type
-#include <OpenSG/OSGPnt3fFields.h> // ParticlePosition type
-#include <OpenSG/OSGPnt3fFields.h> // ParticleSecPosition type
-#include <OpenSG/OSGVec3fFields.h> // ParticleNormal type
-#include <OpenSG/OSGColor4fFields.h> // ParticleColor type
-#include <OpenSG/OSGVec3fFields.h> // ParticleSize type
-#include <OpenSG/OSGReal32Fields.h> // ParticleLifespan type
-#include <OpenSG/OSGReal32Fields.h> // ParticleAge type
-#include <OpenSG/OSGVec3fFields.h> // ParticleVelocity type
-#include <OpenSG/OSGVec3fFields.h> // ParticleSecVelocity type
-#include <OpenSG/OSGVec3fFields.h> // ParticleAcceleration type
-#include <OpenSG/Toolbox/OSGStringToUInt32MapType.h> // ParticleAttributes type
+#include "OSGSysFields.h"               // ParticleIndex type
+#include "OSGVecFields.h"               // ParticlePosition type
+#include "OSGBaseFields.h"              // ParticleColor type
+#include "OSGStringToUInt32MapFields.h" // ParticleAttributes type
 
 #include "OSGParticleEventFields.h"
+
+
 OSG_BEGIN_NAMESPACE
 
 class ParticleEvent;
-class BinaryDataHandler;
 
 //! \brief ParticleEvent Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleEventBase : public Event
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleEventBase : public Event
 {
-  private:
-
-    typedef Event    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ParticleEventPtr  Ptr;
+    typedef Event Inherited;
+    typedef Event ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(ParticleEvent);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        ParticleIndexFieldId        = Inherited::NextFieldId,
-        ParticlePositionFieldId     = ParticleIndexFieldId        + 1,
-        ParticleSecPositionFieldId  = ParticlePositionFieldId     + 1,
-        ParticleNormalFieldId       = ParticleSecPositionFieldId  + 1,
-        ParticleColorFieldId        = ParticleNormalFieldId       + 1,
-        ParticleSizeFieldId         = ParticleColorFieldId        + 1,
-        ParticleLifespanFieldId     = ParticleSizeFieldId         + 1,
-        ParticleAgeFieldId          = ParticleLifespanFieldId     + 1,
-        ParticleVelocityFieldId     = ParticleAgeFieldId          + 1,
-        ParticleSecVelocityFieldId  = ParticleVelocityFieldId     + 1,
-        ParticleAccelerationFieldId = ParticleSecVelocityFieldId  + 1,
-        ParticleAttributesFieldId   = ParticleAccelerationFieldId + 1,
-        NextFieldId                 = ParticleAttributesFieldId   + 1
+        ParticleIndexFieldId = Inherited::NextFieldId,
+        ParticlePositionFieldId = ParticleIndexFieldId + 1,
+        ParticleSecPositionFieldId = ParticlePositionFieldId + 1,
+        ParticleNormalFieldId = ParticleSecPositionFieldId + 1,
+        ParticleColorFieldId = ParticleNormalFieldId + 1,
+        ParticleSizeFieldId = ParticleColorFieldId + 1,
+        ParticleLifespanFieldId = ParticleSizeFieldId + 1,
+        ParticleAgeFieldId = ParticleLifespanFieldId + 1,
+        ParticleVelocityFieldId = ParticleAgeFieldId + 1,
+        ParticleSecVelocityFieldId = ParticleVelocityFieldId + 1,
+        ParticleAccelerationFieldId = ParticleSecVelocityFieldId + 1,
+        ParticleAttributesFieldId = ParticleAccelerationFieldId + 1,
+        NextFieldId = ParticleAttributesFieldId + 1
     };
 
-    static const OSG::BitVector ParticleIndexFieldMask;
-    static const OSG::BitVector ParticlePositionFieldMask;
-    static const OSG::BitVector ParticleSecPositionFieldMask;
-    static const OSG::BitVector ParticleNormalFieldMask;
-    static const OSG::BitVector ParticleColorFieldMask;
-    static const OSG::BitVector ParticleSizeFieldMask;
-    static const OSG::BitVector ParticleLifespanFieldMask;
-    static const OSG::BitVector ParticleAgeFieldMask;
-    static const OSG::BitVector ParticleVelocityFieldMask;
-    static const OSG::BitVector ParticleSecVelocityFieldMask;
-    static const OSG::BitVector ParticleAccelerationFieldMask;
-    static const OSG::BitVector ParticleAttributesFieldMask;
+    static const OSG::BitVector ParticleIndexFieldMask =
+        (TypeTraits<BitVector>::One << ParticleIndexFieldId);
+    static const OSG::BitVector ParticlePositionFieldMask =
+        (TypeTraits<BitVector>::One << ParticlePositionFieldId);
+    static const OSG::BitVector ParticleSecPositionFieldMask =
+        (TypeTraits<BitVector>::One << ParticleSecPositionFieldId);
+    static const OSG::BitVector ParticleNormalFieldMask =
+        (TypeTraits<BitVector>::One << ParticleNormalFieldId);
+    static const OSG::BitVector ParticleColorFieldMask =
+        (TypeTraits<BitVector>::One << ParticleColorFieldId);
+    static const OSG::BitVector ParticleSizeFieldMask =
+        (TypeTraits<BitVector>::One << ParticleSizeFieldId);
+    static const OSG::BitVector ParticleLifespanFieldMask =
+        (TypeTraits<BitVector>::One << ParticleLifespanFieldId);
+    static const OSG::BitVector ParticleAgeFieldMask =
+        (TypeTraits<BitVector>::One << ParticleAgeFieldId);
+    static const OSG::BitVector ParticleVelocityFieldMask =
+        (TypeTraits<BitVector>::One << ParticleVelocityFieldId);
+    static const OSG::BitVector ParticleSecVelocityFieldMask =
+        (TypeTraits<BitVector>::One << ParticleSecVelocityFieldId);
+    static const OSG::BitVector ParticleAccelerationFieldMask =
+        (TypeTraits<BitVector>::One << ParticleAccelerationFieldId);
+    static const OSG::BitVector ParticleAttributesFieldMask =
+        (TypeTraits<BitVector>::One << ParticleAttributesFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFInt32           SFParticleIndexType;
+    typedef SFPnt3f           SFParticlePositionType;
+    typedef SFPnt3f           SFParticleSecPositionType;
+    typedef SFVec3f           SFParticleNormalType;
+    typedef SFColor4f         SFParticleColorType;
+    typedef SFVec3f           SFParticleSizeType;
+    typedef SFReal32          SFParticleLifespanType;
+    typedef SFReal32          SFParticleAgeType;
+    typedef SFVec3f           SFParticleVelocityType;
+    typedef SFVec3f           SFParticleSecVelocityType;
+    typedef SFVec3f           SFParticleAccelerationType;
+    typedef SFStringToUInt32Map SFParticleAttributesType;
 
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -154,43 +176,55 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleEventBase : public Event
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-     const SFInt32             *getSFParticleIndex  (void) const;
-     const SFPnt3f             *getSFParticlePosition(void) const;
-     const SFPnt3f             *getSFParticleSecPosition(void) const;
-     const SFVec3f             *getSFParticleNormal (void) const;
-     const SFColor4f           *getSFParticleColor  (void) const;
-     const SFVec3f             *getSFParticleSize   (void) const;
-     const SFReal32            *getSFParticleLifespan(void) const;
-     const SFReal32            *getSFParticleAge    (void) const;
-     const SFVec3f             *getSFParticleVelocity(void) const;
-     const SFVec3f             *getSFParticleSecVelocity(void) const;
-     const SFVec3f             *getSFParticleAcceleration(void) const;
-     const SFStringToUInt32Map *getSFParticleAttributes(void) const;
+
+            const SFInt32             *getSFParticleIndex   (void) const;
+
+            const SFPnt3f             *getSFParticlePosition (void) const;
+
+            const SFPnt3f             *getSFParticleSecPosition (void) const;
+
+            const SFVec3f             *getSFParticleNormal  (void) const;
+
+            const SFColor4f           *getSFParticleColor   (void) const;
+
+            const SFVec3f             *getSFParticleSize    (void) const;
+
+            const SFReal32            *getSFParticleLifespan (void) const;
+
+            const SFReal32            *getSFParticleAge     (void) const;
+
+            const SFVec3f             *getSFParticleVelocity (void) const;
+
+            const SFVec3f             *getSFParticleSecVelocity (void) const;
+
+            const SFVec3f             *getSFParticleAcceleration (void) const;
+
+            const SFStringToUInt32Map *getSFParticleAttributes (void) const;
 
 
-     const Int32               &getParticleIndex  (void) const;
+                  Int32                getParticleIndex   (void) const;
 
-     const Pnt3f               &getParticlePosition(void) const;
+            const Pnt3f               &getParticlePosition (void) const;
 
-     const Pnt3f               &getParticleSecPosition(void) const;
+            const Pnt3f               &getParticleSecPosition (void) const;
 
-     const Vec3f               &getParticleNormal (void) const;
+            const Vec3f               &getParticleNormal  (void) const;
 
-     const Color4f             &getParticleColor  (void) const;
+            const Color4f             &getParticleColor   (void) const;
 
-     const Vec3f               &getParticleSize   (void) const;
+            const Vec3f               &getParticleSize    (void) const;
 
-     const Real32              &getParticleLifespan(void) const;
+                  Real32               getParticleLifespan (void) const;
 
-     const Real32              &getParticleAge    (void) const;
+                  Real32               getParticleAge     (void) const;
 
-     const Vec3f               &getParticleVelocity(void) const;
+            const Vec3f               &getParticleVelocity (void) const;
 
-     const Vec3f               &getParticleSecVelocity(void) const;
+            const Vec3f               &getParticleSecVelocity (void) const;
 
-     const Vec3f               &getParticleAcceleration(void) const;
+            const Vec3f               &getParticleAcceleration (void) const;
 
-     const StringToUInt32Map   &getParticleAttributes(void) const;
+            const StringToUInt32Map   &getParticleAttributes (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -200,7 +234,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleEventBase : public Event
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -208,49 +242,67 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleEventBase : public Event
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  ParticleEventPtr      create          (void); 
-    static  ParticleEventPtr      createEmpty     (void); 
+    static  ParticleEventTransitPtr  create          (void);
+    static  ParticleEvent           *createEmpty     (void);
+
+    static  ParticleEventTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  ParticleEvent            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  ParticleEventTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFInt32             _sfParticleIndex;
-    SFPnt3f             _sfParticlePosition;
-    SFPnt3f             _sfParticleSecPosition;
-    SFVec3f             _sfParticleNormal;
-    SFColor4f           _sfParticleColor;
-    SFVec3f             _sfParticleSize;
-    SFReal32            _sfParticleLifespan;
-    SFReal32            _sfParticleAge;
-    SFVec3f             _sfParticleVelocity;
-    SFVec3f             _sfParticleSecVelocity;
-    SFVec3f             _sfParticleAcceleration;
-    SFStringToUInt32Map   _sfParticleAttributes;
+    SFInt32           _sfParticleIndex;
+    SFPnt3f           _sfParticlePosition;
+    SFPnt3f           _sfParticleSecPosition;
+    SFVec3f           _sfParticleNormal;
+    SFColor4f         _sfParticleColor;
+    SFVec3f           _sfParticleSize;
+    SFReal32          _sfParticleLifespan;
+    SFReal32          _sfParticleAge;
+    SFVec3f           _sfParticleVelocity;
+    SFVec3f           _sfParticleSecVelocity;
+    SFVec3f           _sfParticleAcceleration;
+    SFStringToUInt32Map _sfParticleAttributes;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -265,115 +317,178 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleEventBase : public Event
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ParticleEventBase(void); 
+    virtual ~ParticleEventBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleParticleIndex   (void) const;
+    EditFieldHandlePtr editHandleParticleIndex  (void);
+    GetFieldHandlePtr  getHandleParticlePosition (void) const;
+    EditFieldHandlePtr editHandleParticlePosition(void);
+    GetFieldHandlePtr  getHandleParticleSecPosition (void) const;
+    EditFieldHandlePtr editHandleParticleSecPosition(void);
+    GetFieldHandlePtr  getHandleParticleNormal  (void) const;
+    EditFieldHandlePtr editHandleParticleNormal (void);
+    GetFieldHandlePtr  getHandleParticleColor   (void) const;
+    EditFieldHandlePtr editHandleParticleColor  (void);
+    GetFieldHandlePtr  getHandleParticleSize    (void) const;
+    EditFieldHandlePtr editHandleParticleSize   (void);
+    GetFieldHandlePtr  getHandleParticleLifespan (void) const;
+    EditFieldHandlePtr editHandleParticleLifespan(void);
+    GetFieldHandlePtr  getHandleParticleAge     (void) const;
+    EditFieldHandlePtr editHandleParticleAge    (void);
+    GetFieldHandlePtr  getHandleParticleVelocity (void) const;
+    EditFieldHandlePtr editHandleParticleVelocity(void);
+    GetFieldHandlePtr  getHandleParticleSecVelocity (void) const;
+    EditFieldHandlePtr editHandleParticleSecVelocity(void);
+    GetFieldHandlePtr  getHandleParticleAcceleration (void) const;
+    EditFieldHandlePtr editHandleParticleAcceleration(void);
+    GetFieldHandlePtr  getHandleParticleAttributes (void) const;
+    EditFieldHandlePtr editHandleParticleAttributes(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFInt32             *editSFParticleIndex  (void);
-           SFPnt3f             *editSFParticlePosition(void);
-           SFPnt3f             *editSFParticleSecPosition(void);
-           SFVec3f             *editSFParticleNormal (void);
-           SFColor4f           *editSFParticleColor  (void);
-           SFVec3f             *editSFParticleSize   (void);
-           SFReal32            *editSFParticleLifespan(void);
-           SFReal32            *editSFParticleAge    (void);
-           SFVec3f             *editSFParticleVelocity(void);
-           SFVec3f             *editSFParticleSecVelocity(void);
-           SFVec3f             *editSFParticleAcceleration(void);
-           SFStringToUInt32Map *editSFParticleAttributes(void);
 
-           Int32               &editParticleIndex  (void);
-           Pnt3f               &editParticlePosition(void);
-           Pnt3f               &editParticleSecPosition(void);
-           Vec3f               &editParticleNormal (void);
-           Color4f             &editParticleColor  (void);
-           Vec3f               &editParticleSize   (void);
-           Real32              &editParticleLifespan(void);
-           Real32              &editParticleAge    (void);
-           Vec3f               &editParticleVelocity(void);
-           Vec3f               &editParticleSecVelocity(void);
-           Vec3f               &editParticleAcceleration(void);
-           StringToUInt32Map   &editParticleAttributes(void);
+                  SFInt32             *editSFParticleIndex  (void);
+
+                  SFPnt3f             *editSFParticlePosition(void);
+
+                  SFPnt3f             *editSFParticleSecPosition(void);
+
+                  SFVec3f             *editSFParticleNormal (void);
+
+                  SFColor4f           *editSFParticleColor  (void);
+
+                  SFVec3f             *editSFParticleSize   (void);
+
+                  SFReal32            *editSFParticleLifespan(void);
+
+                  SFReal32            *editSFParticleAge    (void);
+
+                  SFVec3f             *editSFParticleVelocity(void);
+
+                  SFVec3f             *editSFParticleSecVelocity(void);
+
+                  SFVec3f             *editSFParticleAcceleration(void);
+
+                  SFStringToUInt32Map *editSFParticleAttributes(void);
+
+
+                  Int32               &editParticleIndex  (void);
+
+                  Pnt3f               &editParticlePosition(void);
+
+                  Pnt3f               &editParticleSecPosition(void);
+
+                  Vec3f               &editParticleNormal (void);
+
+                  Color4f             &editParticleColor  (void);
+
+                  Vec3f               &editParticleSize   (void);
+
+                  Real32              &editParticleLifespan(void);
+
+                  Real32              &editParticleAge    (void);
+
+                  Vec3f               &editParticleVelocity(void);
+
+                  Vec3f               &editParticleSecVelocity(void);
+
+                  Vec3f               &editParticleAcceleration(void);
+
+                  StringToUInt32Map   &editParticleAttributes(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setParticleIndex  (const Int32 &value);
-     void setParticlePosition(const Pnt3f &value);
-     void setParticleSecPosition(const Pnt3f &value);
-     void setParticleNormal (const Vec3f &value);
-     void setParticleColor  (const Color4f &value);
-     void setParticleSize   (const Vec3f &value);
-     void setParticleLifespan(const Real32 &value);
-     void setParticleAge    (const Real32 &value);
-     void setParticleVelocity(const Vec3f &value);
-     void setParticleSecVelocity(const Vec3f &value);
-     void setParticleAcceleration(const Vec3f &value);
-     void setParticleAttributes(const StringToUInt32Map &value);
+            void setParticleIndex  (const Int32 value);
+            void setParticlePosition(const Pnt3f &value);
+            void setParticleSecPosition(const Pnt3f &value);
+            void setParticleNormal (const Vec3f &value);
+            void setParticleColor  (const Color4f &value);
+            void setParticleSize   (const Vec3f &value);
+            void setParticleLifespan(const Real32 value);
+            void setParticleAge    (const Real32 value);
+            void setParticleVelocity(const Vec3f &value);
+            void setParticleSecVelocity(const Vec3f &value);
+            void setParticleAcceleration(const Vec3f &value);
+            void setParticleAttributes(const StringToUInt32Map &value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ParticleEventBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      ParticleEventBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      ParticleEventBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const ParticleEventBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef ParticleEventBase *ParticleEventBaseP;
-
-typedef osgIF<ParticleEventBase::isNodeCore,
-              CoredNodePtr<ParticleEvent>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ParticleEventNodePtr;
-
-typedef RefPtr<ParticleEventPtr> ParticleEventRefPtr;
 
 OSG_END_NAMESPACE
 

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala                                                   *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -38,18 +38,11 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
-
 inline
-ParticleSystemCore::SystemUpdateListener::SystemUpdateListener(ParticleSystemCorePtr TheCore) : _Core(TheCore)
+ParticleSystemCore::SystemUpdateListener::SystemUpdateListener(ParticleSystemCoreRefPtr TheCore) : _Core(TheCore)
 {
 }
 
-
 OSG_END_NAMESPACE
-
-#define OSGPARTICLESYSTEMCORE_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
-

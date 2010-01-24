@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,101 +55,48 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &SegmentSetDistribution1DBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 SegmentSetDistribution1DBase::getClassTypeId(void) 
+OSG::UInt32 SegmentSetDistribution1DBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-SegmentSetDistribution1DPtr SegmentSetDistribution1DBase::create(void) 
-{
-    SegmentSetDistribution1DPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = SegmentSetDistribution1DPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-SegmentSetDistribution1DPtr SegmentSetDistribution1DBase::createEmpty(void) 
-{ 
-    SegmentSetDistribution1DPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 SegmentSetDistribution1DBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the SegmentSetDistribution1D::_mfSegment field.
-inline
-const MFVec2f *SegmentSetDistribution1DBase::getMFSegment(void) const
-{
-    return &_mfSegment;
-}
-
-//! Get the SegmentSetDistribution1D::_mfSegment field.
-inline
-MFVec2f *SegmentSetDistribution1DBase::editMFSegment(void)
-{
-    return &_mfSegment;
-}
-
-//! Get the SegmentSetDistribution1D::_sfTotalLength field.
-inline
-const SFReal32 *SegmentSetDistribution1DBase::getSFTotalLength(void) const
-{
-    return &_sfTotalLength;
-}
-
-//! Get the SegmentSetDistribution1D::_sfTotalLength field.
-inline
-SFReal32 *SegmentSetDistribution1DBase::editSFTotalLength(void)
-{
-    return &_sfTotalLength;
-}
-
-
 //! Get the value of the SegmentSetDistribution1D::_sfTotalLength field.
+
 inline
 Real32 &SegmentSetDistribution1DBase::editTotalLength(void)
 {
+    editSField(TotalLengthFieldMask);
+
     return _sfTotalLength.getValue();
 }
 
 //! Get the value of the SegmentSetDistribution1D::_sfTotalLength field.
 inline
-const Real32 &SegmentSetDistribution1DBase::getTotalLength(void) const
+      Real32  SegmentSetDistribution1DBase::getTotalLength(void) const
 {
     return _sfTotalLength.getValue();
 }
 
 //! Set the value of the SegmentSetDistribution1D::_sfTotalLength field.
 inline
-void SegmentSetDistribution1DBase::setTotalLength(const Real32 &value)
+void SegmentSetDistribution1DBase::setTotalLength(const Real32 value)
 {
+    editSField(TotalLengthFieldMask);
+
     _sfTotalLength.setValue(value);
-}
-
-
-//! Get the value of the \a index element the SegmentSetDistribution1D::_mfSegment field.
-inline
-Vec2f &SegmentSetDistribution1DBase::editSegment(const UInt32 index)
-{
-    return _mfSegment[index];
 }
 
 //! Get the value of the \a index element the SegmentSetDistribution1D::_mfSegment field.
@@ -161,20 +106,46 @@ const Vec2f &SegmentSetDistribution1DBase::getSegment(const UInt32 index) const
     return _mfSegment[index];
 }
 
-#ifndef OSG_2_PREP
-//! Get the SegmentSetDistribution1D::_mfSegment field.
 inline
-MFVec2f &SegmentSetDistribution1DBase::getSegment(void)
+Vec2f &SegmentSetDistribution1DBase::editSegment(const UInt32 index)
 {
-    return _mfSegment;
+    editMField(SegmentFieldMask, _mfSegment);
+
+    return _mfSegment[index];
 }
 
-//! Get the SegmentSetDistribution1D::_mfSegment field.
-inline
-const MFVec2f &SegmentSetDistribution1DBase::getSegment(void) const
-{
-    return _mfSegment;
-}
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void SegmentSetDistribution1DBase::execSync (      SegmentSetDistribution1DBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (SegmentFieldMask & whichField))
+        _mfSegment.syncWith(pFrom->_mfSegment,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (TotalLengthFieldMask & whichField))
+        _sfTotalLength.syncWith(pFrom->_sfTotalLength);
+}
 #endif
+
+
+inline
+const Char8 *SegmentSetDistribution1DBase::getClassname(void)
+{
+    return "SegmentSetDistribution1D";
+}
+
+
+OSG_GEN_CONTAINERPTR(SegmentSetDistribution1D);
+
 OSG_END_NAMESPACE
+

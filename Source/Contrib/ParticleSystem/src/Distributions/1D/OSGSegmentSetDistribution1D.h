@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Dynamics                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,49 +42,47 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
-
 #include "OSGSegmentSetDistribution1DBase.h"
-#include <OpenSG/OSGSysFieldDataType.h>
 
 OSG_BEGIN_NAMESPACE
 
-#define OSG_SEGMENTSET_DIST_OUTPUTPARAMETERS (1, \
-    (\
-      ("RandomValue", Real32) \
-    ))
+/*! \brief SegmentSetDistribution1D class. See \ref
+           PageContribParticleSystemSegmentSetDistribution1D for a description.
+*/
 
-
-#define OSG_SEGMENTSET_DIST_INPUTPARAMETERS (0, ())
-
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING SegmentSetDistribution1D : public SegmentSetDistribution1DBase
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING SegmentSetDistribution1D : public SegmentSetDistribution1DBase
 {
-  private:
-
-    typedef SegmentSetDistribution1DBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef SegmentSetDistribution1DBase Inherited;
+    typedef SegmentSetDistribution1D     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
     virtual Real32 generate(void) const;
+    
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in SegmentSetDistribution1DBase.
@@ -101,20 +99,24 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING SegmentSetDistribution1D : public Segment
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SegmentSetDistribution1D(void); 
+    virtual ~SegmentSetDistribution1D(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class SegmentSetDistribution1DBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const SegmentSetDistribution1D &source);
 };
 

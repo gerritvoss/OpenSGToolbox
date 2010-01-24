@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,264 +50,568 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEDYNAMICSPARTICLEGENERATORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGDistribution3D.h"          // PositionDistribution Class
+#include "OSGDistribution1D.h"          // TransparencyDistribution Class
 
 #include "OSGDynamicsParticleGeneratorBase.h"
 #include "OSGDynamicsParticleGenerator.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  DynamicsParticleGeneratorBase::PositionDistributionFieldMask = 
-    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::PositionDistributionFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  DynamicsParticleGeneratorBase::SecPositionDistributionFieldMask = 
-    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::SecPositionDistributionFieldId);
-
-const OSG::BitVector  DynamicsParticleGeneratorBase::NormalDistributionFieldMask = 
-    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::NormalDistributionFieldId);
-
-const OSG::BitVector  DynamicsParticleGeneratorBase::ColorDistributionFieldMask = 
-    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::ColorDistributionFieldId);
-
-const OSG::BitVector  DynamicsParticleGeneratorBase::TransparencyDistributionFieldMask = 
-    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::TransparencyDistributionFieldId);
-
-const OSG::BitVector  DynamicsParticleGeneratorBase::SizeDistributionFieldMask = 
-    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::SizeDistributionFieldId);
-
-const OSG::BitVector  DynamicsParticleGeneratorBase::LifespanDistributionFieldMask = 
-    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::LifespanDistributionFieldId);
-
-const OSG::BitVector  DynamicsParticleGeneratorBase::AgeDistributionFieldMask = 
-    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::AgeDistributionFieldId);
-
-const OSG::BitVector  DynamicsParticleGeneratorBase::VelocityDistributionFieldMask = 
-    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::VelocityDistributionFieldId);
-
-const OSG::BitVector  DynamicsParticleGeneratorBase::SecVelocityDistributionFieldMask = 
-    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::SecVelocityDistributionFieldId);
-
-const OSG::BitVector  DynamicsParticleGeneratorBase::AccelerationDistributionFieldMask = 
-    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::AccelerationDistributionFieldId);
-
-const OSG::BitVector DynamicsParticleGeneratorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var Distribution3DPtr DynamicsParticleGeneratorBase::_sfPositionDistribution
+/*! \class OSG::DynamicsParticleGenerator
     
-*/
-/*! \var Distribution3DPtr DynamicsParticleGeneratorBase::_sfSecPositionDistribution
-    
-*/
-/*! \var Distribution3DPtr DynamicsParticleGeneratorBase::_sfNormalDistribution
-    
-*/
-/*! \var Distribution3DPtr DynamicsParticleGeneratorBase::_sfColorDistribution
-    
-*/
-/*! \var Distribution1DPtr DynamicsParticleGeneratorBase::_sfTransparencyDistribution
-    
-*/
-/*! \var Distribution3DPtr DynamicsParticleGeneratorBase::_sfSizeDistribution
-    
-*/
-/*! \var Distribution1DPtr DynamicsParticleGeneratorBase::_sfLifespanDistribution
-    
-*/
-/*! \var Distribution1DPtr DynamicsParticleGeneratorBase::_sfAgeDistribution
-    
-*/
-/*! \var Distribution3DPtr DynamicsParticleGeneratorBase::_sfVelocityDistribution
-    
-*/
-/*! \var Distribution3DPtr DynamicsParticleGeneratorBase::_sfSecVelocityDistribution
-    
-*/
-/*! \var Distribution3DPtr DynamicsParticleGeneratorBase::_sfAccelerationDistribution
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
+
+/*! \var Distribution3D * DynamicsParticleGeneratorBase::_sfPositionDistribution
     
 */
 
-//! DynamicsParticleGenerator description
+/*! \var Distribution3D * DynamicsParticleGeneratorBase::_sfSecPositionDistribution
+    
+*/
 
-FieldDescription *DynamicsParticleGeneratorBase::_desc[] = 
+/*! \var Distribution3D * DynamicsParticleGeneratorBase::_sfNormalDistribution
+    
+*/
+
+/*! \var Distribution3D * DynamicsParticleGeneratorBase::_sfColorDistribution
+    
+*/
+
+/*! \var Distribution1D * DynamicsParticleGeneratorBase::_sfTransparencyDistribution
+    
+*/
+
+/*! \var Distribution3D * DynamicsParticleGeneratorBase::_sfSizeDistribution
+    
+*/
+
+/*! \var Distribution1D * DynamicsParticleGeneratorBase::_sfLifespanDistribution
+    
+*/
+
+/*! \var Distribution1D * DynamicsParticleGeneratorBase::_sfAgeDistribution
+    
+*/
+
+/*! \var Distribution3D * DynamicsParticleGeneratorBase::_sfVelocityDistribution
+    
+*/
+
+/*! \var Distribution3D * DynamicsParticleGeneratorBase::_sfSecVelocityDistribution
+    
+*/
+
+/*! \var Distribution3D * DynamicsParticleGeneratorBase::_sfAccelerationDistribution
+    
+*/
+
+
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<DynamicsParticleGenerator *>::_type("DynamicsParticleGeneratorPtr", "ParticleGeneratorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(DynamicsParticleGenerator *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           DynamicsParticleGenerator *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           DynamicsParticleGenerator *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void DynamicsParticleGeneratorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFDistribution3DPtr::getClassType(), 
-                     "PositionDistribution", 
-                     PositionDistributionFieldId, PositionDistributionFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DynamicsParticleGeneratorBase::editSFPositionDistribution)),
-    new FieldDescription(SFDistribution3DPtr::getClassType(), 
-                     "SecPositionDistribution", 
-                     SecPositionDistributionFieldId, SecPositionDistributionFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DynamicsParticleGeneratorBase::editSFSecPositionDistribution)),
-    new FieldDescription(SFDistribution3DPtr::getClassType(), 
-                     "NormalDistribution", 
-                     NormalDistributionFieldId, NormalDistributionFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DynamicsParticleGeneratorBase::editSFNormalDistribution)),
-    new FieldDescription(SFDistribution3DPtr::getClassType(), 
-                     "ColorDistribution", 
-                     ColorDistributionFieldId, ColorDistributionFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DynamicsParticleGeneratorBase::editSFColorDistribution)),
-    new FieldDescription(SFDistribution1DPtr::getClassType(), 
-                     "TransparencyDistribution", 
-                     TransparencyDistributionFieldId, TransparencyDistributionFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DynamicsParticleGeneratorBase::editSFTransparencyDistribution)),
-    new FieldDescription(SFDistribution3DPtr::getClassType(), 
-                     "SizeDistribution", 
-                     SizeDistributionFieldId, SizeDistributionFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DynamicsParticleGeneratorBase::editSFSizeDistribution)),
-    new FieldDescription(SFDistribution1DPtr::getClassType(), 
-                     "LifespanDistribution", 
-                     LifespanDistributionFieldId, LifespanDistributionFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DynamicsParticleGeneratorBase::editSFLifespanDistribution)),
-    new FieldDescription(SFDistribution1DPtr::getClassType(), 
-                     "AgeDistribution", 
-                     AgeDistributionFieldId, AgeDistributionFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DynamicsParticleGeneratorBase::editSFAgeDistribution)),
-    new FieldDescription(SFDistribution3DPtr::getClassType(), 
-                     "VelocityDistribution", 
-                     VelocityDistributionFieldId, VelocityDistributionFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DynamicsParticleGeneratorBase::editSFVelocityDistribution)),
-    new FieldDescription(SFDistribution3DPtr::getClassType(), 
-                     "SecVelocityDistribution", 
-                     SecVelocityDistributionFieldId, SecVelocityDistributionFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DynamicsParticleGeneratorBase::editSFSecVelocityDistribution)),
-    new FieldDescription(SFDistribution3DPtr::getClassType(), 
-                     "AccelerationDistribution", 
-                     AccelerationDistributionFieldId, AccelerationDistributionFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DynamicsParticleGeneratorBase::editSFAccelerationDistribution))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType DynamicsParticleGeneratorBase::_type(
-    "DynamicsParticleGenerator",
-    "ParticleGenerator",
+    pDesc = new SFUnrecDistribution3DPtr::Description(
+        SFUnrecDistribution3DPtr::getClassType(),
+        "PositionDistribution",
+        "",
+        PositionDistributionFieldId, PositionDistributionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DynamicsParticleGenerator::editHandlePositionDistribution),
+        static_cast<FieldGetMethodSig >(&DynamicsParticleGenerator::getHandlePositionDistribution));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecDistribution3DPtr::Description(
+        SFUnrecDistribution3DPtr::getClassType(),
+        "SecPositionDistribution",
+        "",
+        SecPositionDistributionFieldId, SecPositionDistributionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DynamicsParticleGenerator::editHandleSecPositionDistribution),
+        static_cast<FieldGetMethodSig >(&DynamicsParticleGenerator::getHandleSecPositionDistribution));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecDistribution3DPtr::Description(
+        SFUnrecDistribution3DPtr::getClassType(),
+        "NormalDistribution",
+        "",
+        NormalDistributionFieldId, NormalDistributionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DynamicsParticleGenerator::editHandleNormalDistribution),
+        static_cast<FieldGetMethodSig >(&DynamicsParticleGenerator::getHandleNormalDistribution));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecDistribution3DPtr::Description(
+        SFUnrecDistribution3DPtr::getClassType(),
+        "ColorDistribution",
+        "",
+        ColorDistributionFieldId, ColorDistributionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DynamicsParticleGenerator::editHandleColorDistribution),
+        static_cast<FieldGetMethodSig >(&DynamicsParticleGenerator::getHandleColorDistribution));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecDistribution1DPtr::Description(
+        SFUnrecDistribution1DPtr::getClassType(),
+        "TransparencyDistribution",
+        "",
+        TransparencyDistributionFieldId, TransparencyDistributionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DynamicsParticleGenerator::editHandleTransparencyDistribution),
+        static_cast<FieldGetMethodSig >(&DynamicsParticleGenerator::getHandleTransparencyDistribution));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecDistribution3DPtr::Description(
+        SFUnrecDistribution3DPtr::getClassType(),
+        "SizeDistribution",
+        "",
+        SizeDistributionFieldId, SizeDistributionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DynamicsParticleGenerator::editHandleSizeDistribution),
+        static_cast<FieldGetMethodSig >(&DynamicsParticleGenerator::getHandleSizeDistribution));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecDistribution1DPtr::Description(
+        SFUnrecDistribution1DPtr::getClassType(),
+        "LifespanDistribution",
+        "",
+        LifespanDistributionFieldId, LifespanDistributionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DynamicsParticleGenerator::editHandleLifespanDistribution),
+        static_cast<FieldGetMethodSig >(&DynamicsParticleGenerator::getHandleLifespanDistribution));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecDistribution1DPtr::Description(
+        SFUnrecDistribution1DPtr::getClassType(),
+        "AgeDistribution",
+        "",
+        AgeDistributionFieldId, AgeDistributionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DynamicsParticleGenerator::editHandleAgeDistribution),
+        static_cast<FieldGetMethodSig >(&DynamicsParticleGenerator::getHandleAgeDistribution));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecDistribution3DPtr::Description(
+        SFUnrecDistribution3DPtr::getClassType(),
+        "VelocityDistribution",
+        "",
+        VelocityDistributionFieldId, VelocityDistributionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DynamicsParticleGenerator::editHandleVelocityDistribution),
+        static_cast<FieldGetMethodSig >(&DynamicsParticleGenerator::getHandleVelocityDistribution));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecDistribution3DPtr::Description(
+        SFUnrecDistribution3DPtr::getClassType(),
+        "SecVelocityDistribution",
+        "",
+        SecVelocityDistributionFieldId, SecVelocityDistributionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DynamicsParticleGenerator::editHandleSecVelocityDistribution),
+        static_cast<FieldGetMethodSig >(&DynamicsParticleGenerator::getHandleSecVelocityDistribution));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecDistribution3DPtr::Description(
+        SFUnrecDistribution3DPtr::getClassType(),
+        "AccelerationDistribution",
+        "",
+        AccelerationDistributionFieldId, AccelerationDistributionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DynamicsParticleGenerator::editHandleAccelerationDistribution),
+        static_cast<FieldGetMethodSig >(&DynamicsParticleGenerator::getHandleAccelerationDistribution));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+DynamicsParticleGeneratorBase::TypeObject DynamicsParticleGeneratorBase::_type(
+    DynamicsParticleGeneratorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
     NULL,
-    NULL, 
     DynamicsParticleGenerator::initMethod,
-    _desc,
-    sizeof(_desc));
+    DynamicsParticleGenerator::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&DynamicsParticleGenerator::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"DynamicsParticleGenerator\"\n"
+    "\tparent=\"ParticleGenerator\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"abstract\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com), Daniel Guilliams           \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"PositionDistribution\"\n"
+    "\t\ttype=\"Distribution3D\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SecPositionDistribution\"\n"
+    "\t\ttype=\"Distribution3D\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"NormalDistribution\"\n"
+    "\t\ttype=\"Distribution3D\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ColorDistribution\"\n"
+    "\t\ttype=\"Distribution3D\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TransparencyDistribution\"\n"
+    "\t\ttype=\"Distribution1D\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SizeDistribution\"\n"
+    "\t\ttype=\"Distribution3D\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"LifespanDistribution\"\n"
+    "\t\ttype=\"Distribution1D\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"AgeDistribution\"\n"
+    "\t\ttype=\"Distribution1D\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"VelocityDistribution\"\n"
+    "\t\ttype=\"Distribution3D\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SecVelocityDistribution\"\n"
+    "\t\ttype=\"Distribution3D\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"AccelerationDistribution\"\n"
+    "\t\ttype=\"Distribution3D\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(DynamicsParticleGeneratorBase, DynamicsParticleGeneratorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &DynamicsParticleGeneratorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &DynamicsParticleGeneratorBase::getType(void) const 
+FieldContainerType &DynamicsParticleGeneratorBase::getType(void)
 {
     return _type;
-} 
-
-
-UInt32 DynamicsParticleGeneratorBase::getContainerSize(void) const 
-{ 
-    return sizeof(DynamicsParticleGenerator); 
 }
 
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DynamicsParticleGeneratorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &DynamicsParticleGeneratorBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<DynamicsParticleGeneratorBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void DynamicsParticleGeneratorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 DynamicsParticleGeneratorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((DynamicsParticleGeneratorBase *) &other, whichField, sInfo);
+    return sizeof(DynamicsParticleGenerator);
 }
-void DynamicsParticleGeneratorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the DynamicsParticleGenerator::_sfPositionDistribution field.
+const SFUnrecDistribution3DPtr *DynamicsParticleGeneratorBase::getSFPositionDistribution(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfPositionDistribution;
 }
 
-void DynamicsParticleGeneratorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecDistribution3DPtr *DynamicsParticleGeneratorBase::editSFPositionDistribution(void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(PositionDistributionFieldMask);
 
+    return &_sfPositionDistribution;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-DynamicsParticleGeneratorBase::DynamicsParticleGeneratorBase(void) :
-    _sfPositionDistribution   (Distribution3DPtr(NullFC)), 
-    _sfSecPositionDistribution(Distribution3DPtr(NullFC)), 
-    _sfNormalDistribution     (Distribution3DPtr(NullFC)), 
-    _sfColorDistribution      (Distribution3DPtr(NullFC)), 
-    _sfTransparencyDistribution(Distribution1DPtr(NullFC)), 
-    _sfSizeDistribution       (Distribution3DPtr(NullFC)), 
-    _sfLifespanDistribution   (Distribution1DPtr(NullFC)), 
-    _sfAgeDistribution        (Distribution1DPtr(NullFC)), 
-    _sfVelocityDistribution   (Distribution3DPtr(NullFC)), 
-    _sfSecVelocityDistribution(Distribution3DPtr(NullFC)), 
-    _sfAccelerationDistribution(Distribution3DPtr(NullFC)), 
-    Inherited() 
+//! Get the DynamicsParticleGenerator::_sfSecPositionDistribution field.
+const SFUnrecDistribution3DPtr *DynamicsParticleGeneratorBase::getSFSecPositionDistribution(void) const
 {
+    return &_sfSecPositionDistribution;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-DynamicsParticleGeneratorBase::DynamicsParticleGeneratorBase(const DynamicsParticleGeneratorBase &source) :
-    _sfPositionDistribution   (source._sfPositionDistribution   ), 
-    _sfSecPositionDistribution(source._sfSecPositionDistribution), 
-    _sfNormalDistribution     (source._sfNormalDistribution     ), 
-    _sfColorDistribution      (source._sfColorDistribution      ), 
-    _sfTransparencyDistribution(source._sfTransparencyDistribution), 
-    _sfSizeDistribution       (source._sfSizeDistribution       ), 
-    _sfLifespanDistribution   (source._sfLifespanDistribution   ), 
-    _sfAgeDistribution        (source._sfAgeDistribution        ), 
-    _sfVelocityDistribution   (source._sfVelocityDistribution   ), 
-    _sfSecVelocityDistribution(source._sfSecVelocityDistribution), 
-    _sfAccelerationDistribution(source._sfAccelerationDistribution), 
-    Inherited                 (source)
+SFUnrecDistribution3DPtr *DynamicsParticleGeneratorBase::editSFSecPositionDistribution(void)
 {
+    editSField(SecPositionDistributionFieldMask);
+
+    return &_sfSecPositionDistribution;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-DynamicsParticleGeneratorBase::~DynamicsParticleGeneratorBase(void)
+//! Get the DynamicsParticleGenerator::_sfNormalDistribution field.
+const SFUnrecDistribution3DPtr *DynamicsParticleGeneratorBase::getSFNormalDistribution(void) const
 {
+    return &_sfNormalDistribution;
 }
+
+SFUnrecDistribution3DPtr *DynamicsParticleGeneratorBase::editSFNormalDistribution(void)
+{
+    editSField(NormalDistributionFieldMask);
+
+    return &_sfNormalDistribution;
+}
+
+//! Get the DynamicsParticleGenerator::_sfColorDistribution field.
+const SFUnrecDistribution3DPtr *DynamicsParticleGeneratorBase::getSFColorDistribution(void) const
+{
+    return &_sfColorDistribution;
+}
+
+SFUnrecDistribution3DPtr *DynamicsParticleGeneratorBase::editSFColorDistribution(void)
+{
+    editSField(ColorDistributionFieldMask);
+
+    return &_sfColorDistribution;
+}
+
+//! Get the DynamicsParticleGenerator::_sfTransparencyDistribution field.
+const SFUnrecDistribution1DPtr *DynamicsParticleGeneratorBase::getSFTransparencyDistribution(void) const
+{
+    return &_sfTransparencyDistribution;
+}
+
+SFUnrecDistribution1DPtr *DynamicsParticleGeneratorBase::editSFTransparencyDistribution(void)
+{
+    editSField(TransparencyDistributionFieldMask);
+
+    return &_sfTransparencyDistribution;
+}
+
+//! Get the DynamicsParticleGenerator::_sfSizeDistribution field.
+const SFUnrecDistribution3DPtr *DynamicsParticleGeneratorBase::getSFSizeDistribution(void) const
+{
+    return &_sfSizeDistribution;
+}
+
+SFUnrecDistribution3DPtr *DynamicsParticleGeneratorBase::editSFSizeDistribution(void)
+{
+    editSField(SizeDistributionFieldMask);
+
+    return &_sfSizeDistribution;
+}
+
+//! Get the DynamicsParticleGenerator::_sfLifespanDistribution field.
+const SFUnrecDistribution1DPtr *DynamicsParticleGeneratorBase::getSFLifespanDistribution(void) const
+{
+    return &_sfLifespanDistribution;
+}
+
+SFUnrecDistribution1DPtr *DynamicsParticleGeneratorBase::editSFLifespanDistribution(void)
+{
+    editSField(LifespanDistributionFieldMask);
+
+    return &_sfLifespanDistribution;
+}
+
+//! Get the DynamicsParticleGenerator::_sfAgeDistribution field.
+const SFUnrecDistribution1DPtr *DynamicsParticleGeneratorBase::getSFAgeDistribution(void) const
+{
+    return &_sfAgeDistribution;
+}
+
+SFUnrecDistribution1DPtr *DynamicsParticleGeneratorBase::editSFAgeDistribution(void)
+{
+    editSField(AgeDistributionFieldMask);
+
+    return &_sfAgeDistribution;
+}
+
+//! Get the DynamicsParticleGenerator::_sfVelocityDistribution field.
+const SFUnrecDistribution3DPtr *DynamicsParticleGeneratorBase::getSFVelocityDistribution(void) const
+{
+    return &_sfVelocityDistribution;
+}
+
+SFUnrecDistribution3DPtr *DynamicsParticleGeneratorBase::editSFVelocityDistribution(void)
+{
+    editSField(VelocityDistributionFieldMask);
+
+    return &_sfVelocityDistribution;
+}
+
+//! Get the DynamicsParticleGenerator::_sfSecVelocityDistribution field.
+const SFUnrecDistribution3DPtr *DynamicsParticleGeneratorBase::getSFSecVelocityDistribution(void) const
+{
+    return &_sfSecVelocityDistribution;
+}
+
+SFUnrecDistribution3DPtr *DynamicsParticleGeneratorBase::editSFSecVelocityDistribution(void)
+{
+    editSField(SecVelocityDistributionFieldMask);
+
+    return &_sfSecVelocityDistribution;
+}
+
+//! Get the DynamicsParticleGenerator::_sfAccelerationDistribution field.
+const SFUnrecDistribution3DPtr *DynamicsParticleGeneratorBase::getSFAccelerationDistribution(void) const
+{
+    return &_sfAccelerationDistribution;
+}
+
+SFUnrecDistribution3DPtr *DynamicsParticleGeneratorBase::editSFAccelerationDistribution(void)
+{
+    editSField(AccelerationDistributionFieldMask);
+
+    return &_sfAccelerationDistribution;
+}
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 DynamicsParticleGeneratorBase::getBinSize(const BitVector &whichField)
+UInt32 DynamicsParticleGeneratorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -315,63 +619,52 @@ UInt32 DynamicsParticleGeneratorBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfPositionDistribution.getBinSize();
     }
-
     if(FieldBits::NoField != (SecPositionDistributionFieldMask & whichField))
     {
         returnValue += _sfSecPositionDistribution.getBinSize();
     }
-
     if(FieldBits::NoField != (NormalDistributionFieldMask & whichField))
     {
         returnValue += _sfNormalDistribution.getBinSize();
     }
-
     if(FieldBits::NoField != (ColorDistributionFieldMask & whichField))
     {
         returnValue += _sfColorDistribution.getBinSize();
     }
-
     if(FieldBits::NoField != (TransparencyDistributionFieldMask & whichField))
     {
         returnValue += _sfTransparencyDistribution.getBinSize();
     }
-
     if(FieldBits::NoField != (SizeDistributionFieldMask & whichField))
     {
         returnValue += _sfSizeDistribution.getBinSize();
     }
-
     if(FieldBits::NoField != (LifespanDistributionFieldMask & whichField))
     {
         returnValue += _sfLifespanDistribution.getBinSize();
     }
-
     if(FieldBits::NoField != (AgeDistributionFieldMask & whichField))
     {
         returnValue += _sfAgeDistribution.getBinSize();
     }
-
     if(FieldBits::NoField != (VelocityDistributionFieldMask & whichField))
     {
         returnValue += _sfVelocityDistribution.getBinSize();
     }
-
     if(FieldBits::NoField != (SecVelocityDistributionFieldMask & whichField))
     {
         returnValue += _sfSecVelocityDistribution.getBinSize();
     }
-
     if(FieldBits::NoField != (AccelerationDistributionFieldMask & whichField))
     {
         returnValue += _sfAccelerationDistribution.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void DynamicsParticleGeneratorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void DynamicsParticleGeneratorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -379,62 +672,50 @@ void DynamicsParticleGeneratorBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfPositionDistribution.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SecPositionDistributionFieldMask & whichField))
     {
         _sfSecPositionDistribution.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (NormalDistributionFieldMask & whichField))
     {
         _sfNormalDistribution.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ColorDistributionFieldMask & whichField))
     {
         _sfColorDistribution.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TransparencyDistributionFieldMask & whichField))
     {
         _sfTransparencyDistribution.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SizeDistributionFieldMask & whichField))
     {
         _sfSizeDistribution.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (LifespanDistributionFieldMask & whichField))
     {
         _sfLifespanDistribution.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (AgeDistributionFieldMask & whichField))
     {
         _sfAgeDistribution.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (VelocityDistributionFieldMask & whichField))
     {
         _sfVelocityDistribution.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SecVelocityDistributionFieldMask & whichField))
     {
         _sfSecVelocityDistribution.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (AccelerationDistributionFieldMask & whichField))
     {
         _sfAccelerationDistribution.copyToBin(pMem);
     }
-
-
 }
 
-void DynamicsParticleGeneratorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void DynamicsParticleGeneratorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -442,172 +723,480 @@ void DynamicsParticleGeneratorBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfPositionDistribution.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SecPositionDistributionFieldMask & whichField))
     {
         _sfSecPositionDistribution.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (NormalDistributionFieldMask & whichField))
     {
         _sfNormalDistribution.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ColorDistributionFieldMask & whichField))
     {
         _sfColorDistribution.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TransparencyDistributionFieldMask & whichField))
     {
         _sfTransparencyDistribution.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SizeDistributionFieldMask & whichField))
     {
         _sfSizeDistribution.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (LifespanDistributionFieldMask & whichField))
     {
         _sfLifespanDistribution.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (AgeDistributionFieldMask & whichField))
     {
         _sfAgeDistribution.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (VelocityDistributionFieldMask & whichField))
     {
         _sfVelocityDistribution.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SecVelocityDistributionFieldMask & whichField))
     {
         _sfSecVelocityDistribution.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (AccelerationDistributionFieldMask & whichField))
     {
         _sfAccelerationDistribution.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DynamicsParticleGeneratorBase::executeSyncImpl(      DynamicsParticleGeneratorBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+DynamicsParticleGeneratorBase::DynamicsParticleGeneratorBase(void) :
+    Inherited(),
+    _sfPositionDistribution   (NULL),
+    _sfSecPositionDistribution(NULL),
+    _sfNormalDistribution     (NULL),
+    _sfColorDistribution      (NULL),
+    _sfTransparencyDistribution(NULL),
+    _sfSizeDistribution       (NULL),
+    _sfLifespanDistribution   (NULL),
+    _sfAgeDistribution        (NULL),
+    _sfVelocityDistribution   (NULL),
+    _sfSecVelocityDistribution(NULL),
+    _sfAccelerationDistribution(NULL)
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-    if(FieldBits::NoField != (PositionDistributionFieldMask & whichField))
-        _sfPositionDistribution.syncWith(pOther->_sfPositionDistribution);
-
-    if(FieldBits::NoField != (SecPositionDistributionFieldMask & whichField))
-        _sfSecPositionDistribution.syncWith(pOther->_sfSecPositionDistribution);
-
-    if(FieldBits::NoField != (NormalDistributionFieldMask & whichField))
-        _sfNormalDistribution.syncWith(pOther->_sfNormalDistribution);
-
-    if(FieldBits::NoField != (ColorDistributionFieldMask & whichField))
-        _sfColorDistribution.syncWith(pOther->_sfColorDistribution);
-
-    if(FieldBits::NoField != (TransparencyDistributionFieldMask & whichField))
-        _sfTransparencyDistribution.syncWith(pOther->_sfTransparencyDistribution);
-
-    if(FieldBits::NoField != (SizeDistributionFieldMask & whichField))
-        _sfSizeDistribution.syncWith(pOther->_sfSizeDistribution);
-
-    if(FieldBits::NoField != (LifespanDistributionFieldMask & whichField))
-        _sfLifespanDistribution.syncWith(pOther->_sfLifespanDistribution);
-
-    if(FieldBits::NoField != (AgeDistributionFieldMask & whichField))
-        _sfAgeDistribution.syncWith(pOther->_sfAgeDistribution);
-
-    if(FieldBits::NoField != (VelocityDistributionFieldMask & whichField))
-        _sfVelocityDistribution.syncWith(pOther->_sfVelocityDistribution);
-
-    if(FieldBits::NoField != (SecVelocityDistributionFieldMask & whichField))
-        _sfSecVelocityDistribution.syncWith(pOther->_sfSecVelocityDistribution);
-
-    if(FieldBits::NoField != (AccelerationDistributionFieldMask & whichField))
-        _sfAccelerationDistribution.syncWith(pOther->_sfAccelerationDistribution);
-
-
-}
-#else
-void DynamicsParticleGeneratorBase::executeSyncImpl(      DynamicsParticleGeneratorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (PositionDistributionFieldMask & whichField))
-        _sfPositionDistribution.syncWith(pOther->_sfPositionDistribution);
-
-    if(FieldBits::NoField != (SecPositionDistributionFieldMask & whichField))
-        _sfSecPositionDistribution.syncWith(pOther->_sfSecPositionDistribution);
-
-    if(FieldBits::NoField != (NormalDistributionFieldMask & whichField))
-        _sfNormalDistribution.syncWith(pOther->_sfNormalDistribution);
-
-    if(FieldBits::NoField != (ColorDistributionFieldMask & whichField))
-        _sfColorDistribution.syncWith(pOther->_sfColorDistribution);
-
-    if(FieldBits::NoField != (TransparencyDistributionFieldMask & whichField))
-        _sfTransparencyDistribution.syncWith(pOther->_sfTransparencyDistribution);
-
-    if(FieldBits::NoField != (SizeDistributionFieldMask & whichField))
-        _sfSizeDistribution.syncWith(pOther->_sfSizeDistribution);
-
-    if(FieldBits::NoField != (LifespanDistributionFieldMask & whichField))
-        _sfLifespanDistribution.syncWith(pOther->_sfLifespanDistribution);
-
-    if(FieldBits::NoField != (AgeDistributionFieldMask & whichField))
-        _sfAgeDistribution.syncWith(pOther->_sfAgeDistribution);
-
-    if(FieldBits::NoField != (VelocityDistributionFieldMask & whichField))
-        _sfVelocityDistribution.syncWith(pOther->_sfVelocityDistribution);
-
-    if(FieldBits::NoField != (SecVelocityDistributionFieldMask & whichField))
-        _sfSecVelocityDistribution.syncWith(pOther->_sfSecVelocityDistribution);
-
-    if(FieldBits::NoField != (AccelerationDistributionFieldMask & whichField))
-        _sfAccelerationDistribution.syncWith(pOther->_sfAccelerationDistribution);
-
-
-
 }
 
-void DynamicsParticleGeneratorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+DynamicsParticleGeneratorBase::DynamicsParticleGeneratorBase(const DynamicsParticleGeneratorBase &source) :
+    Inherited(source),
+    _sfPositionDistribution   (NULL),
+    _sfSecPositionDistribution(NULL),
+    _sfNormalDistribution     (NULL),
+    _sfColorDistribution      (NULL),
+    _sfTransparencyDistribution(NULL),
+    _sfSizeDistribution       (NULL),
+    _sfLifespanDistribution   (NULL),
+    _sfAgeDistribution        (NULL),
+    _sfVelocityDistribution   (NULL),
+    _sfSecVelocityDistribution(NULL),
+    _sfAccelerationDistribution(NULL)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
+
+/*-------------------------- destructors ----------------------------------*/
+
+DynamicsParticleGeneratorBase::~DynamicsParticleGeneratorBase(void)
+{
+}
+
+void DynamicsParticleGeneratorBase::onCreate(const DynamicsParticleGenerator *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        DynamicsParticleGenerator *pThis = static_cast<DynamicsParticleGenerator *>(this);
+
+        pThis->setPositionDistribution(source->getPositionDistribution());
+
+        pThis->setSecPositionDistribution(source->getSecPositionDistribution());
+
+        pThis->setNormalDistribution(source->getNormalDistribution());
+
+        pThis->setColorDistribution(source->getColorDistribution());
+
+        pThis->setTransparencyDistribution(source->getTransparencyDistribution());
+
+        pThis->setSizeDistribution(source->getSizeDistribution());
+
+        pThis->setLifespanDistribution(source->getLifespanDistribution());
+
+        pThis->setAgeDistribution(source->getAgeDistribution());
+
+        pThis->setVelocityDistribution(source->getVelocityDistribution());
+
+        pThis->setSecVelocityDistribution(source->getSecVelocityDistribution());
+
+        pThis->setAccelerationDistribution(source->getAccelerationDistribution());
+    }
+}
+
+GetFieldHandlePtr DynamicsParticleGeneratorBase::getHandlePositionDistribution (void) const
+{
+    SFUnrecDistribution3DPtr::GetHandlePtr returnValue(
+        new  SFUnrecDistribution3DPtr::GetHandle(
+             &_sfPositionDistribution,
+             this->getType().getFieldDesc(PositionDistributionFieldId),
+             const_cast<DynamicsParticleGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DynamicsParticleGeneratorBase::editHandlePositionDistribution(void)
+{
+    SFUnrecDistribution3DPtr::EditHandlePtr returnValue(
+        new  SFUnrecDistribution3DPtr::EditHandle(
+             &_sfPositionDistribution,
+             this->getType().getFieldDesc(PositionDistributionFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DynamicsParticleGenerator::setPositionDistribution,
+                    static_cast<DynamicsParticleGenerator *>(this), _1));
+
+    editSField(PositionDistributionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DynamicsParticleGeneratorBase::getHandleSecPositionDistribution (void) const
+{
+    SFUnrecDistribution3DPtr::GetHandlePtr returnValue(
+        new  SFUnrecDistribution3DPtr::GetHandle(
+             &_sfSecPositionDistribution,
+             this->getType().getFieldDesc(SecPositionDistributionFieldId),
+             const_cast<DynamicsParticleGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DynamicsParticleGeneratorBase::editHandleSecPositionDistribution(void)
+{
+    SFUnrecDistribution3DPtr::EditHandlePtr returnValue(
+        new  SFUnrecDistribution3DPtr::EditHandle(
+             &_sfSecPositionDistribution,
+             this->getType().getFieldDesc(SecPositionDistributionFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DynamicsParticleGenerator::setSecPositionDistribution,
+                    static_cast<DynamicsParticleGenerator *>(this), _1));
+
+    editSField(SecPositionDistributionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DynamicsParticleGeneratorBase::getHandleNormalDistribution (void) const
+{
+    SFUnrecDistribution3DPtr::GetHandlePtr returnValue(
+        new  SFUnrecDistribution3DPtr::GetHandle(
+             &_sfNormalDistribution,
+             this->getType().getFieldDesc(NormalDistributionFieldId),
+             const_cast<DynamicsParticleGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DynamicsParticleGeneratorBase::editHandleNormalDistribution(void)
+{
+    SFUnrecDistribution3DPtr::EditHandlePtr returnValue(
+        new  SFUnrecDistribution3DPtr::EditHandle(
+             &_sfNormalDistribution,
+             this->getType().getFieldDesc(NormalDistributionFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DynamicsParticleGenerator::setNormalDistribution,
+                    static_cast<DynamicsParticleGenerator *>(this), _1));
+
+    editSField(NormalDistributionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DynamicsParticleGeneratorBase::getHandleColorDistribution (void) const
+{
+    SFUnrecDistribution3DPtr::GetHandlePtr returnValue(
+        new  SFUnrecDistribution3DPtr::GetHandle(
+             &_sfColorDistribution,
+             this->getType().getFieldDesc(ColorDistributionFieldId),
+             const_cast<DynamicsParticleGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DynamicsParticleGeneratorBase::editHandleColorDistribution(void)
+{
+    SFUnrecDistribution3DPtr::EditHandlePtr returnValue(
+        new  SFUnrecDistribution3DPtr::EditHandle(
+             &_sfColorDistribution,
+             this->getType().getFieldDesc(ColorDistributionFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DynamicsParticleGenerator::setColorDistribution,
+                    static_cast<DynamicsParticleGenerator *>(this), _1));
+
+    editSField(ColorDistributionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DynamicsParticleGeneratorBase::getHandleTransparencyDistribution (void) const
+{
+    SFUnrecDistribution1DPtr::GetHandlePtr returnValue(
+        new  SFUnrecDistribution1DPtr::GetHandle(
+             &_sfTransparencyDistribution,
+             this->getType().getFieldDesc(TransparencyDistributionFieldId),
+             const_cast<DynamicsParticleGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DynamicsParticleGeneratorBase::editHandleTransparencyDistribution(void)
+{
+    SFUnrecDistribution1DPtr::EditHandlePtr returnValue(
+        new  SFUnrecDistribution1DPtr::EditHandle(
+             &_sfTransparencyDistribution,
+             this->getType().getFieldDesc(TransparencyDistributionFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DynamicsParticleGenerator::setTransparencyDistribution,
+                    static_cast<DynamicsParticleGenerator *>(this), _1));
+
+    editSField(TransparencyDistributionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DynamicsParticleGeneratorBase::getHandleSizeDistribution (void) const
+{
+    SFUnrecDistribution3DPtr::GetHandlePtr returnValue(
+        new  SFUnrecDistribution3DPtr::GetHandle(
+             &_sfSizeDistribution,
+             this->getType().getFieldDesc(SizeDistributionFieldId),
+             const_cast<DynamicsParticleGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DynamicsParticleGeneratorBase::editHandleSizeDistribution(void)
+{
+    SFUnrecDistribution3DPtr::EditHandlePtr returnValue(
+        new  SFUnrecDistribution3DPtr::EditHandle(
+             &_sfSizeDistribution,
+             this->getType().getFieldDesc(SizeDistributionFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DynamicsParticleGenerator::setSizeDistribution,
+                    static_cast<DynamicsParticleGenerator *>(this), _1));
+
+    editSField(SizeDistributionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DynamicsParticleGeneratorBase::getHandleLifespanDistribution (void) const
+{
+    SFUnrecDistribution1DPtr::GetHandlePtr returnValue(
+        new  SFUnrecDistribution1DPtr::GetHandle(
+             &_sfLifespanDistribution,
+             this->getType().getFieldDesc(LifespanDistributionFieldId),
+             const_cast<DynamicsParticleGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DynamicsParticleGeneratorBase::editHandleLifespanDistribution(void)
+{
+    SFUnrecDistribution1DPtr::EditHandlePtr returnValue(
+        new  SFUnrecDistribution1DPtr::EditHandle(
+             &_sfLifespanDistribution,
+             this->getType().getFieldDesc(LifespanDistributionFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DynamicsParticleGenerator::setLifespanDistribution,
+                    static_cast<DynamicsParticleGenerator *>(this), _1));
+
+    editSField(LifespanDistributionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DynamicsParticleGeneratorBase::getHandleAgeDistribution (void) const
+{
+    SFUnrecDistribution1DPtr::GetHandlePtr returnValue(
+        new  SFUnrecDistribution1DPtr::GetHandle(
+             &_sfAgeDistribution,
+             this->getType().getFieldDesc(AgeDistributionFieldId),
+             const_cast<DynamicsParticleGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DynamicsParticleGeneratorBase::editHandleAgeDistribution(void)
+{
+    SFUnrecDistribution1DPtr::EditHandlePtr returnValue(
+        new  SFUnrecDistribution1DPtr::EditHandle(
+             &_sfAgeDistribution,
+             this->getType().getFieldDesc(AgeDistributionFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DynamicsParticleGenerator::setAgeDistribution,
+                    static_cast<DynamicsParticleGenerator *>(this), _1));
+
+    editSField(AgeDistributionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DynamicsParticleGeneratorBase::getHandleVelocityDistribution (void) const
+{
+    SFUnrecDistribution3DPtr::GetHandlePtr returnValue(
+        new  SFUnrecDistribution3DPtr::GetHandle(
+             &_sfVelocityDistribution,
+             this->getType().getFieldDesc(VelocityDistributionFieldId),
+             const_cast<DynamicsParticleGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DynamicsParticleGeneratorBase::editHandleVelocityDistribution(void)
+{
+    SFUnrecDistribution3DPtr::EditHandlePtr returnValue(
+        new  SFUnrecDistribution3DPtr::EditHandle(
+             &_sfVelocityDistribution,
+             this->getType().getFieldDesc(VelocityDistributionFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DynamicsParticleGenerator::setVelocityDistribution,
+                    static_cast<DynamicsParticleGenerator *>(this), _1));
+
+    editSField(VelocityDistributionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DynamicsParticleGeneratorBase::getHandleSecVelocityDistribution (void) const
+{
+    SFUnrecDistribution3DPtr::GetHandlePtr returnValue(
+        new  SFUnrecDistribution3DPtr::GetHandle(
+             &_sfSecVelocityDistribution,
+             this->getType().getFieldDesc(SecVelocityDistributionFieldId),
+             const_cast<DynamicsParticleGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DynamicsParticleGeneratorBase::editHandleSecVelocityDistribution(void)
+{
+    SFUnrecDistribution3DPtr::EditHandlePtr returnValue(
+        new  SFUnrecDistribution3DPtr::EditHandle(
+             &_sfSecVelocityDistribution,
+             this->getType().getFieldDesc(SecVelocityDistributionFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DynamicsParticleGenerator::setSecVelocityDistribution,
+                    static_cast<DynamicsParticleGenerator *>(this), _1));
+
+    editSField(SecVelocityDistributionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DynamicsParticleGeneratorBase::getHandleAccelerationDistribution (void) const
+{
+    SFUnrecDistribution3DPtr::GetHandlePtr returnValue(
+        new  SFUnrecDistribution3DPtr::GetHandle(
+             &_sfAccelerationDistribution,
+             this->getType().getFieldDesc(AccelerationDistributionFieldId),
+             const_cast<DynamicsParticleGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DynamicsParticleGeneratorBase::editHandleAccelerationDistribution(void)
+{
+    SFUnrecDistribution3DPtr::EditHandlePtr returnValue(
+        new  SFUnrecDistribution3DPtr::EditHandle(
+             &_sfAccelerationDistribution,
+             this->getType().getFieldDesc(AccelerationDistributionFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DynamicsParticleGenerator::setAccelerationDistribution,
+                    static_cast<DynamicsParticleGenerator *>(this), _1));
+
+    editSField(AccelerationDistributionFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void DynamicsParticleGeneratorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    DynamicsParticleGenerator *pThis = static_cast<DynamicsParticleGenerator *>(this);
+
+    pThis->execSync(static_cast<DynamicsParticleGenerator *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
 
+void DynamicsParticleGeneratorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<DynamicsParticleGenerator *>(this)->setPositionDistribution(NULL);
+
+    static_cast<DynamicsParticleGenerator *>(this)->setSecPositionDistribution(NULL);
+
+    static_cast<DynamicsParticleGenerator *>(this)->setNormalDistribution(NULL);
+
+    static_cast<DynamicsParticleGenerator *>(this)->setColorDistribution(NULL);
+
+    static_cast<DynamicsParticleGenerator *>(this)->setTransparencyDistribution(NULL);
+
+    static_cast<DynamicsParticleGenerator *>(this)->setSizeDistribution(NULL);
+
+    static_cast<DynamicsParticleGenerator *>(this)->setLifespanDistribution(NULL);
+
+    static_cast<DynamicsParticleGenerator *>(this)->setAgeDistribution(NULL);
+
+    static_cast<DynamicsParticleGenerator *>(this)->setVelocityDistribution(NULL);
+
+    static_cast<DynamicsParticleGenerator *>(this)->setSecVelocityDistribution(NULL);
+
+    static_cast<DynamicsParticleGenerator *>(this)->setAccelerationDistribution(NULL);
+
+
+}
+
+
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<DynamicsParticleGeneratorPtr>::_type("DynamicsParticleGeneratorPtr", "ParticleGeneratorPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(DynamicsParticleGeneratorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(DynamicsParticleGeneratorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-
-
-OSG_END_NAMESPACE
-

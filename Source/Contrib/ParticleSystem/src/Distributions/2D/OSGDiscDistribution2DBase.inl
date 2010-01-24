@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,134 +55,31 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &DiscDistribution2DBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 DiscDistribution2DBase::getClassTypeId(void) 
+OSG::UInt32 DiscDistribution2DBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-DiscDistribution2DPtr DiscDistribution2DBase::create(void) 
-{
-    DiscDistribution2DPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = DiscDistribution2DPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-DiscDistribution2DPtr DiscDistribution2DBase::createEmpty(void) 
-{ 
-    DiscDistribution2DPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 DiscDistribution2DBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the DiscDistribution2D::_sfCenter field.
-inline
-const SFPnt2f *DiscDistribution2DBase::getSFCenter(void) const
-{
-    return &_sfCenter;
-}
-
-//! Get the DiscDistribution2D::_sfCenter field.
-inline
-SFPnt2f *DiscDistribution2DBase::editSFCenter(void)
-{
-    return &_sfCenter;
-}
-
-//! Get the DiscDistribution2D::_sfMinRadius field.
-inline
-const SFReal32 *DiscDistribution2DBase::getSFMinRadius(void) const
-{
-    return &_sfMinRadius;
-}
-
-//! Get the DiscDistribution2D::_sfMinRadius field.
-inline
-SFReal32 *DiscDistribution2DBase::editSFMinRadius(void)
-{
-    return &_sfMinRadius;
-}
-
-//! Get the DiscDistribution2D::_sfMaxRadius field.
-inline
-const SFReal32 *DiscDistribution2DBase::getSFMaxRadius(void) const
-{
-    return &_sfMaxRadius;
-}
-
-//! Get the DiscDistribution2D::_sfMaxRadius field.
-inline
-SFReal32 *DiscDistribution2DBase::editSFMaxRadius(void)
-{
-    return &_sfMaxRadius;
-}
-
-//! Get the DiscDistribution2D::_sfMinTheta field.
-inline
-const SFReal32 *DiscDistribution2DBase::getSFMinTheta(void) const
-{
-    return &_sfMinTheta;
-}
-
-//! Get the DiscDistribution2D::_sfMinTheta field.
-inline
-SFReal32 *DiscDistribution2DBase::editSFMinTheta(void)
-{
-    return &_sfMinTheta;
-}
-
-//! Get the DiscDistribution2D::_sfMaxTheta field.
-inline
-const SFReal32 *DiscDistribution2DBase::getSFMaxTheta(void) const
-{
-    return &_sfMaxTheta;
-}
-
-//! Get the DiscDistribution2D::_sfMaxTheta field.
-inline
-SFReal32 *DiscDistribution2DBase::editSFMaxTheta(void)
-{
-    return &_sfMaxTheta;
-}
-
-//! Get the DiscDistribution2D::_sfSurfaceOrEdge field.
-inline
-const SFUInt32 *DiscDistribution2DBase::getSFSurfaceOrEdge(void) const
-{
-    return &_sfSurfaceOrEdge;
-}
-
-//! Get the DiscDistribution2D::_sfSurfaceOrEdge field.
-inline
-SFUInt32 *DiscDistribution2DBase::editSFSurfaceOrEdge(void)
-{
-    return &_sfSurfaceOrEdge;
-}
-
-
 //! Get the value of the DiscDistribution2D::_sfCenter field.
+
 inline
 Pnt2f &DiscDistribution2DBase::editCenter(void)
 {
+    editSField(CenterFieldMask);
+
     return _sfCenter.getValue();
 }
 
@@ -199,113 +94,176 @@ const Pnt2f &DiscDistribution2DBase::getCenter(void) const
 inline
 void DiscDistribution2DBase::setCenter(const Pnt2f &value)
 {
+    editSField(CenterFieldMask);
+
     _sfCenter.setValue(value);
 }
-
 //! Get the value of the DiscDistribution2D::_sfMinRadius field.
+
 inline
 Real32 &DiscDistribution2DBase::editMinRadius(void)
 {
+    editSField(MinRadiusFieldMask);
+
     return _sfMinRadius.getValue();
 }
 
 //! Get the value of the DiscDistribution2D::_sfMinRadius field.
 inline
-const Real32 &DiscDistribution2DBase::getMinRadius(void) const
+      Real32  DiscDistribution2DBase::getMinRadius(void) const
 {
     return _sfMinRadius.getValue();
 }
 
 //! Set the value of the DiscDistribution2D::_sfMinRadius field.
 inline
-void DiscDistribution2DBase::setMinRadius(const Real32 &value)
+void DiscDistribution2DBase::setMinRadius(const Real32 value)
 {
+    editSField(MinRadiusFieldMask);
+
     _sfMinRadius.setValue(value);
 }
-
 //! Get the value of the DiscDistribution2D::_sfMaxRadius field.
+
 inline
 Real32 &DiscDistribution2DBase::editMaxRadius(void)
 {
+    editSField(MaxRadiusFieldMask);
+
     return _sfMaxRadius.getValue();
 }
 
 //! Get the value of the DiscDistribution2D::_sfMaxRadius field.
 inline
-const Real32 &DiscDistribution2DBase::getMaxRadius(void) const
+      Real32  DiscDistribution2DBase::getMaxRadius(void) const
 {
     return _sfMaxRadius.getValue();
 }
 
 //! Set the value of the DiscDistribution2D::_sfMaxRadius field.
 inline
-void DiscDistribution2DBase::setMaxRadius(const Real32 &value)
+void DiscDistribution2DBase::setMaxRadius(const Real32 value)
 {
+    editSField(MaxRadiusFieldMask);
+
     _sfMaxRadius.setValue(value);
 }
-
 //! Get the value of the DiscDistribution2D::_sfMinTheta field.
+
 inline
 Real32 &DiscDistribution2DBase::editMinTheta(void)
 {
+    editSField(MinThetaFieldMask);
+
     return _sfMinTheta.getValue();
 }
 
 //! Get the value of the DiscDistribution2D::_sfMinTheta field.
 inline
-const Real32 &DiscDistribution2DBase::getMinTheta(void) const
+      Real32  DiscDistribution2DBase::getMinTheta(void) const
 {
     return _sfMinTheta.getValue();
 }
 
 //! Set the value of the DiscDistribution2D::_sfMinTheta field.
 inline
-void DiscDistribution2DBase::setMinTheta(const Real32 &value)
+void DiscDistribution2DBase::setMinTheta(const Real32 value)
 {
+    editSField(MinThetaFieldMask);
+
     _sfMinTheta.setValue(value);
 }
-
 //! Get the value of the DiscDistribution2D::_sfMaxTheta field.
+
 inline
 Real32 &DiscDistribution2DBase::editMaxTheta(void)
 {
+    editSField(MaxThetaFieldMask);
+
     return _sfMaxTheta.getValue();
 }
 
 //! Get the value of the DiscDistribution2D::_sfMaxTheta field.
 inline
-const Real32 &DiscDistribution2DBase::getMaxTheta(void) const
+      Real32  DiscDistribution2DBase::getMaxTheta(void) const
 {
     return _sfMaxTheta.getValue();
 }
 
 //! Set the value of the DiscDistribution2D::_sfMaxTheta field.
 inline
-void DiscDistribution2DBase::setMaxTheta(const Real32 &value)
+void DiscDistribution2DBase::setMaxTheta(const Real32 value)
 {
+    editSField(MaxThetaFieldMask);
+
     _sfMaxTheta.setValue(value);
 }
-
 //! Get the value of the DiscDistribution2D::_sfSurfaceOrEdge field.
+
 inline
 UInt32 &DiscDistribution2DBase::editSurfaceOrEdge(void)
 {
+    editSField(SurfaceOrEdgeFieldMask);
+
     return _sfSurfaceOrEdge.getValue();
 }
 
 //! Get the value of the DiscDistribution2D::_sfSurfaceOrEdge field.
 inline
-const UInt32 &DiscDistribution2DBase::getSurfaceOrEdge(void) const
+      UInt32  DiscDistribution2DBase::getSurfaceOrEdge(void) const
 {
     return _sfSurfaceOrEdge.getValue();
 }
 
 //! Set the value of the DiscDistribution2D::_sfSurfaceOrEdge field.
 inline
-void DiscDistribution2DBase::setSurfaceOrEdge(const UInt32 &value)
+void DiscDistribution2DBase::setSurfaceOrEdge(const UInt32 value)
 {
+    editSField(SurfaceOrEdgeFieldMask);
+
     _sfSurfaceOrEdge.setValue(value);
 }
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void DiscDistribution2DBase::execSync (      DiscDistribution2DBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (CenterFieldMask & whichField))
+        _sfCenter.syncWith(pFrom->_sfCenter);
+
+    if(FieldBits::NoField != (MinRadiusFieldMask & whichField))
+        _sfMinRadius.syncWith(pFrom->_sfMinRadius);
+
+    if(FieldBits::NoField != (MaxRadiusFieldMask & whichField))
+        _sfMaxRadius.syncWith(pFrom->_sfMaxRadius);
+
+    if(FieldBits::NoField != (MinThetaFieldMask & whichField))
+        _sfMinTheta.syncWith(pFrom->_sfMinTheta);
+
+    if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
+        _sfMaxTheta.syncWith(pFrom->_sfMaxTheta);
+
+    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
+        _sfSurfaceOrEdge.syncWith(pFrom->_sfSurfaceOrEdge);
+}
+#endif
+
+
+inline
+const Char8 *DiscDistribution2DBase::getClassname(void)
+{
+    return "DiscDistribution2D";
+}
+
+
+OSG_GEN_CONTAINERPTR(DiscDistribution2D);
+
 OSG_END_NAMESPACE
+

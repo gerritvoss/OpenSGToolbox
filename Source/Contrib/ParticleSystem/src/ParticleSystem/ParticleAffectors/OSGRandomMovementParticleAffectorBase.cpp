@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,235 +50,449 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILERANDOMMOVEMENTPARTICLEAFFECTORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+#include "Distributions/1D/OSGPerlinNoiseDistribution1D.h"   // InterpolationType default header
+
+#include "OSGPerlinNoiseDistribution1D.h" // PerlinDistribution Class
 
 #include "OSGRandomMovementParticleAffectorBase.h"
 #include "OSGRandomMovementParticleAffector.h"
 
-#include <Distributions/1D/OSGPerlinNoiseDistribution1D.h>   // InterpolationType default header
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  RandomMovementParticleAffectorBase::AttributeAffectedFieldMask = 
-    (TypeTraits<BitVector>::One << RandomMovementParticleAffectorBase::AttributeAffectedFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  RandomMovementParticleAffectorBase::PerlinDistributionFieldMask = 
-    (TypeTraits<BitVector>::One << RandomMovementParticleAffectorBase::PerlinDistributionFieldId);
+/*! \class OSG::RandomMovementParticleAffector
+    
+ */
 
-const OSG::BitVector  RandomMovementParticleAffectorBase::AmplitudeFieldMask = 
-    (TypeTraits<BitVector>::One << RandomMovementParticleAffectorBase::AmplitudeFieldId);
-
-const OSG::BitVector  RandomMovementParticleAffectorBase::InterpolationTypeFieldMask = 
-    (TypeTraits<BitVector>::One << RandomMovementParticleAffectorBase::InterpolationTypeFieldId);
-
-const OSG::BitVector  RandomMovementParticleAffectorBase::PhaseFieldMask = 
-    (TypeTraits<BitVector>::One << RandomMovementParticleAffectorBase::PhaseFieldId);
-
-const OSG::BitVector  RandomMovementParticleAffectorBase::PersistanceFieldMask = 
-    (TypeTraits<BitVector>::One << RandomMovementParticleAffectorBase::PersistanceFieldId);
-
-const OSG::BitVector  RandomMovementParticleAffectorBase::FrequencyFieldMask = 
-    (TypeTraits<BitVector>::One << RandomMovementParticleAffectorBase::FrequencyFieldId);
-
-const OSG::BitVector  RandomMovementParticleAffectorBase::OctavesFieldMask = 
-    (TypeTraits<BitVector>::One << RandomMovementParticleAffectorBase::OctavesFieldId);
-
-const OSG::BitVector RandomMovementParticleAffectorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var UInt32          RandomMovementParticleAffectorBase::_sfAttributeAffected
     
 */
-/*! \var PerlinNoiseDistribution1DPtr RandomMovementParticleAffectorBase::_sfPerlinDistribution
+
+/*! \var PerlinNoiseDistribution1D * RandomMovementParticleAffectorBase::_sfPerlinDistribution
     
 */
+
 /*! \var Real32          RandomMovementParticleAffectorBase::_sfAmplitude
     
 */
+
 /*! \var UInt32          RandomMovementParticleAffectorBase::_sfInterpolationType
     
 */
+
 /*! \var Vec3f           RandomMovementParticleAffectorBase::_sfPhase
     
 */
+
 /*! \var Real32          RandomMovementParticleAffectorBase::_sfPersistance
     
 */
+
 /*! \var Real32          RandomMovementParticleAffectorBase::_sfFrequency
     
 */
+
 /*! \var UInt32          RandomMovementParticleAffectorBase::_sfOctaves
     
 */
 
-//! RandomMovementParticleAffector description
 
-FieldDescription *RandomMovementParticleAffectorBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<RandomMovementParticleAffector *>::_type("RandomMovementParticleAffectorPtr", "ParticleAffectorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(RandomMovementParticleAffector *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           RandomMovementParticleAffector *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           RandomMovementParticleAffector *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void RandomMovementParticleAffectorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "AttributeAffected", 
-                     AttributeAffectedFieldId, AttributeAffectedFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&RandomMovementParticleAffectorBase::editSFAttributeAffected)),
-    new FieldDescription(SFPerlinNoiseDistribution1DPtr::getClassType(), 
-                     "PerlinDistribution", 
-                     PerlinDistributionFieldId, PerlinDistributionFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&RandomMovementParticleAffectorBase::editSFPerlinDistribution)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Amplitude", 
-                     AmplitudeFieldId, AmplitudeFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&RandomMovementParticleAffectorBase::editSFAmplitude)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "InterpolationType", 
-                     InterpolationTypeFieldId, InterpolationTypeFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&RandomMovementParticleAffectorBase::editSFInterpolationType)),
-    new FieldDescription(SFVec3f::getClassType(), 
-                     "Phase", 
-                     PhaseFieldId, PhaseFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&RandomMovementParticleAffectorBase::editSFPhase)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Persistance", 
-                     PersistanceFieldId, PersistanceFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&RandomMovementParticleAffectorBase::editSFPersistance)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Frequency", 
-                     FrequencyFieldId, FrequencyFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&RandomMovementParticleAffectorBase::editSFFrequency)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "Octaves", 
-                     OctavesFieldId, OctavesFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&RandomMovementParticleAffectorBase::editSFOctaves))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType RandomMovementParticleAffectorBase::_type(
-    "RandomMovementParticleAffector",
-    "ParticleAffector",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&RandomMovementParticleAffectorBase::createEmpty),
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "AttributeAffected",
+        "",
+        AttributeAffectedFieldId, AttributeAffectedFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&RandomMovementParticleAffector::editHandleAttributeAffected),
+        static_cast<FieldGetMethodSig >(&RandomMovementParticleAffector::getHandleAttributeAffected));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecPerlinNoiseDistribution1DPtr::Description(
+        SFUnrecPerlinNoiseDistribution1DPtr::getClassType(),
+        "PerlinDistribution",
+        "",
+        PerlinDistributionFieldId, PerlinDistributionFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&RandomMovementParticleAffector::editHandlePerlinDistribution),
+        static_cast<FieldGetMethodSig >(&RandomMovementParticleAffector::getHandlePerlinDistribution));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Amplitude",
+        "",
+        AmplitudeFieldId, AmplitudeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&RandomMovementParticleAffector::editHandleAmplitude),
+        static_cast<FieldGetMethodSig >(&RandomMovementParticleAffector::getHandleAmplitude));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "InterpolationType",
+        "",
+        InterpolationTypeFieldId, InterpolationTypeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&RandomMovementParticleAffector::editHandleInterpolationType),
+        static_cast<FieldGetMethodSig >(&RandomMovementParticleAffector::getHandleInterpolationType));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFVec3f::Description(
+        SFVec3f::getClassType(),
+        "Phase",
+        "",
+        PhaseFieldId, PhaseFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&RandomMovementParticleAffector::editHandlePhase),
+        static_cast<FieldGetMethodSig >(&RandomMovementParticleAffector::getHandlePhase));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Persistance",
+        "",
+        PersistanceFieldId, PersistanceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&RandomMovementParticleAffector::editHandlePersistance),
+        static_cast<FieldGetMethodSig >(&RandomMovementParticleAffector::getHandlePersistance));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Frequency",
+        "",
+        FrequencyFieldId, FrequencyFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&RandomMovementParticleAffector::editHandleFrequency),
+        static_cast<FieldGetMethodSig >(&RandomMovementParticleAffector::getHandleFrequency));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "Octaves",
+        "",
+        OctavesFieldId, OctavesFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&RandomMovementParticleAffector::editHandleOctaves),
+        static_cast<FieldGetMethodSig >(&RandomMovementParticleAffector::getHandleOctaves));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+RandomMovementParticleAffectorBase::TypeObject RandomMovementParticleAffectorBase::_type(
+    RandomMovementParticleAffectorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&RandomMovementParticleAffectorBase::createEmptyLocal),
     RandomMovementParticleAffector::initMethod,
-    _desc,
-    sizeof(_desc));
+    RandomMovementParticleAffector::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&RandomMovementParticleAffector::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"RandomMovementParticleAffector\"\n"
+    "\tparent=\"ParticleAffector\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com), Daniel Guilliams           \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"AttributeAffected\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"RandomMovementParticleAffector::POSITION_ATTRIBUTE\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"PerlinDistribution\"\n"
+    "\t\ttype=\"PerlinNoiseDistribution1D\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Amplitude\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"3.000\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InterpolationType\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"PerlinNoiseDistribution1D::LINEAR\"\n"
+    "\t\tdefaultHeader=\"Distributions/1D/OSGPerlinNoiseDistribution1D.h\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\t\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Phase\"\n"
+    "\t\ttype=\"Vec3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Persistance\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.25f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Frequency\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Octaves\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"4\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(RandomMovementParticleAffectorBase, RandomMovementParticleAffectorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &RandomMovementParticleAffectorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &RandomMovementParticleAffectorBase::getType(void) const 
+FieldContainerType &RandomMovementParticleAffectorBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr RandomMovementParticleAffectorBase::shallowCopy(void) const 
-{ 
-    RandomMovementParticleAffectorPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const RandomMovementParticleAffector *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 RandomMovementParticleAffectorBase::getContainerSize(void) const 
-{ 
-    return sizeof(RandomMovementParticleAffector); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void RandomMovementParticleAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &RandomMovementParticleAffectorBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<RandomMovementParticleAffectorBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void RandomMovementParticleAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 RandomMovementParticleAffectorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((RandomMovementParticleAffectorBase *) &other, whichField, sInfo);
+    return sizeof(RandomMovementParticleAffector);
 }
-void RandomMovementParticleAffectorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFUInt32 *RandomMovementParticleAffectorBase::editSFAttributeAffected(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(AttributeAffectedFieldMask);
+
+    return &_sfAttributeAffected;
 }
 
-void RandomMovementParticleAffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFUInt32 *RandomMovementParticleAffectorBase::getSFAttributeAffected(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfAttributeAffected;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-RandomMovementParticleAffectorBase::RandomMovementParticleAffectorBase(void) :
-    _sfAttributeAffected      (UInt32(RandomMovementParticleAffector::POSITION_ATTRIBUTE)), 
-    _sfPerlinDistribution     (PerlinNoiseDistribution1DPtr(NullFC)), 
-    _sfAmplitude              (Real32(3.000)), 
-    _sfInterpolationType      (UInt32(PerlinNoiseDistribution1D::LINEAR)), 
-    _sfPhase                  (Vec3f(0.0,0.0,0.0)), 
-    _sfPersistance            (Real32(0.25f)), 
-    _sfFrequency              (Real32(1.0f)), 
-    _sfOctaves                (UInt32(4)), 
-    Inherited() 
+//! Get the RandomMovementParticleAffector::_sfPerlinDistribution field.
+const SFUnrecPerlinNoiseDistribution1DPtr *RandomMovementParticleAffectorBase::getSFPerlinDistribution(void) const
 {
+    return &_sfPerlinDistribution;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-RandomMovementParticleAffectorBase::RandomMovementParticleAffectorBase(const RandomMovementParticleAffectorBase &source) :
-    _sfAttributeAffected      (source._sfAttributeAffected      ), 
-    _sfPerlinDistribution     (source._sfPerlinDistribution     ), 
-    _sfAmplitude              (source._sfAmplitude              ), 
-    _sfInterpolationType      (source._sfInterpolationType      ), 
-    _sfPhase                  (source._sfPhase                  ), 
-    _sfPersistance            (source._sfPersistance            ), 
-    _sfFrequency              (source._sfFrequency              ), 
-    _sfOctaves                (source._sfOctaves                ), 
-    Inherited                 (source)
+SFUnrecPerlinNoiseDistribution1DPtr *RandomMovementParticleAffectorBase::editSFPerlinDistribution(void)
 {
+    editSField(PerlinDistributionFieldMask);
+
+    return &_sfPerlinDistribution;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-RandomMovementParticleAffectorBase::~RandomMovementParticleAffectorBase(void)
+SFReal32 *RandomMovementParticleAffectorBase::editSFAmplitude(void)
 {
+    editSField(AmplitudeFieldMask);
+
+    return &_sfAmplitude;
 }
+
+const SFReal32 *RandomMovementParticleAffectorBase::getSFAmplitude(void) const
+{
+    return &_sfAmplitude;
+}
+
+
+SFUInt32 *RandomMovementParticleAffectorBase::editSFInterpolationType(void)
+{
+    editSField(InterpolationTypeFieldMask);
+
+    return &_sfInterpolationType;
+}
+
+const SFUInt32 *RandomMovementParticleAffectorBase::getSFInterpolationType(void) const
+{
+    return &_sfInterpolationType;
+}
+
+
+SFVec3f *RandomMovementParticleAffectorBase::editSFPhase(void)
+{
+    editSField(PhaseFieldMask);
+
+    return &_sfPhase;
+}
+
+const SFVec3f *RandomMovementParticleAffectorBase::getSFPhase(void) const
+{
+    return &_sfPhase;
+}
+
+
+SFReal32 *RandomMovementParticleAffectorBase::editSFPersistance(void)
+{
+    editSField(PersistanceFieldMask);
+
+    return &_sfPersistance;
+}
+
+const SFReal32 *RandomMovementParticleAffectorBase::getSFPersistance(void) const
+{
+    return &_sfPersistance;
+}
+
+
+SFReal32 *RandomMovementParticleAffectorBase::editSFFrequency(void)
+{
+    editSField(FrequencyFieldMask);
+
+    return &_sfFrequency;
+}
+
+const SFReal32 *RandomMovementParticleAffectorBase::getSFFrequency(void) const
+{
+    return &_sfFrequency;
+}
+
+
+SFUInt32 *RandomMovementParticleAffectorBase::editSFOctaves(void)
+{
+    editSField(OctavesFieldMask);
+
+    return &_sfOctaves;
+}
+
+const SFUInt32 *RandomMovementParticleAffectorBase::getSFOctaves(void) const
+{
+    return &_sfOctaves;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 RandomMovementParticleAffectorBase::getBinSize(const BitVector &whichField)
+UInt32 RandomMovementParticleAffectorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -286,48 +500,40 @@ UInt32 RandomMovementParticleAffectorBase::getBinSize(const BitVector &whichFiel
     {
         returnValue += _sfAttributeAffected.getBinSize();
     }
-
     if(FieldBits::NoField != (PerlinDistributionFieldMask & whichField))
     {
         returnValue += _sfPerlinDistribution.getBinSize();
     }
-
     if(FieldBits::NoField != (AmplitudeFieldMask & whichField))
     {
         returnValue += _sfAmplitude.getBinSize();
     }
-
     if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
     {
         returnValue += _sfInterpolationType.getBinSize();
     }
-
     if(FieldBits::NoField != (PhaseFieldMask & whichField))
     {
         returnValue += _sfPhase.getBinSize();
     }
-
     if(FieldBits::NoField != (PersistanceFieldMask & whichField))
     {
         returnValue += _sfPersistance.getBinSize();
     }
-
     if(FieldBits::NoField != (FrequencyFieldMask & whichField))
     {
         returnValue += _sfFrequency.getBinSize();
     }
-
     if(FieldBits::NoField != (OctavesFieldMask & whichField))
     {
         returnValue += _sfOctaves.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void RandomMovementParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void RandomMovementParticleAffectorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -335,47 +541,38 @@ void RandomMovementParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem
     {
         _sfAttributeAffected.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (PerlinDistributionFieldMask & whichField))
     {
         _sfPerlinDistribution.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (AmplitudeFieldMask & whichField))
     {
         _sfAmplitude.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
     {
         _sfInterpolationType.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (PhaseFieldMask & whichField))
     {
         _sfPhase.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (PersistanceFieldMask & whichField))
     {
         _sfPersistance.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FrequencyFieldMask & whichField))
     {
         _sfFrequency.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (OctavesFieldMask & whichField))
     {
         _sfOctaves.copyToBin(pMem);
     }
-
-
 }
 
-void RandomMovementParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void RandomMovementParticleAffectorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -383,139 +580,446 @@ void RandomMovementParticleAffectorBase::copyFromBin(      BinaryDataHandler &pM
     {
         _sfAttributeAffected.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (PerlinDistributionFieldMask & whichField))
     {
         _sfPerlinDistribution.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (AmplitudeFieldMask & whichField))
     {
         _sfAmplitude.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
     {
         _sfInterpolationType.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (PhaseFieldMask & whichField))
     {
         _sfPhase.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (PersistanceFieldMask & whichField))
     {
         _sfPersistance.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FrequencyFieldMask & whichField))
     {
         _sfFrequency.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (OctavesFieldMask & whichField))
     {
         _sfOctaves.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void RandomMovementParticleAffectorBase::executeSyncImpl(      RandomMovementParticleAffectorBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+RandomMovementParticleAffectorTransitPtr RandomMovementParticleAffectorBase::createLocal(BitVector bFlags)
 {
+    RandomMovementParticleAffectorTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (AttributeAffectedFieldMask & whichField))
-        _sfAttributeAffected.syncWith(pOther->_sfAttributeAffected);
+        fc = dynamic_pointer_cast<RandomMovementParticleAffector>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (PerlinDistributionFieldMask & whichField))
-        _sfPerlinDistribution.syncWith(pOther->_sfPerlinDistribution);
-
-    if(FieldBits::NoField != (AmplitudeFieldMask & whichField))
-        _sfAmplitude.syncWith(pOther->_sfAmplitude);
-
-    if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
-        _sfInterpolationType.syncWith(pOther->_sfInterpolationType);
-
-    if(FieldBits::NoField != (PhaseFieldMask & whichField))
-        _sfPhase.syncWith(pOther->_sfPhase);
-
-    if(FieldBits::NoField != (PersistanceFieldMask & whichField))
-        _sfPersistance.syncWith(pOther->_sfPersistance);
-
-    if(FieldBits::NoField != (FrequencyFieldMask & whichField))
-        _sfFrequency.syncWith(pOther->_sfFrequency);
-
-    if(FieldBits::NoField != (OctavesFieldMask & whichField))
-        _sfOctaves.syncWith(pOther->_sfOctaves);
-
-
-}
-#else
-void RandomMovementParticleAffectorBase::executeSyncImpl(      RandomMovementParticleAffectorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (AttributeAffectedFieldMask & whichField))
-        _sfAttributeAffected.syncWith(pOther->_sfAttributeAffected);
-
-    if(FieldBits::NoField != (PerlinDistributionFieldMask & whichField))
-        _sfPerlinDistribution.syncWith(pOther->_sfPerlinDistribution);
-
-    if(FieldBits::NoField != (AmplitudeFieldMask & whichField))
-        _sfAmplitude.syncWith(pOther->_sfAmplitude);
-
-    if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
-        _sfInterpolationType.syncWith(pOther->_sfInterpolationType);
-
-    if(FieldBits::NoField != (PhaseFieldMask & whichField))
-        _sfPhase.syncWith(pOther->_sfPhase);
-
-    if(FieldBits::NoField != (PersistanceFieldMask & whichField))
-        _sfPersistance.syncWith(pOther->_sfPersistance);
-
-    if(FieldBits::NoField != (FrequencyFieldMask & whichField))
-        _sfFrequency.syncWith(pOther->_sfFrequency);
-
-    if(FieldBits::NoField != (OctavesFieldMask & whichField))
-        _sfOctaves.syncWith(pOther->_sfOctaves);
-
-
-
+    return fc;
 }
 
-void RandomMovementParticleAffectorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+RandomMovementParticleAffectorTransitPtr RandomMovementParticleAffectorBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    RandomMovementParticleAffectorTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<RandomMovementParticleAffector>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+RandomMovementParticleAffectorTransitPtr RandomMovementParticleAffectorBase::create(void)
+{
+    RandomMovementParticleAffectorTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<RandomMovementParticleAffector>(tmpPtr);
+    }
+
+    return fc;
+}
+
+RandomMovementParticleAffector *RandomMovementParticleAffectorBase::createEmptyLocal(BitVector bFlags)
+{
+    RandomMovementParticleAffector *returnValue;
+
+    newPtr<RandomMovementParticleAffector>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+RandomMovementParticleAffector *RandomMovementParticleAffectorBase::createEmpty(void)
+{
+    RandomMovementParticleAffector *returnValue;
+
+    newPtr<RandomMovementParticleAffector>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr RandomMovementParticleAffectorBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    RandomMovementParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const RandomMovementParticleAffector *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr RandomMovementParticleAffectorBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    RandomMovementParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const RandomMovementParticleAffector *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr RandomMovementParticleAffectorBase::shallowCopy(void) const
+{
+    RandomMovementParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const RandomMovementParticleAffector *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+RandomMovementParticleAffectorBase::RandomMovementParticleAffectorBase(void) :
+    Inherited(),
+    _sfAttributeAffected      (UInt32(RandomMovementParticleAffector::POSITION_ATTRIBUTE)),
+    _sfPerlinDistribution     (NULL),
+    _sfAmplitude              (Real32(3.000)),
+    _sfInterpolationType      (UInt32(PerlinNoiseDistribution1D::LINEAR)),
+    _sfPhase                  (Vec3f(0.0,0.0,0.0)),
+    _sfPersistance            (Real32(0.25f)),
+    _sfFrequency              (Real32(1.0f)),
+    _sfOctaves                (UInt32(4))
+{
+}
+
+RandomMovementParticleAffectorBase::RandomMovementParticleAffectorBase(const RandomMovementParticleAffectorBase &source) :
+    Inherited(source),
+    _sfAttributeAffected      (source._sfAttributeAffected      ),
+    _sfPerlinDistribution     (NULL),
+    _sfAmplitude              (source._sfAmplitude              ),
+    _sfInterpolationType      (source._sfInterpolationType      ),
+    _sfPhase                  (source._sfPhase                  ),
+    _sfPersistance            (source._sfPersistance            ),
+    _sfFrequency              (source._sfFrequency              ),
+    _sfOctaves                (source._sfOctaves                )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+RandomMovementParticleAffectorBase::~RandomMovementParticleAffectorBase(void)
+{
+}
+
+void RandomMovementParticleAffectorBase::onCreate(const RandomMovementParticleAffector *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        RandomMovementParticleAffector *pThis = static_cast<RandomMovementParticleAffector *>(this);
+
+        pThis->setPerlinDistribution(source->getPerlinDistribution());
+    }
+}
+
+GetFieldHandlePtr RandomMovementParticleAffectorBase::getHandleAttributeAffected (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfAttributeAffected,
+             this->getType().getFieldDesc(AttributeAffectedFieldId),
+             const_cast<RandomMovementParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr RandomMovementParticleAffectorBase::editHandleAttributeAffected(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfAttributeAffected,
+             this->getType().getFieldDesc(AttributeAffectedFieldId),
+             this));
+
+
+    editSField(AttributeAffectedFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr RandomMovementParticleAffectorBase::getHandlePerlinDistribution (void) const
+{
+    SFUnrecPerlinNoiseDistribution1DPtr::GetHandlePtr returnValue(
+        new  SFUnrecPerlinNoiseDistribution1DPtr::GetHandle(
+             &_sfPerlinDistribution,
+             this->getType().getFieldDesc(PerlinDistributionFieldId),
+             const_cast<RandomMovementParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr RandomMovementParticleAffectorBase::editHandlePerlinDistribution(void)
+{
+    SFUnrecPerlinNoiseDistribution1DPtr::EditHandlePtr returnValue(
+        new  SFUnrecPerlinNoiseDistribution1DPtr::EditHandle(
+             &_sfPerlinDistribution,
+             this->getType().getFieldDesc(PerlinDistributionFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&RandomMovementParticleAffector::setPerlinDistribution,
+                    static_cast<RandomMovementParticleAffector *>(this), _1));
+
+    editSField(PerlinDistributionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr RandomMovementParticleAffectorBase::getHandleAmplitude       (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfAmplitude,
+             this->getType().getFieldDesc(AmplitudeFieldId),
+             const_cast<RandomMovementParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr RandomMovementParticleAffectorBase::editHandleAmplitude      (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfAmplitude,
+             this->getType().getFieldDesc(AmplitudeFieldId),
+             this));
+
+
+    editSField(AmplitudeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr RandomMovementParticleAffectorBase::getHandleInterpolationType (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfInterpolationType,
+             this->getType().getFieldDesc(InterpolationTypeFieldId),
+             const_cast<RandomMovementParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr RandomMovementParticleAffectorBase::editHandleInterpolationType(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfInterpolationType,
+             this->getType().getFieldDesc(InterpolationTypeFieldId),
+             this));
+
+
+    editSField(InterpolationTypeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr RandomMovementParticleAffectorBase::getHandlePhase           (void) const
+{
+    SFVec3f::GetHandlePtr returnValue(
+        new  SFVec3f::GetHandle(
+             &_sfPhase,
+             this->getType().getFieldDesc(PhaseFieldId),
+             const_cast<RandomMovementParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr RandomMovementParticleAffectorBase::editHandlePhase          (void)
+{
+    SFVec3f::EditHandlePtr returnValue(
+        new  SFVec3f::EditHandle(
+             &_sfPhase,
+             this->getType().getFieldDesc(PhaseFieldId),
+             this));
+
+
+    editSField(PhaseFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr RandomMovementParticleAffectorBase::getHandlePersistance     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfPersistance,
+             this->getType().getFieldDesc(PersistanceFieldId),
+             const_cast<RandomMovementParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr RandomMovementParticleAffectorBase::editHandlePersistance    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfPersistance,
+             this->getType().getFieldDesc(PersistanceFieldId),
+             this));
+
+
+    editSField(PersistanceFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr RandomMovementParticleAffectorBase::getHandleFrequency       (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfFrequency,
+             this->getType().getFieldDesc(FrequencyFieldId),
+             const_cast<RandomMovementParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr RandomMovementParticleAffectorBase::editHandleFrequency      (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfFrequency,
+             this->getType().getFieldDesc(FrequencyFieldId),
+             this));
+
+
+    editSField(FrequencyFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr RandomMovementParticleAffectorBase::getHandleOctaves         (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfOctaves,
+             this->getType().getFieldDesc(OctavesFieldId),
+             const_cast<RandomMovementParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr RandomMovementParticleAffectorBase::editHandleOctaves        (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfOctaves,
+             this->getType().getFieldDesc(OctavesFieldId),
+             this));
+
+
+    editSField(OctavesFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void RandomMovementParticleAffectorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    RandomMovementParticleAffector *pThis = static_cast<RandomMovementParticleAffector *>(this);
+
+    pThis->execSync(static_cast<RandomMovementParticleAffector *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *RandomMovementParticleAffectorBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    RandomMovementParticleAffector *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const RandomMovementParticleAffector *>(pRefAspect),
+                  dynamic_cast<const RandomMovementParticleAffector *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<RandomMovementParticleAffectorPtr>::_type("RandomMovementParticleAffectorPtr", "ParticleAffectorPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(RandomMovementParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(RandomMovementParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+void RandomMovementParticleAffectorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<RandomMovementParticleAffector *>(this)->setPerlinDistribution(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,233 +50,447 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEAIRPARTICLEAFFECTORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGNode.h"                    // Beacon Class
 
 #include "OSGAirParticleAffectorBase.h"
 #include "OSGAirParticleAffector.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  AirParticleAffectorBase::MagnitudeFieldMask = 
-    (TypeTraits<BitVector>::One << AirParticleAffectorBase::MagnitudeFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  AirParticleAffectorBase::DirectionFieldMask = 
-    (TypeTraits<BitVector>::One << AirParticleAffectorBase::DirectionFieldId);
+/*! \class OSG::AirParticleAffector
+    
+ */
 
-const OSG::BitVector  AirParticleAffectorBase::AttenuationFieldMask = 
-    (TypeTraits<BitVector>::One << AirParticleAffectorBase::AttenuationFieldId);
-
-const OSG::BitVector  AirParticleAffectorBase::SpeedFieldMask = 
-    (TypeTraits<BitVector>::One << AirParticleAffectorBase::SpeedFieldId);
-
-const OSG::BitVector  AirParticleAffectorBase::SpreadFieldMask = 
-    (TypeTraits<BitVector>::One << AirParticleAffectorBase::SpreadFieldId);
-
-const OSG::BitVector  AirParticleAffectorBase::MaxDistanceFieldMask = 
-    (TypeTraits<BitVector>::One << AirParticleAffectorBase::MaxDistanceFieldId);
-
-const OSG::BitVector  AirParticleAffectorBase::UseSpreadFieldMask = 
-    (TypeTraits<BitVector>::One << AirParticleAffectorBase::UseSpreadFieldId);
-
-const OSG::BitVector  AirParticleAffectorBase::BeaconFieldMask = 
-    (TypeTraits<BitVector>::One << AirParticleAffectorBase::BeaconFieldId);
-
-const OSG::BitVector AirParticleAffectorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Real32          AirParticleAffectorBase::_sfMagnitude
     
 */
+
 /*! \var Vec3f           AirParticleAffectorBase::_sfDirection
     
 */
+
 /*! \var Real32          AirParticleAffectorBase::_sfAttenuation
     
 */
+
 /*! \var Real32          AirParticleAffectorBase::_sfSpeed
     
 */
+
 /*! \var Real32          AirParticleAffectorBase::_sfSpread
     
 */
+
 /*! \var Real32          AirParticleAffectorBase::_sfMaxDistance
     
 */
+
 /*! \var bool            AirParticleAffectorBase::_sfUseSpread
     
 */
-/*! \var NodePtr         AirParticleAffectorBase::_sfBeacon
+
+/*! \var Node *          AirParticleAffectorBase::_sfBeacon
     
 */
 
-//! AirParticleAffector description
 
-FieldDescription *AirParticleAffectorBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<AirParticleAffector *>::_type("AirParticleAffectorPtr", "ParticleAffectorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(AirParticleAffector *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           AirParticleAffector *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           AirParticleAffector *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void AirParticleAffectorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Magnitude", 
-                     MagnitudeFieldId, MagnitudeFieldMask,
-                     false,
-                     (FieldAccessMethod) &AirParticleAffectorBase::getSFMagnitude),
-    new FieldDescription(SFVec3f::getClassType(), 
-                     "Direction", 
-                     DirectionFieldId, DirectionFieldMask,
-                     false,
-                     (FieldAccessMethod) &AirParticleAffectorBase::getSFDirection),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Attenuation", 
-                     AttenuationFieldId, AttenuationFieldMask,
-                     false,
-                     (FieldAccessMethod) &AirParticleAffectorBase::getSFAttenuation),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Speed", 
-                     SpeedFieldId, SpeedFieldMask,
-                     false,
-                     (FieldAccessMethod) &AirParticleAffectorBase::getSFSpeed),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Spread", 
-                     SpreadFieldId, SpreadFieldMask,
-                     false,
-                     (FieldAccessMethod) &AirParticleAffectorBase::getSFSpread),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "MaxDistance", 
-                     MaxDistanceFieldId, MaxDistanceFieldMask,
-                     false,
-                     (FieldAccessMethod) &AirParticleAffectorBase::getSFMaxDistance),
-    new FieldDescription(SFBool::getClassType(), 
-                     "UseSpread", 
-                     UseSpreadFieldId, UseSpreadFieldMask,
-                     false,
-                     (FieldAccessMethod) &AirParticleAffectorBase::getSFUseSpread),
-    new FieldDescription(SFNodePtr::getClassType(), 
-                     "Beacon", 
-                     BeaconFieldId, BeaconFieldMask,
-                     false,
-                     (FieldAccessMethod) &AirParticleAffectorBase::getSFBeacon)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType AirParticleAffectorBase::_type(
-    "AirParticleAffector",
-    "ParticleAffector",
-    NULL,
-    (PrototypeCreateF) &AirParticleAffectorBase::createEmpty,
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Magnitude",
+        "",
+        MagnitudeFieldId, MagnitudeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AirParticleAffector::editHandleMagnitude),
+        static_cast<FieldGetMethodSig >(&AirParticleAffector::getHandleMagnitude));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFVec3f::Description(
+        SFVec3f::getClassType(),
+        "Direction",
+        "",
+        DirectionFieldId, DirectionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AirParticleAffector::editHandleDirection),
+        static_cast<FieldGetMethodSig >(&AirParticleAffector::getHandleDirection));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Attenuation",
+        "",
+        AttenuationFieldId, AttenuationFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AirParticleAffector::editHandleAttenuation),
+        static_cast<FieldGetMethodSig >(&AirParticleAffector::getHandleAttenuation));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Speed",
+        "",
+        SpeedFieldId, SpeedFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AirParticleAffector::editHandleSpeed),
+        static_cast<FieldGetMethodSig >(&AirParticleAffector::getHandleSpeed));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Spread",
+        "",
+        SpreadFieldId, SpreadFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AirParticleAffector::editHandleSpread),
+        static_cast<FieldGetMethodSig >(&AirParticleAffector::getHandleSpread));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "MaxDistance",
+        "",
+        MaxDistanceFieldId, MaxDistanceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AirParticleAffector::editHandleMaxDistance),
+        static_cast<FieldGetMethodSig >(&AirParticleAffector::getHandleMaxDistance));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "UseSpread",
+        "",
+        UseSpreadFieldId, UseSpreadFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AirParticleAffector::editHandleUseSpread),
+        static_cast<FieldGetMethodSig >(&AirParticleAffector::getHandleUseSpread));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecNodePtr::Description(
+        SFUnrecNodePtr::getClassType(),
+        "Beacon",
+        "",
+        BeaconFieldId, BeaconFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AirParticleAffector::editHandleBeacon),
+        static_cast<FieldGetMethodSig >(&AirParticleAffector::getHandleBeacon));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+AirParticleAffectorBase::TypeObject AirParticleAffectorBase::_type(
+    AirParticleAffectorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&AirParticleAffectorBase::createEmptyLocal),
     AirParticleAffector::initMethod,
-    _desc,
-    sizeof(_desc));
+    AirParticleAffector::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&AirParticleAffector::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"AirParticleAffector\"\n"
+    "\tparent=\"ParticleAffector\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com), Daniel Guilliams           \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"Magnitude\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"5.000\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Direction\"\n"
+    "\t\ttype=\"Vec3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0, 0.0, 0.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Attenuation\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"2.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Speed\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Spread\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.5\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MaxDistance\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"-1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"UseSpread\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Beacon\"\n"
+    "\t\ttype=\"Node\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(AirParticleAffectorBase, AirParticleAffectorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &AirParticleAffectorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &AirParticleAffectorBase::getType(void) const 
+FieldContainerType &AirParticleAffectorBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr AirParticleAffectorBase::shallowCopy(void) const 
-{ 
-    AirParticleAffectorPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const AirParticleAffector *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 AirParticleAffectorBase::getContainerSize(void) const 
-{ 
-    return sizeof(AirParticleAffector); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void AirParticleAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &AirParticleAffectorBase::getType(void) const
 {
-    this->executeSyncImpl((AirParticleAffectorBase *) &other, whichField);
+    return _type;
 }
-#else
-void AirParticleAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 AirParticleAffectorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((AirParticleAffectorBase *) &other, whichField, sInfo);
+    return sizeof(AirParticleAffector);
 }
-void AirParticleAffectorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFReal32 *AirParticleAffectorBase::editSFMagnitude(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(MagnitudeFieldMask);
+
+    return &_sfMagnitude;
 }
 
-void AirParticleAffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFReal32 *AirParticleAffectorBase::getSFMagnitude(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfMagnitude;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-AirParticleAffectorBase::AirParticleAffectorBase(void) :
-    _sfMagnitude              (Real32(5.000)), 
-    _sfDirection              (Vec3f(1.0, 0.0, 0.0)), 
-    _sfAttenuation            (Real32(2.0)), 
-    _sfSpeed                  (Real32(1.0)), 
-    _sfSpread                 (Real32(0.5)), 
-    _sfMaxDistance            (Real32(-1.0)), 
-    _sfUseSpread              (bool(false)), 
-    _sfBeacon                 (NodePtr(NullFC)), 
-    Inherited() 
+SFVec3f *AirParticleAffectorBase::editSFDirection(void)
 {
+    editSField(DirectionFieldMask);
+
+    return &_sfDirection;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-AirParticleAffectorBase::AirParticleAffectorBase(const AirParticleAffectorBase &source) :
-    _sfMagnitude              (source._sfMagnitude              ), 
-    _sfDirection              (source._sfDirection              ), 
-    _sfAttenuation            (source._sfAttenuation            ), 
-    _sfSpeed                  (source._sfSpeed                  ), 
-    _sfSpread                 (source._sfSpread                 ), 
-    _sfMaxDistance            (source._sfMaxDistance            ), 
-    _sfUseSpread              (source._sfUseSpread              ), 
-    _sfBeacon                 (source._sfBeacon                 ), 
-    Inherited                 (source)
+const SFVec3f *AirParticleAffectorBase::getSFDirection(void) const
 {
+    return &_sfDirection;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-AirParticleAffectorBase::~AirParticleAffectorBase(void)
+SFReal32 *AirParticleAffectorBase::editSFAttenuation(void)
 {
+    editSField(AttenuationFieldMask);
+
+    return &_sfAttenuation;
 }
+
+const SFReal32 *AirParticleAffectorBase::getSFAttenuation(void) const
+{
+    return &_sfAttenuation;
+}
+
+
+SFReal32 *AirParticleAffectorBase::editSFSpeed(void)
+{
+    editSField(SpeedFieldMask);
+
+    return &_sfSpeed;
+}
+
+const SFReal32 *AirParticleAffectorBase::getSFSpeed(void) const
+{
+    return &_sfSpeed;
+}
+
+
+SFReal32 *AirParticleAffectorBase::editSFSpread(void)
+{
+    editSField(SpreadFieldMask);
+
+    return &_sfSpread;
+}
+
+const SFReal32 *AirParticleAffectorBase::getSFSpread(void) const
+{
+    return &_sfSpread;
+}
+
+
+SFReal32 *AirParticleAffectorBase::editSFMaxDistance(void)
+{
+    editSField(MaxDistanceFieldMask);
+
+    return &_sfMaxDistance;
+}
+
+const SFReal32 *AirParticleAffectorBase::getSFMaxDistance(void) const
+{
+    return &_sfMaxDistance;
+}
+
+
+SFBool *AirParticleAffectorBase::editSFUseSpread(void)
+{
+    editSField(UseSpreadFieldMask);
+
+    return &_sfUseSpread;
+}
+
+const SFBool *AirParticleAffectorBase::getSFUseSpread(void) const
+{
+    return &_sfUseSpread;
+}
+
+
+//! Get the AirParticleAffector::_sfBeacon field.
+const SFUnrecNodePtr *AirParticleAffectorBase::getSFBeacon(void) const
+{
+    return &_sfBeacon;
+}
+
+SFUnrecNodePtr      *AirParticleAffectorBase::editSFBeacon         (void)
+{
+    editSField(BeaconFieldMask);
+
+    return &_sfBeacon;
+}
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 AirParticleAffectorBase::getBinSize(const BitVector &whichField)
+UInt32 AirParticleAffectorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -284,48 +498,40 @@ UInt32 AirParticleAffectorBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfMagnitude.getBinSize();
     }
-
     if(FieldBits::NoField != (DirectionFieldMask & whichField))
     {
         returnValue += _sfDirection.getBinSize();
     }
-
     if(FieldBits::NoField != (AttenuationFieldMask & whichField))
     {
         returnValue += _sfAttenuation.getBinSize();
     }
-
     if(FieldBits::NoField != (SpeedFieldMask & whichField))
     {
         returnValue += _sfSpeed.getBinSize();
     }
-
     if(FieldBits::NoField != (SpreadFieldMask & whichField))
     {
         returnValue += _sfSpread.getBinSize();
     }
-
     if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
     {
         returnValue += _sfMaxDistance.getBinSize();
     }
-
     if(FieldBits::NoField != (UseSpreadFieldMask & whichField))
     {
         returnValue += _sfUseSpread.getBinSize();
     }
-
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
     {
         returnValue += _sfBeacon.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void AirParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void AirParticleAffectorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -333,47 +539,38 @@ void AirParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfMagnitude.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DirectionFieldMask & whichField))
     {
         _sfDirection.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (AttenuationFieldMask & whichField))
     {
         _sfAttenuation.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SpeedFieldMask & whichField))
     {
         _sfSpeed.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SpreadFieldMask & whichField))
     {
         _sfSpread.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
     {
         _sfMaxDistance.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (UseSpreadFieldMask & whichField))
     {
         _sfUseSpread.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
     {
         _sfBeacon.copyToBin(pMem);
     }
-
-
 }
 
-void AirParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void AirParticleAffectorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -381,159 +578,446 @@ void AirParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfMagnitude.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DirectionFieldMask & whichField))
     {
         _sfDirection.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (AttenuationFieldMask & whichField))
     {
         _sfAttenuation.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SpeedFieldMask & whichField))
     {
         _sfSpeed.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SpreadFieldMask & whichField))
     {
         _sfSpread.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
     {
         _sfMaxDistance.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (UseSpreadFieldMask & whichField))
     {
         _sfUseSpread.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
     {
         _sfBeacon.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void AirParticleAffectorBase::executeSyncImpl(      AirParticleAffectorBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+AirParticleAffectorTransitPtr AirParticleAffectorBase::createLocal(BitVector bFlags)
 {
+    AirParticleAffectorTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (MagnitudeFieldMask & whichField))
-        _sfMagnitude.syncWith(pOther->_sfMagnitude);
+        fc = dynamic_pointer_cast<AirParticleAffector>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (DirectionFieldMask & whichField))
-        _sfDirection.syncWith(pOther->_sfDirection);
-
-    if(FieldBits::NoField != (AttenuationFieldMask & whichField))
-        _sfAttenuation.syncWith(pOther->_sfAttenuation);
-
-    if(FieldBits::NoField != (SpeedFieldMask & whichField))
-        _sfSpeed.syncWith(pOther->_sfSpeed);
-
-    if(FieldBits::NoField != (SpreadFieldMask & whichField))
-        _sfSpread.syncWith(pOther->_sfSpread);
-
-    if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
-        _sfMaxDistance.syncWith(pOther->_sfMaxDistance);
-
-    if(FieldBits::NoField != (UseSpreadFieldMask & whichField))
-        _sfUseSpread.syncWith(pOther->_sfUseSpread);
-
-    if(FieldBits::NoField != (BeaconFieldMask & whichField))
-        _sfBeacon.syncWith(pOther->_sfBeacon);
-
-
-}
-#else
-void AirParticleAffectorBase::executeSyncImpl(      AirParticleAffectorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (MagnitudeFieldMask & whichField))
-        _sfMagnitude.syncWith(pOther->_sfMagnitude);
-
-    if(FieldBits::NoField != (DirectionFieldMask & whichField))
-        _sfDirection.syncWith(pOther->_sfDirection);
-
-    if(FieldBits::NoField != (AttenuationFieldMask & whichField))
-        _sfAttenuation.syncWith(pOther->_sfAttenuation);
-
-    if(FieldBits::NoField != (SpeedFieldMask & whichField))
-        _sfSpeed.syncWith(pOther->_sfSpeed);
-
-    if(FieldBits::NoField != (SpreadFieldMask & whichField))
-        _sfSpread.syncWith(pOther->_sfSpread);
-
-    if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
-        _sfMaxDistance.syncWith(pOther->_sfMaxDistance);
-
-    if(FieldBits::NoField != (UseSpreadFieldMask & whichField))
-        _sfUseSpread.syncWith(pOther->_sfUseSpread);
-
-    if(FieldBits::NoField != (BeaconFieldMask & whichField))
-        _sfBeacon.syncWith(pOther->_sfBeacon);
-
-
-
+    return fc;
 }
 
-void AirParticleAffectorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+AirParticleAffectorTransitPtr AirParticleAffectorBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    AirParticleAffectorTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<AirParticleAffector>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+AirParticleAffectorTransitPtr AirParticleAffectorBase::create(void)
+{
+    AirParticleAffectorTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<AirParticleAffector>(tmpPtr);
+    }
+
+    return fc;
+}
+
+AirParticleAffector *AirParticleAffectorBase::createEmptyLocal(BitVector bFlags)
+{
+    AirParticleAffector *returnValue;
+
+    newPtr<AirParticleAffector>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+AirParticleAffector *AirParticleAffectorBase::createEmpty(void)
+{
+    AirParticleAffector *returnValue;
+
+    newPtr<AirParticleAffector>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr AirParticleAffectorBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    AirParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const AirParticleAffector *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr AirParticleAffectorBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    AirParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const AirParticleAffector *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr AirParticleAffectorBase::shallowCopy(void) const
+{
+    AirParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const AirParticleAffector *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+AirParticleAffectorBase::AirParticleAffectorBase(void) :
+    Inherited(),
+    _sfMagnitude              (Real32(5.000)),
+    _sfDirection              (Vec3f(1.0, 0.0, 0.0)),
+    _sfAttenuation            (Real32(2.0)),
+    _sfSpeed                  (Real32(1.0)),
+    _sfSpread                 (Real32(0.5)),
+    _sfMaxDistance            (Real32(-1.0)),
+    _sfUseSpread              (bool(false)),
+    _sfBeacon                 (NULL)
+{
+}
+
+AirParticleAffectorBase::AirParticleAffectorBase(const AirParticleAffectorBase &source) :
+    Inherited(source),
+    _sfMagnitude              (source._sfMagnitude              ),
+    _sfDirection              (source._sfDirection              ),
+    _sfAttenuation            (source._sfAttenuation            ),
+    _sfSpeed                  (source._sfSpeed                  ),
+    _sfSpread                 (source._sfSpread                 ),
+    _sfMaxDistance            (source._sfMaxDistance            ),
+    _sfUseSpread              (source._sfUseSpread              ),
+    _sfBeacon                 (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+AirParticleAffectorBase::~AirParticleAffectorBase(void)
+{
+}
+
+void AirParticleAffectorBase::onCreate(const AirParticleAffector *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        AirParticleAffector *pThis = static_cast<AirParticleAffector *>(this);
+
+        pThis->setBeacon(source->getBeacon());
+    }
+}
+
+GetFieldHandlePtr AirParticleAffectorBase::getHandleMagnitude       (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMagnitude,
+             this->getType().getFieldDesc(MagnitudeFieldId),
+             const_cast<AirParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AirParticleAffectorBase::editHandleMagnitude      (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMagnitude,
+             this->getType().getFieldDesc(MagnitudeFieldId),
+             this));
+
+
+    editSField(MagnitudeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AirParticleAffectorBase::getHandleDirection       (void) const
+{
+    SFVec3f::GetHandlePtr returnValue(
+        new  SFVec3f::GetHandle(
+             &_sfDirection,
+             this->getType().getFieldDesc(DirectionFieldId),
+             const_cast<AirParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AirParticleAffectorBase::editHandleDirection      (void)
+{
+    SFVec3f::EditHandlePtr returnValue(
+        new  SFVec3f::EditHandle(
+             &_sfDirection,
+             this->getType().getFieldDesc(DirectionFieldId),
+             this));
+
+
+    editSField(DirectionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AirParticleAffectorBase::getHandleAttenuation     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfAttenuation,
+             this->getType().getFieldDesc(AttenuationFieldId),
+             const_cast<AirParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AirParticleAffectorBase::editHandleAttenuation    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfAttenuation,
+             this->getType().getFieldDesc(AttenuationFieldId),
+             this));
+
+
+    editSField(AttenuationFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AirParticleAffectorBase::getHandleSpeed           (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfSpeed,
+             this->getType().getFieldDesc(SpeedFieldId),
+             const_cast<AirParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AirParticleAffectorBase::editHandleSpeed          (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfSpeed,
+             this->getType().getFieldDesc(SpeedFieldId),
+             this));
+
+
+    editSField(SpeedFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AirParticleAffectorBase::getHandleSpread          (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfSpread,
+             this->getType().getFieldDesc(SpreadFieldId),
+             const_cast<AirParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AirParticleAffectorBase::editHandleSpread         (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfSpread,
+             this->getType().getFieldDesc(SpreadFieldId),
+             this));
+
+
+    editSField(SpreadFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AirParticleAffectorBase::getHandleMaxDistance     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMaxDistance,
+             this->getType().getFieldDesc(MaxDistanceFieldId),
+             const_cast<AirParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AirParticleAffectorBase::editHandleMaxDistance    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMaxDistance,
+             this->getType().getFieldDesc(MaxDistanceFieldId),
+             this));
+
+
+    editSField(MaxDistanceFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AirParticleAffectorBase::getHandleUseSpread       (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfUseSpread,
+             this->getType().getFieldDesc(UseSpreadFieldId),
+             const_cast<AirParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AirParticleAffectorBase::editHandleUseSpread      (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfUseSpread,
+             this->getType().getFieldDesc(UseSpreadFieldId),
+             this));
+
+
+    editSField(UseSpreadFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AirParticleAffectorBase::getHandleBeacon          (void) const
+{
+    SFUnrecNodePtr::GetHandlePtr returnValue(
+        new  SFUnrecNodePtr::GetHandle(
+             &_sfBeacon,
+             this->getType().getFieldDesc(BeaconFieldId),
+             const_cast<AirParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AirParticleAffectorBase::editHandleBeacon         (void)
+{
+    SFUnrecNodePtr::EditHandlePtr returnValue(
+        new  SFUnrecNodePtr::EditHandle(
+             &_sfBeacon,
+             this->getType().getFieldDesc(BeaconFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&AirParticleAffector::setBeacon,
+                    static_cast<AirParticleAffector *>(this), _1));
+
+    editSField(BeaconFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void AirParticleAffectorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    AirParticleAffector *pThis = static_cast<AirParticleAffector *>(this);
+
+    pThis->execSync(static_cast<AirParticleAffector *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *AirParticleAffectorBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    AirParticleAffector *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const AirParticleAffector *>(pRefAspect),
+                  dynamic_cast<const AirParticleAffector *>(this));
+
+    return returnValue;
+}
+#endif
+
+void AirParticleAffectorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<AirParticleAffector *>(this)->setBeacon(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<AirParticleAffectorPtr>::_type("AirParticleAffectorPtr", "ParticleAffectorPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(AirParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(AirParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGAIRPARTICLEAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGAIRPARTICLEAFFECTORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGAIRPARTICLEAFFECTORFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

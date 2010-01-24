@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,134 +55,132 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &DistanceParticleAffectorBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 DistanceParticleAffectorBase::getClassTypeId(void) 
+OSG::UInt32 DistanceParticleAffectorBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
+    return _type.getId();
+}
 
+inline
+OSG::UInt16 DistanceParticleAffectorBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
+}
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the DistanceParticleAffector::_sfDistanceFromSource field.
-inline
-SFUInt32 *DistanceParticleAffectorBase::getSFDistanceFromSource(void)
-{
-    return &_sfDistanceFromSource;
-}
-
-//! Get the DistanceParticleAffector::_sfDistanceFromNode field.
-inline
-SFNodePtr *DistanceParticleAffectorBase::getSFDistanceFromNode(void)
-{
-    return &_sfDistanceFromNode;
-}
-
-//! Get the DistanceParticleAffector::_sfParticleSystemNode field.
-inline
-SFNodePtr *DistanceParticleAffectorBase::getSFParticleSystemNode(void)
-{
-    return &_sfParticleSystemNode;
-}
-
-//! Get the DistanceParticleAffector::_sfDistanceFromCamera field.
-inline
-SFCameraPtr *DistanceParticleAffectorBase::getSFDistanceFromCamera(void)
-{
-    return &_sfDistanceFromCamera;
-}
-
-
 //! Get the value of the DistanceParticleAffector::_sfDistanceFromSource field.
+
 inline
-UInt32 &DistanceParticleAffectorBase::getDistanceFromSource(void)
+UInt32 &DistanceParticleAffectorBase::editDistanceFromSource(void)
 {
+    editSField(DistanceFromSourceFieldMask);
+
     return _sfDistanceFromSource.getValue();
 }
 
 //! Get the value of the DistanceParticleAffector::_sfDistanceFromSource field.
 inline
-const UInt32 &DistanceParticleAffectorBase::getDistanceFromSource(void) const
+      UInt32  DistanceParticleAffectorBase::getDistanceFromSource(void) const
 {
     return _sfDistanceFromSource.getValue();
 }
 
 //! Set the value of the DistanceParticleAffector::_sfDistanceFromSource field.
 inline
-void DistanceParticleAffectorBase::setDistanceFromSource(const UInt32 &value)
+void DistanceParticleAffectorBase::setDistanceFromSource(const UInt32 value)
 {
+    editSField(DistanceFromSourceFieldMask);
+
     _sfDistanceFromSource.setValue(value);
 }
 
 //! Get the value of the DistanceParticleAffector::_sfDistanceFromNode field.
 inline
-NodePtr &DistanceParticleAffectorBase::getDistanceFromNode(void)
-{
-    return _sfDistanceFromNode.getValue();
-}
-
-//! Get the value of the DistanceParticleAffector::_sfDistanceFromNode field.
-inline
-const NodePtr &DistanceParticleAffectorBase::getDistanceFromNode(void) const
+Node * DistanceParticleAffectorBase::getDistanceFromNode(void) const
 {
     return _sfDistanceFromNode.getValue();
 }
 
 //! Set the value of the DistanceParticleAffector::_sfDistanceFromNode field.
 inline
-void DistanceParticleAffectorBase::setDistanceFromNode(const NodePtr &value)
+void DistanceParticleAffectorBase::setDistanceFromNode(Node * const value)
 {
+    editSField(DistanceFromNodeFieldMask);
+
     _sfDistanceFromNode.setValue(value);
 }
 
 //! Get the value of the DistanceParticleAffector::_sfParticleSystemNode field.
 inline
-NodePtr &DistanceParticleAffectorBase::getParticleSystemNode(void)
-{
-    return _sfParticleSystemNode.getValue();
-}
-
-//! Get the value of the DistanceParticleAffector::_sfParticleSystemNode field.
-inline
-const NodePtr &DistanceParticleAffectorBase::getParticleSystemNode(void) const
+Node * DistanceParticleAffectorBase::getParticleSystemNode(void) const
 {
     return _sfParticleSystemNode.getValue();
 }
 
 //! Set the value of the DistanceParticleAffector::_sfParticleSystemNode field.
 inline
-void DistanceParticleAffectorBase::setParticleSystemNode(const NodePtr &value)
+void DistanceParticleAffectorBase::setParticleSystemNode(Node * const value)
 {
+    editSField(ParticleSystemNodeFieldMask);
+
     _sfParticleSystemNode.setValue(value);
 }
 
 //! Get the value of the DistanceParticleAffector::_sfDistanceFromCamera field.
 inline
-CameraPtr &DistanceParticleAffectorBase::getDistanceFromCamera(void)
-{
-    return _sfDistanceFromCamera.getValue();
-}
-
-//! Get the value of the DistanceParticleAffector::_sfDistanceFromCamera field.
-inline
-const CameraPtr &DistanceParticleAffectorBase::getDistanceFromCamera(void) const
+Camera * DistanceParticleAffectorBase::getDistanceFromCamera(void) const
 {
     return _sfDistanceFromCamera.getValue();
 }
 
 //! Set the value of the DistanceParticleAffector::_sfDistanceFromCamera field.
 inline
-void DistanceParticleAffectorBase::setDistanceFromCamera(const CameraPtr &value)
+void DistanceParticleAffectorBase::setDistanceFromCamera(Camera * const value)
 {
+    editSField(DistanceFromCameraFieldMask);
+
     _sfDistanceFromCamera.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void DistanceParticleAffectorBase::execSync (      DistanceParticleAffectorBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGDISTANCEPARTICLEAFFECTORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (DistanceFromSourceFieldMask & whichField))
+        _sfDistanceFromSource.syncWith(pFrom->_sfDistanceFromSource);
+
+    if(FieldBits::NoField != (DistanceFromNodeFieldMask & whichField))
+        _sfDistanceFromNode.syncWith(pFrom->_sfDistanceFromNode);
+
+    if(FieldBits::NoField != (ParticleSystemNodeFieldMask & whichField))
+        _sfParticleSystemNode.syncWith(pFrom->_sfParticleSystemNode);
+
+    if(FieldBits::NoField != (DistanceFromCameraFieldMask & whichField))
+        _sfDistanceFromCamera.syncWith(pFrom->_sfDistanceFromCamera);
+}
+#endif
+
+
+inline
+const Char8 *DistanceParticleAffectorBase::getClassname(void)
+{
+    return "DistanceParticleAffector";
+}
+
+
+OSG_GEN_CONTAINERPTR(DistanceParticleAffector);
+
+OSG_END_NAMESPACE
 

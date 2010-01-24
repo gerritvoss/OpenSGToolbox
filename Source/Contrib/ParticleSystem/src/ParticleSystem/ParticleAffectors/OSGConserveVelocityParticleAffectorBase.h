@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,62 +58,69 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGParticleAffector.h" // Parent
 
-#include <OpenSG/OSGReal32Fields.h> // Conserve type
+#include "OSGSysFields.h"               // Conserve type
 
 #include "OSGConserveVelocityParticleAffectorFields.h"
+
 
 OSG_BEGIN_NAMESPACE
 
 class ConserveVelocityParticleAffector;
-class BinaryDataHandler;
 
 //! \brief ConserveVelocityParticleAffector Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ConserveVelocityParticleAffectorBase : public ParticleAffector
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ConserveVelocityParticleAffectorBase : public ParticleAffector
 {
-  private:
-
-    typedef ParticleAffector    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ConserveVelocityParticleAffectorPtr  Ptr;
+    typedef ParticleAffector Inherited;
+    typedef ParticleAffector ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(ConserveVelocityParticleAffector);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
         ConserveFieldId = Inherited::NextFieldId,
-        NextFieldId     = ConserveFieldId + 1
+        NextFieldId = ConserveFieldId + 1
     };
 
-    static const OSG::BitVector ConserveFieldMask;
+    static const OSG::BitVector ConserveFieldMask =
+        (TypeTraits<BitVector>::One << ConserveFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFReal32          SFConserveType;
 
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -122,21 +129,24 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ConserveVelocityParticleAffectorBase : pu
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *getSFConserve       (void);
 
-           Real32              &getConserve       (void);
-     const Real32              &getConserve       (void) const;
+                  SFReal32            *editSFConserve       (void);
+            const SFReal32            *getSFConserve        (void) const;
+
+
+                  Real32              &editConserve       (void);
+                  Real32               getConserve        (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setConserve       ( const Real32 &value );
+            void setConserve       (const Real32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -144,38 +154,56 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ConserveVelocityParticleAffectorBase : pu
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  ConserveVelocityParticleAffectorPtr      create          (void); 
-    static  ConserveVelocityParticleAffectorPtr      createEmpty     (void); 
+    static  ConserveVelocityParticleAffectorTransitPtr  create          (void);
+    static  ConserveVelocityParticleAffector           *createEmpty     (void);
+
+    static  ConserveVelocityParticleAffectorTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  ConserveVelocityParticleAffector            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  ConserveVelocityParticleAffectorTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFReal32            _sfConserve;
+    SFReal32          _sfConserve;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -190,69 +218,79 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ConserveVelocityParticleAffectorBase : pu
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ConserveVelocityParticleAffectorBase(void); 
+    virtual ~ConserveVelocityParticleAffectorBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleConserve        (void) const;
+    EditFieldHandlePtr editHandleConserve       (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ConserveVelocityParticleAffectorBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      ConserveVelocityParticleAffectorBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      ConserveVelocityParticleAffectorBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const ConserveVelocityParticleAffectorBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef ConserveVelocityParticleAffectorBase *ConserveVelocityParticleAffectorBaseP;
 
-typedef osgIF<ConserveVelocityParticleAffectorBase::isNodeCore,
-              CoredNodePtr<ConserveVelocityParticleAffector>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ConserveVelocityParticleAffectorNodePtr;
-
-typedef RefPtr<ConserveVelocityParticleAffectorPtr> ConserveVelocityParticleAffectorRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGCONSERVEVELOCITYPARTICLEAFFECTORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGCONSERVEVELOCITYPARTICLEAFFECTORBASE_H_ */

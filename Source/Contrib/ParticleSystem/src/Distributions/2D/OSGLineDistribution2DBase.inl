@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,78 +55,31 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &LineDistribution2DBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 LineDistribution2DBase::getClassTypeId(void) 
+OSG::UInt32 LineDistribution2DBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-LineDistribution2DPtr LineDistribution2DBase::create(void) 
-{
-    LineDistribution2DPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = LineDistribution2DPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-LineDistribution2DPtr LineDistribution2DBase::createEmpty(void) 
-{ 
-    LineDistribution2DPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 LineDistribution2DBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the LineDistribution2D::_sfPoint1 field.
-inline
-const SFPnt2f *LineDistribution2DBase::getSFPoint1(void) const
-{
-    return &_sfPoint1;
-}
-
-//! Get the LineDistribution2D::_sfPoint1 field.
-inline
-SFPnt2f *LineDistribution2DBase::editSFPoint1(void)
-{
-    return &_sfPoint1;
-}
-
-//! Get the LineDistribution2D::_sfPoint2 field.
-inline
-const SFPnt2f *LineDistribution2DBase::getSFPoint2(void) const
-{
-    return &_sfPoint2;
-}
-
-//! Get the LineDistribution2D::_sfPoint2 field.
-inline
-SFPnt2f *LineDistribution2DBase::editSFPoint2(void)
-{
-    return &_sfPoint2;
-}
-
-
 //! Get the value of the LineDistribution2D::_sfPoint1 field.
+
 inline
 Pnt2f &LineDistribution2DBase::editPoint1(void)
 {
+    editSField(Point1FieldMask);
+
     return _sfPoint1.getValue();
 }
 
@@ -143,13 +94,17 @@ const Pnt2f &LineDistribution2DBase::getPoint1(void) const
 inline
 void LineDistribution2DBase::setPoint1(const Pnt2f &value)
 {
+    editSField(Point1FieldMask);
+
     _sfPoint1.setValue(value);
 }
-
 //! Get the value of the LineDistribution2D::_sfPoint2 field.
+
 inline
 Pnt2f &LineDistribution2DBase::editPoint2(void)
 {
+    editSField(Point2FieldMask);
+
     return _sfPoint2.getValue();
 }
 
@@ -164,8 +119,39 @@ const Pnt2f &LineDistribution2DBase::getPoint2(void) const
 inline
 void LineDistribution2DBase::setPoint2(const Pnt2f &value)
 {
+    editSField(Point2FieldMask);
+
     _sfPoint2.setValue(value);
 }
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void LineDistribution2DBase::execSync (      LineDistribution2DBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (Point1FieldMask & whichField))
+        _sfPoint1.syncWith(pFrom->_sfPoint1);
+
+    if(FieldBits::NoField != (Point2FieldMask & whichField))
+        _sfPoint2.syncWith(pFrom->_sfPoint2);
+}
+#endif
+
+
+inline
+const Char8 *LineDistribution2DBase::getClassname(void)
+{
+    return "LineDistribution2D";
+}
+
+
+OSG_GEN_CONTAINERPTR(LineDistribution2D);
+
 OSG_END_NAMESPACE
+

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                 Authors: David Kabala, Daniel Guilliams                   *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,28 +40,23 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGRandomMovementParticleAffector.h"
-
-#include "ParticleSystem/OSGParticleSystem.h"
-#include <OpenSG/OSGMatrix.h>
-#include <OpenSG/OSGQuaternion.h>
+#include "OSGParticleSystem.h"
+#include "OSGMatrix.h"
+#include "OSGQuaternion.h"
+#include "OSGPerlinNoiseDistribution1D.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::RandomMovementParticleAffector
-
-*/
+// Documentation for this class is emitted in the
+// OSGRandomMovementParticleAffectorBase.cpp file.
+// To modify it, please change the .fcd file (OSGRandomMovementParticleAffector.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -71,8 +66,13 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void RandomMovementParticleAffector::initMethod (void)
+void RandomMovementParticleAffector::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -80,56 +80,80 @@ void RandomMovementParticleAffector::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool RandomMovementParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps)
+bool RandomMovementParticleAffector::affect(ParticleSystemRefPtr System, Int32 ParticleIndex, const Time& elps)
 {
-	//System->setUpdateSecAttribs(false);
-	Real32 x,y,z,age(System->getAge(ParticleIndex));
-	if(getAttributeAffected() == VELOCITY_ATTRIBUTE)
-	{
-			Vec3f vel = System->getSecVelocity(ParticleIndex);
-			// grab each value independently , and adjust the phase for each
-			// axis, since we have a 3D phase and the 1D distribution only takes
-			// one value
-			Real32 velSum = vel.x() + vel.y() + vel.z();
+    //System->setUpdateSecAttribs(false);
+    Real32 x,
+           y,
+           z,
+           age(System->getAge(ParticleIndex));
 
-			beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::PhaseFieldMask);
-				getPerlinDistribution()->setPhase(getPhase().x() + velSum);
-				x = getPerlinDistribution()->generate(vel.x() + age);
-				getPerlinDistribution()->setPhase(getPhase().y() + velSum);
-				y = getPerlinDistribution()->generate(vel.y() + age);
-				getPerlinDistribution()->setPhase(getPhase().z() + velSum);
-				z = getPerlinDistribution()->generate(vel.z() + age);
-			endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::PhaseFieldMask);
-			
+    if(getAttributeAffected() == VELOCITY_ATTRIBUTE)
+    {
+        Vec3f vel = System->getSecVelocity(ParticleIndex);
+        // grab each value independently , and adjust the phase for each
+        // axis, since we have a 3D phase and the 1D distribution only takes
+        // one value
+        Real32 velSum = vel.x() + vel.y() + vel.z();
 
-			System->setVelocity(Vec3f(x,y,z) + vel,ParticleIndex);
+        getPerlinDistribution()->setPhase(getPhase().x() + velSum);
+        x = getPerlinDistribution()->generate(vel.x() + age);
+        getPerlinDistribution()->setPhase(getPhase().y() + velSum);
+        y = getPerlinDistribution()->generate(vel.y() + age);
+        getPerlinDistribution()->setPhase(getPhase().z() + velSum);
+        z = getPerlinDistribution()->generate(vel.z() + age);
 
-	}else // affecting position	
-	{
-			Pnt3f pos = System->getSecPosition(ParticleIndex);
-			Real32 posSum = pos.x() + pos.y() + pos.z();
 
-			beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::PhaseFieldMask);
-				getPerlinDistribution()->setPhase(getPhase().x() + posSum);
-				x = getPerlinDistribution()->generate(pos.x() + age);
-				getPerlinDistribution()->setPhase(getPhase().y() + posSum);
-				y = getPerlinDistribution()->generate(pos.y() + age);
-				getPerlinDistribution()->setPhase(getPhase().z() + posSum);
-				z = getPerlinDistribution()->generate(pos.z() + age);
-			endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::PhaseFieldMask);
-			
+        System->setVelocity(Vec3f(x,y,z) + vel,ParticleIndex);
 
-			System->setPosition(Pnt3f(x,y,z) + pos,ParticleIndex);
-	}
+    }else // affecting position	
+    {
+        Pnt3f pos = System->getSecPosition(ParticleIndex);
+        Real32 posSum = pos.x() + pos.y() + pos.z();
 
-	return false;
+        getPerlinDistribution()->setPhase(getPhase().x() + posSum);
+        x = getPerlinDistribution()->generate(pos.x() + age);
+        getPerlinDistribution()->setPhase(getPhase().y() + posSum);
+        y = getPerlinDistribution()->generate(pos.y() + age);
+        getPerlinDistribution()->setPhase(getPhase().z() + posSum);
+        z = getPerlinDistribution()->generate(pos.z() + age);
+
+
+        System->setPosition(Pnt3f(x,y,z) + pos.subZero(),ParticleIndex);
+    }
+
+    return false;
 }
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+void RandomMovementParticleAffector::onCreate(const RandomMovementParticleAffector *source)
+{
+    if(source != NULL)
+    {
+        //Shader Chunk
+        PerlinNoiseDistribution1DRefPtr TheNoiseDist = PerlinNoiseDistribution1D::create();
+        TheNoiseDist->setFrequency(getFrequency());
+        TheNoiseDist->setPersistance(getPersistance());
+        TheNoiseDist->setOctaves(getOctaves());
+        TheNoiseDist->setAmplitude(getAmplitude());
+        TheNoiseDist->setInterpolationType(getInterpolationType());
+        TheNoiseDist->setPhase(getPhase().x());
+        TheNoiseDist->setUseSmoothing(true);
 
+        setPerlinDistribution(TheNoiseDist);
+    }
+}
+
+void RandomMovementParticleAffector::onDestroy(void)
+{
+    if(getPerlinDistribution() != NULL)
+    {
+        setPerlinDistribution(NULL);
+    }
+}
 
 /*----------------------- constructors & destructors ----------------------*/
 
@@ -149,82 +173,42 @@ RandomMovementParticleAffector::~RandomMovementParticleAffector(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void RandomMovementParticleAffector::onCreate(const RandomMovementParticleAffector *source)
+void RandomMovementParticleAffector::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    if(source != NULL)
-    {
-        //Shader Chunk
-        PerlinNoiseDistribution1DPtr TheNoiseDist = PerlinNoiseDistribution1D::create();
-        beginEditCP(TheNoiseDist);
-            TheNoiseDist->setFrequency(getFrequency());
-            TheNoiseDist->setPersistance(getPersistance());
-            TheNoiseDist->setOctaves(getOctaves());
-            TheNoiseDist->setAmplitude(getAmplitude());
-            TheNoiseDist->setInterpolationType(getInterpolationType());
-            TheNoiseDist->setPhase(getPhase().x());
-            TheNoiseDist->setUseSmoothing(true);
-        endEditCP(TheNoiseDist);
+    Inherited::changed(whichField, origin, details);
 
-        addRefCP(TheNoiseDist);
-        setPerlinDistribution(TheNoiseDist);
+    if(whichField & PersistanceFieldMask)
+    {
+        getPerlinDistribution()->setPersistance(getPersistance());
+    } 
+    else if (whichField & FrequencyFieldMask)
+    {
+        getPerlinDistribution()->setFrequency(getFrequency());
+    } 
+    else if (whichField & InterpolationTypeFieldMask)
+    {
+        getPerlinDistribution()->setInterpolationType(getInterpolationType());
+    } 
+    else if (whichField & OctavesFieldMask)
+    {
+        getPerlinDistribution()->setOctaves(getOctaves());
+    } 
+    else if (whichField & AmplitudeFieldMask )
+    {
+        getPerlinDistribution()->setAmplitude(getAmplitude());
+    }
+    else if (whichField & PhaseFieldMask )
+    {
+        getPerlinDistribution()->setPhase(getPhase()[0]);
     }
 }
 
-void RandomMovementParticleAffector::onDestroy(void)
-{
-    if(getPerlinDistribution() != NullFC)
-    {
-        subRefCP(getPerlinDistribution());
-        setPerlinDistribution(NullFC);
-    }
-}
-
-void RandomMovementParticleAffector::changed(BitVector whichField, UInt32 origin)
-{
-    Inherited::changed(whichField, origin);
-	if(whichField & PersistanceFieldMask)
-	{
-		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::PersistanceFieldMask);
-			getPerlinDistribution()->setPersistance(getPersistance());
-		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::PersistanceFieldMask);
-	} 
-	else if (whichField & FrequencyFieldMask)
-	{
-		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::FrequencyFieldMask);
-			getPerlinDistribution()->setFrequency(getFrequency());
-		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::FrequencyFieldMask);
-	} 
-	else if (whichField & InterpolationTypeFieldMask)
-	{
-		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::InterpolationTypeFieldMask);
-			getPerlinDistribution()->setInterpolationType(getInterpolationType());
-		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::InterpolationTypeFieldMask);
-	} 
-	else if (whichField & OctavesFieldMask)
-	{
-		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::OctavesFieldMask);
-			getPerlinDistribution()->setOctaves(getOctaves());
-		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::OctavesFieldMask);
-	} 
-	else if (whichField & AmplitudeFieldMask )
-	{
-		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::AmplitudeFieldMask);
-			getPerlinDistribution()->setAmplitude(getAmplitude());
-		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::AmplitudeFieldMask);
-	}
-	else if (whichField & PhaseFieldMask )
-	{
-		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::PhaseFieldMask);
-			getPerlinDistribution()->setPhase(getPhase()[0]);
-		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::PhaseFieldMask);
-	}
-}
-
-void RandomMovementParticleAffector::dump(      UInt32    , 
+void RandomMovementParticleAffector::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump RandomMovementParticleAffector NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

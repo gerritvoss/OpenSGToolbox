@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,169 +50,246 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILERATEPARTICLEGENERATORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGRateParticleGeneratorBase.h"
 #include "OSGRateParticleGenerator.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  RateParticleGeneratorBase::GenerationRateFieldMask = 
-    (TypeTraits<BitVector>::One << RateParticleGeneratorBase::GenerationRateFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  RateParticleGeneratorBase::TimeSinceLastGenerationFieldMask = 
-    (TypeTraits<BitVector>::One << RateParticleGeneratorBase::TimeSinceLastGenerationFieldId);
+/*! \class OSG::RateParticleGenerator
+    
+ */
 
-const OSG::BitVector  RateParticleGeneratorBase::RateSpreadFieldMask = 
-    (TypeTraits<BitVector>::One << RateParticleGeneratorBase::RateSpreadFieldId);
-
-const OSG::BitVector RateParticleGeneratorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Real32          RateParticleGeneratorBase::_sfGenerationRate
     
 */
+
 /*! \var Real32          RateParticleGeneratorBase::_sfTimeSinceLastGeneration
     
 */
+
 /*! \var Real32          RateParticleGeneratorBase::_sfRateSpread
     
 */
 
-//! RateParticleGenerator description
 
-FieldDescription *RateParticleGeneratorBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<RateParticleGenerator *>::_type("RateParticleGeneratorPtr", "DynamicsParticleGeneratorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(RateParticleGenerator *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           RateParticleGenerator *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           RateParticleGenerator *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void RateParticleGeneratorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "GenerationRate", 
-                     GenerationRateFieldId, GenerationRateFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&RateParticleGeneratorBase::editSFGenerationRate)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "TimeSinceLastGeneration", 
-                     TimeSinceLastGenerationFieldId, TimeSinceLastGenerationFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&RateParticleGeneratorBase::editSFTimeSinceLastGeneration)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "RateSpread", 
-                     RateSpreadFieldId, RateSpreadFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&RateParticleGeneratorBase::editSFRateSpread))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType RateParticleGeneratorBase::_type(
-    "RateParticleGenerator",
-    "DynamicsParticleGenerator",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&RateParticleGeneratorBase::createEmpty),
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "GenerationRate",
+        "",
+        GenerationRateFieldId, GenerationRateFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&RateParticleGenerator::editHandleGenerationRate),
+        static_cast<FieldGetMethodSig >(&RateParticleGenerator::getHandleGenerationRate));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "TimeSinceLastGeneration",
+        "",
+        TimeSinceLastGenerationFieldId, TimeSinceLastGenerationFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&RateParticleGenerator::editHandleTimeSinceLastGeneration),
+        static_cast<FieldGetMethodSig >(&RateParticleGenerator::getHandleTimeSinceLastGeneration));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "RateSpread",
+        "",
+        RateSpreadFieldId, RateSpreadFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&RateParticleGenerator::editHandleRateSpread),
+        static_cast<FieldGetMethodSig >(&RateParticleGenerator::getHandleRateSpread));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+RateParticleGeneratorBase::TypeObject RateParticleGeneratorBase::_type(
+    RateParticleGeneratorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&RateParticleGeneratorBase::createEmptyLocal),
     RateParticleGenerator::initMethod,
-    _desc,
-    sizeof(_desc));
+    RateParticleGenerator::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&RateParticleGenerator::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"RateParticleGenerator\"\n"
+    "\tparent=\"DynamicsParticleGenerator\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com), Daniel Guilliams           \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"GenerationRate\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TimeSinceLastGeneration\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"0.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "    <Field\n"
+    "\t\tname=\"RateSpread\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(RateParticleGeneratorBase, RateParticleGeneratorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &RateParticleGeneratorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &RateParticleGeneratorBase::getType(void) const 
+FieldContainerType &RateParticleGeneratorBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr RateParticleGeneratorBase::shallowCopy(void) const 
-{ 
-    RateParticleGeneratorPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const RateParticleGenerator *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 RateParticleGeneratorBase::getContainerSize(void) const 
-{ 
-    return sizeof(RateParticleGenerator); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void RateParticleGeneratorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &RateParticleGeneratorBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<RateParticleGeneratorBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void RateParticleGeneratorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 RateParticleGeneratorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((RateParticleGeneratorBase *) &other, whichField, sInfo);
+    return sizeof(RateParticleGenerator);
 }
-void RateParticleGeneratorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFReal32 *RateParticleGeneratorBase::editSFGenerationRate(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(GenerationRateFieldMask);
+
+    return &_sfGenerationRate;
 }
 
-void RateParticleGeneratorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFReal32 *RateParticleGeneratorBase::getSFGenerationRate(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfGenerationRate;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-RateParticleGeneratorBase::RateParticleGeneratorBase(void) :
-    _sfGenerationRate         (Real32(1.0f)), 
-    _sfTimeSinceLastGeneration(Real32(0.0f)), 
-    _sfRateSpread             (Real32(0.0f)), 
-    Inherited() 
+SFReal32 *RateParticleGeneratorBase::editSFTimeSinceLastGeneration(void)
 {
+    editSField(TimeSinceLastGenerationFieldMask);
+
+    return &_sfTimeSinceLastGeneration;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-RateParticleGeneratorBase::RateParticleGeneratorBase(const RateParticleGeneratorBase &source) :
-    _sfGenerationRate         (source._sfGenerationRate         ), 
-    _sfTimeSinceLastGeneration(source._sfTimeSinceLastGeneration), 
-    _sfRateSpread             (source._sfRateSpread             ), 
-    Inherited                 (source)
+const SFReal32 *RateParticleGeneratorBase::getSFTimeSinceLastGeneration(void) const
 {
+    return &_sfTimeSinceLastGeneration;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-RateParticleGeneratorBase::~RateParticleGeneratorBase(void)
+SFReal32 *RateParticleGeneratorBase::editSFRateSpread(void)
 {
+    editSField(RateSpreadFieldMask);
+
+    return &_sfRateSpread;
 }
+
+const SFReal32 *RateParticleGeneratorBase::getSFRateSpread(void) const
+{
+    return &_sfRateSpread;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 RateParticleGeneratorBase::getBinSize(const BitVector &whichField)
+UInt32 RateParticleGeneratorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -220,23 +297,20 @@ UInt32 RateParticleGeneratorBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfGenerationRate.getBinSize();
     }
-
     if(FieldBits::NoField != (TimeSinceLastGenerationFieldMask & whichField))
     {
         returnValue += _sfTimeSinceLastGeneration.getBinSize();
     }
-
     if(FieldBits::NoField != (RateSpreadFieldMask & whichField))
     {
         returnValue += _sfRateSpread.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void RateParticleGeneratorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void RateParticleGeneratorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -244,22 +318,18 @@ void RateParticleGeneratorBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfGenerationRate.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TimeSinceLastGenerationFieldMask & whichField))
     {
         _sfTimeSinceLastGeneration.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (RateSpreadFieldMask & whichField))
     {
         _sfRateSpread.copyToBin(pMem);
     }
-
-
 }
 
-void RateParticleGeneratorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void RateParticleGeneratorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -267,84 +337,275 @@ void RateParticleGeneratorBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfGenerationRate.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TimeSinceLastGenerationFieldMask & whichField))
     {
         _sfTimeSinceLastGeneration.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (RateSpreadFieldMask & whichField))
     {
         _sfRateSpread.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void RateParticleGeneratorBase::executeSyncImpl(      RateParticleGeneratorBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+RateParticleGeneratorTransitPtr RateParticleGeneratorBase::createLocal(BitVector bFlags)
 {
+    RateParticleGeneratorTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (GenerationRateFieldMask & whichField))
-        _sfGenerationRate.syncWith(pOther->_sfGenerationRate);
+        fc = dynamic_pointer_cast<RateParticleGenerator>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (TimeSinceLastGenerationFieldMask & whichField))
-        _sfTimeSinceLastGeneration.syncWith(pOther->_sfTimeSinceLastGeneration);
-
-    if(FieldBits::NoField != (RateSpreadFieldMask & whichField))
-        _sfRateSpread.syncWith(pOther->_sfRateSpread);
-
-
-}
-#else
-void RateParticleGeneratorBase::executeSyncImpl(      RateParticleGeneratorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (GenerationRateFieldMask & whichField))
-        _sfGenerationRate.syncWith(pOther->_sfGenerationRate);
-
-    if(FieldBits::NoField != (TimeSinceLastGenerationFieldMask & whichField))
-        _sfTimeSinceLastGeneration.syncWith(pOther->_sfTimeSinceLastGeneration);
-
-    if(FieldBits::NoField != (RateSpreadFieldMask & whichField))
-        _sfRateSpread.syncWith(pOther->_sfRateSpread);
-
-
-
+    return fc;
 }
 
-void RateParticleGeneratorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+RateParticleGeneratorTransitPtr RateParticleGeneratorBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    RateParticleGeneratorTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<RateParticleGenerator>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+RateParticleGeneratorTransitPtr RateParticleGeneratorBase::create(void)
+{
+    RateParticleGeneratorTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<RateParticleGenerator>(tmpPtr);
+    }
+
+    return fc;
+}
+
+RateParticleGenerator *RateParticleGeneratorBase::createEmptyLocal(BitVector bFlags)
+{
+    RateParticleGenerator *returnValue;
+
+    newPtr<RateParticleGenerator>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+RateParticleGenerator *RateParticleGeneratorBase::createEmpty(void)
+{
+    RateParticleGenerator *returnValue;
+
+    newPtr<RateParticleGenerator>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr RateParticleGeneratorBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    RateParticleGenerator *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const RateParticleGenerator *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr RateParticleGeneratorBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    RateParticleGenerator *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const RateParticleGenerator *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr RateParticleGeneratorBase::shallowCopy(void) const
+{
+    RateParticleGenerator *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const RateParticleGenerator *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+RateParticleGeneratorBase::RateParticleGeneratorBase(void) :
+    Inherited(),
+    _sfGenerationRate         (Real32(1.0f)),
+    _sfTimeSinceLastGeneration(Real32(0.0f)),
+    _sfRateSpread             (Real32(0.0f))
+{
+}
+
+RateParticleGeneratorBase::RateParticleGeneratorBase(const RateParticleGeneratorBase &source) :
+    Inherited(source),
+    _sfGenerationRate         (source._sfGenerationRate         ),
+    _sfTimeSinceLastGeneration(source._sfTimeSinceLastGeneration),
+    _sfRateSpread             (source._sfRateSpread             )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+RateParticleGeneratorBase::~RateParticleGeneratorBase(void)
+{
+}
+
+
+GetFieldHandlePtr RateParticleGeneratorBase::getHandleGenerationRate  (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfGenerationRate,
+             this->getType().getFieldDesc(GenerationRateFieldId),
+             const_cast<RateParticleGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr RateParticleGeneratorBase::editHandleGenerationRate (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfGenerationRate,
+             this->getType().getFieldDesc(GenerationRateFieldId),
+             this));
+
+
+    editSField(GenerationRateFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr RateParticleGeneratorBase::getHandleTimeSinceLastGeneration (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfTimeSinceLastGeneration,
+             this->getType().getFieldDesc(TimeSinceLastGenerationFieldId),
+             const_cast<RateParticleGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr RateParticleGeneratorBase::editHandleTimeSinceLastGeneration(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfTimeSinceLastGeneration,
+             this->getType().getFieldDesc(TimeSinceLastGenerationFieldId),
+             this));
+
+
+    editSField(TimeSinceLastGenerationFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr RateParticleGeneratorBase::getHandleRateSpread      (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfRateSpread,
+             this->getType().getFieldDesc(RateSpreadFieldId),
+             const_cast<RateParticleGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr RateParticleGeneratorBase::editHandleRateSpread     (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfRateSpread,
+             this->getType().getFieldDesc(RateSpreadFieldId),
+             this));
+
+
+    editSField(RateSpreadFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void RateParticleGeneratorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    RateParticleGenerator *pThis = static_cast<RateParticleGenerator *>(this);
+
+    pThis->execSync(static_cast<RateParticleGenerator *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *RateParticleGeneratorBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    RateParticleGenerator *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const RateParticleGenerator *>(pRefAspect),
+                  dynamic_cast<const RateParticleGenerator *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<RateParticleGeneratorPtr>::_type("RateParticleGeneratorPtr", "DynamicsParticleGeneratorPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(RateParticleGeneratorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(RateParticleGeneratorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+void RateParticleGeneratorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

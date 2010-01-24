@@ -3,21 +3,23 @@
 <FieldContainer
 	name="MultiParticleSystemAffector"
 	parent="AttachmentContainer"
-	library="ParticleSystem"
-	pointerfieldtypes="both"
+    library="ContribParticleSystem"
+    pointerfieldtypes="both"
 	structure="abstract"
-	systemcomponent="false"
-	parentsystemcomponent="true"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 	<Field
 		name="Systems"
-		type="ParticleSystemPtr"
+		type="ParticleSystem"
+        category="pointer"
 		cardinality="multi"
 		visibility="external"
 		access="public"
-		header="ParticleSystem/OSGParticleSystemFields.h"
 	>
 	</Field>
 </FieldContainer>

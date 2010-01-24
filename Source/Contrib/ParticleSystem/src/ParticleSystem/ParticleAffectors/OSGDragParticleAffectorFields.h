@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGParticleAffectorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class DragParticleAffector;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! DragParticleAffectorPtr
+OSG_GEN_CONTAINERPTR(DragParticleAffector);
 
-typedef FCPtr<ParticleAffectorPtr, DragParticleAffector> DragParticleAffectorPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpParticleSystemFieldTraits
+/*! \ingroup GrpContribParticleSystemFieldTraits
+    \ingroup GrpLibOSGContribParticleSystem
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<DragParticleAffectorPtr> : 
-    public FieldTraitsRecurseMapper<DragParticleAffectorPtr, true>
+struct FieldTraits<DragParticleAffector *> :
+    public FieldTraitsFCPtrBase<DragParticleAffector *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFDragParticleAffectorPtr"; }
-    static const char *getMName(void) { return "MFDragParticleAffectorPtr"; }
+    typedef FieldTraits<DragParticleAffector *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFDragParticleAffectorPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFDragParticleAffectorPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<DragParticleAffectorPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<DragParticleAffector *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecDragParticleAffectorPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<DragParticleAffector *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecDragParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DragParticleAffector *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakDragParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DragParticleAffector *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdDragParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DragParticleAffector *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecDragParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DragParticleAffector *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecDragParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DragParticleAffector *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakDragParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DragParticleAffector *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdDragParticleAffectorPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<DragParticleAffector *,
+                      RecordedRefCountPolicy  > SFRecDragParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<DragParticleAffector *,
+                      UnrecordedRefCountPolicy> SFUnrecDragParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<DragParticleAffector *,
+                      WeakRefCountPolicy      > SFWeakDragParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<DragParticleAffector *,
+                      NoRefCountPolicy        > SFUncountedDragParticleAffectorPtr;
 
-typedef SField<DragParticleAffectorPtr> SFDragParticleAffectorPtr;
-#endif
 
-#ifndef OSG_COMPILEDRAGPARTICLEAFFECTORINST
-OSG_DLLEXPORT_DECL1(SField, DragParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<DragParticleAffector *,
+                      RecordedRefCountPolicy  > MFRecDragParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<DragParticleAffector *,
+                      UnrecordedRefCountPolicy> MFUnrecDragParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<DragParticleAffector *,
+                      WeakRefCountPolicy      > MFWeakDragParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<DragParticleAffector *,
+                      NoRefCountPolicy        > MFUncountedDragParticleAffectorPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldMulti */
 
-typedef MField<DragParticleAffectorPtr> MFDragParticleAffectorPtr;
-#endif
 
-#ifndef OSG_COMPILEDRAGPARTICLEAFFECTORINST
-OSG_DLLEXPORT_DECL1(MField, DragParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFRecDragParticleAffectorPtr : 
+    public PointerSField<DragParticleAffector *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUnrecDragParticleAffectorPtr : 
+    public PointerSField<DragParticleAffector *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFWeakDragParticleAffectorPtr :
+    public PointerSField<DragParticleAffector *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUncountedDragParticleAffectorPtr :
+    public PointerSField<DragParticleAffector *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFRecDragParticleAffectorPtr :
+    public PointerMField<DragParticleAffector *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUnrecDragParticleAffectorPtr :
+    public PointerMField<DragParticleAffector *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFWeakDragParticleAffectorPtr :
+    public PointerMField<DragParticleAffector *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUncountedDragParticleAffectorPtr :
+    public PointerMField<DragParticleAffector *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGDRAGPARTICLEAFFECTORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGDRAGPARTICLEAFFECTORFIELDS_H_ */

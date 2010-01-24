@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,75 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGParticleSystemAffectorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class CollisionParticleSystemAffector;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! CollisionParticleSystemAffectorPtr
+OSG_GEN_CONTAINERPTR(CollisionParticleSystemAffector);
 
-typedef FCPtr<ParticleSystemAffectorPtr, CollisionParticleSystemAffector> CollisionParticleSystemAffectorPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpParticleSystemFieldTraits
+/*! \ingroup GrpContribParticleSystemFieldTraits
+    \ingroup GrpLibOSGContribParticleSystem
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<CollisionParticleSystemAffectorPtr> : 
-    public FieldTraitsRecurseMapper<CollisionParticleSystemAffectorPtr, true>
+struct FieldTraits<CollisionParticleSystemAffector *> :
+    public FieldTraitsFCPtrBase<CollisionParticleSystemAffector *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFCollisionParticleSystemAffectorPtr"; }
-    static const char *getMName(void) { return "MFCollisionParticleSystemAffectorPtr"; }
+    typedef FieldTraits<CollisionParticleSystemAffector *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFCollisionParticleSystemAffectorPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFCollisionParticleSystemAffectorPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<CollisionParticleSystemAffectorPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<CollisionParticleSystemAffector *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecCollisionParticleSystemAffectorPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<CollisionParticleSystemAffector *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecCollisionParticleSystemAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CollisionParticleSystemAffector *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakCollisionParticleSystemAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CollisionParticleSystemAffector *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdCollisionParticleSystemAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CollisionParticleSystemAffector *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecCollisionParticleSystemAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CollisionParticleSystemAffector *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecCollisionParticleSystemAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CollisionParticleSystemAffector *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakCollisionParticleSystemAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CollisionParticleSystemAffector *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdCollisionParticleSystemAffectorPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<CollisionParticleSystemAffector *,
+                      RecordedRefCountPolicy  > SFRecCollisionParticleSystemAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<CollisionParticleSystemAffector *,
+                      UnrecordedRefCountPolicy> SFUnrecCollisionParticleSystemAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<CollisionParticleSystemAffector *,
+                      WeakRefCountPolicy      > SFWeakCollisionParticleSystemAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<CollisionParticleSystemAffector *,
+                      NoRefCountPolicy        > SFUncountedCollisionParticleSystemAffectorPtr;
 
-typedef SField<CollisionParticleSystemAffectorPtr> SFCollisionParticleSystemAffectorPtr;
-#endif
 
-#ifndef OSG_COMPILECOLLISIONPARTICLESYSTEMAFFECTORINST
-OSG_DLLEXPORT_DECL1(SField, CollisionParticleSystemAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<CollisionParticleSystemAffector *,
+                      RecordedRefCountPolicy  > MFRecCollisionParticleSystemAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<CollisionParticleSystemAffector *,
+                      UnrecordedRefCountPolicy> MFUnrecCollisionParticleSystemAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<CollisionParticleSystemAffector *,
+                      WeakRefCountPolicy      > MFWeakCollisionParticleSystemAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<CollisionParticleSystemAffector *,
+                      NoRefCountPolicy        > MFUncountedCollisionParticleSystemAffectorPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldMulti */
 
-typedef MField<CollisionParticleSystemAffectorPtr> MFCollisionParticleSystemAffectorPtr;
-#endif
 
-#ifndef OSG_COMPILECOLLISIONPARTICLESYSTEMAFFECTORINST
-OSG_DLLEXPORT_DECL1(MField, CollisionParticleSystemAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFRecCollisionParticleSystemAffectorPtr : 
+    public PointerSField<CollisionParticleSystemAffector *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUnrecCollisionParticleSystemAffectorPtr : 
+    public PointerSField<CollisionParticleSystemAffector *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFWeakCollisionParticleSystemAffectorPtr :
+    public PointerSField<CollisionParticleSystemAffector *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUncountedCollisionParticleSystemAffectorPtr :
+    public PointerSField<CollisionParticleSystemAffector *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFRecCollisionParticleSystemAffectorPtr :
+    public PointerMField<CollisionParticleSystemAffector *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUnrecCollisionParticleSystemAffectorPtr :
+    public PointerMField<CollisionParticleSystemAffector *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFWeakCollisionParticleSystemAffectorPtr :
+    public PointerMField<CollisionParticleSystemAffector *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUncountedCollisionParticleSystemAffectorPtr :
+    public PointerMField<CollisionParticleSystemAffector *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

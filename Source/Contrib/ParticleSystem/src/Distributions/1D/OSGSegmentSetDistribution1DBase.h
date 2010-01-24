@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,64 +58,74 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGDistribution1D.h" // Parent
 
-#include <OpenSG/OSGVec2fFields.h> // Segment type
-#include <OpenSG/OSGReal32Fields.h> // TotalLength type
+#include "OSGVecFields.h"               // Segment type
+#include "OSGSysFields.h"               // TotalLength type
 
 #include "OSGSegmentSetDistribution1DFields.h"
+
+
 OSG_BEGIN_NAMESPACE
 
 class SegmentSetDistribution1D;
-class BinaryDataHandler;
 
 //! \brief SegmentSetDistribution1D Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING SegmentSetDistribution1DBase : public Distribution1D
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING SegmentSetDistribution1DBase : public Distribution1D
 {
-  private:
-
-    typedef Distribution1D    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef SegmentSetDistribution1DPtr  Ptr;
+    typedef Distribution1D Inherited;
+    typedef Distribution1D ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(SegmentSetDistribution1D);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        SegmentFieldId     = Inherited::NextFieldId,
-        TotalLengthFieldId = SegmentFieldId     + 1,
-        NextFieldId        = TotalLengthFieldId + 1
+        SegmentFieldId = Inherited::NextFieldId,
+        TotalLengthFieldId = SegmentFieldId + 1,
+        NextFieldId = TotalLengthFieldId + 1
     };
 
-    static const OSG::BitVector SegmentFieldMask;
-    static const OSG::BitVector TotalLengthFieldMask;
+    static const OSG::BitVector SegmentFieldMask =
+        (TypeTraits<BitVector>::One << SegmentFieldId);
+    static const OSG::BitVector TotalLengthFieldMask =
+        (TypeTraits<BitVector>::One << TotalLengthFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef MFVec2f           MFSegmentType;
+    typedef SFReal32          SFTotalLengthType;
 
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -125,19 +135,12 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING SegmentSetDistribution1DBase : public Dis
     /*! \{                                                                 */
 
 
-           MFVec2f             *editMFSegment        (void);
-     const MFVec2f             *getMFSegment        (void) const;
-     const SFReal32            *getSFTotalLength    (void) const;
+                  MFVec2f             *editMFSegment        (void);
+            const MFVec2f             *getMFSegment         (void) const;
 
 
-     const Real32              &getTotalLength    (void) const;
-
-           Vec2f               &editSegment        (const UInt32 index);
-     const Vec2f               &getSegment        (const UInt32 index) const;
-#ifndef OSG_2_PREP
-           MFVec2f             &getSegment        (void);
-     const MFVec2f             &getSegment        (void) const;
-#endif
+                  Vec2f               &editSegment        (const UInt32 index);
+            const Vec2f               &getSegment         (const UInt32 index) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -147,7 +150,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING SegmentSetDistribution1DBase : public Dis
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -155,39 +158,57 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING SegmentSetDistribution1DBase : public Dis
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  SegmentSetDistribution1DPtr      create          (void); 
-    static  SegmentSetDistribution1DPtr      createEmpty     (void); 
+    static  SegmentSetDistribution1DTransitPtr  create          (void);
+    static  SegmentSetDistribution1D           *createEmpty     (void);
+
+    static  SegmentSetDistribution1DTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  SegmentSetDistribution1D            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  SegmentSetDistribution1DTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    MFVec2f             _mfSegment;
-    SFReal32            _sfTotalLength;
+    MFVec2f           _mfSegment;
+    SFReal32          _sfTotalLength;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -202,82 +223,105 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING SegmentSetDistribution1DBase : public Dis
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SegmentSetDistribution1DBase(void); 
+    virtual ~SegmentSetDistribution1DBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleSegment         (void) const;
+    EditFieldHandlePtr editHandleSegment        (void);
+    GetFieldHandlePtr  getHandleTotalLength     (void) const;
+    EditFieldHandlePtr editHandleTotalLength    (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *editSFTotalLength    (void);
 
-           Real32              &editTotalLength    (void);
+                  SFReal32            *editSFTotalLength    (void);
+            const SFReal32            *getSFTotalLength     (void) const;
+
+
+                  Real32              &editTotalLength    (void);
+                  Real32               getTotalLength     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setTotalLength    (const Real32 &value);
+            void setTotalLength    (const Real32 value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      SegmentSetDistribution1DBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      SegmentSetDistribution1DBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      SegmentSetDistribution1DBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const SegmentSetDistribution1DBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef SegmentSetDistribution1DBase *SegmentSetDistribution1DBaseP;
-
-typedef osgIF<SegmentSetDistribution1DBase::isNodeCore,
-              CoredNodePtr<SegmentSetDistribution1D>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet SegmentSetDistribution1DNodePtr;
-
-typedef RefPtr<SegmentSetDistribution1DPtr> SegmentSetDistribution1DRefPtr;
 
 OSG_END_NAMESPACE
 

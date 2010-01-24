@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                 Authors: David Kabala , Daniel Guilliams                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,44 +42,47 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGDragParticleAffectorBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DragParticleAffector class. See \ref 
-           PageParticleSystemDragParticleAffector for a description.
+/*! \brief DragParticleAffector class. See \ref
+           PageContribParticleSystemDragParticleAffector for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING DragParticleAffector : public DragParticleAffectorBase
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DragParticleAffector : public DragParticleAffectorBase
 {
-  private:
-
-    typedef DragParticleAffectorBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef DragParticleAffectorBase Inherited;
+    typedef DragParticleAffector     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
-	virtual bool affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps);
-
     /*! \}                                                                 */
+
+	virtual bool affect(ParticleSystemRefPtr System, Int32 ParticleIndex, const Time& elps);
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in DragParticleAffectorBase.
@@ -96,20 +99,24 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DragParticleAffector : public DragParticl
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DragParticleAffector(void); 
+    virtual ~DragParticleAffector(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class DragParticleAffectorBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const DragParticleAffector &source);
 };
 
@@ -119,7 +126,5 @@ OSG_END_NAMESPACE
 
 #include "OSGDragParticleAffectorBase.inl"
 #include "OSGDragParticleAffector.inl"
-
-#define OSGDRAGPARTICLEAFFECTOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGDRAGPARTICLEAFFECTOR_H_ */

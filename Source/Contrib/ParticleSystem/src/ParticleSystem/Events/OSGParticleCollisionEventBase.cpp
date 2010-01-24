@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,182 +50,291 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEPARTICLECOLLISIONEVENTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGParticleSystem.h"          // PrimarySystem Class
 
 #include "OSGParticleCollisionEventBase.h"
 #include "OSGParticleCollisionEvent.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ParticleCollisionEventBase::PrimarySystemFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleCollisionEventBase::PrimarySystemFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  ParticleCollisionEventBase::PrimaryParticleIndexFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleCollisionEventBase::PrimaryParticleIndexFieldId);
+/*! \class OSG::ParticleCollisionEvent
+    
+ */
 
-const OSG::BitVector  ParticleCollisionEventBase::SecondarySystemFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleCollisionEventBase::SecondarySystemFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  ParticleCollisionEventBase::SecondaryParticleIndexFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleCollisionEventBase::SecondaryParticleIndexFieldId);
-
-const OSG::BitVector ParticleCollisionEventBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var ParticleSystemPtr ParticleCollisionEventBase::_sfPrimarySystem
+/*! \var ParticleSystem * ParticleCollisionEventBase::_sfPrimarySystem
     
 */
+
 /*! \var UInt32          ParticleCollisionEventBase::_sfPrimaryParticleIndex
     
 */
-/*! \var ParticleSystemPtr ParticleCollisionEventBase::_sfSecondarySystem
+
+/*! \var ParticleSystem * ParticleCollisionEventBase::_sfSecondarySystem
     
 */
+
 /*! \var UInt32          ParticleCollisionEventBase::_sfSecondaryParticleIndex
     
 */
 
-//! ParticleCollisionEvent description
 
-FieldDescription *ParticleCollisionEventBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ParticleCollisionEvent *>::_type("ParticleCollisionEventPtr", "EventPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ParticleCollisionEvent *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ParticleCollisionEvent *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ParticleCollisionEvent *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ParticleCollisionEventBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFParticleSystemPtr::getClassType(), 
-                     "PrimarySystem", 
-                     PrimarySystemFieldId, PrimarySystemFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleCollisionEventBase::editSFPrimarySystem)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "PrimaryParticleIndex", 
-                     PrimaryParticleIndexFieldId, PrimaryParticleIndexFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleCollisionEventBase::editSFPrimaryParticleIndex)),
-    new FieldDescription(SFParticleSystemPtr::getClassType(), 
-                     "SecondarySystem", 
-                     SecondarySystemFieldId, SecondarySystemFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleCollisionEventBase::editSFSecondarySystem)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "SecondaryParticleIndex", 
-                     SecondaryParticleIndexFieldId, SecondaryParticleIndexFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleCollisionEventBase::editSFSecondaryParticleIndex))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType ParticleCollisionEventBase::_type(
-    "ParticleCollisionEvent",
-    "Event",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&ParticleCollisionEventBase::createEmpty),
+    pDesc = new SFUnrecParticleSystemPtr::Description(
+        SFUnrecParticleSystemPtr::getClassType(),
+        "PrimarySystem",
+        "",
+        PrimarySystemFieldId, PrimarySystemFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleCollisionEvent::editHandlePrimarySystem),
+        static_cast<FieldGetMethodSig >(&ParticleCollisionEvent::getHandlePrimarySystem));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "PrimaryParticleIndex",
+        "",
+        PrimaryParticleIndexFieldId, PrimaryParticleIndexFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleCollisionEvent::editHandlePrimaryParticleIndex),
+        static_cast<FieldGetMethodSig >(&ParticleCollisionEvent::getHandlePrimaryParticleIndex));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecParticleSystemPtr::Description(
+        SFUnrecParticleSystemPtr::getClassType(),
+        "SecondarySystem",
+        "",
+        SecondarySystemFieldId, SecondarySystemFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleCollisionEvent::editHandleSecondarySystem),
+        static_cast<FieldGetMethodSig >(&ParticleCollisionEvent::getHandleSecondarySystem));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "SecondaryParticleIndex",
+        "",
+        SecondaryParticleIndexFieldId, SecondaryParticleIndexFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleCollisionEvent::editHandleSecondaryParticleIndex),
+        static_cast<FieldGetMethodSig >(&ParticleCollisionEvent::getHandleSecondaryParticleIndex));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+ParticleCollisionEventBase::TypeObject ParticleCollisionEventBase::_type(
+    ParticleCollisionEventBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ParticleCollisionEventBase::createEmptyLocal),
     ParticleCollisionEvent::initMethod,
-    _desc,
-    sizeof(_desc));
+    ParticleCollisionEvent::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ParticleCollisionEvent::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ParticleCollisionEvent\"\n"
+    "\tparent=\"Event\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"PrimarySystem\"\n"
+    "\t\ttype=\"ParticleSystem\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"PrimaryParticleIndex\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "        defaultValue=\"0\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SecondarySystem\"\n"
+    "\t\ttype=\"ParticleSystem\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SecondaryParticleIndex\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "        defaultValue=\"0\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(ParticleCollisionEventBase, ParticleCollisionEventPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ParticleCollisionEventBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ParticleCollisionEventBase::getType(void) const 
+FieldContainerType &ParticleCollisionEventBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr ParticleCollisionEventBase::shallowCopy(void) const 
-{ 
-    ParticleCollisionEventPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const ParticleCollisionEvent *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 ParticleCollisionEventBase::getContainerSize(void) const 
-{ 
-    return sizeof(ParticleCollisionEvent); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ParticleCollisionEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &ParticleCollisionEventBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<ParticleCollisionEventBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void ParticleCollisionEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 ParticleCollisionEventBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((ParticleCollisionEventBase *) &other, whichField, sInfo);
+    return sizeof(ParticleCollisionEvent);
 }
-void ParticleCollisionEventBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the ParticleCollisionEvent::_sfPrimarySystem field.
+const SFUnrecParticleSystemPtr *ParticleCollisionEventBase::getSFPrimarySystem(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfPrimarySystem;
 }
 
-void ParticleCollisionEventBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecParticleSystemPtr *ParticleCollisionEventBase::editSFPrimarySystem  (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(PrimarySystemFieldMask);
 
+    return &_sfPrimarySystem;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-ParticleCollisionEventBase::ParticleCollisionEventBase(void) :
-    _sfPrimarySystem          (ParticleSystemPtr(NullFC)), 
-    _sfPrimaryParticleIndex   (UInt32(0)), 
-    _sfSecondarySystem        (ParticleSystemPtr(NullFC)), 
-    _sfSecondaryParticleIndex (UInt32(0)), 
-    Inherited() 
+SFUInt32 *ParticleCollisionEventBase::editSFPrimaryParticleIndex(void)
 {
+    editSField(PrimaryParticleIndexFieldMask);
+
+    return &_sfPrimaryParticleIndex;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-ParticleCollisionEventBase::ParticleCollisionEventBase(const ParticleCollisionEventBase &source) :
-    _sfPrimarySystem          (source._sfPrimarySystem          ), 
-    _sfPrimaryParticleIndex   (source._sfPrimaryParticleIndex   ), 
-    _sfSecondarySystem        (source._sfSecondarySystem        ), 
-    _sfSecondaryParticleIndex (source._sfSecondaryParticleIndex ), 
-    Inherited                 (source)
+const SFUInt32 *ParticleCollisionEventBase::getSFPrimaryParticleIndex(void) const
 {
+    return &_sfPrimaryParticleIndex;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-ParticleCollisionEventBase::~ParticleCollisionEventBase(void)
+//! Get the ParticleCollisionEvent::_sfSecondarySystem field.
+const SFUnrecParticleSystemPtr *ParticleCollisionEventBase::getSFSecondarySystem(void) const
 {
+    return &_sfSecondarySystem;
 }
+
+SFUnrecParticleSystemPtr *ParticleCollisionEventBase::editSFSecondarySystem(void)
+{
+    editSField(SecondarySystemFieldMask);
+
+    return &_sfSecondarySystem;
+}
+
+SFUInt32 *ParticleCollisionEventBase::editSFSecondaryParticleIndex(void)
+{
+    editSField(SecondaryParticleIndexFieldMask);
+
+    return &_sfSecondaryParticleIndex;
+}
+
+const SFUInt32 *ParticleCollisionEventBase::getSFSecondaryParticleIndex(void) const
+{
+    return &_sfSecondaryParticleIndex;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ParticleCollisionEventBase::getBinSize(const BitVector &whichField)
+UInt32 ParticleCollisionEventBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -233,28 +342,24 @@ UInt32 ParticleCollisionEventBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfPrimarySystem.getBinSize();
     }
-
     if(FieldBits::NoField != (PrimaryParticleIndexFieldMask & whichField))
     {
         returnValue += _sfPrimaryParticleIndex.getBinSize();
     }
-
     if(FieldBits::NoField != (SecondarySystemFieldMask & whichField))
     {
         returnValue += _sfSecondarySystem.getBinSize();
     }
-
     if(FieldBits::NoField != (SecondaryParticleIndexFieldMask & whichField))
     {
         returnValue += _sfSecondaryParticleIndex.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ParticleCollisionEventBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ParticleCollisionEventBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -262,27 +367,22 @@ void ParticleCollisionEventBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfPrimarySystem.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (PrimaryParticleIndexFieldMask & whichField))
     {
         _sfPrimaryParticleIndex.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SecondarySystemFieldMask & whichField))
     {
         _sfSecondarySystem.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SecondaryParticleIndexFieldMask & whichField))
     {
         _sfSecondaryParticleIndex.copyToBin(pMem);
     }
-
-
 }
 
-void ParticleCollisionEventBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ParticleCollisionEventBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -290,93 +390,329 @@ void ParticleCollisionEventBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfPrimarySystem.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (PrimaryParticleIndexFieldMask & whichField))
     {
         _sfPrimaryParticleIndex.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SecondarySystemFieldMask & whichField))
     {
         _sfSecondarySystem.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SecondaryParticleIndexFieldMask & whichField))
     {
         _sfSecondaryParticleIndex.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ParticleCollisionEventBase::executeSyncImpl(      ParticleCollisionEventBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ParticleCollisionEventTransitPtr ParticleCollisionEventBase::createLocal(BitVector bFlags)
 {
+    ParticleCollisionEventTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (PrimarySystemFieldMask & whichField))
-        _sfPrimarySystem.syncWith(pOther->_sfPrimarySystem);
+        fc = dynamic_pointer_cast<ParticleCollisionEvent>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (PrimaryParticleIndexFieldMask & whichField))
-        _sfPrimaryParticleIndex.syncWith(pOther->_sfPrimaryParticleIndex);
-
-    if(FieldBits::NoField != (SecondarySystemFieldMask & whichField))
-        _sfSecondarySystem.syncWith(pOther->_sfSecondarySystem);
-
-    if(FieldBits::NoField != (SecondaryParticleIndexFieldMask & whichField))
-        _sfSecondaryParticleIndex.syncWith(pOther->_sfSecondaryParticleIndex);
-
-
-}
-#else
-void ParticleCollisionEventBase::executeSyncImpl(      ParticleCollisionEventBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (PrimarySystemFieldMask & whichField))
-        _sfPrimarySystem.syncWith(pOther->_sfPrimarySystem);
-
-    if(FieldBits::NoField != (PrimaryParticleIndexFieldMask & whichField))
-        _sfPrimaryParticleIndex.syncWith(pOther->_sfPrimaryParticleIndex);
-
-    if(FieldBits::NoField != (SecondarySystemFieldMask & whichField))
-        _sfSecondarySystem.syncWith(pOther->_sfSecondarySystem);
-
-    if(FieldBits::NoField != (SecondaryParticleIndexFieldMask & whichField))
-        _sfSecondaryParticleIndex.syncWith(pOther->_sfSecondaryParticleIndex);
-
-
-
+    return fc;
 }
 
-void ParticleCollisionEventBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ParticleCollisionEventTransitPtr ParticleCollisionEventBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ParticleCollisionEventTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<ParticleCollisionEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ParticleCollisionEventTransitPtr ParticleCollisionEventBase::create(void)
+{
+    ParticleCollisionEventTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<ParticleCollisionEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+ParticleCollisionEvent *ParticleCollisionEventBase::createEmptyLocal(BitVector bFlags)
+{
+    ParticleCollisionEvent *returnValue;
+
+    newPtr<ParticleCollisionEvent>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+ParticleCollisionEvent *ParticleCollisionEventBase::createEmpty(void)
+{
+    ParticleCollisionEvent *returnValue;
+
+    newPtr<ParticleCollisionEvent>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ParticleCollisionEventBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    ParticleCollisionEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ParticleCollisionEvent *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ParticleCollisionEventBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    ParticleCollisionEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ParticleCollisionEvent *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ParticleCollisionEventBase::shallowCopy(void) const
+{
+    ParticleCollisionEvent *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const ParticleCollisionEvent *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ParticleCollisionEventBase::ParticleCollisionEventBase(void) :
+    Inherited(),
+    _sfPrimarySystem          (NULL),
+    _sfPrimaryParticleIndex   (UInt32(0)),
+    _sfSecondarySystem        (NULL),
+    _sfSecondaryParticleIndex (UInt32(0))
+{
+}
+
+ParticleCollisionEventBase::ParticleCollisionEventBase(const ParticleCollisionEventBase &source) :
+    Inherited(source),
+    _sfPrimarySystem          (NULL),
+    _sfPrimaryParticleIndex   (source._sfPrimaryParticleIndex   ),
+    _sfSecondarySystem        (NULL),
+    _sfSecondaryParticleIndex (source._sfSecondaryParticleIndex )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ParticleCollisionEventBase::~ParticleCollisionEventBase(void)
+{
+}
+
+void ParticleCollisionEventBase::onCreate(const ParticleCollisionEvent *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        ParticleCollisionEvent *pThis = static_cast<ParticleCollisionEvent *>(this);
+
+        pThis->setPrimarySystem(source->getPrimarySystem());
+
+        pThis->setSecondarySystem(source->getSecondarySystem());
+    }
+}
+
+GetFieldHandlePtr ParticleCollisionEventBase::getHandlePrimarySystem   (void) const
+{
+    SFUnrecParticleSystemPtr::GetHandlePtr returnValue(
+        new  SFUnrecParticleSystemPtr::GetHandle(
+             &_sfPrimarySystem,
+             this->getType().getFieldDesc(PrimarySystemFieldId),
+             const_cast<ParticleCollisionEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleCollisionEventBase::editHandlePrimarySystem  (void)
+{
+    SFUnrecParticleSystemPtr::EditHandlePtr returnValue(
+        new  SFUnrecParticleSystemPtr::EditHandle(
+             &_sfPrimarySystem,
+             this->getType().getFieldDesc(PrimarySystemFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ParticleCollisionEvent::setPrimarySystem,
+                    static_cast<ParticleCollisionEvent *>(this), _1));
+
+    editSField(PrimarySystemFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleCollisionEventBase::getHandlePrimaryParticleIndex (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfPrimaryParticleIndex,
+             this->getType().getFieldDesc(PrimaryParticleIndexFieldId),
+             const_cast<ParticleCollisionEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleCollisionEventBase::editHandlePrimaryParticleIndex(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfPrimaryParticleIndex,
+             this->getType().getFieldDesc(PrimaryParticleIndexFieldId),
+             this));
+
+
+    editSField(PrimaryParticleIndexFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleCollisionEventBase::getHandleSecondarySystem (void) const
+{
+    SFUnrecParticleSystemPtr::GetHandlePtr returnValue(
+        new  SFUnrecParticleSystemPtr::GetHandle(
+             &_sfSecondarySystem,
+             this->getType().getFieldDesc(SecondarySystemFieldId),
+             const_cast<ParticleCollisionEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleCollisionEventBase::editHandleSecondarySystem(void)
+{
+    SFUnrecParticleSystemPtr::EditHandlePtr returnValue(
+        new  SFUnrecParticleSystemPtr::EditHandle(
+             &_sfSecondarySystem,
+             this->getType().getFieldDesc(SecondarySystemFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ParticleCollisionEvent::setSecondarySystem,
+                    static_cast<ParticleCollisionEvent *>(this), _1));
+
+    editSField(SecondarySystemFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleCollisionEventBase::getHandleSecondaryParticleIndex (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfSecondaryParticleIndex,
+             this->getType().getFieldDesc(SecondaryParticleIndexFieldId),
+             const_cast<ParticleCollisionEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleCollisionEventBase::editHandleSecondaryParticleIndex(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfSecondaryParticleIndex,
+             this->getType().getFieldDesc(SecondaryParticleIndexFieldId),
+             this));
+
+
+    editSField(SecondaryParticleIndexFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ParticleCollisionEventBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ParticleCollisionEvent *pThis = static_cast<ParticleCollisionEvent *>(this);
+
+    pThis->execSync(static_cast<ParticleCollisionEvent *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ParticleCollisionEventBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    ParticleCollisionEvent *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const ParticleCollisionEvent *>(pRefAspect),
+                  dynamic_cast<const ParticleCollisionEvent *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ParticleCollisionEventPtr>::_type("ParticleCollisionEventPtr", "EventPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(ParticleCollisionEventPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+void ParticleCollisionEventBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<ParticleCollisionEvent *>(this)->setPrimarySystem(NULL);
+
+    static_cast<ParticleCollisionEvent *>(this)->setSecondarySystem(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-

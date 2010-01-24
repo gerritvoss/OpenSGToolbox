@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,195 +50,327 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEQUADDISTRIBUTION2DINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGQuadDistribution2DBase.h"
 #include "OSGQuadDistribution2D.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  QuadDistribution2DBase::Point1FieldMask = 
-    (TypeTraits<BitVector>::One << QuadDistribution2DBase::Point1FieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  QuadDistribution2DBase::Point2FieldMask = 
-    (TypeTraits<BitVector>::One << QuadDistribution2DBase::Point2FieldId);
+/*! \class OSG::QuadDistribution2D
+    An QuadDistribution2D.
+ */
 
-const OSG::BitVector  QuadDistribution2DBase::Point3FieldMask = 
-    (TypeTraits<BitVector>::One << QuadDistribution2DBase::Point3FieldId);
-
-const OSG::BitVector  QuadDistribution2DBase::Point4FieldMask = 
-    (TypeTraits<BitVector>::One << QuadDistribution2DBase::Point4FieldId);
-
-const OSG::BitVector  QuadDistribution2DBase::SurfaceOrEdgeFieldMask = 
-    (TypeTraits<BitVector>::One << QuadDistribution2DBase::SurfaceOrEdgeFieldId);
-
-const OSG::BitVector QuadDistribution2DBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Pnt2f           QuadDistribution2DBase::_sfPoint1
     
 */
+
 /*! \var Pnt2f           QuadDistribution2DBase::_sfPoint2
     
 */
+
 /*! \var Pnt2f           QuadDistribution2DBase::_sfPoint3
     
 */
+
 /*! \var Pnt2f           QuadDistribution2DBase::_sfPoint4
     
 */
+
 /*! \var UInt32          QuadDistribution2DBase::_sfSurfaceOrEdge
     
 */
 
-//! QuadDistribution2D description
 
-FieldDescription *QuadDistribution2DBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<QuadDistribution2D *>::_type("QuadDistribution2DPtr", "Distribution2DPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(QuadDistribution2D *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           QuadDistribution2D *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           QuadDistribution2D *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void QuadDistribution2DBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFPnt2f::getClassType(), 
-                     "Point1", 
-                     Point1FieldId, Point1FieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&QuadDistribution2DBase::editSFPoint1)),
-    new FieldDescription(SFPnt2f::getClassType(), 
-                     "Point2", 
-                     Point2FieldId, Point2FieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&QuadDistribution2DBase::editSFPoint2)),
-    new FieldDescription(SFPnt2f::getClassType(), 
-                     "Point3", 
-                     Point3FieldId, Point3FieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&QuadDistribution2DBase::editSFPoint3)),
-    new FieldDescription(SFPnt2f::getClassType(), 
-                     "Point4", 
-                     Point4FieldId, Point4FieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&QuadDistribution2DBase::editSFPoint4)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "SurfaceOrEdge", 
-                     SurfaceOrEdgeFieldId, SurfaceOrEdgeFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&QuadDistribution2DBase::editSFSurfaceOrEdge))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType QuadDistribution2DBase::_type(
-    "QuadDistribution2D",
-    "Distribution2D",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&QuadDistribution2DBase::createEmpty),
+    pDesc = new SFPnt2f::Description(
+        SFPnt2f::getClassType(),
+        "Point1",
+        "",
+        Point1FieldId, Point1FieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&QuadDistribution2D::editHandlePoint1),
+        static_cast<FieldGetMethodSig >(&QuadDistribution2D::getHandlePoint1));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFPnt2f::Description(
+        SFPnt2f::getClassType(),
+        "Point2",
+        "",
+        Point2FieldId, Point2FieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&QuadDistribution2D::editHandlePoint2),
+        static_cast<FieldGetMethodSig >(&QuadDistribution2D::getHandlePoint2));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFPnt2f::Description(
+        SFPnt2f::getClassType(),
+        "Point3",
+        "",
+        Point3FieldId, Point3FieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&QuadDistribution2D::editHandlePoint3),
+        static_cast<FieldGetMethodSig >(&QuadDistribution2D::getHandlePoint3));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFPnt2f::Description(
+        SFPnt2f::getClassType(),
+        "Point4",
+        "",
+        Point4FieldId, Point4FieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&QuadDistribution2D::editHandlePoint4),
+        static_cast<FieldGetMethodSig >(&QuadDistribution2D::getHandlePoint4));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "SurfaceOrEdge",
+        "",
+        SurfaceOrEdgeFieldId, SurfaceOrEdgeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&QuadDistribution2D::editHandleSurfaceOrEdge),
+        static_cast<FieldGetMethodSig >(&QuadDistribution2D::getHandleSurfaceOrEdge));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+QuadDistribution2DBase::TypeObject QuadDistribution2DBase::_type(
+    QuadDistribution2DBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&QuadDistribution2DBase::createEmptyLocal),
     QuadDistribution2D::initMethod,
-    _desc,
-    sizeof(_desc));
+    QuadDistribution2D::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&QuadDistribution2D::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"QuadDistribution2D\"\n"
+    "\tparent=\"Distribution2D\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "An QuadDistribution2D.\n"
+    "\t<Field\n"
+    "\t\tname=\"Point1\"\n"
+    "\t\ttype=\"Pnt2f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Point2\"\n"
+    "\t\ttype=\"Pnt2f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1.0,0.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Point3\"\n"
+    "\t\ttype=\"Pnt2f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Point4\"\n"
+    "\t\ttype=\"Pnt2f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SurfaceOrEdge\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"QuadDistribution2D::SURFACE\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "An QuadDistribution2D.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(QuadDistribution2DBase, QuadDistribution2DPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &QuadDistribution2DBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &QuadDistribution2DBase::getType(void) const 
+FieldContainerType &QuadDistribution2DBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr QuadDistribution2DBase::shallowCopy(void) const 
-{ 
-    QuadDistribution2DPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const QuadDistribution2D *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 QuadDistribution2DBase::getContainerSize(void) const 
-{ 
-    return sizeof(QuadDistribution2D); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void QuadDistribution2DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &QuadDistribution2DBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<QuadDistribution2DBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void QuadDistribution2DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 QuadDistribution2DBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((QuadDistribution2DBase *) &other, whichField, sInfo);
+    return sizeof(QuadDistribution2D);
 }
-void QuadDistribution2DBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFPnt2f *QuadDistribution2DBase::editSFPoint1(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(Point1FieldMask);
+
+    return &_sfPoint1;
 }
 
-void QuadDistribution2DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFPnt2f *QuadDistribution2DBase::getSFPoint1(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfPoint1;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-QuadDistribution2DBase::QuadDistribution2DBase(void) :
-    _sfPoint1                 (Pnt2f(0.0,0.0)), 
-    _sfPoint2                 (Pnt2f(1.0,0.0)), 
-    _sfPoint3                 (Pnt2f(1.0,1.0)), 
-    _sfPoint4                 (Pnt2f(0.0,1.0)), 
-    _sfSurfaceOrEdge          (UInt32(QuadDistribution2D::SURFACE)), 
-    Inherited() 
+SFPnt2f *QuadDistribution2DBase::editSFPoint2(void)
 {
+    editSField(Point2FieldMask);
+
+    return &_sfPoint2;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-QuadDistribution2DBase::QuadDistribution2DBase(const QuadDistribution2DBase &source) :
-    _sfPoint1                 (source._sfPoint1                 ), 
-    _sfPoint2                 (source._sfPoint2                 ), 
-    _sfPoint3                 (source._sfPoint3                 ), 
-    _sfPoint4                 (source._sfPoint4                 ), 
-    _sfSurfaceOrEdge          (source._sfSurfaceOrEdge          ), 
-    Inherited                 (source)
+const SFPnt2f *QuadDistribution2DBase::getSFPoint2(void) const
 {
+    return &_sfPoint2;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-QuadDistribution2DBase::~QuadDistribution2DBase(void)
+SFPnt2f *QuadDistribution2DBase::editSFPoint3(void)
 {
+    editSField(Point3FieldMask);
+
+    return &_sfPoint3;
 }
+
+const SFPnt2f *QuadDistribution2DBase::getSFPoint3(void) const
+{
+    return &_sfPoint3;
+}
+
+
+SFPnt2f *QuadDistribution2DBase::editSFPoint4(void)
+{
+    editSField(Point4FieldMask);
+
+    return &_sfPoint4;
+}
+
+const SFPnt2f *QuadDistribution2DBase::getSFPoint4(void) const
+{
+    return &_sfPoint4;
+}
+
+
+SFUInt32 *QuadDistribution2DBase::editSFSurfaceOrEdge(void)
+{
+    editSField(SurfaceOrEdgeFieldMask);
+
+    return &_sfSurfaceOrEdge;
+}
+
+const SFUInt32 *QuadDistribution2DBase::getSFSurfaceOrEdge(void) const
+{
+    return &_sfSurfaceOrEdge;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 QuadDistribution2DBase::getBinSize(const BitVector &whichField)
+UInt32 QuadDistribution2DBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -246,33 +378,28 @@ UInt32 QuadDistribution2DBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfPoint1.getBinSize();
     }
-
     if(FieldBits::NoField != (Point2FieldMask & whichField))
     {
         returnValue += _sfPoint2.getBinSize();
     }
-
     if(FieldBits::NoField != (Point3FieldMask & whichField))
     {
         returnValue += _sfPoint3.getBinSize();
     }
-
     if(FieldBits::NoField != (Point4FieldMask & whichField))
     {
         returnValue += _sfPoint4.getBinSize();
     }
-
     if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
     {
         returnValue += _sfSurfaceOrEdge.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void QuadDistribution2DBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void QuadDistribution2DBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -280,32 +407,26 @@ void QuadDistribution2DBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfPoint1.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (Point2FieldMask & whichField))
     {
         _sfPoint2.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (Point3FieldMask & whichField))
     {
         _sfPoint3.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (Point4FieldMask & whichField))
     {
         _sfPoint4.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
     {
         _sfSurfaceOrEdge.copyToBin(pMem);
     }
-
-
 }
 
-void QuadDistribution2DBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void QuadDistribution2DBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -313,106 +434,337 @@ void QuadDistribution2DBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfPoint1.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (Point2FieldMask & whichField))
     {
         _sfPoint2.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (Point3FieldMask & whichField))
     {
         _sfPoint3.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (Point4FieldMask & whichField))
     {
         _sfPoint4.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
     {
         _sfSurfaceOrEdge.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void QuadDistribution2DBase::executeSyncImpl(      QuadDistribution2DBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+QuadDistribution2DTransitPtr QuadDistribution2DBase::createLocal(BitVector bFlags)
 {
+    QuadDistribution2DTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (Point1FieldMask & whichField))
-        _sfPoint1.syncWith(pOther->_sfPoint1);
+        fc = dynamic_pointer_cast<QuadDistribution2D>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (Point2FieldMask & whichField))
-        _sfPoint2.syncWith(pOther->_sfPoint2);
-
-    if(FieldBits::NoField != (Point3FieldMask & whichField))
-        _sfPoint3.syncWith(pOther->_sfPoint3);
-
-    if(FieldBits::NoField != (Point4FieldMask & whichField))
-        _sfPoint4.syncWith(pOther->_sfPoint4);
-
-    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
-        _sfSurfaceOrEdge.syncWith(pOther->_sfSurfaceOrEdge);
-
-
-}
-#else
-void QuadDistribution2DBase::executeSyncImpl(      QuadDistribution2DBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (Point1FieldMask & whichField))
-        _sfPoint1.syncWith(pOther->_sfPoint1);
-
-    if(FieldBits::NoField != (Point2FieldMask & whichField))
-        _sfPoint2.syncWith(pOther->_sfPoint2);
-
-    if(FieldBits::NoField != (Point3FieldMask & whichField))
-        _sfPoint3.syncWith(pOther->_sfPoint3);
-
-    if(FieldBits::NoField != (Point4FieldMask & whichField))
-        _sfPoint4.syncWith(pOther->_sfPoint4);
-
-    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
-        _sfSurfaceOrEdge.syncWith(pOther->_sfSurfaceOrEdge);
-
-
-
+    return fc;
 }
 
-void QuadDistribution2DBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+QuadDistribution2DTransitPtr QuadDistribution2DBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    QuadDistribution2DTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<QuadDistribution2D>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+QuadDistribution2DTransitPtr QuadDistribution2DBase::create(void)
+{
+    QuadDistribution2DTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<QuadDistribution2D>(tmpPtr);
+    }
+
+    return fc;
+}
+
+QuadDistribution2D *QuadDistribution2DBase::createEmptyLocal(BitVector bFlags)
+{
+    QuadDistribution2D *returnValue;
+
+    newPtr<QuadDistribution2D>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+QuadDistribution2D *QuadDistribution2DBase::createEmpty(void)
+{
+    QuadDistribution2D *returnValue;
+
+    newPtr<QuadDistribution2D>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr QuadDistribution2DBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    QuadDistribution2D *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const QuadDistribution2D *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr QuadDistribution2DBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    QuadDistribution2D *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const QuadDistribution2D *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr QuadDistribution2DBase::shallowCopy(void) const
+{
+    QuadDistribution2D *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const QuadDistribution2D *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+QuadDistribution2DBase::QuadDistribution2DBase(void) :
+    Inherited(),
+    _sfPoint1                 (Pnt2f(0.0,0.0)),
+    _sfPoint2                 (Pnt2f(1.0,0.0)),
+    _sfPoint3                 (Pnt2f(1.0,1.0)),
+    _sfPoint4                 (Pnt2f(0.0,1.0)),
+    _sfSurfaceOrEdge          (UInt32(QuadDistribution2D::SURFACE))
+{
+}
+
+QuadDistribution2DBase::QuadDistribution2DBase(const QuadDistribution2DBase &source) :
+    Inherited(source),
+    _sfPoint1                 (source._sfPoint1                 ),
+    _sfPoint2                 (source._sfPoint2                 ),
+    _sfPoint3                 (source._sfPoint3                 ),
+    _sfPoint4                 (source._sfPoint4                 ),
+    _sfSurfaceOrEdge          (source._sfSurfaceOrEdge          )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+QuadDistribution2DBase::~QuadDistribution2DBase(void)
+{
+}
+
+
+GetFieldHandlePtr QuadDistribution2DBase::getHandlePoint1          (void) const
+{
+    SFPnt2f::GetHandlePtr returnValue(
+        new  SFPnt2f::GetHandle(
+             &_sfPoint1,
+             this->getType().getFieldDesc(Point1FieldId),
+             const_cast<QuadDistribution2DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr QuadDistribution2DBase::editHandlePoint1         (void)
+{
+    SFPnt2f::EditHandlePtr returnValue(
+        new  SFPnt2f::EditHandle(
+             &_sfPoint1,
+             this->getType().getFieldDesc(Point1FieldId),
+             this));
+
+
+    editSField(Point1FieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr QuadDistribution2DBase::getHandlePoint2          (void) const
+{
+    SFPnt2f::GetHandlePtr returnValue(
+        new  SFPnt2f::GetHandle(
+             &_sfPoint2,
+             this->getType().getFieldDesc(Point2FieldId),
+             const_cast<QuadDistribution2DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr QuadDistribution2DBase::editHandlePoint2         (void)
+{
+    SFPnt2f::EditHandlePtr returnValue(
+        new  SFPnt2f::EditHandle(
+             &_sfPoint2,
+             this->getType().getFieldDesc(Point2FieldId),
+             this));
+
+
+    editSField(Point2FieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr QuadDistribution2DBase::getHandlePoint3          (void) const
+{
+    SFPnt2f::GetHandlePtr returnValue(
+        new  SFPnt2f::GetHandle(
+             &_sfPoint3,
+             this->getType().getFieldDesc(Point3FieldId),
+             const_cast<QuadDistribution2DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr QuadDistribution2DBase::editHandlePoint3         (void)
+{
+    SFPnt2f::EditHandlePtr returnValue(
+        new  SFPnt2f::EditHandle(
+             &_sfPoint3,
+             this->getType().getFieldDesc(Point3FieldId),
+             this));
+
+
+    editSField(Point3FieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr QuadDistribution2DBase::getHandlePoint4          (void) const
+{
+    SFPnt2f::GetHandlePtr returnValue(
+        new  SFPnt2f::GetHandle(
+             &_sfPoint4,
+             this->getType().getFieldDesc(Point4FieldId),
+             const_cast<QuadDistribution2DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr QuadDistribution2DBase::editHandlePoint4         (void)
+{
+    SFPnt2f::EditHandlePtr returnValue(
+        new  SFPnt2f::EditHandle(
+             &_sfPoint4,
+             this->getType().getFieldDesc(Point4FieldId),
+             this));
+
+
+    editSField(Point4FieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr QuadDistribution2DBase::getHandleSurfaceOrEdge   (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfSurfaceOrEdge,
+             this->getType().getFieldDesc(SurfaceOrEdgeFieldId),
+             const_cast<QuadDistribution2DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr QuadDistribution2DBase::editHandleSurfaceOrEdge  (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfSurfaceOrEdge,
+             this->getType().getFieldDesc(SurfaceOrEdgeFieldId),
+             this));
+
+
+    editSField(SurfaceOrEdgeFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void QuadDistribution2DBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    QuadDistribution2D *pThis = static_cast<QuadDistribution2D *>(this);
+
+    pThis->execSync(static_cast<QuadDistribution2D *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *QuadDistribution2DBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    QuadDistribution2D *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const QuadDistribution2D *>(pRefAspect),
+                  dynamic_cast<const QuadDistribution2D *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<QuadDistribution2DPtr>::_type("QuadDistribution2DPtr", "Distribution2DPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(QuadDistribution2DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(QuadDistribution2DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+void QuadDistribution2DBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

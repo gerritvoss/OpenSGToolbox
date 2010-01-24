@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,26 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGQuadParticleSystemDrawer.h"
-#include "ParticleSystem/OSGParticleSystem.h"
-#include <OpenSG/OSGDrawable.h>
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::QuadParticleSystemDrawer
-
-*/
+// Documentation for this class is emitted in the
+// OSGQuadParticleSystemDrawerBase.cpp file.
+// To modify it, please change the .fcd file (OSGQuadParticleSystemDrawer.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -69,8 +62,13 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void QuadParticleSystemDrawer::initMethod (void)
+void QuadParticleSystemDrawer::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -78,92 +76,88 @@ void QuadParticleSystemDrawer::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-Action::ResultE QuadParticleSystemDrawer::draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort)
+Action::ResultE QuadParticleSystemDrawer::draw(DrawEnv *pEnv, ParticleSystemUnrecPtr System, const MFUInt32& Sort)
 {
-	bool isSorted(Sort.getSize() > 0);
-	UInt32 NumParticles;
-	if(isSorted)
-	{
-		NumParticles = Sort.getSize();
-	}
-	else
-	{
-		NumParticles = System->getNumParticles();
-	}
-	action->getStatistics()->getElem(ParticleSystem::statNParticles)->add(NumParticles);
-	Pnt3f P1,P2,P3,P4;
-	UInt32 Index;
+    bool isSorted(Sort.getSize() > 0);
+    UInt32 NumParticles;
+    if(isSorted)
+    {
+        NumParticles = Sort.getSize();
+    }
+    else
+    {
+        NumParticles = System->getNumParticles();
+    }
+    Pnt3f P1,P2,P3,P4;
+    UInt32 Index;
 
-glBegin(GL_QUADS);
-	for(UInt32 i(0); i<NumParticles;++i)
-	{
-		if(isSorted)
-		{
-			Index = Sort[i];
-		}
-		else
-		{
-			Index = i;
-		}
-	//Loop through all particles
-		//Get The Normal of the Particle
-		Vec3f Normal = getQuadNormal(action,System, Index);
+    glBegin(GL_QUADS);
+        for(UInt32 i(0); i<NumParticles;++i)
+        {
+            if(isSorted)
+            {
+                Index = Sort[i];
+            }
+            else
+            {
+                Index = i;
+            }
+            //Loop through all particles
+            //Get The Normal of the Particle
+            Vec3f Normal = getQuadNormal(pEnv,System, Index);
 
 
-	    //Calculate the Binormal as the cross between Normal and Up
-	    Vec3f Binormal = getQuadUpDir(action,  System, Index).cross(Normal);
-		
-		//Get the Up Direction of the Particle
-		Vec3f Up = Normal.cross(Binormal);
+            //Calculate the Binormal as the cross between Normal and Up
+            Vec3f Binormal = getQuadUpDir(pEnv,  System, Index).cross(Normal);
 
-		//Determine Local Space of the Particle
-		//This is where error occurs
-		Pnt3f Position = System->getPosition(Index);
+            //Get the Up Direction of the Particle
+            Vec3f Up = Normal.cross(Binormal);
 
-		//Determine the Width and Height of the quad
-		Real32 Width = System->getSize(Index).x()*getQuadSizeScaling().x(),Height =System->getSize(Index).y()*getQuadSizeScaling().y();
+            //Determine Local Space of the Particle
+            //This is where error occurs
+            Pnt3f Position = System->getPosition(Index);
 
-		//Calculate Quads positions
-		P1 = Position + (Width/2.0f)*Binormal + (Height/2.0f)*Up;
-		P2 = Position + (Width/2.0f)*Binormal - (Height/2.0f)*Up;
-		P3 = Position - (Width/2.0f)*Binormal - (Height/2.0f)*Up;
-		P4 = Position - (Width/2.0f)*Binormal + (Height/2.0f)*Up;
+            //Determine the Width and Height of the quad
+            Real32 Width = System->getSize(Index).x()*getQuadSizeScaling().x(),Height =System->getSize(Index).y()*getQuadSizeScaling().y();
 
-	    //Draw the Quad
-		glNormal3fv(Normal.getValues());
+            //Calculate Quads positions
+            P1 = Position + (Width/2.0f)*Binormal + (Height/2.0f)*Up;
+            P2 = Position + (Width/2.0f)*Binormal - (Height/2.0f)*Up;
+            P3 = Position - (Width/2.0f)*Binormal - (Height/2.0f)*Up;
+            P4 = Position - (Width/2.0f)*Binormal + (Height/2.0f)*Up;
 
-		glColor4fv(System->getColor(Index).getValuesRGBA());
-		glTexCoord2f(1.0, 1.0);
-		glVertex3fv(P1.getValues());
-		
+            //Draw the Quad
+            glNormal3fv(Normal.getValues());
 
-		glTexCoord2f(0.0, 1.0);
-		glVertex3fv(P4.getValues());
-		
-	
-		glTexCoord2f(0.0, 0.0);
-		glVertex3fv(P3.getValues());
+            glColor4fv(System->getColor(Index).getValuesRGBA());
+            glTexCoord2f(1.0, 1.0);
+            glVertex3fv(P1.getValues());
 
-		glTexCoord2f(1.0, 0.0);
-		glVertex3fv(P2.getValues());
-	}
-	glColor4f(1.0f,1.0f,1.0f,1.0f);
-glEnd();
-    action->getStatistics()->getElem(Drawable::statNTriangles)->add(2*NumParticles);
-    action->getStatistics()->getElem(Drawable::statNVertices)->add(4*NumParticles);
-    action->getStatistics()->getElem(Drawable::statNPrimitives)->add(2*NumParticles);
 
-	//Generate a local space for the particle
+            glTexCoord2f(0.0, 1.0);
+            glVertex3fv(P4.getValues());
+
+
+            glTexCoord2f(0.0, 0.0);
+            glVertex3fv(P3.getValues());
+
+            glTexCoord2f(1.0, 0.0);
+            glVertex3fv(P2.getValues());
+        }
+        glColor4f(1.0f,1.0f,1.0f,1.0f);
+    glEnd();
+
+    //Generate a local space for the particle
     return Action::Continue;
 }
 
-void QuadParticleSystemDrawer::adjustVolume(ParticleSystemPtr System, Volume & volume)
+void QuadParticleSystemDrawer::adjustVolume(ParticleSystemUnrecPtr System, Volume & volume)
 {
     //Get The Volume of the Particle System
-	Pnt3f MinVolPoint,MaxVolPoint;
+    Pnt3f MinVolPoint,MaxVolPoint;
     System->getVolume().getBounds(MinVolPoint,MaxVolPoint);
 
-	Real32 Width, Height, Max(0.0f);
+    Real32 Width, Height, Max(0.0f);
 
     Vec3f MaxSize(System->getMaxParticleSize() * 0.5f);
 
@@ -171,17 +165,53 @@ void QuadParticleSystemDrawer::adjustVolume(ParticleSystemPtr System, Volume & v
     volume.extendBy( MaxVolPoint + MaxSize );
 
 }
+
+void QuadParticleSystemDrawer::fill(DrawableStatsAttachment *pStat,
+                                    ParticleSystemUnrecPtr System,
+                                    const MFUInt32& Sort)
+{
+    if(pStat == NULL)
+    {
+        FINFO(("QuadParticleSystemDrawer::fill(DrawableStatsAttachment *, ParticleSystemUnrecPtr , const MFUInt32& ): "
+               "No attachment given.\n"));
+
+        return;
+    }
+    if(System == NULL)
+    {
+        FINFO(("QuadParticleSystemDrawer::fill(DrawableStatsAttachment *, ParticleSystemUnrecPtr , const MFUInt32& ): "
+               "Particle System is NULL.\n"));
+
+        return;
+    }
+
+    UInt32 NumParticles;
+
+    if(Sort.size() > 0)
+    {
+        NumParticles = Sort.getSize();
+    }
+    else
+    {
+        NumParticles = System->getNumParticles();
+    }
+
+    pStat->setVertices(4*NumParticles);
+    pStat->setTriangles(2*NumParticles);
+    pStat->setValid(true);
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
-void QuadParticleSystemDrawer::getQuadWidthHeight(ParticleSystemPtr System, UInt32 Index, Real32& Width, Real32& Height)
+void QuadParticleSystemDrawer::getQuadWidthHeight(ParticleSystemUnrecPtr System, UInt32 Index, Real32& Width, Real32& Height)
 {
 	Width = System->getSize(Index).x();
 	Height = System->getSize(Index).y();
 }
 
-Vec3f QuadParticleSystemDrawer::getQuadNormal(DrawActionBase *action,ParticleSystemPtr System, UInt32 Index)
+Vec3f QuadParticleSystemDrawer::getQuadNormal(DrawEnv *pEnv, ParticleSystemUnrecPtr System, UInt32 Index)
 {
 	Vec3f Direction;
 	
@@ -209,8 +239,8 @@ Vec3f QuadParticleSystemDrawer::getQuadNormal(DrawActionBase *action,ParticleSys
 	case NORMAL_VIEW_POSITION:
 		{
 			//TODO: make this more efficient
-			Matrix ModelView = action->getCameraToWorld();
-			Vec3f Position(ModelView[0][3],ModelView[1][3],ModelView[2][3]);
+            Matrix ModelView(pEnv->getCameraViewing()); 
+			Pnt3f Position(ModelView[0][3],ModelView[1][3],ModelView[2][3]);
 			Direction = Position - System->getPosition(Index);
 			Direction.normalize();
 		
@@ -222,16 +252,16 @@ Vec3f QuadParticleSystemDrawer::getQuadNormal(DrawActionBase *action,ParticleSys
 	case NORMAL_VIEW_DIRECTION:
 	default:
 		{
-			//TODO: make this more efficient
-			Matrix ModelView = action->getCameraToWorld();
-			Direction.setValues(ModelView[2][0],ModelView[2][1],ModelView[2][2]);
+            Matrix ModelView(pEnv->getCameraViewing()); 
+            ModelView.mult(pEnv->getObjectToWorld());
+			Direction.setValues(ModelView[0][2],ModelView[1][2],ModelView[2][2]);
 		break;
 		}
 	}
 	return Direction;
 }
 
-Vec3f QuadParticleSystemDrawer::getQuadUpDir(DrawActionBase *action,ParticleSystemPtr System, UInt32 Index)
+Vec3f QuadParticleSystemDrawer::getQuadUpDir(DrawEnv *pEnv, ParticleSystemUnrecPtr System, UInt32 Index)
 {
 	Vec3f Direction;
 	
@@ -258,9 +288,9 @@ Vec3f QuadParticleSystemDrawer::getQuadUpDir(DrawActionBase *action,ParticleSyst
 	case UP_VIEW_DIRECTION:
 	default:
 		{
-			//TODO: make this more efficient
-			Matrix ModelView = action->getCameraToWorld();
-			Direction.setValues(ModelView[1][0],ModelView[1][1],ModelView[1][2]);
+            Matrix ModelView(pEnv->getCameraViewing()); 
+            ModelView.mult(pEnv->getObjectToWorld());
+			Direction.setValues(ModelView[0][1],ModelView[1][1],ModelView[2][1]);
 		break;
 		}
 	}
@@ -286,41 +316,17 @@ QuadParticleSystemDrawer::~QuadParticleSystemDrawer(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void QuadParticleSystemDrawer::changed(BitVector whichField, UInt32 origin)
+void QuadParticleSystemDrawer::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void QuadParticleSystemDrawer::dump(      UInt32    , 
+void QuadParticleSystemDrawer::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump QuadParticleSystemDrawer NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGQUADPARTICLESYSTEMDRAWERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGQUADPARTICLESYSTEMDRAWERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGQUADPARTICLESYSTEMDRAWERFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

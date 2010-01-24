@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,192 +50,300 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILECOLLISIONPARTICLESYSTEMAFFECTORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGParticleSystem.h"          // SecondaryCollisionSystems Class
 
 #include "OSGCollisionParticleSystemAffectorBase.h"
 #include "OSGCollisionParticleSystemAffector.h"
 
+#include <boost/bind.hpp>
+
+#include "OSGEvent.h"
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  CollisionParticleSystemAffectorBase::CollisionDistanceFieldMask = 
-    (TypeTraits<BitVector>::One << CollisionParticleSystemAffectorBase::CollisionDistanceFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  CollisionParticleSystemAffectorBase::SecondaryCollisionSystemsFieldMask = 
-    (TypeTraits<BitVector>::One << CollisionParticleSystemAffectorBase::SecondaryCollisionSystemsFieldId);
+/*! \class OSG::CollisionParticleSystemAffector
+    
+ */
 
-const OSG::BitVector  CollisionParticleSystemAffectorBase::EventProducerFieldMask =
-    (TypeTraits<BitVector>::One << CollisionParticleSystemAffectorBase::EventProducerFieldId);
-
-const OSG::BitVector CollisionParticleSystemAffectorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Real32          CollisionParticleSystemAffectorBase::_sfCollisionDistance
     
 */
-/*! \var ParticleSystemPtr CollisionParticleSystemAffectorBase::_mfSecondaryCollisionSystems
+
+/*! \var ParticleSystem * CollisionParticleSystemAffectorBase::_mfSecondaryCollisionSystems
     
 */
 
-//! CollisionParticleSystemAffector description
 
-FieldDescription *CollisionParticleSystemAffectorBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<CollisionParticleSystemAffector *>::_type("CollisionParticleSystemAffectorPtr", "ParticleSystemAffectorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(CollisionParticleSystemAffector *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           CollisionParticleSystemAffector *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           CollisionParticleSystemAffector *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void CollisionParticleSystemAffectorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "CollisionDistance", 
-                     CollisionDistanceFieldId, CollisionDistanceFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&CollisionParticleSystemAffectorBase::editSFCollisionDistance)),
-    new FieldDescription(MFParticleSystemPtr::getClassType(), 
-                     "SecondaryCollisionSystems", 
-                     SecondaryCollisionSystemsFieldId, SecondaryCollisionSystemsFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&CollisionParticleSystemAffectorBase::editMFSecondaryCollisionSystems))
-    , 
-    new FieldDescription(SFEventProducerPtr::getClassType(), 
-                     "EventProducer", 
-                     EventProducerFieldId,EventProducerFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&CollisionParticleSystemAffectorBase::editSFEventProducer))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType CollisionParticleSystemAffectorBase::_type(
-    "CollisionParticleSystemAffector",
-    "ParticleSystemAffector",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&CollisionParticleSystemAffectorBase::createEmpty),
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "CollisionDistance",
+        "",
+        CollisionDistanceFieldId, CollisionDistanceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&CollisionParticleSystemAffector::editHandleCollisionDistance),
+        static_cast<FieldGetMethodSig >(&CollisionParticleSystemAffector::getHandleCollisionDistance));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFUnrecParticleSystemPtr::Description(
+        MFUnrecParticleSystemPtr::getClassType(),
+        "SecondaryCollisionSystems",
+        "",
+        SecondaryCollisionSystemsFieldId, SecondaryCollisionSystemsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&CollisionParticleSystemAffector::editHandleSecondaryCollisionSystems),
+        static_cast<FieldGetMethodSig >(&CollisionParticleSystemAffector::getHandleSecondaryCollisionSystems));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFEventProducerPtr::Description(
+        SFEventProducerPtr::getClassType(),
+        "EventProducer",
+        "Event Producer",
+        EventProducerFieldId,EventProducerFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast     <FieldEditMethodSig>(&CollisionParticleSystemAffector::invalidEditField),
+        static_cast     <FieldGetMethodSig >(&CollisionParticleSystemAffector::invalidGetField));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+CollisionParticleSystemAffectorBase::TypeObject CollisionParticleSystemAffectorBase::_type(
+    CollisionParticleSystemAffectorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&CollisionParticleSystemAffectorBase::createEmptyLocal),
     CollisionParticleSystemAffector::initMethod,
-    _desc,
-    sizeof(_desc));
+    CollisionParticleSystemAffector::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&CollisionParticleSystemAffector::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"CollisionParticleSystemAffector\"\n"
+    "\tparent=\"ParticleSystemAffector\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"CollisionDistance\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SecondaryCollisionSystems\"\n"
+    "\t\ttype=\"ParticleSystem\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"ParticleCollision\"\n"
+    "\t\ttype=\"ParticleCollisionEvent\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
 //! CollisionParticleSystemAffector Produced Methods
 
 MethodDescription *CollisionParticleSystemAffectorBase::_methodDesc[] =
 {
     new MethodDescription("ParticleCollision", 
+                    "",
                      ParticleCollisionMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod())
 };
 
 EventProducerType CollisionParticleSystemAffectorBase::_producerType(
     "CollisionParticleSystemAffectorProducerType",
     "EventProducerType",
-    NULL,
+    "",
     InitEventProducerFunctor(),
     _methodDesc,
     sizeof(_methodDesc));
-//OSG_FIELD_CONTAINER_DEF(CollisionParticleSystemAffectorBase, CollisionParticleSystemAffectorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &CollisionParticleSystemAffectorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &CollisionParticleSystemAffectorBase::getType(void) const 
+FieldContainerType &CollisionParticleSystemAffectorBase::getType(void)
 {
     return _type;
-} 
+}
+
+const FieldContainerType &CollisionParticleSystemAffectorBase::getType(void) const
+{
+    return _type;
+}
 
 const EventProducerType &CollisionParticleSystemAffectorBase::getProducerType(void) const
 {
     return _producerType;
 }
 
-
-FieldContainerPtr CollisionParticleSystemAffectorBase::shallowCopy(void) const 
-{ 
-    CollisionParticleSystemAffectorPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const CollisionParticleSystemAffector *>(this)); 
-
-    return returnValue; 
-}
-
-UInt32 CollisionParticleSystemAffectorBase::getContainerSize(void) const 
-{ 
-    return sizeof(CollisionParticleSystemAffector); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void CollisionParticleSystemAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+UInt32 CollisionParticleSystemAffectorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl(static_cast<CollisionParticleSystemAffectorBase *>(&other),
-                          whichField);
+    return sizeof(CollisionParticleSystemAffector);
 }
-#else
-void CollisionParticleSystemAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFReal32 *CollisionParticleSystemAffectorBase::editSFCollisionDistance(void)
 {
-    this->executeSyncImpl((CollisionParticleSystemAffectorBase *) &other, whichField, sInfo);
+    editSField(CollisionDistanceFieldMask);
+
+    return &_sfCollisionDistance;
 }
-void CollisionParticleSystemAffectorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+const SFReal32 *CollisionParticleSystemAffectorBase::getSFCollisionDistance(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfCollisionDistance;
 }
 
-void CollisionParticleSystemAffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+
+//! Get the CollisionParticleSystemAffector::_mfSecondaryCollisionSystems field.
+const MFUnrecParticleSystemPtr *CollisionParticleSystemAffectorBase::getMFSecondaryCollisionSystems(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
-    _mfSecondaryCollisionSystems.terminateShare(uiAspect, this->getContainerSize());
+    return &_mfSecondaryCollisionSystems;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-CollisionParticleSystemAffectorBase::CollisionParticleSystemAffectorBase(void) :
-    _Producer(&getProducerType()),
-    _sfCollisionDistance      (Real32(0.0f)), 
-    _mfSecondaryCollisionSystems(), 
-    _sfEventProducer(&_Producer),
-    Inherited() 
+MFUnrecParticleSystemPtr *CollisionParticleSystemAffectorBase::editMFSecondaryCollisionSystems(void)
 {
+    editMField(SecondaryCollisionSystemsFieldMask, _mfSecondaryCollisionSystems);
+
+    return &_mfSecondaryCollisionSystems;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-CollisionParticleSystemAffectorBase::CollisionParticleSystemAffectorBase(const CollisionParticleSystemAffectorBase &source) :
-    _Producer(&source.getProducerType()),
-    _sfCollisionDistance      (source._sfCollisionDistance      ), 
-    _mfSecondaryCollisionSystems(source._mfSecondaryCollisionSystems), 
-    _sfEventProducer(&_Producer),
-    Inherited                 (source)
+
+void CollisionParticleSystemAffectorBase::pushToSecondaryCollisionSystems(ParticleSystem * const value)
 {
+    editMField(SecondaryCollisionSystemsFieldMask, _mfSecondaryCollisionSystems);
+
+    _mfSecondaryCollisionSystems.push_back(value);
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-CollisionParticleSystemAffectorBase::~CollisionParticleSystemAffectorBase(void)
+void CollisionParticleSystemAffectorBase::assignSecondaryCollisionSystems(const MFUnrecParticleSystemPtr &value)
 {
+    MFUnrecParticleSystemPtr::const_iterator elemIt  =
+        value.begin();
+    MFUnrecParticleSystemPtr::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<CollisionParticleSystemAffector *>(this)->clearSecondaryCollisionSystems();
+
+    while(elemIt != elemEnd)
+    {
+        this->pushToSecondaryCollisionSystems(*elemIt);
+
+        ++elemIt;
+    }
 }
+
+void CollisionParticleSystemAffectorBase::removeFromSecondaryCollisionSystems(UInt32 uiIndex)
+{
+    if(uiIndex < _mfSecondaryCollisionSystems.size())
+    {
+        editMField(SecondaryCollisionSystemsFieldMask, _mfSecondaryCollisionSystems);
+
+        _mfSecondaryCollisionSystems.erase(uiIndex);
+    }
+}
+
+void CollisionParticleSystemAffectorBase::removeObjFromSecondaryCollisionSystems(ParticleSystem * const value)
+{
+    Int32 iElemIdx = _mfSecondaryCollisionSystems.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(SecondaryCollisionSystemsFieldMask, _mfSecondaryCollisionSystems);
+
+        _mfSecondaryCollisionSystems.erase(iElemIdx);
+    }
+}
+void CollisionParticleSystemAffectorBase::clearSecondaryCollisionSystems(void)
+{
+    editMField(SecondaryCollisionSystemsFieldMask, _mfSecondaryCollisionSystems);
+
+
+    _mfSecondaryCollisionSystems.clear();
+}
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 CollisionParticleSystemAffectorBase::getBinSize(const BitVector &whichField)
+UInt32 CollisionParticleSystemAffectorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -243,23 +351,20 @@ UInt32 CollisionParticleSystemAffectorBase::getBinSize(const BitVector &whichFie
     {
         returnValue += _sfCollisionDistance.getBinSize();
     }
-
     if(FieldBits::NoField != (SecondaryCollisionSystemsFieldMask & whichField))
     {
         returnValue += _mfSecondaryCollisionSystems.getBinSize();
     }
-
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
     {
         returnValue += _sfEventProducer.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void CollisionParticleSystemAffectorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void CollisionParticleSystemAffectorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -267,22 +372,18 @@ void CollisionParticleSystemAffectorBase::copyToBin(      BinaryDataHandler &pMe
     {
         _sfCollisionDistance.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SecondaryCollisionSystemsFieldMask & whichField))
     {
         _mfSecondaryCollisionSystems.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
     {
         _sfEventProducer.copyToBin(pMem);
     }
-
-
 }
 
-void CollisionParticleSystemAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void CollisionParticleSystemAffectorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -290,84 +391,287 @@ void CollisionParticleSystemAffectorBase::copyFromBin(      BinaryDataHandler &p
     {
         _sfCollisionDistance.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SecondaryCollisionSystemsFieldMask & whichField))
     {
         _mfSecondaryCollisionSystems.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
     {
         _sfEventProducer.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void CollisionParticleSystemAffectorBase::executeSyncImpl(      CollisionParticleSystemAffectorBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+CollisionParticleSystemAffectorTransitPtr CollisionParticleSystemAffectorBase::createLocal(BitVector bFlags)
 {
+    CollisionParticleSystemAffectorTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (CollisionDistanceFieldMask & whichField))
-        _sfCollisionDistance.syncWith(pOther->_sfCollisionDistance);
+        fc = dynamic_pointer_cast<CollisionParticleSystemAffector>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (SecondaryCollisionSystemsFieldMask & whichField))
-        _mfSecondaryCollisionSystems.syncWith(pOther->_mfSecondaryCollisionSystems);
-
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-        _sfEventProducer.syncWith(pOther->_sfEventProducer);
-
-
-}
-#else
-void CollisionParticleSystemAffectorBase::executeSyncImpl(      CollisionParticleSystemAffectorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (CollisionDistanceFieldMask & whichField))
-        _sfCollisionDistance.syncWith(pOther->_sfCollisionDistance);
-
-
-    if(FieldBits::NoField != (SecondaryCollisionSystemsFieldMask & whichField))
-        _mfSecondaryCollisionSystems.syncWith(pOther->_mfSecondaryCollisionSystems, sInfo);
-
-
+    return fc;
 }
 
-void CollisionParticleSystemAffectorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+CollisionParticleSystemAffectorTransitPtr CollisionParticleSystemAffectorBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    CollisionParticleSystemAffectorTransitPtr fc;
 
-    if(FieldBits::NoField != (SecondaryCollisionSystemsFieldMask & whichField))
-        _mfSecondaryCollisionSystems.beginEdit(uiAspect, uiContainerSize);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
+        fc = dynamic_pointer_cast<CollisionParticleSystemAffector>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+CollisionParticleSystemAffectorTransitPtr CollisionParticleSystemAffectorBase::create(void)
+{
+    CollisionParticleSystemAffectorTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<CollisionParticleSystemAffector>(tmpPtr);
+    }
+
+    return fc;
+}
+
+CollisionParticleSystemAffector *CollisionParticleSystemAffectorBase::createEmptyLocal(BitVector bFlags)
+{
+    CollisionParticleSystemAffector *returnValue;
+
+    newPtr<CollisionParticleSystemAffector>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+CollisionParticleSystemAffector *CollisionParticleSystemAffectorBase::createEmpty(void)
+{
+    CollisionParticleSystemAffector *returnValue;
+
+    newPtr<CollisionParticleSystemAffector>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr CollisionParticleSystemAffectorBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    CollisionParticleSystemAffector *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const CollisionParticleSystemAffector *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr CollisionParticleSystemAffectorBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    CollisionParticleSystemAffector *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const CollisionParticleSystemAffector *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr CollisionParticleSystemAffectorBase::shallowCopy(void) const
+{
+    CollisionParticleSystemAffector *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const CollisionParticleSystemAffector *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+CollisionParticleSystemAffectorBase::CollisionParticleSystemAffectorBase(void) :
+    _Producer(&getProducerType()),
+    Inherited(),
+    _sfCollisionDistance      (Real32(0.0f)),
+    _mfSecondaryCollisionSystems()
+    ,_sfEventProducer(&_Producer)
+{
+}
+
+CollisionParticleSystemAffectorBase::CollisionParticleSystemAffectorBase(const CollisionParticleSystemAffectorBase &source) :
+    _Producer(&source.getProducerType()),
+    Inherited(source),
+    _sfCollisionDistance      (source._sfCollisionDistance      ),
+    _mfSecondaryCollisionSystems()
+    ,_sfEventProducer(&_Producer)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+CollisionParticleSystemAffectorBase::~CollisionParticleSystemAffectorBase(void)
+{
+}
+
+void CollisionParticleSystemAffectorBase::onCreate(const CollisionParticleSystemAffector *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        CollisionParticleSystemAffector *pThis = static_cast<CollisionParticleSystemAffector *>(this);
+
+        MFUnrecParticleSystemPtr::const_iterator SecondaryCollisionSystemsIt  =
+            source->_mfSecondaryCollisionSystems.begin();
+        MFUnrecParticleSystemPtr::const_iterator SecondaryCollisionSystemsEnd =
+            source->_mfSecondaryCollisionSystems.end  ();
+
+        while(SecondaryCollisionSystemsIt != SecondaryCollisionSystemsEnd)
+        {
+            pThis->pushToSecondaryCollisionSystems(*SecondaryCollisionSystemsIt);
+
+            ++SecondaryCollisionSystemsIt;
+        }
+    }
+}
+
+GetFieldHandlePtr CollisionParticleSystemAffectorBase::getHandleCollisionDistance (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfCollisionDistance,
+             this->getType().getFieldDesc(CollisionDistanceFieldId),
+             const_cast<CollisionParticleSystemAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr CollisionParticleSystemAffectorBase::editHandleCollisionDistance(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfCollisionDistance,
+             this->getType().getFieldDesc(CollisionDistanceFieldId),
+             this));
+
+
+    editSField(CollisionDistanceFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr CollisionParticleSystemAffectorBase::getHandleSecondaryCollisionSystems (void) const
+{
+    MFUnrecParticleSystemPtr::GetHandlePtr returnValue(
+        new  MFUnrecParticleSystemPtr::GetHandle(
+             &_mfSecondaryCollisionSystems,
+             this->getType().getFieldDesc(SecondaryCollisionSystemsFieldId),
+             const_cast<CollisionParticleSystemAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr CollisionParticleSystemAffectorBase::editHandleSecondaryCollisionSystems(void)
+{
+    MFUnrecParticleSystemPtr::EditHandlePtr returnValue(
+        new  MFUnrecParticleSystemPtr::EditHandle(
+             &_mfSecondaryCollisionSystems,
+             this->getType().getFieldDesc(SecondaryCollisionSystemsFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&CollisionParticleSystemAffector::pushToSecondaryCollisionSystems,
+                    static_cast<CollisionParticleSystemAffector *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&CollisionParticleSystemAffector::removeFromSecondaryCollisionSystems,
+                    static_cast<CollisionParticleSystemAffector *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&CollisionParticleSystemAffector::removeObjFromSecondaryCollisionSystems,
+                    static_cast<CollisionParticleSystemAffector *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&CollisionParticleSystemAffector::clearSecondaryCollisionSystems,
+                    static_cast<CollisionParticleSystemAffector *>(this)));
+
+    editMField(SecondaryCollisionSystemsFieldMask, _mfSecondaryCollisionSystems);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void CollisionParticleSystemAffectorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    CollisionParticleSystemAffector *pThis = static_cast<CollisionParticleSystemAffector *>(this);
+
+    pThis->execSync(static_cast<CollisionParticleSystemAffector *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *CollisionParticleSystemAffectorBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    CollisionParticleSystemAffector *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const CollisionParticleSystemAffector *>(pRefAspect),
+                  dynamic_cast<const CollisionParticleSystemAffector *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<CollisionParticleSystemAffectorPtr>::_type("CollisionParticleSystemAffectorPtr", "ParticleSystemAffectorPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(CollisionParticleSystemAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(CollisionParticleSystemAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+void CollisionParticleSystemAffectorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<CollisionParticleSystemAffector *>(this)->clearSecondaryCollisionSystems();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

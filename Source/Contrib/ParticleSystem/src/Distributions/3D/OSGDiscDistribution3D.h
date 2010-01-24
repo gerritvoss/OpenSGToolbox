@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Dynamics                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,41 +42,48 @@
 #pragma once
 #endif
 
-#include "OSGParticleSystemDef.h"
-
 #include "OSGDiscDistribution3DBase.h"
-#include <OpenSG/OSGVecFieldDataType.h>
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING DiscDistribution3D : public DiscDistribution3DBase
-{
-  private:
+/*! \brief DiscDistribution3D class. See \ref
+           PageContribParticleSystemDiscDistribution3D for a description.
+*/
 
-    typedef DiscDistribution3DBase Inherited;
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DiscDistribution3D : public DiscDistribution3DBase
+{
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
     enum SurfaceOrEdge {SURFACE=0, EDGE=1};
+
+    typedef DiscDistribution3DBase Inherited;
+    typedef DiscDistribution3D     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
     virtual Vec3f generate(void) const;
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in DiscDistribution3DBase.
@@ -93,20 +100,24 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DiscDistribution3D : public DiscDistribut
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DiscDistribution3D(void); 
+    virtual ~DiscDistribution3D(void);
 
     /*! \}                                                                 */
-   
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class DiscDistribution3DBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const DiscDistribution3D &source);
 };
 

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,50 +55,66 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &ParticleGeneratorDecoratorBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ParticleGeneratorDecoratorBase::getClassTypeId(void) 
+OSG::UInt32 ParticleGeneratorDecoratorBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
+    return _type.getId();
+}
 
+inline
+OSG::UInt16 ParticleGeneratorDecoratorBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
+}
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ParticleGeneratorDecorator::_sfDecoratee field.
-inline
-SFParticleGeneratorPtr *ParticleGeneratorDecoratorBase::getSFDecoratee(void)
-{
-    return &_sfDecoratee;
-}
-
 
 //! Get the value of the ParticleGeneratorDecorator::_sfDecoratee field.
 inline
-ParticleGeneratorPtr &ParticleGeneratorDecoratorBase::getDecoratee(void)
-{
-    return _sfDecoratee.getValue();
-}
-
-//! Get the value of the ParticleGeneratorDecorator::_sfDecoratee field.
-inline
-const ParticleGeneratorPtr &ParticleGeneratorDecoratorBase::getDecoratee(void) const
+ParticleGenerator * ParticleGeneratorDecoratorBase::getDecoratee(void) const
 {
     return _sfDecoratee.getValue();
 }
 
 //! Set the value of the ParticleGeneratorDecorator::_sfDecoratee field.
 inline
-void ParticleGeneratorDecoratorBase::setDecoratee(const ParticleGeneratorPtr &value)
+void ParticleGeneratorDecoratorBase::setDecoratee(ParticleGenerator * const value)
 {
+    editSField(DecorateeFieldMask);
+
     _sfDecoratee.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void ParticleGeneratorDecoratorBase::execSync (      ParticleGeneratorDecoratorBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGPARTICLEGENERATORDECORATORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (DecorateeFieldMask & whichField))
+        _sfDecoratee.syncWith(pFrom->_sfDecoratee);
+}
+#endif
+
+
+inline
+const Char8 *ParticleGeneratorDecoratorBase::getClassname(void)
+{
+    return "ParticleGeneratorDecorator";
+}
+
+
+OSG_GEN_CONTAINERPTR(ParticleGeneratorDecorator);
+
+OSG_END_NAMESPACE
 

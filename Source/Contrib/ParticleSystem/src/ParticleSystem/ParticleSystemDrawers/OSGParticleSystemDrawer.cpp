@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGParticleSystemDrawer.h"
-#include "ParticleSystem/OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::ParticleSystemDrawer
-
-*/
+// Documentation for this class is emitted in the
+// OSGParticleSystemDrawerBase.cpp file.
+// To modify it, please change the .fcd file (OSGParticleSystemDrawer.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -68,8 +62,13 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ParticleSystemDrawer::initMethod (void)
+void ParticleSystemDrawer::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -77,7 +76,7 @@ void ParticleSystemDrawer::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ParticleSystemDrawer::adjustVolume(ParticleSystemPtr System, Volume & volume)
+void ParticleSystemDrawer::adjustVolume(ParticleSystemUnrecPtr System, Volume & volume)
 {
     //Get The Volume of the Particle System
 	Pnt3f MinVolPoint,MaxVolPoint;
@@ -111,41 +110,17 @@ ParticleSystemDrawer::~ParticleSystemDrawer(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void ParticleSystemDrawer::changed(BitVector whichField, UInt32 origin)
+void ParticleSystemDrawer::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void ParticleSystemDrawer::dump(      UInt32    , 
+void ParticleSystemDrawer::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump ParticleSystemDrawer NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGPARTICLESYSTEMDRAWERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPARTICLESYSTEMDRAWERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGPARTICLESYSTEMDRAWERFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

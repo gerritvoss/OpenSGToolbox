@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,67 +58,77 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGDynamicsParticleGenerator.h" // Parent
 
-#include <OpenSG/OSGReal32Fields.h> // GenerationRate type
-#include <OpenSG/OSGReal32Fields.h> // TimeSinceLastGeneration type
-#include <OpenSG/OSGReal32Fields.h> // RateSpread type
+#include "OSGSysFields.h"               // GenerationRate type
 
 #include "OSGRateParticleGeneratorFields.h"
+
+
 OSG_BEGIN_NAMESPACE
 
 class RateParticleGenerator;
-class BinaryDataHandler;
 
 //! \brief RateParticleGenerator Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING RateParticleGeneratorBase : public DynamicsParticleGenerator
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING RateParticleGeneratorBase : public DynamicsParticleGenerator
 {
-  private:
-
-    typedef DynamicsParticleGenerator    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef RateParticleGeneratorPtr  Ptr;
+    typedef DynamicsParticleGenerator Inherited;
+    typedef DynamicsParticleGenerator ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(RateParticleGenerator);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        GenerationRateFieldId          = Inherited::NextFieldId,
-        TimeSinceLastGenerationFieldId = GenerationRateFieldId          + 1,
-        RateSpreadFieldId              = TimeSinceLastGenerationFieldId + 1,
-        NextFieldId                    = RateSpreadFieldId              + 1
+        GenerationRateFieldId = Inherited::NextFieldId,
+        TimeSinceLastGenerationFieldId = GenerationRateFieldId + 1,
+        RateSpreadFieldId = TimeSinceLastGenerationFieldId + 1,
+        NextFieldId = RateSpreadFieldId + 1
     };
 
-    static const OSG::BitVector GenerationRateFieldMask;
-    static const OSG::BitVector TimeSinceLastGenerationFieldMask;
-    static const OSG::BitVector RateSpreadFieldMask;
+    static const OSG::BitVector GenerationRateFieldMask =
+        (TypeTraits<BitVector>::One << GenerationRateFieldId);
+    static const OSG::BitVector TimeSinceLastGenerationFieldMask =
+        (TypeTraits<BitVector>::One << TimeSinceLastGenerationFieldId);
+    static const OSG::BitVector RateSpreadFieldMask =
+        (TypeTraits<BitVector>::One << RateSpreadFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFReal32          SFGenerationRateType;
+    typedef SFReal32          SFTimeSinceLastGenerationType;
+    typedef SFReal32          SFRateSpreadType;
 
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -128,31 +138,30 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RateParticleGeneratorBase : public Dynami
     /*! \{                                                                 */
 
 
-           SFReal32            *editSFGenerationRate (void);
-     const SFReal32            *getSFGenerationRate (void) const;
+                  SFReal32            *editSFGenerationRate (void);
+            const SFReal32            *getSFGenerationRate  (void) const;
 
-           SFReal32            *editSFRateSpread     (void);
-     const SFReal32            *getSFRateSpread     (void) const;
-
-
-           Real32              &editGenerationRate (void);
-     const Real32              &getGenerationRate (void) const;
+                  SFReal32            *editSFRateSpread     (void);
+            const SFReal32            *getSFRateSpread      (void) const;
 
 
-           Real32              &editRateSpread     (void);
-     const Real32              &getRateSpread     (void) const;
+                  Real32              &editGenerationRate (void);
+                  Real32               getGenerationRate  (void) const;
+
+                  Real32              &editRateSpread     (void);
+                  Real32               getRateSpread      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setGenerationRate ( const Real32 &value );
-     void setRateSpread     ( const Real32 &value );
+            void setGenerationRate (const Real32 value);
+            void setRateSpread     (const Real32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -160,40 +169,58 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RateParticleGeneratorBase : public Dynami
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  RateParticleGeneratorPtr      create          (void); 
-    static  RateParticleGeneratorPtr      createEmpty     (void); 
+    static  RateParticleGeneratorTransitPtr  create          (void);
+    static  RateParticleGenerator           *createEmpty     (void);
+
+    static  RateParticleGeneratorTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  RateParticleGenerator            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  RateParticleGeneratorTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFReal32            _sfGenerationRate;
-    SFReal32            _sfTimeSinceLastGeneration;
-    SFReal32            _sfRateSpread;
+    SFReal32          _sfGenerationRate;
+    SFReal32          _sfTimeSinceLastGeneration;
+    SFReal32          _sfRateSpread;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -208,84 +235,107 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RateParticleGeneratorBase : public Dynami
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~RateParticleGeneratorBase(void); 
+    virtual ~RateParticleGeneratorBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleGenerationRate  (void) const;
+    EditFieldHandlePtr editHandleGenerationRate (void);
+    GetFieldHandlePtr  getHandleTimeSinceLastGeneration (void) const;
+    EditFieldHandlePtr editHandleTimeSinceLastGeneration(void);
+    GetFieldHandlePtr  getHandleRateSpread      (void) const;
+    EditFieldHandlePtr editHandleRateSpread     (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *editSFTimeSinceLastGeneration(void);
-     const SFReal32            *getSFTimeSinceLastGeneration(void) const;
 
-           Real32              &editTimeSinceLastGeneration(void);
-     const Real32              &getTimeSinceLastGeneration(void) const;
+                  SFReal32            *editSFTimeSinceLastGeneration(void);
+            const SFReal32            *getSFTimeSinceLastGeneration (void) const;
+
+
+                  Real32              &editTimeSinceLastGeneration(void);
+                  Real32               getTimeSinceLastGeneration (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setTimeSinceLastGeneration(const Real32 &value);
+            void setTimeSinceLastGeneration(const Real32 value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      RateParticleGeneratorBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      RateParticleGeneratorBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      RateParticleGeneratorBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const RateParticleGeneratorBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef RateParticleGeneratorBase *RateParticleGeneratorBaseP;
-
-typedef osgIF<RateParticleGeneratorBase::isNodeCore,
-              CoredNodePtr<RateParticleGenerator>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet RateParticleGeneratorNodePtr;
-
-typedef RefPtr<RateParticleGeneratorPtr> RateParticleGeneratorRefPtr;
 
 OSG_END_NAMESPACE
 

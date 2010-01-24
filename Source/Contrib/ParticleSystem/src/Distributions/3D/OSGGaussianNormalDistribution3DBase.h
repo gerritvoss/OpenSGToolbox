@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,70 +58,82 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGDistribution3D.h" // Parent
 
-#include <OpenSG/OSGPnt3fFields.h> // Mean type
-#include <OpenSG/OSGReal32Fields.h> // StandardDeviationX type
-#include <OpenSG/OSGReal32Fields.h> // StandardDeviationY type
-#include <OpenSG/OSGReal32Fields.h> // StandardDeviationZ type
+#include "OSGVecFields.h"               // Mean type
+#include "OSGSysFields.h"               // StandardDeviationX type
 
 #include "OSGGaussianNormalDistribution3DFields.h"
+
+
 OSG_BEGIN_NAMESPACE
 
 class GaussianNormalDistribution3D;
-class BinaryDataHandler;
 
 //! \brief GaussianNormalDistribution3D Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING GaussianNormalDistribution3DBase : public Distribution3D
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING GaussianNormalDistribution3DBase : public Distribution3D
 {
-  private:
-
-    typedef Distribution3D    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef GaussianNormalDistribution3DPtr  Ptr;
+    typedef Distribution3D Inherited;
+    typedef Distribution3D ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(GaussianNormalDistribution3D);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        MeanFieldId               = Inherited::NextFieldId,
-        StandardDeviationXFieldId = MeanFieldId               + 1,
+        MeanFieldId = Inherited::NextFieldId,
+        StandardDeviationXFieldId = MeanFieldId + 1,
         StandardDeviationYFieldId = StandardDeviationXFieldId + 1,
         StandardDeviationZFieldId = StandardDeviationYFieldId + 1,
-        NextFieldId               = StandardDeviationZFieldId + 1
+        NextFieldId = StandardDeviationZFieldId + 1
     };
 
-    static const OSG::BitVector MeanFieldMask;
-    static const OSG::BitVector StandardDeviationXFieldMask;
-    static const OSG::BitVector StandardDeviationYFieldMask;
-    static const OSG::BitVector StandardDeviationZFieldMask;
+    static const OSG::BitVector MeanFieldMask =
+        (TypeTraits<BitVector>::One << MeanFieldId);
+    static const OSG::BitVector StandardDeviationXFieldMask =
+        (TypeTraits<BitVector>::One << StandardDeviationXFieldId);
+    static const OSG::BitVector StandardDeviationYFieldMask =
+        (TypeTraits<BitVector>::One << StandardDeviationYFieldId);
+    static const OSG::BitVector StandardDeviationZFieldMask =
+        (TypeTraits<BitVector>::One << StandardDeviationZFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFPnt3f           SFMeanType;
+    typedef SFReal32          SFStandardDeviationXType;
+    typedef SFReal32          SFStandardDeviationYType;
+    typedef SFReal32          SFStandardDeviationZType;
 
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -131,44 +143,44 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GaussianNormalDistribution3DBase : public
     /*! \{                                                                 */
 
 
-           SFPnt3f             *editSFMean           (void);
-     const SFPnt3f             *getSFMean           (void) const;
+                  SFPnt3f             *editSFMean           (void);
+            const SFPnt3f             *getSFMean            (void) const;
 
-           SFReal32            *editSFStandardDeviationX(void);
-     const SFReal32            *getSFStandardDeviationX(void) const;
+                  SFReal32            *editSFStandardDeviationX(void);
+            const SFReal32            *getSFStandardDeviationX (void) const;
 
-           SFReal32            *editSFStandardDeviationY(void);
-     const SFReal32            *getSFStandardDeviationY(void) const;
+                  SFReal32            *editSFStandardDeviationY(void);
+            const SFReal32            *getSFStandardDeviationY (void) const;
 
-           SFReal32            *editSFStandardDeviationZ(void);
-     const SFReal32            *getSFStandardDeviationZ(void) const;
+                  SFReal32            *editSFStandardDeviationZ(void);
+            const SFReal32            *getSFStandardDeviationZ (void) const;
 
 
-           Pnt3f               &editMean           (void);
-     const Pnt3f               &getMean           (void) const;
+                  Pnt3f               &editMean           (void);
+            const Pnt3f               &getMean            (void) const;
 
-           Real32              &editStandardDeviationX(void);
-     const Real32              &getStandardDeviationX(void) const;
+                  Real32              &editStandardDeviationX(void);
+                  Real32               getStandardDeviationX (void) const;
 
-           Real32              &editStandardDeviationY(void);
-     const Real32              &getStandardDeviationY(void) const;
+                  Real32              &editStandardDeviationY(void);
+                  Real32               getStandardDeviationY (void) const;
 
-           Real32              &editStandardDeviationZ(void);
-     const Real32              &getStandardDeviationZ(void) const;
+                  Real32              &editStandardDeviationZ(void);
+                  Real32               getStandardDeviationZ (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setMean           ( const Pnt3f &value );
-     void setStandardDeviationX( const Real32 &value );
-     void setStandardDeviationY( const Real32 &value );
-     void setStandardDeviationZ( const Real32 &value );
+            void setMean           (const Pnt3f &value);
+            void setStandardDeviationX(const Real32 value);
+            void setStandardDeviationY(const Real32 value);
+            void setStandardDeviationZ(const Real32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -176,41 +188,59 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GaussianNormalDistribution3DBase : public
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  GaussianNormalDistribution3DPtr      create          (void); 
-    static  GaussianNormalDistribution3DPtr      createEmpty     (void); 
+    static  GaussianNormalDistribution3DTransitPtr  create          (void);
+    static  GaussianNormalDistribution3D           *createEmpty     (void);
+
+    static  GaussianNormalDistribution3DTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  GaussianNormalDistribution3D            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  GaussianNormalDistribution3DTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFPnt3f             _sfMean;
-    SFReal32            _sfStandardDeviationX;
-    SFReal32            _sfStandardDeviationY;
-    SFReal32            _sfStandardDeviationZ;
+    SFPnt3f           _sfMean;
+    SFReal32          _sfStandardDeviationX;
+    SFReal32          _sfStandardDeviationY;
+    SFReal32          _sfStandardDeviationZ;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -225,66 +255,84 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GaussianNormalDistribution3DBase : public
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~GaussianNormalDistribution3DBase(void); 
+    virtual ~GaussianNormalDistribution3DBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleMean            (void) const;
+    EditFieldHandlePtr editHandleMean           (void);
+    GetFieldHandlePtr  getHandleStandardDeviationX (void) const;
+    EditFieldHandlePtr editHandleStandardDeviationX(void);
+    GetFieldHandlePtr  getHandleStandardDeviationY (void) const;
+    EditFieldHandlePtr editHandleStandardDeviationY(void);
+    GetFieldHandlePtr  getHandleStandardDeviationZ (void) const;
+    EditFieldHandlePtr editHandleStandardDeviationZ(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      GaussianNormalDistribution3DBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      GaussianNormalDistribution3DBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      GaussianNormalDistribution3DBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const GaussianNormalDistribution3DBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef GaussianNormalDistribution3DBase *GaussianNormalDistribution3DBaseP;
-
-typedef osgIF<GaussianNormalDistribution3DBase::isNodeCore,
-              CoredNodePtr<GaussianNormalDistribution3D>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet GaussianNormalDistribution3DNodePtr;
-
-typedef RefPtr<GaussianNormalDistribution3DPtr> GaussianNormalDistribution3DRefPtr;
 
 OSG_END_NAMESPACE
 

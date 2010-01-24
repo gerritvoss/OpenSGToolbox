@@ -3,35 +3,38 @@
 <FieldContainer
 	name="GeometryCollisionParticleSystemAffector"
 	parent="ParticleSystemAffector"
-	library="ParticleSystem"
-	pointerfieldtypes="both"
+    library="ContribParticleSystem"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 	<Field
 		name="CollisionAffectors"
-		type="ParticleAffectorPtr"
+		type="ParticleAffector"
+        category="pointer"
 		cardinality="multi"
 		visibility="external"
 		access="public"
-		header="ParticleSystem/ParticleAffectors/OSGParticleAffectorFields.h"
 	>
 	</Field>
 	<Field
 		name="CollisionNode"
-		type="NodePtr"
+		type="Node"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<ProducedMethod
 		name="ParticleCollision"
-		producedEventType="ParticleEvent"
+		type="ParticleEvent"
 	>
 	</ProducedMethod>
 </FieldContainer>

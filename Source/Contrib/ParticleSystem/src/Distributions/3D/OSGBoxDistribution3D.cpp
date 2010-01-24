@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Dynamics                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,23 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGBoxDistribution3D.h"
-#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
+#include "OSGRandomPoolManager.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::BoxDistribution3D
-An BoxDistribution3D. 	
-*/
+// Documentation for this class is emitted in the
+// OSGBoxDistribution3DBase.cpp file.
+// To modify it, please change the .fcd file (OSGBoxDistribution3D.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -66,8 +63,13 @@ An BoxDistribution3D.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void BoxDistribution3D::initMethod (void)
+void BoxDistribution3D::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -96,42 +98,43 @@ Vec3f BoxDistribution3D::generate(void) const
             Real32 PickSide(RandomPoolManager::getRandomReal32(0.0,1.0));
             if(PickSide >= 0.0 && PickSide <Areas[0]/Areas.back())  //Min Z
             {
-                Result = Pnt3f(getMinPoint()) +
+                Result = getMinPoint().subZero() +
                          Vec3f(RandomPoolManager::getRandomReal32(0.0,1.0)*SideLengths.x(),
                                RandomPoolManager::getRandomReal32(0.0,1.0)*SideLengths.y(),
                                0.0);
             }
             else if(PickSide >= Areas[0]/Areas.back() && PickSide <Areas[1]/Areas.back())  //Max Z
             {
-                Result = Pnt3f(getMinPoint().x(), getMinPoint().y(), getMaxPoint().z()) +
+                Result = Vec3f(getMinPoint().x(), getMinPoint().y(),
+                               getMaxPoint().z()) +
                          Vec3f(RandomPoolManager::getRandomReal32(0.0,1.0)*SideLengths.x(),
                                RandomPoolManager::getRandomReal32(0.0,1.0)*SideLengths.y(),
                                0.0);
             }
             else if(PickSide >= Areas[1]/Areas.back() && PickSide <Areas[2]/Areas.back())  //Min Y
             {
-                Result = Pnt3f(getMinPoint()) +
+                Result = getMinPoint().subZero() +
                          Vec3f(RandomPoolManager::getRandomReal32(0.0,1.0)*SideLengths.x(),
                                0.0,
                                RandomPoolManager::getRandomReal32(0.0,1.0)*SideLengths.z());
             }
             else if(PickSide >= Areas[2]/Areas.back() && PickSide <Areas[3]/Areas.back())  //Max Y
             {
-                Result = Pnt3f(getMinPoint().x(), getMaxPoint().y(), getMinPoint().z()) +
+                Result = Vec3f(getMinPoint().x(), getMaxPoint().y(), getMinPoint().z()) +
                          Vec3f(RandomPoolManager::getRandomReal32(0.0,1.0)*SideLengths.x(),
                                0.0,
                                RandomPoolManager::getRandomReal32(0.0,1.0)*SideLengths.z());
             }
             else if(PickSide >= Areas[3]/Areas.back() && PickSide <Areas[4]/Areas.back())  //Min X
             {
-                Result = Pnt3f(getMinPoint()) +
+                Result = getMinPoint().subZero() +
                          Vec3f(0.0,
                                RandomPoolManager::getRandomReal32(0.0,1.0)*SideLengths.y(),
                                RandomPoolManager::getRandomReal32(0.0,1.0)*SideLengths.z());
             }
             else if(PickSide >= Areas[4]/Areas.back() && PickSide <Areas[5]/Areas.back())  //Max Y
             {
-                Result = Pnt3f(getMaxPoint().x(), getMinPoint().y(), getMinPoint().z()) +
+                Result = Vec3f(getMaxPoint().x(), getMinPoint().y(), getMinPoint().z()) +
                          Vec3f(0.0,
                                RandomPoolManager::getRandomReal32(0.0,1.0)*SideLengths.y(),
                                RandomPoolManager::getRandomReal32(0.0,1.0)*SideLengths.z());
@@ -146,7 +149,7 @@ Vec3f BoxDistribution3D::generate(void) const
     case VOLUME:
     default:
 
-        Result = getMinPoint() + Vec3f(RandomPoolManager::getRandomReal32(0.0,1.0)*(getMaxPoint().x() - getMinPoint().x()),
+        Result = getMinPoint().subZero() + Vec3f(RandomPoolManager::getRandomReal32(0.0,1.0)*(getMaxPoint().x() - getMinPoint().x()),
             RandomPoolManager::getRandomReal32(0.0,1.0)*(getMaxPoint().y() - getMinPoint().y()),
             RandomPoolManager::getRandomReal32(0.0,1.0)*(getMaxPoint().z() - getMinPoint().z()));
         
@@ -155,6 +158,7 @@ Vec3f BoxDistribution3D::generate(void) const
 
     return Result;
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -177,16 +181,17 @@ BoxDistribution3D::~BoxDistribution3D(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void BoxDistribution3D::changed(BitVector whichField, UInt32 origin)
+void BoxDistribution3D::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void BoxDistribution3D::dump(      UInt32    , 
+void BoxDistribution3D::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump BoxDistribution3D NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

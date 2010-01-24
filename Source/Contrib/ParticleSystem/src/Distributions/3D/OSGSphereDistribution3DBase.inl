@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,162 +55,31 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &SphereDistribution3DBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 SphereDistribution3DBase::getClassTypeId(void) 
+OSG::UInt32 SphereDistribution3DBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-SphereDistribution3DPtr SphereDistribution3DBase::create(void) 
-{
-    SphereDistribution3DPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = SphereDistribution3DPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-SphereDistribution3DPtr SphereDistribution3DBase::createEmpty(void) 
-{ 
-    SphereDistribution3DPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 SphereDistribution3DBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the SphereDistribution3D::_sfCenter field.
-inline
-const SFPnt3f *SphereDistribution3DBase::getSFCenter(void) const
-{
-    return &_sfCenter;
-}
-
-//! Get the SphereDistribution3D::_sfCenter field.
-inline
-SFPnt3f *SphereDistribution3DBase::editSFCenter(void)
-{
-    return &_sfCenter;
-}
-
-//! Get the SphereDistribution3D::_sfInnerRadius field.
-inline
-const SFReal32 *SphereDistribution3DBase::getSFInnerRadius(void) const
-{
-    return &_sfInnerRadius;
-}
-
-//! Get the SphereDistribution3D::_sfInnerRadius field.
-inline
-SFReal32 *SphereDistribution3DBase::editSFInnerRadius(void)
-{
-    return &_sfInnerRadius;
-}
-
-//! Get the SphereDistribution3D::_sfOuterRadius field.
-inline
-const SFReal32 *SphereDistribution3DBase::getSFOuterRadius(void) const
-{
-    return &_sfOuterRadius;
-}
-
-//! Get the SphereDistribution3D::_sfOuterRadius field.
-inline
-SFReal32 *SphereDistribution3DBase::editSFOuterRadius(void)
-{
-    return &_sfOuterRadius;
-}
-
-//! Get the SphereDistribution3D::_sfMinTheta field.
-inline
-const SFReal32 *SphereDistribution3DBase::getSFMinTheta(void) const
-{
-    return &_sfMinTheta;
-}
-
-//! Get the SphereDistribution3D::_sfMinTheta field.
-inline
-SFReal32 *SphereDistribution3DBase::editSFMinTheta(void)
-{
-    return &_sfMinTheta;
-}
-
-//! Get the SphereDistribution3D::_sfMaxTheta field.
-inline
-const SFReal32 *SphereDistribution3DBase::getSFMaxTheta(void) const
-{
-    return &_sfMaxTheta;
-}
-
-//! Get the SphereDistribution3D::_sfMaxTheta field.
-inline
-SFReal32 *SphereDistribution3DBase::editSFMaxTheta(void)
-{
-    return &_sfMaxTheta;
-}
-
-//! Get the SphereDistribution3D::_sfMinZ field.
-inline
-const SFReal32 *SphereDistribution3DBase::getSFMinZ(void) const
-{
-    return &_sfMinZ;
-}
-
-//! Get the SphereDistribution3D::_sfMinZ field.
-inline
-SFReal32 *SphereDistribution3DBase::editSFMinZ(void)
-{
-    return &_sfMinZ;
-}
-
-//! Get the SphereDistribution3D::_sfMaxZ field.
-inline
-const SFReal32 *SphereDistribution3DBase::getSFMaxZ(void) const
-{
-    return &_sfMaxZ;
-}
-
-//! Get the SphereDistribution3D::_sfMaxZ field.
-inline
-SFReal32 *SphereDistribution3DBase::editSFMaxZ(void)
-{
-    return &_sfMaxZ;
-}
-
-//! Get the SphereDistribution3D::_sfSurfaceOrVolume field.
-inline
-const SFUInt32 *SphereDistribution3DBase::getSFSurfaceOrVolume(void) const
-{
-    return &_sfSurfaceOrVolume;
-}
-
-//! Get the SphereDistribution3D::_sfSurfaceOrVolume field.
-inline
-SFUInt32 *SphereDistribution3DBase::editSFSurfaceOrVolume(void)
-{
-    return &_sfSurfaceOrVolume;
-}
-
-
 //! Get the value of the SphereDistribution3D::_sfCenter field.
+
 inline
 Pnt3f &SphereDistribution3DBase::editCenter(void)
 {
+    editSField(CenterFieldMask);
+
     return _sfCenter.getValue();
 }
 
@@ -227,155 +94,232 @@ const Pnt3f &SphereDistribution3DBase::getCenter(void) const
 inline
 void SphereDistribution3DBase::setCenter(const Pnt3f &value)
 {
+    editSField(CenterFieldMask);
+
     _sfCenter.setValue(value);
 }
-
 //! Get the value of the SphereDistribution3D::_sfInnerRadius field.
+
 inline
 Real32 &SphereDistribution3DBase::editInnerRadius(void)
 {
+    editSField(InnerRadiusFieldMask);
+
     return _sfInnerRadius.getValue();
 }
 
 //! Get the value of the SphereDistribution3D::_sfInnerRadius field.
 inline
-const Real32 &SphereDistribution3DBase::getInnerRadius(void) const
+      Real32  SphereDistribution3DBase::getInnerRadius(void) const
 {
     return _sfInnerRadius.getValue();
 }
 
 //! Set the value of the SphereDistribution3D::_sfInnerRadius field.
 inline
-void SphereDistribution3DBase::setInnerRadius(const Real32 &value)
+void SphereDistribution3DBase::setInnerRadius(const Real32 value)
 {
+    editSField(InnerRadiusFieldMask);
+
     _sfInnerRadius.setValue(value);
 }
-
 //! Get the value of the SphereDistribution3D::_sfOuterRadius field.
+
 inline
 Real32 &SphereDistribution3DBase::editOuterRadius(void)
 {
+    editSField(OuterRadiusFieldMask);
+
     return _sfOuterRadius.getValue();
 }
 
 //! Get the value of the SphereDistribution3D::_sfOuterRadius field.
 inline
-const Real32 &SphereDistribution3DBase::getOuterRadius(void) const
+      Real32  SphereDistribution3DBase::getOuterRadius(void) const
 {
     return _sfOuterRadius.getValue();
 }
 
 //! Set the value of the SphereDistribution3D::_sfOuterRadius field.
 inline
-void SphereDistribution3DBase::setOuterRadius(const Real32 &value)
+void SphereDistribution3DBase::setOuterRadius(const Real32 value)
 {
+    editSField(OuterRadiusFieldMask);
+
     _sfOuterRadius.setValue(value);
 }
-
 //! Get the value of the SphereDistribution3D::_sfMinTheta field.
+
 inline
 Real32 &SphereDistribution3DBase::editMinTheta(void)
 {
+    editSField(MinThetaFieldMask);
+
     return _sfMinTheta.getValue();
 }
 
 //! Get the value of the SphereDistribution3D::_sfMinTheta field.
 inline
-const Real32 &SphereDistribution3DBase::getMinTheta(void) const
+      Real32  SphereDistribution3DBase::getMinTheta(void) const
 {
     return _sfMinTheta.getValue();
 }
 
 //! Set the value of the SphereDistribution3D::_sfMinTheta field.
 inline
-void SphereDistribution3DBase::setMinTheta(const Real32 &value)
+void SphereDistribution3DBase::setMinTheta(const Real32 value)
 {
+    editSField(MinThetaFieldMask);
+
     _sfMinTheta.setValue(value);
 }
-
 //! Get the value of the SphereDistribution3D::_sfMaxTheta field.
+
 inline
 Real32 &SphereDistribution3DBase::editMaxTheta(void)
 {
+    editSField(MaxThetaFieldMask);
+
     return _sfMaxTheta.getValue();
 }
 
 //! Get the value of the SphereDistribution3D::_sfMaxTheta field.
 inline
-const Real32 &SphereDistribution3DBase::getMaxTheta(void) const
+      Real32  SphereDistribution3DBase::getMaxTheta(void) const
 {
     return _sfMaxTheta.getValue();
 }
 
 //! Set the value of the SphereDistribution3D::_sfMaxTheta field.
 inline
-void SphereDistribution3DBase::setMaxTheta(const Real32 &value)
+void SphereDistribution3DBase::setMaxTheta(const Real32 value)
 {
+    editSField(MaxThetaFieldMask);
+
     _sfMaxTheta.setValue(value);
 }
-
 //! Get the value of the SphereDistribution3D::_sfMinZ field.
+
 inline
 Real32 &SphereDistribution3DBase::editMinZ(void)
 {
+    editSField(MinZFieldMask);
+
     return _sfMinZ.getValue();
 }
 
 //! Get the value of the SphereDistribution3D::_sfMinZ field.
 inline
-const Real32 &SphereDistribution3DBase::getMinZ(void) const
+      Real32  SphereDistribution3DBase::getMinZ(void) const
 {
     return _sfMinZ.getValue();
 }
 
 //! Set the value of the SphereDistribution3D::_sfMinZ field.
 inline
-void SphereDistribution3DBase::setMinZ(const Real32 &value)
+void SphereDistribution3DBase::setMinZ(const Real32 value)
 {
+    editSField(MinZFieldMask);
+
     _sfMinZ.setValue(value);
 }
-
 //! Get the value of the SphereDistribution3D::_sfMaxZ field.
+
 inline
 Real32 &SphereDistribution3DBase::editMaxZ(void)
 {
+    editSField(MaxZFieldMask);
+
     return _sfMaxZ.getValue();
 }
 
 //! Get the value of the SphereDistribution3D::_sfMaxZ field.
 inline
-const Real32 &SphereDistribution3DBase::getMaxZ(void) const
+      Real32  SphereDistribution3DBase::getMaxZ(void) const
 {
     return _sfMaxZ.getValue();
 }
 
 //! Set the value of the SphereDistribution3D::_sfMaxZ field.
 inline
-void SphereDistribution3DBase::setMaxZ(const Real32 &value)
+void SphereDistribution3DBase::setMaxZ(const Real32 value)
 {
+    editSField(MaxZFieldMask);
+
     _sfMaxZ.setValue(value);
 }
-
 //! Get the value of the SphereDistribution3D::_sfSurfaceOrVolume field.
+
 inline
 UInt32 &SphereDistribution3DBase::editSurfaceOrVolume(void)
 {
+    editSField(SurfaceOrVolumeFieldMask);
+
     return _sfSurfaceOrVolume.getValue();
 }
 
 //! Get the value of the SphereDistribution3D::_sfSurfaceOrVolume field.
 inline
-const UInt32 &SphereDistribution3DBase::getSurfaceOrVolume(void) const
+      UInt32  SphereDistribution3DBase::getSurfaceOrVolume(void) const
 {
     return _sfSurfaceOrVolume.getValue();
 }
 
 //! Set the value of the SphereDistribution3D::_sfSurfaceOrVolume field.
 inline
-void SphereDistribution3DBase::setSurfaceOrVolume(const UInt32 &value)
+void SphereDistribution3DBase::setSurfaceOrVolume(const UInt32 value)
 {
+    editSField(SurfaceOrVolumeFieldMask);
+
     _sfSurfaceOrVolume.setValue(value);
 }
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void SphereDistribution3DBase::execSync (      SphereDistribution3DBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (CenterFieldMask & whichField))
+        _sfCenter.syncWith(pFrom->_sfCenter);
+
+    if(FieldBits::NoField != (InnerRadiusFieldMask & whichField))
+        _sfInnerRadius.syncWith(pFrom->_sfInnerRadius);
+
+    if(FieldBits::NoField != (OuterRadiusFieldMask & whichField))
+        _sfOuterRadius.syncWith(pFrom->_sfOuterRadius);
+
+    if(FieldBits::NoField != (MinThetaFieldMask & whichField))
+        _sfMinTheta.syncWith(pFrom->_sfMinTheta);
+
+    if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
+        _sfMaxTheta.syncWith(pFrom->_sfMaxTheta);
+
+    if(FieldBits::NoField != (MinZFieldMask & whichField))
+        _sfMinZ.syncWith(pFrom->_sfMinZ);
+
+    if(FieldBits::NoField != (MaxZFieldMask & whichField))
+        _sfMaxZ.syncWith(pFrom->_sfMaxZ);
+
+    if(FieldBits::NoField != (SurfaceOrVolumeFieldMask & whichField))
+        _sfSurfaceOrVolume.syncWith(pFrom->_sfSurfaceOrVolume);
+}
+#endif
+
+
+inline
+const Char8 *SphereDistribution3DBase::getClassname(void)
+{
+    return "SphereDistribution3D";
+}
+
+
+OSG_GEN_CONTAINERPTR(SphereDistribution3D);
+
 OSG_END_NAMESPACE
+

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,47 +42,75 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
-
 #include "OSGDiscParticleSystemDrawerBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DiscParticleSystemDrawer class. See \ref 
-           PageParticleSystemDiscParticleSystemDrawer for a description.
+/*! \brief DiscParticleSystemDrawer class. See \ref
+           PageContribParticleSystemDiscParticleSystemDrawer for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING DiscParticleSystemDrawer : public DiscParticleSystemDrawerBase
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DiscParticleSystemDrawer : public DiscParticleSystemDrawerBase
 {
-  private:
-
-    typedef DiscParticleSystemDrawerBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
-      enum NormalSource {NORMAL_POSITION_CHANGE, NORMAL_VELOCITY_CHANGE, NORMAL_VELOCITY, NORMAL_ACCELERATION, NORMAL_PARTICLE_NORMAL, NORMAL_VIEW_DIRECTION, NORMAL_VIEW_POSITION, NORMAL_STATIC};
-      enum UpSource {UP_POSITION_CHANGE, UP_VELOCITY_CHANGE, UP_VELOCITY, UP_ACCELERATION, UP_PARTICLE_NORMAL, UP_VIEW_DIRECTION, UP_STATIC};
+    enum NormalSource
+    {
+        NORMAL_POSITION_CHANGE = 0,
+        NORMAL_VELOCITY_CHANGE = 1,
+        NORMAL_VELOCITY        = 2,
+        NORMAL_ACCELERATION    = 3,
+        NORMAL_PARTICLE_NORMAL = 4,
+        NORMAL_VIEW_DIRECTION  = 5,
+        NORMAL_VIEW_POSITION   = 6,
+        NORMAL_STATIC          = 7
+    };
+
+    enum UpSource
+    {
+        UP_POSITION_CHANGE = 0,
+        UP_VELOCITY_CHANGE = 1,
+        UP_VELOCITY        = 2,
+        UP_ACCELERATION    = 3,
+        UP_PARTICLE_NORMAL = 4,
+        UP_VIEW_DIRECTION  = 5,
+        UP_STATIC          = 6
+    };
+
+    typedef DiscParticleSystemDrawerBase Inherited;
+    typedef DiscParticleSystemDrawer     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual Action::ResultE draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort);
-	virtual void adjustVolume(ParticleSystemPtr System, Volume & volume);
+
+	virtual Action::ResultE draw(DrawEnv *pEnv, ParticleSystemUnrecPtr System, const MFUInt32& Sort);
+
+    virtual void adjustVolume(ParticleSystemUnrecPtr System, Volume & volume);
+
+    virtual void fill(DrawableStatsAttachment *pStat,
+                      ParticleSystemUnrecPtr System,
+                      const MFUInt32& Sort);
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in DiscParticleSystemDrawerBase.
@@ -99,25 +127,29 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DiscParticleSystemDrawer : public DiscPar
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DiscParticleSystemDrawer(void); 
+    virtual ~DiscParticleSystemDrawer(void);
 
     /*! \}                                                                 */
-	Vec3f getQuadNormal(DrawActionBase *action,ParticleSystemPtr System, UInt32 Index);
-	Vec3f getQuadUpDir(DrawActionBase *action,ParticleSystemPtr System, UInt32 Index);
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+	Vec3f getQuadNormal(DrawEnv *pEnv, ParticleSystemUnrecPtr System, UInt32 Index);
+	Vec3f getQuadUpDir(DrawEnv *pEnv, ParticleSystemUnrecPtr System, UInt32 Index);
 	void updateDiscPoints(void);
 
 	std::vector<Pnt2f> _DiscPoints;
-    
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class DiscParticleSystemDrawerBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const DiscParticleSystemDrawer &source);
 };
 
@@ -127,7 +159,5 @@ OSG_END_NAMESPACE
 
 #include "OSGDiscParticleSystemDrawerBase.inl"
 #include "OSGDiscParticleSystemDrawer.inl"
-
-#define OSGDISCPARTICLESYSTEMDRAWER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGDISCPARTICLESYSTEMDRAWER_H_ */

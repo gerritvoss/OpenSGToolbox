@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,113 +50,124 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEDISTRIBUTION1DINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGDistribution1DBase.h"
 #include "OSGDistribution1D.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector Distribution1DBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::Distribution1D
+    
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<Distribution1D *>::_type("Distribution1DPtr", "DistributionPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(Distribution1D *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           Distribution1D *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           Distribution1D *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void Distribution1DBase::classDescInserter(TypeObject &oType)
+{
+}
 
 
-FieldContainerType Distribution1DBase::_type(
-    "Distribution1D",
-    "Distribution",
+Distribution1DBase::TypeObject Distribution1DBase::_type(
+    Distribution1DBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
     NULL,
-    NULL, 
     Distribution1D::initMethod,
-    NULL,
-    0);
+    Distribution1D::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&Distribution1D::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"Distribution1D\"\n"
+    "\tparent=\"Distribution\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"abstract\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(Distribution1DBase, Distribution1DPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &Distribution1DBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &Distribution1DBase::getType(void) const 
+FieldContainerType &Distribution1DBase::getType(void)
 {
     return _type;
-} 
-
-
-UInt32 Distribution1DBase::getContainerSize(void) const 
-{ 
-    return sizeof(Distribution1D); 
 }
 
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void Distribution1DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &Distribution1DBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<Distribution1DBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void Distribution1DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 Distribution1DBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((Distribution1DBase *) &other, whichField, sInfo);
-}
-void Distribution1DBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(Distribution1D);
 }
 
-void Distribution1DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-Distribution1DBase::Distribution1DBase(void) :
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-Distribution1DBase::Distribution1DBase(const Distribution1DBase &source) :
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-Distribution1DBase::~Distribution1DBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 Distribution1DBase::getBinSize(const BitVector &whichField)
+UInt32 Distribution1DBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -164,68 +175,69 @@ UInt32 Distribution1DBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void Distribution1DBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void Distribution1DBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-
 }
 
-void Distribution1DBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void Distribution1DBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void Distribution1DBase::executeSyncImpl(      Distribution1DBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+Distribution1DBase::Distribution1DBase(void) :
+    Inherited()
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-
-}
-#else
-void Distribution1DBase::executeSyncImpl(      Distribution1DBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
 }
 
-void Distribution1DBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+Distribution1DBase::Distribution1DBase(const Distribution1DBase &source) :
+    Inherited(source)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
+
+/*-------------------------- destructors ----------------------------------*/
+
+Distribution1DBase::~Distribution1DBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void Distribution1DBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Distribution1D *pThis = static_cast<Distribution1D *>(this);
+
+    pThis->execSync(static_cast<Distribution1D *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
 
-OSG_END_NAMESPACE
+void Distribution1DBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
 
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<Distribution1DPtr>::_type("Distribution1DPtr", "DistributionPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(Distribution1DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(Distribution1DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+}
 
 
 OSG_END_NAMESPACE
-

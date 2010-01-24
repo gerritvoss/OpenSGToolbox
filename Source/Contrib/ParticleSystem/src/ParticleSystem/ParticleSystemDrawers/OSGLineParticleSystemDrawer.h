@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,47 +42,72 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
-
 #include "OSGLineParticleSystemDrawerBase.h"
+#include "OSGDrawable.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief LineParticleSystemDrawer class. See \ref 
-           PageParticleSystemLineParticleSystemDrawer for a description.
+/*! \brief LineParticleSystemDrawer class. See \ref
+           PageContribParticleSystemLineParticleSystemDrawer for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING LineParticleSystemDrawer : public LineParticleSystemDrawerBase
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING LineParticleSystemDrawer : public LineParticleSystemDrawerBase
 {
-  private:
-
-    typedef LineParticleSystemDrawerBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
-      enum LineDirectionSource {DIRECTION_POSITION_CHANGE, DIRECTION_VELOCITY_CHANGE, DIRECTION_VELOCITY, DIRECTION_ACCELERATION, DIRECTION_NORMAL, DIRECTION_STATIC};
-      enum LineLengthSource {LENGTH_SIZE_X, LENGTH_SIZE_Y, LENGTH_SIZE_Z, LENGTH_STATIC, LENGTH_SPEED, LENGTH_ACCELERATION};
+    enum LineDirectionSource
+    {
+        DIRECTION_POSITION_CHANGE = 0,
+        DIRECTION_VELOCITY_CHANGE = 1,
+        DIRECTION_VELOCITY        = 2,
+        DIRECTION_ACCELERATION    = 3,
+        DIRECTION_NORMAL          = 4,
+        DIRECTION_STATIC          = 5
+    };
+
+    enum LineLengthSource
+    {
+        LENGTH_SIZE_X       = 0,
+        LENGTH_SIZE_Y       = 1,
+        LENGTH_SIZE_Z       = 2,
+        LENGTH_STATIC       = 3,
+        LENGTH_SPEED        = 4,
+        LENGTH_ACCELERATION = 5
+    };
+
+    typedef LineParticleSystemDrawerBase Inherited;
+    typedef LineParticleSystemDrawer     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual Action::ResultE draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort);
-	virtual void adjustVolume(ParticleSystemPtr System, Volume & volume);
+
+	virtual Action::ResultE draw(DrawEnv *pEnv, ParticleSystemUnrecPtr System, const MFUInt32& Sort);
+
+    virtual void adjustVolume(ParticleSystemUnrecPtr System, Volume & volume);
+
+    virtual void fill(DrawableStatsAttachment *pStat,
+                      ParticleSystemUnrecPtr System,
+                      const MFUInt32& Sort);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in LineParticleSystemDrawerBase.
@@ -99,22 +124,27 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING LineParticleSystemDrawer : public LinePar
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~LineParticleSystemDrawer(void); 
-
-	Pnt3f getLineEndpoint(ParticleSystemPtr System, UInt32 Index);
+    virtual ~LineParticleSystemDrawer(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+
+	Pnt3f getLineEndpoint(ParticleSystemUnrecPtr System, UInt32 Index) const;
+
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class LineParticleSystemDrawerBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const LineParticleSystemDrawer &source);
 };
 

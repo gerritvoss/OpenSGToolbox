@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,239 +55,56 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &ParticleEventBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ParticleEventBase::getClassTypeId(void) 
+OSG::UInt32 ParticleEventBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-ParticleEventPtr ParticleEventBase::create(void) 
-{
-    ParticleEventPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = ParticleEventPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-ParticleEventPtr ParticleEventBase::createEmpty(void) 
-{ 
-    ParticleEventPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 ParticleEventBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ParticleEvent::_sfParticleIndex field.
-inline
-const SFInt32 *ParticleEventBase::getSFParticleIndex(void) const
-{
-    return &_sfParticleIndex;
-}
-
-//! Get the ParticleEvent::_sfParticleIndex field.
-inline
-SFInt32 *ParticleEventBase::editSFParticleIndex(void)
-{
-    return &_sfParticleIndex;
-}
-
-//! Get the ParticleEvent::_sfParticlePosition field.
-inline
-const SFPnt3f *ParticleEventBase::getSFParticlePosition(void) const
-{
-    return &_sfParticlePosition;
-}
-
-//! Get the ParticleEvent::_sfParticlePosition field.
-inline
-SFPnt3f *ParticleEventBase::editSFParticlePosition(void)
-{
-    return &_sfParticlePosition;
-}
-
-//! Get the ParticleEvent::_sfParticleSecPosition field.
-inline
-const SFPnt3f *ParticleEventBase::getSFParticleSecPosition(void) const
-{
-    return &_sfParticleSecPosition;
-}
-
-//! Get the ParticleEvent::_sfParticleSecPosition field.
-inline
-SFPnt3f *ParticleEventBase::editSFParticleSecPosition(void)
-{
-    return &_sfParticleSecPosition;
-}
-
-//! Get the ParticleEvent::_sfParticleNormal field.
-inline
-const SFVec3f *ParticleEventBase::getSFParticleNormal(void) const
-{
-    return &_sfParticleNormal;
-}
-
-//! Get the ParticleEvent::_sfParticleNormal field.
-inline
-SFVec3f *ParticleEventBase::editSFParticleNormal(void)
-{
-    return &_sfParticleNormal;
-}
-
-//! Get the ParticleEvent::_sfParticleColor field.
-inline
-const SFColor4f *ParticleEventBase::getSFParticleColor(void) const
-{
-    return &_sfParticleColor;
-}
-
-//! Get the ParticleEvent::_sfParticleColor field.
-inline
-SFColor4f *ParticleEventBase::editSFParticleColor(void)
-{
-    return &_sfParticleColor;
-}
-
-//! Get the ParticleEvent::_sfParticleSize field.
-inline
-const SFVec3f *ParticleEventBase::getSFParticleSize(void) const
-{
-    return &_sfParticleSize;
-}
-
-//! Get the ParticleEvent::_sfParticleSize field.
-inline
-SFVec3f *ParticleEventBase::editSFParticleSize(void)
-{
-    return &_sfParticleSize;
-}
-
-//! Get the ParticleEvent::_sfParticleLifespan field.
-inline
-const SFReal32 *ParticleEventBase::getSFParticleLifespan(void) const
-{
-    return &_sfParticleLifespan;
-}
-
-//! Get the ParticleEvent::_sfParticleLifespan field.
-inline
-SFReal32 *ParticleEventBase::editSFParticleLifespan(void)
-{
-    return &_sfParticleLifespan;
-}
-
-//! Get the ParticleEvent::_sfParticleAge field.
-inline
-const SFReal32 *ParticleEventBase::getSFParticleAge(void) const
-{
-    return &_sfParticleAge;
-}
-
-//! Get the ParticleEvent::_sfParticleAge field.
-inline
-SFReal32 *ParticleEventBase::editSFParticleAge(void)
-{
-    return &_sfParticleAge;
-}
-
-//! Get the ParticleEvent::_sfParticleVelocity field.
-inline
-const SFVec3f *ParticleEventBase::getSFParticleVelocity(void) const
-{
-    return &_sfParticleVelocity;
-}
-
-//! Get the ParticleEvent::_sfParticleVelocity field.
-inline
-SFVec3f *ParticleEventBase::editSFParticleVelocity(void)
-{
-    return &_sfParticleVelocity;
-}
-
-//! Get the ParticleEvent::_sfParticleSecVelocity field.
-inline
-const SFVec3f *ParticleEventBase::getSFParticleSecVelocity(void) const
-{
-    return &_sfParticleSecVelocity;
-}
-
-//! Get the ParticleEvent::_sfParticleSecVelocity field.
-inline
-SFVec3f *ParticleEventBase::editSFParticleSecVelocity(void)
-{
-    return &_sfParticleSecVelocity;
-}
-
-//! Get the ParticleEvent::_sfParticleAcceleration field.
-inline
-const SFVec3f *ParticleEventBase::getSFParticleAcceleration(void) const
-{
-    return &_sfParticleAcceleration;
-}
-
-//! Get the ParticleEvent::_sfParticleAcceleration field.
-inline
-SFVec3f *ParticleEventBase::editSFParticleAcceleration(void)
-{
-    return &_sfParticleAcceleration;
-}
-
-//! Get the ParticleEvent::_sfParticleAttributes field.
-inline
-const SFStringToUInt32Map *ParticleEventBase::getSFParticleAttributes(void) const
-{
-    return &_sfParticleAttributes;
-}
-
-//! Get the ParticleEvent::_sfParticleAttributes field.
-inline
-SFStringToUInt32Map *ParticleEventBase::editSFParticleAttributes(void)
-{
-    return &_sfParticleAttributes;
-}
-
-
 //! Get the value of the ParticleEvent::_sfParticleIndex field.
+
 inline
 Int32 &ParticleEventBase::editParticleIndex(void)
 {
+    editSField(ParticleIndexFieldMask);
+
     return _sfParticleIndex.getValue();
 }
 
 //! Get the value of the ParticleEvent::_sfParticleIndex field.
 inline
-const Int32 &ParticleEventBase::getParticleIndex(void) const
+      Int32  ParticleEventBase::getParticleIndex(void) const
 {
     return _sfParticleIndex.getValue();
 }
 
 //! Set the value of the ParticleEvent::_sfParticleIndex field.
 inline
-void ParticleEventBase::setParticleIndex(const Int32 &value)
+void ParticleEventBase::setParticleIndex(const Int32 value)
 {
+    editSField(ParticleIndexFieldMask);
+
     _sfParticleIndex.setValue(value);
 }
-
 //! Get the value of the ParticleEvent::_sfParticlePosition field.
+
 inline
 Pnt3f &ParticleEventBase::editParticlePosition(void)
 {
+    editSField(ParticlePositionFieldMask);
+
     return _sfParticlePosition.getValue();
 }
 
@@ -304,13 +119,17 @@ const Pnt3f &ParticleEventBase::getParticlePosition(void) const
 inline
 void ParticleEventBase::setParticlePosition(const Pnt3f &value)
 {
+    editSField(ParticlePositionFieldMask);
+
     _sfParticlePosition.setValue(value);
 }
-
 //! Get the value of the ParticleEvent::_sfParticleSecPosition field.
+
 inline
 Pnt3f &ParticleEventBase::editParticleSecPosition(void)
 {
+    editSField(ParticleSecPositionFieldMask);
+
     return _sfParticleSecPosition.getValue();
 }
 
@@ -325,13 +144,17 @@ const Pnt3f &ParticleEventBase::getParticleSecPosition(void) const
 inline
 void ParticleEventBase::setParticleSecPosition(const Pnt3f &value)
 {
+    editSField(ParticleSecPositionFieldMask);
+
     _sfParticleSecPosition.setValue(value);
 }
-
 //! Get the value of the ParticleEvent::_sfParticleNormal field.
+
 inline
 Vec3f &ParticleEventBase::editParticleNormal(void)
 {
+    editSField(ParticleNormalFieldMask);
+
     return _sfParticleNormal.getValue();
 }
 
@@ -346,13 +169,17 @@ const Vec3f &ParticleEventBase::getParticleNormal(void) const
 inline
 void ParticleEventBase::setParticleNormal(const Vec3f &value)
 {
+    editSField(ParticleNormalFieldMask);
+
     _sfParticleNormal.setValue(value);
 }
-
 //! Get the value of the ParticleEvent::_sfParticleColor field.
+
 inline
 Color4f &ParticleEventBase::editParticleColor(void)
 {
+    editSField(ParticleColorFieldMask);
+
     return _sfParticleColor.getValue();
 }
 
@@ -367,13 +194,17 @@ const Color4f &ParticleEventBase::getParticleColor(void) const
 inline
 void ParticleEventBase::setParticleColor(const Color4f &value)
 {
+    editSField(ParticleColorFieldMask);
+
     _sfParticleColor.setValue(value);
 }
-
 //! Get the value of the ParticleEvent::_sfParticleSize field.
+
 inline
 Vec3f &ParticleEventBase::editParticleSize(void)
 {
+    editSField(ParticleSizeFieldMask);
+
     return _sfParticleSize.getValue();
 }
 
@@ -388,55 +219,67 @@ const Vec3f &ParticleEventBase::getParticleSize(void) const
 inline
 void ParticleEventBase::setParticleSize(const Vec3f &value)
 {
+    editSField(ParticleSizeFieldMask);
+
     _sfParticleSize.setValue(value);
 }
-
 //! Get the value of the ParticleEvent::_sfParticleLifespan field.
+
 inline
 Real32 &ParticleEventBase::editParticleLifespan(void)
 {
+    editSField(ParticleLifespanFieldMask);
+
     return _sfParticleLifespan.getValue();
 }
 
 //! Get the value of the ParticleEvent::_sfParticleLifespan field.
 inline
-const Real32 &ParticleEventBase::getParticleLifespan(void) const
+      Real32  ParticleEventBase::getParticleLifespan(void) const
 {
     return _sfParticleLifespan.getValue();
 }
 
 //! Set the value of the ParticleEvent::_sfParticleLifespan field.
 inline
-void ParticleEventBase::setParticleLifespan(const Real32 &value)
+void ParticleEventBase::setParticleLifespan(const Real32 value)
 {
+    editSField(ParticleLifespanFieldMask);
+
     _sfParticleLifespan.setValue(value);
 }
-
 //! Get the value of the ParticleEvent::_sfParticleAge field.
+
 inline
 Real32 &ParticleEventBase::editParticleAge(void)
 {
+    editSField(ParticleAgeFieldMask);
+
     return _sfParticleAge.getValue();
 }
 
 //! Get the value of the ParticleEvent::_sfParticleAge field.
 inline
-const Real32 &ParticleEventBase::getParticleAge(void) const
+      Real32  ParticleEventBase::getParticleAge(void) const
 {
     return _sfParticleAge.getValue();
 }
 
 //! Set the value of the ParticleEvent::_sfParticleAge field.
 inline
-void ParticleEventBase::setParticleAge(const Real32 &value)
+void ParticleEventBase::setParticleAge(const Real32 value)
 {
+    editSField(ParticleAgeFieldMask);
+
     _sfParticleAge.setValue(value);
 }
-
 //! Get the value of the ParticleEvent::_sfParticleVelocity field.
+
 inline
 Vec3f &ParticleEventBase::editParticleVelocity(void)
 {
+    editSField(ParticleVelocityFieldMask);
+
     return _sfParticleVelocity.getValue();
 }
 
@@ -451,13 +294,17 @@ const Vec3f &ParticleEventBase::getParticleVelocity(void) const
 inline
 void ParticleEventBase::setParticleVelocity(const Vec3f &value)
 {
+    editSField(ParticleVelocityFieldMask);
+
     _sfParticleVelocity.setValue(value);
 }
-
 //! Get the value of the ParticleEvent::_sfParticleSecVelocity field.
+
 inline
 Vec3f &ParticleEventBase::editParticleSecVelocity(void)
 {
+    editSField(ParticleSecVelocityFieldMask);
+
     return _sfParticleSecVelocity.getValue();
 }
 
@@ -472,13 +319,17 @@ const Vec3f &ParticleEventBase::getParticleSecVelocity(void) const
 inline
 void ParticleEventBase::setParticleSecVelocity(const Vec3f &value)
 {
+    editSField(ParticleSecVelocityFieldMask);
+
     _sfParticleSecVelocity.setValue(value);
 }
-
 //! Get the value of the ParticleEvent::_sfParticleAcceleration field.
+
 inline
 Vec3f &ParticleEventBase::editParticleAcceleration(void)
 {
+    editSField(ParticleAccelerationFieldMask);
+
     return _sfParticleAcceleration.getValue();
 }
 
@@ -493,13 +344,17 @@ const Vec3f &ParticleEventBase::getParticleAcceleration(void) const
 inline
 void ParticleEventBase::setParticleAcceleration(const Vec3f &value)
 {
+    editSField(ParticleAccelerationFieldMask);
+
     _sfParticleAcceleration.setValue(value);
 }
-
 //! Get the value of the ParticleEvent::_sfParticleAttributes field.
+
 inline
 StringToUInt32Map &ParticleEventBase::editParticleAttributes(void)
 {
+    editSField(ParticleAttributesFieldMask);
+
     return _sfParticleAttributes.getValue();
 }
 
@@ -514,9 +369,69 @@ const StringToUInt32Map &ParticleEventBase::getParticleAttributes(void) const
 inline
 void ParticleEventBase::setParticleAttributes(const StringToUInt32Map &value)
 {
+    editSField(ParticleAttributesFieldMask);
+
     _sfParticleAttributes.setValue(value);
 }
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void ParticleEventBase::execSync (      ParticleEventBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (ParticleIndexFieldMask & whichField))
+        _sfParticleIndex.syncWith(pFrom->_sfParticleIndex);
+
+    if(FieldBits::NoField != (ParticlePositionFieldMask & whichField))
+        _sfParticlePosition.syncWith(pFrom->_sfParticlePosition);
+
+    if(FieldBits::NoField != (ParticleSecPositionFieldMask & whichField))
+        _sfParticleSecPosition.syncWith(pFrom->_sfParticleSecPosition);
+
+    if(FieldBits::NoField != (ParticleNormalFieldMask & whichField))
+        _sfParticleNormal.syncWith(pFrom->_sfParticleNormal);
+
+    if(FieldBits::NoField != (ParticleColorFieldMask & whichField))
+        _sfParticleColor.syncWith(pFrom->_sfParticleColor);
+
+    if(FieldBits::NoField != (ParticleSizeFieldMask & whichField))
+        _sfParticleSize.syncWith(pFrom->_sfParticleSize);
+
+    if(FieldBits::NoField != (ParticleLifespanFieldMask & whichField))
+        _sfParticleLifespan.syncWith(pFrom->_sfParticleLifespan);
+
+    if(FieldBits::NoField != (ParticleAgeFieldMask & whichField))
+        _sfParticleAge.syncWith(pFrom->_sfParticleAge);
+
+    if(FieldBits::NoField != (ParticleVelocityFieldMask & whichField))
+        _sfParticleVelocity.syncWith(pFrom->_sfParticleVelocity);
+
+    if(FieldBits::NoField != (ParticleSecVelocityFieldMask & whichField))
+        _sfParticleSecVelocity.syncWith(pFrom->_sfParticleSecVelocity);
+
+    if(FieldBits::NoField != (ParticleAccelerationFieldMask & whichField))
+        _sfParticleAcceleration.syncWith(pFrom->_sfParticleAcceleration);
+
+    if(FieldBits::NoField != (ParticleAttributesFieldMask & whichField))
+        _sfParticleAttributes.syncWith(pFrom->_sfParticleAttributes);
+}
+#endif
+
+
+inline
+const Char8 *ParticleEventBase::getClassname(void)
+{
+    return "ParticleEvent";
+}
+
+
+OSG_GEN_CONTAINERPTR(ParticleEvent);
 
 OSG_END_NAMESPACE
 

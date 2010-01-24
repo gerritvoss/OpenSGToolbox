@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                 Authors: David Kabala , Daniel Guilliams                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,51 +42,50 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGTurbulenceParticleAffectorBase.h"
-#include "Distributions/1D/OSGPerlinNoiseDistribution1D.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TurbulenceParticleAffector class. See \ref 
-           PageParticleSystemTurbulenceParticleAffector for a description.
+/*! \brief TurbulenceParticleAffector class. See \ref
+           PageContribParticleSystemTurbulenceParticleAffector for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING TurbulenceParticleAffector : public TurbulenceParticleAffectorBase
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING TurbulenceParticleAffector : public TurbulenceParticleAffectorBase
 {
-  private:
-
-    typedef TurbulenceParticleAffectorBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef TurbulenceParticleAffectorBase Inherited;
+    typedef TurbulenceParticleAffector     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
-	virtual bool affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps);
+	virtual bool affect(ParticleSystemRefPtr System, Int32 ParticleIndex, const Time& elps);
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in TurbulenceParticleAffectorBase.
-
-	bool distributionIsNotInitialized();
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
@@ -100,20 +99,30 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING TurbulenceParticleAffector : public Turbu
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TurbulenceParticleAffector(void); 
+    virtual ~TurbulenceParticleAffector(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+	void onCreate(const TurbulenceParticleAffector *Id = NULL);
+	void onDestroy();
+
+    /*! \}                                                                 */
+
+	bool distributionIsNotInitialized(void);
+
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class TurbulenceParticleAffectorBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const TurbulenceParticleAffector &source);
 };
 

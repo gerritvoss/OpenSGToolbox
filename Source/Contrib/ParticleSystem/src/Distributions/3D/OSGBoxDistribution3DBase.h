@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,67 +58,78 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGDistribution3D.h" // Parent
 
-#include <OpenSG/OSGPnt3fFields.h> // MinPoint type
-#include <OpenSG/OSGPnt3fFields.h> // MaxPoint type
-#include <OpenSG/OSGUInt32Fields.h> // SurfaceOrVolume type
+#include "OSGVecFields.h"               // MinPoint type
+#include "OSGSysFields.h"               // SurfaceOrVolume type
 
 #include "OSGBoxDistribution3DFields.h"
+
+
 OSG_BEGIN_NAMESPACE
 
 class BoxDistribution3D;
-class BinaryDataHandler;
 
 //! \brief BoxDistribution3D Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING BoxDistribution3DBase : public Distribution3D
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING BoxDistribution3DBase : public Distribution3D
 {
-  private:
-
-    typedef Distribution3D    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef BoxDistribution3DPtr  Ptr;
+    typedef Distribution3D Inherited;
+    typedef Distribution3D ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(BoxDistribution3D);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        MinPointFieldId        = Inherited::NextFieldId,
-        MaxPointFieldId        = MinPointFieldId        + 1,
-        SurfaceOrVolumeFieldId = MaxPointFieldId        + 1,
-        NextFieldId            = SurfaceOrVolumeFieldId + 1
+        MinPointFieldId = Inherited::NextFieldId,
+        MaxPointFieldId = MinPointFieldId + 1,
+        SurfaceOrVolumeFieldId = MaxPointFieldId + 1,
+        NextFieldId = SurfaceOrVolumeFieldId + 1
     };
 
-    static const OSG::BitVector MinPointFieldMask;
-    static const OSG::BitVector MaxPointFieldMask;
-    static const OSG::BitVector SurfaceOrVolumeFieldMask;
+    static const OSG::BitVector MinPointFieldMask =
+        (TypeTraits<BitVector>::One << MinPointFieldId);
+    static const OSG::BitVector MaxPointFieldMask =
+        (TypeTraits<BitVector>::One << MaxPointFieldId);
+    static const OSG::BitVector SurfaceOrVolumeFieldMask =
+        (TypeTraits<BitVector>::One << SurfaceOrVolumeFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFPnt3f           SFMinPointType;
+    typedef SFPnt3f           SFMaxPointType;
+    typedef SFUInt32          SFSurfaceOrVolumeType;
 
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -128,37 +139,37 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING BoxDistribution3DBase : public Distributi
     /*! \{                                                                 */
 
 
-           SFPnt3f             *editSFMinPoint       (void);
-     const SFPnt3f             *getSFMinPoint       (void) const;
+                  SFPnt3f             *editSFMinPoint       (void);
+            const SFPnt3f             *getSFMinPoint        (void) const;
 
-           SFPnt3f             *editSFMaxPoint       (void);
-     const SFPnt3f             *getSFMaxPoint       (void) const;
+                  SFPnt3f             *editSFMaxPoint       (void);
+            const SFPnt3f             *getSFMaxPoint        (void) const;
 
-           SFUInt32            *editSFSurfaceOrVolume(void);
-     const SFUInt32            *getSFSurfaceOrVolume(void) const;
+                  SFUInt32            *editSFSurfaceOrVolume(void);
+            const SFUInt32            *getSFSurfaceOrVolume (void) const;
 
 
-           Pnt3f               &editMinPoint       (void);
-     const Pnt3f               &getMinPoint       (void) const;
+                  Pnt3f               &editMinPoint       (void);
+            const Pnt3f               &getMinPoint        (void) const;
 
-           Pnt3f               &editMaxPoint       (void);
-     const Pnt3f               &getMaxPoint       (void) const;
+                  Pnt3f               &editMaxPoint       (void);
+            const Pnt3f               &getMaxPoint        (void) const;
 
-           UInt32              &editSurfaceOrVolume(void);
-     const UInt32              &getSurfaceOrVolume(void) const;
+                  UInt32              &editSurfaceOrVolume(void);
+                  UInt32               getSurfaceOrVolume (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setMinPoint       ( const Pnt3f &value );
-     void setMaxPoint       ( const Pnt3f &value );
-     void setSurfaceOrVolume( const UInt32 &value );
+            void setMinPoint       (const Pnt3f &value);
+            void setMaxPoint       (const Pnt3f &value);
+            void setSurfaceOrVolume(const UInt32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -166,40 +177,58 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING BoxDistribution3DBase : public Distributi
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  BoxDistribution3DPtr      create          (void); 
-    static  BoxDistribution3DPtr      createEmpty     (void); 
+    static  BoxDistribution3DTransitPtr  create          (void);
+    static  BoxDistribution3D           *createEmpty     (void);
+
+    static  BoxDistribution3DTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  BoxDistribution3D            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  BoxDistribution3DTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFPnt3f             _sfMinPoint;
-    SFPnt3f             _sfMaxPoint;
-    SFUInt32            _sfSurfaceOrVolume;
+    SFPnt3f           _sfMinPoint;
+    SFPnt3f           _sfMaxPoint;
+    SFUInt32          _sfSurfaceOrVolume;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -214,66 +243,82 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING BoxDistribution3DBase : public Distributi
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~BoxDistribution3DBase(void); 
+    virtual ~BoxDistribution3DBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleMinPoint        (void) const;
+    EditFieldHandlePtr editHandleMinPoint       (void);
+    GetFieldHandlePtr  getHandleMaxPoint        (void) const;
+    EditFieldHandlePtr editHandleMaxPoint       (void);
+    GetFieldHandlePtr  getHandleSurfaceOrVolume (void) const;
+    EditFieldHandlePtr editHandleSurfaceOrVolume(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      BoxDistribution3DBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      BoxDistribution3DBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      BoxDistribution3DBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const BoxDistribution3DBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef BoxDistribution3DBase *BoxDistribution3DBaseP;
-
-typedef osgIF<BoxDistribution3DBase::isNodeCore,
-              CoredNodePtr<BoxDistribution3D>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet BoxDistribution3DNodePtr;
-
-typedef RefPtr<BoxDistribution3DPtr> BoxDistribution3DRefPtr;
 
 OSG_END_NAMESPACE
 

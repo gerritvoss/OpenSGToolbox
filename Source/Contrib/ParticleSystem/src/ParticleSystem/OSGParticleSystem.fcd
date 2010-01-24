@@ -3,26 +3,30 @@
 <FieldContainer
 	name="ParticleSystem"
 	parent="AttachmentContainer"
-	library="ParticleSystem"
-	pointerfieldtypes="both"
+    library="ContribParticleSystem"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="true"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com), Daniel Guilliams           "
 >
 	<Field
 		name="Beacon"
-		type="NodePtr"
+		type="Node"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="InternalPositions"
 		type="Pnt3f"
+        category="data"
 		cardinality="multi"
 		visibility="external"
 		access="protected"
@@ -33,6 +37,7 @@
 	<Field
 		name="InternalSecPositions"
 		type="Pnt3f"
+        category="data"
 		cardinality="multi"
 		visibility="external"
 		access="protected"
@@ -44,6 +49,7 @@
 	<Field
 		name="InternalNormals"
 		type="Vec3f"
+        category="data"
 		cardinality="multi"
 		visibility="external"
 		access="protected"
@@ -55,6 +61,7 @@
 	<Field
 		name="InternalColors"
 		type="Color4f"
+        category="data"
 		cardinality="multi"
 		visibility="external"
 		access="protected"
@@ -64,6 +71,7 @@
 	<Field
 		name="InternalSizes"
 		type="Vec3f"
+        category="data"
 		cardinality="multi"
 		visibility="external"
 		access="protected"
@@ -77,6 +85,7 @@
 	<Field
 		name="InternalLifespans"
 		type="Time"
+        category="data"
 		cardinality="multi"
 		visibility="external"
 		access="protected"
@@ -86,6 +95,7 @@
 	<Field
 		name="InternalAges"
 		type="Time"
+        category="data"
 		cardinality="multi"
 		visibility="external"
 		access="protected"
@@ -96,6 +106,7 @@
 	<Field
 		name="InternalVelocities"
 		type="Vec3f"
+        category="data"
 		cardinality="multi"
 		visibility="external"
 		access="protected"
@@ -108,6 +119,7 @@
 	<Field
 		name="InternalSecVelocities"
 		type="Vec3f"
+        category="data"
 		cardinality="multi"
 		visibility="external"
 		access="protected"
@@ -119,6 +131,7 @@
 	<Field
 		name="InternalAccelerations"
 		type="Vec3f"
+        category="data"
 		cardinality="multi"
 		visibility="external"
 		access="protected"
@@ -131,16 +144,17 @@
 	<Field
 		name="InternalAttributes"
 		type="StringToUInt32Map"
+        category="data"
 		cardinality="multi"
 		visibility="external"
 		access="protected"
-		header="OpenSG/Toolbox/OSGStringToUInt32MapType.h"
 	>
    A per-particle attribute map.  Used for storing user-defined data to particles.
 	</Field>
 	<Field
 		name="MaxParticles"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -151,6 +165,7 @@
 	<Field
 		name="Dynamic"
 		type="bool"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="true"
@@ -162,6 +177,7 @@
 	<Field
 		name="UpdateSecAttribs"
 		type="bool"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -172,6 +188,7 @@
 	<Field
 		name="LastElapsedTime"
 		type="Time"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0"
@@ -181,37 +198,38 @@
 	</Field>
 	<Field
 		name="Generators"
-		type="ParticleGeneratorPtr"
+		type="ParticleGenerator"
+        category="pointer"
 		cardinality="multi"
 		visibility="external"
 		access="public"
-		header="ParticleSystem/ParticleGenerators/OSGParticleGeneratorFields.h"
 	>
    List of Particle Generators.
 	</Field>
 	<Field
 		name="Affectors"
-		type="ParticleAffectorPtr"
+		type="ParticleAffector"
+        category="pointer"
 		cardinality="multi"
 		visibility="external"
 		access="public"
-		header="ParticleSystem/ParticleAffectors/OSGParticleAffectorFields.h"
 	>
    List of Particle Affectors.  These are applied on a per particle basis.
 	</Field>
 	<Field
 		name="SystemAffectors"
-		type="ParticleSystemAffectorPtr"
+		type="ParticleSystemAffector"
+        category="pointer"
 		cardinality="multi"
 		visibility="external"
 		access="public"
-		header="ParticleSystem/ParticleSystemAffectors/OSGParticleSystemAffectorFields.h"
 	>
    List of Particle System Affectors.  These are applied to the entire system of particles and can allow for particle-to-particle interaction.
 	</Field>
 	<Field
 		name="Volume"
-		type="DynamicVolume"
+		type="BoxVolume"
+        category="data"
 		cardinality="single"
 		visibility="internal"
 		access="protected"
@@ -222,6 +240,7 @@
 	<Field
 		name="MaxParticleSize"
 		type="Vec3f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="protected"
@@ -232,27 +251,27 @@
 	</Field>
 	<ProducedMethod
 		name="SystemUpdated"
-		producedEventType="ParticleSystemEvent"
+		type="ParticleSystemEvent"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="VolumeChanged"
-		producedEventType="ParticleSystemEvent"
+		type="ParticleSystemEvent"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="ParticleGenerated"
-		producedEventType="ParticleEvent"
+		type="ParticleEvent"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="ParticleKilled"
-		producedEventType="ParticleEvent"
+		type="ParticleEvent"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="ParticleStolen"
-		producedEventType="ParticleEvent"
+		type="ParticleEvent"
 	>
 	</ProducedMethod>
 </FieldContainer>

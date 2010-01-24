@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,181 +50,286 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEDISTANCEFADEPARTICLEAFFECTORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGDistanceFadeParticleAffectorBase.h"
 #include "OSGDistanceFadeParticleAffector.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  DistanceFadeParticleAffectorBase::DistanceFadeStartFieldMask = 
-    (TypeTraits<BitVector>::One << DistanceFadeParticleAffectorBase::DistanceFadeStartFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  DistanceFadeParticleAffectorBase::DistanceFadeEndFieldMask = 
-    (TypeTraits<BitVector>::One << DistanceFadeParticleAffectorBase::DistanceFadeEndFieldId);
+/*! \class OSG::DistanceFadeParticleAffector
+    
+ */
 
-const OSG::BitVector  DistanceFadeParticleAffectorBase::FadeStartAlphaFieldMask = 
-    (TypeTraits<BitVector>::One << DistanceFadeParticleAffectorBase::FadeStartAlphaFieldId);
-
-const OSG::BitVector  DistanceFadeParticleAffectorBase::FadeEndAlphaFieldMask = 
-    (TypeTraits<BitVector>::One << DistanceFadeParticleAffectorBase::FadeEndAlphaFieldId);
-
-const OSG::BitVector DistanceFadeParticleAffectorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Real32          DistanceFadeParticleAffectorBase::_sfDistanceFadeStart
     
 */
+
 /*! \var Real32          DistanceFadeParticleAffectorBase::_sfDistanceFadeEnd
     
 */
+
 /*! \var Real32          DistanceFadeParticleAffectorBase::_sfFadeStartAlpha
     
 */
+
 /*! \var Real32          DistanceFadeParticleAffectorBase::_sfFadeEndAlpha
     
 */
 
-//! DistanceFadeParticleAffector description
 
-FieldDescription *DistanceFadeParticleAffectorBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<DistanceFadeParticleAffector *>::_type("DistanceFadeParticleAffectorPtr", "DistanceParticleAffectorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(DistanceFadeParticleAffector *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           DistanceFadeParticleAffector *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           DistanceFadeParticleAffector *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void DistanceFadeParticleAffectorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "DistanceFadeStart", 
-                     DistanceFadeStartFieldId, DistanceFadeStartFieldMask,
-                     false,
-                     (FieldAccessMethod) &DistanceFadeParticleAffectorBase::getSFDistanceFadeStart),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "DistanceFadeEnd", 
-                     DistanceFadeEndFieldId, DistanceFadeEndFieldMask,
-                     false,
-                     (FieldAccessMethod) &DistanceFadeParticleAffectorBase::getSFDistanceFadeEnd),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "FadeStartAlpha", 
-                     FadeStartAlphaFieldId, FadeStartAlphaFieldMask,
-                     false,
-                     (FieldAccessMethod) &DistanceFadeParticleAffectorBase::getSFFadeStartAlpha),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "FadeEndAlpha", 
-                     FadeEndAlphaFieldId, FadeEndAlphaFieldMask,
-                     false,
-                     (FieldAccessMethod) &DistanceFadeParticleAffectorBase::getSFFadeEndAlpha)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType DistanceFadeParticleAffectorBase::_type(
-    "DistanceFadeParticleAffector",
-    "DistanceParticleAffector",
-    NULL,
-    (PrototypeCreateF) &DistanceFadeParticleAffectorBase::createEmpty,
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "DistanceFadeStart",
+        "",
+        DistanceFadeStartFieldId, DistanceFadeStartFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DistanceFadeParticleAffector::editHandleDistanceFadeStart),
+        static_cast<FieldGetMethodSig >(&DistanceFadeParticleAffector::getHandleDistanceFadeStart));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "DistanceFadeEnd",
+        "",
+        DistanceFadeEndFieldId, DistanceFadeEndFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DistanceFadeParticleAffector::editHandleDistanceFadeEnd),
+        static_cast<FieldGetMethodSig >(&DistanceFadeParticleAffector::getHandleDistanceFadeEnd));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "FadeStartAlpha",
+        "",
+        FadeStartAlphaFieldId, FadeStartAlphaFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DistanceFadeParticleAffector::editHandleFadeStartAlpha),
+        static_cast<FieldGetMethodSig >(&DistanceFadeParticleAffector::getHandleFadeStartAlpha));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "FadeEndAlpha",
+        "",
+        FadeEndAlphaFieldId, FadeEndAlphaFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DistanceFadeParticleAffector::editHandleFadeEndAlpha),
+        static_cast<FieldGetMethodSig >(&DistanceFadeParticleAffector::getHandleFadeEndAlpha));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+DistanceFadeParticleAffectorBase::TypeObject DistanceFadeParticleAffectorBase::_type(
+    DistanceFadeParticleAffectorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&DistanceFadeParticleAffectorBase::createEmptyLocal),
     DistanceFadeParticleAffector::initMethod,
-    _desc,
-    sizeof(_desc));
+    DistanceFadeParticleAffector::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&DistanceFadeParticleAffector::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"DistanceFadeParticleAffector\"\n"
+    "\tparent=\"DistanceParticleAffector\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com), Daniel Guilliams           \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"DistanceFadeStart\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"100.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"DistanceFadeEnd\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"200.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FadeStartAlpha\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FadeEndAlpha\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(DistanceFadeParticleAffectorBase, DistanceFadeParticleAffectorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &DistanceFadeParticleAffectorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &DistanceFadeParticleAffectorBase::getType(void) const 
+FieldContainerType &DistanceFadeParticleAffectorBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr DistanceFadeParticleAffectorBase::shallowCopy(void) const 
-{ 
-    DistanceFadeParticleAffectorPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const DistanceFadeParticleAffector *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 DistanceFadeParticleAffectorBase::getContainerSize(void) const 
-{ 
-    return sizeof(DistanceFadeParticleAffector); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DistanceFadeParticleAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &DistanceFadeParticleAffectorBase::getType(void) const
 {
-    this->executeSyncImpl((DistanceFadeParticleAffectorBase *) &other, whichField);
+    return _type;
 }
-#else
-void DistanceFadeParticleAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 DistanceFadeParticleAffectorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((DistanceFadeParticleAffectorBase *) &other, whichField, sInfo);
+    return sizeof(DistanceFadeParticleAffector);
 }
-void DistanceFadeParticleAffectorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFReal32 *DistanceFadeParticleAffectorBase::editSFDistanceFadeStart(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(DistanceFadeStartFieldMask);
+
+    return &_sfDistanceFadeStart;
 }
 
-void DistanceFadeParticleAffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFReal32 *DistanceFadeParticleAffectorBase::getSFDistanceFadeStart(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfDistanceFadeStart;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-DistanceFadeParticleAffectorBase::DistanceFadeParticleAffectorBase(void) :
-    _sfDistanceFadeStart      (Real32(100.0)), 
-    _sfDistanceFadeEnd        (Real32(200.0)), 
-    _sfFadeStartAlpha         (Real32(1.0f)), 
-    _sfFadeEndAlpha           (Real32(0.0f)), 
-    Inherited() 
+SFReal32 *DistanceFadeParticleAffectorBase::editSFDistanceFadeEnd(void)
 {
+    editSField(DistanceFadeEndFieldMask);
+
+    return &_sfDistanceFadeEnd;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-DistanceFadeParticleAffectorBase::DistanceFadeParticleAffectorBase(const DistanceFadeParticleAffectorBase &source) :
-    _sfDistanceFadeStart      (source._sfDistanceFadeStart      ), 
-    _sfDistanceFadeEnd        (source._sfDistanceFadeEnd        ), 
-    _sfFadeStartAlpha         (source._sfFadeStartAlpha         ), 
-    _sfFadeEndAlpha           (source._sfFadeEndAlpha           ), 
-    Inherited                 (source)
+const SFReal32 *DistanceFadeParticleAffectorBase::getSFDistanceFadeEnd(void) const
 {
+    return &_sfDistanceFadeEnd;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-DistanceFadeParticleAffectorBase::~DistanceFadeParticleAffectorBase(void)
+SFReal32 *DistanceFadeParticleAffectorBase::editSFFadeStartAlpha(void)
 {
+    editSField(FadeStartAlphaFieldMask);
+
+    return &_sfFadeStartAlpha;
 }
+
+const SFReal32 *DistanceFadeParticleAffectorBase::getSFFadeStartAlpha(void) const
+{
+    return &_sfFadeStartAlpha;
+}
+
+
+SFReal32 *DistanceFadeParticleAffectorBase::editSFFadeEndAlpha(void)
+{
+    editSField(FadeEndAlphaFieldMask);
+
+    return &_sfFadeEndAlpha;
+}
+
+const SFReal32 *DistanceFadeParticleAffectorBase::getSFFadeEndAlpha(void) const
+{
+    return &_sfFadeEndAlpha;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 DistanceFadeParticleAffectorBase::getBinSize(const BitVector &whichField)
+UInt32 DistanceFadeParticleAffectorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -232,28 +337,24 @@ UInt32 DistanceFadeParticleAffectorBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfDistanceFadeStart.getBinSize();
     }
-
     if(FieldBits::NoField != (DistanceFadeEndFieldMask & whichField))
     {
         returnValue += _sfDistanceFadeEnd.getBinSize();
     }
-
     if(FieldBits::NoField != (FadeStartAlphaFieldMask & whichField))
     {
         returnValue += _sfFadeStartAlpha.getBinSize();
     }
-
     if(FieldBits::NoField != (FadeEndAlphaFieldMask & whichField))
     {
         returnValue += _sfFadeEndAlpha.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void DistanceFadeParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void DistanceFadeParticleAffectorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -261,27 +362,22 @@ void DistanceFadeParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfDistanceFadeStart.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DistanceFadeEndFieldMask & whichField))
     {
         _sfDistanceFadeEnd.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FadeStartAlphaFieldMask & whichField))
     {
         _sfFadeStartAlpha.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FadeEndAlphaFieldMask & whichField))
     {
         _sfFadeEndAlpha.copyToBin(pMem);
     }
-
-
 }
 
-void DistanceFadeParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void DistanceFadeParticleAffectorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -289,115 +385,306 @@ void DistanceFadeParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem
     {
         _sfDistanceFadeStart.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DistanceFadeEndFieldMask & whichField))
     {
         _sfDistanceFadeEnd.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FadeStartAlphaFieldMask & whichField))
     {
         _sfFadeStartAlpha.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FadeEndAlphaFieldMask & whichField))
     {
         _sfFadeEndAlpha.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DistanceFadeParticleAffectorBase::executeSyncImpl(      DistanceFadeParticleAffectorBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+DistanceFadeParticleAffectorTransitPtr DistanceFadeParticleAffectorBase::createLocal(BitVector bFlags)
 {
+    DistanceFadeParticleAffectorTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (DistanceFadeStartFieldMask & whichField))
-        _sfDistanceFadeStart.syncWith(pOther->_sfDistanceFadeStart);
+        fc = dynamic_pointer_cast<DistanceFadeParticleAffector>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (DistanceFadeEndFieldMask & whichField))
-        _sfDistanceFadeEnd.syncWith(pOther->_sfDistanceFadeEnd);
-
-    if(FieldBits::NoField != (FadeStartAlphaFieldMask & whichField))
-        _sfFadeStartAlpha.syncWith(pOther->_sfFadeStartAlpha);
-
-    if(FieldBits::NoField != (FadeEndAlphaFieldMask & whichField))
-        _sfFadeEndAlpha.syncWith(pOther->_sfFadeEndAlpha);
-
-
-}
-#else
-void DistanceFadeParticleAffectorBase::executeSyncImpl(      DistanceFadeParticleAffectorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (DistanceFadeStartFieldMask & whichField))
-        _sfDistanceFadeStart.syncWith(pOther->_sfDistanceFadeStart);
-
-    if(FieldBits::NoField != (DistanceFadeEndFieldMask & whichField))
-        _sfDistanceFadeEnd.syncWith(pOther->_sfDistanceFadeEnd);
-
-    if(FieldBits::NoField != (FadeStartAlphaFieldMask & whichField))
-        _sfFadeStartAlpha.syncWith(pOther->_sfFadeStartAlpha);
-
-    if(FieldBits::NoField != (FadeEndAlphaFieldMask & whichField))
-        _sfFadeEndAlpha.syncWith(pOther->_sfFadeEndAlpha);
-
-
-
+    return fc;
 }
 
-void DistanceFadeParticleAffectorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+DistanceFadeParticleAffectorTransitPtr DistanceFadeParticleAffectorBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    DistanceFadeParticleAffectorTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<DistanceFadeParticleAffector>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+DistanceFadeParticleAffectorTransitPtr DistanceFadeParticleAffectorBase::create(void)
+{
+    DistanceFadeParticleAffectorTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<DistanceFadeParticleAffector>(tmpPtr);
+    }
+
+    return fc;
+}
+
+DistanceFadeParticleAffector *DistanceFadeParticleAffectorBase::createEmptyLocal(BitVector bFlags)
+{
+    DistanceFadeParticleAffector *returnValue;
+
+    newPtr<DistanceFadeParticleAffector>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+DistanceFadeParticleAffector *DistanceFadeParticleAffectorBase::createEmpty(void)
+{
+    DistanceFadeParticleAffector *returnValue;
+
+    newPtr<DistanceFadeParticleAffector>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr DistanceFadeParticleAffectorBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    DistanceFadeParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DistanceFadeParticleAffector *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DistanceFadeParticleAffectorBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    DistanceFadeParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DistanceFadeParticleAffector *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DistanceFadeParticleAffectorBase::shallowCopy(void) const
+{
+    DistanceFadeParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const DistanceFadeParticleAffector *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+DistanceFadeParticleAffectorBase::DistanceFadeParticleAffectorBase(void) :
+    Inherited(),
+    _sfDistanceFadeStart      (Real32(100.0)),
+    _sfDistanceFadeEnd        (Real32(200.0)),
+    _sfFadeStartAlpha         (Real32(1.0f)),
+    _sfFadeEndAlpha           (Real32(0.0f))
+{
+}
+
+DistanceFadeParticleAffectorBase::DistanceFadeParticleAffectorBase(const DistanceFadeParticleAffectorBase &source) :
+    Inherited(source),
+    _sfDistanceFadeStart      (source._sfDistanceFadeStart      ),
+    _sfDistanceFadeEnd        (source._sfDistanceFadeEnd        ),
+    _sfFadeStartAlpha         (source._sfFadeStartAlpha         ),
+    _sfFadeEndAlpha           (source._sfFadeEndAlpha           )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+DistanceFadeParticleAffectorBase::~DistanceFadeParticleAffectorBase(void)
+{
+}
+
+
+GetFieldHandlePtr DistanceFadeParticleAffectorBase::getHandleDistanceFadeStart (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfDistanceFadeStart,
+             this->getType().getFieldDesc(DistanceFadeStartFieldId),
+             const_cast<DistanceFadeParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DistanceFadeParticleAffectorBase::editHandleDistanceFadeStart(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfDistanceFadeStart,
+             this->getType().getFieldDesc(DistanceFadeStartFieldId),
+             this));
+
+
+    editSField(DistanceFadeStartFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DistanceFadeParticleAffectorBase::getHandleDistanceFadeEnd (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfDistanceFadeEnd,
+             this->getType().getFieldDesc(DistanceFadeEndFieldId),
+             const_cast<DistanceFadeParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DistanceFadeParticleAffectorBase::editHandleDistanceFadeEnd(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfDistanceFadeEnd,
+             this->getType().getFieldDesc(DistanceFadeEndFieldId),
+             this));
+
+
+    editSField(DistanceFadeEndFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DistanceFadeParticleAffectorBase::getHandleFadeStartAlpha  (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfFadeStartAlpha,
+             this->getType().getFieldDesc(FadeStartAlphaFieldId),
+             const_cast<DistanceFadeParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DistanceFadeParticleAffectorBase::editHandleFadeStartAlpha (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfFadeStartAlpha,
+             this->getType().getFieldDesc(FadeStartAlphaFieldId),
+             this));
+
+
+    editSField(FadeStartAlphaFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DistanceFadeParticleAffectorBase::getHandleFadeEndAlpha    (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfFadeEndAlpha,
+             this->getType().getFieldDesc(FadeEndAlphaFieldId),
+             const_cast<DistanceFadeParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DistanceFadeParticleAffectorBase::editHandleFadeEndAlpha   (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfFadeEndAlpha,
+             this->getType().getFieldDesc(FadeEndAlphaFieldId),
+             this));
+
+
+    editSField(FadeEndAlphaFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void DistanceFadeParticleAffectorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    DistanceFadeParticleAffector *pThis = static_cast<DistanceFadeParticleAffector *>(this);
+
+    pThis->execSync(static_cast<DistanceFadeParticleAffector *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *DistanceFadeParticleAffectorBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    DistanceFadeParticleAffector *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const DistanceFadeParticleAffector *>(pRefAspect),
+                  dynamic_cast<const DistanceFadeParticleAffector *>(this));
+
+    return returnValue;
+}
+#endif
+
+void DistanceFadeParticleAffectorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<DistanceFadeParticleAffectorPtr>::_type("DistanceFadeParticleAffectorPtr", "DistanceParticleAffectorPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(DistanceFadeParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(DistanceFadeParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGDISTANCEFADEPARTICLEAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDISTANCEFADEPARTICLEAFFECTORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDISTANCEFADEPARTICLEAFFECTORFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

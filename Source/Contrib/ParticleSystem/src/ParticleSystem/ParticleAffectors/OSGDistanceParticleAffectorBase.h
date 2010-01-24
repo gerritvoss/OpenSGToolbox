@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,71 +58,83 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGParticleAffector.h" // Parent
 
-#include <OpenSG/OSGUInt32Fields.h> // DistanceFromSource type
-#include <OpenSG/OSGNodeFields.h> // DistanceFromNode type
-#include <OpenSG/OSGNodeFields.h> // ParticleSystemNode type
-#include <OpenSG/OSGCameraFields.h> // DistanceFromCamera type
+#include "OSGSysFields.h"               // DistanceFromSource type
+#include "OSGNodeFields.h"              // DistanceFromNode type
+#include "OSGCameraFields.h"            // DistanceFromCamera type
 
 #include "OSGDistanceParticleAffectorFields.h"
+
 
 OSG_BEGIN_NAMESPACE
 
 class DistanceParticleAffector;
-class BinaryDataHandler;
 
 //! \brief DistanceParticleAffector Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING DistanceParticleAffectorBase : public ParticleAffector
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DistanceParticleAffectorBase : public ParticleAffector
 {
-  private:
-
-    typedef ParticleAffector    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef DistanceParticleAffectorPtr  Ptr;
+    typedef ParticleAffector Inherited;
+    typedef ParticleAffector ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(DistanceParticleAffector);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
         DistanceFromSourceFieldId = Inherited::NextFieldId,
-        DistanceFromNodeFieldId   = DistanceFromSourceFieldId + 1,
-        ParticleSystemNodeFieldId = DistanceFromNodeFieldId   + 1,
+        DistanceFromNodeFieldId = DistanceFromSourceFieldId + 1,
+        ParticleSystemNodeFieldId = DistanceFromNodeFieldId + 1,
         DistanceFromCameraFieldId = ParticleSystemNodeFieldId + 1,
-        NextFieldId               = DistanceFromCameraFieldId + 1
+        NextFieldId = DistanceFromCameraFieldId + 1
     };
 
-    static const OSG::BitVector DistanceFromSourceFieldMask;
-    static const OSG::BitVector DistanceFromNodeFieldMask;
-    static const OSG::BitVector ParticleSystemNodeFieldMask;
-    static const OSG::BitVector DistanceFromCameraFieldMask;
+    static const OSG::BitVector DistanceFromSourceFieldMask =
+        (TypeTraits<BitVector>::One << DistanceFromSourceFieldId);
+    static const OSG::BitVector DistanceFromNodeFieldMask =
+        (TypeTraits<BitVector>::One << DistanceFromNodeFieldId);
+    static const OSG::BitVector ParticleSystemNodeFieldMask =
+        (TypeTraits<BitVector>::One << ParticleSystemNodeFieldId);
+    static const OSG::BitVector DistanceFromCameraFieldMask =
+        (TypeTraits<BitVector>::One << DistanceFromCameraFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUInt32          SFDistanceFromSourceType;
+    typedef SFUnrecNodePtr    SFDistanceFromNodeType;
+    typedef SFUnrecNodePtr    SFParticleSystemNodeType;
+    typedef SFUnrecCameraPtr  SFDistanceFromCameraType;
 
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -131,33 +143,44 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DistanceParticleAffectorBase : public Par
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUInt32            *getSFDistanceFromSource(void);
-           SFNodePtr           *getSFDistanceFromNode(void);
-           SFNodePtr           *getSFParticleSystemNode(void);
-           SFCameraPtr         *getSFDistanceFromCamera(void);
 
-           UInt32              &getDistanceFromSource(void);
-     const UInt32              &getDistanceFromSource(void) const;
-           NodePtr             &getDistanceFromNode(void);
-     const NodePtr             &getDistanceFromNode(void) const;
-           NodePtr             &getParticleSystemNode(void);
-     const NodePtr             &getParticleSystemNode(void) const;
-           CameraPtr           &getDistanceFromCamera(void);
-     const CameraPtr           &getDistanceFromCamera(void) const;
+                  SFUInt32            *editSFDistanceFromSource(void);
+            const SFUInt32            *getSFDistanceFromSource (void) const;
+            const SFUnrecNodePtr      *getSFDistanceFromNode(void) const;
+                  SFUnrecNodePtr      *editSFDistanceFromNode(void);
+            const SFUnrecNodePtr      *getSFParticleSystemNode(void) const;
+                  SFUnrecNodePtr      *editSFParticleSystemNode(void);
+            const SFUnrecCameraPtr    *getSFDistanceFromCamera(void) const;
+                  SFUnrecCameraPtr    *editSFDistanceFromCamera(void);
+
+
+                  UInt32              &editDistanceFromSource(void);
+                  UInt32               getDistanceFromSource (void) const;
+
+                  Node * getDistanceFromNode(void) const;
+
+                  Node * getParticleSystemNode(void) const;
+
+                  Camera * getDistanceFromCamera(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setDistanceFromSource( const UInt32 &value );
-     void setDistanceFromNode( const NodePtr &value );
-     void setParticleSystemNode( const NodePtr &value );
-     void setDistanceFromCamera( const CameraPtr &value );
+            void setDistanceFromSource(const UInt32 value);
+            void setDistanceFromNode(Node * const value);
+            void setParticleSystemNode(Node * const value);
+            void setDistanceFromCamera(Camera * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -165,25 +188,32 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DistanceParticleAffectorBase : public Par
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUInt32            _sfDistanceFromSource;
-    SFNodePtr           _sfDistanceFromNode;
-    SFNodePtr           _sfParticleSystemNode;
-    SFCameraPtr         _sfDistanceFromCamera;
+    SFUInt32          _sfDistanceFromSource;
+    SFUnrecNodePtr    _sfDistanceFromNode;
+    SFUnrecNodePtr    _sfParticleSystemNode;
+    SFUnrecCameraPtr  _sfDistanceFromCamera;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -198,69 +228,81 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DistanceParticleAffectorBase : public Par
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DistanceParticleAffectorBase(void); 
+    virtual ~DistanceParticleAffectorBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const DistanceParticleAffector *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleDistanceFromSource (void) const;
+    EditFieldHandlePtr editHandleDistanceFromSource(void);
+    GetFieldHandlePtr  getHandleDistanceFromNode (void) const;
+    EditFieldHandlePtr editHandleDistanceFromNode(void);
+    GetFieldHandlePtr  getHandleParticleSystemNode (void) const;
+    EditFieldHandlePtr editHandleParticleSystemNode(void);
+    GetFieldHandlePtr  getHandleDistanceFromCamera (void) const;
+    EditFieldHandlePtr editHandleDistanceFromCamera(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      DistanceParticleAffectorBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      DistanceParticleAffectorBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      DistanceParticleAffectorBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const DistanceParticleAffectorBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef DistanceParticleAffectorBase *DistanceParticleAffectorBaseP;
 
-typedef osgIF<DistanceParticleAffectorBase::isNodeCore,
-              CoredNodePtr<DistanceParticleAffector>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet DistanceParticleAffectorNodePtr;
-
-typedef RefPtr<DistanceParticleAffectorPtr> DistanceParticleAffectorRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGDISTANCEPARTICLEAFFECTORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGDISTANCEPARTICLEAFFECTORBASE_H_ */

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGParticleEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::ParticleEvent
-
-*/
+// Documentation for this class is emitted in the
+// OSGParticleEventBase.cpp file.
+// To modify it, please change the .fcd file (OSGParticleEvent.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,11 +62,16 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ParticleEvent::initMethod (void)
+void ParticleEvent::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-ParticleEventPtr ParticleEvent::create( FieldContainerPtr Source,
+ParticleEventTransitPtr ParticleEvent::create( FieldContainerRefPtr Source,
                                              Time TimeStamp,
                                              Int32 Index,
                                              const Pnt3f& Position,
@@ -86,7 +86,7 @@ ParticleEventPtr ParticleEvent::create( FieldContainerPtr Source,
                                              const Vec3f& Acceleration,
                                              const StringToUInt32Map& Attributes)
 {
-    ParticleEventPtr TheEvent = ParticleEvent::createEmpty();
+    ParticleEvent* TheEvent = ParticleEvent::createEmpty();
 
     TheEvent->setSource(Source);
     TheEvent->setTimeStamp(TimeStamp);
@@ -103,7 +103,7 @@ ParticleEventPtr ParticleEvent::create( FieldContainerPtr Source,
     TheEvent->setParticleAcceleration(Acceleration);
     TheEvent->setParticleAttributes(Attributes);
 
-    return TheEvent;
+    return ParticleEventTransitPtr(TheEvent);
 }
 
 /***************************************************************************\
@@ -132,17 +132,17 @@ ParticleEvent::~ParticleEvent(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void ParticleEvent::changed(BitVector whichField, UInt32 origin)
+void ParticleEvent::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void ParticleEvent::dump(      UInt32    , 
+void ParticleEvent::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump ParticleEvent NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

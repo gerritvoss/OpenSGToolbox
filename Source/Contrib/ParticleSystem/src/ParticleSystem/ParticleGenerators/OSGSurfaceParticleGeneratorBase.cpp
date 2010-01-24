@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,247 +50,489 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILESURFACEPARTICLEGENERATORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGGeoSurfaceDistribution3D.h" // PositionVelocityDistribution Class
+#include "OSGDistribution3D.h"          // NormalDistribution Class
+#include "OSGDistribution1D.h"          // TransparencyDistribution Class
 
 #include "OSGSurfaceParticleGeneratorBase.h"
 #include "OSGSurfaceParticleGenerator.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  SurfaceParticleGeneratorBase::PositionVelocityDistributionFieldMask = 
-    (TypeTraits<BitVector>::One << SurfaceParticleGeneratorBase::PositionVelocityDistributionFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  SurfaceParticleGeneratorBase::NormalDistributionFieldMask = 
-    (TypeTraits<BitVector>::One << SurfaceParticleGeneratorBase::NormalDistributionFieldId);
-
-const OSG::BitVector  SurfaceParticleGeneratorBase::ColorDistributionFieldMask = 
-    (TypeTraits<BitVector>::One << SurfaceParticleGeneratorBase::ColorDistributionFieldId);
-
-const OSG::BitVector  SurfaceParticleGeneratorBase::TransparencyDistributionFieldMask = 
-    (TypeTraits<BitVector>::One << SurfaceParticleGeneratorBase::TransparencyDistributionFieldId);
-
-const OSG::BitVector  SurfaceParticleGeneratorBase::SizeDistributionFieldMask = 
-    (TypeTraits<BitVector>::One << SurfaceParticleGeneratorBase::SizeDistributionFieldId);
-
-const OSG::BitVector  SurfaceParticleGeneratorBase::LifespanDistributionFieldMask = 
-    (TypeTraits<BitVector>::One << SurfaceParticleGeneratorBase::LifespanDistributionFieldId);
-
-const OSG::BitVector  SurfaceParticleGeneratorBase::AgeDistributionFieldMask = 
-    (TypeTraits<BitVector>::One << SurfaceParticleGeneratorBase::AgeDistributionFieldId);
-
-const OSG::BitVector  SurfaceParticleGeneratorBase::SpeedDistributionFieldMask = 
-    (TypeTraits<BitVector>::One << SurfaceParticleGeneratorBase::SpeedDistributionFieldId);
-
-const OSG::BitVector  SurfaceParticleGeneratorBase::AccelerationDistributionFieldMask = 
-    (TypeTraits<BitVector>::One << SurfaceParticleGeneratorBase::AccelerationDistributionFieldId);
-
-const OSG::BitVector SurfaceParticleGeneratorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var GeoSurfaceDistribution3DPtr SurfaceParticleGeneratorBase::_sfPositionVelocityDistribution
+/*! \class OSG::SurfaceParticleGenerator
     
-*/
-/*! \var Distribution3DPtr SurfaceParticleGeneratorBase::_sfNormalDistribution
-    
-*/
-/*! \var Distribution3DPtr SurfaceParticleGeneratorBase::_sfColorDistribution
-    
-*/
-/*! \var Distribution1DPtr SurfaceParticleGeneratorBase::_sfTransparencyDistribution
-    
-*/
-/*! \var Distribution3DPtr SurfaceParticleGeneratorBase::_sfSizeDistribution
-    
-*/
-/*! \var Distribution1DPtr SurfaceParticleGeneratorBase::_sfLifespanDistribution
-    
-*/
-/*! \var Distribution1DPtr SurfaceParticleGeneratorBase::_sfAgeDistribution
-    
-*/
-/*! \var Distribution1DPtr SurfaceParticleGeneratorBase::_sfSpeedDistribution
-    
-*/
-/*! \var Distribution3DPtr SurfaceParticleGeneratorBase::_sfAccelerationDistribution
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
+
+/*! \var GeoSurfaceDistribution3D * SurfaceParticleGeneratorBase::_sfPositionVelocityDistribution
     
 */
 
-//! SurfaceParticleGenerator description
+/*! \var Distribution3D * SurfaceParticleGeneratorBase::_sfNormalDistribution
+    
+*/
 
-FieldDescription *SurfaceParticleGeneratorBase::_desc[] = 
+/*! \var Distribution3D * SurfaceParticleGeneratorBase::_sfColorDistribution
+    
+*/
+
+/*! \var Distribution1D * SurfaceParticleGeneratorBase::_sfTransparencyDistribution
+    
+*/
+
+/*! \var Distribution3D * SurfaceParticleGeneratorBase::_sfSizeDistribution
+    
+*/
+
+/*! \var Distribution1D * SurfaceParticleGeneratorBase::_sfLifespanDistribution
+    
+*/
+
+/*! \var Distribution1D * SurfaceParticleGeneratorBase::_sfAgeDistribution
+    
+*/
+
+/*! \var Distribution1D * SurfaceParticleGeneratorBase::_sfSpeedDistribution
+    
+*/
+
+/*! \var Distribution3D * SurfaceParticleGeneratorBase::_sfAccelerationDistribution
+    
+*/
+
+
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<SurfaceParticleGenerator *>::_type("SurfaceParticleGeneratorPtr", "ParticleGeneratorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(SurfaceParticleGenerator *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           SurfaceParticleGenerator *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           SurfaceParticleGenerator *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void SurfaceParticleGeneratorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFGeoSurfaceDistribution3DPtr::getClassType(), 
-                     "PositionVelocityDistribution", 
-                     PositionVelocityDistributionFieldId, PositionVelocityDistributionFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&SurfaceParticleGeneratorBase::editSFPositionVelocityDistribution)),
-    new FieldDescription(SFDistribution3DPtr::getClassType(), 
-                     "NormalDistribution", 
-                     NormalDistributionFieldId, NormalDistributionFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&SurfaceParticleGeneratorBase::editSFNormalDistribution)),
-    new FieldDescription(SFDistribution3DPtr::getClassType(), 
-                     "ColorDistribution", 
-                     ColorDistributionFieldId, ColorDistributionFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&SurfaceParticleGeneratorBase::editSFColorDistribution)),
-    new FieldDescription(SFDistribution1DPtr::getClassType(), 
-                     "TransparencyDistribution", 
-                     TransparencyDistributionFieldId, TransparencyDistributionFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&SurfaceParticleGeneratorBase::editSFTransparencyDistribution)),
-    new FieldDescription(SFDistribution3DPtr::getClassType(), 
-                     "SizeDistribution", 
-                     SizeDistributionFieldId, SizeDistributionFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&SurfaceParticleGeneratorBase::editSFSizeDistribution)),
-    new FieldDescription(SFDistribution1DPtr::getClassType(), 
-                     "LifespanDistribution", 
-                     LifespanDistributionFieldId, LifespanDistributionFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&SurfaceParticleGeneratorBase::editSFLifespanDistribution)),
-    new FieldDescription(SFDistribution1DPtr::getClassType(), 
-                     "AgeDistribution", 
-                     AgeDistributionFieldId, AgeDistributionFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&SurfaceParticleGeneratorBase::editSFAgeDistribution)),
-    new FieldDescription(SFDistribution1DPtr::getClassType(), 
-                     "SpeedDistribution", 
-                     SpeedDistributionFieldId, SpeedDistributionFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&SurfaceParticleGeneratorBase::editSFSpeedDistribution)),
-    new FieldDescription(SFDistribution3DPtr::getClassType(), 
-                     "AccelerationDistribution", 
-                     AccelerationDistributionFieldId, AccelerationDistributionFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&SurfaceParticleGeneratorBase::editSFAccelerationDistribution))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType SurfaceParticleGeneratorBase::_type(
-    "SurfaceParticleGenerator",
-    "ParticleGenerator",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&SurfaceParticleGeneratorBase::createEmpty),
+    pDesc = new SFUnrecGeoSurfaceDistribution3DPtr::Description(
+        SFUnrecGeoSurfaceDistribution3DPtr::getClassType(),
+        "PositionVelocityDistribution",
+        "",
+        PositionVelocityDistributionFieldId, PositionVelocityDistributionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SurfaceParticleGenerator::editHandlePositionVelocityDistribution),
+        static_cast<FieldGetMethodSig >(&SurfaceParticleGenerator::getHandlePositionVelocityDistribution));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecDistribution3DPtr::Description(
+        SFUnrecDistribution3DPtr::getClassType(),
+        "NormalDistribution",
+        "",
+        NormalDistributionFieldId, NormalDistributionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SurfaceParticleGenerator::editHandleNormalDistribution),
+        static_cast<FieldGetMethodSig >(&SurfaceParticleGenerator::getHandleNormalDistribution));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecDistribution3DPtr::Description(
+        SFUnrecDistribution3DPtr::getClassType(),
+        "ColorDistribution",
+        "",
+        ColorDistributionFieldId, ColorDistributionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SurfaceParticleGenerator::editHandleColorDistribution),
+        static_cast<FieldGetMethodSig >(&SurfaceParticleGenerator::getHandleColorDistribution));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecDistribution1DPtr::Description(
+        SFUnrecDistribution1DPtr::getClassType(),
+        "TransparencyDistribution",
+        "",
+        TransparencyDistributionFieldId, TransparencyDistributionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SurfaceParticleGenerator::editHandleTransparencyDistribution),
+        static_cast<FieldGetMethodSig >(&SurfaceParticleGenerator::getHandleTransparencyDistribution));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecDistribution3DPtr::Description(
+        SFUnrecDistribution3DPtr::getClassType(),
+        "SizeDistribution",
+        "",
+        SizeDistributionFieldId, SizeDistributionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SurfaceParticleGenerator::editHandleSizeDistribution),
+        static_cast<FieldGetMethodSig >(&SurfaceParticleGenerator::getHandleSizeDistribution));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecDistribution1DPtr::Description(
+        SFUnrecDistribution1DPtr::getClassType(),
+        "LifespanDistribution",
+        "",
+        LifespanDistributionFieldId, LifespanDistributionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SurfaceParticleGenerator::editHandleLifespanDistribution),
+        static_cast<FieldGetMethodSig >(&SurfaceParticleGenerator::getHandleLifespanDistribution));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecDistribution1DPtr::Description(
+        SFUnrecDistribution1DPtr::getClassType(),
+        "AgeDistribution",
+        "",
+        AgeDistributionFieldId, AgeDistributionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SurfaceParticleGenerator::editHandleAgeDistribution),
+        static_cast<FieldGetMethodSig >(&SurfaceParticleGenerator::getHandleAgeDistribution));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecDistribution1DPtr::Description(
+        SFUnrecDistribution1DPtr::getClassType(),
+        "SpeedDistribution",
+        "",
+        SpeedDistributionFieldId, SpeedDistributionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SurfaceParticleGenerator::editHandleSpeedDistribution),
+        static_cast<FieldGetMethodSig >(&SurfaceParticleGenerator::getHandleSpeedDistribution));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecDistribution3DPtr::Description(
+        SFUnrecDistribution3DPtr::getClassType(),
+        "AccelerationDistribution",
+        "",
+        AccelerationDistributionFieldId, AccelerationDistributionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SurfaceParticleGenerator::editHandleAccelerationDistribution),
+        static_cast<FieldGetMethodSig >(&SurfaceParticleGenerator::getHandleAccelerationDistribution));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+SurfaceParticleGeneratorBase::TypeObject SurfaceParticleGeneratorBase::_type(
+    SurfaceParticleGeneratorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&SurfaceParticleGeneratorBase::createEmptyLocal),
     SurfaceParticleGenerator::initMethod,
-    _desc,
-    sizeof(_desc));
+    SurfaceParticleGenerator::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&SurfaceParticleGenerator::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"SurfaceParticleGenerator\"\n"
+    "\tparent=\"ParticleGenerator\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com), Daniel Guilliams           \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"PositionVelocityDistribution\"\n"
+    "\t\ttype=\"GeoSurfaceDistribution3D\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"NormalDistribution\"\n"
+    "\t\ttype=\"Distribution3D\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ColorDistribution\"\n"
+    "\t\ttype=\"Distribution3D\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TransparencyDistribution\"\n"
+    "\t\ttype=\"Distribution1D\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SizeDistribution\"\n"
+    "\t\ttype=\"Distribution3D\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"LifespanDistribution\"\n"
+    "\t\ttype=\"Distribution1D\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"AgeDistribution\"\n"
+    "\t\ttype=\"Distribution1D\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SpeedDistribution\"\n"
+    "\t\ttype=\"Distribution1D\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"AccelerationDistribution\"\n"
+    "\t\ttype=\"Distribution3D\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(SurfaceParticleGeneratorBase, SurfaceParticleGeneratorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &SurfaceParticleGeneratorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &SurfaceParticleGeneratorBase::getType(void) const 
+FieldContainerType &SurfaceParticleGeneratorBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr SurfaceParticleGeneratorBase::shallowCopy(void) const 
-{ 
-    SurfaceParticleGeneratorPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const SurfaceParticleGenerator *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 SurfaceParticleGeneratorBase::getContainerSize(void) const 
-{ 
-    return sizeof(SurfaceParticleGenerator); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void SurfaceParticleGeneratorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &SurfaceParticleGeneratorBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<SurfaceParticleGeneratorBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void SurfaceParticleGeneratorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 SurfaceParticleGeneratorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((SurfaceParticleGeneratorBase *) &other, whichField, sInfo);
+    return sizeof(SurfaceParticleGenerator);
 }
-void SurfaceParticleGeneratorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the SurfaceParticleGenerator::_sfPositionVelocityDistribution field.
+const SFUnrecGeoSurfaceDistribution3DPtr *SurfaceParticleGeneratorBase::getSFPositionVelocityDistribution(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfPositionVelocityDistribution;
 }
 
-void SurfaceParticleGeneratorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecGeoSurfaceDistribution3DPtr *SurfaceParticleGeneratorBase::editSFPositionVelocityDistribution(void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(PositionVelocityDistributionFieldMask);
 
+    return &_sfPositionVelocityDistribution;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-SurfaceParticleGeneratorBase::SurfaceParticleGeneratorBase(void) :
-    _sfPositionVelocityDistribution(GeoSurfaceDistribution3DPtr(NullFC)), 
-    _sfNormalDistribution     (Distribution3DPtr(NullFC)), 
-    _sfColorDistribution      (Distribution3DPtr(NullFC)), 
-    _sfTransparencyDistribution(Distribution1DPtr(NullFC)), 
-    _sfSizeDistribution       (Distribution3DPtr(NullFC)), 
-    _sfLifespanDistribution   (Distribution1DPtr(NullFC)), 
-    _sfAgeDistribution        (Distribution1DPtr(NullFC)), 
-    _sfSpeedDistribution      (Distribution1DPtr(NullFC)), 
-    _sfAccelerationDistribution(Distribution3DPtr(NullFC)), 
-    Inherited() 
+//! Get the SurfaceParticleGenerator::_sfNormalDistribution field.
+const SFUnrecDistribution3DPtr *SurfaceParticleGeneratorBase::getSFNormalDistribution(void) const
 {
+    return &_sfNormalDistribution;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-SurfaceParticleGeneratorBase::SurfaceParticleGeneratorBase(const SurfaceParticleGeneratorBase &source) :
-    _sfPositionVelocityDistribution(source._sfPositionVelocityDistribution), 
-    _sfNormalDistribution     (source._sfNormalDistribution     ), 
-    _sfColorDistribution      (source._sfColorDistribution      ), 
-    _sfTransparencyDistribution(source._sfTransparencyDistribution), 
-    _sfSizeDistribution       (source._sfSizeDistribution       ), 
-    _sfLifespanDistribution   (source._sfLifespanDistribution   ), 
-    _sfAgeDistribution        (source._sfAgeDistribution        ), 
-    _sfSpeedDistribution      (source._sfSpeedDistribution      ), 
-    _sfAccelerationDistribution(source._sfAccelerationDistribution), 
-    Inherited                 (source)
+SFUnrecDistribution3DPtr *SurfaceParticleGeneratorBase::editSFNormalDistribution(void)
 {
+    editSField(NormalDistributionFieldMask);
+
+    return &_sfNormalDistribution;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-SurfaceParticleGeneratorBase::~SurfaceParticleGeneratorBase(void)
+//! Get the SurfaceParticleGenerator::_sfColorDistribution field.
+const SFUnrecDistribution3DPtr *SurfaceParticleGeneratorBase::getSFColorDistribution(void) const
 {
+    return &_sfColorDistribution;
 }
+
+SFUnrecDistribution3DPtr *SurfaceParticleGeneratorBase::editSFColorDistribution(void)
+{
+    editSField(ColorDistributionFieldMask);
+
+    return &_sfColorDistribution;
+}
+
+//! Get the SurfaceParticleGenerator::_sfTransparencyDistribution field.
+const SFUnrecDistribution1DPtr *SurfaceParticleGeneratorBase::getSFTransparencyDistribution(void) const
+{
+    return &_sfTransparencyDistribution;
+}
+
+SFUnrecDistribution1DPtr *SurfaceParticleGeneratorBase::editSFTransparencyDistribution(void)
+{
+    editSField(TransparencyDistributionFieldMask);
+
+    return &_sfTransparencyDistribution;
+}
+
+//! Get the SurfaceParticleGenerator::_sfSizeDistribution field.
+const SFUnrecDistribution3DPtr *SurfaceParticleGeneratorBase::getSFSizeDistribution(void) const
+{
+    return &_sfSizeDistribution;
+}
+
+SFUnrecDistribution3DPtr *SurfaceParticleGeneratorBase::editSFSizeDistribution(void)
+{
+    editSField(SizeDistributionFieldMask);
+
+    return &_sfSizeDistribution;
+}
+
+//! Get the SurfaceParticleGenerator::_sfLifespanDistribution field.
+const SFUnrecDistribution1DPtr *SurfaceParticleGeneratorBase::getSFLifespanDistribution(void) const
+{
+    return &_sfLifespanDistribution;
+}
+
+SFUnrecDistribution1DPtr *SurfaceParticleGeneratorBase::editSFLifespanDistribution(void)
+{
+    editSField(LifespanDistributionFieldMask);
+
+    return &_sfLifespanDistribution;
+}
+
+//! Get the SurfaceParticleGenerator::_sfAgeDistribution field.
+const SFUnrecDistribution1DPtr *SurfaceParticleGeneratorBase::getSFAgeDistribution(void) const
+{
+    return &_sfAgeDistribution;
+}
+
+SFUnrecDistribution1DPtr *SurfaceParticleGeneratorBase::editSFAgeDistribution(void)
+{
+    editSField(AgeDistributionFieldMask);
+
+    return &_sfAgeDistribution;
+}
+
+//! Get the SurfaceParticleGenerator::_sfSpeedDistribution field.
+const SFUnrecDistribution1DPtr *SurfaceParticleGeneratorBase::getSFSpeedDistribution(void) const
+{
+    return &_sfSpeedDistribution;
+}
+
+SFUnrecDistribution1DPtr *SurfaceParticleGeneratorBase::editSFSpeedDistribution(void)
+{
+    editSField(SpeedDistributionFieldMask);
+
+    return &_sfSpeedDistribution;
+}
+
+//! Get the SurfaceParticleGenerator::_sfAccelerationDistribution field.
+const SFUnrecDistribution3DPtr *SurfaceParticleGeneratorBase::getSFAccelerationDistribution(void) const
+{
+    return &_sfAccelerationDistribution;
+}
+
+SFUnrecDistribution3DPtr *SurfaceParticleGeneratorBase::editSFAccelerationDistribution(void)
+{
+    editSField(AccelerationDistributionFieldMask);
+
+    return &_sfAccelerationDistribution;
+}
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 SurfaceParticleGeneratorBase::getBinSize(const BitVector &whichField)
+UInt32 SurfaceParticleGeneratorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -298,53 +540,44 @@ UInt32 SurfaceParticleGeneratorBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfPositionVelocityDistribution.getBinSize();
     }
-
     if(FieldBits::NoField != (NormalDistributionFieldMask & whichField))
     {
         returnValue += _sfNormalDistribution.getBinSize();
     }
-
     if(FieldBits::NoField != (ColorDistributionFieldMask & whichField))
     {
         returnValue += _sfColorDistribution.getBinSize();
     }
-
     if(FieldBits::NoField != (TransparencyDistributionFieldMask & whichField))
     {
         returnValue += _sfTransparencyDistribution.getBinSize();
     }
-
     if(FieldBits::NoField != (SizeDistributionFieldMask & whichField))
     {
         returnValue += _sfSizeDistribution.getBinSize();
     }
-
     if(FieldBits::NoField != (LifespanDistributionFieldMask & whichField))
     {
         returnValue += _sfLifespanDistribution.getBinSize();
     }
-
     if(FieldBits::NoField != (AgeDistributionFieldMask & whichField))
     {
         returnValue += _sfAgeDistribution.getBinSize();
     }
-
     if(FieldBits::NoField != (SpeedDistributionFieldMask & whichField))
     {
         returnValue += _sfSpeedDistribution.getBinSize();
     }
-
     if(FieldBits::NoField != (AccelerationDistributionFieldMask & whichField))
     {
         returnValue += _sfAccelerationDistribution.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void SurfaceParticleGeneratorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void SurfaceParticleGeneratorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -352,52 +585,42 @@ void SurfaceParticleGeneratorBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfPositionVelocityDistribution.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (NormalDistributionFieldMask & whichField))
     {
         _sfNormalDistribution.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ColorDistributionFieldMask & whichField))
     {
         _sfColorDistribution.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TransparencyDistributionFieldMask & whichField))
     {
         _sfTransparencyDistribution.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SizeDistributionFieldMask & whichField))
     {
         _sfSizeDistribution.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (LifespanDistributionFieldMask & whichField))
     {
         _sfLifespanDistribution.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (AgeDistributionFieldMask & whichField))
     {
         _sfAgeDistribution.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SpeedDistributionFieldMask & whichField))
     {
         _sfSpeedDistribution.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (AccelerationDistributionFieldMask & whichField))
     {
         _sfAccelerationDistribution.copyToBin(pMem);
     }
-
-
 }
 
-void SurfaceParticleGeneratorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void SurfaceParticleGeneratorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -405,150 +628,533 @@ void SurfaceParticleGeneratorBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfPositionVelocityDistribution.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (NormalDistributionFieldMask & whichField))
     {
         _sfNormalDistribution.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ColorDistributionFieldMask & whichField))
     {
         _sfColorDistribution.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TransparencyDistributionFieldMask & whichField))
     {
         _sfTransparencyDistribution.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SizeDistributionFieldMask & whichField))
     {
         _sfSizeDistribution.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (LifespanDistributionFieldMask & whichField))
     {
         _sfLifespanDistribution.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (AgeDistributionFieldMask & whichField))
     {
         _sfAgeDistribution.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SpeedDistributionFieldMask & whichField))
     {
         _sfSpeedDistribution.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (AccelerationDistributionFieldMask & whichField))
     {
         _sfAccelerationDistribution.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void SurfaceParticleGeneratorBase::executeSyncImpl(      SurfaceParticleGeneratorBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+SurfaceParticleGeneratorTransitPtr SurfaceParticleGeneratorBase::createLocal(BitVector bFlags)
 {
+    SurfaceParticleGeneratorTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (PositionVelocityDistributionFieldMask & whichField))
-        _sfPositionVelocityDistribution.syncWith(pOther->_sfPositionVelocityDistribution);
+        fc = dynamic_pointer_cast<SurfaceParticleGenerator>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (NormalDistributionFieldMask & whichField))
-        _sfNormalDistribution.syncWith(pOther->_sfNormalDistribution);
-
-    if(FieldBits::NoField != (ColorDistributionFieldMask & whichField))
-        _sfColorDistribution.syncWith(pOther->_sfColorDistribution);
-
-    if(FieldBits::NoField != (TransparencyDistributionFieldMask & whichField))
-        _sfTransparencyDistribution.syncWith(pOther->_sfTransparencyDistribution);
-
-    if(FieldBits::NoField != (SizeDistributionFieldMask & whichField))
-        _sfSizeDistribution.syncWith(pOther->_sfSizeDistribution);
-
-    if(FieldBits::NoField != (LifespanDistributionFieldMask & whichField))
-        _sfLifespanDistribution.syncWith(pOther->_sfLifespanDistribution);
-
-    if(FieldBits::NoField != (AgeDistributionFieldMask & whichField))
-        _sfAgeDistribution.syncWith(pOther->_sfAgeDistribution);
-
-    if(FieldBits::NoField != (SpeedDistributionFieldMask & whichField))
-        _sfSpeedDistribution.syncWith(pOther->_sfSpeedDistribution);
-
-    if(FieldBits::NoField != (AccelerationDistributionFieldMask & whichField))
-        _sfAccelerationDistribution.syncWith(pOther->_sfAccelerationDistribution);
-
-
-}
-#else
-void SurfaceParticleGeneratorBase::executeSyncImpl(      SurfaceParticleGeneratorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (PositionVelocityDistributionFieldMask & whichField))
-        _sfPositionVelocityDistribution.syncWith(pOther->_sfPositionVelocityDistribution);
-
-    if(FieldBits::NoField != (NormalDistributionFieldMask & whichField))
-        _sfNormalDistribution.syncWith(pOther->_sfNormalDistribution);
-
-    if(FieldBits::NoField != (ColorDistributionFieldMask & whichField))
-        _sfColorDistribution.syncWith(pOther->_sfColorDistribution);
-
-    if(FieldBits::NoField != (TransparencyDistributionFieldMask & whichField))
-        _sfTransparencyDistribution.syncWith(pOther->_sfTransparencyDistribution);
-
-    if(FieldBits::NoField != (SizeDistributionFieldMask & whichField))
-        _sfSizeDistribution.syncWith(pOther->_sfSizeDistribution);
-
-    if(FieldBits::NoField != (LifespanDistributionFieldMask & whichField))
-        _sfLifespanDistribution.syncWith(pOther->_sfLifespanDistribution);
-
-    if(FieldBits::NoField != (AgeDistributionFieldMask & whichField))
-        _sfAgeDistribution.syncWith(pOther->_sfAgeDistribution);
-
-    if(FieldBits::NoField != (SpeedDistributionFieldMask & whichField))
-        _sfSpeedDistribution.syncWith(pOther->_sfSpeedDistribution);
-
-    if(FieldBits::NoField != (AccelerationDistributionFieldMask & whichField))
-        _sfAccelerationDistribution.syncWith(pOther->_sfAccelerationDistribution);
-
-
-
+    return fc;
 }
 
-void SurfaceParticleGeneratorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+SurfaceParticleGeneratorTransitPtr SurfaceParticleGeneratorBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    SurfaceParticleGeneratorTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<SurfaceParticleGenerator>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+SurfaceParticleGeneratorTransitPtr SurfaceParticleGeneratorBase::create(void)
+{
+    SurfaceParticleGeneratorTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<SurfaceParticleGenerator>(tmpPtr);
+    }
+
+    return fc;
+}
+
+SurfaceParticleGenerator *SurfaceParticleGeneratorBase::createEmptyLocal(BitVector bFlags)
+{
+    SurfaceParticleGenerator *returnValue;
+
+    newPtr<SurfaceParticleGenerator>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+SurfaceParticleGenerator *SurfaceParticleGeneratorBase::createEmpty(void)
+{
+    SurfaceParticleGenerator *returnValue;
+
+    newPtr<SurfaceParticleGenerator>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr SurfaceParticleGeneratorBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    SurfaceParticleGenerator *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const SurfaceParticleGenerator *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr SurfaceParticleGeneratorBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    SurfaceParticleGenerator *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const SurfaceParticleGenerator *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr SurfaceParticleGeneratorBase::shallowCopy(void) const
+{
+    SurfaceParticleGenerator *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const SurfaceParticleGenerator *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+SurfaceParticleGeneratorBase::SurfaceParticleGeneratorBase(void) :
+    Inherited(),
+    _sfPositionVelocityDistribution(NULL),
+    _sfNormalDistribution     (NULL),
+    _sfColorDistribution      (NULL),
+    _sfTransparencyDistribution(NULL),
+    _sfSizeDistribution       (NULL),
+    _sfLifespanDistribution   (NULL),
+    _sfAgeDistribution        (NULL),
+    _sfSpeedDistribution      (NULL),
+    _sfAccelerationDistribution(NULL)
+{
+}
+
+SurfaceParticleGeneratorBase::SurfaceParticleGeneratorBase(const SurfaceParticleGeneratorBase &source) :
+    Inherited(source),
+    _sfPositionVelocityDistribution(NULL),
+    _sfNormalDistribution     (NULL),
+    _sfColorDistribution      (NULL),
+    _sfTransparencyDistribution(NULL),
+    _sfSizeDistribution       (NULL),
+    _sfLifespanDistribution   (NULL),
+    _sfAgeDistribution        (NULL),
+    _sfSpeedDistribution      (NULL),
+    _sfAccelerationDistribution(NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+SurfaceParticleGeneratorBase::~SurfaceParticleGeneratorBase(void)
+{
+}
+
+void SurfaceParticleGeneratorBase::onCreate(const SurfaceParticleGenerator *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        SurfaceParticleGenerator *pThis = static_cast<SurfaceParticleGenerator *>(this);
+
+        pThis->setPositionVelocityDistribution(source->getPositionVelocityDistribution());
+
+        pThis->setNormalDistribution(source->getNormalDistribution());
+
+        pThis->setColorDistribution(source->getColorDistribution());
+
+        pThis->setTransparencyDistribution(source->getTransparencyDistribution());
+
+        pThis->setSizeDistribution(source->getSizeDistribution());
+
+        pThis->setLifespanDistribution(source->getLifespanDistribution());
+
+        pThis->setAgeDistribution(source->getAgeDistribution());
+
+        pThis->setSpeedDistribution(source->getSpeedDistribution());
+
+        pThis->setAccelerationDistribution(source->getAccelerationDistribution());
+    }
+}
+
+GetFieldHandlePtr SurfaceParticleGeneratorBase::getHandlePositionVelocityDistribution (void) const
+{
+    SFUnrecGeoSurfaceDistribution3DPtr::GetHandlePtr returnValue(
+        new  SFUnrecGeoSurfaceDistribution3DPtr::GetHandle(
+             &_sfPositionVelocityDistribution,
+             this->getType().getFieldDesc(PositionVelocityDistributionFieldId),
+             const_cast<SurfaceParticleGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SurfaceParticleGeneratorBase::editHandlePositionVelocityDistribution(void)
+{
+    SFUnrecGeoSurfaceDistribution3DPtr::EditHandlePtr returnValue(
+        new  SFUnrecGeoSurfaceDistribution3DPtr::EditHandle(
+             &_sfPositionVelocityDistribution,
+             this->getType().getFieldDesc(PositionVelocityDistributionFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&SurfaceParticleGenerator::setPositionVelocityDistribution,
+                    static_cast<SurfaceParticleGenerator *>(this), _1));
+
+    editSField(PositionVelocityDistributionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SurfaceParticleGeneratorBase::getHandleNormalDistribution (void) const
+{
+    SFUnrecDistribution3DPtr::GetHandlePtr returnValue(
+        new  SFUnrecDistribution3DPtr::GetHandle(
+             &_sfNormalDistribution,
+             this->getType().getFieldDesc(NormalDistributionFieldId),
+             const_cast<SurfaceParticleGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SurfaceParticleGeneratorBase::editHandleNormalDistribution(void)
+{
+    SFUnrecDistribution3DPtr::EditHandlePtr returnValue(
+        new  SFUnrecDistribution3DPtr::EditHandle(
+             &_sfNormalDistribution,
+             this->getType().getFieldDesc(NormalDistributionFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&SurfaceParticleGenerator::setNormalDistribution,
+                    static_cast<SurfaceParticleGenerator *>(this), _1));
+
+    editSField(NormalDistributionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SurfaceParticleGeneratorBase::getHandleColorDistribution (void) const
+{
+    SFUnrecDistribution3DPtr::GetHandlePtr returnValue(
+        new  SFUnrecDistribution3DPtr::GetHandle(
+             &_sfColorDistribution,
+             this->getType().getFieldDesc(ColorDistributionFieldId),
+             const_cast<SurfaceParticleGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SurfaceParticleGeneratorBase::editHandleColorDistribution(void)
+{
+    SFUnrecDistribution3DPtr::EditHandlePtr returnValue(
+        new  SFUnrecDistribution3DPtr::EditHandle(
+             &_sfColorDistribution,
+             this->getType().getFieldDesc(ColorDistributionFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&SurfaceParticleGenerator::setColorDistribution,
+                    static_cast<SurfaceParticleGenerator *>(this), _1));
+
+    editSField(ColorDistributionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SurfaceParticleGeneratorBase::getHandleTransparencyDistribution (void) const
+{
+    SFUnrecDistribution1DPtr::GetHandlePtr returnValue(
+        new  SFUnrecDistribution1DPtr::GetHandle(
+             &_sfTransparencyDistribution,
+             this->getType().getFieldDesc(TransparencyDistributionFieldId),
+             const_cast<SurfaceParticleGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SurfaceParticleGeneratorBase::editHandleTransparencyDistribution(void)
+{
+    SFUnrecDistribution1DPtr::EditHandlePtr returnValue(
+        new  SFUnrecDistribution1DPtr::EditHandle(
+             &_sfTransparencyDistribution,
+             this->getType().getFieldDesc(TransparencyDistributionFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&SurfaceParticleGenerator::setTransparencyDistribution,
+                    static_cast<SurfaceParticleGenerator *>(this), _1));
+
+    editSField(TransparencyDistributionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SurfaceParticleGeneratorBase::getHandleSizeDistribution (void) const
+{
+    SFUnrecDistribution3DPtr::GetHandlePtr returnValue(
+        new  SFUnrecDistribution3DPtr::GetHandle(
+             &_sfSizeDistribution,
+             this->getType().getFieldDesc(SizeDistributionFieldId),
+             const_cast<SurfaceParticleGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SurfaceParticleGeneratorBase::editHandleSizeDistribution(void)
+{
+    SFUnrecDistribution3DPtr::EditHandlePtr returnValue(
+        new  SFUnrecDistribution3DPtr::EditHandle(
+             &_sfSizeDistribution,
+             this->getType().getFieldDesc(SizeDistributionFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&SurfaceParticleGenerator::setSizeDistribution,
+                    static_cast<SurfaceParticleGenerator *>(this), _1));
+
+    editSField(SizeDistributionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SurfaceParticleGeneratorBase::getHandleLifespanDistribution (void) const
+{
+    SFUnrecDistribution1DPtr::GetHandlePtr returnValue(
+        new  SFUnrecDistribution1DPtr::GetHandle(
+             &_sfLifespanDistribution,
+             this->getType().getFieldDesc(LifespanDistributionFieldId),
+             const_cast<SurfaceParticleGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SurfaceParticleGeneratorBase::editHandleLifespanDistribution(void)
+{
+    SFUnrecDistribution1DPtr::EditHandlePtr returnValue(
+        new  SFUnrecDistribution1DPtr::EditHandle(
+             &_sfLifespanDistribution,
+             this->getType().getFieldDesc(LifespanDistributionFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&SurfaceParticleGenerator::setLifespanDistribution,
+                    static_cast<SurfaceParticleGenerator *>(this), _1));
+
+    editSField(LifespanDistributionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SurfaceParticleGeneratorBase::getHandleAgeDistribution (void) const
+{
+    SFUnrecDistribution1DPtr::GetHandlePtr returnValue(
+        new  SFUnrecDistribution1DPtr::GetHandle(
+             &_sfAgeDistribution,
+             this->getType().getFieldDesc(AgeDistributionFieldId),
+             const_cast<SurfaceParticleGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SurfaceParticleGeneratorBase::editHandleAgeDistribution(void)
+{
+    SFUnrecDistribution1DPtr::EditHandlePtr returnValue(
+        new  SFUnrecDistribution1DPtr::EditHandle(
+             &_sfAgeDistribution,
+             this->getType().getFieldDesc(AgeDistributionFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&SurfaceParticleGenerator::setAgeDistribution,
+                    static_cast<SurfaceParticleGenerator *>(this), _1));
+
+    editSField(AgeDistributionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SurfaceParticleGeneratorBase::getHandleSpeedDistribution (void) const
+{
+    SFUnrecDistribution1DPtr::GetHandlePtr returnValue(
+        new  SFUnrecDistribution1DPtr::GetHandle(
+             &_sfSpeedDistribution,
+             this->getType().getFieldDesc(SpeedDistributionFieldId),
+             const_cast<SurfaceParticleGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SurfaceParticleGeneratorBase::editHandleSpeedDistribution(void)
+{
+    SFUnrecDistribution1DPtr::EditHandlePtr returnValue(
+        new  SFUnrecDistribution1DPtr::EditHandle(
+             &_sfSpeedDistribution,
+             this->getType().getFieldDesc(SpeedDistributionFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&SurfaceParticleGenerator::setSpeedDistribution,
+                    static_cast<SurfaceParticleGenerator *>(this), _1));
+
+    editSField(SpeedDistributionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SurfaceParticleGeneratorBase::getHandleAccelerationDistribution (void) const
+{
+    SFUnrecDistribution3DPtr::GetHandlePtr returnValue(
+        new  SFUnrecDistribution3DPtr::GetHandle(
+             &_sfAccelerationDistribution,
+             this->getType().getFieldDesc(AccelerationDistributionFieldId),
+             const_cast<SurfaceParticleGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SurfaceParticleGeneratorBase::editHandleAccelerationDistribution(void)
+{
+    SFUnrecDistribution3DPtr::EditHandlePtr returnValue(
+        new  SFUnrecDistribution3DPtr::EditHandle(
+             &_sfAccelerationDistribution,
+             this->getType().getFieldDesc(AccelerationDistributionFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&SurfaceParticleGenerator::setAccelerationDistribution,
+                    static_cast<SurfaceParticleGenerator *>(this), _1));
+
+    editSField(AccelerationDistributionFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void SurfaceParticleGeneratorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    SurfaceParticleGenerator *pThis = static_cast<SurfaceParticleGenerator *>(this);
+
+    pThis->execSync(static_cast<SurfaceParticleGenerator *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *SurfaceParticleGeneratorBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    SurfaceParticleGenerator *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const SurfaceParticleGenerator *>(pRefAspect),
+                  dynamic_cast<const SurfaceParticleGenerator *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<SurfaceParticleGeneratorPtr>::_type("SurfaceParticleGeneratorPtr", "ParticleGeneratorPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(SurfaceParticleGeneratorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(SurfaceParticleGeneratorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+void SurfaceParticleGeneratorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<SurfaceParticleGenerator *>(this)->setPositionVelocityDistribution(NULL);
+
+    static_cast<SurfaceParticleGenerator *>(this)->setNormalDistribution(NULL);
+
+    static_cast<SurfaceParticleGenerator *>(this)->setColorDistribution(NULL);
+
+    static_cast<SurfaceParticleGenerator *>(this)->setTransparencyDistribution(NULL);
+
+    static_cast<SurfaceParticleGenerator *>(this)->setSizeDistribution(NULL);
+
+    static_cast<SurfaceParticleGenerator *>(this)->setLifespanDistribution(NULL);
+
+    static_cast<SurfaceParticleGenerator *>(this)->setAgeDistribution(NULL);
+
+    static_cast<SurfaceParticleGenerator *>(this)->setSpeedDistribution(NULL);
+
+    static_cast<SurfaceParticleGenerator *>(this)->setAccelerationDistribution(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-

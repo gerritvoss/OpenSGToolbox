@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGParticleAffectorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class AgeSizeParticleAffector;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! AgeSizeParticleAffectorPtr
+OSG_GEN_CONTAINERPTR(AgeSizeParticleAffector);
 
-typedef FCPtr<ParticleAffectorPtr, AgeSizeParticleAffector> AgeSizeParticleAffectorPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpParticleSystemFieldTraits
+/*! \ingroup GrpContribParticleSystemFieldTraits
+    \ingroup GrpLibOSGContribParticleSystem
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<AgeSizeParticleAffectorPtr> : 
-    public FieldTraitsRecurseMapper<AgeSizeParticleAffectorPtr, true>
+struct FieldTraits<AgeSizeParticleAffector *> :
+    public FieldTraitsFCPtrBase<AgeSizeParticleAffector *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFAgeSizeParticleAffectorPtr"; }
-    static const char *getMName(void) { return "MFAgeSizeParticleAffectorPtr"; }
+    typedef FieldTraits<AgeSizeParticleAffector *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFAgeSizeParticleAffectorPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFAgeSizeParticleAffectorPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<AgeSizeParticleAffectorPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<AgeSizeParticleAffector *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecAgeSizeParticleAffectorPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<AgeSizeParticleAffector *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecAgeSizeParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AgeSizeParticleAffector *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakAgeSizeParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AgeSizeParticleAffector *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdAgeSizeParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AgeSizeParticleAffector *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecAgeSizeParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AgeSizeParticleAffector *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecAgeSizeParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AgeSizeParticleAffector *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakAgeSizeParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AgeSizeParticleAffector *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdAgeSizeParticleAffectorPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<AgeSizeParticleAffector *,
+                      RecordedRefCountPolicy  > SFRecAgeSizeParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<AgeSizeParticleAffector *,
+                      UnrecordedRefCountPolicy> SFUnrecAgeSizeParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<AgeSizeParticleAffector *,
+                      WeakRefCountPolicy      > SFWeakAgeSizeParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<AgeSizeParticleAffector *,
+                      NoRefCountPolicy        > SFUncountedAgeSizeParticleAffectorPtr;
 
-typedef SField<AgeSizeParticleAffectorPtr> SFAgeSizeParticleAffectorPtr;
-#endif
 
-#ifndef OSG_COMPILEAGESIZEPARTICLEAFFECTORINST
-OSG_DLLEXPORT_DECL1(SField, AgeSizeParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<AgeSizeParticleAffector *,
+                      RecordedRefCountPolicy  > MFRecAgeSizeParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<AgeSizeParticleAffector *,
+                      UnrecordedRefCountPolicy> MFUnrecAgeSizeParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<AgeSizeParticleAffector *,
+                      WeakRefCountPolicy      > MFWeakAgeSizeParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<AgeSizeParticleAffector *,
+                      NoRefCountPolicy        > MFUncountedAgeSizeParticleAffectorPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldMulti */
 
-typedef MField<AgeSizeParticleAffectorPtr> MFAgeSizeParticleAffectorPtr;
-#endif
 
-#ifndef OSG_COMPILEAGESIZEPARTICLEAFFECTORINST
-OSG_DLLEXPORT_DECL1(MField, AgeSizeParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFRecAgeSizeParticleAffectorPtr : 
+    public PointerSField<AgeSizeParticleAffector *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUnrecAgeSizeParticleAffectorPtr : 
+    public PointerSField<AgeSizeParticleAffector *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFWeakAgeSizeParticleAffectorPtr :
+    public PointerSField<AgeSizeParticleAffector *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUncountedAgeSizeParticleAffectorPtr :
+    public PointerSField<AgeSizeParticleAffector *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFRecAgeSizeParticleAffectorPtr :
+    public PointerMField<AgeSizeParticleAffector *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUnrecAgeSizeParticleAffectorPtr :
+    public PointerMField<AgeSizeParticleAffector *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFWeakAgeSizeParticleAffectorPtr :
+    public PointerMField<AgeSizeParticleAffector *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUncountedAgeSizeParticleAffectorPtr :
+    public PointerMField<AgeSizeParticleAffector *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGAGESIZEPARTICLEAFFECTORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGAGESIZEPARTICLEAFFECTORFIELDS_H_ */

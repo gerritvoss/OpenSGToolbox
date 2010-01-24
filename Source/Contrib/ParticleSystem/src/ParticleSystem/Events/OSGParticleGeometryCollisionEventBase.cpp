@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,221 +50,415 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEPARTICLEGEOMETRYCOLLISIONEVENTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGNode.h"                    // HitNode Class
+#include "OSGParticleSystem.h"          // System Class
 
 #include "OSGParticleGeometryCollisionEventBase.h"
 #include "OSGParticleGeometryCollisionEvent.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ParticleGeometryCollisionEventBase::HitTFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleGeometryCollisionEventBase::HitTFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  ParticleGeometryCollisionEventBase::HitNodeFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleGeometryCollisionEventBase::HitNodeFieldId);
+/*! \class OSG::ParticleGeometryCollisionEvent
+    
+ */
 
-const OSG::BitVector  ParticleGeometryCollisionEventBase::HitPolygonIndexFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleGeometryCollisionEventBase::HitPolygonIndexFieldId);
-
-const OSG::BitVector  ParticleGeometryCollisionEventBase::HitNormalFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleGeometryCollisionEventBase::HitNormalFieldId);
-
-const OSG::BitVector  ParticleGeometryCollisionEventBase::HitPointFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleGeometryCollisionEventBase::HitPointFieldId);
-
-const OSG::BitVector  ParticleGeometryCollisionEventBase::SystemFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleGeometryCollisionEventBase::SystemFieldId);
-
-const OSG::BitVector  ParticleGeometryCollisionEventBase::ParticleIndexFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleGeometryCollisionEventBase::ParticleIndexFieldId);
-
-const OSG::BitVector ParticleGeometryCollisionEventBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Real32          ParticleGeometryCollisionEventBase::_sfHitT
     
 */
-/*! \var NodePtr         ParticleGeometryCollisionEventBase::_sfHitNode
+
+/*! \var Node *          ParticleGeometryCollisionEventBase::_sfHitNode
     
 */
+
 /*! \var Int32           ParticleGeometryCollisionEventBase::_sfHitPolygonIndex
     
 */
+
 /*! \var Vec3f           ParticleGeometryCollisionEventBase::_sfHitNormal
     
 */
+
 /*! \var Pnt3f           ParticleGeometryCollisionEventBase::_sfHitPoint
     
 */
-/*! \var ParticleSystemPtr ParticleGeometryCollisionEventBase::_sfSystem
+
+/*! \var ParticleSystem * ParticleGeometryCollisionEventBase::_sfSystem
     
 */
+
 /*! \var UInt32          ParticleGeometryCollisionEventBase::_sfParticleIndex
     
 */
 
-//! ParticleGeometryCollisionEvent description
 
-FieldDescription *ParticleGeometryCollisionEventBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ParticleGeometryCollisionEvent *>::_type("ParticleGeometryCollisionEventPtr", "EventPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ParticleGeometryCollisionEvent *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ParticleGeometryCollisionEvent *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ParticleGeometryCollisionEvent *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ParticleGeometryCollisionEventBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "HitT", 
-                     HitTFieldId, HitTFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleGeometryCollisionEventBase::editSFHitT)),
-    new FieldDescription(SFNodePtr::getClassType(), 
-                     "HitNode", 
-                     HitNodeFieldId, HitNodeFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleGeometryCollisionEventBase::editSFHitNode)),
-    new FieldDescription(SFInt32::getClassType(), 
-                     "HitPolygonIndex", 
-                     HitPolygonIndexFieldId, HitPolygonIndexFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleGeometryCollisionEventBase::editSFHitPolygonIndex)),
-    new FieldDescription(SFVec3f::getClassType(), 
-                     "HitNormal", 
-                     HitNormalFieldId, HitNormalFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleGeometryCollisionEventBase::editSFHitNormal)),
-    new FieldDescription(SFPnt3f::getClassType(), 
-                     "HitPoint", 
-                     HitPointFieldId, HitPointFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleGeometryCollisionEventBase::editSFHitPoint)),
-    new FieldDescription(SFParticleSystemPtr::getClassType(), 
-                     "System", 
-                     SystemFieldId, SystemFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleGeometryCollisionEventBase::editSFSystem)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "ParticleIndex", 
-                     ParticleIndexFieldId, ParticleIndexFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleGeometryCollisionEventBase::editSFParticleIndex))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType ParticleGeometryCollisionEventBase::_type(
-    "ParticleGeometryCollisionEvent",
-    "Event",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&ParticleGeometryCollisionEventBase::createEmpty),
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "HitT",
+        "",
+        HitTFieldId, HitTFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleGeometryCollisionEvent::editHandleHitT),
+        static_cast<FieldGetMethodSig >(&ParticleGeometryCollisionEvent::getHandleHitT));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecNodePtr::Description(
+        SFUnrecNodePtr::getClassType(),
+        "HitNode",
+        "",
+        HitNodeFieldId, HitNodeFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleGeometryCollisionEvent::editHandleHitNode),
+        static_cast<FieldGetMethodSig >(&ParticleGeometryCollisionEvent::getHandleHitNode));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFInt32::Description(
+        SFInt32::getClassType(),
+        "HitPolygonIndex",
+        "",
+        HitPolygonIndexFieldId, HitPolygonIndexFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleGeometryCollisionEvent::editHandleHitPolygonIndex),
+        static_cast<FieldGetMethodSig >(&ParticleGeometryCollisionEvent::getHandleHitPolygonIndex));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFVec3f::Description(
+        SFVec3f::getClassType(),
+        "HitNormal",
+        "",
+        HitNormalFieldId, HitNormalFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleGeometryCollisionEvent::editHandleHitNormal),
+        static_cast<FieldGetMethodSig >(&ParticleGeometryCollisionEvent::getHandleHitNormal));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFPnt3f::Description(
+        SFPnt3f::getClassType(),
+        "HitPoint",
+        "",
+        HitPointFieldId, HitPointFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleGeometryCollisionEvent::editHandleHitPoint),
+        static_cast<FieldGetMethodSig >(&ParticleGeometryCollisionEvent::getHandleHitPoint));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecParticleSystemPtr::Description(
+        SFUnrecParticleSystemPtr::getClassType(),
+        "System",
+        "",
+        SystemFieldId, SystemFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleGeometryCollisionEvent::editHandleSystem),
+        static_cast<FieldGetMethodSig >(&ParticleGeometryCollisionEvent::getHandleSystem));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "ParticleIndex",
+        "",
+        ParticleIndexFieldId, ParticleIndexFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleGeometryCollisionEvent::editHandleParticleIndex),
+        static_cast<FieldGetMethodSig >(&ParticleGeometryCollisionEvent::getHandleParticleIndex));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+ParticleGeometryCollisionEventBase::TypeObject ParticleGeometryCollisionEventBase::_type(
+    ParticleGeometryCollisionEventBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ParticleGeometryCollisionEventBase::createEmptyLocal),
     ParticleGeometryCollisionEvent::initMethod,
-    _desc,
-    sizeof(_desc));
+    ParticleGeometryCollisionEvent::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ParticleGeometryCollisionEvent::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ParticleGeometryCollisionEvent\"\n"
+    "\tparent=\"Event\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"HitT\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "        defaultValue=\"0.0f\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"HitNode\"\n"
+    "\t\ttype=\"Node\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"HitPolygonIndex\"\n"
+    "\t\ttype=\"Int32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "        defaultValue=\"-1\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"HitNormal\"\n"
+    "\t\ttype=\"Vec3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "        defaultValue=\"0.0f,0.0f,0.0f\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"HitPoint\"\n"
+    "\t\ttype=\"Pnt3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "        defaultValue=\"0.0f,0.0f,0.0f\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"System\"\n"
+    "\t\ttype=\"ParticleSystem\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ParticleIndex\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "        defaultValue=\"0\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(ParticleGeometryCollisionEventBase, ParticleGeometryCollisionEventPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ParticleGeometryCollisionEventBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ParticleGeometryCollisionEventBase::getType(void) const 
+FieldContainerType &ParticleGeometryCollisionEventBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr ParticleGeometryCollisionEventBase::shallowCopy(void) const 
-{ 
-    ParticleGeometryCollisionEventPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const ParticleGeometryCollisionEvent *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 ParticleGeometryCollisionEventBase::getContainerSize(void) const 
-{ 
-    return sizeof(ParticleGeometryCollisionEvent); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ParticleGeometryCollisionEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &ParticleGeometryCollisionEventBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<ParticleGeometryCollisionEventBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void ParticleGeometryCollisionEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 ParticleGeometryCollisionEventBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((ParticleGeometryCollisionEventBase *) &other, whichField, sInfo);
+    return sizeof(ParticleGeometryCollisionEvent);
 }
-void ParticleGeometryCollisionEventBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFReal32 *ParticleGeometryCollisionEventBase::editSFHitT(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(HitTFieldMask);
+
+    return &_sfHitT;
 }
 
-void ParticleGeometryCollisionEventBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFReal32 *ParticleGeometryCollisionEventBase::getSFHitT(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfHitT;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-ParticleGeometryCollisionEventBase::ParticleGeometryCollisionEventBase(void) :
-    _sfHitT                   (Real32(0.0f)), 
-    _sfHitNode                (NodePtr(NullFC)), 
-    _sfHitPolygonIndex        (Int32(-1)), 
-    _sfHitNormal              (Vec3f(0.0f,0.0f,0.0f)), 
-    _sfHitPoint               (Pnt3f(0.0f,0.0f,0.0f)), 
-    _sfSystem                 (ParticleSystemPtr(NullFC)), 
-    _sfParticleIndex          (UInt32(0)), 
-    Inherited() 
+//! Get the ParticleGeometryCollisionEvent::_sfHitNode field.
+const SFUnrecNodePtr *ParticleGeometryCollisionEventBase::getSFHitNode(void) const
 {
+    return &_sfHitNode;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-ParticleGeometryCollisionEventBase::ParticleGeometryCollisionEventBase(const ParticleGeometryCollisionEventBase &source) :
-    _sfHitT                   (source._sfHitT                   ), 
-    _sfHitNode                (source._sfHitNode                ), 
-    _sfHitPolygonIndex        (source._sfHitPolygonIndex        ), 
-    _sfHitNormal              (source._sfHitNormal              ), 
-    _sfHitPoint               (source._sfHitPoint               ), 
-    _sfSystem                 (source._sfSystem                 ), 
-    _sfParticleIndex          (source._sfParticleIndex          ), 
-    Inherited                 (source)
+SFUnrecNodePtr      *ParticleGeometryCollisionEventBase::editSFHitNode        (void)
 {
+    editSField(HitNodeFieldMask);
+
+    return &_sfHitNode;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-ParticleGeometryCollisionEventBase::~ParticleGeometryCollisionEventBase(void)
+SFInt32 *ParticleGeometryCollisionEventBase::editSFHitPolygonIndex(void)
 {
+    editSField(HitPolygonIndexFieldMask);
+
+    return &_sfHitPolygonIndex;
 }
+
+const SFInt32 *ParticleGeometryCollisionEventBase::getSFHitPolygonIndex(void) const
+{
+    return &_sfHitPolygonIndex;
+}
+
+
+SFVec3f *ParticleGeometryCollisionEventBase::editSFHitNormal(void)
+{
+    editSField(HitNormalFieldMask);
+
+    return &_sfHitNormal;
+}
+
+const SFVec3f *ParticleGeometryCollisionEventBase::getSFHitNormal(void) const
+{
+    return &_sfHitNormal;
+}
+
+
+SFPnt3f *ParticleGeometryCollisionEventBase::editSFHitPoint(void)
+{
+    editSField(HitPointFieldMask);
+
+    return &_sfHitPoint;
+}
+
+const SFPnt3f *ParticleGeometryCollisionEventBase::getSFHitPoint(void) const
+{
+    return &_sfHitPoint;
+}
+
+
+//! Get the ParticleGeometryCollisionEvent::_sfSystem field.
+const SFUnrecParticleSystemPtr *ParticleGeometryCollisionEventBase::getSFSystem(void) const
+{
+    return &_sfSystem;
+}
+
+SFUnrecParticleSystemPtr *ParticleGeometryCollisionEventBase::editSFSystem         (void)
+{
+    editSField(SystemFieldMask);
+
+    return &_sfSystem;
+}
+
+SFUInt32 *ParticleGeometryCollisionEventBase::editSFParticleIndex(void)
+{
+    editSField(ParticleIndexFieldMask);
+
+    return &_sfParticleIndex;
+}
+
+const SFUInt32 *ParticleGeometryCollisionEventBase::getSFParticleIndex(void) const
+{
+    return &_sfParticleIndex;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ParticleGeometryCollisionEventBase::getBinSize(const BitVector &whichField)
+UInt32 ParticleGeometryCollisionEventBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -272,43 +466,36 @@ UInt32 ParticleGeometryCollisionEventBase::getBinSize(const BitVector &whichFiel
     {
         returnValue += _sfHitT.getBinSize();
     }
-
     if(FieldBits::NoField != (HitNodeFieldMask & whichField))
     {
         returnValue += _sfHitNode.getBinSize();
     }
-
     if(FieldBits::NoField != (HitPolygonIndexFieldMask & whichField))
     {
         returnValue += _sfHitPolygonIndex.getBinSize();
     }
-
     if(FieldBits::NoField != (HitNormalFieldMask & whichField))
     {
         returnValue += _sfHitNormal.getBinSize();
     }
-
     if(FieldBits::NoField != (HitPointFieldMask & whichField))
     {
         returnValue += _sfHitPoint.getBinSize();
     }
-
     if(FieldBits::NoField != (SystemFieldMask & whichField))
     {
         returnValue += _sfSystem.getBinSize();
     }
-
     if(FieldBits::NoField != (ParticleIndexFieldMask & whichField))
     {
         returnValue += _sfParticleIndex.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ParticleGeometryCollisionEventBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ParticleGeometryCollisionEventBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -316,42 +503,34 @@ void ParticleGeometryCollisionEventBase::copyToBin(      BinaryDataHandler &pMem
     {
         _sfHitT.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (HitNodeFieldMask & whichField))
     {
         _sfHitNode.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (HitPolygonIndexFieldMask & whichField))
     {
         _sfHitPolygonIndex.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (HitNormalFieldMask & whichField))
     {
         _sfHitNormal.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (HitPointFieldMask & whichField))
     {
         _sfHitPoint.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SystemFieldMask & whichField))
     {
         _sfSystem.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ParticleIndexFieldMask & whichField))
     {
         _sfParticleIndex.copyToBin(pMem);
     }
-
-
 }
 
-void ParticleGeometryCollisionEventBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ParticleGeometryCollisionEventBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -359,126 +538,422 @@ void ParticleGeometryCollisionEventBase::copyFromBin(      BinaryDataHandler &pM
     {
         _sfHitT.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (HitNodeFieldMask & whichField))
     {
         _sfHitNode.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (HitPolygonIndexFieldMask & whichField))
     {
         _sfHitPolygonIndex.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (HitNormalFieldMask & whichField))
     {
         _sfHitNormal.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (HitPointFieldMask & whichField))
     {
         _sfHitPoint.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SystemFieldMask & whichField))
     {
         _sfSystem.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ParticleIndexFieldMask & whichField))
     {
         _sfParticleIndex.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ParticleGeometryCollisionEventBase::executeSyncImpl(      ParticleGeometryCollisionEventBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ParticleGeometryCollisionEventTransitPtr ParticleGeometryCollisionEventBase::createLocal(BitVector bFlags)
 {
+    ParticleGeometryCollisionEventTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (HitTFieldMask & whichField))
-        _sfHitT.syncWith(pOther->_sfHitT);
+        fc = dynamic_pointer_cast<ParticleGeometryCollisionEvent>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (HitNodeFieldMask & whichField))
-        _sfHitNode.syncWith(pOther->_sfHitNode);
-
-    if(FieldBits::NoField != (HitPolygonIndexFieldMask & whichField))
-        _sfHitPolygonIndex.syncWith(pOther->_sfHitPolygonIndex);
-
-    if(FieldBits::NoField != (HitNormalFieldMask & whichField))
-        _sfHitNormal.syncWith(pOther->_sfHitNormal);
-
-    if(FieldBits::NoField != (HitPointFieldMask & whichField))
-        _sfHitPoint.syncWith(pOther->_sfHitPoint);
-
-    if(FieldBits::NoField != (SystemFieldMask & whichField))
-        _sfSystem.syncWith(pOther->_sfSystem);
-
-    if(FieldBits::NoField != (ParticleIndexFieldMask & whichField))
-        _sfParticleIndex.syncWith(pOther->_sfParticleIndex);
-
-
-}
-#else
-void ParticleGeometryCollisionEventBase::executeSyncImpl(      ParticleGeometryCollisionEventBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (HitTFieldMask & whichField))
-        _sfHitT.syncWith(pOther->_sfHitT);
-
-    if(FieldBits::NoField != (HitNodeFieldMask & whichField))
-        _sfHitNode.syncWith(pOther->_sfHitNode);
-
-    if(FieldBits::NoField != (HitPolygonIndexFieldMask & whichField))
-        _sfHitPolygonIndex.syncWith(pOther->_sfHitPolygonIndex);
-
-    if(FieldBits::NoField != (HitNormalFieldMask & whichField))
-        _sfHitNormal.syncWith(pOther->_sfHitNormal);
-
-    if(FieldBits::NoField != (HitPointFieldMask & whichField))
-        _sfHitPoint.syncWith(pOther->_sfHitPoint);
-
-    if(FieldBits::NoField != (SystemFieldMask & whichField))
-        _sfSystem.syncWith(pOther->_sfSystem);
-
-    if(FieldBits::NoField != (ParticleIndexFieldMask & whichField))
-        _sfParticleIndex.syncWith(pOther->_sfParticleIndex);
-
-
-
+    return fc;
 }
 
-void ParticleGeometryCollisionEventBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ParticleGeometryCollisionEventTransitPtr ParticleGeometryCollisionEventBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ParticleGeometryCollisionEventTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<ParticleGeometryCollisionEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ParticleGeometryCollisionEventTransitPtr ParticleGeometryCollisionEventBase::create(void)
+{
+    ParticleGeometryCollisionEventTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<ParticleGeometryCollisionEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+ParticleGeometryCollisionEvent *ParticleGeometryCollisionEventBase::createEmptyLocal(BitVector bFlags)
+{
+    ParticleGeometryCollisionEvent *returnValue;
+
+    newPtr<ParticleGeometryCollisionEvent>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+ParticleGeometryCollisionEvent *ParticleGeometryCollisionEventBase::createEmpty(void)
+{
+    ParticleGeometryCollisionEvent *returnValue;
+
+    newPtr<ParticleGeometryCollisionEvent>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ParticleGeometryCollisionEventBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    ParticleGeometryCollisionEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ParticleGeometryCollisionEvent *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ParticleGeometryCollisionEventBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    ParticleGeometryCollisionEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ParticleGeometryCollisionEvent *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ParticleGeometryCollisionEventBase::shallowCopy(void) const
+{
+    ParticleGeometryCollisionEvent *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const ParticleGeometryCollisionEvent *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ParticleGeometryCollisionEventBase::ParticleGeometryCollisionEventBase(void) :
+    Inherited(),
+    _sfHitT                   (Real32(0.0f)),
+    _sfHitNode                (NULL),
+    _sfHitPolygonIndex        (Int32(-1)),
+    _sfHitNormal              (Vec3f(0.0f,0.0f,0.0f)),
+    _sfHitPoint               (Pnt3f(0.0f,0.0f,0.0f)),
+    _sfSystem                 (NULL),
+    _sfParticleIndex          (UInt32(0))
+{
+}
+
+ParticleGeometryCollisionEventBase::ParticleGeometryCollisionEventBase(const ParticleGeometryCollisionEventBase &source) :
+    Inherited(source),
+    _sfHitT                   (source._sfHitT                   ),
+    _sfHitNode                (NULL),
+    _sfHitPolygonIndex        (source._sfHitPolygonIndex        ),
+    _sfHitNormal              (source._sfHitNormal              ),
+    _sfHitPoint               (source._sfHitPoint               ),
+    _sfSystem                 (NULL),
+    _sfParticleIndex          (source._sfParticleIndex          )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ParticleGeometryCollisionEventBase::~ParticleGeometryCollisionEventBase(void)
+{
+}
+
+void ParticleGeometryCollisionEventBase::onCreate(const ParticleGeometryCollisionEvent *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        ParticleGeometryCollisionEvent *pThis = static_cast<ParticleGeometryCollisionEvent *>(this);
+
+        pThis->setHitNode(source->getHitNode());
+
+        pThis->setSystem(source->getSystem());
+    }
+}
+
+GetFieldHandlePtr ParticleGeometryCollisionEventBase::getHandleHitT            (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfHitT,
+             this->getType().getFieldDesc(HitTFieldId),
+             const_cast<ParticleGeometryCollisionEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleGeometryCollisionEventBase::editHandleHitT           (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfHitT,
+             this->getType().getFieldDesc(HitTFieldId),
+             this));
+
+
+    editSField(HitTFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleGeometryCollisionEventBase::getHandleHitNode         (void) const
+{
+    SFUnrecNodePtr::GetHandlePtr returnValue(
+        new  SFUnrecNodePtr::GetHandle(
+             &_sfHitNode,
+             this->getType().getFieldDesc(HitNodeFieldId),
+             const_cast<ParticleGeometryCollisionEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleGeometryCollisionEventBase::editHandleHitNode        (void)
+{
+    SFUnrecNodePtr::EditHandlePtr returnValue(
+        new  SFUnrecNodePtr::EditHandle(
+             &_sfHitNode,
+             this->getType().getFieldDesc(HitNodeFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ParticleGeometryCollisionEvent::setHitNode,
+                    static_cast<ParticleGeometryCollisionEvent *>(this), _1));
+
+    editSField(HitNodeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleGeometryCollisionEventBase::getHandleHitPolygonIndex (void) const
+{
+    SFInt32::GetHandlePtr returnValue(
+        new  SFInt32::GetHandle(
+             &_sfHitPolygonIndex,
+             this->getType().getFieldDesc(HitPolygonIndexFieldId),
+             const_cast<ParticleGeometryCollisionEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleGeometryCollisionEventBase::editHandleHitPolygonIndex(void)
+{
+    SFInt32::EditHandlePtr returnValue(
+        new  SFInt32::EditHandle(
+             &_sfHitPolygonIndex,
+             this->getType().getFieldDesc(HitPolygonIndexFieldId),
+             this));
+
+
+    editSField(HitPolygonIndexFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleGeometryCollisionEventBase::getHandleHitNormal       (void) const
+{
+    SFVec3f::GetHandlePtr returnValue(
+        new  SFVec3f::GetHandle(
+             &_sfHitNormal,
+             this->getType().getFieldDesc(HitNormalFieldId),
+             const_cast<ParticleGeometryCollisionEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleGeometryCollisionEventBase::editHandleHitNormal      (void)
+{
+    SFVec3f::EditHandlePtr returnValue(
+        new  SFVec3f::EditHandle(
+             &_sfHitNormal,
+             this->getType().getFieldDesc(HitNormalFieldId),
+             this));
+
+
+    editSField(HitNormalFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleGeometryCollisionEventBase::getHandleHitPoint        (void) const
+{
+    SFPnt3f::GetHandlePtr returnValue(
+        new  SFPnt3f::GetHandle(
+             &_sfHitPoint,
+             this->getType().getFieldDesc(HitPointFieldId),
+             const_cast<ParticleGeometryCollisionEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleGeometryCollisionEventBase::editHandleHitPoint       (void)
+{
+    SFPnt3f::EditHandlePtr returnValue(
+        new  SFPnt3f::EditHandle(
+             &_sfHitPoint,
+             this->getType().getFieldDesc(HitPointFieldId),
+             this));
+
+
+    editSField(HitPointFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleGeometryCollisionEventBase::getHandleSystem          (void) const
+{
+    SFUnrecParticleSystemPtr::GetHandlePtr returnValue(
+        new  SFUnrecParticleSystemPtr::GetHandle(
+             &_sfSystem,
+             this->getType().getFieldDesc(SystemFieldId),
+             const_cast<ParticleGeometryCollisionEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleGeometryCollisionEventBase::editHandleSystem         (void)
+{
+    SFUnrecParticleSystemPtr::EditHandlePtr returnValue(
+        new  SFUnrecParticleSystemPtr::EditHandle(
+             &_sfSystem,
+             this->getType().getFieldDesc(SystemFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ParticleGeometryCollisionEvent::setSystem,
+                    static_cast<ParticleGeometryCollisionEvent *>(this), _1));
+
+    editSField(SystemFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleGeometryCollisionEventBase::getHandleParticleIndex   (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfParticleIndex,
+             this->getType().getFieldDesc(ParticleIndexFieldId),
+             const_cast<ParticleGeometryCollisionEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleGeometryCollisionEventBase::editHandleParticleIndex  (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfParticleIndex,
+             this->getType().getFieldDesc(ParticleIndexFieldId),
+             this));
+
+
+    editSField(ParticleIndexFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ParticleGeometryCollisionEventBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ParticleGeometryCollisionEvent *pThis = static_cast<ParticleGeometryCollisionEvent *>(this);
+
+    pThis->execSync(static_cast<ParticleGeometryCollisionEvent *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ParticleGeometryCollisionEventBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    ParticleGeometryCollisionEvent *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const ParticleGeometryCollisionEvent *>(pRefAspect),
+                  dynamic_cast<const ParticleGeometryCollisionEvent *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ParticleGeometryCollisionEventPtr>::_type("ParticleGeometryCollisionEventPtr", "EventPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(ParticleGeometryCollisionEventPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+void ParticleGeometryCollisionEventBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<ParticleGeometryCollisionEvent *>(this)->setHitNode(NULL);
+
+    static_cast<ParticleGeometryCollisionEvent *>(this)->setSystem(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-

@@ -3,27 +3,30 @@
 <FieldContainer
 	name="TurbulenceParticleAffector"
 	parent="ParticleAffector"
-	library="ParticleSystem"
-	pointerfieldtypes="both"
+    library="ContribParticleSystem"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com), Daniel Guilliams           "
 >
 	<Field
 		name="PerlinDistribution"
-		type="PerlinNoiseDistribution1DPtr"
+		type="PerlinNoiseDistribution1D"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="NullFC"
-		header="Distributions/1D/OSGPerlinNoiseDistribution1DFields.h"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="Amplitude"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -33,6 +36,7 @@
 	<Field
 		name="InterpolationType"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="PerlinNoiseDistribution1D::LINEAR"
@@ -43,6 +47,7 @@
 	<Field
 		name="Phase"
 		type="Vec3f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -52,6 +57,7 @@
 	<Field
 		name="Persistance"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -61,6 +67,7 @@
 	<Field
 		name="Frequency"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -70,6 +77,7 @@
 	<Field
 		name="Octaves"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -78,16 +86,18 @@
 	</Field>
 	<Field
 		name="Beacon"
-		type="NodePtr"
+		type="Node"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="Attenuation"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -97,6 +107,7 @@
 	<Field
 		name="MaxDistance"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"

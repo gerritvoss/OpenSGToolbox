@@ -29,7 +29,7 @@
 OSG_BEGIN_NAMESPACE
 
 
-Real32 calcPerlinNoise(Real32 t, Real32 Amplitude, Real32 Frequency, Real32 Phase, Real32 Persistance, UInt32 Octaves, UInt32 InterpolationType, bool Smoothing)
+Real32 calcPerlinNoise(Real32 t, Real32 Amplitude, Real32 Frequency, Real32 Phase, Real32 Persistance, UInt32 Octaves, UInt32 UInt32, bool Smoothing)
 {
 	Real32 total(0.0f), amplitude(Amplitude), frequency(Frequency), pos(t + Phase);
 	
@@ -41,7 +41,7 @@ Real32 calcPerlinNoise(Real32 t, Real32 Amplitude, Real32 Frequency, Real32 Phas
 		  amplitude *= Persistance;
 		}
 
-		total += interpolatedNoise(pos * frequency, i, InterpolationType, Smoothing) * amplitude;
+		total += interpolatedNoise(pos * frequency, i, UInt32, Smoothing) * amplitude;
 	}
 
 	return total;
@@ -59,9 +59,9 @@ Real32 interpolateLinear(Real32 a, Real32 b, Real32 t)
 	return  a*(1.0f-t) + b*t;
 }
 
-Real32 interpolatedNoise(Real32 t, UInt32 octave, UInt32 InterpolationType, bool Smoothing)
+Real32 interpolatedNoise(Real32 t, UInt32 octave, UInt32 UInt32, bool Smoothing)
 {
-	Real32 intT(osgfloor(t));
+	Real32 intT(osgFloor(t));
 	Real32 fractionT = t - intT;
 	Real32 v1,v2;
 	if(Smoothing)
@@ -76,8 +76,8 @@ Real32 interpolatedNoise(Real32 t, UInt32 octave, UInt32 InterpolationType, bool
 	}
 
 	Real32 returnValue(0.0);
-	if(InterpolationType == PERLIN_INTERPOLATE_COSINE) returnValue = interpolateCosine(v1 , v2 , fractionT);
-	else if(InterpolationType == PERLIN_INTERPOLATE_LINEAR) returnValue = interpolateLinear(v1 , v2 , fractionT);
+	if(UInt32 == PERLIN_INTERPOLATE_COSINE) returnValue = interpolateCosine(v1 , v2 , fractionT);
+	else if(UInt32 == PERLIN_INTERPOLATE_LINEAR) returnValue = interpolateLinear(v1 , v2 , fractionT);
 	
 	return returnValue;
 }
@@ -122,7 +122,7 @@ Real32 getNoise(Int32 t, UInt32 octave)
 	return noiseVal;
 }
 
-Real32 calcPerlinNoise(const Pnt2f& t, Real32 Amplitude, Real32 Frequency, const Vec2f& Phase, Real32 Persistance, UInt32 Octaves, UInt32 InterpolationType, bool Smoothing)
+Real32 calcPerlinNoise(const Pnt2f& t, Real32 Amplitude, Real32 Frequency, const Vec2f& Phase, Real32 Persistance, UInt32 Octaves, UInt32 UInt32, bool Smoothing)
 {	
 	Real32 total(0.0f), amplitude(Amplitude), frequency(Frequency);
 	Pnt2f pos(t + Phase);
@@ -134,29 +134,29 @@ Real32 calcPerlinNoise(const Pnt2f& t, Real32 Amplitude, Real32 Frequency, const
 		  amplitude *= Persistance;
 		}
 
-		total += interpolatedNoise(pos * frequency, i, InterpolationType, Smoothing) * amplitude;
+		total += interpolatedNoise(pos * frequency, i, UInt32, Smoothing) * amplitude;
 	}
 
 	return total;
 }
 
-Real32 interpolatedNoise(const Pnt2f& t, UInt32 & octave, UInt32 InterpolationType, bool Smoothing)
+Real32 interpolatedNoise(const Pnt2f& t, UInt32 & octave, UInt32 UInt32, bool Smoothing)
 {
-	Real32 intX(osgfloor(t[0])), intY(osgfloor(t[1]));
+	Real32 intX(osgFloor(t[0])), intY(osgFloor(t[1]));
 	Real32 fractionX = t[0] - intX;
 	Real32 fractionY = t[1] - intY;
 
 	Real32 i1(0.0f), i2(0.0f), returnValue(0.0f);
 	if(Smoothing)
 	{
-		if(InterpolationType == PERLIN_INTERPOLATE_COSINE)
+		if(UInt32 == PERLIN_INTERPOLATE_COSINE)
 		{
 			i1 = interpolateCosine(smoothNoise(intX, intY, octave),smoothNoise(intX + 1.0f, intY, octave), fractionX);
 			intY += 1.0f;
 			i2 = interpolateCosine(smoothNoise(intX, intY, octave),smoothNoise(intX + 1.0f, intY, octave), fractionX);
 			returnValue = interpolateCosine(i1 , i2 , fractionY);
 		}
-		else if (InterpolationType == PERLIN_INTERPOLATE_LINEAR)
+		else if (UInt32 == PERLIN_INTERPOLATE_LINEAR)
 		{
 			i1 = interpolateLinear(smoothNoise(intX, intY, octave),smoothNoise(intX + 1.0f, intY, octave), fractionX);
 			intY += 1.0f;
@@ -165,14 +165,14 @@ Real32 interpolatedNoise(const Pnt2f& t, UInt32 & octave, UInt32 InterpolationTy
 		}
 	} else
 	{
-		if(InterpolationType == PERLIN_INTERPOLATE_COSINE)
+		if(UInt32 == PERLIN_INTERPOLATE_COSINE)
 		{
 			i1 = interpolateCosine(getNoise(intX, intY, octave),getNoise(intX + 1.0f, intY, octave), fractionX);
 			intY += 1.0f;
 			i2 = interpolateCosine(getNoise(intX, intY, octave),getNoise(intX + 1.0f, intY, octave), fractionX);
 			returnValue = interpolateCosine(i1 , i2 , fractionY);
 		}
-		else if (InterpolationType == PERLIN_INTERPOLATE_LINEAR)
+		else if (UInt32 == PERLIN_INTERPOLATE_LINEAR)
 		{
 			i1 = interpolateLinear(getNoise(intX, intY, octave),getNoise(intX + 1.0f, intY, octave), fractionX);
 			intY += 1.0f;
@@ -240,7 +240,7 @@ Real32 getNoise(Int32 t1, Int32 t2, UInt32 & octave)
 	return noiseVal;
 }
 
-Real32 calcPerlinNoise(const Pnt3f& t, Real32 Amplitude, Real32 Frequency, const Vec3f& Phase, Real32 Persistance, UInt32 Octaves, UInt32 InterpolationType, bool Smoothing)
+Real32 calcPerlinNoise(const Pnt3f& t, Real32 Amplitude, Real32 Frequency, const Vec3f& Phase, Real32 Persistance, UInt32 Octaves, UInt32 UInt32, bool Smoothing)
 {
 	
 	Real32 total(0.0f), amplitude(Amplitude), frequency(Frequency);
@@ -253,15 +253,15 @@ Real32 calcPerlinNoise(const Pnt3f& t, Real32 Amplitude, Real32 Frequency, const
 		  amplitude *= Persistance;
 		}
 
-		total += interpolatedNoise(pos * frequency, i, InterpolationType,Smoothing) * amplitude;
+		total += interpolatedNoise(pos * frequency, i, UInt32,Smoothing) * amplitude;
 	}
 
 	return total;
 }
 
-Real32 interpolatedNoise(const Pnt3f& t, UInt32 & octave, UInt32 InterpolationType, bool Smoothing)
+Real32 interpolatedNoise(const Pnt3f& t, UInt32 & octave, UInt32 UInt32, bool Smoothing)
 {
-	Real32 intX(osgfloor(t[0])), intY(osgfloor(t[1])), intZ(osgfloor(t[2]));
+	Real32 intX(osgFloor(t[0])), intY(osgFloor(t[1])), intZ(osgFloor(t[2]));
 	Real32 fractionX = t[0] - intX;
 	Real32 fractionY = t[1] - intY;
 	Real32 fractionZ = t[2] - intZ;
@@ -279,7 +279,7 @@ Real32 interpolatedNoise(const Pnt3f& t, UInt32 & octave, UInt32 InterpolationTy
 		v7 = smoothNoise(intX,intY + 1.0f,intZ + 1.0f,octave);
 		v8 = smoothNoise(intX + 1.0f,intY + 1.0f,intZ + 1.0f,octave);
 
-		if(InterpolationType == PERLIN_INTERPOLATE_COSINE)
+		if(UInt32 == PERLIN_INTERPOLATE_COSINE)
 		{
 			i1 = interpolateCosine(v1,v2,fractionX);
 			i2 = interpolateCosine(v3,v4,fractionX);
@@ -291,7 +291,7 @@ Real32 interpolatedNoise(const Pnt3f& t, UInt32 & octave, UInt32 InterpolationTy
 
 			returnValue = interpolateCosine(i1,i2,fractionZ);
 
-		} else if (InterpolationType == PERLIN_INTERPOLATE_LINEAR)
+		} else if (UInt32 == PERLIN_INTERPOLATE_LINEAR)
 		{
 			i1 = interpolateLinear(v1,v2,fractionX);
 			i2 = interpolateLinear(v3,v4,fractionX);
@@ -315,7 +315,7 @@ Real32 interpolatedNoise(const Pnt3f& t, UInt32 & octave, UInt32 InterpolationTy
 		v7 = getNoise(intX,intY + 1.0f,intZ + 1.0f,octave);
 		v8 = getNoise(intX + 1.0f,intY + 1.0f,intZ + 1.0f,octave);
 
-		if(InterpolationType == PERLIN_INTERPOLATE_COSINE)
+		if(UInt32 == PERLIN_INTERPOLATE_COSINE)
 		{
 			i1 = interpolateCosine(v1,v2,fractionX);
 			i2 = interpolateCosine(v3,v4,fractionX);
@@ -327,7 +327,7 @@ Real32 interpolatedNoise(const Pnt3f& t, UInt32 & octave, UInt32 InterpolationTy
 
 			returnValue = interpolateCosine(i1,i2,fractionZ);
 
-		} else if (InterpolationType == PERLIN_INTERPOLATE_LINEAR)
+		} else if (UInt32 == PERLIN_INTERPOLATE_LINEAR)
 		{
 			i1 = interpolateLinear(v1,v2,fractionX);
 			i2 = interpolateLinear(v3,v4,fractionX);
@@ -405,144 +405,144 @@ Real32 getNoise(Int32 t1, Int32 t2, Int32 t3, UInt32 octave)
 	return noiseVal;
 }
 
-ImagePtr createPerlinImage(const Vec2s& Size, const Vec2f& Range, Real32 Amplitude, Real32 Frequency, const Vec2f& Phase, Real32 Persistance, UInt32 Octaves, UInt32 InterpolationType, bool Smoothing, Image::PixelFormat pixelformat, Image::Type  type)
-{
-	ImagePtr PerlinImage = Image::create();
+//ImageRefPtr createPerlinImage(const Vec2s& Size, const Vec2f& Range, Real32 Amplitude, Real32 Frequency, const Vec2f& Phase, Real32 Persistance, UInt32 Octaves, UInt32 UInt32, bool Smoothing, Image::PixelFormat pixelformat, Image::Type  type)
+//{
+	//ImageRefPtr PerlinImage = Image::create();
 
-	std::vector<Real32> ImageData(Size.x() * Size.y());
+	//std::vector<Real32> ImageData(Size.x() * Size.y());
 
-	bool shouldTranslate(false);
+	//bool shouldTranslate(false);
 	
-	switch(type)
-	{
-	case Image::OSG_UINT8_IMAGEDATA:
-	case Image::OSG_UINT16_IMAGEDATA:
-	case Image::OSG_UINT32_IMAGEDATA:
-		shouldTranslate = true;
-		break;
-	default:
-		shouldTranslate = false;
-		break;
-	}
+	//switch(type)
+	//{
+	//case Image::OSG_UINT8_IMAGEDATA:
+	//case Image::OSG_UINT16_IMAGEDATA:
+	//case Image::OSG_UINT32_IMAGEDATA:
+		//shouldTranslate = true;
+		//break;
+	//default:
+		//shouldTranslate = false;
+		//break;
+	//}
 
-	for(UInt32 i(0) ; i<Size.x() ; ++i)
-	{
-		for(UInt32 j(0) ; j<Size.y() ; ++j)
-		{
-			ImageData[i*Size.x()+j] = osgClamp(-0.5f, calcPerlinNoise(Pnt2f(Range.x()*static_cast<Real32>(i)/static_cast<Real32>(Size.x()), Range.y()*static_cast<Real32>(j)/static_cast<Real32>(Size.y())),
-				Amplitude,
-				Frequency,
-				Phase,
-				Persistance,
-				Octaves,
-				InterpolationType,
-				Smoothing),0.5f);
+	//for(UInt32 i(0) ; i<Size.x() ; ++i)
+	//{
+		//for(UInt32 j(0) ; j<Size.y() ; ++j)
+		//{
+			//ImageData[i*Size.x()+j] = osgClamp(-0.5f, calcPerlinNoise(Pnt2f(Range.x()*static_cast<Real32>(i)/static_cast<Real32>(Size.x()), Range.y()*static_cast<Real32>(j)/static_cast<Real32>(Size.y())),
+				//Amplitude,
+				//Frequency,
+				//Phase,
+				//Persistance,
+				//Octaves,
+				//UInt32,
+				//Smoothing),0.5f);
 
-			if(shouldTranslate)
-			{
-				ImageData[i*Size.x()+j] += 0.5f;
+			//if(shouldTranslate)
+			//{
+				//ImageData[i*Size.x()+j] += 0.5f;
 
-			}
-		}
-	}
+			//}
+		//}
+	//}
 
-	if(PerlinImage->set(Image::OSG_I_PF, Size.x(), Size.y(),1,1,1,0.0f,reinterpret_cast<UInt8*>(&ImageData[0]),Image::OSG_FLOAT32_IMAGEDATA))
-	{
-		if(type != Image::OSG_FLOAT32_IMAGEDATA)
-		{
-			if(!PerlinImage->convertDataTypeTo(type))
-			{
-				return NullFC;
-			}
-		}
+	//if(PerlinImage->set(Image::OSG_I_PF, Size.x(), Size.y(),1,1,1,0.0f,reinterpret_cast<UInt8*>(&ImageData[0]),Image::OSG_FLOAT32_IMAGEDATA))
+	//{
+		//if(type != Image::OSG_FLOAT32_IMAGEDATA)
+		//{
+			//if(!PerlinImage->convertDataTypeTo(type))
+			//{
+				//return NULL;
+			//}
+		//}
 
-		if(pixelformat != Image::OSG_I_PF)
-		{
-			if(!PerlinImage->reformat(pixelformat))
-			{
-				return NullFC;
-			}
-		}
+		//if(pixelformat != Image::OSG_I_PF)
+		//{
+			//if(!PerlinImage->reformat(pixelformat))
+			//{
+				//return NULL;
+			//}
+		//}
 
-		return PerlinImage;
-	}
-	else
-	{
-		return NullFC;
-	}
-}
+		//return PerlinImage;
+	//}
+	//else
+	//{
+		//return NULL;
+	//}
+//}
 
 
-ImagePtr createPerlinImage(const Vec3s& Size, const Vec3f& Range, Real32 Amplitude, Real32 Frequency, Real32 Phase, Real32 Persistance, UInt32 Octaves, UInt32 InterpolationType, bool Smoothing, Image::PixelFormat pixelformat, Image::Type  type)
-{
-	ImagePtr PerlinImage = Image::create();
+//ImageRefPtr createPerlinImage(const Vec3s& Size, const Vec3f& Range, Real32 Amplitude, Real32 Frequency, Real32 Phase, Real32 Persistance, UInt32 Octaves, UInt32 UInt32, bool Smoothing, Image::PixelFormat pixelformat, Image::Type  type)
+//{
+	//ImageRefPtr PerlinImage = Image::create();
 
-	std::vector<Real32> ImageData(Size.x() * Size.y() * Size.z());
+	//std::vector<Real32> ImageData(Size.x() * Size.y() * Size.z());
 
-	bool shouldTranslate(false);
+	//bool shouldTranslate(false);
 	
-	switch(type)
-	{
-	case Image::OSG_UINT8_IMAGEDATA:
-	case Image::OSG_UINT16_IMAGEDATA:
-	case Image::OSG_UINT32_IMAGEDATA:
-		shouldTranslate = true;
-		break;
-	default:
-		shouldTranslate = false;
-		break;
-	}
+	//switch(type)
+	//{
+	//case Image::OSG_UINT8_IMAGEDATA:
+	//case Image::OSG_UINT16_IMAGEDATA:
+	//case Image::OSG_UINT32_IMAGEDATA:
+		//shouldTranslate = true;
+		//break;
+	//default:
+		//shouldTranslate = false;
+		//break;
+	//}
 
-	for(UInt32 i(0) ; i<Size.x() ; ++i)
-	{
-		for(UInt32 j(0) ; j<Size.y() ; ++j)
-		{
-			for(UInt32 k(0) ; k<Size.z() ; ++k)
-			{
-				ImageData[i*Size.x()*Size.y()+j*Size.y()+k] = osgClamp(-0.5f, 
-					calcPerlinNoise(Pnt2f(Range.x()*static_cast<Real32>(i)/static_cast<Real32>(Size.x()), Range.y()*static_cast<Real32>(j)/static_cast<Real32>(Size.y()), Range.z()*static_cast<Real32>(k)/static_cast<Real32>(Size.z())),
-						Amplitude,
-						Frequency,
-						Phase,
-						Persistance,
-						Octaves,
-						InterpolationType,
-						Smoothing),
-					0.5f);
+	//for(UInt32 i(0) ; i<Size.x() ; ++i)
+	//{
+		//for(UInt32 j(0) ; j<Size.y() ; ++j)
+		//{
+			//for(UInt32 k(0) ; k<Size.z() ; ++k)
+			//{
+				//ImageData[i*Size.x()*Size.y()+j*Size.y()+k] = osgClamp(-0.5f, 
+					//calcPerlinNoise(Pnt2f(Range.x()*static_cast<Real32>(i)/static_cast<Real32>(Size.x()), Range.y()*static_cast<Real32>(j)/static_cast<Real32>(Size.y()), Range.z()*static_cast<Real32>(k)/static_cast<Real32>(Size.z())),
+						//Amplitude,
+						//Frequency,
+						//Phase,
+						//Persistance,
+						//Octaves,
+						//UInt32,
+						//Smoothing),
+					//0.5f);
 
-				if(shouldTranslate)
-				{
-					ImageData[i*Size.x()*Size.y()+j*Size.y()+k] += 0.5f;
+				//if(shouldTranslate)
+				//{
+					//ImageData[i*Size.x()*Size.y()+j*Size.y()+k] += 0.5f;
 
-				}
-			}
-		}
-	}
+				//}
+			//}
+		//}
+	//}
 
-	if(PerlinImage->set(Image::OSG_I_PF, Size.x(), Size.y(),1,1,1,0.0f,reinterpret_cast<UInt8*>(&ImageData[0]),Image::OSG_FLOAT32_IMAGEDATA))
-	{
-		if(type != Image::OSG_FLOAT32_IMAGEDATA)
-		{
-			if(!PerlinImage->convertDataTypeTo(type))
-			{
-				return NullFC;
-			}
-		}
+	//if(PerlinImage->set(Image::OSG_I_PF, Size.x(), Size.y(),1,1,1,0.0f,reinterpret_cast<UInt8*>(&ImageData[0]),Image::OSG_FLOAT32_IMAGEDATA))
+	//{
+		//if(type != Image::OSG_FLOAT32_IMAGEDATA)
+		//{
+			//if(!PerlinImage->convertDataTypeTo(type))
+			//{
+				//return NULL;
+			//}
+		//}
 
-		if(pixelformat != Image::OSG_I_PF)
-		{
-			if(!PerlinImage->reformat(pixelformat))
-			{
-				return NullFC;
-			}
-		}
+		//if(pixelformat != Image::OSG_I_PF)
+		//{
+			//if(!PerlinImage->reformat(pixelformat))
+			//{
+				//return NULL;
+			//}
+		//}
 
-		return PerlinImage;
-	}
-	else
-	{
-		return NullFC;
-	}
-}
+		//return PerlinImage;
+	//}
+	//else
+	//{
+		//return NULL;
+	//}
+//}
 OSG_END_NAMESPACE
 

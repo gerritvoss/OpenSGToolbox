@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,70 +58,83 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGParticleAffector.h" // Parent
 
-#include <OpenSG/OSGStringFields.h> // ConditionalAttribute type
-#include <OpenSG/OSGUInt8Fields.h> // ConditionalOperator type
-#include <OpenSG/OSGUInt32Fields.h> // ConditionalValue type
-//#include <OpenSG/OSGParticleAffectorFields.h> // Affectors type
+#include "OSGBaseFields.h"              // ConditionalAttribute type
+#include "OSGSysFields.h"               // ConditionalOperator type
+#include "OSGParticleAffectorFields.h"  // Affectors type
 
 #include "OSGConditionalParticleAffectorFields.h"
+
+
 OSG_BEGIN_NAMESPACE
 
 class ConditionalParticleAffector;
-class BinaryDataHandler;
 
 //! \brief ConditionalParticleAffector Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ConditionalParticleAffectorBase : public ParticleAffector
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ConditionalParticleAffectorBase : public ParticleAffector
 {
-  private:
-
-    typedef ParticleAffector    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ConditionalParticleAffectorPtr  Ptr;
+    typedef ParticleAffector Inherited;
+    typedef ParticleAffector ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(ConditionalParticleAffector);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
         ConditionalAttributeFieldId = Inherited::NextFieldId,
-        ConditionalOperatorFieldId  = ConditionalAttributeFieldId + 1,
-        ConditionalValueFieldId     = ConditionalOperatorFieldId  + 1,
-        AffectorsFieldId            = ConditionalValueFieldId     + 1,
-        NextFieldId                 = AffectorsFieldId            + 1
+        ConditionalOperatorFieldId = ConditionalAttributeFieldId + 1,
+        ConditionalValueFieldId = ConditionalOperatorFieldId + 1,
+        AffectorsFieldId = ConditionalValueFieldId + 1,
+        NextFieldId = AffectorsFieldId + 1
     };
 
-    static const OSG::BitVector ConditionalAttributeFieldMask;
-    static const OSG::BitVector ConditionalOperatorFieldMask;
-    static const OSG::BitVector ConditionalValueFieldMask;
-    static const OSG::BitVector AffectorsFieldMask;
+    static const OSG::BitVector ConditionalAttributeFieldMask =
+        (TypeTraits<BitVector>::One << ConditionalAttributeFieldId);
+    static const OSG::BitVector ConditionalOperatorFieldMask =
+        (TypeTraits<BitVector>::One << ConditionalOperatorFieldId);
+    static const OSG::BitVector ConditionalValueFieldMask =
+        (TypeTraits<BitVector>::One << ConditionalValueFieldId);
+    static const OSG::BitVector AffectorsFieldMask =
+        (TypeTraits<BitVector>::One << AffectorsFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFString          SFConditionalAttributeType;
+    typedef SFUInt8           SFConditionalOperatorType;
+    typedef SFUInt32          SFConditionalValueType;
+    typedef MFUnrecParticleAffectorPtr MFAffectorsType;
 
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -131,89 +144,112 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ConditionalParticleAffectorBase : public 
     /*! \{                                                                 */
 
 
-           SFString            *editSFConditionalAttribute(void);
-     const SFString            *getSFConditionalAttribute(void) const;
+                  SFString            *editSFConditionalAttribute(void);
+            const SFString            *getSFConditionalAttribute (void) const;
 
-           SFUInt8             *editSFConditionalOperator(void);
-     const SFUInt8             *getSFConditionalOperator(void) const;
+                  SFUInt8             *editSFConditionalOperator(void);
+            const SFUInt8             *getSFConditionalOperator (void) const;
 
-           SFUInt32            *editSFConditionalValue(void);
-     const SFUInt32            *getSFConditionalValue(void) const;
+                  SFUInt32            *editSFConditionalValue(void);
+            const SFUInt32            *getSFConditionalValue (void) const;
+            const MFUnrecParticleAffectorPtr *getMFAffectors      (void) const;
+                  MFUnrecParticleAffectorPtr *editMFAffectors      (void);
 
-           MFParticleAffectorPtr *editMFAffectors      (void);
-     const MFParticleAffectorPtr *getMFAffectors      (void) const;
 
+                  std::string         &editConditionalAttribute(void);
+            const std::string         &getConditionalAttribute (void) const;
 
-           std::string         &editConditionalAttribute(void);
-     const std::string         &getConditionalAttribute(void) const;
+                  UInt8               &editConditionalOperator(void);
+                  UInt8                getConditionalOperator (void) const;
 
-           UInt8               &editConditionalOperator(void);
-     const UInt8               &getConditionalOperator(void) const;
+                  UInt32              &editConditionalValue(void);
+                  UInt32               getConditionalValue (void) const;
 
-           UInt32              &editConditionalValue(void);
-     const UInt32              &getConditionalValue(void) const;
-
-           ParticleAffectorPtr &editAffectors      (const UInt32 index);
-     const ParticleAffectorPtr &getAffectors      (const UInt32 index) const;
-#ifndef OSG_2_PREP
-           MFParticleAffectorPtr &getAffectors      (void);
-     const MFParticleAffectorPtr &getAffectors      (void) const;
-#endif
+                  ParticleAffector * getAffectors      (const UInt32 index) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setConditionalAttribute( const std::string &value );
-     void setConditionalOperator( const UInt8 &value );
-     void setConditionalValue( const UInt32 &value );
+            void setConditionalAttribute(const std::string &value);
+            void setConditionalOperator(const UInt8 value);
+            void setConditionalValue(const UInt32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
     /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    void pushToAffectors           (ParticleAffector * const value   );
+    void assignAffectors          (const MFUnrecParticleAffectorPtr &value);
+    void removeFromAffectors (UInt32               uiIndex );
+    void removeObjFromAffectors(ParticleAffector * const value   );
+    void clearAffectors             (void                         );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  ConditionalParticleAffectorPtr      create          (void); 
-    static  ConditionalParticleAffectorPtr      createEmpty     (void); 
+    static  ConditionalParticleAffectorTransitPtr  create          (void);
+    static  ConditionalParticleAffector           *createEmpty     (void);
+
+    static  ConditionalParticleAffectorTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  ConditionalParticleAffector            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  ConditionalParticleAffectorTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFString            _sfConditionalAttribute;
-    SFUInt8             _sfConditionalOperator;
-    SFUInt32            _sfConditionalValue;
-    MFParticleAffectorPtr   _mfAffectors;
+    SFString          _sfConditionalAttribute;
+    SFUInt8           _sfConditionalOperator;
+    SFUInt32          _sfConditionalValue;
+    MFUnrecParticleAffectorPtr _mfAffectors;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -228,66 +264,85 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ConditionalParticleAffectorBase : public 
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ConditionalParticleAffectorBase(void); 
+    virtual ~ConditionalParticleAffectorBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const ConditionalParticleAffector *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleConditionalAttribute (void) const;
+    EditFieldHandlePtr editHandleConditionalAttribute(void);
+    GetFieldHandlePtr  getHandleConditionalOperator (void) const;
+    EditFieldHandlePtr editHandleConditionalOperator(void);
+    GetFieldHandlePtr  getHandleConditionalValue (void) const;
+    EditFieldHandlePtr editHandleConditionalValue(void);
+    GetFieldHandlePtr  getHandleAffectors       (void) const;
+    EditFieldHandlePtr editHandleAffectors      (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ConditionalParticleAffectorBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      ConditionalParticleAffectorBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      ConditionalParticleAffectorBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const ConditionalParticleAffectorBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef ConditionalParticleAffectorBase *ConditionalParticleAffectorBaseP;
-
-typedef osgIF<ConditionalParticleAffectorBase::isNodeCore,
-              CoredNodePtr<ConditionalParticleAffector>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ConditionalParticleAffectorNodePtr;
-
-typedef RefPtr<ConditionalParticleAffectorPtr> ConditionalParticleAffectorRefPtr;
 
 OSG_END_NAMESPACE
 

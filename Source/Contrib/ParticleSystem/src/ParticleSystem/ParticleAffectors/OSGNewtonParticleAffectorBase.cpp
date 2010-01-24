@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,207 +50,367 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILENEWTONPARTICLEAFFECTORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGNode.h"                    // Beacon Class
 
 #include "OSGNewtonParticleAffectorBase.h"
 #include "OSGNewtonParticleAffector.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  NewtonParticleAffectorBase::MagnitudeFieldMask = 
-    (TypeTraits<BitVector>::One << NewtonParticleAffectorBase::MagnitudeFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  NewtonParticleAffectorBase::AttenuationFieldMask = 
-    (TypeTraits<BitVector>::One << NewtonParticleAffectorBase::AttenuationFieldId);
+/*! \class OSG::NewtonParticleAffector
+    
+ */
 
-const OSG::BitVector  NewtonParticleAffectorBase::MaxDistanceFieldMask = 
-    (TypeTraits<BitVector>::One << NewtonParticleAffectorBase::MaxDistanceFieldId);
-
-const OSG::BitVector  NewtonParticleAffectorBase::MinDistanceFieldMask = 
-    (TypeTraits<BitVector>::One << NewtonParticleAffectorBase::MinDistanceFieldId);
-
-const OSG::BitVector  NewtonParticleAffectorBase::BeaconFieldMask = 
-    (TypeTraits<BitVector>::One << NewtonParticleAffectorBase::BeaconFieldId);
-
-const OSG::BitVector  NewtonParticleAffectorBase::ParticleMassFieldMask = 
-    (TypeTraits<BitVector>::One << NewtonParticleAffectorBase::ParticleMassFieldId);
-
-const OSG::BitVector NewtonParticleAffectorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Real32          NewtonParticleAffectorBase::_sfMagnitude
     
 */
+
 /*! \var Real32          NewtonParticleAffectorBase::_sfAttenuation
     
 */
+
 /*! \var Real32          NewtonParticleAffectorBase::_sfMaxDistance
     
 */
+
 /*! \var Real32          NewtonParticleAffectorBase::_sfMinDistance
     
 */
-/*! \var NodePtr         NewtonParticleAffectorBase::_sfBeacon
+
+/*! \var Node *          NewtonParticleAffectorBase::_sfBeacon
     
 */
+
 /*! \var Real32          NewtonParticleAffectorBase::_sfParticleMass
     
 */
 
-//! NewtonParticleAffector description
 
-FieldDescription *NewtonParticleAffectorBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<NewtonParticleAffector *>::_type("NewtonParticleAffectorPtr", "ParticleAffectorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(NewtonParticleAffector *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           NewtonParticleAffector *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           NewtonParticleAffector *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void NewtonParticleAffectorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Magnitude", 
-                     MagnitudeFieldId, MagnitudeFieldMask,
-                     false,
-                     (FieldAccessMethod) &NewtonParticleAffectorBase::getSFMagnitude),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Attenuation", 
-                     AttenuationFieldId, AttenuationFieldMask,
-                     false,
-                     (FieldAccessMethod) &NewtonParticleAffectorBase::getSFAttenuation),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "MaxDistance", 
-                     MaxDistanceFieldId, MaxDistanceFieldMask,
-                     false,
-                     (FieldAccessMethod) &NewtonParticleAffectorBase::getSFMaxDistance),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "MinDistance", 
-                     MinDistanceFieldId, MinDistanceFieldMask,
-                     false,
-                     (FieldAccessMethod) &NewtonParticleAffectorBase::getSFMinDistance),
-    new FieldDescription(SFNodePtr::getClassType(), 
-                     "Beacon", 
-                     BeaconFieldId, BeaconFieldMask,
-                     false,
-                     (FieldAccessMethod) &NewtonParticleAffectorBase::getSFBeacon),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "ParticleMass", 
-                     ParticleMassFieldId, ParticleMassFieldMask,
-                     false,
-                     (FieldAccessMethod) &NewtonParticleAffectorBase::getSFParticleMass)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType NewtonParticleAffectorBase::_type(
-    "NewtonParticleAffector",
-    "ParticleAffector",
-    NULL,
-    (PrototypeCreateF) &NewtonParticleAffectorBase::createEmpty,
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Magnitude",
+        "",
+        MagnitudeFieldId, MagnitudeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&NewtonParticleAffector::editHandleMagnitude),
+        static_cast<FieldGetMethodSig >(&NewtonParticleAffector::getHandleMagnitude));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Attenuation",
+        "",
+        AttenuationFieldId, AttenuationFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&NewtonParticleAffector::editHandleAttenuation),
+        static_cast<FieldGetMethodSig >(&NewtonParticleAffector::getHandleAttenuation));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "MaxDistance",
+        "",
+        MaxDistanceFieldId, MaxDistanceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&NewtonParticleAffector::editHandleMaxDistance),
+        static_cast<FieldGetMethodSig >(&NewtonParticleAffector::getHandleMaxDistance));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "MinDistance",
+        "",
+        MinDistanceFieldId, MinDistanceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&NewtonParticleAffector::editHandleMinDistance),
+        static_cast<FieldGetMethodSig >(&NewtonParticleAffector::getHandleMinDistance));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecNodePtr::Description(
+        SFUnrecNodePtr::getClassType(),
+        "Beacon",
+        "",
+        BeaconFieldId, BeaconFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&NewtonParticleAffector::editHandleBeacon),
+        static_cast<FieldGetMethodSig >(&NewtonParticleAffector::getHandleBeacon));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "ParticleMass",
+        "",
+        ParticleMassFieldId, ParticleMassFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&NewtonParticleAffector::editHandleParticleMass),
+        static_cast<FieldGetMethodSig >(&NewtonParticleAffector::getHandleParticleMass));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+NewtonParticleAffectorBase::TypeObject NewtonParticleAffectorBase::_type(
+    NewtonParticleAffectorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&NewtonParticleAffectorBase::createEmptyLocal),
     NewtonParticleAffector::initMethod,
-    _desc,
-    sizeof(_desc));
+    NewtonParticleAffector::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&NewtonParticleAffector::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"NewtonParticleAffector\"\n"
+    "\tparent=\"ParticleAffector\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com), Daniel Guilliams           \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"Magnitude\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"5.000\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Attenuation\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"2.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MaxDistance\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"-1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MinDistance\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Beacon\"\n"
+    "\t\ttype=\"Node\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ParticleMass\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(NewtonParticleAffectorBase, NewtonParticleAffectorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &NewtonParticleAffectorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &NewtonParticleAffectorBase::getType(void) const 
+FieldContainerType &NewtonParticleAffectorBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr NewtonParticleAffectorBase::shallowCopy(void) const 
-{ 
-    NewtonParticleAffectorPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const NewtonParticleAffector *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 NewtonParticleAffectorBase::getContainerSize(void) const 
-{ 
-    return sizeof(NewtonParticleAffector); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void NewtonParticleAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &NewtonParticleAffectorBase::getType(void) const
 {
-    this->executeSyncImpl((NewtonParticleAffectorBase *) &other, whichField);
+    return _type;
 }
-#else
-void NewtonParticleAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 NewtonParticleAffectorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((NewtonParticleAffectorBase *) &other, whichField, sInfo);
+    return sizeof(NewtonParticleAffector);
 }
-void NewtonParticleAffectorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFReal32 *NewtonParticleAffectorBase::editSFMagnitude(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(MagnitudeFieldMask);
+
+    return &_sfMagnitude;
 }
 
-void NewtonParticleAffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFReal32 *NewtonParticleAffectorBase::getSFMagnitude(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfMagnitude;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-NewtonParticleAffectorBase::NewtonParticleAffectorBase(void) :
-    _sfMagnitude              (Real32(5.000)), 
-    _sfAttenuation            (Real32(2.0)), 
-    _sfMaxDistance            (Real32(-1.0)), 
-    _sfMinDistance            (Real32(0.0)), 
-    _sfBeacon                 (NodePtr(NullFC)), 
-    _sfParticleMass           (Real32(1.0)), 
-    Inherited() 
+SFReal32 *NewtonParticleAffectorBase::editSFAttenuation(void)
 {
+    editSField(AttenuationFieldMask);
+
+    return &_sfAttenuation;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-NewtonParticleAffectorBase::NewtonParticleAffectorBase(const NewtonParticleAffectorBase &source) :
-    _sfMagnitude              (source._sfMagnitude              ), 
-    _sfAttenuation            (source._sfAttenuation            ), 
-    _sfMaxDistance            (source._sfMaxDistance            ), 
-    _sfMinDistance            (source._sfMinDistance            ), 
-    _sfBeacon                 (source._sfBeacon                 ), 
-    _sfParticleMass           (source._sfParticleMass           ), 
-    Inherited                 (source)
+const SFReal32 *NewtonParticleAffectorBase::getSFAttenuation(void) const
 {
+    return &_sfAttenuation;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-NewtonParticleAffectorBase::~NewtonParticleAffectorBase(void)
+SFReal32 *NewtonParticleAffectorBase::editSFMaxDistance(void)
 {
+    editSField(MaxDistanceFieldMask);
+
+    return &_sfMaxDistance;
 }
+
+const SFReal32 *NewtonParticleAffectorBase::getSFMaxDistance(void) const
+{
+    return &_sfMaxDistance;
+}
+
+
+SFReal32 *NewtonParticleAffectorBase::editSFMinDistance(void)
+{
+    editSField(MinDistanceFieldMask);
+
+    return &_sfMinDistance;
+}
+
+const SFReal32 *NewtonParticleAffectorBase::getSFMinDistance(void) const
+{
+    return &_sfMinDistance;
+}
+
+
+//! Get the NewtonParticleAffector::_sfBeacon field.
+const SFUnrecNodePtr *NewtonParticleAffectorBase::getSFBeacon(void) const
+{
+    return &_sfBeacon;
+}
+
+SFUnrecNodePtr      *NewtonParticleAffectorBase::editSFBeacon         (void)
+{
+    editSField(BeaconFieldMask);
+
+    return &_sfBeacon;
+}
+
+SFReal32 *NewtonParticleAffectorBase::editSFParticleMass(void)
+{
+    editSField(ParticleMassFieldMask);
+
+    return &_sfParticleMass;
+}
+
+const SFReal32 *NewtonParticleAffectorBase::getSFParticleMass(void) const
+{
+    return &_sfParticleMass;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 NewtonParticleAffectorBase::getBinSize(const BitVector &whichField)
+UInt32 NewtonParticleAffectorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -258,38 +418,32 @@ UInt32 NewtonParticleAffectorBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfMagnitude.getBinSize();
     }
-
     if(FieldBits::NoField != (AttenuationFieldMask & whichField))
     {
         returnValue += _sfAttenuation.getBinSize();
     }
-
     if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
     {
         returnValue += _sfMaxDistance.getBinSize();
     }
-
     if(FieldBits::NoField != (MinDistanceFieldMask & whichField))
     {
         returnValue += _sfMinDistance.getBinSize();
     }
-
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
     {
         returnValue += _sfBeacon.getBinSize();
     }
-
     if(FieldBits::NoField != (ParticleMassFieldMask & whichField))
     {
         returnValue += _sfParticleMass.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void NewtonParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void NewtonParticleAffectorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -297,37 +451,30 @@ void NewtonParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfMagnitude.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (AttenuationFieldMask & whichField))
     {
         _sfAttenuation.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
     {
         _sfMaxDistance.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MinDistanceFieldMask & whichField))
     {
         _sfMinDistance.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
     {
         _sfBeacon.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ParticleMassFieldMask & whichField))
     {
         _sfParticleMass.copyToBin(pMem);
     }
-
-
 }
 
-void NewtonParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void NewtonParticleAffectorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -335,137 +482,384 @@ void NewtonParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfMagnitude.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (AttenuationFieldMask & whichField))
     {
         _sfAttenuation.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
     {
         _sfMaxDistance.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MinDistanceFieldMask & whichField))
     {
         _sfMinDistance.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
     {
         _sfBeacon.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ParticleMassFieldMask & whichField))
     {
         _sfParticleMass.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void NewtonParticleAffectorBase::executeSyncImpl(      NewtonParticleAffectorBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+NewtonParticleAffectorTransitPtr NewtonParticleAffectorBase::createLocal(BitVector bFlags)
 {
+    NewtonParticleAffectorTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (MagnitudeFieldMask & whichField))
-        _sfMagnitude.syncWith(pOther->_sfMagnitude);
+        fc = dynamic_pointer_cast<NewtonParticleAffector>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (AttenuationFieldMask & whichField))
-        _sfAttenuation.syncWith(pOther->_sfAttenuation);
-
-    if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
-        _sfMaxDistance.syncWith(pOther->_sfMaxDistance);
-
-    if(FieldBits::NoField != (MinDistanceFieldMask & whichField))
-        _sfMinDistance.syncWith(pOther->_sfMinDistance);
-
-    if(FieldBits::NoField != (BeaconFieldMask & whichField))
-        _sfBeacon.syncWith(pOther->_sfBeacon);
-
-    if(FieldBits::NoField != (ParticleMassFieldMask & whichField))
-        _sfParticleMass.syncWith(pOther->_sfParticleMass);
-
-
-}
-#else
-void NewtonParticleAffectorBase::executeSyncImpl(      NewtonParticleAffectorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (MagnitudeFieldMask & whichField))
-        _sfMagnitude.syncWith(pOther->_sfMagnitude);
-
-    if(FieldBits::NoField != (AttenuationFieldMask & whichField))
-        _sfAttenuation.syncWith(pOther->_sfAttenuation);
-
-    if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
-        _sfMaxDistance.syncWith(pOther->_sfMaxDistance);
-
-    if(FieldBits::NoField != (MinDistanceFieldMask & whichField))
-        _sfMinDistance.syncWith(pOther->_sfMinDistance);
-
-    if(FieldBits::NoField != (BeaconFieldMask & whichField))
-        _sfBeacon.syncWith(pOther->_sfBeacon);
-
-    if(FieldBits::NoField != (ParticleMassFieldMask & whichField))
-        _sfParticleMass.syncWith(pOther->_sfParticleMass);
-
-
-
+    return fc;
 }
 
-void NewtonParticleAffectorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+NewtonParticleAffectorTransitPtr NewtonParticleAffectorBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    NewtonParticleAffectorTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<NewtonParticleAffector>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+NewtonParticleAffectorTransitPtr NewtonParticleAffectorBase::create(void)
+{
+    NewtonParticleAffectorTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<NewtonParticleAffector>(tmpPtr);
+    }
+
+    return fc;
+}
+
+NewtonParticleAffector *NewtonParticleAffectorBase::createEmptyLocal(BitVector bFlags)
+{
+    NewtonParticleAffector *returnValue;
+
+    newPtr<NewtonParticleAffector>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+NewtonParticleAffector *NewtonParticleAffectorBase::createEmpty(void)
+{
+    NewtonParticleAffector *returnValue;
+
+    newPtr<NewtonParticleAffector>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr NewtonParticleAffectorBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    NewtonParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const NewtonParticleAffector *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr NewtonParticleAffectorBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    NewtonParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const NewtonParticleAffector *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr NewtonParticleAffectorBase::shallowCopy(void) const
+{
+    NewtonParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const NewtonParticleAffector *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+NewtonParticleAffectorBase::NewtonParticleAffectorBase(void) :
+    Inherited(),
+    _sfMagnitude              (Real32(5.000)),
+    _sfAttenuation            (Real32(2.0)),
+    _sfMaxDistance            (Real32(-1.0)),
+    _sfMinDistance            (Real32(0.0)),
+    _sfBeacon                 (NULL),
+    _sfParticleMass           (Real32(1.0))
+{
+}
+
+NewtonParticleAffectorBase::NewtonParticleAffectorBase(const NewtonParticleAffectorBase &source) :
+    Inherited(source),
+    _sfMagnitude              (source._sfMagnitude              ),
+    _sfAttenuation            (source._sfAttenuation            ),
+    _sfMaxDistance            (source._sfMaxDistance            ),
+    _sfMinDistance            (source._sfMinDistance            ),
+    _sfBeacon                 (NULL),
+    _sfParticleMass           (source._sfParticleMass           )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+NewtonParticleAffectorBase::~NewtonParticleAffectorBase(void)
+{
+}
+
+void NewtonParticleAffectorBase::onCreate(const NewtonParticleAffector *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        NewtonParticleAffector *pThis = static_cast<NewtonParticleAffector *>(this);
+
+        pThis->setBeacon(source->getBeacon());
+    }
+}
+
+GetFieldHandlePtr NewtonParticleAffectorBase::getHandleMagnitude       (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMagnitude,
+             this->getType().getFieldDesc(MagnitudeFieldId),
+             const_cast<NewtonParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr NewtonParticleAffectorBase::editHandleMagnitude      (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMagnitude,
+             this->getType().getFieldDesc(MagnitudeFieldId),
+             this));
+
+
+    editSField(MagnitudeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr NewtonParticleAffectorBase::getHandleAttenuation     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfAttenuation,
+             this->getType().getFieldDesc(AttenuationFieldId),
+             const_cast<NewtonParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr NewtonParticleAffectorBase::editHandleAttenuation    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfAttenuation,
+             this->getType().getFieldDesc(AttenuationFieldId),
+             this));
+
+
+    editSField(AttenuationFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr NewtonParticleAffectorBase::getHandleMaxDistance     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMaxDistance,
+             this->getType().getFieldDesc(MaxDistanceFieldId),
+             const_cast<NewtonParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr NewtonParticleAffectorBase::editHandleMaxDistance    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMaxDistance,
+             this->getType().getFieldDesc(MaxDistanceFieldId),
+             this));
+
+
+    editSField(MaxDistanceFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr NewtonParticleAffectorBase::getHandleMinDistance     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMinDistance,
+             this->getType().getFieldDesc(MinDistanceFieldId),
+             const_cast<NewtonParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr NewtonParticleAffectorBase::editHandleMinDistance    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMinDistance,
+             this->getType().getFieldDesc(MinDistanceFieldId),
+             this));
+
+
+    editSField(MinDistanceFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr NewtonParticleAffectorBase::getHandleBeacon          (void) const
+{
+    SFUnrecNodePtr::GetHandlePtr returnValue(
+        new  SFUnrecNodePtr::GetHandle(
+             &_sfBeacon,
+             this->getType().getFieldDesc(BeaconFieldId),
+             const_cast<NewtonParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr NewtonParticleAffectorBase::editHandleBeacon         (void)
+{
+    SFUnrecNodePtr::EditHandlePtr returnValue(
+        new  SFUnrecNodePtr::EditHandle(
+             &_sfBeacon,
+             this->getType().getFieldDesc(BeaconFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&NewtonParticleAffector::setBeacon,
+                    static_cast<NewtonParticleAffector *>(this), _1));
+
+    editSField(BeaconFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr NewtonParticleAffectorBase::getHandleParticleMass    (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfParticleMass,
+             this->getType().getFieldDesc(ParticleMassFieldId),
+             const_cast<NewtonParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr NewtonParticleAffectorBase::editHandleParticleMass   (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfParticleMass,
+             this->getType().getFieldDesc(ParticleMassFieldId),
+             this));
+
+
+    editSField(ParticleMassFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void NewtonParticleAffectorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    NewtonParticleAffector *pThis = static_cast<NewtonParticleAffector *>(this);
+
+    pThis->execSync(static_cast<NewtonParticleAffector *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *NewtonParticleAffectorBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    NewtonParticleAffector *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const NewtonParticleAffector *>(pRefAspect),
+                  dynamic_cast<const NewtonParticleAffector *>(this));
+
+    return returnValue;
+}
+#endif
+
+void NewtonParticleAffectorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<NewtonParticleAffector *>(this)->setBeacon(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<NewtonParticleAffectorPtr>::_type("NewtonParticleAffectorPtr", "ParticleAffectorPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(NewtonParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(NewtonParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGNEWTONPARTICLEAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGNEWTONPARTICLEAFFECTORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGNEWTONPARTICLEAFFECTORFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

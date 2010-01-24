@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,71 +58,81 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGDistanceParticleAffector.h" // Parent
 
-#include <OpenSG/OSGReal32Fields.h> // DistanceFadeStart type
-#include <OpenSG/OSGReal32Fields.h> // DistanceFadeEnd type
-#include <OpenSG/OSGReal32Fields.h> // FadeStartAlpha type
-#include <OpenSG/OSGReal32Fields.h> // FadeEndAlpha type
+#include "OSGSysFields.h"               // DistanceFadeStart type
 
 #include "OSGDistanceFadeParticleAffectorFields.h"
+
 
 OSG_BEGIN_NAMESPACE
 
 class DistanceFadeParticleAffector;
-class BinaryDataHandler;
 
 //! \brief DistanceFadeParticleAffector Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING DistanceFadeParticleAffectorBase : public DistanceParticleAffector
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DistanceFadeParticleAffectorBase : public DistanceParticleAffector
 {
-  private:
-
-    typedef DistanceParticleAffector    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef DistanceFadeParticleAffectorPtr  Ptr;
+    typedef DistanceParticleAffector Inherited;
+    typedef DistanceParticleAffector ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(DistanceFadeParticleAffector);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
         DistanceFadeStartFieldId = Inherited::NextFieldId,
-        DistanceFadeEndFieldId   = DistanceFadeStartFieldId + 1,
-        FadeStartAlphaFieldId    = DistanceFadeEndFieldId   + 1,
-        FadeEndAlphaFieldId      = FadeStartAlphaFieldId    + 1,
-        NextFieldId              = FadeEndAlphaFieldId      + 1
+        DistanceFadeEndFieldId = DistanceFadeStartFieldId + 1,
+        FadeStartAlphaFieldId = DistanceFadeEndFieldId + 1,
+        FadeEndAlphaFieldId = FadeStartAlphaFieldId + 1,
+        NextFieldId = FadeEndAlphaFieldId + 1
     };
 
-    static const OSG::BitVector DistanceFadeStartFieldMask;
-    static const OSG::BitVector DistanceFadeEndFieldMask;
-    static const OSG::BitVector FadeStartAlphaFieldMask;
-    static const OSG::BitVector FadeEndAlphaFieldMask;
+    static const OSG::BitVector DistanceFadeStartFieldMask =
+        (TypeTraits<BitVector>::One << DistanceFadeStartFieldId);
+    static const OSG::BitVector DistanceFadeEndFieldMask =
+        (TypeTraits<BitVector>::One << DistanceFadeEndFieldId);
+    static const OSG::BitVector FadeStartAlphaFieldMask =
+        (TypeTraits<BitVector>::One << FadeStartAlphaFieldId);
+    static const OSG::BitVector FadeEndAlphaFieldMask =
+        (TypeTraits<BitVector>::One << FadeEndAlphaFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFReal32          SFDistanceFadeStartType;
+    typedef SFReal32          SFDistanceFadeEndType;
+    typedef SFReal32          SFFadeStartAlphaType;
+    typedef SFReal32          SFFadeEndAlphaType;
 
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -131,33 +141,45 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DistanceFadeParticleAffectorBase : public
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *getSFDistanceFadeStart(void);
-           SFReal32            *getSFDistanceFadeEnd(void);
-           SFReal32            *getSFFadeStartAlpha (void);
-           SFReal32            *getSFFadeEndAlpha   (void);
 
-           Real32              &getDistanceFadeStart(void);
-     const Real32              &getDistanceFadeStart(void) const;
-           Real32              &getDistanceFadeEnd(void);
-     const Real32              &getDistanceFadeEnd(void) const;
-           Real32              &getFadeStartAlpha (void);
-     const Real32              &getFadeStartAlpha (void) const;
-           Real32              &getFadeEndAlpha   (void);
-     const Real32              &getFadeEndAlpha   (void) const;
+                  SFReal32            *editSFDistanceFadeStart(void);
+            const SFReal32            *getSFDistanceFadeStart (void) const;
+
+                  SFReal32            *editSFDistanceFadeEnd(void);
+            const SFReal32            *getSFDistanceFadeEnd (void) const;
+
+                  SFReal32            *editSFFadeStartAlpha (void);
+            const SFReal32            *getSFFadeStartAlpha  (void) const;
+
+                  SFReal32            *editSFFadeEndAlpha   (void);
+            const SFReal32            *getSFFadeEndAlpha    (void) const;
+
+
+                  Real32              &editDistanceFadeStart(void);
+                  Real32               getDistanceFadeStart (void) const;
+
+                  Real32              &editDistanceFadeEnd(void);
+                  Real32               getDistanceFadeEnd (void) const;
+
+                  Real32              &editFadeStartAlpha (void);
+                  Real32               getFadeStartAlpha  (void) const;
+
+                  Real32              &editFadeEndAlpha   (void);
+                  Real32               getFadeEndAlpha    (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setDistanceFadeStart( const Real32 &value );
-     void setDistanceFadeEnd( const Real32 &value );
-     void setFadeStartAlpha ( const Real32 &value );
-     void setFadeEndAlpha   ( const Real32 &value );
+            void setDistanceFadeStart(const Real32 value);
+            void setDistanceFadeEnd(const Real32 value);
+            void setFadeStartAlpha (const Real32 value);
+            void setFadeEndAlpha   (const Real32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -165,41 +187,59 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DistanceFadeParticleAffectorBase : public
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  DistanceFadeParticleAffectorPtr      create          (void); 
-    static  DistanceFadeParticleAffectorPtr      createEmpty     (void); 
+    static  DistanceFadeParticleAffectorTransitPtr  create          (void);
+    static  DistanceFadeParticleAffector           *createEmpty     (void);
+
+    static  DistanceFadeParticleAffectorTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  DistanceFadeParticleAffector            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  DistanceFadeParticleAffectorTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFReal32            _sfDistanceFadeStart;
-    SFReal32            _sfDistanceFadeEnd;
-    SFReal32            _sfFadeStartAlpha;
-    SFReal32            _sfFadeEndAlpha;
+    SFReal32          _sfDistanceFadeStart;
+    SFReal32          _sfDistanceFadeEnd;
+    SFReal32          _sfFadeStartAlpha;
+    SFReal32          _sfFadeEndAlpha;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -214,69 +254,85 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DistanceFadeParticleAffectorBase : public
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DistanceFadeParticleAffectorBase(void); 
+    virtual ~DistanceFadeParticleAffectorBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleDistanceFadeStart (void) const;
+    EditFieldHandlePtr editHandleDistanceFadeStart(void);
+    GetFieldHandlePtr  getHandleDistanceFadeEnd (void) const;
+    EditFieldHandlePtr editHandleDistanceFadeEnd(void);
+    GetFieldHandlePtr  getHandleFadeStartAlpha  (void) const;
+    EditFieldHandlePtr editHandleFadeStartAlpha (void);
+    GetFieldHandlePtr  getHandleFadeEndAlpha    (void) const;
+    EditFieldHandlePtr editHandleFadeEndAlpha   (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      DistanceFadeParticleAffectorBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      DistanceFadeParticleAffectorBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      DistanceFadeParticleAffectorBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const DistanceFadeParticleAffectorBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef DistanceFadeParticleAffectorBase *DistanceFadeParticleAffectorBaseP;
 
-typedef osgIF<DistanceFadeParticleAffectorBase::isNodeCore,
-              CoredNodePtr<DistanceFadeParticleAffector>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet DistanceFadeParticleAffectorNodePtr;
-
-typedef RefPtr<DistanceFadeParticleAffectorPtr> DistanceFadeParticleAffectorRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGDISTANCEFADEPARTICLEAFFECTORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGDISTANCEFADEPARTICLEAFFECTORBASE_H_ */

@@ -29,16 +29,16 @@
 #ifndef _OPENSG_PARTICLESYSTEM_UTILS_H_
 #define _OPENSG_PARTICLESYSTEM_UTILS_H_
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
-#include <OpenSG/OSGBaseTypes.h>
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
+#include "OSGBaseTypes.h"
 #include <vector>
 
 OSG_BEGIN_NAMESPACE
 
 
-UInt32 OSG_PARTICLESYSTEMLIB_DLLMAPPING stlBinarySearch(std::vector<Real32> vector, UInt32 lowerBound, UInt32 upperBound, Real32 value);
-UInt32 OSG_PARTICLESYSTEMLIB_DLLMAPPING stlLowerBound(std::vector<Real32> vector, UInt32 lowerBound, UInt32 upperBound, Real32 value);
+UInt32 OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING stlBinarySearch(std::vector<Real32> vector, UInt32 lowerBound, UInt32 upperBound, Real32 value);
+UInt32 OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING stlLowerBound(std::vector<Real32> vector, UInt32 lowerBound, UInt32 upperBound, Real32 value);
 
 OSG_END_NAMESPACE
 

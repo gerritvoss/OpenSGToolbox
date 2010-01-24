@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,64 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/Toolbox/OSGEventFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class ParticleGeometryCollisionEvent;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! ParticleGeometryCollisionEventPtr
+OSG_GEN_CONTAINERPTR(ParticleGeometryCollisionEvent);
 
-typedef FCPtr<EventPtr, ParticleGeometryCollisionEvent> ParticleGeometryCollisionEventPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpParticleSystemFieldTraits
+/*! \ingroup GrpContribParticleSystemFieldTraits
+    \ingroup GrpLibOSGContribParticleSystem
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<ParticleGeometryCollisionEventPtr> : 
-    public FieldTraitsRecurseMapper<ParticleGeometryCollisionEventPtr, true>
+struct FieldTraits<ParticleGeometryCollisionEvent *> :
+    public FieldTraitsFCPtrBase<ParticleGeometryCollisionEvent *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFParticleGeometryCollisionEventPtr"; }
+    typedef FieldTraits<ParticleGeometryCollisionEvent *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFParticleGeometryCollisionEventPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFParticleGeometryCollisionEventPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<ParticleGeometryCollisionEventPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<ParticleGeometryCollisionEvent *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecParticleGeometryCollisionEventPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<ParticleGeometryCollisionEvent *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecParticleGeometryCollisionEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ParticleGeometryCollisionEvent *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakParticleGeometryCollisionEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ParticleGeometryCollisionEvent *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdParticleGeometryCollisionEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ParticleGeometryCollisionEvent *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecParticleGeometryCollisionEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ParticleGeometryCollisionEvent *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecParticleGeometryCollisionEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ParticleGeometryCollisionEvent *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakParticleGeometryCollisionEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ParticleGeometryCollisionEvent *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdParticleGeometryCollisionEventPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<ParticleGeometryCollisionEvent *,
+                      RecordedRefCountPolicy  > SFRecParticleGeometryCollisionEventPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<ParticleGeometryCollisionEvent *,
+                      UnrecordedRefCountPolicy> SFUnrecParticleGeometryCollisionEventPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<ParticleGeometryCollisionEvent *,
+                      WeakRefCountPolicy      > SFWeakParticleGeometryCollisionEventPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<ParticleGeometryCollisionEvent *,
+                      NoRefCountPolicy        > SFUncountedParticleGeometryCollisionEventPtr;
 
-typedef SField<ParticleGeometryCollisionEventPtr> SFParticleGeometryCollisionEventPtr;
-#endif
 
-#ifndef OSG_COMPILEPARTICLEGEOMETRYCOLLISIONEVENTINST
-OSG_DLLEXPORT_DECL1(SField, ParticleGeometryCollisionEventPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<ParticleGeometryCollisionEvent *,
+                      RecordedRefCountPolicy  > MFRecParticleGeometryCollisionEventPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<ParticleGeometryCollisionEvent *,
+                      UnrecordedRefCountPolicy> MFUnrecParticleGeometryCollisionEventPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<ParticleGeometryCollisionEvent *,
+                      WeakRefCountPolicy      > MFWeakParticleGeometryCollisionEventPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<ParticleGeometryCollisionEvent *,
+                      NoRefCountPolicy        > MFUncountedParticleGeometryCollisionEventPtr;
+
+
+
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFRecParticleGeometryCollisionEventPtr : 
+    public PointerSField<ParticleGeometryCollisionEvent *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUnrecParticleGeometryCollisionEventPtr : 
+    public PointerSField<ParticleGeometryCollisionEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFWeakParticleGeometryCollisionEventPtr :
+    public PointerSField<ParticleGeometryCollisionEvent *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUncountedParticleGeometryCollisionEventPtr :
+    public PointerSField<ParticleGeometryCollisionEvent *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFRecParticleGeometryCollisionEventPtr :
+    public PointerMField<ParticleGeometryCollisionEvent *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUnrecParticleGeometryCollisionEventPtr :
+    public PointerMField<ParticleGeometryCollisionEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFWeakParticleGeometryCollisionEventPtr :
+    public PointerMField<ParticleGeometryCollisionEvent *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUncountedParticleGeometryCollisionEventPtr :
+    public PointerMField<ParticleGeometryCollisionEvent *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

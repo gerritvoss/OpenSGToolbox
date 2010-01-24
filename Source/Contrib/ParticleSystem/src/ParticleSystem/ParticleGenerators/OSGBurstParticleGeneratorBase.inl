@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,76 +55,75 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &BurstParticleGeneratorBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 BurstParticleGeneratorBase::getClassTypeId(void) 
+OSG::UInt32 BurstParticleGeneratorBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-BurstParticleGeneratorPtr BurstParticleGeneratorBase::create(void) 
-{
-    BurstParticleGeneratorPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = BurstParticleGeneratorPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-BurstParticleGeneratorPtr BurstParticleGeneratorBase::createEmpty(void) 
-{ 
-    BurstParticleGeneratorPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 BurstParticleGeneratorBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the BurstParticleGenerator::_sfBurstAmount field.
-inline
-SFUInt32 *BurstParticleGeneratorBase::getSFBurstAmount(void)
-{
-    return &_sfBurstAmount;
-}
-
-
 //! Get the value of the BurstParticleGenerator::_sfBurstAmount field.
+
 inline
-UInt32 &BurstParticleGeneratorBase::getBurstAmount(void)
+UInt32 &BurstParticleGeneratorBase::editBurstAmount(void)
 {
+    editSField(BurstAmountFieldMask);
+
     return _sfBurstAmount.getValue();
 }
 
 //! Get the value of the BurstParticleGenerator::_sfBurstAmount field.
 inline
-const UInt32 &BurstParticleGeneratorBase::getBurstAmount(void) const
+      UInt32  BurstParticleGeneratorBase::getBurstAmount(void) const
 {
     return _sfBurstAmount.getValue();
 }
 
 //! Set the value of the BurstParticleGenerator::_sfBurstAmount field.
 inline
-void BurstParticleGeneratorBase::setBurstAmount(const UInt32 &value)
+void BurstParticleGeneratorBase::setBurstAmount(const UInt32 value)
 {
+    editSField(BurstAmountFieldMask);
+
     _sfBurstAmount.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void BurstParticleGeneratorBase::execSync (      BurstParticleGeneratorBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGBURSTPARTICLEGENERATORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (BurstAmountFieldMask & whichField))
+        _sfBurstAmount.syncWith(pFrom->_sfBurstAmount);
+}
+#endif
+
+
+inline
+const Char8 *BurstParticleGeneratorBase::getClassname(void)
+{
+    return "BurstParticleGenerator";
+}
+
+
+OSG_GEN_CONTAINERPTR(BurstParticleGenerator);
+
+OSG_END_NAMESPACE
 

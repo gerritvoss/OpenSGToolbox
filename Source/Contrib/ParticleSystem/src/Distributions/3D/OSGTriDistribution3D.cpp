@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Dynamics                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,23 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGTriDistribution3D.h"
-#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
+#include "OSGRandomPoolManager.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::TriDistribution3D
-An TriDistribution3D. 	
-*/
+// Documentation for this class is emitted in the
+// OSGTriDistribution3DBase.cpp file.
+// To modify it, please change the .fcd file (OSGTriDistribution3D.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -66,8 +63,13 @@ An TriDistribution3D.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void TriDistribution3D::initMethod (void)
+void TriDistribution3D::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -98,15 +100,15 @@ Vec3f TriDistribution3D::generate(void) const
             Real32 PickEdge(RandomPoolManager::getRandomReal32(0.0,1.0));
             if(Rand < Side1Length/TotalLength)
             {
-                Result = getPoint1() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side1;
+                Result = getPoint1().subZero() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side1;
             }
             else if(Rand < (Side1Length+Side2Length)/TotalLength)
             {
-                Result = getPoint2() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side2;
+                Result = getPoint2().subZero() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side2;
             }
             else
             {
-                Result = getPoint3() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side3;
+                Result = getPoint3().subZero() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side3;
             }
             break;
         }
@@ -122,7 +124,7 @@ Vec3f TriDistribution3D::generate(void) const
                 t = 1.0f - t;
             }
 
-            Result = getPoint1()
+            Result = getPoint1().subZero()
                    + s*(getPoint2() - getPoint1())
                    + t*(getPoint3() - getPoint1());
             break;
@@ -131,6 +133,7 @@ Vec3f TriDistribution3D::generate(void) const
 
     return Result;
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -153,16 +156,17 @@ TriDistribution3D::~TriDistribution3D(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void TriDistribution3D::changed(BitVector whichField, UInt32 origin)
+void TriDistribution3D::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void TriDistribution3D::dump(      UInt32    , 
+void TriDistribution3D::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump TriDistribution3D NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

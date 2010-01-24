@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,211 +55,97 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &ParticleGeometryCollisionEventBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ParticleGeometryCollisionEventBase::getClassTypeId(void) 
+OSG::UInt32 ParticleGeometryCollisionEventBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-ParticleGeometryCollisionEventPtr ParticleGeometryCollisionEventBase::create(void) 
-{
-    ParticleGeometryCollisionEventPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = ParticleGeometryCollisionEventPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-ParticleGeometryCollisionEventPtr ParticleGeometryCollisionEventBase::createEmpty(void) 
-{ 
-    ParticleGeometryCollisionEventPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 ParticleGeometryCollisionEventBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ParticleGeometryCollisionEvent::_sfHitT field.
-inline
-const SFReal32 *ParticleGeometryCollisionEventBase::getSFHitT(void) const
-{
-    return &_sfHitT;
-}
-
-//! Get the ParticleGeometryCollisionEvent::_sfHitT field.
-inline
-SFReal32 *ParticleGeometryCollisionEventBase::editSFHitT(void)
-{
-    return &_sfHitT;
-}
-
-//! Get the ParticleGeometryCollisionEvent::_sfHitNode field.
-inline
-const SFNodePtr *ParticleGeometryCollisionEventBase::getSFHitNode(void) const
-{
-    return &_sfHitNode;
-}
-
-//! Get the ParticleGeometryCollisionEvent::_sfHitNode field.
-inline
-SFNodePtr *ParticleGeometryCollisionEventBase::editSFHitNode(void)
-{
-    return &_sfHitNode;
-}
-
-//! Get the ParticleGeometryCollisionEvent::_sfHitPolygonIndex field.
-inline
-const SFInt32 *ParticleGeometryCollisionEventBase::getSFHitPolygonIndex(void) const
-{
-    return &_sfHitPolygonIndex;
-}
-
-//! Get the ParticleGeometryCollisionEvent::_sfHitPolygonIndex field.
-inline
-SFInt32 *ParticleGeometryCollisionEventBase::editSFHitPolygonIndex(void)
-{
-    return &_sfHitPolygonIndex;
-}
-
-//! Get the ParticleGeometryCollisionEvent::_sfHitNormal field.
-inline
-const SFVec3f *ParticleGeometryCollisionEventBase::getSFHitNormal(void) const
-{
-    return &_sfHitNormal;
-}
-
-//! Get the ParticleGeometryCollisionEvent::_sfHitNormal field.
-inline
-SFVec3f *ParticleGeometryCollisionEventBase::editSFHitNormal(void)
-{
-    return &_sfHitNormal;
-}
-
-//! Get the ParticleGeometryCollisionEvent::_sfHitPoint field.
-inline
-const SFPnt3f *ParticleGeometryCollisionEventBase::getSFHitPoint(void) const
-{
-    return &_sfHitPoint;
-}
-
-//! Get the ParticleGeometryCollisionEvent::_sfHitPoint field.
-inline
-SFPnt3f *ParticleGeometryCollisionEventBase::editSFHitPoint(void)
-{
-    return &_sfHitPoint;
-}
-
-//! Get the ParticleGeometryCollisionEvent::_sfSystem field.
-inline
-const SFParticleSystemPtr *ParticleGeometryCollisionEventBase::getSFSystem(void) const
-{
-    return &_sfSystem;
-}
-
-//! Get the ParticleGeometryCollisionEvent::_sfSystem field.
-inline
-SFParticleSystemPtr *ParticleGeometryCollisionEventBase::editSFSystem(void)
-{
-    return &_sfSystem;
-}
-
-//! Get the ParticleGeometryCollisionEvent::_sfParticleIndex field.
-inline
-const SFUInt32 *ParticleGeometryCollisionEventBase::getSFParticleIndex(void) const
-{
-    return &_sfParticleIndex;
-}
-
-//! Get the ParticleGeometryCollisionEvent::_sfParticleIndex field.
-inline
-SFUInt32 *ParticleGeometryCollisionEventBase::editSFParticleIndex(void)
-{
-    return &_sfParticleIndex;
-}
-
-
 //! Get the value of the ParticleGeometryCollisionEvent::_sfHitT field.
+
 inline
 Real32 &ParticleGeometryCollisionEventBase::editHitT(void)
 {
+    editSField(HitTFieldMask);
+
     return _sfHitT.getValue();
 }
 
 //! Get the value of the ParticleGeometryCollisionEvent::_sfHitT field.
 inline
-const Real32 &ParticleGeometryCollisionEventBase::getHitT(void) const
+      Real32  ParticleGeometryCollisionEventBase::getHitT(void) const
 {
     return _sfHitT.getValue();
 }
 
 //! Set the value of the ParticleGeometryCollisionEvent::_sfHitT field.
 inline
-void ParticleGeometryCollisionEventBase::setHitT(const Real32 &value)
+void ParticleGeometryCollisionEventBase::setHitT(const Real32 value)
 {
+    editSField(HitTFieldMask);
+
     _sfHitT.setValue(value);
 }
 
 //! Get the value of the ParticleGeometryCollisionEvent::_sfHitNode field.
 inline
-NodePtr &ParticleGeometryCollisionEventBase::editHitNode(void)
-{
-    return _sfHitNode.getValue();
-}
-
-//! Get the value of the ParticleGeometryCollisionEvent::_sfHitNode field.
-inline
-const NodePtr &ParticleGeometryCollisionEventBase::getHitNode(void) const
+Node * ParticleGeometryCollisionEventBase::getHitNode(void) const
 {
     return _sfHitNode.getValue();
 }
 
 //! Set the value of the ParticleGeometryCollisionEvent::_sfHitNode field.
 inline
-void ParticleGeometryCollisionEventBase::setHitNode(const NodePtr &value)
+void ParticleGeometryCollisionEventBase::setHitNode(Node * const value)
 {
+    editSField(HitNodeFieldMask);
+
     _sfHitNode.setValue(value);
 }
-
 //! Get the value of the ParticleGeometryCollisionEvent::_sfHitPolygonIndex field.
+
 inline
 Int32 &ParticleGeometryCollisionEventBase::editHitPolygonIndex(void)
 {
+    editSField(HitPolygonIndexFieldMask);
+
     return _sfHitPolygonIndex.getValue();
 }
 
 //! Get the value of the ParticleGeometryCollisionEvent::_sfHitPolygonIndex field.
 inline
-const Int32 &ParticleGeometryCollisionEventBase::getHitPolygonIndex(void) const
+      Int32  ParticleGeometryCollisionEventBase::getHitPolygonIndex(void) const
 {
     return _sfHitPolygonIndex.getValue();
 }
 
 //! Set the value of the ParticleGeometryCollisionEvent::_sfHitPolygonIndex field.
 inline
-void ParticleGeometryCollisionEventBase::setHitPolygonIndex(const Int32 &value)
+void ParticleGeometryCollisionEventBase::setHitPolygonIndex(const Int32 value)
 {
+    editSField(HitPolygonIndexFieldMask);
+
     _sfHitPolygonIndex.setValue(value);
 }
-
 //! Get the value of the ParticleGeometryCollisionEvent::_sfHitNormal field.
+
 inline
 Vec3f &ParticleGeometryCollisionEventBase::editHitNormal(void)
 {
+    editSField(HitNormalFieldMask);
+
     return _sfHitNormal.getValue();
 }
 
@@ -276,13 +160,17 @@ const Vec3f &ParticleGeometryCollisionEventBase::getHitNormal(void) const
 inline
 void ParticleGeometryCollisionEventBase::setHitNormal(const Vec3f &value)
 {
+    editSField(HitNormalFieldMask);
+
     _sfHitNormal.setValue(value);
 }
-
 //! Get the value of the ParticleGeometryCollisionEvent::_sfHitPoint field.
+
 inline
 Pnt3f &ParticleGeometryCollisionEventBase::editHitPoint(void)
 {
+    editSField(HitPointFieldMask);
+
     return _sfHitPoint.getValue();
 }
 
@@ -297,50 +185,95 @@ const Pnt3f &ParticleGeometryCollisionEventBase::getHitPoint(void) const
 inline
 void ParticleGeometryCollisionEventBase::setHitPoint(const Pnt3f &value)
 {
+    editSField(HitPointFieldMask);
+
     _sfHitPoint.setValue(value);
 }
 
 //! Get the value of the ParticleGeometryCollisionEvent::_sfSystem field.
 inline
-ParticleSystemPtr &ParticleGeometryCollisionEventBase::editSystem(void)
-{
-    return _sfSystem.getValue();
-}
-
-//! Get the value of the ParticleGeometryCollisionEvent::_sfSystem field.
-inline
-const ParticleSystemPtr &ParticleGeometryCollisionEventBase::getSystem(void) const
+ParticleSystem * ParticleGeometryCollisionEventBase::getSystem(void) const
 {
     return _sfSystem.getValue();
 }
 
 //! Set the value of the ParticleGeometryCollisionEvent::_sfSystem field.
 inline
-void ParticleGeometryCollisionEventBase::setSystem(const ParticleSystemPtr &value)
+void ParticleGeometryCollisionEventBase::setSystem(ParticleSystem * const value)
 {
+    editSField(SystemFieldMask);
+
     _sfSystem.setValue(value);
 }
-
 //! Get the value of the ParticleGeometryCollisionEvent::_sfParticleIndex field.
+
 inline
 UInt32 &ParticleGeometryCollisionEventBase::editParticleIndex(void)
 {
+    editSField(ParticleIndexFieldMask);
+
     return _sfParticleIndex.getValue();
 }
 
 //! Get the value of the ParticleGeometryCollisionEvent::_sfParticleIndex field.
 inline
-const UInt32 &ParticleGeometryCollisionEventBase::getParticleIndex(void) const
+      UInt32  ParticleGeometryCollisionEventBase::getParticleIndex(void) const
 {
     return _sfParticleIndex.getValue();
 }
 
 //! Set the value of the ParticleGeometryCollisionEvent::_sfParticleIndex field.
 inline
-void ParticleGeometryCollisionEventBase::setParticleIndex(const UInt32 &value)
+void ParticleGeometryCollisionEventBase::setParticleIndex(const UInt32 value)
 {
+    editSField(ParticleIndexFieldMask);
+
     _sfParticleIndex.setValue(value);
 }
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void ParticleGeometryCollisionEventBase::execSync (      ParticleGeometryCollisionEventBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (HitTFieldMask & whichField))
+        _sfHitT.syncWith(pFrom->_sfHitT);
+
+    if(FieldBits::NoField != (HitNodeFieldMask & whichField))
+        _sfHitNode.syncWith(pFrom->_sfHitNode);
+
+    if(FieldBits::NoField != (HitPolygonIndexFieldMask & whichField))
+        _sfHitPolygonIndex.syncWith(pFrom->_sfHitPolygonIndex);
+
+    if(FieldBits::NoField != (HitNormalFieldMask & whichField))
+        _sfHitNormal.syncWith(pFrom->_sfHitNormal);
+
+    if(FieldBits::NoField != (HitPointFieldMask & whichField))
+        _sfHitPoint.syncWith(pFrom->_sfHitPoint);
+
+    if(FieldBits::NoField != (SystemFieldMask & whichField))
+        _sfSystem.syncWith(pFrom->_sfSystem);
+
+    if(FieldBits::NoField != (ParticleIndexFieldMask & whichField))
+        _sfParticleIndex.syncWith(pFrom->_sfParticleIndex);
+}
+#endif
+
+
+inline
+const Char8 *ParticleGeometryCollisionEventBase::getClassname(void)
+{
+    return "ParticleGeometryCollisionEvent";
+}
+
+
+OSG_GEN_CONTAINERPTR(ParticleGeometryCollisionEvent);
+
 OSG_END_NAMESPACE
+

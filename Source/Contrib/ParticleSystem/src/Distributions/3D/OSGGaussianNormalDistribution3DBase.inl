@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,106 +55,31 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &GaussianNormalDistribution3DBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 GaussianNormalDistribution3DBase::getClassTypeId(void) 
+OSG::UInt32 GaussianNormalDistribution3DBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-GaussianNormalDistribution3DPtr GaussianNormalDistribution3DBase::create(void) 
-{
-    GaussianNormalDistribution3DPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = GaussianNormalDistribution3DPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-GaussianNormalDistribution3DPtr GaussianNormalDistribution3DBase::createEmpty(void) 
-{ 
-    GaussianNormalDistribution3DPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 GaussianNormalDistribution3DBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the GaussianNormalDistribution3D::_sfMean field.
-inline
-const SFPnt3f *GaussianNormalDistribution3DBase::getSFMean(void) const
-{
-    return &_sfMean;
-}
-
-//! Get the GaussianNormalDistribution3D::_sfMean field.
-inline
-SFPnt3f *GaussianNormalDistribution3DBase::editSFMean(void)
-{
-    return &_sfMean;
-}
-
-//! Get the GaussianNormalDistribution3D::_sfStandardDeviationX field.
-inline
-const SFReal32 *GaussianNormalDistribution3DBase::getSFStandardDeviationX(void) const
-{
-    return &_sfStandardDeviationX;
-}
-
-//! Get the GaussianNormalDistribution3D::_sfStandardDeviationX field.
-inline
-SFReal32 *GaussianNormalDistribution3DBase::editSFStandardDeviationX(void)
-{
-    return &_sfStandardDeviationX;
-}
-
-//! Get the GaussianNormalDistribution3D::_sfStandardDeviationY field.
-inline
-const SFReal32 *GaussianNormalDistribution3DBase::getSFStandardDeviationY(void) const
-{
-    return &_sfStandardDeviationY;
-}
-
-//! Get the GaussianNormalDistribution3D::_sfStandardDeviationY field.
-inline
-SFReal32 *GaussianNormalDistribution3DBase::editSFStandardDeviationY(void)
-{
-    return &_sfStandardDeviationY;
-}
-
-//! Get the GaussianNormalDistribution3D::_sfStandardDeviationZ field.
-inline
-const SFReal32 *GaussianNormalDistribution3DBase::getSFStandardDeviationZ(void) const
-{
-    return &_sfStandardDeviationZ;
-}
-
-//! Get the GaussianNormalDistribution3D::_sfStandardDeviationZ field.
-inline
-SFReal32 *GaussianNormalDistribution3DBase::editSFStandardDeviationZ(void)
-{
-    return &_sfStandardDeviationZ;
-}
-
-
 //! Get the value of the GaussianNormalDistribution3D::_sfMean field.
+
 inline
 Pnt3f &GaussianNormalDistribution3DBase::editMean(void)
 {
+    editSField(MeanFieldMask);
+
     return _sfMean.getValue();
 }
 
@@ -171,71 +94,120 @@ const Pnt3f &GaussianNormalDistribution3DBase::getMean(void) const
 inline
 void GaussianNormalDistribution3DBase::setMean(const Pnt3f &value)
 {
+    editSField(MeanFieldMask);
+
     _sfMean.setValue(value);
 }
-
 //! Get the value of the GaussianNormalDistribution3D::_sfStandardDeviationX field.
+
 inline
 Real32 &GaussianNormalDistribution3DBase::editStandardDeviationX(void)
 {
+    editSField(StandardDeviationXFieldMask);
+
     return _sfStandardDeviationX.getValue();
 }
 
 //! Get the value of the GaussianNormalDistribution3D::_sfStandardDeviationX field.
 inline
-const Real32 &GaussianNormalDistribution3DBase::getStandardDeviationX(void) const
+      Real32  GaussianNormalDistribution3DBase::getStandardDeviationX(void) const
 {
     return _sfStandardDeviationX.getValue();
 }
 
 //! Set the value of the GaussianNormalDistribution3D::_sfStandardDeviationX field.
 inline
-void GaussianNormalDistribution3DBase::setStandardDeviationX(const Real32 &value)
+void GaussianNormalDistribution3DBase::setStandardDeviationX(const Real32 value)
 {
+    editSField(StandardDeviationXFieldMask);
+
     _sfStandardDeviationX.setValue(value);
 }
-
 //! Get the value of the GaussianNormalDistribution3D::_sfStandardDeviationY field.
+
 inline
 Real32 &GaussianNormalDistribution3DBase::editStandardDeviationY(void)
 {
+    editSField(StandardDeviationYFieldMask);
+
     return _sfStandardDeviationY.getValue();
 }
 
 //! Get the value of the GaussianNormalDistribution3D::_sfStandardDeviationY field.
 inline
-const Real32 &GaussianNormalDistribution3DBase::getStandardDeviationY(void) const
+      Real32  GaussianNormalDistribution3DBase::getStandardDeviationY(void) const
 {
     return _sfStandardDeviationY.getValue();
 }
 
 //! Set the value of the GaussianNormalDistribution3D::_sfStandardDeviationY field.
 inline
-void GaussianNormalDistribution3DBase::setStandardDeviationY(const Real32 &value)
+void GaussianNormalDistribution3DBase::setStandardDeviationY(const Real32 value)
 {
+    editSField(StandardDeviationYFieldMask);
+
     _sfStandardDeviationY.setValue(value);
 }
-
 //! Get the value of the GaussianNormalDistribution3D::_sfStandardDeviationZ field.
+
 inline
 Real32 &GaussianNormalDistribution3DBase::editStandardDeviationZ(void)
 {
+    editSField(StandardDeviationZFieldMask);
+
     return _sfStandardDeviationZ.getValue();
 }
 
 //! Get the value of the GaussianNormalDistribution3D::_sfStandardDeviationZ field.
 inline
-const Real32 &GaussianNormalDistribution3DBase::getStandardDeviationZ(void) const
+      Real32  GaussianNormalDistribution3DBase::getStandardDeviationZ(void) const
 {
     return _sfStandardDeviationZ.getValue();
 }
 
 //! Set the value of the GaussianNormalDistribution3D::_sfStandardDeviationZ field.
 inline
-void GaussianNormalDistribution3DBase::setStandardDeviationZ(const Real32 &value)
+void GaussianNormalDistribution3DBase::setStandardDeviationZ(const Real32 value)
 {
+    editSField(StandardDeviationZFieldMask);
+
     _sfStandardDeviationZ.setValue(value);
 }
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void GaussianNormalDistribution3DBase::execSync (      GaussianNormalDistribution3DBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (MeanFieldMask & whichField))
+        _sfMean.syncWith(pFrom->_sfMean);
+
+    if(FieldBits::NoField != (StandardDeviationXFieldMask & whichField))
+        _sfStandardDeviationX.syncWith(pFrom->_sfStandardDeviationX);
+
+    if(FieldBits::NoField != (StandardDeviationYFieldMask & whichField))
+        _sfStandardDeviationY.syncWith(pFrom->_sfStandardDeviationY);
+
+    if(FieldBits::NoField != (StandardDeviationZFieldMask & whichField))
+        _sfStandardDeviationZ.syncWith(pFrom->_sfStandardDeviationZ);
+}
+#endif
+
+
+inline
+const Char8 *GaussianNormalDistribution3DBase::getClassname(void)
+{
+    return "GaussianNormalDistribution3D";
+}
+
+
+OSG_GEN_CONTAINERPTR(GaussianNormalDistribution3D);
+
 OSG_END_NAMESPACE
+

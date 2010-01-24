@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGParticleAffectorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class NewtonParticleAffector;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! NewtonParticleAffectorPtr
+OSG_GEN_CONTAINERPTR(NewtonParticleAffector);
 
-typedef FCPtr<ParticleAffectorPtr, NewtonParticleAffector> NewtonParticleAffectorPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpParticleSystemFieldTraits
+/*! \ingroup GrpContribParticleSystemFieldTraits
+    \ingroup GrpLibOSGContribParticleSystem
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<NewtonParticleAffectorPtr> : 
-    public FieldTraitsRecurseMapper<NewtonParticleAffectorPtr, true>
+struct FieldTraits<NewtonParticleAffector *> :
+    public FieldTraitsFCPtrBase<NewtonParticleAffector *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFNewtonParticleAffectorPtr"; }
-    static const char *getMName(void) { return "MFNewtonParticleAffectorPtr"; }
+    typedef FieldTraits<NewtonParticleAffector *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFNewtonParticleAffectorPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFNewtonParticleAffectorPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<NewtonParticleAffectorPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<NewtonParticleAffector *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecNewtonParticleAffectorPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<NewtonParticleAffector *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecNewtonParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<NewtonParticleAffector *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakNewtonParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<NewtonParticleAffector *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdNewtonParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<NewtonParticleAffector *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecNewtonParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<NewtonParticleAffector *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecNewtonParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<NewtonParticleAffector *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakNewtonParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<NewtonParticleAffector *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdNewtonParticleAffectorPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<NewtonParticleAffector *,
+                      RecordedRefCountPolicy  > SFRecNewtonParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<NewtonParticleAffector *,
+                      UnrecordedRefCountPolicy> SFUnrecNewtonParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<NewtonParticleAffector *,
+                      WeakRefCountPolicy      > SFWeakNewtonParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<NewtonParticleAffector *,
+                      NoRefCountPolicy        > SFUncountedNewtonParticleAffectorPtr;
 
-typedef SField<NewtonParticleAffectorPtr> SFNewtonParticleAffectorPtr;
-#endif
 
-#ifndef OSG_COMPILENEWTONPARTICLEAFFECTORINST
-OSG_DLLEXPORT_DECL1(SField, NewtonParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<NewtonParticleAffector *,
+                      RecordedRefCountPolicy  > MFRecNewtonParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<NewtonParticleAffector *,
+                      UnrecordedRefCountPolicy> MFUnrecNewtonParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<NewtonParticleAffector *,
+                      WeakRefCountPolicy      > MFWeakNewtonParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<NewtonParticleAffector *,
+                      NoRefCountPolicy        > MFUncountedNewtonParticleAffectorPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldMulti */
 
-typedef MField<NewtonParticleAffectorPtr> MFNewtonParticleAffectorPtr;
-#endif
 
-#ifndef OSG_COMPILENEWTONPARTICLEAFFECTORINST
-OSG_DLLEXPORT_DECL1(MField, NewtonParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFRecNewtonParticleAffectorPtr : 
+    public PointerSField<NewtonParticleAffector *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUnrecNewtonParticleAffectorPtr : 
+    public PointerSField<NewtonParticleAffector *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFWeakNewtonParticleAffectorPtr :
+    public PointerSField<NewtonParticleAffector *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUncountedNewtonParticleAffectorPtr :
+    public PointerSField<NewtonParticleAffector *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFRecNewtonParticleAffectorPtr :
+    public PointerMField<NewtonParticleAffector *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUnrecNewtonParticleAffectorPtr :
+    public PointerMField<NewtonParticleAffector *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFWeakNewtonParticleAffectorPtr :
+    public PointerMField<NewtonParticleAffector *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUncountedNewtonParticleAffectorPtr :
+    public PointerMField<NewtonParticleAffector *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGNEWTONPARTICLEAFFECTORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGNEWTONPARTICLEAFFECTORFIELDS_H_ */

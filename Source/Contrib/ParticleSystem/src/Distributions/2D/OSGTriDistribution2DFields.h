@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,75 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGDistribution2DFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class TriDistribution2D;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! TriDistribution2DPtr
+OSG_GEN_CONTAINERPTR(TriDistribution2D);
 
-typedef FCPtr<Distribution2DPtr, TriDistribution2D> TriDistribution2DPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpParticleSystemFieldTraits
+/*! \ingroup GrpContribParticleSystemFieldTraits
+    \ingroup GrpLibOSGContribParticleSystem
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<TriDistribution2DPtr> : 
-    public FieldTraitsRecurseMapper<TriDistribution2DPtr, true>
+struct FieldTraits<TriDistribution2D *> :
+    public FieldTraitsFCPtrBase<TriDistribution2D *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFTriDistribution2DPtr"; }
-    static const char *getMName(void) { return "MFTriDistribution2DPtr"; }
+    typedef FieldTraits<TriDistribution2D *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFTriDistribution2DPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFTriDistribution2DPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<TriDistribution2DPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<TriDistribution2D *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecTriDistribution2DPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<TriDistribution2D *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecTriDistribution2DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TriDistribution2D *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakTriDistribution2DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TriDistribution2D *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdTriDistribution2DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TriDistribution2D *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecTriDistribution2DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TriDistribution2D *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecTriDistribution2DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TriDistribution2D *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakTriDistribution2DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TriDistribution2D *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdTriDistribution2DPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<TriDistribution2D *,
+                      RecordedRefCountPolicy  > SFRecTriDistribution2DPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<TriDistribution2D *,
+                      UnrecordedRefCountPolicy> SFUnrecTriDistribution2DPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<TriDistribution2D *,
+                      WeakRefCountPolicy      > SFWeakTriDistribution2DPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<TriDistribution2D *,
+                      NoRefCountPolicy        > SFUncountedTriDistribution2DPtr;
 
-typedef SField<TriDistribution2DPtr> SFTriDistribution2DPtr;
-#endif
 
-#ifndef OSG_COMPILETRIDISTRIBUTION2DINST
-OSG_DLLEXPORT_DECL1(SField, TriDistribution2DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<TriDistribution2D *,
+                      RecordedRefCountPolicy  > MFRecTriDistribution2DPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<TriDistribution2D *,
+                      UnrecordedRefCountPolicy> MFUnrecTriDistribution2DPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<TriDistribution2D *,
+                      WeakRefCountPolicy      > MFWeakTriDistribution2DPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<TriDistribution2D *,
+                      NoRefCountPolicy        > MFUncountedTriDistribution2DPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldMulti */
 
-typedef MField<TriDistribution2DPtr> MFTriDistribution2DPtr;
-#endif
 
-#ifndef OSG_COMPILETRIDISTRIBUTION2DINST
-OSG_DLLEXPORT_DECL1(MField, TriDistribution2DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFRecTriDistribution2DPtr : 
+    public PointerSField<TriDistribution2D *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUnrecTriDistribution2DPtr : 
+    public PointerSField<TriDistribution2D *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFWeakTriDistribution2DPtr :
+    public PointerSField<TriDistribution2D *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUncountedTriDistribution2DPtr :
+    public PointerSField<TriDistribution2D *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFRecTriDistribution2DPtr :
+    public PointerMField<TriDistribution2D *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUnrecTriDistribution2DPtr :
+    public PointerMField<TriDistribution2D *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFWeakTriDistribution2DPtr :
+    public PointerMField<TriDistribution2D *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUncountedTriDistribution2DPtr :
+    public PointerMField<TriDistribution2D *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

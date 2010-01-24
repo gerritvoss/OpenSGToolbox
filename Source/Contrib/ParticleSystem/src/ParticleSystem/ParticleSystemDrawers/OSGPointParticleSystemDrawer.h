@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,44 +42,51 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
-
 #include "OSGPointParticleSystemDrawerBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief PointParticleSystemDrawer class. See \ref 
-           PageParticleSystemPointParticleSystemDrawer for a description.
+/*! \brief PointParticleSystemDrawer class. See \ref
+           PageContribParticleSystemPointParticleSystemDrawer for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING PointParticleSystemDrawer : public PointParticleSystemDrawerBase
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING PointParticleSystemDrawer : public PointParticleSystemDrawerBase
 {
-  private:
-
-    typedef PointParticleSystemDrawerBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef PointParticleSystemDrawerBase Inherited;
+    typedef PointParticleSystemDrawer     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual Action::ResultE draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort);
+
+	virtual Action::ResultE draw(DrawEnv *pEnv, ParticleSystemUnrecPtr System, const MFUInt32& Sort);
+
+    virtual void fill(DrawableStatsAttachment *pStat,
+                      ParticleSystemUnrecPtr System,
+                      const MFUInt32& Sort);
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in PointParticleSystemDrawerBase.
@@ -96,20 +103,24 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING PointParticleSystemDrawer : public PointP
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~PointParticleSystemDrawer(void); 
+    virtual ~PointParticleSystemDrawer(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class PointParticleSystemDrawerBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const PointParticleSystemDrawer &source);
 };
 
@@ -119,7 +130,5 @@ OSG_END_NAMESPACE
 
 #include "OSGPointParticleSystemDrawerBase.inl"
 #include "OSGPointParticleSystemDrawer.inl"
-
-#define OSGPOINTPARTICLESYSTEMDRAWER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGPOINTPARTICLESYSTEMDRAWER_H_ */

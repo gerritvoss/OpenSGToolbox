@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,50 +55,60 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &MultiParticleSystemAffectorBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 MultiParticleSystemAffectorBase::getClassTypeId(void) 
+OSG::UInt32 MultiParticleSystemAffectorBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-
-/*------------------------------ get -----------------------------------*/
-
-//! Get the MultiParticleSystemAffector::_mfSystems field.
-inline
-MFParticleSystemPtr *MultiParticleSystemAffectorBase::getMFSystems(void)
-{
-    return &_mfSystems;
+    return _type.getId();
 }
 
+inline
+OSG::UInt16 MultiParticleSystemAffectorBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
+}
+
+/*------------------------------ get -----------------------------------*/
 
 
 //! Get the value of the \a index element the MultiParticleSystemAffector::_mfSystems field.
 inline
-ParticleSystemPtr &MultiParticleSystemAffectorBase::getSystems(const UInt32 index)
+ParticleSystem * MultiParticleSystemAffectorBase::getSystems(const UInt32 index) const
 {
     return _mfSystems[index];
 }
 
-//! Get the MultiParticleSystemAffector::_mfSystems field.
+
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-MFParticleSystemPtr &MultiParticleSystemAffectorBase::getSystems(void)
+void MultiParticleSystemAffectorBase::execSync (      MultiParticleSystemAffectorBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfSystems;
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (SystemsFieldMask & whichField))
+        _mfSystems.syncWith(pFrom->_mfSystems,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+}
+#endif
+
+
+inline
+const Char8 *MultiParticleSystemAffectorBase::getClassname(void)
+{
+    return "MultiParticleSystemAffector";
 }
 
-//! Get the MultiParticleSystemAffector::_mfSystems field.
-inline
-const MFParticleSystemPtr &MultiParticleSystemAffectorBase::getSystems(void) const
-{
-    return _mfSystems;
-}
+
+OSG_GEN_CONTAINERPTR(MultiParticleSystemAffector);
 
 OSG_END_NAMESPACE
-
-#define OSGMULTIPARTICLESYSTEMAFFECTORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

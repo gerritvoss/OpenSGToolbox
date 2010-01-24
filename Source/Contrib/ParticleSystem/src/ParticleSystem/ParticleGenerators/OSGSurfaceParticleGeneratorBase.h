@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,85 +58,103 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGParticleGenerator.h" // Parent
 
-#include "Distributions/3D/OSGGeoSurfaceDistribution3DFields.h" // PositionVelocityDistribution type
-#include "Distributions/3D/OSGDistribution3DFields.h" // NormalDistribution type
-#include "Distributions/3D/OSGDistribution3DFields.h" // ColorDistribution type
-#include "Distributions/1D/OSGDistribution1DFields.h" // TransparencyDistribution type
-#include "Distributions/3D/OSGDistribution3DFields.h" // SizeDistribution type
-#include "Distributions/1D/OSGDistribution1DFields.h" // LifespanDistribution type
-#include "Distributions/1D/OSGDistribution1DFields.h" // AgeDistribution type
-#include "Distributions/1D/OSGDistribution1DFields.h" // SpeedDistribution type
-#include "Distributions/3D/OSGDistribution3DFields.h" // AccelerationDistribution type
+#include "OSGGeoSurfaceDistribution3DFields.h" // PositionVelocityDistribution type
+#include "OSGDistribution3DFields.h"    // NormalDistribution type
+#include "OSGDistribution1DFields.h"    // TransparencyDistribution type
 
 #include "OSGSurfaceParticleGeneratorFields.h"
+
+
 OSG_BEGIN_NAMESPACE
 
 class SurfaceParticleGenerator;
-class BinaryDataHandler;
 
 //! \brief SurfaceParticleGenerator Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING SurfaceParticleGeneratorBase : public ParticleGenerator
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING SurfaceParticleGeneratorBase : public ParticleGenerator
 {
-  private:
-
-    typedef ParticleGenerator    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef SurfaceParticleGeneratorPtr  Ptr;
+    typedef ParticleGenerator Inherited;
+    typedef ParticleGenerator ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(SurfaceParticleGenerator);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
         PositionVelocityDistributionFieldId = Inherited::NextFieldId,
-        NormalDistributionFieldId           = PositionVelocityDistributionFieldId + 1,
-        ColorDistributionFieldId            = NormalDistributionFieldId           + 1,
-        TransparencyDistributionFieldId     = ColorDistributionFieldId            + 1,
-        SizeDistributionFieldId             = TransparencyDistributionFieldId     + 1,
-        LifespanDistributionFieldId         = SizeDistributionFieldId             + 1,
-        AgeDistributionFieldId              = LifespanDistributionFieldId         + 1,
-        SpeedDistributionFieldId            = AgeDistributionFieldId              + 1,
-        AccelerationDistributionFieldId     = SpeedDistributionFieldId            + 1,
-        NextFieldId                         = AccelerationDistributionFieldId     + 1
+        NormalDistributionFieldId = PositionVelocityDistributionFieldId + 1,
+        ColorDistributionFieldId = NormalDistributionFieldId + 1,
+        TransparencyDistributionFieldId = ColorDistributionFieldId + 1,
+        SizeDistributionFieldId = TransparencyDistributionFieldId + 1,
+        LifespanDistributionFieldId = SizeDistributionFieldId + 1,
+        AgeDistributionFieldId = LifespanDistributionFieldId + 1,
+        SpeedDistributionFieldId = AgeDistributionFieldId + 1,
+        AccelerationDistributionFieldId = SpeedDistributionFieldId + 1,
+        NextFieldId = AccelerationDistributionFieldId + 1
     };
 
-    static const OSG::BitVector PositionVelocityDistributionFieldMask;
-    static const OSG::BitVector NormalDistributionFieldMask;
-    static const OSG::BitVector ColorDistributionFieldMask;
-    static const OSG::BitVector TransparencyDistributionFieldMask;
-    static const OSG::BitVector SizeDistributionFieldMask;
-    static const OSG::BitVector LifespanDistributionFieldMask;
-    static const OSG::BitVector AgeDistributionFieldMask;
-    static const OSG::BitVector SpeedDistributionFieldMask;
-    static const OSG::BitVector AccelerationDistributionFieldMask;
+    static const OSG::BitVector PositionVelocityDistributionFieldMask =
+        (TypeTraits<BitVector>::One << PositionVelocityDistributionFieldId);
+    static const OSG::BitVector NormalDistributionFieldMask =
+        (TypeTraits<BitVector>::One << NormalDistributionFieldId);
+    static const OSG::BitVector ColorDistributionFieldMask =
+        (TypeTraits<BitVector>::One << ColorDistributionFieldId);
+    static const OSG::BitVector TransparencyDistributionFieldMask =
+        (TypeTraits<BitVector>::One << TransparencyDistributionFieldId);
+    static const OSG::BitVector SizeDistributionFieldMask =
+        (TypeTraits<BitVector>::One << SizeDistributionFieldId);
+    static const OSG::BitVector LifespanDistributionFieldMask =
+        (TypeTraits<BitVector>::One << LifespanDistributionFieldId);
+    static const OSG::BitVector AgeDistributionFieldMask =
+        (TypeTraits<BitVector>::One << AgeDistributionFieldId);
+    static const OSG::BitVector SpeedDistributionFieldMask =
+        (TypeTraits<BitVector>::One << SpeedDistributionFieldId);
+    static const OSG::BitVector AccelerationDistributionFieldMask =
+        (TypeTraits<BitVector>::One << AccelerationDistributionFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecGeoSurfaceDistribution3DPtr SFPositionVelocityDistributionType;
+    typedef SFUnrecDistribution3DPtr SFNormalDistributionType;
+    typedef SFUnrecDistribution3DPtr SFColorDistributionType;
+    typedef SFUnrecDistribution1DPtr SFTransparencyDistributionType;
+    typedef SFUnrecDistribution3DPtr SFSizeDistributionType;
+    typedef SFUnrecDistribution1DPtr SFLifespanDistributionType;
+    typedef SFUnrecDistribution1DPtr SFAgeDistributionType;
+    typedef SFUnrecDistribution1DPtr SFSpeedDistributionType;
+    typedef SFUnrecDistribution3DPtr SFAccelerationDistributionType;
 
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -145,80 +163,67 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING SurfaceParticleGeneratorBase : public Par
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-
-           SFGeoSurfaceDistribution3DPtr *editSFPositionVelocityDistribution(void);
-     const SFGeoSurfaceDistribution3DPtr *getSFPositionVelocityDistribution(void) const;
-
-           SFDistribution3DPtr *editSFNormalDistribution(void);
-     const SFDistribution3DPtr *getSFNormalDistribution(void) const;
-
-           SFDistribution3DPtr *editSFColorDistribution(void);
-     const SFDistribution3DPtr *getSFColorDistribution(void) const;
-
-           SFDistribution1DPtr *editSFTransparencyDistribution(void);
-     const SFDistribution1DPtr *getSFTransparencyDistribution(void) const;
-
-           SFDistribution3DPtr *editSFSizeDistribution(void);
-     const SFDistribution3DPtr *getSFSizeDistribution(void) const;
-
-           SFDistribution1DPtr *editSFLifespanDistribution(void);
-     const SFDistribution1DPtr *getSFLifespanDistribution(void) const;
-
-           SFDistribution1DPtr *editSFAgeDistribution(void);
-     const SFDistribution1DPtr *getSFAgeDistribution(void) const;
-
-           SFDistribution1DPtr *editSFSpeedDistribution(void);
-     const SFDistribution1DPtr *getSFSpeedDistribution(void) const;
-
-           SFDistribution3DPtr *editSFAccelerationDistribution(void);
-     const SFDistribution3DPtr *getSFAccelerationDistribution(void) const;
+            const SFUnrecGeoSurfaceDistribution3DPtr *getSFPositionVelocityDistribution(void) const;
+                  SFUnrecGeoSurfaceDistribution3DPtr *editSFPositionVelocityDistribution(void);
+            const SFUnrecDistribution3DPtr *getSFNormalDistribution(void) const;
+                  SFUnrecDistribution3DPtr *editSFNormalDistribution(void);
+            const SFUnrecDistribution3DPtr *getSFColorDistribution(void) const;
+                  SFUnrecDistribution3DPtr *editSFColorDistribution(void);
+            const SFUnrecDistribution1DPtr *getSFTransparencyDistribution(void) const;
+                  SFUnrecDistribution1DPtr *editSFTransparencyDistribution(void);
+            const SFUnrecDistribution3DPtr *getSFSizeDistribution(void) const;
+                  SFUnrecDistribution3DPtr *editSFSizeDistribution(void);
+            const SFUnrecDistribution1DPtr *getSFLifespanDistribution(void) const;
+                  SFUnrecDistribution1DPtr *editSFLifespanDistribution(void);
+            const SFUnrecDistribution1DPtr *getSFAgeDistribution(void) const;
+                  SFUnrecDistribution1DPtr *editSFAgeDistribution(void);
+            const SFUnrecDistribution1DPtr *getSFSpeedDistribution(void) const;
+                  SFUnrecDistribution1DPtr *editSFSpeedDistribution(void);
+            const SFUnrecDistribution3DPtr *getSFAccelerationDistribution(void) const;
+                  SFUnrecDistribution3DPtr *editSFAccelerationDistribution(void);
 
 
-           GeoSurfaceDistribution3DPtr &editPositionVelocityDistribution(void);
-     const GeoSurfaceDistribution3DPtr &getPositionVelocityDistribution(void) const;
+                  GeoSurfaceDistribution3D * getPositionVelocityDistribution(void) const;
 
-           Distribution3DPtr   &editNormalDistribution(void);
-     const Distribution3DPtr   &getNormalDistribution(void) const;
+                  Distribution3D * getNormalDistribution(void) const;
 
-           Distribution3DPtr   &editColorDistribution(void);
-     const Distribution3DPtr   &getColorDistribution(void) const;
+                  Distribution3D * getColorDistribution(void) const;
 
-           Distribution1DPtr   &editTransparencyDistribution(void);
-     const Distribution1DPtr   &getTransparencyDistribution(void) const;
+                  Distribution1D * getTransparencyDistribution(void) const;
 
-           Distribution3DPtr   &editSizeDistribution(void);
-     const Distribution3DPtr   &getSizeDistribution(void) const;
+                  Distribution3D * getSizeDistribution(void) const;
 
-           Distribution1DPtr   &editLifespanDistribution(void);
-     const Distribution1DPtr   &getLifespanDistribution(void) const;
+                  Distribution1D * getLifespanDistribution(void) const;
 
-           Distribution1DPtr   &editAgeDistribution(void);
-     const Distribution1DPtr   &getAgeDistribution(void) const;
+                  Distribution1D * getAgeDistribution(void) const;
 
-           Distribution1DPtr   &editSpeedDistribution(void);
-     const Distribution1DPtr   &getSpeedDistribution(void) const;
+                  Distribution1D * getSpeedDistribution(void) const;
 
-           Distribution3DPtr   &editAccelerationDistribution(void);
-     const Distribution3DPtr   &getAccelerationDistribution(void) const;
+                  Distribution3D * getAccelerationDistribution(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setPositionVelocityDistribution( const GeoSurfaceDistribution3DPtr &value );
-     void setNormalDistribution( const Distribution3DPtr &value );
-     void setColorDistribution( const Distribution3DPtr &value );
-     void setTransparencyDistribution( const Distribution1DPtr &value );
-     void setSizeDistribution( const Distribution3DPtr &value );
-     void setLifespanDistribution( const Distribution1DPtr &value );
-     void setAgeDistribution( const Distribution1DPtr &value );
-     void setSpeedDistribution( const Distribution1DPtr &value );
-     void setAccelerationDistribution( const Distribution3DPtr &value );
+            void setPositionVelocityDistribution(GeoSurfaceDistribution3D * const value);
+            void setNormalDistribution(Distribution3D * const value);
+            void setColorDistribution(Distribution3D * const value);
+            void setTransparencyDistribution(Distribution1D * const value);
+            void setSizeDistribution(Distribution3D * const value);
+            void setLifespanDistribution(Distribution1D * const value);
+            void setAgeDistribution(Distribution1D * const value);
+            void setSpeedDistribution(Distribution1D * const value);
+            void setAccelerationDistribution(Distribution3D * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -226,46 +231,64 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING SurfaceParticleGeneratorBase : public Par
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  SurfaceParticleGeneratorPtr      create          (void); 
-    static  SurfaceParticleGeneratorPtr      createEmpty     (void); 
+    static  SurfaceParticleGeneratorTransitPtr  create          (void);
+    static  SurfaceParticleGenerator           *createEmpty     (void);
+
+    static  SurfaceParticleGeneratorTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  SurfaceParticleGenerator            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  SurfaceParticleGeneratorTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFGeoSurfaceDistribution3DPtr   _sfPositionVelocityDistribution;
-    SFDistribution3DPtr   _sfNormalDistribution;
-    SFDistribution3DPtr   _sfColorDistribution;
-    SFDistribution1DPtr   _sfTransparencyDistribution;
-    SFDistribution3DPtr   _sfSizeDistribution;
-    SFDistribution1DPtr   _sfLifespanDistribution;
-    SFDistribution1DPtr   _sfAgeDistribution;
-    SFDistribution1DPtr   _sfSpeedDistribution;
-    SFDistribution3DPtr   _sfAccelerationDistribution;
+    SFUnrecGeoSurfaceDistribution3DPtr _sfPositionVelocityDistribution;
+    SFUnrecDistribution3DPtr _sfNormalDistribution;
+    SFUnrecDistribution3DPtr _sfColorDistribution;
+    SFUnrecDistribution1DPtr _sfTransparencyDistribution;
+    SFUnrecDistribution3DPtr _sfSizeDistribution;
+    SFUnrecDistribution1DPtr _sfLifespanDistribution;
+    SFUnrecDistribution1DPtr _sfAgeDistribution;
+    SFUnrecDistribution1DPtr _sfSpeedDistribution;
+    SFUnrecDistribution3DPtr _sfAccelerationDistribution;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -280,66 +303,95 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING SurfaceParticleGeneratorBase : public Par
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SurfaceParticleGeneratorBase(void); 
+    virtual ~SurfaceParticleGeneratorBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const SurfaceParticleGenerator *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandlePositionVelocityDistribution (void) const;
+    EditFieldHandlePtr editHandlePositionVelocityDistribution(void);
+    GetFieldHandlePtr  getHandleNormalDistribution (void) const;
+    EditFieldHandlePtr editHandleNormalDistribution(void);
+    GetFieldHandlePtr  getHandleColorDistribution (void) const;
+    EditFieldHandlePtr editHandleColorDistribution(void);
+    GetFieldHandlePtr  getHandleTransparencyDistribution (void) const;
+    EditFieldHandlePtr editHandleTransparencyDistribution(void);
+    GetFieldHandlePtr  getHandleSizeDistribution (void) const;
+    EditFieldHandlePtr editHandleSizeDistribution(void);
+    GetFieldHandlePtr  getHandleLifespanDistribution (void) const;
+    EditFieldHandlePtr editHandleLifespanDistribution(void);
+    GetFieldHandlePtr  getHandleAgeDistribution (void) const;
+    EditFieldHandlePtr editHandleAgeDistribution(void);
+    GetFieldHandlePtr  getHandleSpeedDistribution (void) const;
+    EditFieldHandlePtr editHandleSpeedDistribution(void);
+    GetFieldHandlePtr  getHandleAccelerationDistribution (void) const;
+    EditFieldHandlePtr editHandleAccelerationDistribution(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      SurfaceParticleGeneratorBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      SurfaceParticleGeneratorBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      SurfaceParticleGeneratorBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const SurfaceParticleGeneratorBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef SurfaceParticleGeneratorBase *SurfaceParticleGeneratorBaseP;
-
-typedef osgIF<SurfaceParticleGeneratorBase::isNodeCore,
-              CoredNodePtr<SurfaceParticleGenerator>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet SurfaceParticleGeneratorNodePtr;
-
-typedef RefPtr<SurfaceParticleGeneratorPtr> SurfaceParticleGeneratorRefPtr;
 
 OSG_END_NAMESPACE
 

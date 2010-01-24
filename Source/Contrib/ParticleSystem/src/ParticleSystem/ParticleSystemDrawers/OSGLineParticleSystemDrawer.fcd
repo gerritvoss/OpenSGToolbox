@@ -3,17 +3,20 @@
 <FieldContainer
 	name="LineParticleSystemDrawer"
 	parent="ParticleSystemDrawer"
-	library="ParticleSystem"
-	pointerfieldtypes="both"
+    library="ContribParticleSystem"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 	<Field
 		name="LineWidthScaling"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1.0"
@@ -24,6 +27,7 @@
 	<Field
 		name="LineLengthScaling"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1.0"
@@ -34,6 +38,7 @@
 	<Field
 		name="LineDirectionSource"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="LineParticleSystemDrawer::DIRECTION_POSITION_CHANGE"
@@ -50,6 +55,7 @@
 	<Field
 		name="LineDirection"
 		type="Vec3f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,1.0,0.0"
@@ -60,6 +66,7 @@
 	<Field
 		name="LineLengthSource"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="LineParticleSystemDrawer::LENGTH_SIZE_X"
@@ -75,6 +82,7 @@
 	<Field
 		name="LineLength"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1.0"
@@ -85,6 +93,7 @@
 	<Field
 		name="EndPointFading"
 		type="Vec2f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1.0,1.0"

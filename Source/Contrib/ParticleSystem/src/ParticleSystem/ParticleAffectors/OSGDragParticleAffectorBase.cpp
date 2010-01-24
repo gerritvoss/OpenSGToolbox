@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,246 +50,487 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEDRAGPARTICLEAFFECTORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGNode.h"                    // Beacon Class
 
 #include "OSGDragParticleAffectorBase.h"
 #include "OSGDragParticleAffector.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  DragParticleAffectorBase::MagnitudeFieldMask = 
-    (TypeTraits<BitVector>::One << DragParticleAffectorBase::MagnitudeFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  DragParticleAffectorBase::UseDirectionFieldMask = 
-    (TypeTraits<BitVector>::One << DragParticleAffectorBase::UseDirectionFieldId);
+/*! \class OSG::DragParticleAffector
+    
+ */
 
-const OSG::BitVector  DragParticleAffectorBase::DirectionFieldMask = 
-    (TypeTraits<BitVector>::One << DragParticleAffectorBase::DirectionFieldId);
-
-const OSG::BitVector  DragParticleAffectorBase::AttenuationFieldMask = 
-    (TypeTraits<BitVector>::One << DragParticleAffectorBase::AttenuationFieldId);
-
-const OSG::BitVector  DragParticleAffectorBase::SpeedAttenuationFieldMask = 
-    (TypeTraits<BitVector>::One << DragParticleAffectorBase::SpeedAttenuationFieldId);
-
-const OSG::BitVector  DragParticleAffectorBase::MaxDistanceFieldMask = 
-    (TypeTraits<BitVector>::One << DragParticleAffectorBase::MaxDistanceFieldId);
-
-const OSG::BitVector  DragParticleAffectorBase::MotionAttenuationFieldMask = 
-    (TypeTraits<BitVector>::One << DragParticleAffectorBase::MotionAttenuationFieldId);
-
-const OSG::BitVector  DragParticleAffectorBase::InheritVelocityFieldMask = 
-    (TypeTraits<BitVector>::One << DragParticleAffectorBase::InheritVelocityFieldId);
-
-const OSG::BitVector  DragParticleAffectorBase::BeaconFieldMask = 
-    (TypeTraits<BitVector>::One << DragParticleAffectorBase::BeaconFieldId);
-
-const OSG::BitVector DragParticleAffectorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Real32          DragParticleAffectorBase::_sfMagnitude
     
 */
+
 /*! \var bool            DragParticleAffectorBase::_sfUseDirection
     
 */
+
 /*! \var Vec3f           DragParticleAffectorBase::_sfDirection
     
 */
+
 /*! \var Real32          DragParticleAffectorBase::_sfAttenuation
     
 */
+
 /*! \var Real32          DragParticleAffectorBase::_sfSpeedAttenuation
     
 */
+
 /*! \var Real32          DragParticleAffectorBase::_sfMaxDistance
     
 */
+
 /*! \var Real32          DragParticleAffectorBase::_sfMotionAttenuation
     
 */
+
 /*! \var Real32          DragParticleAffectorBase::_sfInheritVelocity
     
 */
-/*! \var NodePtr         DragParticleAffectorBase::_sfBeacon
+
+/*! \var Node *          DragParticleAffectorBase::_sfBeacon
     
 */
 
-//! DragParticleAffector description
 
-FieldDescription *DragParticleAffectorBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<DragParticleAffector *>::_type("DragParticleAffectorPtr", "ParticleAffectorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(DragParticleAffector *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           DragParticleAffector *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           DragParticleAffector *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void DragParticleAffectorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Magnitude", 
-                     MagnitudeFieldId, MagnitudeFieldMask,
-                     false,
-                     (FieldAccessMethod) &DragParticleAffectorBase::getSFMagnitude),
-    new FieldDescription(SFBool::getClassType(), 
-                     "UseDirection", 
-                     UseDirectionFieldId, UseDirectionFieldMask,
-                     false,
-                     (FieldAccessMethod) &DragParticleAffectorBase::getSFUseDirection),
-    new FieldDescription(SFVec3f::getClassType(), 
-                     "Direction", 
-                     DirectionFieldId, DirectionFieldMask,
-                     false,
-                     (FieldAccessMethod) &DragParticleAffectorBase::getSFDirection),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Attenuation", 
-                     AttenuationFieldId, AttenuationFieldMask,
-                     false,
-                     (FieldAccessMethod) &DragParticleAffectorBase::getSFAttenuation),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "SpeedAttenuation", 
-                     SpeedAttenuationFieldId, SpeedAttenuationFieldMask,
-                     false,
-                     (FieldAccessMethod) &DragParticleAffectorBase::getSFSpeedAttenuation),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "MaxDistance", 
-                     MaxDistanceFieldId, MaxDistanceFieldMask,
-                     false,
-                     (FieldAccessMethod) &DragParticleAffectorBase::getSFMaxDistance),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "MotionAttenuation", 
-                     MotionAttenuationFieldId, MotionAttenuationFieldMask,
-                     false,
-                     (FieldAccessMethod) &DragParticleAffectorBase::getSFMotionAttenuation),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "InheritVelocity", 
-                     InheritVelocityFieldId, InheritVelocityFieldMask,
-                     false,
-                     (FieldAccessMethod) &DragParticleAffectorBase::getSFInheritVelocity),
-    new FieldDescription(SFNodePtr::getClassType(), 
-                     "Beacon", 
-                     BeaconFieldId, BeaconFieldMask,
-                     false,
-                     (FieldAccessMethod) &DragParticleAffectorBase::getSFBeacon)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType DragParticleAffectorBase::_type(
-    "DragParticleAffector",
-    "ParticleAffector",
-    NULL,
-    (PrototypeCreateF) &DragParticleAffectorBase::createEmpty,
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Magnitude",
+        "",
+        MagnitudeFieldId, MagnitudeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DragParticleAffector::editHandleMagnitude),
+        static_cast<FieldGetMethodSig >(&DragParticleAffector::getHandleMagnitude));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "UseDirection",
+        "",
+        UseDirectionFieldId, UseDirectionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DragParticleAffector::editHandleUseDirection),
+        static_cast<FieldGetMethodSig >(&DragParticleAffector::getHandleUseDirection));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFVec3f::Description(
+        SFVec3f::getClassType(),
+        "Direction",
+        "",
+        DirectionFieldId, DirectionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DragParticleAffector::editHandleDirection),
+        static_cast<FieldGetMethodSig >(&DragParticleAffector::getHandleDirection));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Attenuation",
+        "",
+        AttenuationFieldId, AttenuationFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DragParticleAffector::editHandleAttenuation),
+        static_cast<FieldGetMethodSig >(&DragParticleAffector::getHandleAttenuation));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "SpeedAttenuation",
+        "",
+        SpeedAttenuationFieldId, SpeedAttenuationFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DragParticleAffector::editHandleSpeedAttenuation),
+        static_cast<FieldGetMethodSig >(&DragParticleAffector::getHandleSpeedAttenuation));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "MaxDistance",
+        "",
+        MaxDistanceFieldId, MaxDistanceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DragParticleAffector::editHandleMaxDistance),
+        static_cast<FieldGetMethodSig >(&DragParticleAffector::getHandleMaxDistance));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "MotionAttenuation",
+        "",
+        MotionAttenuationFieldId, MotionAttenuationFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DragParticleAffector::editHandleMotionAttenuation),
+        static_cast<FieldGetMethodSig >(&DragParticleAffector::getHandleMotionAttenuation));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "InheritVelocity",
+        "",
+        InheritVelocityFieldId, InheritVelocityFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DragParticleAffector::editHandleInheritVelocity),
+        static_cast<FieldGetMethodSig >(&DragParticleAffector::getHandleInheritVelocity));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecNodePtr::Description(
+        SFUnrecNodePtr::getClassType(),
+        "Beacon",
+        "",
+        BeaconFieldId, BeaconFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DragParticleAffector::editHandleBeacon),
+        static_cast<FieldGetMethodSig >(&DragParticleAffector::getHandleBeacon));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+DragParticleAffectorBase::TypeObject DragParticleAffectorBase::_type(
+    DragParticleAffectorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&DragParticleAffectorBase::createEmptyLocal),
     DragParticleAffector::initMethod,
-    _desc,
-    sizeof(_desc));
+    DragParticleAffector::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&DragParticleAffector::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"DragParticleAffector\"\n"
+    "\tparent=\"ParticleAffector\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com), Daniel Guilliams           \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"Magnitude\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"5.000\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"UseDirection\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Direction\"\n"
+    "\t\ttype=\"Vec3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.0, 1.0, 0.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Attenuation\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"2.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SpeedAttenuation\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MaxDistance\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"-1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MotionAttenuation\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InheritVelocity\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Beacon\"\n"
+    "\t\ttype=\"Node\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(DragParticleAffectorBase, DragParticleAffectorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &DragParticleAffectorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &DragParticleAffectorBase::getType(void) const 
+FieldContainerType &DragParticleAffectorBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr DragParticleAffectorBase::shallowCopy(void) const 
-{ 
-    DragParticleAffectorPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const DragParticleAffector *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 DragParticleAffectorBase::getContainerSize(void) const 
-{ 
-    return sizeof(DragParticleAffector); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DragParticleAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &DragParticleAffectorBase::getType(void) const
 {
-    this->executeSyncImpl((DragParticleAffectorBase *) &other, whichField);
+    return _type;
 }
-#else
-void DragParticleAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 DragParticleAffectorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((DragParticleAffectorBase *) &other, whichField, sInfo);
+    return sizeof(DragParticleAffector);
 }
-void DragParticleAffectorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFReal32 *DragParticleAffectorBase::editSFMagnitude(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(MagnitudeFieldMask);
+
+    return &_sfMagnitude;
 }
 
-void DragParticleAffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFReal32 *DragParticleAffectorBase::getSFMagnitude(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfMagnitude;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-DragParticleAffectorBase::DragParticleAffectorBase(void) :
-    _sfMagnitude              (Real32(5.000)), 
-    _sfUseDirection           (bool(false)), 
-    _sfDirection              (Vec3f(0.0, 1.0, 0.0)), 
-    _sfAttenuation            (Real32(2.0)), 
-    _sfSpeedAttenuation       (Real32(1.0)), 
-    _sfMaxDistance            (Real32(-1.0)), 
-    _sfMotionAttenuation      (Real32(0.0)), 
-    _sfInheritVelocity        (Real32(0.0)), 
-    _sfBeacon                 (NodePtr(NullFC)), 
-    Inherited() 
+SFBool *DragParticleAffectorBase::editSFUseDirection(void)
 {
+    editSField(UseDirectionFieldMask);
+
+    return &_sfUseDirection;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-DragParticleAffectorBase::DragParticleAffectorBase(const DragParticleAffectorBase &source) :
-    _sfMagnitude              (source._sfMagnitude              ), 
-    _sfUseDirection           (source._sfUseDirection           ), 
-    _sfDirection              (source._sfDirection              ), 
-    _sfAttenuation            (source._sfAttenuation            ), 
-    _sfSpeedAttenuation       (source._sfSpeedAttenuation       ), 
-    _sfMaxDistance            (source._sfMaxDistance            ), 
-    _sfMotionAttenuation      (source._sfMotionAttenuation      ), 
-    _sfInheritVelocity        (source._sfInheritVelocity        ), 
-    _sfBeacon                 (source._sfBeacon                 ), 
-    Inherited                 (source)
+const SFBool *DragParticleAffectorBase::getSFUseDirection(void) const
 {
+    return &_sfUseDirection;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-DragParticleAffectorBase::~DragParticleAffectorBase(void)
+SFVec3f *DragParticleAffectorBase::editSFDirection(void)
 {
+    editSField(DirectionFieldMask);
+
+    return &_sfDirection;
 }
+
+const SFVec3f *DragParticleAffectorBase::getSFDirection(void) const
+{
+    return &_sfDirection;
+}
+
+
+SFReal32 *DragParticleAffectorBase::editSFAttenuation(void)
+{
+    editSField(AttenuationFieldMask);
+
+    return &_sfAttenuation;
+}
+
+const SFReal32 *DragParticleAffectorBase::getSFAttenuation(void) const
+{
+    return &_sfAttenuation;
+}
+
+
+SFReal32 *DragParticleAffectorBase::editSFSpeedAttenuation(void)
+{
+    editSField(SpeedAttenuationFieldMask);
+
+    return &_sfSpeedAttenuation;
+}
+
+const SFReal32 *DragParticleAffectorBase::getSFSpeedAttenuation(void) const
+{
+    return &_sfSpeedAttenuation;
+}
+
+
+SFReal32 *DragParticleAffectorBase::editSFMaxDistance(void)
+{
+    editSField(MaxDistanceFieldMask);
+
+    return &_sfMaxDistance;
+}
+
+const SFReal32 *DragParticleAffectorBase::getSFMaxDistance(void) const
+{
+    return &_sfMaxDistance;
+}
+
+
+SFReal32 *DragParticleAffectorBase::editSFMotionAttenuation(void)
+{
+    editSField(MotionAttenuationFieldMask);
+
+    return &_sfMotionAttenuation;
+}
+
+const SFReal32 *DragParticleAffectorBase::getSFMotionAttenuation(void) const
+{
+    return &_sfMotionAttenuation;
+}
+
+
+SFReal32 *DragParticleAffectorBase::editSFInheritVelocity(void)
+{
+    editSField(InheritVelocityFieldMask);
+
+    return &_sfInheritVelocity;
+}
+
+const SFReal32 *DragParticleAffectorBase::getSFInheritVelocity(void) const
+{
+    return &_sfInheritVelocity;
+}
+
+
+//! Get the DragParticleAffector::_sfBeacon field.
+const SFUnrecNodePtr *DragParticleAffectorBase::getSFBeacon(void) const
+{
+    return &_sfBeacon;
+}
+
+SFUnrecNodePtr      *DragParticleAffectorBase::editSFBeacon         (void)
+{
+    editSField(BeaconFieldMask);
+
+    return &_sfBeacon;
+}
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 DragParticleAffectorBase::getBinSize(const BitVector &whichField)
+UInt32 DragParticleAffectorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -297,53 +538,44 @@ UInt32 DragParticleAffectorBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfMagnitude.getBinSize();
     }
-
     if(FieldBits::NoField != (UseDirectionFieldMask & whichField))
     {
         returnValue += _sfUseDirection.getBinSize();
     }
-
     if(FieldBits::NoField != (DirectionFieldMask & whichField))
     {
         returnValue += _sfDirection.getBinSize();
     }
-
     if(FieldBits::NoField != (AttenuationFieldMask & whichField))
     {
         returnValue += _sfAttenuation.getBinSize();
     }
-
     if(FieldBits::NoField != (SpeedAttenuationFieldMask & whichField))
     {
         returnValue += _sfSpeedAttenuation.getBinSize();
     }
-
     if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
     {
         returnValue += _sfMaxDistance.getBinSize();
     }
-
     if(FieldBits::NoField != (MotionAttenuationFieldMask & whichField))
     {
         returnValue += _sfMotionAttenuation.getBinSize();
     }
-
     if(FieldBits::NoField != (InheritVelocityFieldMask & whichField))
     {
         returnValue += _sfInheritVelocity.getBinSize();
     }
-
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
     {
         returnValue += _sfBeacon.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void DragParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void DragParticleAffectorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -351,52 +583,42 @@ void DragParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfMagnitude.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (UseDirectionFieldMask & whichField))
     {
         _sfUseDirection.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DirectionFieldMask & whichField))
     {
         _sfDirection.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (AttenuationFieldMask & whichField))
     {
         _sfAttenuation.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SpeedAttenuationFieldMask & whichField))
     {
         _sfSpeedAttenuation.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
     {
         _sfMaxDistance.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MotionAttenuationFieldMask & whichField))
     {
         _sfMotionAttenuation.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InheritVelocityFieldMask & whichField))
     {
         _sfInheritVelocity.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
     {
         _sfBeacon.copyToBin(pMem);
     }
-
-
 }
 
-void DragParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void DragParticleAffectorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -404,170 +626,477 @@ void DragParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfMagnitude.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (UseDirectionFieldMask & whichField))
     {
         _sfUseDirection.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DirectionFieldMask & whichField))
     {
         _sfDirection.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (AttenuationFieldMask & whichField))
     {
         _sfAttenuation.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SpeedAttenuationFieldMask & whichField))
     {
         _sfSpeedAttenuation.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
     {
         _sfMaxDistance.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MotionAttenuationFieldMask & whichField))
     {
         _sfMotionAttenuation.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InheritVelocityFieldMask & whichField))
     {
         _sfInheritVelocity.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
     {
         _sfBeacon.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DragParticleAffectorBase::executeSyncImpl(      DragParticleAffectorBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+DragParticleAffectorTransitPtr DragParticleAffectorBase::createLocal(BitVector bFlags)
 {
+    DragParticleAffectorTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (MagnitudeFieldMask & whichField))
-        _sfMagnitude.syncWith(pOther->_sfMagnitude);
+        fc = dynamic_pointer_cast<DragParticleAffector>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (UseDirectionFieldMask & whichField))
-        _sfUseDirection.syncWith(pOther->_sfUseDirection);
-
-    if(FieldBits::NoField != (DirectionFieldMask & whichField))
-        _sfDirection.syncWith(pOther->_sfDirection);
-
-    if(FieldBits::NoField != (AttenuationFieldMask & whichField))
-        _sfAttenuation.syncWith(pOther->_sfAttenuation);
-
-    if(FieldBits::NoField != (SpeedAttenuationFieldMask & whichField))
-        _sfSpeedAttenuation.syncWith(pOther->_sfSpeedAttenuation);
-
-    if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
-        _sfMaxDistance.syncWith(pOther->_sfMaxDistance);
-
-    if(FieldBits::NoField != (MotionAttenuationFieldMask & whichField))
-        _sfMotionAttenuation.syncWith(pOther->_sfMotionAttenuation);
-
-    if(FieldBits::NoField != (InheritVelocityFieldMask & whichField))
-        _sfInheritVelocity.syncWith(pOther->_sfInheritVelocity);
-
-    if(FieldBits::NoField != (BeaconFieldMask & whichField))
-        _sfBeacon.syncWith(pOther->_sfBeacon);
-
-
-}
-#else
-void DragParticleAffectorBase::executeSyncImpl(      DragParticleAffectorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (MagnitudeFieldMask & whichField))
-        _sfMagnitude.syncWith(pOther->_sfMagnitude);
-
-    if(FieldBits::NoField != (UseDirectionFieldMask & whichField))
-        _sfUseDirection.syncWith(pOther->_sfUseDirection);
-
-    if(FieldBits::NoField != (DirectionFieldMask & whichField))
-        _sfDirection.syncWith(pOther->_sfDirection);
-
-    if(FieldBits::NoField != (AttenuationFieldMask & whichField))
-        _sfAttenuation.syncWith(pOther->_sfAttenuation);
-
-    if(FieldBits::NoField != (SpeedAttenuationFieldMask & whichField))
-        _sfSpeedAttenuation.syncWith(pOther->_sfSpeedAttenuation);
-
-    if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
-        _sfMaxDistance.syncWith(pOther->_sfMaxDistance);
-
-    if(FieldBits::NoField != (MotionAttenuationFieldMask & whichField))
-        _sfMotionAttenuation.syncWith(pOther->_sfMotionAttenuation);
-
-    if(FieldBits::NoField != (InheritVelocityFieldMask & whichField))
-        _sfInheritVelocity.syncWith(pOther->_sfInheritVelocity);
-
-    if(FieldBits::NoField != (BeaconFieldMask & whichField))
-        _sfBeacon.syncWith(pOther->_sfBeacon);
-
-
-
+    return fc;
 }
 
-void DragParticleAffectorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+DragParticleAffectorTransitPtr DragParticleAffectorBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    DragParticleAffectorTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<DragParticleAffector>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+DragParticleAffectorTransitPtr DragParticleAffectorBase::create(void)
+{
+    DragParticleAffectorTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<DragParticleAffector>(tmpPtr);
+    }
+
+    return fc;
+}
+
+DragParticleAffector *DragParticleAffectorBase::createEmptyLocal(BitVector bFlags)
+{
+    DragParticleAffector *returnValue;
+
+    newPtr<DragParticleAffector>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+DragParticleAffector *DragParticleAffectorBase::createEmpty(void)
+{
+    DragParticleAffector *returnValue;
+
+    newPtr<DragParticleAffector>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr DragParticleAffectorBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    DragParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DragParticleAffector *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DragParticleAffectorBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    DragParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DragParticleAffector *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DragParticleAffectorBase::shallowCopy(void) const
+{
+    DragParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const DragParticleAffector *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+DragParticleAffectorBase::DragParticleAffectorBase(void) :
+    Inherited(),
+    _sfMagnitude              (Real32(5.000)),
+    _sfUseDirection           (bool(false)),
+    _sfDirection              (Vec3f(0.0, 1.0, 0.0)),
+    _sfAttenuation            (Real32(2.0)),
+    _sfSpeedAttenuation       (Real32(1.0)),
+    _sfMaxDistance            (Real32(-1.0)),
+    _sfMotionAttenuation      (Real32(0.0)),
+    _sfInheritVelocity        (Real32(0.0)),
+    _sfBeacon                 (NULL)
+{
+}
+
+DragParticleAffectorBase::DragParticleAffectorBase(const DragParticleAffectorBase &source) :
+    Inherited(source),
+    _sfMagnitude              (source._sfMagnitude              ),
+    _sfUseDirection           (source._sfUseDirection           ),
+    _sfDirection              (source._sfDirection              ),
+    _sfAttenuation            (source._sfAttenuation            ),
+    _sfSpeedAttenuation       (source._sfSpeedAttenuation       ),
+    _sfMaxDistance            (source._sfMaxDistance            ),
+    _sfMotionAttenuation      (source._sfMotionAttenuation      ),
+    _sfInheritVelocity        (source._sfInheritVelocity        ),
+    _sfBeacon                 (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+DragParticleAffectorBase::~DragParticleAffectorBase(void)
+{
+}
+
+void DragParticleAffectorBase::onCreate(const DragParticleAffector *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        DragParticleAffector *pThis = static_cast<DragParticleAffector *>(this);
+
+        pThis->setBeacon(source->getBeacon());
+    }
+}
+
+GetFieldHandlePtr DragParticleAffectorBase::getHandleMagnitude       (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMagnitude,
+             this->getType().getFieldDesc(MagnitudeFieldId),
+             const_cast<DragParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DragParticleAffectorBase::editHandleMagnitude      (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMagnitude,
+             this->getType().getFieldDesc(MagnitudeFieldId),
+             this));
+
+
+    editSField(MagnitudeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DragParticleAffectorBase::getHandleUseDirection    (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfUseDirection,
+             this->getType().getFieldDesc(UseDirectionFieldId),
+             const_cast<DragParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DragParticleAffectorBase::editHandleUseDirection   (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfUseDirection,
+             this->getType().getFieldDesc(UseDirectionFieldId),
+             this));
+
+
+    editSField(UseDirectionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DragParticleAffectorBase::getHandleDirection       (void) const
+{
+    SFVec3f::GetHandlePtr returnValue(
+        new  SFVec3f::GetHandle(
+             &_sfDirection,
+             this->getType().getFieldDesc(DirectionFieldId),
+             const_cast<DragParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DragParticleAffectorBase::editHandleDirection      (void)
+{
+    SFVec3f::EditHandlePtr returnValue(
+        new  SFVec3f::EditHandle(
+             &_sfDirection,
+             this->getType().getFieldDesc(DirectionFieldId),
+             this));
+
+
+    editSField(DirectionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DragParticleAffectorBase::getHandleAttenuation     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfAttenuation,
+             this->getType().getFieldDesc(AttenuationFieldId),
+             const_cast<DragParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DragParticleAffectorBase::editHandleAttenuation    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfAttenuation,
+             this->getType().getFieldDesc(AttenuationFieldId),
+             this));
+
+
+    editSField(AttenuationFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DragParticleAffectorBase::getHandleSpeedAttenuation (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfSpeedAttenuation,
+             this->getType().getFieldDesc(SpeedAttenuationFieldId),
+             const_cast<DragParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DragParticleAffectorBase::editHandleSpeedAttenuation(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfSpeedAttenuation,
+             this->getType().getFieldDesc(SpeedAttenuationFieldId),
+             this));
+
+
+    editSField(SpeedAttenuationFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DragParticleAffectorBase::getHandleMaxDistance     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMaxDistance,
+             this->getType().getFieldDesc(MaxDistanceFieldId),
+             const_cast<DragParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DragParticleAffectorBase::editHandleMaxDistance    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMaxDistance,
+             this->getType().getFieldDesc(MaxDistanceFieldId),
+             this));
+
+
+    editSField(MaxDistanceFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DragParticleAffectorBase::getHandleMotionAttenuation (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMotionAttenuation,
+             this->getType().getFieldDesc(MotionAttenuationFieldId),
+             const_cast<DragParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DragParticleAffectorBase::editHandleMotionAttenuation(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMotionAttenuation,
+             this->getType().getFieldDesc(MotionAttenuationFieldId),
+             this));
+
+
+    editSField(MotionAttenuationFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DragParticleAffectorBase::getHandleInheritVelocity (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfInheritVelocity,
+             this->getType().getFieldDesc(InheritVelocityFieldId),
+             const_cast<DragParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DragParticleAffectorBase::editHandleInheritVelocity(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfInheritVelocity,
+             this->getType().getFieldDesc(InheritVelocityFieldId),
+             this));
+
+
+    editSField(InheritVelocityFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DragParticleAffectorBase::getHandleBeacon          (void) const
+{
+    SFUnrecNodePtr::GetHandlePtr returnValue(
+        new  SFUnrecNodePtr::GetHandle(
+             &_sfBeacon,
+             this->getType().getFieldDesc(BeaconFieldId),
+             const_cast<DragParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DragParticleAffectorBase::editHandleBeacon         (void)
+{
+    SFUnrecNodePtr::EditHandlePtr returnValue(
+        new  SFUnrecNodePtr::EditHandle(
+             &_sfBeacon,
+             this->getType().getFieldDesc(BeaconFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DragParticleAffector::setBeacon,
+                    static_cast<DragParticleAffector *>(this), _1));
+
+    editSField(BeaconFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void DragParticleAffectorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    DragParticleAffector *pThis = static_cast<DragParticleAffector *>(this);
+
+    pThis->execSync(static_cast<DragParticleAffector *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *DragParticleAffectorBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    DragParticleAffector *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const DragParticleAffector *>(pRefAspect),
+                  dynamic_cast<const DragParticleAffector *>(this));
+
+    return returnValue;
+}
+#endif
+
+void DragParticleAffectorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<DragParticleAffector *>(this)->setBeacon(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<DragParticleAffectorPtr>::_type("DragParticleAffectorPtr", "ParticleAffectorPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(DragParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(DragParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGDRAGPARTICLEAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDRAGPARTICLEAFFECTORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDRAGPARTICLEAFFECTORFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

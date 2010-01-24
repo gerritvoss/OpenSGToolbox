@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,208 +50,367 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEDISCDISTRIBUTION2DINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGDiscDistribution2DBase.h"
 #include "OSGDiscDistribution2D.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  DiscDistribution2DBase::CenterFieldMask = 
-    (TypeTraits<BitVector>::One << DiscDistribution2DBase::CenterFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  DiscDistribution2DBase::MinRadiusFieldMask = 
-    (TypeTraits<BitVector>::One << DiscDistribution2DBase::MinRadiusFieldId);
+/*! \class OSG::DiscDistribution2D
+    An DiscDistribution2D.
+ */
 
-const OSG::BitVector  DiscDistribution2DBase::MaxRadiusFieldMask = 
-    (TypeTraits<BitVector>::One << DiscDistribution2DBase::MaxRadiusFieldId);
-
-const OSG::BitVector  DiscDistribution2DBase::MinThetaFieldMask = 
-    (TypeTraits<BitVector>::One << DiscDistribution2DBase::MinThetaFieldId);
-
-const OSG::BitVector  DiscDistribution2DBase::MaxThetaFieldMask = 
-    (TypeTraits<BitVector>::One << DiscDistribution2DBase::MaxThetaFieldId);
-
-const OSG::BitVector  DiscDistribution2DBase::SurfaceOrEdgeFieldMask = 
-    (TypeTraits<BitVector>::One << DiscDistribution2DBase::SurfaceOrEdgeFieldId);
-
-const OSG::BitVector DiscDistribution2DBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Pnt2f           DiscDistribution2DBase::_sfCenter
     
 */
+
 /*! \var Real32          DiscDistribution2DBase::_sfMinRadius
     
 */
+
 /*! \var Real32          DiscDistribution2DBase::_sfMaxRadius
     
 */
+
 /*! \var Real32          DiscDistribution2DBase::_sfMinTheta
     
 */
+
 /*! \var Real32          DiscDistribution2DBase::_sfMaxTheta
     
 */
+
 /*! \var UInt32          DiscDistribution2DBase::_sfSurfaceOrEdge
     
 */
 
-//! DiscDistribution2D description
 
-FieldDescription *DiscDistribution2DBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<DiscDistribution2D *>::_type("DiscDistribution2DPtr", "Distribution2DPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(DiscDistribution2D *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           DiscDistribution2D *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           DiscDistribution2D *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void DiscDistribution2DBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFPnt2f::getClassType(), 
-                     "Center", 
-                     CenterFieldId, CenterFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DiscDistribution2DBase::editSFCenter)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "MinRadius", 
-                     MinRadiusFieldId, MinRadiusFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DiscDistribution2DBase::editSFMinRadius)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "MaxRadius", 
-                     MaxRadiusFieldId, MaxRadiusFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DiscDistribution2DBase::editSFMaxRadius)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "MinTheta", 
-                     MinThetaFieldId, MinThetaFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DiscDistribution2DBase::editSFMinTheta)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "MaxTheta", 
-                     MaxThetaFieldId, MaxThetaFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DiscDistribution2DBase::editSFMaxTheta)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "SurfaceOrEdge", 
-                     SurfaceOrEdgeFieldId, SurfaceOrEdgeFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DiscDistribution2DBase::editSFSurfaceOrEdge))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType DiscDistribution2DBase::_type(
-    "DiscDistribution2D",
-    "Distribution2D",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&DiscDistribution2DBase::createEmpty),
+    pDesc = new SFPnt2f::Description(
+        SFPnt2f::getClassType(),
+        "Center",
+        "",
+        CenterFieldId, CenterFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DiscDistribution2D::editHandleCenter),
+        static_cast<FieldGetMethodSig >(&DiscDistribution2D::getHandleCenter));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "MinRadius",
+        "",
+        MinRadiusFieldId, MinRadiusFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DiscDistribution2D::editHandleMinRadius),
+        static_cast<FieldGetMethodSig >(&DiscDistribution2D::getHandleMinRadius));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "MaxRadius",
+        "",
+        MaxRadiusFieldId, MaxRadiusFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DiscDistribution2D::editHandleMaxRadius),
+        static_cast<FieldGetMethodSig >(&DiscDistribution2D::getHandleMaxRadius));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "MinTheta",
+        "",
+        MinThetaFieldId, MinThetaFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DiscDistribution2D::editHandleMinTheta),
+        static_cast<FieldGetMethodSig >(&DiscDistribution2D::getHandleMinTheta));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "MaxTheta",
+        "",
+        MaxThetaFieldId, MaxThetaFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DiscDistribution2D::editHandleMaxTheta),
+        static_cast<FieldGetMethodSig >(&DiscDistribution2D::getHandleMaxTheta));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "SurfaceOrEdge",
+        "",
+        SurfaceOrEdgeFieldId, SurfaceOrEdgeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DiscDistribution2D::editHandleSurfaceOrEdge),
+        static_cast<FieldGetMethodSig >(&DiscDistribution2D::getHandleSurfaceOrEdge));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+DiscDistribution2DBase::TypeObject DiscDistribution2DBase::_type(
+    DiscDistribution2DBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&DiscDistribution2DBase::createEmptyLocal),
     DiscDistribution2D::initMethod,
-    _desc,
-    sizeof(_desc));
+    DiscDistribution2D::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&DiscDistribution2D::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"DiscDistribution2D\"\n"
+    "\tparent=\"Distribution2D\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "An DiscDistribution2D.\n"
+    "\t<Field\n"
+    "\t\tname=\"Center\"\n"
+    "\t\ttype=\"Pnt2f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MinRadius\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MaxRadius\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MinTheta\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MaxTheta\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"6.28319\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SurfaceOrEdge\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"DiscDistribution2D::SURFACE\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "An DiscDistribution2D.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(DiscDistribution2DBase, DiscDistribution2DPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &DiscDistribution2DBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &DiscDistribution2DBase::getType(void) const 
+FieldContainerType &DiscDistribution2DBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr DiscDistribution2DBase::shallowCopy(void) const 
-{ 
-    DiscDistribution2DPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const DiscDistribution2D *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 DiscDistribution2DBase::getContainerSize(void) const 
-{ 
-    return sizeof(DiscDistribution2D); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DiscDistribution2DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &DiscDistribution2DBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<DiscDistribution2DBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void DiscDistribution2DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 DiscDistribution2DBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((DiscDistribution2DBase *) &other, whichField, sInfo);
+    return sizeof(DiscDistribution2D);
 }
-void DiscDistribution2DBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFPnt2f *DiscDistribution2DBase::editSFCenter(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(CenterFieldMask);
+
+    return &_sfCenter;
 }
 
-void DiscDistribution2DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFPnt2f *DiscDistribution2DBase::getSFCenter(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfCenter;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-DiscDistribution2DBase::DiscDistribution2DBase(void) :
-    _sfCenter                 (Pnt2f(0.0,0.0)), 
-    _sfMinRadius              (Real32(0.0)), 
-    _sfMaxRadius              (Real32(1.0)), 
-    _sfMinTheta               (Real32(0.0)), 
-    _sfMaxTheta               (Real32(6.28319)), 
-    _sfSurfaceOrEdge          (UInt32(DiscDistribution2D::SURFACE)), 
-    Inherited() 
+SFReal32 *DiscDistribution2DBase::editSFMinRadius(void)
 {
+    editSField(MinRadiusFieldMask);
+
+    return &_sfMinRadius;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-DiscDistribution2DBase::DiscDistribution2DBase(const DiscDistribution2DBase &source) :
-    _sfCenter                 (source._sfCenter                 ), 
-    _sfMinRadius              (source._sfMinRadius              ), 
-    _sfMaxRadius              (source._sfMaxRadius              ), 
-    _sfMinTheta               (source._sfMinTheta               ), 
-    _sfMaxTheta               (source._sfMaxTheta               ), 
-    _sfSurfaceOrEdge          (source._sfSurfaceOrEdge          ), 
-    Inherited                 (source)
+const SFReal32 *DiscDistribution2DBase::getSFMinRadius(void) const
 {
+    return &_sfMinRadius;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-DiscDistribution2DBase::~DiscDistribution2DBase(void)
+SFReal32 *DiscDistribution2DBase::editSFMaxRadius(void)
 {
+    editSField(MaxRadiusFieldMask);
+
+    return &_sfMaxRadius;
 }
+
+const SFReal32 *DiscDistribution2DBase::getSFMaxRadius(void) const
+{
+    return &_sfMaxRadius;
+}
+
+
+SFReal32 *DiscDistribution2DBase::editSFMinTheta(void)
+{
+    editSField(MinThetaFieldMask);
+
+    return &_sfMinTheta;
+}
+
+const SFReal32 *DiscDistribution2DBase::getSFMinTheta(void) const
+{
+    return &_sfMinTheta;
+}
+
+
+SFReal32 *DiscDistribution2DBase::editSFMaxTheta(void)
+{
+    editSField(MaxThetaFieldMask);
+
+    return &_sfMaxTheta;
+}
+
+const SFReal32 *DiscDistribution2DBase::getSFMaxTheta(void) const
+{
+    return &_sfMaxTheta;
+}
+
+
+SFUInt32 *DiscDistribution2DBase::editSFSurfaceOrEdge(void)
+{
+    editSField(SurfaceOrEdgeFieldMask);
+
+    return &_sfSurfaceOrEdge;
+}
+
+const SFUInt32 *DiscDistribution2DBase::getSFSurfaceOrEdge(void) const
+{
+    return &_sfSurfaceOrEdge;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 DiscDistribution2DBase::getBinSize(const BitVector &whichField)
+UInt32 DiscDistribution2DBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -259,38 +418,32 @@ UInt32 DiscDistribution2DBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfCenter.getBinSize();
     }
-
     if(FieldBits::NoField != (MinRadiusFieldMask & whichField))
     {
         returnValue += _sfMinRadius.getBinSize();
     }
-
     if(FieldBits::NoField != (MaxRadiusFieldMask & whichField))
     {
         returnValue += _sfMaxRadius.getBinSize();
     }
-
     if(FieldBits::NoField != (MinThetaFieldMask & whichField))
     {
         returnValue += _sfMinTheta.getBinSize();
     }
-
     if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
     {
         returnValue += _sfMaxTheta.getBinSize();
     }
-
     if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
     {
         returnValue += _sfSurfaceOrEdge.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void DiscDistribution2DBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void DiscDistribution2DBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -298,37 +451,30 @@ void DiscDistribution2DBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfCenter.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MinRadiusFieldMask & whichField))
     {
         _sfMinRadius.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxRadiusFieldMask & whichField))
     {
         _sfMaxRadius.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MinThetaFieldMask & whichField))
     {
         _sfMinTheta.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
     {
         _sfMaxTheta.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
     {
         _sfSurfaceOrEdge.copyToBin(pMem);
     }
-
-
 }
 
-void DiscDistribution2DBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void DiscDistribution2DBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -336,117 +482,368 @@ void DiscDistribution2DBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfCenter.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MinRadiusFieldMask & whichField))
     {
         _sfMinRadius.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxRadiusFieldMask & whichField))
     {
         _sfMaxRadius.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MinThetaFieldMask & whichField))
     {
         _sfMinTheta.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
     {
         _sfMaxTheta.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
     {
         _sfSurfaceOrEdge.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DiscDistribution2DBase::executeSyncImpl(      DiscDistribution2DBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+DiscDistribution2DTransitPtr DiscDistribution2DBase::createLocal(BitVector bFlags)
 {
+    DiscDistribution2DTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (CenterFieldMask & whichField))
-        _sfCenter.syncWith(pOther->_sfCenter);
+        fc = dynamic_pointer_cast<DiscDistribution2D>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (MinRadiusFieldMask & whichField))
-        _sfMinRadius.syncWith(pOther->_sfMinRadius);
-
-    if(FieldBits::NoField != (MaxRadiusFieldMask & whichField))
-        _sfMaxRadius.syncWith(pOther->_sfMaxRadius);
-
-    if(FieldBits::NoField != (MinThetaFieldMask & whichField))
-        _sfMinTheta.syncWith(pOther->_sfMinTheta);
-
-    if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
-        _sfMaxTheta.syncWith(pOther->_sfMaxTheta);
-
-    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
-        _sfSurfaceOrEdge.syncWith(pOther->_sfSurfaceOrEdge);
-
-
-}
-#else
-void DiscDistribution2DBase::executeSyncImpl(      DiscDistribution2DBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (CenterFieldMask & whichField))
-        _sfCenter.syncWith(pOther->_sfCenter);
-
-    if(FieldBits::NoField != (MinRadiusFieldMask & whichField))
-        _sfMinRadius.syncWith(pOther->_sfMinRadius);
-
-    if(FieldBits::NoField != (MaxRadiusFieldMask & whichField))
-        _sfMaxRadius.syncWith(pOther->_sfMaxRadius);
-
-    if(FieldBits::NoField != (MinThetaFieldMask & whichField))
-        _sfMinTheta.syncWith(pOther->_sfMinTheta);
-
-    if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
-        _sfMaxTheta.syncWith(pOther->_sfMaxTheta);
-
-    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
-        _sfSurfaceOrEdge.syncWith(pOther->_sfSurfaceOrEdge);
-
-
-
+    return fc;
 }
 
-void DiscDistribution2DBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+DiscDistribution2DTransitPtr DiscDistribution2DBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    DiscDistribution2DTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<DiscDistribution2D>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+DiscDistribution2DTransitPtr DiscDistribution2DBase::create(void)
+{
+    DiscDistribution2DTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<DiscDistribution2D>(tmpPtr);
+    }
+
+    return fc;
+}
+
+DiscDistribution2D *DiscDistribution2DBase::createEmptyLocal(BitVector bFlags)
+{
+    DiscDistribution2D *returnValue;
+
+    newPtr<DiscDistribution2D>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+DiscDistribution2D *DiscDistribution2DBase::createEmpty(void)
+{
+    DiscDistribution2D *returnValue;
+
+    newPtr<DiscDistribution2D>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr DiscDistribution2DBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    DiscDistribution2D *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DiscDistribution2D *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DiscDistribution2DBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    DiscDistribution2D *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DiscDistribution2D *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DiscDistribution2DBase::shallowCopy(void) const
+{
+    DiscDistribution2D *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const DiscDistribution2D *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+DiscDistribution2DBase::DiscDistribution2DBase(void) :
+    Inherited(),
+    _sfCenter                 (Pnt2f(0.0,0.0)),
+    _sfMinRadius              (Real32(0.0)),
+    _sfMaxRadius              (Real32(1.0)),
+    _sfMinTheta               (Real32(0.0)),
+    _sfMaxTheta               (Real32(6.28319)),
+    _sfSurfaceOrEdge          (UInt32(DiscDistribution2D::SURFACE))
+{
+}
+
+DiscDistribution2DBase::DiscDistribution2DBase(const DiscDistribution2DBase &source) :
+    Inherited(source),
+    _sfCenter                 (source._sfCenter                 ),
+    _sfMinRadius              (source._sfMinRadius              ),
+    _sfMaxRadius              (source._sfMaxRadius              ),
+    _sfMinTheta               (source._sfMinTheta               ),
+    _sfMaxTheta               (source._sfMaxTheta               ),
+    _sfSurfaceOrEdge          (source._sfSurfaceOrEdge          )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+DiscDistribution2DBase::~DiscDistribution2DBase(void)
+{
+}
+
+
+GetFieldHandlePtr DiscDistribution2DBase::getHandleCenter          (void) const
+{
+    SFPnt2f::GetHandlePtr returnValue(
+        new  SFPnt2f::GetHandle(
+             &_sfCenter,
+             this->getType().getFieldDesc(CenterFieldId),
+             const_cast<DiscDistribution2DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DiscDistribution2DBase::editHandleCenter         (void)
+{
+    SFPnt2f::EditHandlePtr returnValue(
+        new  SFPnt2f::EditHandle(
+             &_sfCenter,
+             this->getType().getFieldDesc(CenterFieldId),
+             this));
+
+
+    editSField(CenterFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DiscDistribution2DBase::getHandleMinRadius       (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMinRadius,
+             this->getType().getFieldDesc(MinRadiusFieldId),
+             const_cast<DiscDistribution2DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DiscDistribution2DBase::editHandleMinRadius      (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMinRadius,
+             this->getType().getFieldDesc(MinRadiusFieldId),
+             this));
+
+
+    editSField(MinRadiusFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DiscDistribution2DBase::getHandleMaxRadius       (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMaxRadius,
+             this->getType().getFieldDesc(MaxRadiusFieldId),
+             const_cast<DiscDistribution2DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DiscDistribution2DBase::editHandleMaxRadius      (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMaxRadius,
+             this->getType().getFieldDesc(MaxRadiusFieldId),
+             this));
+
+
+    editSField(MaxRadiusFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DiscDistribution2DBase::getHandleMinTheta        (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMinTheta,
+             this->getType().getFieldDesc(MinThetaFieldId),
+             const_cast<DiscDistribution2DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DiscDistribution2DBase::editHandleMinTheta       (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMinTheta,
+             this->getType().getFieldDesc(MinThetaFieldId),
+             this));
+
+
+    editSField(MinThetaFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DiscDistribution2DBase::getHandleMaxTheta        (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMaxTheta,
+             this->getType().getFieldDesc(MaxThetaFieldId),
+             const_cast<DiscDistribution2DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DiscDistribution2DBase::editHandleMaxTheta       (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMaxTheta,
+             this->getType().getFieldDesc(MaxThetaFieldId),
+             this));
+
+
+    editSField(MaxThetaFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DiscDistribution2DBase::getHandleSurfaceOrEdge   (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfSurfaceOrEdge,
+             this->getType().getFieldDesc(SurfaceOrEdgeFieldId),
+             const_cast<DiscDistribution2DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DiscDistribution2DBase::editHandleSurfaceOrEdge  (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfSurfaceOrEdge,
+             this->getType().getFieldDesc(SurfaceOrEdgeFieldId),
+             this));
+
+
+    editSField(SurfaceOrEdgeFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void DiscDistribution2DBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    DiscDistribution2D *pThis = static_cast<DiscDistribution2D *>(this);
+
+    pThis->execSync(static_cast<DiscDistribution2D *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *DiscDistribution2DBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    DiscDistribution2D *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const DiscDistribution2D *>(pRefAspect),
+                  dynamic_cast<const DiscDistribution2D *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<DiscDistribution2DPtr>::_type("DiscDistribution2DPtr", "Distribution2DPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(DiscDistribution2DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(DiscDistribution2DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+void DiscDistribution2DBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

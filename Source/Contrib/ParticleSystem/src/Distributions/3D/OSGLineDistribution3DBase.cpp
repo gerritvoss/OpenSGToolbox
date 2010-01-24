@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,156 +50,207 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILELINEDISTRIBUTION3DINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGLineDistribution3DBase.h"
 #include "OSGLineDistribution3D.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  LineDistribution3DBase::Point1FieldMask = 
-    (TypeTraits<BitVector>::One << LineDistribution3DBase::Point1FieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  LineDistribution3DBase::Point2FieldMask = 
-    (TypeTraits<BitVector>::One << LineDistribution3DBase::Point2FieldId);
+/*! \class OSG::LineDistribution3D
+    An LineDistribution3D.
+ */
 
-const OSG::BitVector LineDistribution3DBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Pnt3f           LineDistribution3DBase::_sfPoint1
     
 */
+
 /*! \var Pnt3f           LineDistribution3DBase::_sfPoint2
     
 */
 
-//! LineDistribution3D description
 
-FieldDescription *LineDistribution3DBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<LineDistribution3D *>::_type("LineDistribution3DPtr", "Distribution3DPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(LineDistribution3D *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           LineDistribution3D *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           LineDistribution3D *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void LineDistribution3DBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFPnt3f::getClassType(), 
-                     "Point1", 
-                     Point1FieldId, Point1FieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&LineDistribution3DBase::editSFPoint1)),
-    new FieldDescription(SFPnt3f::getClassType(), 
-                     "Point2", 
-                     Point2FieldId, Point2FieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&LineDistribution3DBase::editSFPoint2))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType LineDistribution3DBase::_type(
-    "LineDistribution3D",
-    "Distribution3D",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&LineDistribution3DBase::createEmpty),
+    pDesc = new SFPnt3f::Description(
+        SFPnt3f::getClassType(),
+        "Point1",
+        "",
+        Point1FieldId, Point1FieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&LineDistribution3D::editHandlePoint1),
+        static_cast<FieldGetMethodSig >(&LineDistribution3D::getHandlePoint1));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFPnt3f::Description(
+        SFPnt3f::getClassType(),
+        "Point2",
+        "",
+        Point2FieldId, Point2FieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&LineDistribution3D::editHandlePoint2),
+        static_cast<FieldGetMethodSig >(&LineDistribution3D::getHandlePoint2));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+LineDistribution3DBase::TypeObject LineDistribution3DBase::_type(
+    LineDistribution3DBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&LineDistribution3DBase::createEmptyLocal),
     LineDistribution3D::initMethod,
-    _desc,
-    sizeof(_desc));
+    LineDistribution3D::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&LineDistribution3D::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"LineDistribution3D\"\n"
+    "\tparent=\"Distribution3D\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "An LineDistribution3D.\n"
+    "\t<Field\n"
+    "\t\tname=\"Point1\"\n"
+    "\t\ttype=\"Pnt3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Point2\"\n"
+    "\t\ttype=\"Pnt3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1.0,1.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "An LineDistribution3D.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(LineDistribution3DBase, LineDistribution3DPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &LineDistribution3DBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &LineDistribution3DBase::getType(void) const 
+FieldContainerType &LineDistribution3DBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr LineDistribution3DBase::shallowCopy(void) const 
-{ 
-    LineDistribution3DPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const LineDistribution3D *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 LineDistribution3DBase::getContainerSize(void) const 
-{ 
-    return sizeof(LineDistribution3D); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void LineDistribution3DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &LineDistribution3DBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<LineDistribution3DBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void LineDistribution3DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 LineDistribution3DBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((LineDistribution3DBase *) &other, whichField, sInfo);
+    return sizeof(LineDistribution3D);
 }
-void LineDistribution3DBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFPnt3f *LineDistribution3DBase::editSFPoint1(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(Point1FieldMask);
+
+    return &_sfPoint1;
 }
 
-void LineDistribution3DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFPnt3f *LineDistribution3DBase::getSFPoint1(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfPoint1;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-LineDistribution3DBase::LineDistribution3DBase(void) :
-    _sfPoint1                 (Pnt3f(0.0,0.0,0.0)), 
-    _sfPoint2                 (Pnt3f(1.0,1.0,1.0)), 
-    Inherited() 
+SFPnt3f *LineDistribution3DBase::editSFPoint2(void)
 {
+    editSField(Point2FieldMask);
+
+    return &_sfPoint2;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-LineDistribution3DBase::LineDistribution3DBase(const LineDistribution3DBase &source) :
-    _sfPoint1                 (source._sfPoint1                 ), 
-    _sfPoint2                 (source._sfPoint2                 ), 
-    Inherited                 (source)
+const SFPnt3f *LineDistribution3DBase::getSFPoint2(void) const
 {
+    return &_sfPoint2;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-LineDistribution3DBase::~LineDistribution3DBase(void)
-{
-}
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 LineDistribution3DBase::getBinSize(const BitVector &whichField)
+UInt32 LineDistribution3DBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -207,18 +258,16 @@ UInt32 LineDistribution3DBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfPoint1.getBinSize();
     }
-
     if(FieldBits::NoField != (Point2FieldMask & whichField))
     {
         returnValue += _sfPoint2.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void LineDistribution3DBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void LineDistribution3DBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -226,17 +275,14 @@ void LineDistribution3DBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfPoint1.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (Point2FieldMask & whichField))
     {
         _sfPoint2.copyToBin(pMem);
     }
-
-
 }
 
-void LineDistribution3DBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void LineDistribution3DBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -244,73 +290,244 @@ void LineDistribution3DBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfPoint1.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (Point2FieldMask & whichField))
     {
         _sfPoint2.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void LineDistribution3DBase::executeSyncImpl(      LineDistribution3DBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+LineDistribution3DTransitPtr LineDistribution3DBase::createLocal(BitVector bFlags)
 {
+    LineDistribution3DTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (Point1FieldMask & whichField))
-        _sfPoint1.syncWith(pOther->_sfPoint1);
+        fc = dynamic_pointer_cast<LineDistribution3D>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (Point2FieldMask & whichField))
-        _sfPoint2.syncWith(pOther->_sfPoint2);
-
-
-}
-#else
-void LineDistribution3DBase::executeSyncImpl(      LineDistribution3DBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (Point1FieldMask & whichField))
-        _sfPoint1.syncWith(pOther->_sfPoint1);
-
-    if(FieldBits::NoField != (Point2FieldMask & whichField))
-        _sfPoint2.syncWith(pOther->_sfPoint2);
-
-
-
+    return fc;
 }
 
-void LineDistribution3DBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+LineDistribution3DTransitPtr LineDistribution3DBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    LineDistribution3DTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<LineDistribution3D>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+LineDistribution3DTransitPtr LineDistribution3DBase::create(void)
+{
+    LineDistribution3DTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<LineDistribution3D>(tmpPtr);
+    }
+
+    return fc;
+}
+
+LineDistribution3D *LineDistribution3DBase::createEmptyLocal(BitVector bFlags)
+{
+    LineDistribution3D *returnValue;
+
+    newPtr<LineDistribution3D>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+LineDistribution3D *LineDistribution3DBase::createEmpty(void)
+{
+    LineDistribution3D *returnValue;
+
+    newPtr<LineDistribution3D>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr LineDistribution3DBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    LineDistribution3D *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const LineDistribution3D *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr LineDistribution3DBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    LineDistribution3D *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const LineDistribution3D *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr LineDistribution3DBase::shallowCopy(void) const
+{
+    LineDistribution3D *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const LineDistribution3D *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+LineDistribution3DBase::LineDistribution3DBase(void) :
+    Inherited(),
+    _sfPoint1                 (Pnt3f(0.0,0.0,0.0)),
+    _sfPoint2                 (Pnt3f(1.0,1.0,1.0))
+{
+}
+
+LineDistribution3DBase::LineDistribution3DBase(const LineDistribution3DBase &source) :
+    Inherited(source),
+    _sfPoint1                 (source._sfPoint1                 ),
+    _sfPoint2                 (source._sfPoint2                 )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+LineDistribution3DBase::~LineDistribution3DBase(void)
+{
+}
+
+
+GetFieldHandlePtr LineDistribution3DBase::getHandlePoint1          (void) const
+{
+    SFPnt3f::GetHandlePtr returnValue(
+        new  SFPnt3f::GetHandle(
+             &_sfPoint1,
+             this->getType().getFieldDesc(Point1FieldId),
+             const_cast<LineDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr LineDistribution3DBase::editHandlePoint1         (void)
+{
+    SFPnt3f::EditHandlePtr returnValue(
+        new  SFPnt3f::EditHandle(
+             &_sfPoint1,
+             this->getType().getFieldDesc(Point1FieldId),
+             this));
+
+
+    editSField(Point1FieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr LineDistribution3DBase::getHandlePoint2          (void) const
+{
+    SFPnt3f::GetHandlePtr returnValue(
+        new  SFPnt3f::GetHandle(
+             &_sfPoint2,
+             this->getType().getFieldDesc(Point2FieldId),
+             const_cast<LineDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr LineDistribution3DBase::editHandlePoint2         (void)
+{
+    SFPnt3f::EditHandlePtr returnValue(
+        new  SFPnt3f::EditHandle(
+             &_sfPoint2,
+             this->getType().getFieldDesc(Point2FieldId),
+             this));
+
+
+    editSField(Point2FieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void LineDistribution3DBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    LineDistribution3D *pThis = static_cast<LineDistribution3D *>(this);
+
+    pThis->execSync(static_cast<LineDistribution3D *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *LineDistribution3DBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    LineDistribution3D *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const LineDistribution3D *>(pRefAspect),
+                  dynamic_cast<const LineDistribution3D *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<LineDistribution3DPtr>::_type("LineDistribution3DPtr", "Distribution3DPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(LineDistribution3DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(LineDistribution3DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+void LineDistribution3DBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

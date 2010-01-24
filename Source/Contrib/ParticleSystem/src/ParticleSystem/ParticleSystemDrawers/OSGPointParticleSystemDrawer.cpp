@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,27 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGGL.h>
-#include <OpenSG/OSGDrawable.h>
+#include <OSGConfig.h>
 
 #include "OSGPointParticleSystemDrawer.h"
-#include "ParticleSystem/OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::PointParticleSystemDrawer
-
-*/
+// Documentation for this class is emitted in the
+// OSGPointParticleSystemDrawerBase.cpp file.
+// To modify it, please change the .fcd file (OSGPointParticleSystemDrawer.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -70,8 +62,13 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void PointParticleSystemDrawer::initMethod (void)
+void PointParticleSystemDrawer::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -79,7 +76,9 @@ void PointParticleSystemDrawer::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-Action::ResultE PointParticleSystemDrawer::draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort)
+Action::ResultE PointParticleSystemDrawer::draw(DrawEnv *pEnv,
+                                               ParticleSystemUnrecPtr System,
+                                               const MFUInt32& Sort)
 {
 	bool isSorted(Sort.getSize() > 0);
 	UInt32 NumParticles;
@@ -91,7 +90,6 @@ Action::ResultE PointParticleSystemDrawer::draw(DrawActionBase *action, Particle
 	{
 		NumParticles = System->getNumParticles();
 	}
-	action->getStatistics()->getElem(ParticleSystem::statNParticles)->add(NumParticles);
 	if(NumParticles != 0)
 	{
 
@@ -162,11 +160,42 @@ Action::ResultE PointParticleSystemDrawer::draw(DrawActionBase *action, Particle
 		glEnd();
 	}
 
-    action->getStatistics()->getElem(Drawable::statNPoints)->add(NumParticles);
-    action->getStatistics()->getElem(Drawable::statNVertices)->add(NumParticles);
-    action->getStatistics()->getElem(Drawable::statNPrimitives)->add(NumParticles);
-
     return Action::Continue;
+}
+
+void PointParticleSystemDrawer::fill(DrawableStatsAttachment *pStat,
+                                    ParticleSystemUnrecPtr System,
+                                    const MFUInt32& Sort)
+{
+    if(pStat == NULL)
+    {
+        FINFO(("PointParticleSystemDrawer::fill(DrawableStatsAttachment *, ParticleSystemUnrecPtr , const MFUInt32& ): "
+               "No attachment given.\n"));
+
+        return;
+    }
+    if(System == NULL)
+    {
+        FINFO(("PointParticleSystemDrawer::fill(DrawableStatsAttachment *, ParticleSystemUnrecPtr , const MFUInt32& ): "
+               "Particle System is NULL.\n"));
+
+        return;
+    }
+
+    UInt32 NumParticles;
+
+    if(Sort.size() > 0)
+    {
+        NumParticles = Sort.getSize();
+    }
+    else
+    {
+        NumParticles = System->getNumParticles();
+    }
+
+    pStat->setVertices(NumParticles);
+    pStat->setPoints(NumParticles);
+    pStat->setValid(true);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -190,41 +219,17 @@ PointParticleSystemDrawer::~PointParticleSystemDrawer(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void PointParticleSystemDrawer::changed(BitVector whichField, UInt32 origin)
+void PointParticleSystemDrawer::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void PointParticleSystemDrawer::dump(      UInt32    , 
+void PointParticleSystemDrawer::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump PointParticleSystemDrawer NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGPOINTPARTICLESYSTEMDRAWERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPOINTPARTICLESYSTEMDRAWERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGPOINTPARTICLESYSTEMDRAWERFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

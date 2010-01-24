@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,157 +50,206 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEAGESIZEPARTICLEAFFECTORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGAgeSizeParticleAffectorBase.h"
 #include "OSGAgeSizeParticleAffector.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  AgeSizeParticleAffectorBase::AgesFieldMask = 
-    (TypeTraits<BitVector>::One << AgeSizeParticleAffectorBase::AgesFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  AgeSizeParticleAffectorBase::SizesFieldMask = 
-    (TypeTraits<BitVector>::One << AgeSizeParticleAffectorBase::SizesFieldId);
+/*! \class OSG::AgeSizeParticleAffector
+    
+ */
 
-const OSG::BitVector AgeSizeParticleAffectorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Real32          AgeSizeParticleAffectorBase::_mfAges
     
 */
+
 /*! \var Vec3f           AgeSizeParticleAffectorBase::_mfSizes
     
 */
 
-//! AgeSizeParticleAffector description
 
-FieldDescription *AgeSizeParticleAffectorBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<AgeSizeParticleAffector *>::_type("AgeSizeParticleAffectorPtr", "ParticleAffectorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(AgeSizeParticleAffector *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           AgeSizeParticleAffector *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           AgeSizeParticleAffector *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void AgeSizeParticleAffectorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(MFReal32::getClassType(), 
-                     "Ages", 
-                     AgesFieldId, AgesFieldMask,
-                     false,
-                     (FieldAccessMethod) &AgeSizeParticleAffectorBase::getMFAges),
-    new FieldDescription(MFVec3f::getClassType(), 
-                     "Sizes", 
-                     SizesFieldId, SizesFieldMask,
-                     false,
-                     (FieldAccessMethod) &AgeSizeParticleAffectorBase::getMFSizes)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType AgeSizeParticleAffectorBase::_type(
-    "AgeSizeParticleAffector",
-    "ParticleAffector",
-    NULL,
-    (PrototypeCreateF) &AgeSizeParticleAffectorBase::createEmpty,
+    pDesc = new MFReal32::Description(
+        MFReal32::getClassType(),
+        "Ages",
+        "",
+        AgesFieldId, AgesFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AgeSizeParticleAffector::editHandleAges),
+        static_cast<FieldGetMethodSig >(&AgeSizeParticleAffector::getHandleAges));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFVec3f::Description(
+        MFVec3f::getClassType(),
+        "Sizes",
+        "",
+        SizesFieldId, SizesFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AgeSizeParticleAffector::editHandleSizes),
+        static_cast<FieldGetMethodSig >(&AgeSizeParticleAffector::getHandleSizes));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+AgeSizeParticleAffectorBase::TypeObject AgeSizeParticleAffectorBase::_type(
+    AgeSizeParticleAffectorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&AgeSizeParticleAffectorBase::createEmptyLocal),
     AgeSizeParticleAffector::initMethod,
-    _desc,
-    sizeof(_desc));
+    AgeSizeParticleAffector::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&AgeSizeParticleAffector::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"AgeSizeParticleAffector\"\n"
+    "\tparent=\"ParticleAffector\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com), Daniel Guilliams           \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"Ages\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Sizes\"\n"
+    "\t\ttype=\"Vec3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(AgeSizeParticleAffectorBase, AgeSizeParticleAffectorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &AgeSizeParticleAffectorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &AgeSizeParticleAffectorBase::getType(void) const 
+FieldContainerType &AgeSizeParticleAffectorBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr AgeSizeParticleAffectorBase::shallowCopy(void) const 
-{ 
-    AgeSizeParticleAffectorPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const AgeSizeParticleAffector *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 AgeSizeParticleAffectorBase::getContainerSize(void) const 
-{ 
-    return sizeof(AgeSizeParticleAffector); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void AgeSizeParticleAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &AgeSizeParticleAffectorBase::getType(void) const
 {
-    this->executeSyncImpl((AgeSizeParticleAffectorBase *) &other, whichField);
+    return _type;
 }
-#else
-void AgeSizeParticleAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 AgeSizeParticleAffectorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((AgeSizeParticleAffectorBase *) &other, whichField, sInfo);
+    return sizeof(AgeSizeParticleAffector);
 }
-void AgeSizeParticleAffectorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+MFReal32 *AgeSizeParticleAffectorBase::editMFAges(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editMField(AgesFieldMask, _mfAges);
+
+    return &_mfAges;
 }
 
-void AgeSizeParticleAffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const MFReal32 *AgeSizeParticleAffectorBase::getMFAges(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
-    _mfAges.terminateShare(uiAspect, this->getContainerSize());
-    _mfSizes.terminateShare(uiAspect, this->getContainerSize());
+    return &_mfAges;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-AgeSizeParticleAffectorBase::AgeSizeParticleAffectorBase(void) :
-    _mfAges                   (), 
-    _mfSizes                  (), 
-    Inherited() 
+MFVec3f *AgeSizeParticleAffectorBase::editMFSizes(void)
 {
+    editMField(SizesFieldMask, _mfSizes);
+
+    return &_mfSizes;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-AgeSizeParticleAffectorBase::AgeSizeParticleAffectorBase(const AgeSizeParticleAffectorBase &source) :
-    _mfAges                   (source._mfAges                   ), 
-    _mfSizes                  (source._mfSizes                  ), 
-    Inherited                 (source)
+const MFVec3f *AgeSizeParticleAffectorBase::getMFSizes(void) const
 {
+    return &_mfSizes;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-AgeSizeParticleAffectorBase::~AgeSizeParticleAffectorBase(void)
-{
-}
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 AgeSizeParticleAffectorBase::getBinSize(const BitVector &whichField)
+UInt32 AgeSizeParticleAffectorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -208,18 +257,16 @@ UInt32 AgeSizeParticleAffectorBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _mfAges.getBinSize();
     }
-
     if(FieldBits::NoField != (SizesFieldMask & whichField))
     {
         returnValue += _mfSizes.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void AgeSizeParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void AgeSizeParticleAffectorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -227,17 +274,14 @@ void AgeSizeParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _mfAges.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SizesFieldMask & whichField))
     {
         _mfSizes.copyToBin(pMem);
     }
-
-
 }
 
-void AgeSizeParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void AgeSizeParticleAffectorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -245,99 +289,257 @@ void AgeSizeParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _mfAges.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SizesFieldMask & whichField))
     {
         _mfSizes.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void AgeSizeParticleAffectorBase::executeSyncImpl(      AgeSizeParticleAffectorBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+AgeSizeParticleAffectorTransitPtr AgeSizeParticleAffectorBase::createLocal(BitVector bFlags)
 {
+    AgeSizeParticleAffectorTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (AgesFieldMask & whichField))
-        _mfAges.syncWith(pOther->_mfAges);
+        fc = dynamic_pointer_cast<AgeSizeParticleAffector>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (SizesFieldMask & whichField))
-        _mfSizes.syncWith(pOther->_mfSizes);
-
-
-}
-#else
-void AgeSizeParticleAffectorBase::executeSyncImpl(      AgeSizeParticleAffectorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-    if(FieldBits::NoField != (AgesFieldMask & whichField))
-        _mfAges.syncWith(pOther->_mfAges, sInfo);
-
-    if(FieldBits::NoField != (SizesFieldMask & whichField))
-        _mfSizes.syncWith(pOther->_mfSizes, sInfo);
-
-
+    return fc;
 }
 
-void AgeSizeParticleAffectorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+AgeSizeParticleAffectorTransitPtr AgeSizeParticleAffectorBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    AgeSizeParticleAffectorTransitPtr fc;
 
-    if(FieldBits::NoField != (AgesFieldMask & whichField))
-        _mfAges.beginEdit(uiAspect, uiContainerSize);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
-    if(FieldBits::NoField != (SizesFieldMask & whichField))
-        _mfSizes.beginEdit(uiAspect, uiContainerSize);
+        fc = dynamic_pointer_cast<AgeSizeParticleAffector>(tmpPtr);
+    }
 
+    return fc;
+}
+
+//! create a new instance of the class
+AgeSizeParticleAffectorTransitPtr AgeSizeParticleAffectorBase::create(void)
+{
+    AgeSizeParticleAffectorTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<AgeSizeParticleAffector>(tmpPtr);
+    }
+
+    return fc;
+}
+
+AgeSizeParticleAffector *AgeSizeParticleAffectorBase::createEmptyLocal(BitVector bFlags)
+{
+    AgeSizeParticleAffector *returnValue;
+
+    newPtr<AgeSizeParticleAffector>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+AgeSizeParticleAffector *AgeSizeParticleAffectorBase::createEmpty(void)
+{
+    AgeSizeParticleAffector *returnValue;
+
+    newPtr<AgeSizeParticleAffector>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr AgeSizeParticleAffectorBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    AgeSizeParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const AgeSizeParticleAffector *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr AgeSizeParticleAffectorBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    AgeSizeParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const AgeSizeParticleAffector *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr AgeSizeParticleAffectorBase::shallowCopy(void) const
+{
+    AgeSizeParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const AgeSizeParticleAffector *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+AgeSizeParticleAffectorBase::AgeSizeParticleAffectorBase(void) :
+    Inherited(),
+    _mfAges                   (),
+    _mfSizes                  ()
+{
+}
+
+AgeSizeParticleAffectorBase::AgeSizeParticleAffectorBase(const AgeSizeParticleAffectorBase &source) :
+    Inherited(source),
+    _mfAges                   (source._mfAges                   ),
+    _mfSizes                  (source._mfSizes                  )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+AgeSizeParticleAffectorBase::~AgeSizeParticleAffectorBase(void)
+{
+}
+
+
+GetFieldHandlePtr AgeSizeParticleAffectorBase::getHandleAges            (void) const
+{
+    MFReal32::GetHandlePtr returnValue(
+        new  MFReal32::GetHandle(
+             &_mfAges,
+             this->getType().getFieldDesc(AgesFieldId),
+             const_cast<AgeSizeParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AgeSizeParticleAffectorBase::editHandleAges           (void)
+{
+    MFReal32::EditHandlePtr returnValue(
+        new  MFReal32::EditHandle(
+             &_mfAges,
+             this->getType().getFieldDesc(AgesFieldId),
+             this));
+
+
+    editMField(AgesFieldMask, _mfAges);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AgeSizeParticleAffectorBase::getHandleSizes           (void) const
+{
+    MFVec3f::GetHandlePtr returnValue(
+        new  MFVec3f::GetHandle(
+             &_mfSizes,
+             this->getType().getFieldDesc(SizesFieldId),
+             const_cast<AgeSizeParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AgeSizeParticleAffectorBase::editHandleSizes          (void)
+{
+    MFVec3f::EditHandlePtr returnValue(
+        new  MFVec3f::EditHandle(
+             &_mfSizes,
+             this->getType().getFieldDesc(SizesFieldId),
+             this));
+
+
+    editMField(SizesFieldMask, _mfSizes);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void AgeSizeParticleAffectorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    AgeSizeParticleAffector *pThis = static_cast<AgeSizeParticleAffector *>(this);
+
+    pThis->execSync(static_cast<AgeSizeParticleAffector *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *AgeSizeParticleAffectorBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    AgeSizeParticleAffector *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const AgeSizeParticleAffector *>(pRefAspect),
+                  dynamic_cast<const AgeSizeParticleAffector *>(this));
+
+    return returnValue;
+}
+#endif
+
+void AgeSizeParticleAffectorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+#ifdef OSG_MT_CPTR_ASPECT
+    AspectOffsetStore oOffsets;
+
+    _pAspectStore->fillOffsetArray(oOffsets, this);
+#endif
+
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfAges.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfSizes.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<AgeSizeParticleAffectorPtr>::_type("AgeSizeParticleAffectorPtr", "ParticleAffectorPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(AgeSizeParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(AgeSizeParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGAGESIZEPARTICLEAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGAGESIZEPARTICLEAFFECTORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGAGESIZEPARTICLEAFFECTORFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

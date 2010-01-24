@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Dynamics                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,39 +42,49 @@
 #pragma once
 #endif
 
-#include "OSGParticleSystemDef.h"
-
 #include "OSGGeoSurfaceDistribution3DBase.h"
 
 OSG_BEGIN_NAMESPACE
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeoSurfaceDistribution3D : public GeoSurfaceDistribution3DBase
-{
-  private:
 
-    typedef GeoSurfaceDistribution3DBase Inherited;
+/*! \brief GeoSurfaceDistribution3D class. See \ref
+           PageContribParticleSystemGeoSurfaceDistribution3D for a description.
+*/
+
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING GeoSurfaceDistribution3D : public GeoSurfaceDistribution3DBase
+{
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef GeoSurfaceDistribution3DBase Inherited;
+    typedef GeoSurfaceDistribution3D     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
     virtual Vec3f generate(void) const;
+
     virtual void generate(Pnt3f& Pos, Vec3f& Normal, Vec3f& Tangent) const;
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in GeoSurfaceDistribution3DBase.
@@ -91,25 +101,29 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeoSurfaceDistribution3D : public GeoSurf
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~GeoSurfaceDistribution3D(void); 
+    virtual ~GeoSurfaceDistribution3D(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
 	
 	void updateSurfaceArea(void);
 	
-	
 	std::vector<Real32> mAreaVector;
-    
+	
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class GeoSurfaceDistribution3DBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const GeoSurfaceDistribution3D &source);
 };
 

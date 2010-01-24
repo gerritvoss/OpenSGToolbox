@@ -3,29 +3,31 @@
 <FieldContainer
 	name="ParticleCollisionEvent"
 	parent="Event"
-    parentHeader="OpenSG/Toolbox/OSGEvent"
-	library="ParticleSystem"
-	pointerfieldtypes="single"
+    library="ContribParticleSystem"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="true"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 	<Field
 		name="PrimarySystem"
-		type="ParticleSystemPtr"
-        header="ParticleSystem/OSGParticleSystemFields.h"
+		type="ParticleSystem"
+        category="pointer"
 		cardinality="single"
 		visibility="internal"
 		access="protected"
-        defaultValue="NullFC"
+        defaultValue="NULL"
         publicRead="true"
 	>
 	</Field>
 	<Field
 		name="PrimaryParticleIndex"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="internal"
 		access="protected"
@@ -35,18 +37,19 @@
 	</Field>
 	<Field
 		name="SecondarySystem"
-		type="ParticleSystemPtr"
-        header="ParticleSystem/OSGParticleSystemFields.h"
+		type="ParticleSystem"
+        category="pointer"
 		cardinality="single"
 		visibility="internal"
 		access="protected"
-        defaultValue="NullFC"
+        defaultValue="NULL"
         publicRead="true"
 	>
 	</Field>
 	<Field
 		name="SecondaryParticleIndex"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="internal"
 		access="protected"

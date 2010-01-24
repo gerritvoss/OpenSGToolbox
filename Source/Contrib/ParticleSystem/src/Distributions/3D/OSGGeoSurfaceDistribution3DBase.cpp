@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,143 +50,168 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEGEOSURFACEDISTRIBUTION3DINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGGeometry.h"                // Surface Class
 
 #include "OSGGeoSurfaceDistribution3DBase.h"
 #include "OSGGeoSurfaceDistribution3D.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  GeoSurfaceDistribution3DBase::SurfaceFieldMask = 
-    (TypeTraits<BitVector>::One << GeoSurfaceDistribution3DBase::SurfaceFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector GeoSurfaceDistribution3DBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::GeoSurfaceDistribution3D
+    An GeoSurfaceDistribution3D.
+ */
 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-// Field descriptions
-
-/*! \var GeometryPtr     GeoSurfaceDistribution3DBase::_sfSurface
+/*! \var Geometry *      GeoSurfaceDistribution3DBase::_sfSurface
     
 */
 
-//! GeoSurfaceDistribution3D description
 
-FieldDescription *GeoSurfaceDistribution3DBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<GeoSurfaceDistribution3D *>::_type("GeoSurfaceDistribution3DPtr", "Distribution3DPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(GeoSurfaceDistribution3D *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           GeoSurfaceDistribution3D *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           GeoSurfaceDistribution3D *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void GeoSurfaceDistribution3DBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFGeometryPtr::getClassType(), 
-                     "Surface", 
-                     SurfaceFieldId, SurfaceFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&GeoSurfaceDistribution3DBase::editSFSurface))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType GeoSurfaceDistribution3DBase::_type(
-    "GeoSurfaceDistribution3D",
-    "Distribution3D",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&GeoSurfaceDistribution3DBase::createEmpty),
+    pDesc = new SFUnrecGeometryPtr::Description(
+        SFUnrecGeometryPtr::getClassType(),
+        "Surface",
+        "",
+        SurfaceFieldId, SurfaceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GeoSurfaceDistribution3D::editHandleSurface),
+        static_cast<FieldGetMethodSig >(&GeoSurfaceDistribution3D::getHandleSurface));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+GeoSurfaceDistribution3DBase::TypeObject GeoSurfaceDistribution3DBase::_type(
+    GeoSurfaceDistribution3DBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&GeoSurfaceDistribution3DBase::createEmptyLocal),
     GeoSurfaceDistribution3D::initMethod,
-    _desc,
-    sizeof(_desc));
+    GeoSurfaceDistribution3D::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&GeoSurfaceDistribution3D::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"GeoSurfaceDistribution3D\"\n"
+    "\tparent=\"Distribution3D\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "An GeoSurfaceDistribution3D.\n"
+    "\t<Field\n"
+    "\t\tname=\"Surface\"\n"
+    "\t\ttype=\"Geometry\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "An GeoSurfaceDistribution3D.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(GeoSurfaceDistribution3DBase, GeoSurfaceDistribution3DPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &GeoSurfaceDistribution3DBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &GeoSurfaceDistribution3DBase::getType(void) const 
+FieldContainerType &GeoSurfaceDistribution3DBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr GeoSurfaceDistribution3DBase::shallowCopy(void) const 
-{ 
-    GeoSurfaceDistribution3DPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const GeoSurfaceDistribution3D *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 GeoSurfaceDistribution3DBase::getContainerSize(void) const 
-{ 
-    return sizeof(GeoSurfaceDistribution3D); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void GeoSurfaceDistribution3DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &GeoSurfaceDistribution3DBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<GeoSurfaceDistribution3DBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void GeoSurfaceDistribution3DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 GeoSurfaceDistribution3DBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((GeoSurfaceDistribution3DBase *) &other, whichField, sInfo);
+    return sizeof(GeoSurfaceDistribution3D);
 }
-void GeoSurfaceDistribution3DBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the GeoSurfaceDistribution3D::_sfSurface field.
+const SFUnrecGeometryPtr *GeoSurfaceDistribution3DBase::getSFSurface(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfSurface;
 }
 
-void GeoSurfaceDistribution3DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecGeometryPtr  *GeoSurfaceDistribution3DBase::editSFSurface        (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(SurfaceFieldMask);
 
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-GeoSurfaceDistribution3DBase::GeoSurfaceDistribution3DBase(void) :
-    _sfSurface                (GeometryPtr(NullFC)), 
-    Inherited() 
-{
+    return &_sfSurface;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-GeoSurfaceDistribution3DBase::GeoSurfaceDistribution3DBase(const GeoSurfaceDistribution3DBase &source) :
-    _sfSurface                (source._sfSurface                ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-GeoSurfaceDistribution3DBase::~GeoSurfaceDistribution3DBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 GeoSurfaceDistribution3DBase::getBinSize(const BitVector &whichField)
+UInt32 GeoSurfaceDistribution3DBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -195,12 +220,11 @@ UInt32 GeoSurfaceDistribution3DBase::getBinSize(const BitVector &whichField)
         returnValue += _sfSurface.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void GeoSurfaceDistribution3DBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void GeoSurfaceDistribution3DBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -208,12 +232,10 @@ void GeoSurfaceDistribution3DBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfSurface.copyToBin(pMem);
     }
-
-
 }
 
-void GeoSurfaceDistribution3DBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void GeoSurfaceDistribution3DBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -221,62 +243,229 @@ void GeoSurfaceDistribution3DBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfSurface.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void GeoSurfaceDistribution3DBase::executeSyncImpl(      GeoSurfaceDistribution3DBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+GeoSurfaceDistribution3DTransitPtr GeoSurfaceDistribution3DBase::createLocal(BitVector bFlags)
 {
+    GeoSurfaceDistribution3DTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (SurfaceFieldMask & whichField))
-        _sfSurface.syncWith(pOther->_sfSurface);
+        fc = dynamic_pointer_cast<GeoSurfaceDistribution3D>(tmpPtr);
+    }
 
-
-}
-#else
-void GeoSurfaceDistribution3DBase::executeSyncImpl(      GeoSurfaceDistribution3DBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (SurfaceFieldMask & whichField))
-        _sfSurface.syncWith(pOther->_sfSurface);
-
-
-
+    return fc;
 }
 
-void GeoSurfaceDistribution3DBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+GeoSurfaceDistribution3DTransitPtr GeoSurfaceDistribution3DBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    GeoSurfaceDistribution3DTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<GeoSurfaceDistribution3D>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+GeoSurfaceDistribution3DTransitPtr GeoSurfaceDistribution3DBase::create(void)
+{
+    GeoSurfaceDistribution3DTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<GeoSurfaceDistribution3D>(tmpPtr);
+    }
+
+    return fc;
+}
+
+GeoSurfaceDistribution3D *GeoSurfaceDistribution3DBase::createEmptyLocal(BitVector bFlags)
+{
+    GeoSurfaceDistribution3D *returnValue;
+
+    newPtr<GeoSurfaceDistribution3D>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+GeoSurfaceDistribution3D *GeoSurfaceDistribution3DBase::createEmpty(void)
+{
+    GeoSurfaceDistribution3D *returnValue;
+
+    newPtr<GeoSurfaceDistribution3D>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr GeoSurfaceDistribution3DBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    GeoSurfaceDistribution3D *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const GeoSurfaceDistribution3D *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr GeoSurfaceDistribution3DBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    GeoSurfaceDistribution3D *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const GeoSurfaceDistribution3D *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr GeoSurfaceDistribution3DBase::shallowCopy(void) const
+{
+    GeoSurfaceDistribution3D *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const GeoSurfaceDistribution3D *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+GeoSurfaceDistribution3DBase::GeoSurfaceDistribution3DBase(void) :
+    Inherited(),
+    _sfSurface                (NULL)
+{
+}
+
+GeoSurfaceDistribution3DBase::GeoSurfaceDistribution3DBase(const GeoSurfaceDistribution3DBase &source) :
+    Inherited(source),
+    _sfSurface                (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+GeoSurfaceDistribution3DBase::~GeoSurfaceDistribution3DBase(void)
+{
+}
+
+void GeoSurfaceDistribution3DBase::onCreate(const GeoSurfaceDistribution3D *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        GeoSurfaceDistribution3D *pThis = static_cast<GeoSurfaceDistribution3D *>(this);
+
+        pThis->setSurface(source->getSurface());
+    }
+}
+
+GetFieldHandlePtr GeoSurfaceDistribution3DBase::getHandleSurface         (void) const
+{
+    SFUnrecGeometryPtr::GetHandlePtr returnValue(
+        new  SFUnrecGeometryPtr::GetHandle(
+             &_sfSurface,
+             this->getType().getFieldDesc(SurfaceFieldId),
+             const_cast<GeoSurfaceDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GeoSurfaceDistribution3DBase::editHandleSurface        (void)
+{
+    SFUnrecGeometryPtr::EditHandlePtr returnValue(
+        new  SFUnrecGeometryPtr::EditHandle(
+             &_sfSurface,
+             this->getType().getFieldDesc(SurfaceFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&GeoSurfaceDistribution3D::setSurface,
+                    static_cast<GeoSurfaceDistribution3D *>(this), _1));
+
+    editSField(SurfaceFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void GeoSurfaceDistribution3DBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    GeoSurfaceDistribution3D *pThis = static_cast<GeoSurfaceDistribution3D *>(this);
+
+    pThis->execSync(static_cast<GeoSurfaceDistribution3D *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *GeoSurfaceDistribution3DBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    GeoSurfaceDistribution3D *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const GeoSurfaceDistribution3D *>(pRefAspect),
+                  dynamic_cast<const GeoSurfaceDistribution3D *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<GeoSurfaceDistribution3DPtr>::_type("GeoSurfaceDistribution3DPtr", "Distribution3DPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(GeoSurfaceDistribution3DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(GeoSurfaceDistribution3DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+void GeoSurfaceDistribution3DBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<GeoSurfaceDistribution3D *>(this)->setSurface(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-

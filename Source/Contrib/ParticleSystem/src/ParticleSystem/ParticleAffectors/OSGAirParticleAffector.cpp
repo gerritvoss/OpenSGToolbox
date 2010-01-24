@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                 Authors: David Kabala , Daniel Guilliams                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,27 +40,25 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGMatrix.h>
-#include <OpenSG/OSGQuaternion.h>
+#include <OSGConfig.h>
 
 #include "OSGAirParticleAffector.h"
-#include "ParticleSystem/OSGParticleSystem.h"
+
+#include "OSGMatrix.h"
+#include "OSGQuaternion.h"
+
+#include "OSGAirParticleAffector.h"
+#include "OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::AirParticleAffector
-
-*/
+// Documentation for this class is emitted in the
+// OSGAirParticleAffectorBase.cpp file.
+// To modify it, please change the .fcd file (OSGAirParticleAffector.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -70,8 +68,13 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void AirParticleAffector::initMethod (void)
+void AirParticleAffector::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -79,9 +82,9 @@ void AirParticleAffector::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool AirParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps)
+bool AirParticleAffector::affect(ParticleSystemRefPtr System, Int32 ParticleIndex, const Time& elps)
 {
-	if(getBeacon() != NullFC)
+	if(getBeacon() != NULL)
 	{	
 		Matrix BeaconToWorld(getBeacon()->getToWorld());
 		Vec3f translation, tmp;
@@ -103,7 +106,7 @@ bool AirParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, 
 			{
 				// calculating effect of field
 				particleDirFromField *= (elps * getSpeed() * getMagnitude())
-										/osg::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax());
+										/osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax());
 				
 				// ensuring the particle is not moving faster than the field magnitude
 				newVelocity = System->getVelocity(ParticleIndex);
@@ -119,7 +122,7 @@ bool AirParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, 
 			else if(!getUseSpread()) //particle velocity affected regardless of field spread
 			{	
 				fieldDirection *= (elps * getSpeed() * getMagnitude())
-										/osg::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax());
+										/osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax());
 				
 				// ensuring the particle is not moving faster than the field magnitude
 				newVelocity = System->getVelocity(ParticleIndex);
@@ -160,41 +163,17 @@ AirParticleAffector::~AirParticleAffector(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void AirParticleAffector::changed(BitVector whichField, UInt32 origin)
+void AirParticleAffector::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void AirParticleAffector::dump(      UInt32    , 
+void AirParticleAffector::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump AirParticleAffector NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGAIRPARTICLEAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGAIRPARTICLEAFFECTORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGAIRPARTICLEAFFECTORFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

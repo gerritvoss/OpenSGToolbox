@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,49 +42,51 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
-#include <set>
-#include "ParticleSystem/Events/OSGParticleCollisionListener.h"
-
 #include "OSGCollisionParticleSystemAffectorBase.h"
+#include <set>
+#include "OSGParticleCollisionListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief CollisionParticleSystemAffector class. See \ref 
-           PageParticleSystemCollisionParticleSystemAffector for a description.
+/*! \brief CollisionParticleSystemAffector class. See \ref
+           PageContribParticleSystemCollisionParticleSystemAffector for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING CollisionParticleSystemAffector : public CollisionParticleSystemAffectorBase
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING CollisionParticleSystemAffector : public CollisionParticleSystemAffectorBase
 {
-  private:
-
-    typedef CollisionParticleSystemAffectorBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef CollisionParticleSystemAffectorBase Inherited;
+    typedef CollisionParticleSystemAffector     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual void affect(ParticleSystemPtr System, const Time& elps);
+    virtual void affect(ParticleSystemRefPtr System, const Time& elps);
+
     EventConnection addParticleCollisionListener(ParticleCollisionListenerPtr Listener);
     bool isParticleCollisionListenerAttached(ParticleCollisionListenerPtr Listener) const;
     void removeParticleCollisionListener(ParticleCollisionListenerPtr Listener);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in CollisionParticleSystemAffectorBase.
@@ -101,7 +103,14 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING CollisionParticleSystemAffector : public 
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~CollisionParticleSystemAffector(void); 
+    virtual ~CollisionParticleSystemAffector(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
 	typedef std::set<ParticleCollisionListenerPtr> ParticleCollisionListenerSet;
@@ -109,18 +118,15 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING CollisionParticleSystemAffector : public 
 
     ParticleCollisionListenerSet       _ParticleCollisionListeners;
 
-    void produceCollision(const ParticleCollisionEventPtr Event);
-    
+    void produceCollision(const ParticleCollisionEventUnrecPtr Event);
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class CollisionParticleSystemAffectorBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const CollisionParticleSystemAffector &source);
 };
 

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,176 +55,106 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &DiscParticleSystemDrawerBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 DiscParticleSystemDrawerBase::getClassTypeId(void) 
+OSG::UInt32 DiscParticleSystemDrawerBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-DiscParticleSystemDrawerPtr DiscParticleSystemDrawerBase::create(void) 
-{
-    DiscParticleSystemDrawerPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = DiscParticleSystemDrawerPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-DiscParticleSystemDrawerPtr DiscParticleSystemDrawerBase::createEmpty(void) 
-{ 
-    DiscParticleSystemDrawerPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 DiscParticleSystemDrawerBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the DiscParticleSystemDrawer::_sfRadius field.
-inline
-SFReal32 *DiscParticleSystemDrawerBase::getSFRadius(void)
-{
-    return &_sfRadius;
-}
-
-//! Get the DiscParticleSystemDrawer::_sfSegments field.
-inline
-SFUInt32 *DiscParticleSystemDrawerBase::getSFSegments(void)
-{
-    return &_sfSegments;
-}
-
-//! Get the DiscParticleSystemDrawer::_sfNormalSource field.
-inline
-SFUInt32 *DiscParticleSystemDrawerBase::getSFNormalSource(void)
-{
-    return &_sfNormalSource;
-}
-
-//! Get the DiscParticleSystemDrawer::_sfNormal field.
-inline
-SFVec3f *DiscParticleSystemDrawerBase::getSFNormal(void)
-{
-    return &_sfNormal;
-}
-
-//! Get the DiscParticleSystemDrawer::_sfUpSource field.
-inline
-SFUInt32 *DiscParticleSystemDrawerBase::getSFUpSource(void)
-{
-    return &_sfUpSource;
-}
-
-//! Get the DiscParticleSystemDrawer::_sfUp field.
-inline
-SFVec3f *DiscParticleSystemDrawerBase::getSFUp(void)
-{
-    return &_sfUp;
-}
-
-//! Get the DiscParticleSystemDrawer::_sfUseNormalAsObjectSpaceRotation field.
-inline
-SFBool *DiscParticleSystemDrawerBase::getSFUseNormalAsObjectSpaceRotation(void)
-{
-    return &_sfUseNormalAsObjectSpaceRotation;
-}
-
-//! Get the DiscParticleSystemDrawer::_sfCenterAlpha field.
-inline
-SFReal32 *DiscParticleSystemDrawerBase::getSFCenterAlpha(void)
-{
-    return &_sfCenterAlpha;
-}
-
-//! Get the DiscParticleSystemDrawer::_sfEdgeAlpha field.
-inline
-SFReal32 *DiscParticleSystemDrawerBase::getSFEdgeAlpha(void)
-{
-    return &_sfEdgeAlpha;
-}
-
-
 //! Get the value of the DiscParticleSystemDrawer::_sfRadius field.
+
 inline
-Real32 &DiscParticleSystemDrawerBase::getRadius(void)
+Real32 &DiscParticleSystemDrawerBase::editRadius(void)
 {
+    editSField(RadiusFieldMask);
+
     return _sfRadius.getValue();
 }
 
 //! Get the value of the DiscParticleSystemDrawer::_sfRadius field.
 inline
-const Real32 &DiscParticleSystemDrawerBase::getRadius(void) const
+      Real32  DiscParticleSystemDrawerBase::getRadius(void) const
 {
     return _sfRadius.getValue();
 }
 
 //! Set the value of the DiscParticleSystemDrawer::_sfRadius field.
 inline
-void DiscParticleSystemDrawerBase::setRadius(const Real32 &value)
+void DiscParticleSystemDrawerBase::setRadius(const Real32 value)
 {
+    editSField(RadiusFieldMask);
+
     _sfRadius.setValue(value);
 }
-
 //! Get the value of the DiscParticleSystemDrawer::_sfSegments field.
+
 inline
-UInt32 &DiscParticleSystemDrawerBase::getSegments(void)
+UInt32 &DiscParticleSystemDrawerBase::editSegments(void)
 {
+    editSField(SegmentsFieldMask);
+
     return _sfSegments.getValue();
 }
 
 //! Get the value of the DiscParticleSystemDrawer::_sfSegments field.
 inline
-const UInt32 &DiscParticleSystemDrawerBase::getSegments(void) const
+      UInt32  DiscParticleSystemDrawerBase::getSegments(void) const
 {
     return _sfSegments.getValue();
 }
 
 //! Set the value of the DiscParticleSystemDrawer::_sfSegments field.
 inline
-void DiscParticleSystemDrawerBase::setSegments(const UInt32 &value)
+void DiscParticleSystemDrawerBase::setSegments(const UInt32 value)
 {
+    editSField(SegmentsFieldMask);
+
     _sfSegments.setValue(value);
 }
-
 //! Get the value of the DiscParticleSystemDrawer::_sfNormalSource field.
+
 inline
-UInt32 &DiscParticleSystemDrawerBase::getNormalSource(void)
+UInt32 &DiscParticleSystemDrawerBase::editNormalSource(void)
 {
+    editSField(NormalSourceFieldMask);
+
     return _sfNormalSource.getValue();
 }
 
 //! Get the value of the DiscParticleSystemDrawer::_sfNormalSource field.
 inline
-const UInt32 &DiscParticleSystemDrawerBase::getNormalSource(void) const
+      UInt32  DiscParticleSystemDrawerBase::getNormalSource(void) const
 {
     return _sfNormalSource.getValue();
 }
 
 //! Set the value of the DiscParticleSystemDrawer::_sfNormalSource field.
 inline
-void DiscParticleSystemDrawerBase::setNormalSource(const UInt32 &value)
+void DiscParticleSystemDrawerBase::setNormalSource(const UInt32 value)
 {
+    editSField(NormalSourceFieldMask);
+
     _sfNormalSource.setValue(value);
 }
-
 //! Get the value of the DiscParticleSystemDrawer::_sfNormal field.
+
 inline
-Vec3f &DiscParticleSystemDrawerBase::getNormal(void)
+Vec3f &DiscParticleSystemDrawerBase::editNormal(void)
 {
+    editSField(NormalFieldMask);
+
     return _sfNormal.getValue();
 }
 
@@ -241,34 +169,42 @@ const Vec3f &DiscParticleSystemDrawerBase::getNormal(void) const
 inline
 void DiscParticleSystemDrawerBase::setNormal(const Vec3f &value)
 {
+    editSField(NormalFieldMask);
+
     _sfNormal.setValue(value);
 }
-
 //! Get the value of the DiscParticleSystemDrawer::_sfUpSource field.
+
 inline
-UInt32 &DiscParticleSystemDrawerBase::getUpSource(void)
+UInt32 &DiscParticleSystemDrawerBase::editUpSource(void)
 {
+    editSField(UpSourceFieldMask);
+
     return _sfUpSource.getValue();
 }
 
 //! Get the value of the DiscParticleSystemDrawer::_sfUpSource field.
 inline
-const UInt32 &DiscParticleSystemDrawerBase::getUpSource(void) const
+      UInt32  DiscParticleSystemDrawerBase::getUpSource(void) const
 {
     return _sfUpSource.getValue();
 }
 
 //! Set the value of the DiscParticleSystemDrawer::_sfUpSource field.
 inline
-void DiscParticleSystemDrawerBase::setUpSource(const UInt32 &value)
+void DiscParticleSystemDrawerBase::setUpSource(const UInt32 value)
 {
+    editSField(UpSourceFieldMask);
+
     _sfUpSource.setValue(value);
 }
-
 //! Get the value of the DiscParticleSystemDrawer::_sfUp field.
+
 inline
-Vec3f &DiscParticleSystemDrawerBase::getUp(void)
+Vec3f &DiscParticleSystemDrawerBase::editUp(void)
 {
+    editSField(UpFieldMask);
+
     return _sfUp.getValue();
 }
 
@@ -283,74 +219,135 @@ const Vec3f &DiscParticleSystemDrawerBase::getUp(void) const
 inline
 void DiscParticleSystemDrawerBase::setUp(const Vec3f &value)
 {
+    editSField(UpFieldMask);
+
     _sfUp.setValue(value);
 }
-
 //! Get the value of the DiscParticleSystemDrawer::_sfUseNormalAsObjectSpaceRotation field.
+
 inline
-bool &DiscParticleSystemDrawerBase::getUseNormalAsObjectSpaceRotation(void)
+bool &DiscParticleSystemDrawerBase::editUseNormalAsObjectSpaceRotation(void)
 {
+    editSField(UseNormalAsObjectSpaceRotationFieldMask);
+
     return _sfUseNormalAsObjectSpaceRotation.getValue();
 }
 
 //! Get the value of the DiscParticleSystemDrawer::_sfUseNormalAsObjectSpaceRotation field.
 inline
-const bool &DiscParticleSystemDrawerBase::getUseNormalAsObjectSpaceRotation(void) const
+      bool  DiscParticleSystemDrawerBase::getUseNormalAsObjectSpaceRotation(void) const
 {
     return _sfUseNormalAsObjectSpaceRotation.getValue();
 }
 
 //! Set the value of the DiscParticleSystemDrawer::_sfUseNormalAsObjectSpaceRotation field.
 inline
-void DiscParticleSystemDrawerBase::setUseNormalAsObjectSpaceRotation(const bool &value)
+void DiscParticleSystemDrawerBase::setUseNormalAsObjectSpaceRotation(const bool value)
 {
+    editSField(UseNormalAsObjectSpaceRotationFieldMask);
+
     _sfUseNormalAsObjectSpaceRotation.setValue(value);
 }
-
 //! Get the value of the DiscParticleSystemDrawer::_sfCenterAlpha field.
+
 inline
-Real32 &DiscParticleSystemDrawerBase::getCenterAlpha(void)
+Real32 &DiscParticleSystemDrawerBase::editCenterAlpha(void)
 {
+    editSField(CenterAlphaFieldMask);
+
     return _sfCenterAlpha.getValue();
 }
 
 //! Get the value of the DiscParticleSystemDrawer::_sfCenterAlpha field.
 inline
-const Real32 &DiscParticleSystemDrawerBase::getCenterAlpha(void) const
+      Real32  DiscParticleSystemDrawerBase::getCenterAlpha(void) const
 {
     return _sfCenterAlpha.getValue();
 }
 
 //! Set the value of the DiscParticleSystemDrawer::_sfCenterAlpha field.
 inline
-void DiscParticleSystemDrawerBase::setCenterAlpha(const Real32 &value)
+void DiscParticleSystemDrawerBase::setCenterAlpha(const Real32 value)
 {
+    editSField(CenterAlphaFieldMask);
+
     _sfCenterAlpha.setValue(value);
 }
-
 //! Get the value of the DiscParticleSystemDrawer::_sfEdgeAlpha field.
+
 inline
-Real32 &DiscParticleSystemDrawerBase::getEdgeAlpha(void)
+Real32 &DiscParticleSystemDrawerBase::editEdgeAlpha(void)
 {
+    editSField(EdgeAlphaFieldMask);
+
     return _sfEdgeAlpha.getValue();
 }
 
 //! Get the value of the DiscParticleSystemDrawer::_sfEdgeAlpha field.
 inline
-const Real32 &DiscParticleSystemDrawerBase::getEdgeAlpha(void) const
+      Real32  DiscParticleSystemDrawerBase::getEdgeAlpha(void) const
 {
     return _sfEdgeAlpha.getValue();
 }
 
 //! Set the value of the DiscParticleSystemDrawer::_sfEdgeAlpha field.
 inline
-void DiscParticleSystemDrawerBase::setEdgeAlpha(const Real32 &value)
+void DiscParticleSystemDrawerBase::setEdgeAlpha(const Real32 value)
 {
+    editSField(EdgeAlphaFieldMask);
+
     _sfEdgeAlpha.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void DiscParticleSystemDrawerBase::execSync (      DiscParticleSystemDrawerBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGDISCPARTICLESYSTEMDRAWERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (RadiusFieldMask & whichField))
+        _sfRadius.syncWith(pFrom->_sfRadius);
+
+    if(FieldBits::NoField != (SegmentsFieldMask & whichField))
+        _sfSegments.syncWith(pFrom->_sfSegments);
+
+    if(FieldBits::NoField != (NormalSourceFieldMask & whichField))
+        _sfNormalSource.syncWith(pFrom->_sfNormalSource);
+
+    if(FieldBits::NoField != (NormalFieldMask & whichField))
+        _sfNormal.syncWith(pFrom->_sfNormal);
+
+    if(FieldBits::NoField != (UpSourceFieldMask & whichField))
+        _sfUpSource.syncWith(pFrom->_sfUpSource);
+
+    if(FieldBits::NoField != (UpFieldMask & whichField))
+        _sfUp.syncWith(pFrom->_sfUp);
+
+    if(FieldBits::NoField != (UseNormalAsObjectSpaceRotationFieldMask & whichField))
+        _sfUseNormalAsObjectSpaceRotation.syncWith(pFrom->_sfUseNormalAsObjectSpaceRotation);
+
+    if(FieldBits::NoField != (CenterAlphaFieldMask & whichField))
+        _sfCenterAlpha.syncWith(pFrom->_sfCenterAlpha);
+
+    if(FieldBits::NoField != (EdgeAlphaFieldMask & whichField))
+        _sfEdgeAlpha.syncWith(pFrom->_sfEdgeAlpha);
+}
+#endif
+
+
+inline
+const Char8 *DiscParticleSystemDrawerBase::getClassname(void)
+{
+    return "DiscParticleSystemDrawer";
+}
+
+
+OSG_GEN_CONTAINERPTR(DiscParticleSystemDrawer);
+
+OSG_END_NAMESPACE
 

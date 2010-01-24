@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,143 +50,168 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEPARTICLEDISTRIBUTION3DINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGParticleSystem.h"          // System Class
 
 #include "OSGParticleDistribution3DBase.h"
 #include "OSGParticleDistribution3D.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ParticleDistribution3DBase::SystemFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleDistribution3DBase::SystemFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector ParticleDistribution3DBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::ParticleDistribution3D
+    An BoxDistribution3D.
+ */
 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-// Field descriptions
-
-/*! \var ParticleSystemPtr ParticleDistribution3DBase::_sfSystem
+/*! \var ParticleSystem * ParticleDistribution3DBase::_sfSystem
     
 */
 
-//! ParticleDistribution3D description
 
-FieldDescription *ParticleDistribution3DBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ParticleDistribution3D *>::_type("ParticleDistribution3DPtr", "Distribution3DPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ParticleDistribution3D *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ParticleDistribution3D *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ParticleDistribution3D *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ParticleDistribution3DBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFParticleSystemPtr::getClassType(), 
-                     "System", 
-                     SystemFieldId, SystemFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleDistribution3DBase::editSFSystem))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType ParticleDistribution3DBase::_type(
-    "ParticleDistribution3D",
-    "Distribution3D",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&ParticleDistribution3DBase::createEmpty),
+    pDesc = new SFUnrecParticleSystemPtr::Description(
+        SFUnrecParticleSystemPtr::getClassType(),
+        "System",
+        "",
+        SystemFieldId, SystemFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleDistribution3D::editHandleSystem),
+        static_cast<FieldGetMethodSig >(&ParticleDistribution3D::getHandleSystem));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+ParticleDistribution3DBase::TypeObject ParticleDistribution3DBase::_type(
+    ParticleDistribution3DBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ParticleDistribution3DBase::createEmptyLocal),
     ParticleDistribution3D::initMethod,
-    _desc,
-    sizeof(_desc));
+    ParticleDistribution3D::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ParticleDistribution3D::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ParticleDistribution3D\"\n"
+    "\tparent=\"Distribution3D\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "An BoxDistribution3D.\n"
+    "\t<Field\n"
+    "\t\tname=\"System\"\n"
+    "\t\ttype=\"ParticleSystem\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "An BoxDistribution3D.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(ParticleDistribution3DBase, ParticleDistribution3DPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ParticleDistribution3DBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ParticleDistribution3DBase::getType(void) const 
+FieldContainerType &ParticleDistribution3DBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr ParticleDistribution3DBase::shallowCopy(void) const 
-{ 
-    ParticleDistribution3DPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const ParticleDistribution3D *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 ParticleDistribution3DBase::getContainerSize(void) const 
-{ 
-    return sizeof(ParticleDistribution3D); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ParticleDistribution3DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &ParticleDistribution3DBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<ParticleDistribution3DBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void ParticleDistribution3DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 ParticleDistribution3DBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((ParticleDistribution3DBase *) &other, whichField, sInfo);
+    return sizeof(ParticleDistribution3D);
 }
-void ParticleDistribution3DBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the ParticleDistribution3D::_sfSystem field.
+const SFUnrecParticleSystemPtr *ParticleDistribution3DBase::getSFSystem(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfSystem;
 }
 
-void ParticleDistribution3DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecParticleSystemPtr *ParticleDistribution3DBase::editSFSystem         (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(SystemFieldMask);
 
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-ParticleDistribution3DBase::ParticleDistribution3DBase(void) :
-    _sfSystem                 (ParticleSystemPtr(NullFC)), 
-    Inherited() 
-{
+    return &_sfSystem;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-ParticleDistribution3DBase::ParticleDistribution3DBase(const ParticleDistribution3DBase &source) :
-    _sfSystem                 (source._sfSystem                 ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-ParticleDistribution3DBase::~ParticleDistribution3DBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ParticleDistribution3DBase::getBinSize(const BitVector &whichField)
+UInt32 ParticleDistribution3DBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -195,12 +220,11 @@ UInt32 ParticleDistribution3DBase::getBinSize(const BitVector &whichField)
         returnValue += _sfSystem.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ParticleDistribution3DBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ParticleDistribution3DBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -208,12 +232,10 @@ void ParticleDistribution3DBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfSystem.copyToBin(pMem);
     }
-
-
 }
 
-void ParticleDistribution3DBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ParticleDistribution3DBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -221,62 +243,229 @@ void ParticleDistribution3DBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfSystem.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ParticleDistribution3DBase::executeSyncImpl(      ParticleDistribution3DBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ParticleDistribution3DTransitPtr ParticleDistribution3DBase::createLocal(BitVector bFlags)
 {
+    ParticleDistribution3DTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (SystemFieldMask & whichField))
-        _sfSystem.syncWith(pOther->_sfSystem);
+        fc = dynamic_pointer_cast<ParticleDistribution3D>(tmpPtr);
+    }
 
-
-}
-#else
-void ParticleDistribution3DBase::executeSyncImpl(      ParticleDistribution3DBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (SystemFieldMask & whichField))
-        _sfSystem.syncWith(pOther->_sfSystem);
-
-
-
+    return fc;
 }
 
-void ParticleDistribution3DBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ParticleDistribution3DTransitPtr ParticleDistribution3DBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ParticleDistribution3DTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<ParticleDistribution3D>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ParticleDistribution3DTransitPtr ParticleDistribution3DBase::create(void)
+{
+    ParticleDistribution3DTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<ParticleDistribution3D>(tmpPtr);
+    }
+
+    return fc;
+}
+
+ParticleDistribution3D *ParticleDistribution3DBase::createEmptyLocal(BitVector bFlags)
+{
+    ParticleDistribution3D *returnValue;
+
+    newPtr<ParticleDistribution3D>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+ParticleDistribution3D *ParticleDistribution3DBase::createEmpty(void)
+{
+    ParticleDistribution3D *returnValue;
+
+    newPtr<ParticleDistribution3D>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ParticleDistribution3DBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    ParticleDistribution3D *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ParticleDistribution3D *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ParticleDistribution3DBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    ParticleDistribution3D *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ParticleDistribution3D *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ParticleDistribution3DBase::shallowCopy(void) const
+{
+    ParticleDistribution3D *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const ParticleDistribution3D *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ParticleDistribution3DBase::ParticleDistribution3DBase(void) :
+    Inherited(),
+    _sfSystem                 (NULL)
+{
+}
+
+ParticleDistribution3DBase::ParticleDistribution3DBase(const ParticleDistribution3DBase &source) :
+    Inherited(source),
+    _sfSystem                 (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ParticleDistribution3DBase::~ParticleDistribution3DBase(void)
+{
+}
+
+void ParticleDistribution3DBase::onCreate(const ParticleDistribution3D *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        ParticleDistribution3D *pThis = static_cast<ParticleDistribution3D *>(this);
+
+        pThis->setSystem(source->getSystem());
+    }
+}
+
+GetFieldHandlePtr ParticleDistribution3DBase::getHandleSystem          (void) const
+{
+    SFUnrecParticleSystemPtr::GetHandlePtr returnValue(
+        new  SFUnrecParticleSystemPtr::GetHandle(
+             &_sfSystem,
+             this->getType().getFieldDesc(SystemFieldId),
+             const_cast<ParticleDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleDistribution3DBase::editHandleSystem         (void)
+{
+    SFUnrecParticleSystemPtr::EditHandlePtr returnValue(
+        new  SFUnrecParticleSystemPtr::EditHandle(
+             &_sfSystem,
+             this->getType().getFieldDesc(SystemFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ParticleDistribution3D::setSystem,
+                    static_cast<ParticleDistribution3D *>(this), _1));
+
+    editSField(SystemFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ParticleDistribution3DBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ParticleDistribution3D *pThis = static_cast<ParticleDistribution3D *>(this);
+
+    pThis->execSync(static_cast<ParticleDistribution3D *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ParticleDistribution3DBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    ParticleDistribution3D *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const ParticleDistribution3D *>(pRefAspect),
+                  dynamic_cast<const ParticleDistribution3D *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ParticleDistribution3DPtr>::_type("ParticleDistribution3DPtr", "Distribution3DPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(ParticleDistribution3DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ParticleDistribution3DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+void ParticleDistribution3DBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<ParticleDistribution3D *>(this)->setSystem(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-

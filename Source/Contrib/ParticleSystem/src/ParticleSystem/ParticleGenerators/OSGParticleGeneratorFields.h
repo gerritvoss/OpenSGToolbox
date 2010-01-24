@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,75 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/OSGAttachmentContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class ParticleGenerator;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! ParticleGeneratorPtr
+OSG_GEN_CONTAINERPTR(ParticleGenerator);
 
-typedef FCPtr<AttachmentContainerPtr, ParticleGenerator> ParticleGeneratorPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpParticleSystemFieldTraits
+/*! \ingroup GrpContribParticleSystemFieldTraits
+    \ingroup GrpLibOSGContribParticleSystem
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<ParticleGeneratorPtr> : 
-    public FieldTraitsRecurseMapper<ParticleGeneratorPtr, true>
+struct FieldTraits<ParticleGenerator *> :
+    public FieldTraitsFCPtrBase<ParticleGenerator *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFParticleGeneratorPtr"; }
-    static const char *getMName(void) { return "MFParticleGeneratorPtr"; }
+    typedef FieldTraits<ParticleGenerator *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFParticleGeneratorPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFParticleGeneratorPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<ParticleGeneratorPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<ParticleGenerator *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecParticleGeneratorPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<ParticleGenerator *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecParticleGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ParticleGenerator *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakParticleGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ParticleGenerator *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdParticleGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ParticleGenerator *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecParticleGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ParticleGenerator *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecParticleGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ParticleGenerator *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakParticleGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ParticleGenerator *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdParticleGeneratorPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<ParticleGenerator *,
+                      RecordedRefCountPolicy  > SFRecParticleGeneratorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<ParticleGenerator *,
+                      UnrecordedRefCountPolicy> SFUnrecParticleGeneratorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<ParticleGenerator *,
+                      WeakRefCountPolicy      > SFWeakParticleGeneratorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<ParticleGenerator *,
+                      NoRefCountPolicy        > SFUncountedParticleGeneratorPtr;
 
-typedef SField<ParticleGeneratorPtr> SFParticleGeneratorPtr;
-#endif
 
-#ifndef OSG_COMPILEPARTICLEGENERATORINST
-OSG_DLLEXPORT_DECL1(SField, ParticleGeneratorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<ParticleGenerator *,
+                      RecordedRefCountPolicy  > MFRecParticleGeneratorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<ParticleGenerator *,
+                      UnrecordedRefCountPolicy> MFUnrecParticleGeneratorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<ParticleGenerator *,
+                      WeakRefCountPolicy      > MFWeakParticleGeneratorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<ParticleGenerator *,
+                      NoRefCountPolicy        > MFUncountedParticleGeneratorPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldMulti */
 
-typedef MField<ParticleGeneratorPtr> MFParticleGeneratorPtr;
-#endif
 
-#ifndef OSG_COMPILEPARTICLEGENERATORINST
-OSG_DLLEXPORT_DECL1(MField, ParticleGeneratorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFRecParticleGeneratorPtr : 
+    public PointerSField<ParticleGenerator *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUnrecParticleGeneratorPtr : 
+    public PointerSField<ParticleGenerator *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFWeakParticleGeneratorPtr :
+    public PointerSField<ParticleGenerator *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUncountedParticleGeneratorPtr :
+    public PointerSField<ParticleGenerator *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFRecParticleGeneratorPtr :
+    public PointerMField<ParticleGenerator *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUnrecParticleGeneratorPtr :
+    public PointerMField<ParticleGenerator *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFWeakParticleGeneratorPtr :
+    public PointerMField<ParticleGenerator *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUncountedParticleGeneratorPtr :
+    public PointerMField<ParticleGenerator *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

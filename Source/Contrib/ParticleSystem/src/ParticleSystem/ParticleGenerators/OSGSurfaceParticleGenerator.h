@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                 Authors: David Kabala , Daniel Guilliams                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,44 +42,48 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGSurfaceParticleGeneratorBase.h"
+#include "OSGGeometry.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief SurfaceParticleGenerator class. See \ref 
-           PageParticleSystemSurfaceParticleGenerator for a description.
+/*! \brief SurfaceParticleGenerator class. See \ref
+           PageContribParticleSystemSurfaceParticleGenerator for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING SurfaceParticleGenerator : public SurfaceParticleGeneratorBase
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING SurfaceParticleGenerator : public SurfaceParticleGeneratorBase
 {
-  private:
-
-    typedef SurfaceParticleGeneratorBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef SurfaceParticleGeneratorBase Inherited;
+    typedef SurfaceParticleGenerator     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
-    /*! \} */
+    /*! \}                                                                 */
 
-	virtual bool generate(ParticleSystemPtr System, const Time& elps);
+	virtual bool generate(ParticleSystemRefPtr System, const Time& elps);
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in SurfaceParticleGeneratorBase.
@@ -96,20 +100,24 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING SurfaceParticleGenerator : public Surface
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SurfaceParticleGenerator(void); 
+    virtual ~SurfaceParticleGenerator(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class SurfaceParticleGeneratorBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const SurfaceParticleGenerator &source);
 };
 

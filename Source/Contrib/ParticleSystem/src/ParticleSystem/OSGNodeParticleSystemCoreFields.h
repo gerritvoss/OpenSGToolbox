@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/OSGGroupFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class NodeParticleSystemCore;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! NodeParticleSystemCorePtr
+OSG_GEN_CONTAINERPTR(NodeParticleSystemCore);
 
-typedef FCPtr<GroupPtr, NodeParticleSystemCore> NodeParticleSystemCorePtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpParticleSystemFieldTraits
+/*! \ingroup GrpContribParticleSystemFieldTraits
+    \ingroup GrpLibOSGContribParticleSystem
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<NodeParticleSystemCorePtr> : 
-    public FieldTraitsRecurseMapper<NodeParticleSystemCorePtr, true>
+struct FieldTraits<NodeParticleSystemCore *> :
+    public FieldTraitsFCPtrBase<NodeParticleSystemCore *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFNodeParticleSystemCorePtr"; }
-    static const char *getMName(void) { return "MFNodeParticleSystemCorePtr"; }
+    typedef FieldTraits<NodeParticleSystemCore *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFNodeParticleSystemCorePtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFNodeParticleSystemCorePtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<NodeParticleSystemCorePtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<NodeParticleSystemCore *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecNodeParticleSystemCorePtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<NodeParticleSystemCore *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecNodeParticleSystemCorePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<NodeParticleSystemCore *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakNodeParticleSystemCorePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<NodeParticleSystemCore *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdNodeParticleSystemCorePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<NodeParticleSystemCore *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecNodeParticleSystemCorePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<NodeParticleSystemCore *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecNodeParticleSystemCorePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<NodeParticleSystemCore *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakNodeParticleSystemCorePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<NodeParticleSystemCore *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdNodeParticleSystemCorePtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<NodeParticleSystemCore *,
+                      RecordedRefCountPolicy  > SFRecNodeParticleSystemCorePtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<NodeParticleSystemCore *,
+                      UnrecordedRefCountPolicy> SFUnrecNodeParticleSystemCorePtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<NodeParticleSystemCore *,
+                      WeakRefCountPolicy      > SFWeakNodeParticleSystemCorePtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<NodeParticleSystemCore *,
+                      NoRefCountPolicy        > SFUncountedNodeParticleSystemCorePtr;
 
-typedef SField<NodeParticleSystemCorePtr> SFNodeParticleSystemCorePtr;
-#endif
 
-#ifndef OSG_COMPILENODEPARTICLESYSTEMCOREINST
-OSG_DLLEXPORT_DECL1(SField, NodeParticleSystemCorePtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<NodeParticleSystemCore *,
+                      RecordedRefCountPolicy  > MFRecNodeParticleSystemCorePtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<NodeParticleSystemCore *,
+                      UnrecordedRefCountPolicy> MFUnrecNodeParticleSystemCorePtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<NodeParticleSystemCore *,
+                      WeakRefCountPolicy      > MFWeakNodeParticleSystemCorePtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<NodeParticleSystemCore *,
+                      NoRefCountPolicy        > MFUncountedNodeParticleSystemCorePtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldMulti */
 
-typedef MField<NodeParticleSystemCorePtr> MFNodeParticleSystemCorePtr;
-#endif
 
-#ifndef OSG_COMPILENODEPARTICLESYSTEMCOREINST
-OSG_DLLEXPORT_DECL1(MField, NodeParticleSystemCorePtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFRecNodeParticleSystemCorePtr : 
+    public PointerSField<NodeParticleSystemCore *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUnrecNodeParticleSystemCorePtr : 
+    public PointerSField<NodeParticleSystemCore *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFWeakNodeParticleSystemCorePtr :
+    public PointerSField<NodeParticleSystemCore *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUncountedNodeParticleSystemCorePtr :
+    public PointerSField<NodeParticleSystemCore *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFRecNodeParticleSystemCorePtr :
+    public PointerMField<NodeParticleSystemCore *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUnrecNodeParticleSystemCorePtr :
+    public PointerMField<NodeParticleSystemCore *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFWeakNodeParticleSystemCorePtr :
+    public PointerMField<NodeParticleSystemCore *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUncountedNodeParticleSystemCorePtr :
+    public PointerMField<NodeParticleSystemCore *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGNODEPARTICLESYSTEMCOREFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGNODEPARTICLESYSTEMCOREFIELDS_H_ */

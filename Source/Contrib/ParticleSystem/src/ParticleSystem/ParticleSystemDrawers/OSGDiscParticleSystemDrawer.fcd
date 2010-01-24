@@ -3,17 +3,20 @@
 <FieldContainer
 	name="DiscParticleSystemDrawer"
 	parent="ParticleSystemDrawer"
-	library="ParticleSystem"
-	pointerfieldtypes="both"
+    library="ContribParticleSystem"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 	<Field
 		name="Radius"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.5"
@@ -24,6 +27,7 @@
 	<Field
 		name="Segments"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="12"
@@ -34,6 +38,7 @@
 	<Field
 		name="NormalSource"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="DiscParticleSystemDrawer::NORMAL_VIEW_DIRECTION"
@@ -52,6 +57,7 @@
    <Field
 		name="Normal"
 		type="Vec3f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1.0,0.0,0.0"
@@ -62,6 +68,7 @@
 	<Field
 		name="UpSource"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="DiscParticleSystemDrawer::UP_VIEW_DIRECTION"
@@ -79,6 +86,7 @@
    <Field
 		name="Up"
 		type="Vec3f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,1.0,0.0"
@@ -89,6 +97,7 @@
 	<Field
 		name="UseNormalAsObjectSpaceRotation"
 		type="bool"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="false"
@@ -98,6 +107,7 @@
 	<Field
 		name="CenterAlpha"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1.0"
@@ -107,6 +117,7 @@
 	<Field
 		name="EdgeAlpha"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1.0"

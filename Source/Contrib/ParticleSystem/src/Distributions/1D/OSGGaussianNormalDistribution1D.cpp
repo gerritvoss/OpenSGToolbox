@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Dynamics                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,23 +40,21 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGGaussianNormalDistribution1D.h"
-#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
+#include "OSGRandomPoolManager.h"
+#include "OSGBaseFunctions.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::GaussianNormalDistribution1D
-An GaussianNormalDistribution1D. 	
-*/
+// Documentation for this class is emitted in the
+// OSGGaussianNormalDistribution1DBase.cpp file.
+// To modify it, please change the .fcd file (OSGGaussianNormalDistribution1D.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -66,8 +64,13 @@ An GaussianNormalDistribution1D.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void GaussianNormalDistribution1D::initMethod (void)
+void GaussianNormalDistribution1D::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -78,7 +81,7 @@ void GaussianNormalDistribution1D::initMethod (void)
 Real32 GaussianNormalDistribution1D::generate(void) const
 {
     //Use the Box-Muller method for generating normally distributed values
-    return osgsqrt(-2.0f * osglog(1.0f - RandomPoolManager::getRandomReal32(0.0,1.0)))* osgcos(6.283185f * RandomPoolManager::getRandomReal32(0.0,1.0))*getStandardDeviation() + getMean();
+    return osgSqrt(-2.0f * osgLog(1.0f - RandomPoolManager::getRandomReal32(0.0,1.0)))* osgCos(6.283185f * RandomPoolManager::getRandomReal32(0.0,1.0))*getStandardDeviation() + getMean();
 }
 
 /*-------------------------------------------------------------------------*\
@@ -103,16 +106,17 @@ GaussianNormalDistribution1D::~GaussianNormalDistribution1D(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void GaussianNormalDistribution1D::changed(BitVector whichField, UInt32 origin)
+void GaussianNormalDistribution1D::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void GaussianNormalDistribution1D::dump(      UInt32    , 
+void GaussianNormalDistribution1D::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump GaussianNormalDistribution1D NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,113 +50,124 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEDISTRIBUTION3DINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGDistribution3DBase.h"
 #include "OSGDistribution3D.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector Distribution3DBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::Distribution3D
+    
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<Distribution3D *>::_type("Distribution3DPtr", "DistributionPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(Distribution3D *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           Distribution3D *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           Distribution3D *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void Distribution3DBase::classDescInserter(TypeObject &oType)
+{
+}
 
 
-FieldContainerType Distribution3DBase::_type(
-    "Distribution3D",
-    "Distribution",
+Distribution3DBase::TypeObject Distribution3DBase::_type(
+    Distribution3DBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
     NULL,
-    NULL, 
     Distribution3D::initMethod,
-    NULL,
-    0);
+    Distribution3D::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&Distribution3D::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"Distribution3D\"\n"
+    "\tparent=\"Distribution\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"abstract\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(Distribution3DBase, Distribution3DPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &Distribution3DBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &Distribution3DBase::getType(void) const 
+FieldContainerType &Distribution3DBase::getType(void)
 {
     return _type;
-} 
-
-
-UInt32 Distribution3DBase::getContainerSize(void) const 
-{ 
-    return sizeof(Distribution3D); 
 }
 
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void Distribution3DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &Distribution3DBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<Distribution3DBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void Distribution3DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 Distribution3DBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((Distribution3DBase *) &other, whichField, sInfo);
-}
-void Distribution3DBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(Distribution3D);
 }
 
-void Distribution3DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-Distribution3DBase::Distribution3DBase(void) :
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-Distribution3DBase::Distribution3DBase(const Distribution3DBase &source) :
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-Distribution3DBase::~Distribution3DBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 Distribution3DBase::getBinSize(const BitVector &whichField)
+UInt32 Distribution3DBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -164,68 +175,69 @@ UInt32 Distribution3DBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void Distribution3DBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void Distribution3DBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-
 }
 
-void Distribution3DBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void Distribution3DBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void Distribution3DBase::executeSyncImpl(      Distribution3DBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+Distribution3DBase::Distribution3DBase(void) :
+    Inherited()
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-
-}
-#else
-void Distribution3DBase::executeSyncImpl(      Distribution3DBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
 }
 
-void Distribution3DBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+Distribution3DBase::Distribution3DBase(const Distribution3DBase &source) :
+    Inherited(source)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
+
+/*-------------------------- destructors ----------------------------------*/
+
+Distribution3DBase::~Distribution3DBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void Distribution3DBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Distribution3D *pThis = static_cast<Distribution3D *>(this);
+
+    pThis->execSync(static_cast<Distribution3D *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
 
-OSG_END_NAMESPACE
+void Distribution3DBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
 
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<Distribution3DPtr>::_type("Distribution3DPtr", "DistributionPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(Distribution3DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(Distribution3DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+}
 
 
 OSG_END_NAMESPACE
-

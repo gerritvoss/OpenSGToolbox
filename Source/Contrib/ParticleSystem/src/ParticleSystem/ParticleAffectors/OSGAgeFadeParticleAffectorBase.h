@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,74 +58,85 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGParticleAffector.h" // Parent
 
-#include <OpenSG/OSGReal32Fields.h> // FadeInTime type
-#include <OpenSG/OSGReal32Fields.h> // FadeOutTime type
-#include <OpenSG/OSGReal32Fields.h> // FadeToAlpha type
-#include <OpenSG/OSGReal32Fields.h> // StartAlpha type
-#include <OpenSG/OSGReal32Fields.h> // EndAlpha type
+#include "OSGSysFields.h"               // FadeInTime type
 
 #include "OSGAgeFadeParticleAffectorFields.h"
+
 
 OSG_BEGIN_NAMESPACE
 
 class AgeFadeParticleAffector;
-class BinaryDataHandler;
 
 //! \brief AgeFadeParticleAffector Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING AgeFadeParticleAffectorBase : public ParticleAffector
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING AgeFadeParticleAffectorBase : public ParticleAffector
 {
-  private:
-
-    typedef ParticleAffector    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef AgeFadeParticleAffectorPtr  Ptr;
+    typedef ParticleAffector Inherited;
+    typedef ParticleAffector ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(AgeFadeParticleAffector);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        FadeInTimeFieldId  = Inherited::NextFieldId,
-        FadeOutTimeFieldId = FadeInTimeFieldId  + 1,
+        FadeInTimeFieldId = Inherited::NextFieldId,
+        FadeOutTimeFieldId = FadeInTimeFieldId + 1,
         FadeToAlphaFieldId = FadeOutTimeFieldId + 1,
-        StartAlphaFieldId  = FadeToAlphaFieldId + 1,
-        EndAlphaFieldId    = StartAlphaFieldId  + 1,
-        NextFieldId        = EndAlphaFieldId    + 1
+        StartAlphaFieldId = FadeToAlphaFieldId + 1,
+        EndAlphaFieldId = StartAlphaFieldId + 1,
+        NextFieldId = EndAlphaFieldId + 1
     };
 
-    static const OSG::BitVector FadeInTimeFieldMask;
-    static const OSG::BitVector FadeOutTimeFieldMask;
-    static const OSG::BitVector FadeToAlphaFieldMask;
-    static const OSG::BitVector StartAlphaFieldMask;
-    static const OSG::BitVector EndAlphaFieldMask;
+    static const OSG::BitVector FadeInTimeFieldMask =
+        (TypeTraits<BitVector>::One << FadeInTimeFieldId);
+    static const OSG::BitVector FadeOutTimeFieldMask =
+        (TypeTraits<BitVector>::One << FadeOutTimeFieldId);
+    static const OSG::BitVector FadeToAlphaFieldMask =
+        (TypeTraits<BitVector>::One << FadeToAlphaFieldId);
+    static const OSG::BitVector StartAlphaFieldMask =
+        (TypeTraits<BitVector>::One << StartAlphaFieldId);
+    static const OSG::BitVector EndAlphaFieldMask =
+        (TypeTraits<BitVector>::One << EndAlphaFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFReal32          SFFadeInTimeType;
+    typedef SFReal32          SFFadeOutTimeType;
+    typedef SFReal32          SFFadeToAlphaType;
+    typedef SFReal32          SFStartAlphaType;
+    typedef SFReal32          SFEndAlphaType;
 
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -134,37 +145,52 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING AgeFadeParticleAffectorBase : public Part
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *getSFFadeInTime     (void);
-           SFReal32            *getSFFadeOutTime    (void);
-           SFReal32            *getSFFadeToAlpha    (void);
-           SFReal32            *getSFStartAlpha     (void);
-           SFReal32            *getSFEndAlpha       (void);
 
-           Real32              &getFadeInTime     (void);
-     const Real32              &getFadeInTime     (void) const;
-           Real32              &getFadeOutTime    (void);
-     const Real32              &getFadeOutTime    (void) const;
-           Real32              &getFadeToAlpha    (void);
-     const Real32              &getFadeToAlpha    (void) const;
-           Real32              &getStartAlpha     (void);
-     const Real32              &getStartAlpha     (void) const;
-           Real32              &getEndAlpha       (void);
-     const Real32              &getEndAlpha       (void) const;
+                  SFReal32            *editSFFadeInTime     (void);
+            const SFReal32            *getSFFadeInTime      (void) const;
+
+                  SFReal32            *editSFFadeOutTime    (void);
+            const SFReal32            *getSFFadeOutTime     (void) const;
+
+                  SFReal32            *editSFFadeToAlpha    (void);
+            const SFReal32            *getSFFadeToAlpha     (void) const;
+
+                  SFReal32            *editSFStartAlpha     (void);
+            const SFReal32            *getSFStartAlpha      (void) const;
+
+                  SFReal32            *editSFEndAlpha       (void);
+            const SFReal32            *getSFEndAlpha        (void) const;
+
+
+                  Real32              &editFadeInTime     (void);
+                  Real32               getFadeInTime      (void) const;
+
+                  Real32              &editFadeOutTime    (void);
+                  Real32               getFadeOutTime     (void) const;
+
+                  Real32              &editFadeToAlpha    (void);
+                  Real32               getFadeToAlpha     (void) const;
+
+                  Real32              &editStartAlpha     (void);
+                  Real32               getStartAlpha      (void) const;
+
+                  Real32              &editEndAlpha       (void);
+                  Real32               getEndAlpha        (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setFadeInTime     ( const Real32 &value );
-     void setFadeOutTime    ( const Real32 &value );
-     void setFadeToAlpha    ( const Real32 &value );
-     void setStartAlpha     ( const Real32 &value );
-     void setEndAlpha       ( const Real32 &value );
+            void setFadeInTime     (const Real32 value);
+            void setFadeOutTime    (const Real32 value);
+            void setFadeToAlpha    (const Real32 value);
+            void setStartAlpha     (const Real32 value);
+            void setEndAlpha       (const Real32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -172,42 +198,60 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING AgeFadeParticleAffectorBase : public Part
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  AgeFadeParticleAffectorPtr      create          (void); 
-    static  AgeFadeParticleAffectorPtr      createEmpty     (void); 
+    static  AgeFadeParticleAffectorTransitPtr  create          (void);
+    static  AgeFadeParticleAffector           *createEmpty     (void);
+
+    static  AgeFadeParticleAffectorTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  AgeFadeParticleAffector            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  AgeFadeParticleAffectorTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFReal32            _sfFadeInTime;
-    SFReal32            _sfFadeOutTime;
-    SFReal32            _sfFadeToAlpha;
-    SFReal32            _sfStartAlpha;
-    SFReal32            _sfEndAlpha;
+    SFReal32          _sfFadeInTime;
+    SFReal32          _sfFadeOutTime;
+    SFReal32          _sfFadeToAlpha;
+    SFReal32          _sfStartAlpha;
+    SFReal32          _sfEndAlpha;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -222,69 +266,87 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING AgeFadeParticleAffectorBase : public Part
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~AgeFadeParticleAffectorBase(void); 
+    virtual ~AgeFadeParticleAffectorBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleFadeInTime      (void) const;
+    EditFieldHandlePtr editHandleFadeInTime     (void);
+    GetFieldHandlePtr  getHandleFadeOutTime     (void) const;
+    EditFieldHandlePtr editHandleFadeOutTime    (void);
+    GetFieldHandlePtr  getHandleFadeToAlpha     (void) const;
+    EditFieldHandlePtr editHandleFadeToAlpha    (void);
+    GetFieldHandlePtr  getHandleStartAlpha      (void) const;
+    EditFieldHandlePtr editHandleStartAlpha     (void);
+    GetFieldHandlePtr  getHandleEndAlpha        (void) const;
+    EditFieldHandlePtr editHandleEndAlpha       (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      AgeFadeParticleAffectorBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      AgeFadeParticleAffectorBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      AgeFadeParticleAffectorBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const AgeFadeParticleAffectorBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef AgeFadeParticleAffectorBase *AgeFadeParticleAffectorBaseP;
 
-typedef osgIF<AgeFadeParticleAffectorBase::isNodeCore,
-              CoredNodePtr<AgeFadeParticleAffector>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet AgeFadeParticleAffectorNodePtr;
-
-typedef RefPtr<AgeFadeParticleAffectorPtr> AgeFadeParticleAffectorRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGAGEFADEPARTICLEAFFECTORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGAGEFADEPARTICLEAFFECTORBASE_H_ */

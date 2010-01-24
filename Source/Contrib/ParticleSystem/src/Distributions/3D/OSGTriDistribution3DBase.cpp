@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,182 +50,287 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILETRIDISTRIBUTION3DINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGTriDistribution3DBase.h"
 #include "OSGTriDistribution3D.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  TriDistribution3DBase::Point1FieldMask = 
-    (TypeTraits<BitVector>::One << TriDistribution3DBase::Point1FieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  TriDistribution3DBase::Point2FieldMask = 
-    (TypeTraits<BitVector>::One << TriDistribution3DBase::Point2FieldId);
+/*! \class OSG::TriDistribution3D
+    An TriDistribution3D.
+ */
 
-const OSG::BitVector  TriDistribution3DBase::Point3FieldMask = 
-    (TypeTraits<BitVector>::One << TriDistribution3DBase::Point3FieldId);
-
-const OSG::BitVector  TriDistribution3DBase::SurfaceOrEdgeFieldMask = 
-    (TypeTraits<BitVector>::One << TriDistribution3DBase::SurfaceOrEdgeFieldId);
-
-const OSG::BitVector TriDistribution3DBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Pnt3f           TriDistribution3DBase::_sfPoint1
     
 */
+
 /*! \var Pnt3f           TriDistribution3DBase::_sfPoint2
     
 */
+
 /*! \var Pnt3f           TriDistribution3DBase::_sfPoint3
     
 */
+
 /*! \var UInt32          TriDistribution3DBase::_sfSurfaceOrEdge
     
 */
 
-//! TriDistribution3D description
 
-FieldDescription *TriDistribution3DBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<TriDistribution3D *>::_type("TriDistribution3DPtr", "Distribution3DPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(TriDistribution3D *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           TriDistribution3D *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           TriDistribution3D *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void TriDistribution3DBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFPnt3f::getClassType(), 
-                     "Point1", 
-                     Point1FieldId, Point1FieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TriDistribution3DBase::editSFPoint1)),
-    new FieldDescription(SFPnt3f::getClassType(), 
-                     "Point2", 
-                     Point2FieldId, Point2FieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TriDistribution3DBase::editSFPoint2)),
-    new FieldDescription(SFPnt3f::getClassType(), 
-                     "Point3", 
-                     Point3FieldId, Point3FieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TriDistribution3DBase::editSFPoint3)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "SurfaceOrEdge", 
-                     SurfaceOrEdgeFieldId, SurfaceOrEdgeFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TriDistribution3DBase::editSFSurfaceOrEdge))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType TriDistribution3DBase::_type(
-    "TriDistribution3D",
-    "Distribution3D",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&TriDistribution3DBase::createEmpty),
+    pDesc = new SFPnt3f::Description(
+        SFPnt3f::getClassType(),
+        "Point1",
+        "",
+        Point1FieldId, Point1FieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TriDistribution3D::editHandlePoint1),
+        static_cast<FieldGetMethodSig >(&TriDistribution3D::getHandlePoint1));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFPnt3f::Description(
+        SFPnt3f::getClassType(),
+        "Point2",
+        "",
+        Point2FieldId, Point2FieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TriDistribution3D::editHandlePoint2),
+        static_cast<FieldGetMethodSig >(&TriDistribution3D::getHandlePoint2));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFPnt3f::Description(
+        SFPnt3f::getClassType(),
+        "Point3",
+        "",
+        Point3FieldId, Point3FieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TriDistribution3D::editHandlePoint3),
+        static_cast<FieldGetMethodSig >(&TriDistribution3D::getHandlePoint3));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "SurfaceOrEdge",
+        "",
+        SurfaceOrEdgeFieldId, SurfaceOrEdgeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TriDistribution3D::editHandleSurfaceOrEdge),
+        static_cast<FieldGetMethodSig >(&TriDistribution3D::getHandleSurfaceOrEdge));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+TriDistribution3DBase::TypeObject TriDistribution3DBase::_type(
+    TriDistribution3DBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&TriDistribution3DBase::createEmptyLocal),
     TriDistribution3D::initMethod,
-    _desc,
-    sizeof(_desc));
+    TriDistribution3D::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&TriDistribution3D::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"TriDistribution3D\"\n"
+    "\tparent=\"Distribution3D\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "An TriDistribution3D.\n"
+    "\t<Field\n"
+    "\t\tname=\"Point1\"\n"
+    "\t\ttype=\"Pnt3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Point2\"\n"
+    "\t\ttype=\"Pnt3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1.0,0.0,0.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Point3\"\n"
+    "\t\ttype=\"Pnt3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,1.0,0.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SurfaceOrEdge\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"TriDistribution3D::SURFACE\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "An TriDistribution3D.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(TriDistribution3DBase, TriDistribution3DPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &TriDistribution3DBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &TriDistribution3DBase::getType(void) const 
+FieldContainerType &TriDistribution3DBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr TriDistribution3DBase::shallowCopy(void) const 
-{ 
-    TriDistribution3DPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const TriDistribution3D *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 TriDistribution3DBase::getContainerSize(void) const 
-{ 
-    return sizeof(TriDistribution3D); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TriDistribution3DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &TriDistribution3DBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<TriDistribution3DBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void TriDistribution3DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 TriDistribution3DBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((TriDistribution3DBase *) &other, whichField, sInfo);
+    return sizeof(TriDistribution3D);
 }
-void TriDistribution3DBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFPnt3f *TriDistribution3DBase::editSFPoint1(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(Point1FieldMask);
+
+    return &_sfPoint1;
 }
 
-void TriDistribution3DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFPnt3f *TriDistribution3DBase::getSFPoint1(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfPoint1;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-TriDistribution3DBase::TriDistribution3DBase(void) :
-    _sfPoint1                 (Pnt3f(0.0,0.0,0.0)), 
-    _sfPoint2                 (Pnt3f(1.0,0.0,0.0)), 
-    _sfPoint3                 (Pnt3f(0.0,1.0,0.0)), 
-    _sfSurfaceOrEdge          (UInt32(TriDistribution3D::SURFACE)), 
-    Inherited() 
+SFPnt3f *TriDistribution3DBase::editSFPoint2(void)
 {
+    editSField(Point2FieldMask);
+
+    return &_sfPoint2;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-TriDistribution3DBase::TriDistribution3DBase(const TriDistribution3DBase &source) :
-    _sfPoint1                 (source._sfPoint1                 ), 
-    _sfPoint2                 (source._sfPoint2                 ), 
-    _sfPoint3                 (source._sfPoint3                 ), 
-    _sfSurfaceOrEdge          (source._sfSurfaceOrEdge          ), 
-    Inherited                 (source)
+const SFPnt3f *TriDistribution3DBase::getSFPoint2(void) const
 {
+    return &_sfPoint2;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-TriDistribution3DBase::~TriDistribution3DBase(void)
+SFPnt3f *TriDistribution3DBase::editSFPoint3(void)
 {
+    editSField(Point3FieldMask);
+
+    return &_sfPoint3;
 }
+
+const SFPnt3f *TriDistribution3DBase::getSFPoint3(void) const
+{
+    return &_sfPoint3;
+}
+
+
+SFUInt32 *TriDistribution3DBase::editSFSurfaceOrEdge(void)
+{
+    editSField(SurfaceOrEdgeFieldMask);
+
+    return &_sfSurfaceOrEdge;
+}
+
+const SFUInt32 *TriDistribution3DBase::getSFSurfaceOrEdge(void) const
+{
+    return &_sfSurfaceOrEdge;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 TriDistribution3DBase::getBinSize(const BitVector &whichField)
+UInt32 TriDistribution3DBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -233,28 +338,24 @@ UInt32 TriDistribution3DBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfPoint1.getBinSize();
     }
-
     if(FieldBits::NoField != (Point2FieldMask & whichField))
     {
         returnValue += _sfPoint2.getBinSize();
     }
-
     if(FieldBits::NoField != (Point3FieldMask & whichField))
     {
         returnValue += _sfPoint3.getBinSize();
     }
-
     if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
     {
         returnValue += _sfSurfaceOrEdge.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void TriDistribution3DBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void TriDistribution3DBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -262,27 +363,22 @@ void TriDistribution3DBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfPoint1.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (Point2FieldMask & whichField))
     {
         _sfPoint2.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (Point3FieldMask & whichField))
     {
         _sfPoint3.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
     {
         _sfSurfaceOrEdge.copyToBin(pMem);
     }
-
-
 }
 
-void TriDistribution3DBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void TriDistribution3DBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -290,95 +386,306 @@ void TriDistribution3DBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfPoint1.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (Point2FieldMask & whichField))
     {
         _sfPoint2.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (Point3FieldMask & whichField))
     {
         _sfPoint3.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
     {
         _sfSurfaceOrEdge.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TriDistribution3DBase::executeSyncImpl(      TriDistribution3DBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+TriDistribution3DTransitPtr TriDistribution3DBase::createLocal(BitVector bFlags)
 {
+    TriDistribution3DTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (Point1FieldMask & whichField))
-        _sfPoint1.syncWith(pOther->_sfPoint1);
+        fc = dynamic_pointer_cast<TriDistribution3D>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (Point2FieldMask & whichField))
-        _sfPoint2.syncWith(pOther->_sfPoint2);
-
-    if(FieldBits::NoField != (Point3FieldMask & whichField))
-        _sfPoint3.syncWith(pOther->_sfPoint3);
-
-    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
-        _sfSurfaceOrEdge.syncWith(pOther->_sfSurfaceOrEdge);
-
-
-}
-#else
-void TriDistribution3DBase::executeSyncImpl(      TriDistribution3DBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (Point1FieldMask & whichField))
-        _sfPoint1.syncWith(pOther->_sfPoint1);
-
-    if(FieldBits::NoField != (Point2FieldMask & whichField))
-        _sfPoint2.syncWith(pOther->_sfPoint2);
-
-    if(FieldBits::NoField != (Point3FieldMask & whichField))
-        _sfPoint3.syncWith(pOther->_sfPoint3);
-
-    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
-        _sfSurfaceOrEdge.syncWith(pOther->_sfSurfaceOrEdge);
-
-
-
+    return fc;
 }
 
-void TriDistribution3DBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+TriDistribution3DTransitPtr TriDistribution3DBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    TriDistribution3DTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<TriDistribution3D>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+TriDistribution3DTransitPtr TriDistribution3DBase::create(void)
+{
+    TriDistribution3DTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<TriDistribution3D>(tmpPtr);
+    }
+
+    return fc;
+}
+
+TriDistribution3D *TriDistribution3DBase::createEmptyLocal(BitVector bFlags)
+{
+    TriDistribution3D *returnValue;
+
+    newPtr<TriDistribution3D>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+TriDistribution3D *TriDistribution3DBase::createEmpty(void)
+{
+    TriDistribution3D *returnValue;
+
+    newPtr<TriDistribution3D>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr TriDistribution3DBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    TriDistribution3D *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const TriDistribution3D *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TriDistribution3DBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    TriDistribution3D *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const TriDistribution3D *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TriDistribution3DBase::shallowCopy(void) const
+{
+    TriDistribution3D *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const TriDistribution3D *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+TriDistribution3DBase::TriDistribution3DBase(void) :
+    Inherited(),
+    _sfPoint1                 (Pnt3f(0.0,0.0,0.0)),
+    _sfPoint2                 (Pnt3f(1.0,0.0,0.0)),
+    _sfPoint3                 (Pnt3f(0.0,1.0,0.0)),
+    _sfSurfaceOrEdge          (UInt32(TriDistribution3D::SURFACE))
+{
+}
+
+TriDistribution3DBase::TriDistribution3DBase(const TriDistribution3DBase &source) :
+    Inherited(source),
+    _sfPoint1                 (source._sfPoint1                 ),
+    _sfPoint2                 (source._sfPoint2                 ),
+    _sfPoint3                 (source._sfPoint3                 ),
+    _sfSurfaceOrEdge          (source._sfSurfaceOrEdge          )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+TriDistribution3DBase::~TriDistribution3DBase(void)
+{
+}
+
+
+GetFieldHandlePtr TriDistribution3DBase::getHandlePoint1          (void) const
+{
+    SFPnt3f::GetHandlePtr returnValue(
+        new  SFPnt3f::GetHandle(
+             &_sfPoint1,
+             this->getType().getFieldDesc(Point1FieldId),
+             const_cast<TriDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TriDistribution3DBase::editHandlePoint1         (void)
+{
+    SFPnt3f::EditHandlePtr returnValue(
+        new  SFPnt3f::EditHandle(
+             &_sfPoint1,
+             this->getType().getFieldDesc(Point1FieldId),
+             this));
+
+
+    editSField(Point1FieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TriDistribution3DBase::getHandlePoint2          (void) const
+{
+    SFPnt3f::GetHandlePtr returnValue(
+        new  SFPnt3f::GetHandle(
+             &_sfPoint2,
+             this->getType().getFieldDesc(Point2FieldId),
+             const_cast<TriDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TriDistribution3DBase::editHandlePoint2         (void)
+{
+    SFPnt3f::EditHandlePtr returnValue(
+        new  SFPnt3f::EditHandle(
+             &_sfPoint2,
+             this->getType().getFieldDesc(Point2FieldId),
+             this));
+
+
+    editSField(Point2FieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TriDistribution3DBase::getHandlePoint3          (void) const
+{
+    SFPnt3f::GetHandlePtr returnValue(
+        new  SFPnt3f::GetHandle(
+             &_sfPoint3,
+             this->getType().getFieldDesc(Point3FieldId),
+             const_cast<TriDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TriDistribution3DBase::editHandlePoint3         (void)
+{
+    SFPnt3f::EditHandlePtr returnValue(
+        new  SFPnt3f::EditHandle(
+             &_sfPoint3,
+             this->getType().getFieldDesc(Point3FieldId),
+             this));
+
+
+    editSField(Point3FieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TriDistribution3DBase::getHandleSurfaceOrEdge   (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfSurfaceOrEdge,
+             this->getType().getFieldDesc(SurfaceOrEdgeFieldId),
+             const_cast<TriDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TriDistribution3DBase::editHandleSurfaceOrEdge  (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfSurfaceOrEdge,
+             this->getType().getFieldDesc(SurfaceOrEdgeFieldId),
+             this));
+
+
+    editSField(SurfaceOrEdgeFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void TriDistribution3DBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    TriDistribution3D *pThis = static_cast<TriDistribution3D *>(this);
+
+    pThis->execSync(static_cast<TriDistribution3D *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *TriDistribution3DBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    TriDistribution3D *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const TriDistribution3D *>(pRefAspect),
+                  dynamic_cast<const TriDistribution3D *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TriDistribution3DPtr>::_type("TriDistribution3DPtr", "Distribution3DPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(TriDistribution3DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(TriDistribution3DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+void TriDistribution3DBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

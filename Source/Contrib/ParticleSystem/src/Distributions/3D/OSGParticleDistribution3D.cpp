@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,21 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGParticleDistribution3D.h"
-#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
+#include "OSGRandomPoolManager.h"
+#include "OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::ParticleDistribution3D
-An ParticleDistribution3D. 	
-*/
+// Documentation for this class is emitted in the
+// OSGParticleDistribution3DBase.cpp file.
+// To modify it, please change the .fcd file (OSGParticleDistribution3D.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -68,8 +64,13 @@ An ParticleDistribution3D.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ParticleDistribution3D::initMethod (void)
+void ParticleDistribution3D::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -80,13 +81,15 @@ void ParticleDistribution3D::initMethod (void)
 Vec3f ParticleDistribution3D::generate(void) const
 {
     Vec3f Result;
-	if(getSystem() != NullFC && getSystem()->getNumParticles() != 0)
+	if(getSystem() != NULL && getSystem()->getNumParticles() != 0)
 	{
-		Result = getSystem()->getPosition(RandomPoolManager::getRandomInt32(0,getSystem()->getNumParticles()));
+		Result =
+            getSystem()->getPosition(RandomPoolManager::getRandomInt32(0,getSystem()->getNumParticles())).subZero();
 	}
 
 	return Result;
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -109,16 +112,17 @@ ParticleDistribution3D::~ParticleDistribution3D(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void ParticleDistribution3D::changed(BitVector whichField, UInt32 origin)
+void ParticleDistribution3D::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void ParticleDistribution3D::dump(      UInt32    , 
+void ParticleDistribution3D::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump ParticleDistribution3D NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

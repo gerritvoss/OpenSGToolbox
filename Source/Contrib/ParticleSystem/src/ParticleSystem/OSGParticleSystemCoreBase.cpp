@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,182 +50,297 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEPARTICLESYSTEMCOREINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGParticleSystem.h"          // System Class
+#include "OSGParticleSystemDrawer.h"    // Drawer Class
 
 #include "OSGParticleSystemCoreBase.h"
 #include "OSGParticleSystemCore.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ParticleSystemCoreBase::SortingModeFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemCoreBase::SortingModeFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  ParticleSystemCoreBase::SortFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemCoreBase::SortFieldId);
+/*! \class OSG::ParticleSystemCore
+    
+ */
 
-const OSG::BitVector  ParticleSystemCoreBase::SystemFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemCoreBase::SystemFieldId);
-
-const OSG::BitVector  ParticleSystemCoreBase::DrawerFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemCoreBase::DrawerFieldId);
-
-const OSG::BitVector ParticleSystemCoreBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var UInt32          ParticleSystemCoreBase::_sfSortingMode
-    The method used to sort particles.    NONE - no particle sorting.    FRONT_TO_BACK - particles will be sorted from closest to the view point to the furthest.    BACK_TO_FRONT - particles will be sorted from furthest to the view point to the closest.
+    The method used to sort particles.
+    NONE - no particle sorting.
+    FRONT_TO_BACK - particles will be sorted from closest to the view point to the furthest.
+    BACK_TO_FRONT - particles will be sorted from furthest to the view point to the closest.
 */
+
 /*! \var UInt32          ParticleSystemCoreBase::_mfSort
     
 */
-/*! \var ParticleSystemPtr ParticleSystemCoreBase::_sfSystem
-    
-*/
-/*! \var ParticleSystemDrawerPtr ParticleSystemCoreBase::_sfDrawer
+
+/*! \var ParticleSystem * ParticleSystemCoreBase::_sfSystem
     
 */
 
-//! ParticleSystemCore description
+/*! \var ParticleSystemDrawer * ParticleSystemCoreBase::_sfDrawer
+    
+*/
 
-FieldDescription *ParticleSystemCoreBase::_desc[] = 
+
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ParticleSystemCore *>::_type("ParticleSystemCorePtr", "MaterialDrawablePtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ParticleSystemCore *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ParticleSystemCore *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ParticleSystemCore *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ParticleSystemCoreBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "SortingMode", 
-                     SortingModeFieldId, SortingModeFieldMask,
-                     false,
-                     (FieldAccessMethod) &ParticleSystemCoreBase::getSFSortingMode),
-    new FieldDescription(MFUInt32::getClassType(), 
-                     "Sort", 
-                     SortFieldId, SortFieldMask,
-                     false,
-                     (FieldAccessMethod) &ParticleSystemCoreBase::getMFSort),
-    new FieldDescription(SFParticleSystemPtr::getClassType(), 
-                     "System", 
-                     SystemFieldId, SystemFieldMask,
-                     false,
-                     (FieldAccessMethod) &ParticleSystemCoreBase::getSFSystem),
-    new FieldDescription(SFParticleSystemDrawerPtr::getClassType(), 
-                     "Drawer", 
-                     DrawerFieldId, DrawerFieldMask,
-                     false,
-                     (FieldAccessMethod) &ParticleSystemCoreBase::getSFDrawer)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType ParticleSystemCoreBase::_type(
-    "ParticleSystemCore",
-    "MaterialDrawable",
-    NULL,
-    (PrototypeCreateF) &ParticleSystemCoreBase::createEmpty,
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "SortingMode",
+        "The method used to sort particles.\n"
+        "NONE - no particle sorting.\n"
+        "FRONT_TO_BACK - particles will be sorted from closest to the view point to the furthest.\n"
+        "BACK_TO_FRONT - particles will be sorted from furthest to the view point to the closest.\n",
+        SortingModeFieldId, SortingModeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystemCore::editHandleSortingMode),
+        static_cast<FieldGetMethodSig >(&ParticleSystemCore::getHandleSortingMode));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFUInt32::Description(
+        MFUInt32::getClassType(),
+        "Sort",
+        "",
+        SortFieldId, SortFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystemCore::editHandleSort),
+        static_cast<FieldGetMethodSig >(&ParticleSystemCore::getHandleSort));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecParticleSystemPtr::Description(
+        SFUnrecParticleSystemPtr::getClassType(),
+        "System",
+        "",
+        SystemFieldId, SystemFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystemCore::editHandleSystem),
+        static_cast<FieldGetMethodSig >(&ParticleSystemCore::getHandleSystem));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecParticleSystemDrawerPtr::Description(
+        SFUnrecParticleSystemDrawerPtr::getClassType(),
+        "Drawer",
+        "",
+        DrawerFieldId, DrawerFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystemCore::editHandleDrawer),
+        static_cast<FieldGetMethodSig >(&ParticleSystemCore::getHandleDrawer));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+ParticleSystemCoreBase::TypeObject ParticleSystemCoreBase::_type(
+    ParticleSystemCoreBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ParticleSystemCoreBase::createEmptyLocal),
     ParticleSystemCore::initMethod,
-    _desc,
-    sizeof(_desc));
+    ParticleSystemCore::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ParticleSystemCore::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ParticleSystemCore\"\n"
+    "\tparent=\"MaterialDrawable\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"SortingMode\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"ParticleSystemCore::NONE\"\n"
+    "\t>\n"
+    "   The method used to sort particles.\n"
+    "   NONE - no particle sorting.\n"
+    "   FRONT_TO_BACK - particles will be sorted from closest to the view point to the furthest.\n"
+    "   BACK_TO_FRONT - particles will be sorted from furthest to the view point to the closest.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Sort\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"System\"\n"
+    "\t\ttype=\"ParticleSystem\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Drawer\"\n"
+    "\t\ttype=\"ParticleSystemDrawer\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(ParticleSystemCoreBase, ParticleSystemCorePtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ParticleSystemCoreBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ParticleSystemCoreBase::getType(void) const 
+FieldContainerType &ParticleSystemCoreBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr ParticleSystemCoreBase::shallowCopy(void) const 
-{ 
-    ParticleSystemCorePtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const ParticleSystemCore *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 ParticleSystemCoreBase::getContainerSize(void) const 
-{ 
-    return sizeof(ParticleSystemCore); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ParticleSystemCoreBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &ParticleSystemCoreBase::getType(void) const
 {
-    this->executeSyncImpl((ParticleSystemCoreBase *) &other, whichField);
+    return _type;
 }
-#else
-void ParticleSystemCoreBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 ParticleSystemCoreBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((ParticleSystemCoreBase *) &other, whichField, sInfo);
+    return sizeof(ParticleSystemCore);
 }
-void ParticleSystemCoreBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFUInt32 *ParticleSystemCoreBase::editSFSortingMode(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(SortingModeFieldMask);
+
+    return &_sfSortingMode;
 }
 
-void ParticleSystemCoreBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFUInt32 *ParticleSystemCoreBase::getSFSortingMode(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
-    _mfSort.terminateShare(uiAspect, this->getContainerSize());
+    return &_sfSortingMode;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-ParticleSystemCoreBase::ParticleSystemCoreBase(void) :
-    _sfSortingMode            (UInt32(ParticleSystemCore::NONE)), 
-    _mfSort                   (), 
-    _sfSystem                 (ParticleSystemPtr(NullFC)), 
-    _sfDrawer                 (ParticleSystemDrawerPtr(NullFC)), 
-    Inherited() 
+MFUInt32 *ParticleSystemCoreBase::editMFSort(void)
 {
+    editMField(SortFieldMask, _mfSort);
+
+    return &_mfSort;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-ParticleSystemCoreBase::ParticleSystemCoreBase(const ParticleSystemCoreBase &source) :
-    _sfSortingMode            (source._sfSortingMode            ), 
-    _mfSort                   (source._mfSort                   ), 
-    _sfSystem                 (source._sfSystem                 ), 
-    _sfDrawer                 (source._sfDrawer                 ), 
-    Inherited                 (source)
+const MFUInt32 *ParticleSystemCoreBase::getMFSort(void) const
 {
+    return &_mfSort;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-ParticleSystemCoreBase::~ParticleSystemCoreBase(void)
+//! Get the ParticleSystemCore::_sfSystem field.
+const SFUnrecParticleSystemPtr *ParticleSystemCoreBase::getSFSystem(void) const
 {
+    return &_sfSystem;
 }
+
+SFUnrecParticleSystemPtr *ParticleSystemCoreBase::editSFSystem         (void)
+{
+    editSField(SystemFieldMask);
+
+    return &_sfSystem;
+}
+
+//! Get the ParticleSystemCore::_sfDrawer field.
+const SFUnrecParticleSystemDrawerPtr *ParticleSystemCoreBase::getSFDrawer(void) const
+{
+    return &_sfDrawer;
+}
+
+SFUnrecParticleSystemDrawerPtr *ParticleSystemCoreBase::editSFDrawer         (void)
+{
+    editSField(DrawerFieldMask);
+
+    return &_sfDrawer;
+}
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ParticleSystemCoreBase::getBinSize(const BitVector &whichField)
+UInt32 ParticleSystemCoreBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -233,28 +348,24 @@ UInt32 ParticleSystemCoreBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfSortingMode.getBinSize();
     }
-
     if(FieldBits::NoField != (SortFieldMask & whichField))
     {
         returnValue += _mfSort.getBinSize();
     }
-
     if(FieldBits::NoField != (SystemFieldMask & whichField))
     {
         returnValue += _sfSystem.getBinSize();
     }
-
     if(FieldBits::NoField != (DrawerFieldMask & whichField))
     {
         returnValue += _sfDrawer.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ParticleSystemCoreBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ParticleSystemCoreBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -262,27 +373,22 @@ void ParticleSystemCoreBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfSortingMode.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SortFieldMask & whichField))
     {
         _mfSort.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SystemFieldMask & whichField))
     {
         _sfSystem.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawerFieldMask & whichField))
     {
         _sfDrawer.copyToBin(pMem);
     }
-
-
 }
 
-void ParticleSystemCoreBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ParticleSystemCoreBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -290,118 +396,338 @@ void ParticleSystemCoreBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfSortingMode.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SortFieldMask & whichField))
     {
         _mfSort.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SystemFieldMask & whichField))
     {
         _sfSystem.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawerFieldMask & whichField))
     {
         _sfDrawer.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ParticleSystemCoreBase::executeSyncImpl(      ParticleSystemCoreBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ParticleSystemCoreTransitPtr ParticleSystemCoreBase::createLocal(BitVector bFlags)
 {
+    ParticleSystemCoreTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (SortingModeFieldMask & whichField))
-        _sfSortingMode.syncWith(pOther->_sfSortingMode);
+        fc = dynamic_pointer_cast<ParticleSystemCore>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (SortFieldMask & whichField))
-        _mfSort.syncWith(pOther->_mfSort);
-
-    if(FieldBits::NoField != (SystemFieldMask & whichField))
-        _sfSystem.syncWith(pOther->_sfSystem);
-
-    if(FieldBits::NoField != (DrawerFieldMask & whichField))
-        _sfDrawer.syncWith(pOther->_sfDrawer);
-
-
-}
-#else
-void ParticleSystemCoreBase::executeSyncImpl(      ParticleSystemCoreBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (SortingModeFieldMask & whichField))
-        _sfSortingMode.syncWith(pOther->_sfSortingMode);
-
-    if(FieldBits::NoField != (SystemFieldMask & whichField))
-        _sfSystem.syncWith(pOther->_sfSystem);
-
-    if(FieldBits::NoField != (DrawerFieldMask & whichField))
-        _sfDrawer.syncWith(pOther->_sfDrawer);
-
-
-    if(FieldBits::NoField != (SortFieldMask & whichField))
-        _mfSort.syncWith(pOther->_mfSort, sInfo);
-
-
+    return fc;
 }
 
-void ParticleSystemCoreBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ParticleSystemCoreTransitPtr ParticleSystemCoreBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ParticleSystemCoreTransitPtr fc;
 
-    if(FieldBits::NoField != (SortFieldMask & whichField))
-        _mfSort.beginEdit(uiAspect, uiContainerSize);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
+        fc = dynamic_pointer_cast<ParticleSystemCore>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ParticleSystemCoreTransitPtr ParticleSystemCoreBase::create(void)
+{
+    ParticleSystemCoreTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<ParticleSystemCore>(tmpPtr);
+    }
+
+    return fc;
+}
+
+ParticleSystemCore *ParticleSystemCoreBase::createEmptyLocal(BitVector bFlags)
+{
+    ParticleSystemCore *returnValue;
+
+    newPtr<ParticleSystemCore>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+ParticleSystemCore *ParticleSystemCoreBase::createEmpty(void)
+{
+    ParticleSystemCore *returnValue;
+
+    newPtr<ParticleSystemCore>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ParticleSystemCoreBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    ParticleSystemCore *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ParticleSystemCore *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ParticleSystemCoreBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    ParticleSystemCore *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ParticleSystemCore *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ParticleSystemCoreBase::shallowCopy(void) const
+{
+    ParticleSystemCore *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const ParticleSystemCore *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ParticleSystemCoreBase::ParticleSystemCoreBase(void) :
+    Inherited(),
+    _sfSortingMode            (UInt32(ParticleSystemCore::NONE)),
+    _mfSort                   (),
+    _sfSystem                 (NULL),
+    _sfDrawer                 (NULL)
+{
+}
+
+ParticleSystemCoreBase::ParticleSystemCoreBase(const ParticleSystemCoreBase &source) :
+    Inherited(source),
+    _sfSortingMode            (source._sfSortingMode            ),
+    _mfSort                   (source._mfSort                   ),
+    _sfSystem                 (NULL),
+    _sfDrawer                 (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ParticleSystemCoreBase::~ParticleSystemCoreBase(void)
+{
+}
+
+void ParticleSystemCoreBase::onCreate(const ParticleSystemCore *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        ParticleSystemCore *pThis = static_cast<ParticleSystemCore *>(this);
+
+        pThis->setSystem(source->getSystem());
+
+        pThis->setDrawer(source->getDrawer());
+    }
+}
+
+GetFieldHandlePtr ParticleSystemCoreBase::getHandleSortingMode     (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfSortingMode,
+             this->getType().getFieldDesc(SortingModeFieldId),
+             const_cast<ParticleSystemCoreBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemCoreBase::editHandleSortingMode    (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfSortingMode,
+             this->getType().getFieldDesc(SortingModeFieldId),
+             this));
+
+
+    editSField(SortingModeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleSystemCoreBase::getHandleSort            (void) const
+{
+    MFUInt32::GetHandlePtr returnValue(
+        new  MFUInt32::GetHandle(
+             &_mfSort,
+             this->getType().getFieldDesc(SortFieldId),
+             const_cast<ParticleSystemCoreBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemCoreBase::editHandleSort           (void)
+{
+    MFUInt32::EditHandlePtr returnValue(
+        new  MFUInt32::EditHandle(
+             &_mfSort,
+             this->getType().getFieldDesc(SortFieldId),
+             this));
+
+
+    editMField(SortFieldMask, _mfSort);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleSystemCoreBase::getHandleSystem          (void) const
+{
+    SFUnrecParticleSystemPtr::GetHandlePtr returnValue(
+        new  SFUnrecParticleSystemPtr::GetHandle(
+             &_sfSystem,
+             this->getType().getFieldDesc(SystemFieldId),
+             const_cast<ParticleSystemCoreBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemCoreBase::editHandleSystem         (void)
+{
+    SFUnrecParticleSystemPtr::EditHandlePtr returnValue(
+        new  SFUnrecParticleSystemPtr::EditHandle(
+             &_sfSystem,
+             this->getType().getFieldDesc(SystemFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ParticleSystemCore::setSystem,
+                    static_cast<ParticleSystemCore *>(this), _1));
+
+    editSField(SystemFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleSystemCoreBase::getHandleDrawer          (void) const
+{
+    SFUnrecParticleSystemDrawerPtr::GetHandlePtr returnValue(
+        new  SFUnrecParticleSystemDrawerPtr::GetHandle(
+             &_sfDrawer,
+             this->getType().getFieldDesc(DrawerFieldId),
+             const_cast<ParticleSystemCoreBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemCoreBase::editHandleDrawer         (void)
+{
+    SFUnrecParticleSystemDrawerPtr::EditHandlePtr returnValue(
+        new  SFUnrecParticleSystemDrawerPtr::EditHandle(
+             &_sfDrawer,
+             this->getType().getFieldDesc(DrawerFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ParticleSystemCore::setDrawer,
+                    static_cast<ParticleSystemCore *>(this), _1));
+
+    editSField(DrawerFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ParticleSystemCoreBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ParticleSystemCore *pThis = static_cast<ParticleSystemCore *>(this);
+
+    pThis->execSync(static_cast<ParticleSystemCore *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ParticleSystemCoreBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    ParticleSystemCore *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const ParticleSystemCore *>(pRefAspect),
+                  dynamic_cast<const ParticleSystemCore *>(this));
+
+    return returnValue;
+}
+#endif
+
+void ParticleSystemCoreBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<ParticleSystemCore *>(this)->setSystem(NULL);
+
+    static_cast<ParticleSystemCore *>(this)->setDrawer(NULL);
+
+#ifdef OSG_MT_CPTR_ASPECT
+    AspectOffsetStore oOffsets;
+
+    _pAspectStore->fillOffsetArray(oOffsets, this);
+#endif
+
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfSort.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ParticleSystemCorePtr>::_type("ParticleSystemCorePtr", "MaterialDrawablePtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(ParticleSystemCorePtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ParticleSystemCorePtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGPARTICLESYSTEMCOREBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPARTICLESYSTEMCOREBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGPARTICLESYSTEMCOREFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

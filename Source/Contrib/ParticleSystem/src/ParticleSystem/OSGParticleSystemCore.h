@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala                                                   *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,43 +42,49 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
-
 #include "OSGParticleSystemCoreBase.h"
-#include "ParticleSystem/Events/OSGParticleSystemListener.h"
-#include <OpenSG/OSGStatElemTypes.h>
-#include <OpenSG/OSGLine.h>
+#include "OSGParticleSystemListener.h"
+#include "OSGStatElemTypes.h"
+#include "OSGLine.h"
+#include "OSGRenderAction.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ParticleSystemCore class. See \ref 
-           PageParticleSystemParticleSystemCore for a description.
+/*! \brief ParticleSystemCore class. See \ref
+           PageContribParticleSystemParticleSystemCore for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemCore : public ParticleSystemCoreBase
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemCore : public ParticleSystemCoreBase
 {
-  private:
-
-    typedef ParticleSystemCoreBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
-      enum ParticleSortingMode {NONE=0, FRONT_TO_BACK, BACK_TO_FRONT};
+    enum ParticleSortingMode
+    {
+        NONE          = 0,
+        FRONT_TO_BACK = 1,
+        BACK_TO_FRONT = 2
+    };
+
+    typedef ParticleSystemCoreBase Inherited;
+    typedef ParticleSystemCore     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -86,32 +92,36 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemCore : public ParticleSyste
     /*! \name                       Draw                                   */
     /*! \{                                                                 */
 
-    Action::ResultE drawPrimitives (DrawActionBase *action);
-    Action::ResultE drawActionHandler( Action* action );
-    Action::ResultE renderActionHandler( Action* action );
-    Action::ResultE intersect( Action* action );
+    Action::ResultE     drawPrimitives(DrawEnv *pEnv);
 
     /*! \}*/
 
-	// used for sorting particles
-	struct ParticleSortByViewPosition
-	{
-	public:
-		
-		ParticleSystemPtr _System;
-		Pnt3f _CameraPos;
-		bool _SortByMinimum;
-		ParticleSortByViewPosition(ParticleSystemPtr TheSystem, Pnt3f TheCameraPos, bool SortByMinimum);
-		ParticleSortByViewPosition();
-		bool operator()(UInt32 ParticleIndexLeft, UInt32 ParticleIndexRight);
-	};
-	static ParticleSortByViewPosition TheSorter;
+    Action::ResultE intersect           (Action         *action);
+
+    void    adjustVolume(Volume & volume);
+
+    virtual void fill(DrawableStatsAttachment *pStat);
+
+    // used for sorting particles
+    struct ParticleSortByViewPosition
+    {
+      public:
+
+        const ParticleSystem* _System;
+		Vec3f _CameraPos;
+        bool _SortByMinimum;
+        ParticleSortByViewPosition(const ParticleSystem* TheSystem, Pnt3f TheCameraPos, bool SortByMinimum);
+        ParticleSortByViewPosition();
+        bool operator()(UInt32 ParticleIndexLeft, UInt32 ParticleIndexRight);
+    };
+    static ParticleSortByViewPosition TheSorter;
 
     static StatElemDesc<StatTimeElem    > statParticleSortTime;
 
-    std::vector<UInt32> intersect(const Line& Ray, Real32 IntersectionDistance) const;
+    std::vector<UInt32> intersectLine(const Line& Ray, Real32 IntersectionDistance) const;
 	
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ParticleSystemCoreBase.
@@ -128,76 +138,66 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemCore : public ParticleSyste
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ParticleSystemCore(void); 
+    virtual ~ParticleSystemCore(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
 
-    /*---------------------------------------------------------------------*/
-    /*! \name                NodeCore Specific                             */
-    /*! \{                                                                 */
+    class SystemUpdateListener : public ParticleSystemListener
+    {
+      public:
+        SystemUpdateListener(ParticleSystemCoreRefPtr TheCore);
+        virtual void systemUpdated(const ParticleSystemEventUnrecPtr e);
+        virtual void volumeChanged(const ParticleSystemEventUnrecPtr e);
+        virtual void particleGenerated(const ParticleEventUnrecPtr e);
+        virtual void particleKilled(const ParticleEventUnrecPtr e);
+        virtual void particleStolen(const ParticleEventUnrecPtr e);
+        // used for sorting particles 
 
-    void    adjustVolume(Volume & volume);
+      private:
+        ParticleSystemCoreRefPtr _Core;
+    };
 
-	class SystemUpdateListener : public ParticleSystemListener
-	{
-	public:
-		SystemUpdateListener(ParticleSystemCorePtr TheCore);
-       virtual void systemUpdated(const ParticleSystemEventPtr e);
-       virtual void volumeChanged(const ParticleSystemEventPtr e);
-       virtual void particleGenerated(const ParticleEventPtr e);
-       virtual void particleKilled(const ParticleEventPtr e);
-       virtual void particleStolen(const ParticleEventPtr e);
-	   	// used for sorting particles 
-
-	private:
-		ParticleSystemCorePtr _Core;
-	};
-
-	friend class SystemUpdateListener;
 
 	SystemUpdateListener _SystemUpdateListener;
 	
-    void sortParticles(DrawActionBase *action);
+    void sortParticles(DrawEnv *pEnv);
 	void checkAndInitializeSort(void);
-	void handleParticleGenerated(const ParticleEventPtr e);
-	void handleParticleKilled(const ParticleEventPtr e);
-	void handleParticleStolen(const ParticleEventPtr e);
+	void handleParticleGenerated(const ParticleEventUnrecPtr e);
+	void handleParticleKilled(const ParticleEventUnrecPtr e);
+	void handleParticleStolen(const ParticleEventUnrecPtr e);
 	
 	UInt32 comparisons;
-	
 
-
-
-	friend struct ParticleSortByViewPosition;
-
-
-    /*! \}                                                                 */
-    
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ParticleSystemCoreBase;
-
-    static void initMethod(void);
+	friend struct ParticleSortByViewPosition;
+	friend class SystemUpdateListener;
 
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ParticleSystemCore &source);
-	
 };
 
-// fwd declaration, this function is used for qsort in sortParticles(DrawActionBase *action)
 int qSortComp(const void * a, const void * b);
-
 
 typedef ParticleSystemCore *ParticleSystemCoreP;
 
 OSG_END_NAMESPACE
 
+#include "OSGParticleSystemDrawer.h"
+#include "OSGParticleSystem.h"
+
 #include "OSGParticleSystemCoreBase.inl"
 #include "OSGParticleSystemCore.inl"
-
-#define OSGPARTICLESYSTEMCORE_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGPARTICLESYSTEMCORE_H_ */

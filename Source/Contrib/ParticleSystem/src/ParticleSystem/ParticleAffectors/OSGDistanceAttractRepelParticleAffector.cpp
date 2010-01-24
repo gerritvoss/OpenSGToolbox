@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
-#include "ParticleSystem/OSGParticleSystem.h"
+#include <OSGConfig.h>
 
 #include "OSGDistanceAttractRepelParticleAffector.h"
+#include "OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::DistanceAttractRepelParticleAffector
-
-*/
+// Documentation for this class is emitted in the
+// OSGDistanceAttractRepelParticleAffectorBase.cpp file.
+// To modify it, please change the .fcd file (OSGDistanceAttractRepelParticleAffector.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -68,8 +63,13 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DistanceAttractRepelParticleAffector::initMethod (void)
+void DistanceAttractRepelParticleAffector::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -77,12 +77,11 @@ void DistanceAttractRepelParticleAffector::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool DistanceAttractRepelParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps, const Vec3f& Displacement)
+bool DistanceAttractRepelParticleAffector::affect(ParticleSystemRefPtr System, Int32 ParticleIndex, const Time& elps, const Vec3f& Displacement)
 {
-	Real32 age = System->getAge(ParticleIndex);
-	Real32 d = Displacement.length();
-	Vec3f dnormal =  Displacement;
-	dnormal =  dnormal *(1.0/d);
+	Real32 age     = System->getAge(ParticleIndex);
+	Real32 d       = Displacement.length();
+	Vec3f  dnormal = Displacement*(1.0/d);
 	if( d > getMinDistance()  && d < getMaxDistance())
 	{
 		Real32 t((getQuadratic() * (1.0/(d*d)) + getLinear() * (1.0/d) + getConstant())*elps);
@@ -120,41 +119,17 @@ DistanceAttractRepelParticleAffector::~DistanceAttractRepelParticleAffector(void
 
 /*----------------------------- class specific ----------------------------*/
 
-void DistanceAttractRepelParticleAffector::changed(BitVector whichField, UInt32 origin)
+void DistanceAttractRepelParticleAffector::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void DistanceAttractRepelParticleAffector::dump(      UInt32    , 
+void DistanceAttractRepelParticleAffector::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump DistanceAttractRepelParticleAffector NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGDISTANCEATTRACTREPELPARTICLEAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDISTANCEATTRACTREPELPARTICLEAFFECTORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDISTANCEATTRACTREPELPARTICLEAFFECTORFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

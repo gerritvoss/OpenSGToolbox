@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,27 +40,23 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGDynamicsParticleGenerator.h"
-#include "Distributions/1D/OSGDistribution1D.h"
-#include "Distributions/3D/OSGDistribution3D.h"
-#include "ParticleSystem/OSGParticleSystem.h"
+#include "OSGDistribution3D.h"
+#include "OSGDistribution2D.h"
+#include "OSGDistribution1D.h"
+#include "OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::DynamicsParticleGenerator
-
-*/
+// Documentation for this class is emitted in the
+// OSGDynamicsParticleGeneratorBase.cpp file.
+// To modify it, please change the .fcd file (OSGDynamicsParticleGenerator.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -70,8 +66,13 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DynamicsParticleGenerator::initMethod (void)
+void DynamicsParticleGenerator::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -79,92 +80,92 @@ void DynamicsParticleGenerator::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void DynamicsParticleGenerator::generateDynamic(ParticleSystemPtr System, Real32 AdditionalAging) const
+void DynamicsParticleGenerator::generateDynamic(ParticleSystemRefPtr System, Real32 AdditionalAging) const
 {
-	Pnt3f PositionReturnValue = Pnt3f(0.0,0.0f,0.0f);
-	Pnt3f SecPositionReturnValue = Pnt3f(0.0,0.0f,0.0f);
-	Vec3f NormalReturnValue = Vec3f(0.0,0.0f,1.0f);
-	Vec3f ColorReturnValue = Pnt3f(1.0,1.0f,1.0f);
-	Real32 TransparencyReturnValue(1.0f);
-	Vec3f SizeReturnValue = Vec3f(1.0,1.0f,1.0f);
-	Time LifespanReturnValue = -1;
-	Time AgeReturnValue = 0;
-	Vec3f VelocityReturnValue = Vec3f(0.0,0.0f,0.0f);
-	Vec3f SecVelocityReturnValue = Vec3f(0.0,0.0f,0.0f);
-	Vec3f AccelerationReturnValue = Vec3f(0.0,0.0f,0.0f);
-	StringToUInt32Map AttributesReturnValue;
+    Pnt3f PositionReturnValue      (0.0,0.0f,0.0f);
+    Pnt3f SecPositionReturnValue   (0.0,0.0f,0.0f);
+    Vec3f NormalReturnValue        (0.0,0.0f,1.0f);
+    Vec3f ColorReturnValue         (1.0,1.0f,1.0f);
+    Vec3f SizeReturnValue          (1.0,1.0f,1.0f);
+    Vec3f VelocityReturnValue      (0.0,0.0f,0.0f);
+    Vec3f SecVelocityReturnValue   (0.0,0.0f,0.0f);
+    Vec3f AccelerationReturnValue  (0.0,0.0f,0.0f);
+    Real32 TransparencyReturnValue (1.0f);
+    Time LifespanReturnValue       (1);
+    Time AgeReturnValue            (0);
+    StringToUInt32Map               AttributesReturnValue;
 
 
-	if(getPositionDistribution() != NullFC)
-	{
-		PositionReturnValue.setValue(getPositionDistribution()->generate().getValues());
-	}
-	if(getSecPositionDistribution() != NullFC)
-	{
-		SecPositionReturnValue.setValue(getSecPositionDistribution()->generate().getValues());
-	} else if(getPositionDistribution() != NullFC)
-	{ // if the secondary position function is null and the primary position function isn't,
-	  // then we assign the secondary position to be the same as the primary position.  
-	    SecPositionReturnValue = PositionReturnValue;
-	}
+    if(getPositionDistribution() != NULL)
+    {
+        PositionReturnValue.setValue(getPositionDistribution()->generate().getValues());
+    }
+    if(getSecPositionDistribution() != NULL)
+    {
+        SecPositionReturnValue.setValue(getSecPositionDistribution()->generate().getValues());
+    } else if(getPositionDistribution() != NULL)
+    { // if the secondary position function is null and the primary position function isn't,
+        // then we assign the secondary position to be the same as the primary position.  
+        SecPositionReturnValue = PositionReturnValue;
+    }
 
-	if(getNormalDistribution() != NullFC)
-	{
-		NormalReturnValue = getNormalDistribution()->generate();
-	}
-		
-	if(getColorDistribution() != NullFC)
-	{
-		ColorReturnValue = getColorDistribution()->generate();
-	}
+    if(getNormalDistribution() != NULL)
+    {
+        NormalReturnValue = getNormalDistribution()->generate();
+    }
 
-	if(getTransparencyDistribution() != NullFC)
-	{
-		TransparencyReturnValue = getTransparencyDistribution()->generate();
+    if(getColorDistribution() != NULL)
+    {
+        ColorReturnValue = getColorDistribution()->generate();
+    }
 
-	}
-	
-	Color4f FinalColorValue(ColorReturnValue[0],ColorReturnValue[1],ColorReturnValue[2],TransparencyReturnValue);
+    if(getTransparencyDistribution() != NULL)
+    {
+        TransparencyReturnValue = getTransparencyDistribution()->generate();
 
-	if(getSizeDistribution() != NullFC)
-	{
-		SizeReturnValue = getSizeDistribution()->generate();
-	}
+    }
 
-	if(getLifespanDistribution() != NullFC)
-	{
-		LifespanReturnValue = getLifespanDistribution()->generate();
-	}
-	if(getAgeDistribution() != NullFC)
-	{
-		AgeReturnValue = getAgeDistribution()->generate();
-	}
-	AgeReturnValue += AdditionalAging;
-	if(getVelocityDistribution() != NullFC)
-	{
-		VelocityReturnValue = getVelocityDistribution()->generate();
-	}
-	if(getSecVelocityDistribution() != NullFC)
-	{
-		SecVelocityReturnValue = getSecVelocityDistribution()->generate();
-	}
-	if(getAccelerationDistribution() != NullFC)
-	{
-		AccelerationReturnValue = getAccelerationDistribution()->generate();
-	}
+    Color4f FinalColorValue(ColorReturnValue[0],ColorReturnValue[1],ColorReturnValue[2],TransparencyReturnValue);
 
-	generate(System,
-		PositionReturnValue, 
-		SecPositionReturnValue, 
-		NormalReturnValue,
-		FinalColorValue,
-		SizeReturnValue,
-		LifespanReturnValue,
-		AgeReturnValue,
-		VelocityReturnValue,
-		SecVelocityReturnValue,
-		AccelerationReturnValue,
-		AttributesReturnValue);
+    if(getSizeDistribution() != NULL)
+    {
+        SizeReturnValue = getSizeDistribution()->generate();
+    }
+
+    if(getLifespanDistribution() != NULL)
+    {
+        LifespanReturnValue = getLifespanDistribution()->generate();
+    }
+    if(getAgeDistribution() != NULL)
+    {
+        AgeReturnValue = getAgeDistribution()->generate();
+    }
+    AgeReturnValue += AdditionalAging;
+    if(getVelocityDistribution() != NULL)
+    {
+        VelocityReturnValue = getVelocityDistribution()->generate();
+    }
+    if(getSecVelocityDistribution() != NULL)
+    {
+        SecVelocityReturnValue = getSecVelocityDistribution()->generate();
+    }
+    if(getAccelerationDistribution() != NULL)
+    {
+        AccelerationReturnValue = getAccelerationDistribution()->generate();
+    }
+
+    generate(System,
+             PositionReturnValue, 
+             SecPositionReturnValue, 
+             NormalReturnValue,
+             FinalColorValue,
+             SizeReturnValue,
+             LifespanReturnValue,
+             AgeReturnValue,
+             VelocityReturnValue,
+             SecVelocityReturnValue,
+             AccelerationReturnValue,
+             AttributesReturnValue);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -189,16 +190,17 @@ DynamicsParticleGenerator::~DynamicsParticleGenerator(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void DynamicsParticleGenerator::changed(BitVector whichField, UInt32 origin)
+void DynamicsParticleGenerator::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void DynamicsParticleGenerator::dump(      UInt32    , 
+void DynamicsParticleGenerator::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump DynamicsParticleGenerator NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

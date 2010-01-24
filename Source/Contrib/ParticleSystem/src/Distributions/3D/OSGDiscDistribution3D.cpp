@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Dynamics                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,23 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGDiscDistribution3D.h"
-#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
+#include "OSGRandomPoolManager.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::DiscDistribution3D
-An DiscDistribution3D. 	
-*/
+// Documentation for this class is emitted in the
+// OSGDiscDistribution3DBase.cpp file.
+// To modify it, please change the .fcd file (OSGDiscDistribution3D.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -66,8 +63,13 @@ An DiscDistribution3D.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DiscDistribution3D::initMethod (void)
+void DiscDistribution3D::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -90,11 +92,11 @@ Vec3f DiscDistribution3D::generate(void) const
             Real32 PickEdge(RandomPoolManager::getRandomReal32(0.0,1.0));
             if(PickEdge < InnerCircumference/(OuterCircumference + InnerCircumference))
             {
-                Result =  getCenter() + getInnerRadius()*osgsin(Theta)*getTangent() + getInnerRadius()*osgcos(Theta)*getBinormal();
+                Result =  getCenter().subZero() + getInnerRadius()*osgSin(Theta)*getTangent() + getInnerRadius()*osgCos(Theta)*getBinormal();
             }
             else
             {
-                Result =  getCenter() + getOuterRadius()*osgsin(Theta)*getTangent() + getOuterRadius()*osgcos(Theta)*getBinormal();
+                Result =  getCenter().subZero() + getOuterRadius()*osgSin(Theta)*getTangent() + getOuterRadius()*osgCos(Theta)*getBinormal();
             }
             break;
         }
@@ -105,16 +107,17 @@ Vec3f DiscDistribution3D::generate(void) const
             //Then Take the square root of that.  This gives a square root distribution from 0.0 - 1.0
             //This square root distribution is used for the random radius because the area of a disc is 
             //dependant on the square of the radius, i.e it is a quadratic function
-            Real32 Temp(osgsqrt(RandomPoolManager::getRandomReal32(0.0,1.0)));
+            Real32 Temp(osgSqrt(RandomPoolManager::getRandomReal32(0.0,1.0)));
             Real32 Radius(getInnerRadius() + Temp*(getOuterRadius() - getInnerRadius()));
             Real32 Theta( RandomPoolManager::getRandomReal32(getMinTheta(),getMaxTheta()) );
-            Result = getCenter() + (Radius*osgsin(Theta))*getTangent() + (Radius*osgcos(Theta))*getBinormal();
+            Result = getCenter().subZero() + (Radius*osgSin(Theta))*getTangent() + (Radius*osgCos(Theta))*getBinormal();
             break;
         }
     }
 
     return Result;
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -137,39 +140,17 @@ DiscDistribution3D::~DiscDistribution3D(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void DiscDistribution3D::changed(BitVector whichField, UInt32 origin)
+void DiscDistribution3D::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
-
-    if(whichField & NormalFieldMask)
-    {
-        //Determine the Normal, Tangent, Binormal Vectors
-        editNormal().normalize();
-
-        Vec3f TempVec(getNormal());
-        if(getNormal().x() == 0.0f)
-        {
-            TempVec[0] += osgMax(osgabs(TempVec.y()), osgabs(TempVec.z()));
-        }
-        else
-        {
-            TempVec[1] += osgMax(osgabs(TempVec.x()), osgMax(osgabs(TempVec.y()), osgabs(TempVec.z())));
-        }
-
-        beginEditCP(DiscDistribution3DPtr(this), TangentFieldMask | BinormalFieldMask);
-            setTangent(getNormal().cross(TempVec));
-            editTangent().normalize();
-            setBinormal(getTangent().cross(getNormal()));
-            editBinormal().normalize();
-        endEditCP(DiscDistribution3DPtr(this), TangentFieldMask | BinormalFieldMask);
-    }
+    Inherited::changed(whichField, origin, details);
 }
 
-void DiscDistribution3D::dump(      UInt32    , 
+void DiscDistribution3D::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump DiscDistribution3D NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

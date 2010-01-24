@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,76 +55,75 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &DistanceKillParticleAffectorBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 DistanceKillParticleAffectorBase::getClassTypeId(void) 
+OSG::UInt32 DistanceKillParticleAffectorBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-DistanceKillParticleAffectorPtr DistanceKillParticleAffectorBase::create(void) 
-{
-    DistanceKillParticleAffectorPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = DistanceKillParticleAffectorPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-DistanceKillParticleAffectorPtr DistanceKillParticleAffectorBase::createEmpty(void) 
-{ 
-    DistanceKillParticleAffectorPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 DistanceKillParticleAffectorBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the DistanceKillParticleAffector::_sfKillDistance field.
-inline
-SFReal32 *DistanceKillParticleAffectorBase::getSFKillDistance(void)
-{
-    return &_sfKillDistance;
-}
-
-
 //! Get the value of the DistanceKillParticleAffector::_sfKillDistance field.
+
 inline
-Real32 &DistanceKillParticleAffectorBase::getKillDistance(void)
+Real32 &DistanceKillParticleAffectorBase::editKillDistance(void)
 {
+    editSField(KillDistanceFieldMask);
+
     return _sfKillDistance.getValue();
 }
 
 //! Get the value of the DistanceKillParticleAffector::_sfKillDistance field.
 inline
-const Real32 &DistanceKillParticleAffectorBase::getKillDistance(void) const
+      Real32  DistanceKillParticleAffectorBase::getKillDistance(void) const
 {
     return _sfKillDistance.getValue();
 }
 
 //! Set the value of the DistanceKillParticleAffector::_sfKillDistance field.
 inline
-void DistanceKillParticleAffectorBase::setKillDistance(const Real32 &value)
+void DistanceKillParticleAffectorBase::setKillDistance(const Real32 value)
 {
+    editSField(KillDistanceFieldMask);
+
     _sfKillDistance.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void DistanceKillParticleAffectorBase::execSync (      DistanceKillParticleAffectorBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGDISTANCEKILLPARTICLEAFFECTORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (KillDistanceFieldMask & whichField))
+        _sfKillDistance.syncWith(pFrom->_sfKillDistance);
+}
+#endif
+
+
+inline
+const Char8 *DistanceKillParticleAffectorBase::getClassname(void)
+{
+    return "DistanceKillParticleAffector";
+}
+
+
+OSG_GEN_CONTAINERPTR(DistanceKillParticleAffector);
+
+OSG_END_NAMESPACE
 

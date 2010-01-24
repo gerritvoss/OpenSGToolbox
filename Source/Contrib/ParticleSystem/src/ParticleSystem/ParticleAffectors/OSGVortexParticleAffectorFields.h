@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGParticleAffectorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class VortexParticleAffector;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! VortexParticleAffectorPtr
+OSG_GEN_CONTAINERPTR(VortexParticleAffector);
 
-typedef FCPtr<ParticleAffectorPtr, VortexParticleAffector> VortexParticleAffectorPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpParticleSystemFieldTraits
+/*! \ingroup GrpContribParticleSystemFieldTraits
+    \ingroup GrpLibOSGContribParticleSystem
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<VortexParticleAffectorPtr> : 
-    public FieldTraitsRecurseMapper<VortexParticleAffectorPtr, true>
+struct FieldTraits<VortexParticleAffector *> :
+    public FieldTraitsFCPtrBase<VortexParticleAffector *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFVortexParticleAffectorPtr"; }
-    static const char *getMName(void) { return "MFVortexParticleAffectorPtr"; }
+    typedef FieldTraits<VortexParticleAffector *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFVortexParticleAffectorPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFVortexParticleAffectorPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<VortexParticleAffectorPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<VortexParticleAffector *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecVortexParticleAffectorPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<VortexParticleAffector *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecVortexParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<VortexParticleAffector *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakVortexParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<VortexParticleAffector *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdVortexParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<VortexParticleAffector *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecVortexParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<VortexParticleAffector *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecVortexParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<VortexParticleAffector *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakVortexParticleAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<VortexParticleAffector *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdVortexParticleAffectorPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<VortexParticleAffector *,
+                      RecordedRefCountPolicy  > SFRecVortexParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<VortexParticleAffector *,
+                      UnrecordedRefCountPolicy> SFUnrecVortexParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<VortexParticleAffector *,
+                      WeakRefCountPolicy      > SFWeakVortexParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<VortexParticleAffector *,
+                      NoRefCountPolicy        > SFUncountedVortexParticleAffectorPtr;
 
-typedef SField<VortexParticleAffectorPtr> SFVortexParticleAffectorPtr;
-#endif
 
-#ifndef OSG_COMPILEVORTEXPARTICLEAFFECTORINST
-OSG_DLLEXPORT_DECL1(SField, VortexParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<VortexParticleAffector *,
+                      RecordedRefCountPolicy  > MFRecVortexParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<VortexParticleAffector *,
+                      UnrecordedRefCountPolicy> MFUnrecVortexParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<VortexParticleAffector *,
+                      WeakRefCountPolicy      > MFWeakVortexParticleAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<VortexParticleAffector *,
+                      NoRefCountPolicy        > MFUncountedVortexParticleAffectorPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldMulti */
 
-typedef MField<VortexParticleAffectorPtr> MFVortexParticleAffectorPtr;
-#endif
 
-#ifndef OSG_COMPILEVORTEXPARTICLEAFFECTORINST
-OSG_DLLEXPORT_DECL1(MField, VortexParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFRecVortexParticleAffectorPtr : 
+    public PointerSField<VortexParticleAffector *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUnrecVortexParticleAffectorPtr : 
+    public PointerSField<VortexParticleAffector *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFWeakVortexParticleAffectorPtr :
+    public PointerSField<VortexParticleAffector *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUncountedVortexParticleAffectorPtr :
+    public PointerSField<VortexParticleAffector *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFRecVortexParticleAffectorPtr :
+    public PointerMField<VortexParticleAffector *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUnrecVortexParticleAffectorPtr :
+    public PointerMField<VortexParticleAffector *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFWeakVortexParticleAffectorPtr :
+    public PointerMField<VortexParticleAffector *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUncountedVortexParticleAffectorPtr :
+    public PointerMField<VortexParticleAffector *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGVORTEXPARTICLEAFFECTORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGVORTEXPARTICLEAFFECTORFIELDS_H_ */

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Dynamics                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,23 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGDiscDistribution2D.h"
-#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
+#include "OSGRandomPoolManager.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::DiscDistribution2D
-An DiscDistribution2D. 	
-*/
+// Documentation for this class is emitted in the
+// OSGDiscDistribution2DBase.cpp file.
+// To modify it, please change the .fcd file (OSGDiscDistribution2D.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -66,14 +63,20 @@ An DiscDistribution2D.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DiscDistribution2D::initMethod (void)
+void DiscDistribution2D::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
 Vec2f DiscDistribution2D::generate(void) const
 {
     Vec2f Result;
@@ -89,11 +92,11 @@ Vec2f DiscDistribution2D::generate(void) const
             Real32 PickEdge(RandomPoolManager::getRandomReal32(0.0,1.0));
             if(PickEdge < InnerCircumference/(OuterCircumference + InnerCircumference))
             {
-                Result =  getCenter() + Vec2f(getMinRadius()*osgcos(Theta), getMinRadius()*osgsin(Theta));
+                Result =  getCenter().subZero() + Vec2f(getMinRadius()*osgCos(Theta), getMinRadius()*osgSin(Theta));
             }
             else
             {
-                Result =  getCenter() + Vec2f(getMaxRadius()*osgcos(Theta), getMaxRadius()*osgsin(Theta));
+                Result =  getCenter().subZero() + Vec2f(getMaxRadius()*osgCos(Theta), getMaxRadius()*osgSin(Theta));
             }
             break;
         }
@@ -104,10 +107,10 @@ Vec2f DiscDistribution2D::generate(void) const
             //Then Take the square root of that.  This gives a square root distribution from 0.0 - 1.0
             //This square root distribution is used for the random radius because the area of a disc is 
             //dependant on the square of the radius, i.e it is a quadratic function
-            Real32 Temp(osgsqrt(RandomPoolManager::getRandomReal32(0.0,1.0)));
+            Real32 Temp(osgSqrt(RandomPoolManager::getRandomReal32(0.0,1.0)));
             Real32 Radius(getMinRadius() + Temp*(getMaxRadius() - getMinRadius()));
             Real32 Theta( RandomPoolManager::getRandomReal32(getMinTheta(),getMaxTheta()) );
-            Result = getCenter() + Vec2f(Radius*osgcos(Theta), Radius*osgsin(Theta));
+            Result = getCenter().subZero() + Vec2f(Radius*osgCos(Theta), Radius*osgSin(Theta));
             break;
         }
     }
@@ -137,16 +140,17 @@ DiscDistribution2D::~DiscDistribution2D(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void DiscDistribution2D::changed(BitVector whichField, UInt32 origin)
+void DiscDistribution2D::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void DiscDistribution2D::dump(      UInt32    , 
+void DiscDistribution2D::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump DiscDistribution2D NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

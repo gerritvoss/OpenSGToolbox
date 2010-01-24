@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,253 +55,97 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &TurbulenceParticleAffectorBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 TurbulenceParticleAffectorBase::getClassTypeId(void) 
+OSG::UInt32 TurbulenceParticleAffectorBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-TurbulenceParticleAffectorPtr TurbulenceParticleAffectorBase::create(void) 
-{
-    TurbulenceParticleAffectorPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = TurbulenceParticleAffectorPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-TurbulenceParticleAffectorPtr TurbulenceParticleAffectorBase::createEmpty(void) 
-{ 
-    TurbulenceParticleAffectorPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 TurbulenceParticleAffectorBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the TurbulenceParticleAffector::_sfPerlinDistribution field.
-inline
-const SFPerlinNoiseDistribution1DPtr *TurbulenceParticleAffectorBase::getSFPerlinDistribution(void) const
-{
-    return &_sfPerlinDistribution;
-}
-
-//! Get the TurbulenceParticleAffector::_sfPerlinDistribution field.
-inline
-SFPerlinNoiseDistribution1DPtr *TurbulenceParticleAffectorBase::editSFPerlinDistribution(void)
-{
-    return &_sfPerlinDistribution;
-}
-
-//! Get the TurbulenceParticleAffector::_sfAmplitude field.
-inline
-const SFReal32 *TurbulenceParticleAffectorBase::getSFAmplitude(void) const
-{
-    return &_sfAmplitude;
-}
-
-//! Get the TurbulenceParticleAffector::_sfAmplitude field.
-inline
-SFReal32 *TurbulenceParticleAffectorBase::editSFAmplitude(void)
-{
-    return &_sfAmplitude;
-}
-
-//! Get the TurbulenceParticleAffector::_sfInterpolationType field.
-inline
-const SFUInt32 *TurbulenceParticleAffectorBase::getSFInterpolationType(void) const
-{
-    return &_sfInterpolationType;
-}
-
-//! Get the TurbulenceParticleAffector::_sfInterpolationType field.
-inline
-SFUInt32 *TurbulenceParticleAffectorBase::editSFInterpolationType(void)
-{
-    return &_sfInterpolationType;
-}
-
-//! Get the TurbulenceParticleAffector::_sfPhase field.
-inline
-const SFVec3f *TurbulenceParticleAffectorBase::getSFPhase(void) const
-{
-    return &_sfPhase;
-}
-
-//! Get the TurbulenceParticleAffector::_sfPhase field.
-inline
-SFVec3f *TurbulenceParticleAffectorBase::editSFPhase(void)
-{
-    return &_sfPhase;
-}
-
-//! Get the TurbulenceParticleAffector::_sfPersistance field.
-inline
-const SFReal32 *TurbulenceParticleAffectorBase::getSFPersistance(void) const
-{
-    return &_sfPersistance;
-}
-
-//! Get the TurbulenceParticleAffector::_sfPersistance field.
-inline
-SFReal32 *TurbulenceParticleAffectorBase::editSFPersistance(void)
-{
-    return &_sfPersistance;
-}
-
-//! Get the TurbulenceParticleAffector::_sfFrequency field.
-inline
-const SFReal32 *TurbulenceParticleAffectorBase::getSFFrequency(void) const
-{
-    return &_sfFrequency;
-}
-
-//! Get the TurbulenceParticleAffector::_sfFrequency field.
-inline
-SFReal32 *TurbulenceParticleAffectorBase::editSFFrequency(void)
-{
-    return &_sfFrequency;
-}
-
-//! Get the TurbulenceParticleAffector::_sfOctaves field.
-inline
-const SFUInt32 *TurbulenceParticleAffectorBase::getSFOctaves(void) const
-{
-    return &_sfOctaves;
-}
-
-//! Get the TurbulenceParticleAffector::_sfOctaves field.
-inline
-SFUInt32 *TurbulenceParticleAffectorBase::editSFOctaves(void)
-{
-    return &_sfOctaves;
-}
-
-//! Get the TurbulenceParticleAffector::_sfBeacon field.
-inline
-const SFNodePtr *TurbulenceParticleAffectorBase::getSFBeacon(void) const
-{
-    return &_sfBeacon;
-}
-
-//! Get the TurbulenceParticleAffector::_sfBeacon field.
-inline
-SFNodePtr *TurbulenceParticleAffectorBase::editSFBeacon(void)
-{
-    return &_sfBeacon;
-}
-
-//! Get the TurbulenceParticleAffector::_sfAttenuation field.
-inline
-const SFReal32 *TurbulenceParticleAffectorBase::getSFAttenuation(void) const
-{
-    return &_sfAttenuation;
-}
-
-//! Get the TurbulenceParticleAffector::_sfAttenuation field.
-inline
-SFReal32 *TurbulenceParticleAffectorBase::editSFAttenuation(void)
-{
-    return &_sfAttenuation;
-}
-
-//! Get the TurbulenceParticleAffector::_sfMaxDistance field.
-inline
-const SFReal32 *TurbulenceParticleAffectorBase::getSFMaxDistance(void) const
-{
-    return &_sfMaxDistance;
-}
-
-//! Get the TurbulenceParticleAffector::_sfMaxDistance field.
-inline
-SFReal32 *TurbulenceParticleAffectorBase::editSFMaxDistance(void)
-{
-    return &_sfMaxDistance;
-}
-
 
 //! Get the value of the TurbulenceParticleAffector::_sfPerlinDistribution field.
 inline
-PerlinNoiseDistribution1DPtr &TurbulenceParticleAffectorBase::editPerlinDistribution(void)
-{
-    return _sfPerlinDistribution.getValue();
-}
-
-//! Get the value of the TurbulenceParticleAffector::_sfPerlinDistribution field.
-inline
-const PerlinNoiseDistribution1DPtr &TurbulenceParticleAffectorBase::getPerlinDistribution(void) const
+PerlinNoiseDistribution1D * TurbulenceParticleAffectorBase::getPerlinDistribution(void) const
 {
     return _sfPerlinDistribution.getValue();
 }
 
 //! Set the value of the TurbulenceParticleAffector::_sfPerlinDistribution field.
 inline
-void TurbulenceParticleAffectorBase::setPerlinDistribution(const PerlinNoiseDistribution1DPtr &value)
+void TurbulenceParticleAffectorBase::setPerlinDistribution(PerlinNoiseDistribution1D * const value)
 {
+    editSField(PerlinDistributionFieldMask);
+
     _sfPerlinDistribution.setValue(value);
 }
-
 //! Get the value of the TurbulenceParticleAffector::_sfAmplitude field.
+
 inline
 Real32 &TurbulenceParticleAffectorBase::editAmplitude(void)
 {
+    editSField(AmplitudeFieldMask);
+
     return _sfAmplitude.getValue();
 }
 
 //! Get the value of the TurbulenceParticleAffector::_sfAmplitude field.
 inline
-const Real32 &TurbulenceParticleAffectorBase::getAmplitude(void) const
+      Real32  TurbulenceParticleAffectorBase::getAmplitude(void) const
 {
     return _sfAmplitude.getValue();
 }
 
 //! Set the value of the TurbulenceParticleAffector::_sfAmplitude field.
 inline
-void TurbulenceParticleAffectorBase::setAmplitude(const Real32 &value)
+void TurbulenceParticleAffectorBase::setAmplitude(const Real32 value)
 {
+    editSField(AmplitudeFieldMask);
+
     _sfAmplitude.setValue(value);
 }
-
 //! Get the value of the TurbulenceParticleAffector::_sfInterpolationType field.
+
 inline
 UInt32 &TurbulenceParticleAffectorBase::editInterpolationType(void)
 {
+    editSField(InterpolationTypeFieldMask);
+
     return _sfInterpolationType.getValue();
 }
 
 //! Get the value of the TurbulenceParticleAffector::_sfInterpolationType field.
 inline
-const UInt32 &TurbulenceParticleAffectorBase::getInterpolationType(void) const
+      UInt32  TurbulenceParticleAffectorBase::getInterpolationType(void) const
 {
     return _sfInterpolationType.getValue();
 }
 
 //! Set the value of the TurbulenceParticleAffector::_sfInterpolationType field.
 inline
-void TurbulenceParticleAffectorBase::setInterpolationType(const UInt32 &value)
+void TurbulenceParticleAffectorBase::setInterpolationType(const UInt32 value)
 {
+    editSField(InterpolationTypeFieldMask);
+
     _sfInterpolationType.setValue(value);
 }
-
 //! Get the value of the TurbulenceParticleAffector::_sfPhase field.
+
 inline
 Vec3f &TurbulenceParticleAffectorBase::editPhase(void)
 {
+    editSField(PhaseFieldMask);
+
     return _sfPhase.getValue();
 }
 
@@ -318,134 +160,204 @@ const Vec3f &TurbulenceParticleAffectorBase::getPhase(void) const
 inline
 void TurbulenceParticleAffectorBase::setPhase(const Vec3f &value)
 {
+    editSField(PhaseFieldMask);
+
     _sfPhase.setValue(value);
 }
-
 //! Get the value of the TurbulenceParticleAffector::_sfPersistance field.
+
 inline
 Real32 &TurbulenceParticleAffectorBase::editPersistance(void)
 {
+    editSField(PersistanceFieldMask);
+
     return _sfPersistance.getValue();
 }
 
 //! Get the value of the TurbulenceParticleAffector::_sfPersistance field.
 inline
-const Real32 &TurbulenceParticleAffectorBase::getPersistance(void) const
+      Real32  TurbulenceParticleAffectorBase::getPersistance(void) const
 {
     return _sfPersistance.getValue();
 }
 
 //! Set the value of the TurbulenceParticleAffector::_sfPersistance field.
 inline
-void TurbulenceParticleAffectorBase::setPersistance(const Real32 &value)
+void TurbulenceParticleAffectorBase::setPersistance(const Real32 value)
 {
+    editSField(PersistanceFieldMask);
+
     _sfPersistance.setValue(value);
 }
-
 //! Get the value of the TurbulenceParticleAffector::_sfFrequency field.
+
 inline
 Real32 &TurbulenceParticleAffectorBase::editFrequency(void)
 {
+    editSField(FrequencyFieldMask);
+
     return _sfFrequency.getValue();
 }
 
 //! Get the value of the TurbulenceParticleAffector::_sfFrequency field.
 inline
-const Real32 &TurbulenceParticleAffectorBase::getFrequency(void) const
+      Real32  TurbulenceParticleAffectorBase::getFrequency(void) const
 {
     return _sfFrequency.getValue();
 }
 
 //! Set the value of the TurbulenceParticleAffector::_sfFrequency field.
 inline
-void TurbulenceParticleAffectorBase::setFrequency(const Real32 &value)
+void TurbulenceParticleAffectorBase::setFrequency(const Real32 value)
 {
+    editSField(FrequencyFieldMask);
+
     _sfFrequency.setValue(value);
 }
-
 //! Get the value of the TurbulenceParticleAffector::_sfOctaves field.
+
 inline
 UInt32 &TurbulenceParticleAffectorBase::editOctaves(void)
 {
+    editSField(OctavesFieldMask);
+
     return _sfOctaves.getValue();
 }
 
 //! Get the value of the TurbulenceParticleAffector::_sfOctaves field.
 inline
-const UInt32 &TurbulenceParticleAffectorBase::getOctaves(void) const
+      UInt32  TurbulenceParticleAffectorBase::getOctaves(void) const
 {
     return _sfOctaves.getValue();
 }
 
 //! Set the value of the TurbulenceParticleAffector::_sfOctaves field.
 inline
-void TurbulenceParticleAffectorBase::setOctaves(const UInt32 &value)
+void TurbulenceParticleAffectorBase::setOctaves(const UInt32 value)
 {
+    editSField(OctavesFieldMask);
+
     _sfOctaves.setValue(value);
 }
 
 //! Get the value of the TurbulenceParticleAffector::_sfBeacon field.
 inline
-NodePtr &TurbulenceParticleAffectorBase::editBeacon(void)
-{
-    return _sfBeacon.getValue();
-}
-
-//! Get the value of the TurbulenceParticleAffector::_sfBeacon field.
-inline
-const NodePtr &TurbulenceParticleAffectorBase::getBeacon(void) const
+Node * TurbulenceParticleAffectorBase::getBeacon(void) const
 {
     return _sfBeacon.getValue();
 }
 
 //! Set the value of the TurbulenceParticleAffector::_sfBeacon field.
 inline
-void TurbulenceParticleAffectorBase::setBeacon(const NodePtr &value)
+void TurbulenceParticleAffectorBase::setBeacon(Node * const value)
 {
+    editSField(BeaconFieldMask);
+
     _sfBeacon.setValue(value);
 }
-
 //! Get the value of the TurbulenceParticleAffector::_sfAttenuation field.
+
 inline
 Real32 &TurbulenceParticleAffectorBase::editAttenuation(void)
 {
+    editSField(AttenuationFieldMask);
+
     return _sfAttenuation.getValue();
 }
 
 //! Get the value of the TurbulenceParticleAffector::_sfAttenuation field.
 inline
-const Real32 &TurbulenceParticleAffectorBase::getAttenuation(void) const
+      Real32  TurbulenceParticleAffectorBase::getAttenuation(void) const
 {
     return _sfAttenuation.getValue();
 }
 
 //! Set the value of the TurbulenceParticleAffector::_sfAttenuation field.
 inline
-void TurbulenceParticleAffectorBase::setAttenuation(const Real32 &value)
+void TurbulenceParticleAffectorBase::setAttenuation(const Real32 value)
 {
+    editSField(AttenuationFieldMask);
+
     _sfAttenuation.setValue(value);
 }
-
 //! Get the value of the TurbulenceParticleAffector::_sfMaxDistance field.
+
 inline
 Real32 &TurbulenceParticleAffectorBase::editMaxDistance(void)
 {
+    editSField(MaxDistanceFieldMask);
+
     return _sfMaxDistance.getValue();
 }
 
 //! Get the value of the TurbulenceParticleAffector::_sfMaxDistance field.
 inline
-const Real32 &TurbulenceParticleAffectorBase::getMaxDistance(void) const
+      Real32  TurbulenceParticleAffectorBase::getMaxDistance(void) const
 {
     return _sfMaxDistance.getValue();
 }
 
 //! Set the value of the TurbulenceParticleAffector::_sfMaxDistance field.
 inline
-void TurbulenceParticleAffectorBase::setMaxDistance(const Real32 &value)
+void TurbulenceParticleAffectorBase::setMaxDistance(const Real32 value)
 {
+    editSField(MaxDistanceFieldMask);
+
     _sfMaxDistance.setValue(value);
 }
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void TurbulenceParticleAffectorBase::execSync (      TurbulenceParticleAffectorBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (PerlinDistributionFieldMask & whichField))
+        _sfPerlinDistribution.syncWith(pFrom->_sfPerlinDistribution);
+
+    if(FieldBits::NoField != (AmplitudeFieldMask & whichField))
+        _sfAmplitude.syncWith(pFrom->_sfAmplitude);
+
+    if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
+        _sfInterpolationType.syncWith(pFrom->_sfInterpolationType);
+
+    if(FieldBits::NoField != (PhaseFieldMask & whichField))
+        _sfPhase.syncWith(pFrom->_sfPhase);
+
+    if(FieldBits::NoField != (PersistanceFieldMask & whichField))
+        _sfPersistance.syncWith(pFrom->_sfPersistance);
+
+    if(FieldBits::NoField != (FrequencyFieldMask & whichField))
+        _sfFrequency.syncWith(pFrom->_sfFrequency);
+
+    if(FieldBits::NoField != (OctavesFieldMask & whichField))
+        _sfOctaves.syncWith(pFrom->_sfOctaves);
+
+    if(FieldBits::NoField != (BeaconFieldMask & whichField))
+        _sfBeacon.syncWith(pFrom->_sfBeacon);
+
+    if(FieldBits::NoField != (AttenuationFieldMask & whichField))
+        _sfAttenuation.syncWith(pFrom->_sfAttenuation);
+
+    if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
+        _sfMaxDistance.syncWith(pFrom->_sfMaxDistance);
+}
+#endif
+
+
+inline
+const Char8 *TurbulenceParticleAffectorBase::getClassname(void)
+{
+    return "TurbulenceParticleAffector";
+}
+
+
+OSG_GEN_CONTAINERPTR(TurbulenceParticleAffector);
+
 OSG_END_NAMESPACE
+

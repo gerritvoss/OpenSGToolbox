@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Dynamics                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,23 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGLineDistribution2D.h"
-#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
+#include "OSGRandomPoolManager.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::LineDistribution2D
-An LineDistribution2D. 	
-*/
+// Documentation for this class is emitted in the
+// OSGLineDistribution2DBase.cpp file.
+// To modify it, please change the .fcd file (OSGLineDistribution2D.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -66,18 +63,25 @@ An LineDistribution2D.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void LineDistribution2D::initMethod (void)
+void LineDistribution2D::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
 Vec2f LineDistribution2D::generate(void) const
 {
     return Vec2f(getPoint1() + RandomPoolManager::getRandomReal32(0.0,1.0)*(getPoint2() - getPoint1()));
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -100,16 +104,17 @@ LineDistribution2D::~LineDistribution2D(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void LineDistribution2D::changed(BitVector whichField, UInt32 origin)
+void LineDistribution2D::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void LineDistribution2D::dump(      UInt32    , 
+void LineDistribution2D::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump LineDistribution2D NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

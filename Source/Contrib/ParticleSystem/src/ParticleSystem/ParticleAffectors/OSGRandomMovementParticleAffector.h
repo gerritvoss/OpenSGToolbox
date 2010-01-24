@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                Authors: David Kabala, Daniel Guilliams                    *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,46 +42,53 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGRandomMovementParticleAffectorBase.h"
-#include "Distributions/1D/OSGPerlinNoiseDistribution1D.h"
+#include "OSGPerlinNoiseDistribution1D.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief RandomMovementParticleAffector class. See \ref 
-           PageParticleSystemRandomMovementParticleAffector for a description.
+/*! \brief RandomMovementParticleAffector class. See \ref
+           PageContribParticleSystemRandomMovementParticleAffector for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING RandomMovementParticleAffector : public RandomMovementParticleAffectorBase
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING RandomMovementParticleAffector : public RandomMovementParticleAffectorBase
 {
-  private:
-
-    typedef RandomMovementParticleAffectorBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
-	  enum ParticleAttributes{POSITION_ATTRIBUTE = 0, VELOCITY_ATTRIBUTE = 1};
+    enum ParticleAttributes
+    {
+        POSITION_ATTRIBUTE = 0,
+        VELOCITY_ATTRIBUTE = 1
+    };
+
+    typedef RandomMovementParticleAffectorBase Inherited;
+    typedef RandomMovementParticleAffector     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
-	virtual bool affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps);
+	virtual bool affect(ParticleSystemRefPtr System, Int32 ParticleIndex, const Time& elps);
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in RandomMovementParticleAffectorBase.
@@ -98,22 +105,26 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RandomMovementParticleAffector : public R
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~RandomMovementParticleAffector(void); 
-    void onCreate(const RandomMovementParticleAffector *source = NULL);
-    void onDestroy(void);
+    virtual ~RandomMovementParticleAffector(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+    void onCreate(const RandomMovementParticleAffector *source = NULL);
+    void onDestroy(void);
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class RandomMovementParticleAffectorBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const RandomMovementParticleAffector &source);
 };
 

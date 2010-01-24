@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Dynamics                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,23 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGQuadDistribution2D.h"
-#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
+#include "OSGRandomPoolManager.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::QuadDistribution2D
-An QuadDistribution2D. 	
-*/
+// Documentation for this class is emitted in the
+// OSGQuadDistribution2DBase.cpp file.
+// To modify it, please change the .fcd file (OSGQuadDistribution2D.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -66,8 +63,13 @@ An QuadDistribution2D.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void QuadDistribution2D::initMethod (void)
+void QuadDistribution2D::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -100,19 +102,19 @@ Vec2f QuadDistribution2D::generate(void) const
             Real32 PickEdge(RandomPoolManager::getRandomReal32(0.0,1.0));
             if(Rand < Side1Length/TotalLength)
             {
-                Result = getPoint1() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side1;
+                Result = getPoint1().subZero() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side1;
             }
             else if(Rand < (Side1Length+Side2Length)/TotalLength)
             {
-                Result = getPoint2() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side2;
+                Result = getPoint2().subZero() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side2;
             }
             else if(Rand < (Side1Length+Side2Length+Side3Length)/TotalLength)
             {
-                Result = getPoint3() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side3;
+                Result = getPoint3().subZero() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side3;
             }
             else
             {
-                Result = getPoint4() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side4;
+                Result = getPoint4().subZero() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side4;
             }
             break;
         }
@@ -126,13 +128,13 @@ Vec2f QuadDistribution2D::generate(void) const
             {
                 s = 1.0f - s;
                 t = 1.0f - t;
-                Result = getPoint3()
+                Result = getPoint3().subZero()
                     + s*(getPoint2() - getPoint3())
                     + t*(getPoint4() - getPoint3());
             }
             else
             {
-                Result = getPoint1()
+                Result = getPoint1().subZero()
                     + s*(getPoint2() - getPoint1())
                     + t*(getPoint4() - getPoint1());
             }
@@ -143,6 +145,7 @@ Vec2f QuadDistribution2D::generate(void) const
 
     return Result;
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -165,16 +168,17 @@ QuadDistribution2D::~QuadDistribution2D(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void QuadDistribution2D::changed(BitVector whichField, UInt32 origin)
+void QuadDistribution2D::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void QuadDistribution2D::dump(      UInt32    , 
+void QuadDistribution2D::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump QuadDistribution2D NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

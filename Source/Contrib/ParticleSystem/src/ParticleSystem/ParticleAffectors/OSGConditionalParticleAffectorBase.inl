@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,106 +55,31 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &ConditionalParticleAffectorBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ConditionalParticleAffectorBase::getClassTypeId(void) 
+OSG::UInt32 ConditionalParticleAffectorBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-ConditionalParticleAffectorPtr ConditionalParticleAffectorBase::create(void) 
-{
-    ConditionalParticleAffectorPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = ConditionalParticleAffectorPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-ConditionalParticleAffectorPtr ConditionalParticleAffectorBase::createEmpty(void) 
-{ 
-    ConditionalParticleAffectorPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 ConditionalParticleAffectorBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ConditionalParticleAffector::_sfConditionalAttribute field.
-inline
-const SFString *ConditionalParticleAffectorBase::getSFConditionalAttribute(void) const
-{
-    return &_sfConditionalAttribute;
-}
-
-//! Get the ConditionalParticleAffector::_sfConditionalAttribute field.
-inline
-SFString *ConditionalParticleAffectorBase::editSFConditionalAttribute(void)
-{
-    return &_sfConditionalAttribute;
-}
-
-//! Get the ConditionalParticleAffector::_sfConditionalOperator field.
-inline
-const SFUInt8 *ConditionalParticleAffectorBase::getSFConditionalOperator(void) const
-{
-    return &_sfConditionalOperator;
-}
-
-//! Get the ConditionalParticleAffector::_sfConditionalOperator field.
-inline
-SFUInt8 *ConditionalParticleAffectorBase::editSFConditionalOperator(void)
-{
-    return &_sfConditionalOperator;
-}
-
-//! Get the ConditionalParticleAffector::_sfConditionalValue field.
-inline
-const SFUInt32 *ConditionalParticleAffectorBase::getSFConditionalValue(void) const
-{
-    return &_sfConditionalValue;
-}
-
-//! Get the ConditionalParticleAffector::_sfConditionalValue field.
-inline
-SFUInt32 *ConditionalParticleAffectorBase::editSFConditionalValue(void)
-{
-    return &_sfConditionalValue;
-}
-
-//! Get the ConditionalParticleAffector::_mfAffectors field.
-inline
-const MFParticleAffectorPtr *ConditionalParticleAffectorBase::getMFAffectors(void) const
-{
-    return &_mfAffectors;
-}
-
-//! Get the ConditionalParticleAffector::_mfAffectors field.
-inline
-MFParticleAffectorPtr *ConditionalParticleAffectorBase::editMFAffectors(void)
-{
-    return &_mfAffectors;
-}
-
-
 //! Get the value of the ConditionalParticleAffector::_sfConditionalAttribute field.
+
 inline
 std::string &ConditionalParticleAffectorBase::editConditionalAttribute(void)
 {
+    editSField(ConditionalAttributeFieldMask);
+
     return _sfConditionalAttribute.getValue();
 }
 
@@ -171,80 +94,105 @@ const std::string &ConditionalParticleAffectorBase::getConditionalAttribute(void
 inline
 void ConditionalParticleAffectorBase::setConditionalAttribute(const std::string &value)
 {
+    editSField(ConditionalAttributeFieldMask);
+
     _sfConditionalAttribute.setValue(value);
 }
-
 //! Get the value of the ConditionalParticleAffector::_sfConditionalOperator field.
+
 inline
 UInt8 &ConditionalParticleAffectorBase::editConditionalOperator(void)
 {
+    editSField(ConditionalOperatorFieldMask);
+
     return _sfConditionalOperator.getValue();
 }
 
 //! Get the value of the ConditionalParticleAffector::_sfConditionalOperator field.
 inline
-const UInt8 &ConditionalParticleAffectorBase::getConditionalOperator(void) const
+      UInt8  ConditionalParticleAffectorBase::getConditionalOperator(void) const
 {
     return _sfConditionalOperator.getValue();
 }
 
 //! Set the value of the ConditionalParticleAffector::_sfConditionalOperator field.
 inline
-void ConditionalParticleAffectorBase::setConditionalOperator(const UInt8 &value)
+void ConditionalParticleAffectorBase::setConditionalOperator(const UInt8 value)
 {
+    editSField(ConditionalOperatorFieldMask);
+
     _sfConditionalOperator.setValue(value);
 }
-
 //! Get the value of the ConditionalParticleAffector::_sfConditionalValue field.
+
 inline
 UInt32 &ConditionalParticleAffectorBase::editConditionalValue(void)
 {
+    editSField(ConditionalValueFieldMask);
+
     return _sfConditionalValue.getValue();
 }
 
 //! Get the value of the ConditionalParticleAffector::_sfConditionalValue field.
 inline
-const UInt32 &ConditionalParticleAffectorBase::getConditionalValue(void) const
+      UInt32  ConditionalParticleAffectorBase::getConditionalValue(void) const
 {
     return _sfConditionalValue.getValue();
 }
 
 //! Set the value of the ConditionalParticleAffector::_sfConditionalValue field.
 inline
-void ConditionalParticleAffectorBase::setConditionalValue(const UInt32 &value)
+void ConditionalParticleAffectorBase::setConditionalValue(const UInt32 value)
 {
+    editSField(ConditionalValueFieldMask);
+
     _sfConditionalValue.setValue(value);
 }
 
-
 //! Get the value of the \a index element the ConditionalParticleAffector::_mfAffectors field.
 inline
-ParticleAffectorPtr &ConditionalParticleAffectorBase::editAffectors(const UInt32 index)
+ParticleAffector * ConditionalParticleAffectorBase::getAffectors(const UInt32 index) const
 {
     return _mfAffectors[index];
 }
 
-//! Get the value of the \a index element the ConditionalParticleAffector::_mfAffectors field.
-inline
-const ParticleAffectorPtr &ConditionalParticleAffectorBase::getAffectors(const UInt32 index) const
-{
-    return _mfAffectors[index];
-}
 
-#ifndef OSG_2_PREP
-//! Get the ConditionalParticleAffector::_mfAffectors field.
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-MFParticleAffectorPtr &ConditionalParticleAffectorBase::getAffectors(void)
+void ConditionalParticleAffectorBase::execSync (      ConditionalParticleAffectorBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfAffectors;
-}
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-//! Get the ConditionalParticleAffector::_mfAffectors field.
-inline
-const MFParticleAffectorPtr &ConditionalParticleAffectorBase::getAffectors(void) const
-{
-    return _mfAffectors;
-}
+    if(FieldBits::NoField != (ConditionalAttributeFieldMask & whichField))
+        _sfConditionalAttribute.syncWith(pFrom->_sfConditionalAttribute);
 
+    if(FieldBits::NoField != (ConditionalOperatorFieldMask & whichField))
+        _sfConditionalOperator.syncWith(pFrom->_sfConditionalOperator);
+
+    if(FieldBits::NoField != (ConditionalValueFieldMask & whichField))
+        _sfConditionalValue.syncWith(pFrom->_sfConditionalValue);
+
+    if(FieldBits::NoField != (AffectorsFieldMask & whichField))
+        _mfAffectors.syncWith(pFrom->_mfAffectors,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+}
 #endif
+
+
+inline
+const Char8 *ConditionalParticleAffectorBase::getClassname(void)
+{
+    return "ConditionalParticleAffector";
+}
+
+
+OSG_GEN_CONTAINERPTR(ConditionalParticleAffector);
+
 OSG_END_NAMESPACE
+

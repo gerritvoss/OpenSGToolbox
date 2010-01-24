@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,253 +55,156 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &PerlinNoiseDistribution2DBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 PerlinNoiseDistribution2DBase::getClassTypeId(void) 
+OSG::UInt32 PerlinNoiseDistribution2DBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-PerlinNoiseDistribution2DPtr PerlinNoiseDistribution2DBase::create(void) 
-{
-    PerlinNoiseDistribution2DPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = PerlinNoiseDistribution2DPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-PerlinNoiseDistribution2DPtr PerlinNoiseDistribution2DBase::createEmpty(void) 
-{ 
-    PerlinNoiseDistribution2DPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 PerlinNoiseDistribution2DBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the PerlinNoiseDistribution2D::_sfFrequency field.
-inline
-const SFReal32 *PerlinNoiseDistribution2DBase::getSFFrequency(void) const
-{
-    return &_sfFrequency;
-}
-
-//! Get the PerlinNoiseDistribution2D::_sfFrequency field.
-inline
-SFReal32 *PerlinNoiseDistribution2DBase::editSFFrequency(void)
-{
-    return &_sfFrequency;
-}
-
-//! Get the PerlinNoiseDistribution2D::_sfPersistance field.
-inline
-const SFReal32 *PerlinNoiseDistribution2DBase::getSFPersistance(void) const
-{
-    return &_sfPersistance;
-}
-
-//! Get the PerlinNoiseDistribution2D::_sfPersistance field.
-inline
-SFReal32 *PerlinNoiseDistribution2DBase::editSFPersistance(void)
-{
-    return &_sfPersistance;
-}
-
-//! Get the PerlinNoiseDistribution2D::_sfOctaves field.
-inline
-const SFUInt32 *PerlinNoiseDistribution2DBase::getSFOctaves(void) const
-{
-    return &_sfOctaves;
-}
-
-//! Get the PerlinNoiseDistribution2D::_sfOctaves field.
-inline
-SFUInt32 *PerlinNoiseDistribution2DBase::editSFOctaves(void)
-{
-    return &_sfOctaves;
-}
-
-//! Get the PerlinNoiseDistribution2D::_sfAmplitude field.
-inline
-const SFReal32 *PerlinNoiseDistribution2DBase::getSFAmplitude(void) const
-{
-    return &_sfAmplitude;
-}
-
-//! Get the PerlinNoiseDistribution2D::_sfAmplitude field.
-inline
-SFReal32 *PerlinNoiseDistribution2DBase::editSFAmplitude(void)
-{
-    return &_sfAmplitude;
-}
-
-//! Get the PerlinNoiseDistribution2D::_sfInterpolationType field.
-inline
-const SFUInt32 *PerlinNoiseDistribution2DBase::getSFInterpolationType(void) const
-{
-    return &_sfInterpolationType;
-}
-
-//! Get the PerlinNoiseDistribution2D::_sfInterpolationType field.
-inline
-SFUInt32 *PerlinNoiseDistribution2DBase::editSFInterpolationType(void)
-{
-    return &_sfInterpolationType;
-}
-
-//! Get the PerlinNoiseDistribution2D::_sfPhase field.
-inline
-const SFVec2f *PerlinNoiseDistribution2DBase::getSFPhase(void) const
-{
-    return &_sfPhase;
-}
-
-//! Get the PerlinNoiseDistribution2D::_sfPhase field.
-inline
-SFVec2f *PerlinNoiseDistribution2DBase::editSFPhase(void)
-{
-    return &_sfPhase;
-}
-
-//! Get the PerlinNoiseDistribution2D::_sfUseSmoothing field.
-inline
-const SFBool *PerlinNoiseDistribution2DBase::getSFUseSmoothing(void) const
-{
-    return &_sfUseSmoothing;
-}
-
-//! Get the PerlinNoiseDistribution2D::_sfUseSmoothing field.
-inline
-SFBool *PerlinNoiseDistribution2DBase::editSFUseSmoothing(void)
-{
-    return &_sfUseSmoothing;
-}
-
-
 //! Get the value of the PerlinNoiseDistribution2D::_sfFrequency field.
+
 inline
 Real32 &PerlinNoiseDistribution2DBase::editFrequency(void)
 {
+    editSField(FrequencyFieldMask);
+
     return _sfFrequency.getValue();
 }
 
 //! Get the value of the PerlinNoiseDistribution2D::_sfFrequency field.
 inline
-const Real32 &PerlinNoiseDistribution2DBase::getFrequency(void) const
+      Real32  PerlinNoiseDistribution2DBase::getFrequency(void) const
 {
     return _sfFrequency.getValue();
 }
 
 //! Set the value of the PerlinNoiseDistribution2D::_sfFrequency field.
 inline
-void PerlinNoiseDistribution2DBase::setFrequency(const Real32 &value)
+void PerlinNoiseDistribution2DBase::setFrequency(const Real32 value)
 {
+    editSField(FrequencyFieldMask);
+
     _sfFrequency.setValue(value);
 }
-
 //! Get the value of the PerlinNoiseDistribution2D::_sfPersistance field.
+
 inline
 Real32 &PerlinNoiseDistribution2DBase::editPersistance(void)
 {
+    editSField(PersistanceFieldMask);
+
     return _sfPersistance.getValue();
 }
 
 //! Get the value of the PerlinNoiseDistribution2D::_sfPersistance field.
 inline
-const Real32 &PerlinNoiseDistribution2DBase::getPersistance(void) const
+      Real32  PerlinNoiseDistribution2DBase::getPersistance(void) const
 {
     return _sfPersistance.getValue();
 }
 
 //! Set the value of the PerlinNoiseDistribution2D::_sfPersistance field.
 inline
-void PerlinNoiseDistribution2DBase::setPersistance(const Real32 &value)
+void PerlinNoiseDistribution2DBase::setPersistance(const Real32 value)
 {
+    editSField(PersistanceFieldMask);
+
     _sfPersistance.setValue(value);
 }
-
 //! Get the value of the PerlinNoiseDistribution2D::_sfOctaves field.
+
 inline
 UInt32 &PerlinNoiseDistribution2DBase::editOctaves(void)
 {
+    editSField(OctavesFieldMask);
+
     return _sfOctaves.getValue();
 }
 
 //! Get the value of the PerlinNoiseDistribution2D::_sfOctaves field.
 inline
-const UInt32 &PerlinNoiseDistribution2DBase::getOctaves(void) const
+      UInt32  PerlinNoiseDistribution2DBase::getOctaves(void) const
 {
     return _sfOctaves.getValue();
 }
 
 //! Set the value of the PerlinNoiseDistribution2D::_sfOctaves field.
 inline
-void PerlinNoiseDistribution2DBase::setOctaves(const UInt32 &value)
+void PerlinNoiseDistribution2DBase::setOctaves(const UInt32 value)
 {
+    editSField(OctavesFieldMask);
+
     _sfOctaves.setValue(value);
 }
-
 //! Get the value of the PerlinNoiseDistribution2D::_sfAmplitude field.
+
 inline
 Real32 &PerlinNoiseDistribution2DBase::editAmplitude(void)
 {
+    editSField(AmplitudeFieldMask);
+
     return _sfAmplitude.getValue();
 }
 
 //! Get the value of the PerlinNoiseDistribution2D::_sfAmplitude field.
 inline
-const Real32 &PerlinNoiseDistribution2DBase::getAmplitude(void) const
+      Real32  PerlinNoiseDistribution2DBase::getAmplitude(void) const
 {
     return _sfAmplitude.getValue();
 }
 
 //! Set the value of the PerlinNoiseDistribution2D::_sfAmplitude field.
 inline
-void PerlinNoiseDistribution2DBase::setAmplitude(const Real32 &value)
+void PerlinNoiseDistribution2DBase::setAmplitude(const Real32 value)
 {
+    editSField(AmplitudeFieldMask);
+
     _sfAmplitude.setValue(value);
 }
-
 //! Get the value of the PerlinNoiseDistribution2D::_sfInterpolationType field.
+
 inline
 UInt32 &PerlinNoiseDistribution2DBase::editInterpolationType(void)
 {
+    editSField(InterpolationTypeFieldMask);
+
     return _sfInterpolationType.getValue();
 }
 
 //! Get the value of the PerlinNoiseDistribution2D::_sfInterpolationType field.
 inline
-const UInt32 &PerlinNoiseDistribution2DBase::getInterpolationType(void) const
+      UInt32  PerlinNoiseDistribution2DBase::getInterpolationType(void) const
 {
     return _sfInterpolationType.getValue();
 }
 
 //! Set the value of the PerlinNoiseDistribution2D::_sfInterpolationType field.
 inline
-void PerlinNoiseDistribution2DBase::setInterpolationType(const UInt32 &value)
+void PerlinNoiseDistribution2DBase::setInterpolationType(const UInt32 value)
 {
+    editSField(InterpolationTypeFieldMask);
+
     _sfInterpolationType.setValue(value);
 }
-
 //! Get the value of the PerlinNoiseDistribution2D::_sfPhase field.
+
 inline
 Vec2f &PerlinNoiseDistribution2DBase::editPhase(void)
 {
+    editSField(PhaseFieldMask);
+
     return _sfPhase.getValue();
 }
 
@@ -318,29 +219,79 @@ const Vec2f &PerlinNoiseDistribution2DBase::getPhase(void) const
 inline
 void PerlinNoiseDistribution2DBase::setPhase(const Vec2f &value)
 {
+    editSField(PhaseFieldMask);
+
     _sfPhase.setValue(value);
 }
-
 //! Get the value of the PerlinNoiseDistribution2D::_sfUseSmoothing field.
+
 inline
 bool &PerlinNoiseDistribution2DBase::editUseSmoothing(void)
 {
+    editSField(UseSmoothingFieldMask);
+
     return _sfUseSmoothing.getValue();
 }
 
 //! Get the value of the PerlinNoiseDistribution2D::_sfUseSmoothing field.
 inline
-const bool &PerlinNoiseDistribution2DBase::getUseSmoothing(void) const
+      bool  PerlinNoiseDistribution2DBase::getUseSmoothing(void) const
 {
     return _sfUseSmoothing.getValue();
 }
 
 //! Set the value of the PerlinNoiseDistribution2D::_sfUseSmoothing field.
 inline
-void PerlinNoiseDistribution2DBase::setUseSmoothing(const bool &value)
+void PerlinNoiseDistribution2DBase::setUseSmoothing(const bool value)
 {
+    editSField(UseSmoothingFieldMask);
+
     _sfUseSmoothing.setValue(value);
 }
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void PerlinNoiseDistribution2DBase::execSync (      PerlinNoiseDistribution2DBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (FrequencyFieldMask & whichField))
+        _sfFrequency.syncWith(pFrom->_sfFrequency);
+
+    if(FieldBits::NoField != (PersistanceFieldMask & whichField))
+        _sfPersistance.syncWith(pFrom->_sfPersistance);
+
+    if(FieldBits::NoField != (OctavesFieldMask & whichField))
+        _sfOctaves.syncWith(pFrom->_sfOctaves);
+
+    if(FieldBits::NoField != (AmplitudeFieldMask & whichField))
+        _sfAmplitude.syncWith(pFrom->_sfAmplitude);
+
+    if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
+        _sfInterpolationType.syncWith(pFrom->_sfInterpolationType);
+
+    if(FieldBits::NoField != (PhaseFieldMask & whichField))
+        _sfPhase.syncWith(pFrom->_sfPhase);
+
+    if(FieldBits::NoField != (UseSmoothingFieldMask & whichField))
+        _sfUseSmoothing.syncWith(pFrom->_sfUseSmoothing);
+}
+#endif
+
+
+inline
+const Char8 *PerlinNoiseDistribution2DBase::getClassname(void)
+{
+    return "PerlinNoiseDistribution2D";
+}
+
+
+OSG_GEN_CONTAINERPTR(PerlinNoiseDistribution2D);
+
 OSG_END_NAMESPACE
+

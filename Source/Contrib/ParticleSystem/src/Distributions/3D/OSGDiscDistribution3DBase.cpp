@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,247 +50,487 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEDISCDISTRIBUTION3DINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGDiscDistribution3DBase.h"
 #include "OSGDiscDistribution3D.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  DiscDistribution3DBase::CenterFieldMask = 
-    (TypeTraits<BitVector>::One << DiscDistribution3DBase::CenterFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  DiscDistribution3DBase::NormalFieldMask = 
-    (TypeTraits<BitVector>::One << DiscDistribution3DBase::NormalFieldId);
+/*! \class OSG::DiscDistribution3D
+    An DiscDistribution3D.
+ */
 
-const OSG::BitVector  DiscDistribution3DBase::TangentFieldMask = 
-    (TypeTraits<BitVector>::One << DiscDistribution3DBase::TangentFieldId);
-
-const OSG::BitVector  DiscDistribution3DBase::BinormalFieldMask = 
-    (TypeTraits<BitVector>::One << DiscDistribution3DBase::BinormalFieldId);
-
-const OSG::BitVector  DiscDistribution3DBase::InnerRadiusFieldMask = 
-    (TypeTraits<BitVector>::One << DiscDistribution3DBase::InnerRadiusFieldId);
-
-const OSG::BitVector  DiscDistribution3DBase::OuterRadiusFieldMask = 
-    (TypeTraits<BitVector>::One << DiscDistribution3DBase::OuterRadiusFieldId);
-
-const OSG::BitVector  DiscDistribution3DBase::MinThetaFieldMask = 
-    (TypeTraits<BitVector>::One << DiscDistribution3DBase::MinThetaFieldId);
-
-const OSG::BitVector  DiscDistribution3DBase::MaxThetaFieldMask = 
-    (TypeTraits<BitVector>::One << DiscDistribution3DBase::MaxThetaFieldId);
-
-const OSG::BitVector  DiscDistribution3DBase::SurfaceOrEdgeFieldMask = 
-    (TypeTraits<BitVector>::One << DiscDistribution3DBase::SurfaceOrEdgeFieldId);
-
-const OSG::BitVector DiscDistribution3DBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Pnt3f           DiscDistribution3DBase::_sfCenter
     
 */
+
 /*! \var Vec3f           DiscDistribution3DBase::_sfNormal
     
 */
+
 /*! \var Vec3f           DiscDistribution3DBase::_sfTangent
     
 */
+
 /*! \var Vec3f           DiscDistribution3DBase::_sfBinormal
     
 */
+
 /*! \var Real32          DiscDistribution3DBase::_sfInnerRadius
     
 */
+
 /*! \var Real32          DiscDistribution3DBase::_sfOuterRadius
     
 */
+
 /*! \var Real32          DiscDistribution3DBase::_sfMinTheta
     
 */
+
 /*! \var Real32          DiscDistribution3DBase::_sfMaxTheta
     
 */
+
 /*! \var UInt32          DiscDistribution3DBase::_sfSurfaceOrEdge
     
 */
 
-//! DiscDistribution3D description
 
-FieldDescription *DiscDistribution3DBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<DiscDistribution3D *>::_type("DiscDistribution3DPtr", "Distribution3DPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(DiscDistribution3D *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           DiscDistribution3D *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           DiscDistribution3D *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void DiscDistribution3DBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFPnt3f::getClassType(), 
-                     "Center", 
-                     CenterFieldId, CenterFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DiscDistribution3DBase::editSFCenter)),
-    new FieldDescription(SFVec3f::getClassType(), 
-                     "Normal", 
-                     NormalFieldId, NormalFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DiscDistribution3DBase::editSFNormal)),
-    new FieldDescription(SFVec3f::getClassType(), 
-                     "Tangent", 
-                     TangentFieldId, TangentFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DiscDistribution3DBase::editSFTangent)),
-    new FieldDescription(SFVec3f::getClassType(), 
-                     "Binormal", 
-                     BinormalFieldId, BinormalFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DiscDistribution3DBase::editSFBinormal)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "InnerRadius", 
-                     InnerRadiusFieldId, InnerRadiusFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DiscDistribution3DBase::editSFInnerRadius)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "OuterRadius", 
-                     OuterRadiusFieldId, OuterRadiusFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DiscDistribution3DBase::editSFOuterRadius)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "MinTheta", 
-                     MinThetaFieldId, MinThetaFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DiscDistribution3DBase::editSFMinTheta)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "MaxTheta", 
-                     MaxThetaFieldId, MaxThetaFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DiscDistribution3DBase::editSFMaxTheta)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "SurfaceOrEdge", 
-                     SurfaceOrEdgeFieldId, SurfaceOrEdgeFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DiscDistribution3DBase::editSFSurfaceOrEdge))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType DiscDistribution3DBase::_type(
-    "DiscDistribution3D",
-    "Distribution3D",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&DiscDistribution3DBase::createEmpty),
+    pDesc = new SFPnt3f::Description(
+        SFPnt3f::getClassType(),
+        "Center",
+        "",
+        CenterFieldId, CenterFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DiscDistribution3D::editHandleCenter),
+        static_cast<FieldGetMethodSig >(&DiscDistribution3D::getHandleCenter));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFVec3f::Description(
+        SFVec3f::getClassType(),
+        "Normal",
+        "",
+        NormalFieldId, NormalFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DiscDistribution3D::editHandleNormal),
+        static_cast<FieldGetMethodSig >(&DiscDistribution3D::getHandleNormal));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFVec3f::Description(
+        SFVec3f::getClassType(),
+        "Tangent",
+        "",
+        TangentFieldId, TangentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DiscDistribution3D::editHandleTangent),
+        static_cast<FieldGetMethodSig >(&DiscDistribution3D::getHandleTangent));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFVec3f::Description(
+        SFVec3f::getClassType(),
+        "Binormal",
+        "",
+        BinormalFieldId, BinormalFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DiscDistribution3D::editHandleBinormal),
+        static_cast<FieldGetMethodSig >(&DiscDistribution3D::getHandleBinormal));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "InnerRadius",
+        "",
+        InnerRadiusFieldId, InnerRadiusFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DiscDistribution3D::editHandleInnerRadius),
+        static_cast<FieldGetMethodSig >(&DiscDistribution3D::getHandleInnerRadius));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "OuterRadius",
+        "",
+        OuterRadiusFieldId, OuterRadiusFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DiscDistribution3D::editHandleOuterRadius),
+        static_cast<FieldGetMethodSig >(&DiscDistribution3D::getHandleOuterRadius));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "MinTheta",
+        "",
+        MinThetaFieldId, MinThetaFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DiscDistribution3D::editHandleMinTheta),
+        static_cast<FieldGetMethodSig >(&DiscDistribution3D::getHandleMinTheta));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "MaxTheta",
+        "",
+        MaxThetaFieldId, MaxThetaFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DiscDistribution3D::editHandleMaxTheta),
+        static_cast<FieldGetMethodSig >(&DiscDistribution3D::getHandleMaxTheta));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "SurfaceOrEdge",
+        "",
+        SurfaceOrEdgeFieldId, SurfaceOrEdgeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DiscDistribution3D::editHandleSurfaceOrEdge),
+        static_cast<FieldGetMethodSig >(&DiscDistribution3D::getHandleSurfaceOrEdge));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+DiscDistribution3DBase::TypeObject DiscDistribution3DBase::_type(
+    DiscDistribution3DBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&DiscDistribution3DBase::createEmptyLocal),
     DiscDistribution3D::initMethod,
-    _desc,
-    sizeof(_desc));
+    DiscDistribution3D::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&DiscDistribution3D::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"DiscDistribution3D\"\n"
+    "\tparent=\"Distribution3D\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "An DiscDistribution3D.\n"
+    "\t<Field\n"
+    "\t\tname=\"Center\"\n"
+    "\t\ttype=\"Pnt3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Normal\"\n"
+    "\t\ttype=\"Vec3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Tangent\"\n"
+    "\t\ttype=\"Vec3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,1.0,0.0\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Binormal\"\n"
+    "\t\ttype=\"Vec3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1.0,0.0,0.0\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InnerRadius\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"OuterRadius\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MinTheta\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MaxTheta\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"6.28319\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SurfaceOrEdge\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"DiscDistribution3D::SURFACE\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "An DiscDistribution3D.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(DiscDistribution3DBase, DiscDistribution3DPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &DiscDistribution3DBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &DiscDistribution3DBase::getType(void) const 
+FieldContainerType &DiscDistribution3DBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr DiscDistribution3DBase::shallowCopy(void) const 
-{ 
-    DiscDistribution3DPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const DiscDistribution3D *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 DiscDistribution3DBase::getContainerSize(void) const 
-{ 
-    return sizeof(DiscDistribution3D); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DiscDistribution3DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &DiscDistribution3DBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<DiscDistribution3DBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void DiscDistribution3DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 DiscDistribution3DBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((DiscDistribution3DBase *) &other, whichField, sInfo);
+    return sizeof(DiscDistribution3D);
 }
-void DiscDistribution3DBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFPnt3f *DiscDistribution3DBase::editSFCenter(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(CenterFieldMask);
+
+    return &_sfCenter;
 }
 
-void DiscDistribution3DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFPnt3f *DiscDistribution3DBase::getSFCenter(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfCenter;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-DiscDistribution3DBase::DiscDistribution3DBase(void) :
-    _sfCenter                 (Pnt3f(0.0,0.0,0.0)), 
-    _sfNormal                 (Vec3f(0.0,0.0,1.0)), 
-    _sfTangent                (Vec3f(0.0,1.0,0.0)), 
-    _sfBinormal               (Vec3f(1.0,0.0,0.0)), 
-    _sfInnerRadius            (Real32(0.0)), 
-    _sfOuterRadius            (Real32(1.0)), 
-    _sfMinTheta               (Real32(0.0)), 
-    _sfMaxTheta               (Real32(6.28319)), 
-    _sfSurfaceOrEdge          (UInt32(DiscDistribution3D::SURFACE)), 
-    Inherited() 
+SFVec3f *DiscDistribution3DBase::editSFNormal(void)
 {
+    editSField(NormalFieldMask);
+
+    return &_sfNormal;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-DiscDistribution3DBase::DiscDistribution3DBase(const DiscDistribution3DBase &source) :
-    _sfCenter                 (source._sfCenter                 ), 
-    _sfNormal                 (source._sfNormal                 ), 
-    _sfTangent                (source._sfTangent                ), 
-    _sfBinormal               (source._sfBinormal               ), 
-    _sfInnerRadius            (source._sfInnerRadius            ), 
-    _sfOuterRadius            (source._sfOuterRadius            ), 
-    _sfMinTheta               (source._sfMinTheta               ), 
-    _sfMaxTheta               (source._sfMaxTheta               ), 
-    _sfSurfaceOrEdge          (source._sfSurfaceOrEdge          ), 
-    Inherited                 (source)
+const SFVec3f *DiscDistribution3DBase::getSFNormal(void) const
 {
+    return &_sfNormal;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-DiscDistribution3DBase::~DiscDistribution3DBase(void)
+SFVec3f *DiscDistribution3DBase::editSFTangent(void)
 {
+    editSField(TangentFieldMask);
+
+    return &_sfTangent;
 }
+
+const SFVec3f *DiscDistribution3DBase::getSFTangent(void) const
+{
+    return &_sfTangent;
+}
+
+
+SFVec3f *DiscDistribution3DBase::editSFBinormal(void)
+{
+    editSField(BinormalFieldMask);
+
+    return &_sfBinormal;
+}
+
+const SFVec3f *DiscDistribution3DBase::getSFBinormal(void) const
+{
+    return &_sfBinormal;
+}
+
+
+SFReal32 *DiscDistribution3DBase::editSFInnerRadius(void)
+{
+    editSField(InnerRadiusFieldMask);
+
+    return &_sfInnerRadius;
+}
+
+const SFReal32 *DiscDistribution3DBase::getSFInnerRadius(void) const
+{
+    return &_sfInnerRadius;
+}
+
+
+SFReal32 *DiscDistribution3DBase::editSFOuterRadius(void)
+{
+    editSField(OuterRadiusFieldMask);
+
+    return &_sfOuterRadius;
+}
+
+const SFReal32 *DiscDistribution3DBase::getSFOuterRadius(void) const
+{
+    return &_sfOuterRadius;
+}
+
+
+SFReal32 *DiscDistribution3DBase::editSFMinTheta(void)
+{
+    editSField(MinThetaFieldMask);
+
+    return &_sfMinTheta;
+}
+
+const SFReal32 *DiscDistribution3DBase::getSFMinTheta(void) const
+{
+    return &_sfMinTheta;
+}
+
+
+SFReal32 *DiscDistribution3DBase::editSFMaxTheta(void)
+{
+    editSField(MaxThetaFieldMask);
+
+    return &_sfMaxTheta;
+}
+
+const SFReal32 *DiscDistribution3DBase::getSFMaxTheta(void) const
+{
+    return &_sfMaxTheta;
+}
+
+
+SFUInt32 *DiscDistribution3DBase::editSFSurfaceOrEdge(void)
+{
+    editSField(SurfaceOrEdgeFieldMask);
+
+    return &_sfSurfaceOrEdge;
+}
+
+const SFUInt32 *DiscDistribution3DBase::getSFSurfaceOrEdge(void) const
+{
+    return &_sfSurfaceOrEdge;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 DiscDistribution3DBase::getBinSize(const BitVector &whichField)
+UInt32 DiscDistribution3DBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -298,53 +538,44 @@ UInt32 DiscDistribution3DBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfCenter.getBinSize();
     }
-
     if(FieldBits::NoField != (NormalFieldMask & whichField))
     {
         returnValue += _sfNormal.getBinSize();
     }
-
     if(FieldBits::NoField != (TangentFieldMask & whichField))
     {
         returnValue += _sfTangent.getBinSize();
     }
-
     if(FieldBits::NoField != (BinormalFieldMask & whichField))
     {
         returnValue += _sfBinormal.getBinSize();
     }
-
     if(FieldBits::NoField != (InnerRadiusFieldMask & whichField))
     {
         returnValue += _sfInnerRadius.getBinSize();
     }
-
     if(FieldBits::NoField != (OuterRadiusFieldMask & whichField))
     {
         returnValue += _sfOuterRadius.getBinSize();
     }
-
     if(FieldBits::NoField != (MinThetaFieldMask & whichField))
     {
         returnValue += _sfMinTheta.getBinSize();
     }
-
     if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
     {
         returnValue += _sfMaxTheta.getBinSize();
     }
-
     if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
     {
         returnValue += _sfSurfaceOrEdge.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void DiscDistribution3DBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void DiscDistribution3DBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -352,52 +583,42 @@ void DiscDistribution3DBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfCenter.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (NormalFieldMask & whichField))
     {
         _sfNormal.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TangentFieldMask & whichField))
     {
         _sfTangent.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (BinormalFieldMask & whichField))
     {
         _sfBinormal.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InnerRadiusFieldMask & whichField))
     {
         _sfInnerRadius.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (OuterRadiusFieldMask & whichField))
     {
         _sfOuterRadius.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MinThetaFieldMask & whichField))
     {
         _sfMinTheta.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
     {
         _sfMaxTheta.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
     {
         _sfSurfaceOrEdge.copyToBin(pMem);
     }
-
-
 }
 
-void DiscDistribution3DBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void DiscDistribution3DBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -405,150 +626,461 @@ void DiscDistribution3DBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfCenter.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (NormalFieldMask & whichField))
     {
         _sfNormal.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TangentFieldMask & whichField))
     {
         _sfTangent.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (BinormalFieldMask & whichField))
     {
         _sfBinormal.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InnerRadiusFieldMask & whichField))
     {
         _sfInnerRadius.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (OuterRadiusFieldMask & whichField))
     {
         _sfOuterRadius.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MinThetaFieldMask & whichField))
     {
         _sfMinTheta.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
     {
         _sfMaxTheta.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
     {
         _sfSurfaceOrEdge.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DiscDistribution3DBase::executeSyncImpl(      DiscDistribution3DBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+DiscDistribution3DTransitPtr DiscDistribution3DBase::createLocal(BitVector bFlags)
 {
+    DiscDistribution3DTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (CenterFieldMask & whichField))
-        _sfCenter.syncWith(pOther->_sfCenter);
+        fc = dynamic_pointer_cast<DiscDistribution3D>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (NormalFieldMask & whichField))
-        _sfNormal.syncWith(pOther->_sfNormal);
-
-    if(FieldBits::NoField != (TangentFieldMask & whichField))
-        _sfTangent.syncWith(pOther->_sfTangent);
-
-    if(FieldBits::NoField != (BinormalFieldMask & whichField))
-        _sfBinormal.syncWith(pOther->_sfBinormal);
-
-    if(FieldBits::NoField != (InnerRadiusFieldMask & whichField))
-        _sfInnerRadius.syncWith(pOther->_sfInnerRadius);
-
-    if(FieldBits::NoField != (OuterRadiusFieldMask & whichField))
-        _sfOuterRadius.syncWith(pOther->_sfOuterRadius);
-
-    if(FieldBits::NoField != (MinThetaFieldMask & whichField))
-        _sfMinTheta.syncWith(pOther->_sfMinTheta);
-
-    if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
-        _sfMaxTheta.syncWith(pOther->_sfMaxTheta);
-
-    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
-        _sfSurfaceOrEdge.syncWith(pOther->_sfSurfaceOrEdge);
-
-
-}
-#else
-void DiscDistribution3DBase::executeSyncImpl(      DiscDistribution3DBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (CenterFieldMask & whichField))
-        _sfCenter.syncWith(pOther->_sfCenter);
-
-    if(FieldBits::NoField != (NormalFieldMask & whichField))
-        _sfNormal.syncWith(pOther->_sfNormal);
-
-    if(FieldBits::NoField != (TangentFieldMask & whichField))
-        _sfTangent.syncWith(pOther->_sfTangent);
-
-    if(FieldBits::NoField != (BinormalFieldMask & whichField))
-        _sfBinormal.syncWith(pOther->_sfBinormal);
-
-    if(FieldBits::NoField != (InnerRadiusFieldMask & whichField))
-        _sfInnerRadius.syncWith(pOther->_sfInnerRadius);
-
-    if(FieldBits::NoField != (OuterRadiusFieldMask & whichField))
-        _sfOuterRadius.syncWith(pOther->_sfOuterRadius);
-
-    if(FieldBits::NoField != (MinThetaFieldMask & whichField))
-        _sfMinTheta.syncWith(pOther->_sfMinTheta);
-
-    if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
-        _sfMaxTheta.syncWith(pOther->_sfMaxTheta);
-
-    if(FieldBits::NoField != (SurfaceOrEdgeFieldMask & whichField))
-        _sfSurfaceOrEdge.syncWith(pOther->_sfSurfaceOrEdge);
-
-
-
+    return fc;
 }
 
-void DiscDistribution3DBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+DiscDistribution3DTransitPtr DiscDistribution3DBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    DiscDistribution3DTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<DiscDistribution3D>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+DiscDistribution3DTransitPtr DiscDistribution3DBase::create(void)
+{
+    DiscDistribution3DTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<DiscDistribution3D>(tmpPtr);
+    }
+
+    return fc;
+}
+
+DiscDistribution3D *DiscDistribution3DBase::createEmptyLocal(BitVector bFlags)
+{
+    DiscDistribution3D *returnValue;
+
+    newPtr<DiscDistribution3D>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+DiscDistribution3D *DiscDistribution3DBase::createEmpty(void)
+{
+    DiscDistribution3D *returnValue;
+
+    newPtr<DiscDistribution3D>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr DiscDistribution3DBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    DiscDistribution3D *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DiscDistribution3D *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DiscDistribution3DBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    DiscDistribution3D *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DiscDistribution3D *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DiscDistribution3DBase::shallowCopy(void) const
+{
+    DiscDistribution3D *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const DiscDistribution3D *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+DiscDistribution3DBase::DiscDistribution3DBase(void) :
+    Inherited(),
+    _sfCenter                 (Pnt3f(0.0,0.0,0.0)),
+    _sfNormal                 (Vec3f(0.0,0.0,1.0)),
+    _sfTangent                (Vec3f(0.0,1.0,0.0)),
+    _sfBinormal               (Vec3f(1.0,0.0,0.0)),
+    _sfInnerRadius            (Real32(0.0)),
+    _sfOuterRadius            (Real32(1.0)),
+    _sfMinTheta               (Real32(0.0)),
+    _sfMaxTheta               (Real32(6.28319)),
+    _sfSurfaceOrEdge          (UInt32(DiscDistribution3D::SURFACE))
+{
+}
+
+DiscDistribution3DBase::DiscDistribution3DBase(const DiscDistribution3DBase &source) :
+    Inherited(source),
+    _sfCenter                 (source._sfCenter                 ),
+    _sfNormal                 (source._sfNormal                 ),
+    _sfTangent                (source._sfTangent                ),
+    _sfBinormal               (source._sfBinormal               ),
+    _sfInnerRadius            (source._sfInnerRadius            ),
+    _sfOuterRadius            (source._sfOuterRadius            ),
+    _sfMinTheta               (source._sfMinTheta               ),
+    _sfMaxTheta               (source._sfMaxTheta               ),
+    _sfSurfaceOrEdge          (source._sfSurfaceOrEdge          )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+DiscDistribution3DBase::~DiscDistribution3DBase(void)
+{
+}
+
+
+GetFieldHandlePtr DiscDistribution3DBase::getHandleCenter          (void) const
+{
+    SFPnt3f::GetHandlePtr returnValue(
+        new  SFPnt3f::GetHandle(
+             &_sfCenter,
+             this->getType().getFieldDesc(CenterFieldId),
+             const_cast<DiscDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DiscDistribution3DBase::editHandleCenter         (void)
+{
+    SFPnt3f::EditHandlePtr returnValue(
+        new  SFPnt3f::EditHandle(
+             &_sfCenter,
+             this->getType().getFieldDesc(CenterFieldId),
+             this));
+
+
+    editSField(CenterFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DiscDistribution3DBase::getHandleNormal          (void) const
+{
+    SFVec3f::GetHandlePtr returnValue(
+        new  SFVec3f::GetHandle(
+             &_sfNormal,
+             this->getType().getFieldDesc(NormalFieldId),
+             const_cast<DiscDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DiscDistribution3DBase::editHandleNormal         (void)
+{
+    SFVec3f::EditHandlePtr returnValue(
+        new  SFVec3f::EditHandle(
+             &_sfNormal,
+             this->getType().getFieldDesc(NormalFieldId),
+             this));
+
+
+    editSField(NormalFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DiscDistribution3DBase::getHandleTangent         (void) const
+{
+    SFVec3f::GetHandlePtr returnValue(
+        new  SFVec3f::GetHandle(
+             &_sfTangent,
+             this->getType().getFieldDesc(TangentFieldId),
+             const_cast<DiscDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DiscDistribution3DBase::editHandleTangent        (void)
+{
+    SFVec3f::EditHandlePtr returnValue(
+        new  SFVec3f::EditHandle(
+             &_sfTangent,
+             this->getType().getFieldDesc(TangentFieldId),
+             this));
+
+
+    editSField(TangentFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DiscDistribution3DBase::getHandleBinormal        (void) const
+{
+    SFVec3f::GetHandlePtr returnValue(
+        new  SFVec3f::GetHandle(
+             &_sfBinormal,
+             this->getType().getFieldDesc(BinormalFieldId),
+             const_cast<DiscDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DiscDistribution3DBase::editHandleBinormal       (void)
+{
+    SFVec3f::EditHandlePtr returnValue(
+        new  SFVec3f::EditHandle(
+             &_sfBinormal,
+             this->getType().getFieldDesc(BinormalFieldId),
+             this));
+
+
+    editSField(BinormalFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DiscDistribution3DBase::getHandleInnerRadius     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfInnerRadius,
+             this->getType().getFieldDesc(InnerRadiusFieldId),
+             const_cast<DiscDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DiscDistribution3DBase::editHandleInnerRadius    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfInnerRadius,
+             this->getType().getFieldDesc(InnerRadiusFieldId),
+             this));
+
+
+    editSField(InnerRadiusFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DiscDistribution3DBase::getHandleOuterRadius     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfOuterRadius,
+             this->getType().getFieldDesc(OuterRadiusFieldId),
+             const_cast<DiscDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DiscDistribution3DBase::editHandleOuterRadius    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfOuterRadius,
+             this->getType().getFieldDesc(OuterRadiusFieldId),
+             this));
+
+
+    editSField(OuterRadiusFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DiscDistribution3DBase::getHandleMinTheta        (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMinTheta,
+             this->getType().getFieldDesc(MinThetaFieldId),
+             const_cast<DiscDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DiscDistribution3DBase::editHandleMinTheta       (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMinTheta,
+             this->getType().getFieldDesc(MinThetaFieldId),
+             this));
+
+
+    editSField(MinThetaFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DiscDistribution3DBase::getHandleMaxTheta        (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMaxTheta,
+             this->getType().getFieldDesc(MaxThetaFieldId),
+             const_cast<DiscDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DiscDistribution3DBase::editHandleMaxTheta       (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMaxTheta,
+             this->getType().getFieldDesc(MaxThetaFieldId),
+             this));
+
+
+    editSField(MaxThetaFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DiscDistribution3DBase::getHandleSurfaceOrEdge   (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfSurfaceOrEdge,
+             this->getType().getFieldDesc(SurfaceOrEdgeFieldId),
+             const_cast<DiscDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DiscDistribution3DBase::editHandleSurfaceOrEdge  (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfSurfaceOrEdge,
+             this->getType().getFieldDesc(SurfaceOrEdgeFieldId),
+             this));
+
+
+    editSField(SurfaceOrEdgeFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void DiscDistribution3DBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    DiscDistribution3D *pThis = static_cast<DiscDistribution3D *>(this);
+
+    pThis->execSync(static_cast<DiscDistribution3D *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *DiscDistribution3DBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    DiscDistribution3D *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const DiscDistribution3D *>(pRefAspect),
+                  dynamic_cast<const DiscDistribution3D *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<DiscDistribution3DPtr>::_type("DiscDistribution3DPtr", "Distribution3DPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(DiscDistribution3DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(DiscDistribution3DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+void DiscDistribution3DBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

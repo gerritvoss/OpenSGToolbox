@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGParticleGenerator.h"
-#include "ParticleSystem/OSGParticleSystem.h"
+#include "OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::ParticleGenerator
-
-*/
+// Documentation for this class is emitted in the
+// OSGParticleGeneratorBase.cpp file.
+// To modify it, please change the .fcd file (OSGParticleGenerator.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -68,8 +63,13 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ParticleGenerator::initMethod (void)
+void ParticleGenerator::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -77,63 +77,63 @@ void ParticleGenerator::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-
-void ParticleGenerator::generate(ParticleSystemPtr System,
-		Pnt3f& PositionReturnValue, 
-		Pnt3f& SecPositionReturnValue, 
-		Vec3f& NormalReturnValue,
-		Color4f& ColorReturnValue,
-		Vec3f& SizeReturnValue,
-		Time& LifespanReturnValue,
-		Time& AgeReturnValue,
-		Vec3f& VelocityReturnValue,
-		Vec3f& SecVelocityReturnValue,
-		Vec3f& AccelerationReturnValue,
-        StringToUInt32Map& AttributeReturnValue) const
+void ParticleGenerator::generate(ParticleSystemRefPtr System,
+                                 Pnt3f& PositionReturnValue, 
+                                 Pnt3f& SecPositionReturnValue, 
+                                 Vec3f& NormalReturnValue,
+                                 Color4f& ColorReturnValue,
+                                 Vec3f& SizeReturnValue,
+                                 Time& LifespanReturnValue,
+                                 Time& AgeReturnValue,
+                                 Vec3f& VelocityReturnValue,
+                                 Vec3f& SecVelocityReturnValue,
+                                 Vec3f& AccelerationReturnValue,
+                                 StringToUInt32Map& AttributeReturnValue) const
 {
-	if(System != NullFC)
-	{
-		if(getBeacon() == NullFC || !getGenerateInWorldSpace())
-		{
-			System->addParticle(PositionReturnValue,
-				SecPositionReturnValue,
-				NormalReturnValue,
-				ColorReturnValue,
-				SizeReturnValue,
-				LifespanReturnValue,
-				AgeReturnValue,
-				VelocityReturnValue,
-				SecVelocityReturnValue,
-				AccelerationReturnValue,
-				AttributeReturnValue);
-		}
-		else
-		{
-			Matrix BeaconToWorld(getBeacon()->getToWorld());
-			
-			BeaconToWorld.mult(PositionReturnValue, PositionReturnValue);
-			BeaconToWorld.mult(SecPositionReturnValue, SecPositionReturnValue);
-			BeaconToWorld.mult(NormalReturnValue, NormalReturnValue);
-			//SBeaconToWorld.mult(SizeReturnValue, SizeReturnValue);
-			BeaconToWorld.mult(VelocityReturnValue, VelocityReturnValue);
-			BeaconToWorld.mult(SecVelocityReturnValue, SecVelocityReturnValue);
-			BeaconToWorld.mult(AccelerationReturnValue, AccelerationReturnValue);
+    if(System != NULL)
+    {
+        if(getBeacon() == NULL || !getGenerateInWorldSpace())
+        {
+            System->addParticle(PositionReturnValue,
+                                SecPositionReturnValue,
+                                NormalReturnValue,
+                                ColorReturnValue,
+                                SizeReturnValue,
+                                LifespanReturnValue,
+                                AgeReturnValue,
+                                VelocityReturnValue,
+                                SecVelocityReturnValue,
+                                AccelerationReturnValue,
+                                AttributeReturnValue);
+        }
+        else
+        {
+            Matrix BeaconToWorld(getBeacon()->getToWorld());
 
-			System->addWorldSpaceParticle(PositionReturnValue,
-				SecPositionReturnValue,
-				NormalReturnValue,
-				ColorReturnValue,
-				SizeReturnValue,
-				LifespanReturnValue,
-				AgeReturnValue,
-				VelocityReturnValue,
-				SecVelocityReturnValue,
-				AccelerationReturnValue,
-				AttributeReturnValue);
+            BeaconToWorld.mult(PositionReturnValue, PositionReturnValue);
+            BeaconToWorld.mult(SecPositionReturnValue, SecPositionReturnValue);
+            BeaconToWorld.mult(NormalReturnValue, NormalReturnValue);
+            //SBeaconToWorld.mult(SizeReturnValue, SizeReturnValue);
+            BeaconToWorld.mult(VelocityReturnValue, VelocityReturnValue);
+            BeaconToWorld.mult(SecVelocityReturnValue, SecVelocityReturnValue);
+            BeaconToWorld.mult(AccelerationReturnValue, AccelerationReturnValue);
 
-		}
-	}
+            System->addWorldSpaceParticle(PositionReturnValue,
+                                          SecPositionReturnValue,
+                                          NormalReturnValue,
+                                          ColorReturnValue,
+                                          SizeReturnValue,
+                                          LifespanReturnValue,
+                                          AgeReturnValue,
+                                          VelocityReturnValue,
+                                          SecVelocityReturnValue,
+                                          AccelerationReturnValue,
+                                          AttributeReturnValue);
+
+        }
+    }
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -156,32 +156,17 @@ ParticleGenerator::~ParticleGenerator(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void ParticleGenerator::changed(BitVector whichField, UInt32 origin)
+void ParticleGenerator::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void ParticleGenerator::dump(      UInt32    , 
+void ParticleGenerator::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump ParticleGenerator NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

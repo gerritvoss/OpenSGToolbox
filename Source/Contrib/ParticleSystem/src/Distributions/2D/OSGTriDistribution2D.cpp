@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Dynamics                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,23 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGTriDistribution2D.h"
-#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
+#include "OSGRandomPoolManager.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::TriDistribution2D
-An TriDistribution2D. 	
-*/
+// Documentation for this class is emitted in the
+// OSGTriDistribution2DBase.cpp file.
+// To modify it, please change the .fcd file (OSGTriDistribution2D.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -66,14 +63,20 @@ An TriDistribution2D.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void TriDistribution2D::initMethod (void)
+void TriDistribution2D::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
 Vec2f TriDistribution2D::generate(void) const
 {
     Vec2f Result;
@@ -97,15 +100,15 @@ Vec2f TriDistribution2D::generate(void) const
             Real32 PickEdge(RandomPoolManager::getRandomReal32(0.0,1.0));
             if(Rand < Side1Length/TotalLength)
             {
-                Result = getPoint1() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side1;
+                Result = getPoint1().subZero() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side1;
             }
             else if(Rand < (Side1Length+Side2Length)/TotalLength)
             {
-                Result = getPoint2() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side2;
+                Result = getPoint2().subZero() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side2;
             }
             else
             {
-                Result = getPoint3() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side3;
+                Result = getPoint3().subZero() + RandomPoolManager::getRandomReal32(0.0,1.0)*Side3;
             }
             break;
         }
@@ -121,7 +124,7 @@ Vec2f TriDistribution2D::generate(void) const
                 t = 1.0f - t;
             }
 
-            Result = getPoint1()
+            Result = getPoint1().subZero()
                    + s*(getPoint2() - getPoint1())
                    + t*(getPoint3() - getPoint1());
             break;
@@ -153,16 +156,17 @@ TriDistribution2D::~TriDistribution2D(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void TriDistribution2D::changed(BitVector whichField, UInt32 origin)
+void TriDistribution2D::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void TriDistribution2D::dump(      UInt32    , 
+void TriDistribution2D::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump TriDistribution2D NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

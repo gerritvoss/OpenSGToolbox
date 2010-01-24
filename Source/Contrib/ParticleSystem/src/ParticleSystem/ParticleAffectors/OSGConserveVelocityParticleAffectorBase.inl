@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,76 +55,75 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &ConserveVelocityParticleAffectorBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ConserveVelocityParticleAffectorBase::getClassTypeId(void) 
+OSG::UInt32 ConserveVelocityParticleAffectorBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-ConserveVelocityParticleAffectorPtr ConserveVelocityParticleAffectorBase::create(void) 
-{
-    ConserveVelocityParticleAffectorPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = ConserveVelocityParticleAffectorPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-ConserveVelocityParticleAffectorPtr ConserveVelocityParticleAffectorBase::createEmpty(void) 
-{ 
-    ConserveVelocityParticleAffectorPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 ConserveVelocityParticleAffectorBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ConserveVelocityParticleAffector::_sfConserve field.
-inline
-SFReal32 *ConserveVelocityParticleAffectorBase::getSFConserve(void)
-{
-    return &_sfConserve;
-}
-
-
 //! Get the value of the ConserveVelocityParticleAffector::_sfConserve field.
+
 inline
-Real32 &ConserveVelocityParticleAffectorBase::getConserve(void)
+Real32 &ConserveVelocityParticleAffectorBase::editConserve(void)
 {
+    editSField(ConserveFieldMask);
+
     return _sfConserve.getValue();
 }
 
 //! Get the value of the ConserveVelocityParticleAffector::_sfConserve field.
 inline
-const Real32 &ConserveVelocityParticleAffectorBase::getConserve(void) const
+      Real32  ConserveVelocityParticleAffectorBase::getConserve(void) const
 {
     return _sfConserve.getValue();
 }
 
 //! Set the value of the ConserveVelocityParticleAffector::_sfConserve field.
 inline
-void ConserveVelocityParticleAffectorBase::setConserve(const Real32 &value)
+void ConserveVelocityParticleAffectorBase::setConserve(const Real32 value)
 {
-    _sfConserve.setValue(osg::osgClamp<Real32>(0.0f,value,1.0f));
+    editSField(ConserveFieldMask);
+
+    _sfConserve.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void ConserveVelocityParticleAffectorBase::execSync (      ConserveVelocityParticleAffectorBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGCONSERVEVELOCITYPARTICLEAFFECTORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (ConserveFieldMask & whichField))
+        _sfConserve.syncWith(pFrom->_sfConserve);
+}
+#endif
+
+
+inline
+const Char8 *ConserveVelocityParticleAffectorBase::getClassname(void)
+{
+    return "ConserveVelocityParticleAffector";
+}
+
+
+OSG_GEN_CONTAINERPTR(ConserveVelocityParticleAffector);
+
+OSG_END_NAMESPACE
 

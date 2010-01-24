@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,83 +58,99 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGParticleAffector.h" // Parent
 
-#include <OpenSG/OSGReal32Fields.h> // Magnitude type
-#include <OpenSG/OSGVec3fFields.h> // Direction type
-#include <OpenSG/OSGReal32Fields.h> // Attenuation type
-#include <OpenSG/OSGReal32Fields.h> // Speed type
-#include <OpenSG/OSGReal32Fields.h> // Spread type
-#include <OpenSG/OSGReal32Fields.h> // MaxDistance type
-#include <OpenSG/OSGBoolFields.h> // UseSpread type
-#include <OpenSG/OSGNodeFields.h> // Beacon type
+#include "OSGSysFields.h"               // Magnitude type
+#include "OSGVecFields.h"               // Direction type
+#include "OSGNodeFields.h"              // Beacon type
 
 #include "OSGAirParticleAffectorFields.h"
+
 
 OSG_BEGIN_NAMESPACE
 
 class AirParticleAffector;
-class BinaryDataHandler;
 
 //! \brief AirParticleAffector Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING AirParticleAffectorBase : public ParticleAffector
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING AirParticleAffectorBase : public ParticleAffector
 {
-  private:
-
-    typedef ParticleAffector    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef AirParticleAffectorPtr  Ptr;
+    typedef ParticleAffector Inherited;
+    typedef ParticleAffector ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(AirParticleAffector);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        MagnitudeFieldId   = Inherited::NextFieldId,
-        DirectionFieldId   = MagnitudeFieldId   + 1,
-        AttenuationFieldId = DirectionFieldId   + 1,
-        SpeedFieldId       = AttenuationFieldId + 1,
-        SpreadFieldId      = SpeedFieldId       + 1,
-        MaxDistanceFieldId = SpreadFieldId      + 1,
-        UseSpreadFieldId   = MaxDistanceFieldId + 1,
-        BeaconFieldId      = UseSpreadFieldId   + 1,
-        NextFieldId        = BeaconFieldId      + 1
+        MagnitudeFieldId = Inherited::NextFieldId,
+        DirectionFieldId = MagnitudeFieldId + 1,
+        AttenuationFieldId = DirectionFieldId + 1,
+        SpeedFieldId = AttenuationFieldId + 1,
+        SpreadFieldId = SpeedFieldId + 1,
+        MaxDistanceFieldId = SpreadFieldId + 1,
+        UseSpreadFieldId = MaxDistanceFieldId + 1,
+        BeaconFieldId = UseSpreadFieldId + 1,
+        NextFieldId = BeaconFieldId + 1
     };
 
-    static const OSG::BitVector MagnitudeFieldMask;
-    static const OSG::BitVector DirectionFieldMask;
-    static const OSG::BitVector AttenuationFieldMask;
-    static const OSG::BitVector SpeedFieldMask;
-    static const OSG::BitVector SpreadFieldMask;
-    static const OSG::BitVector MaxDistanceFieldMask;
-    static const OSG::BitVector UseSpreadFieldMask;
-    static const OSG::BitVector BeaconFieldMask;
+    static const OSG::BitVector MagnitudeFieldMask =
+        (TypeTraits<BitVector>::One << MagnitudeFieldId);
+    static const OSG::BitVector DirectionFieldMask =
+        (TypeTraits<BitVector>::One << DirectionFieldId);
+    static const OSG::BitVector AttenuationFieldMask =
+        (TypeTraits<BitVector>::One << AttenuationFieldId);
+    static const OSG::BitVector SpeedFieldMask =
+        (TypeTraits<BitVector>::One << SpeedFieldId);
+    static const OSG::BitVector SpreadFieldMask =
+        (TypeTraits<BitVector>::One << SpreadFieldId);
+    static const OSG::BitVector MaxDistanceFieldMask =
+        (TypeTraits<BitVector>::One << MaxDistanceFieldId);
+    static const OSG::BitVector UseSpreadFieldMask =
+        (TypeTraits<BitVector>::One << UseSpreadFieldId);
+    static const OSG::BitVector BeaconFieldMask =
+        (TypeTraits<BitVector>::One << BeaconFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFReal32          SFMagnitudeType;
+    typedef SFVec3f           SFDirectionType;
+    typedef SFReal32          SFAttenuationType;
+    typedef SFReal32          SFSpeedType;
+    typedef SFReal32          SFSpreadType;
+    typedef SFReal32          SFMaxDistanceType;
+    typedef SFBool            SFUseSpreadType;
+    typedef SFUnrecNodePtr    SFBeaconType;
 
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -143,49 +159,76 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING AirParticleAffectorBase : public Particle
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *getSFMagnitude      (void);
-           SFVec3f             *getSFDirection      (void);
-           SFReal32            *getSFAttenuation    (void);
-           SFReal32            *getSFSpeed          (void);
-           SFReal32            *getSFSpread         (void);
-           SFReal32            *getSFMaxDistance    (void);
-           SFBool              *getSFUseSpread      (void);
-           SFNodePtr           *getSFBeacon         (void);
 
-           Real32              &getMagnitude      (void);
-     const Real32              &getMagnitude      (void) const;
-           Vec3f               &getDirection      (void);
-     const Vec3f               &getDirection      (void) const;
-           Real32              &getAttenuation    (void);
-     const Real32              &getAttenuation    (void) const;
-           Real32              &getSpeed          (void);
-     const Real32              &getSpeed          (void) const;
-           Real32              &getSpread         (void);
-     const Real32              &getSpread         (void) const;
-           Real32              &getMaxDistance    (void);
-     const Real32              &getMaxDistance    (void) const;
-           bool                &getUseSpread      (void);
-     const bool                &getUseSpread      (void) const;
-           NodePtr             &getBeacon         (void);
-     const NodePtr             &getBeacon         (void) const;
+                  SFReal32            *editSFMagnitude      (void);
+            const SFReal32            *getSFMagnitude       (void) const;
+
+                  SFVec3f             *editSFDirection      (void);
+            const SFVec3f             *getSFDirection       (void) const;
+
+                  SFReal32            *editSFAttenuation    (void);
+            const SFReal32            *getSFAttenuation     (void) const;
+
+                  SFReal32            *editSFSpeed          (void);
+            const SFReal32            *getSFSpeed           (void) const;
+
+                  SFReal32            *editSFSpread         (void);
+            const SFReal32            *getSFSpread          (void) const;
+
+                  SFReal32            *editSFMaxDistance    (void);
+            const SFReal32            *getSFMaxDistance     (void) const;
+
+                  SFBool              *editSFUseSpread      (void);
+            const SFBool              *getSFUseSpread       (void) const;
+            const SFUnrecNodePtr      *getSFBeacon         (void) const;
+                  SFUnrecNodePtr      *editSFBeacon         (void);
+
+
+                  Real32              &editMagnitude      (void);
+                  Real32               getMagnitude       (void) const;
+
+                  Vec3f               &editDirection      (void);
+            const Vec3f               &getDirection       (void) const;
+
+                  Real32              &editAttenuation    (void);
+                  Real32               getAttenuation     (void) const;
+
+                  Real32              &editSpeed          (void);
+                  Real32               getSpeed           (void) const;
+
+                  Real32              &editSpread         (void);
+                  Real32               getSpread          (void) const;
+
+                  Real32              &editMaxDistance    (void);
+                  Real32               getMaxDistance     (void) const;
+
+                  bool                &editUseSpread      (void);
+                  bool                 getUseSpread       (void) const;
+
+                  Node * getBeacon         (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setMagnitude      ( const Real32 &value );
-     void setDirection      ( const Vec3f &value );
-     void setAttenuation    ( const Real32 &value );
-     void setSpeed          ( const Real32 &value );
-     void setSpread         ( const Real32 &value );
-     void setMaxDistance    ( const Real32 &value );
-     void setUseSpread      ( const bool &value );
-     void setBeacon         ( const NodePtr &value );
+            void setMagnitude      (const Real32 value);
+            void setDirection      (const Vec3f &value);
+            void setAttenuation    (const Real32 value);
+            void setSpeed          (const Real32 value);
+            void setSpread         (const Real32 value);
+            void setMaxDistance    (const Real32 value);
+            void setUseSpread      (const bool value);
+            void setBeacon         (Node * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -193,45 +236,63 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING AirParticleAffectorBase : public Particle
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  AirParticleAffectorPtr      create          (void); 
-    static  AirParticleAffectorPtr      createEmpty     (void); 
+    static  AirParticleAffectorTransitPtr  create          (void);
+    static  AirParticleAffector           *createEmpty     (void);
+
+    static  AirParticleAffectorTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  AirParticleAffector            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  AirParticleAffectorTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFReal32            _sfMagnitude;
-    SFVec3f             _sfDirection;
-    SFReal32            _sfAttenuation;
-    SFReal32            _sfSpeed;
-    SFReal32            _sfSpread;
-    SFReal32            _sfMaxDistance;
-    SFBool              _sfUseSpread;
-    SFNodePtr           _sfBeacon;
+    SFReal32          _sfMagnitude;
+    SFVec3f           _sfDirection;
+    SFReal32          _sfAttenuation;
+    SFReal32          _sfSpeed;
+    SFReal32          _sfSpread;
+    SFReal32          _sfMaxDistance;
+    SFBool            _sfUseSpread;
+    SFUnrecNodePtr    _sfBeacon;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -246,69 +307,94 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING AirParticleAffectorBase : public Particle
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~AirParticleAffectorBase(void); 
+    virtual ~AirParticleAffectorBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const AirParticleAffector *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleMagnitude       (void) const;
+    EditFieldHandlePtr editHandleMagnitude      (void);
+    GetFieldHandlePtr  getHandleDirection       (void) const;
+    EditFieldHandlePtr editHandleDirection      (void);
+    GetFieldHandlePtr  getHandleAttenuation     (void) const;
+    EditFieldHandlePtr editHandleAttenuation    (void);
+    GetFieldHandlePtr  getHandleSpeed           (void) const;
+    EditFieldHandlePtr editHandleSpeed          (void);
+    GetFieldHandlePtr  getHandleSpread          (void) const;
+    EditFieldHandlePtr editHandleSpread         (void);
+    GetFieldHandlePtr  getHandleMaxDistance     (void) const;
+    EditFieldHandlePtr editHandleMaxDistance    (void);
+    GetFieldHandlePtr  getHandleUseSpread       (void) const;
+    EditFieldHandlePtr editHandleUseSpread      (void);
+    GetFieldHandlePtr  getHandleBeacon          (void) const;
+    EditFieldHandlePtr editHandleBeacon         (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      AirParticleAffectorBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      AirParticleAffectorBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      AirParticleAffectorBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const AirParticleAffectorBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef AirParticleAffectorBase *AirParticleAffectorBaseP;
 
-typedef osgIF<AirParticleAffectorBase::isNodeCore,
-              CoredNodePtr<AirParticleAffector>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet AirParticleAffectorNodePtr;
-
-typedef RefPtr<AirParticleAffectorPtr> AirParticleAffectorRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGAIRPARTICLEAFFECTORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGAIRPARTICLEAFFECTORBASE_H_ */

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,16 +55,15 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &CollisionParticleSystemAffectorBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 CollisionParticleSystemAffectorBase::getClassTypeId(void) 
+OSG::UInt32 CollisionParticleSystemAffectorBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
+    return _type.getId();
+}
 //! access the producer type of the class
 inline
 const EventProducerType &CollisionParticleSystemAffectorBase::getProducerClassType(void)
@@ -81,125 +78,84 @@ UInt32 CollisionParticleSystemAffectorBase::getProducerClassTypeId(void)
     return _producerType.getId();
 }
 
-//! create a new instance of the class
 inline
-CollisionParticleSystemAffectorPtr CollisionParticleSystemAffectorBase::create(void) 
+OSG::UInt16 CollisionParticleSystemAffectorBase::getClassGroupId(void)
 {
-    CollisionParticleSystemAffectorPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = CollisionParticleSystemAffectorPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getGroupId();
 }
-
-//! create an empty new instance of the class, do not copy the prototype
-inline
-CollisionParticleSystemAffectorPtr CollisionParticleSystemAffectorBase::createEmpty(void) 
-{ 
-    CollisionParticleSystemAffectorPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
-}
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the CollisionParticleSystemAffector::_sfCollisionDistance field.
-inline
-const SFReal32 *CollisionParticleSystemAffectorBase::getSFCollisionDistance(void) const
-{
-    return &_sfCollisionDistance;
-}
-
-//! Get the CollisionParticleSystemAffector::_sfCollisionDistance field.
-inline
-SFReal32 *CollisionParticleSystemAffectorBase::editSFCollisionDistance(void)
-{
-    return &_sfCollisionDistance;
-}
-
-//! Get the CollisionParticleSystemAffector::_mfSecondaryCollisionSystems field.
-inline
-const MFParticleSystemPtr *CollisionParticleSystemAffectorBase::getMFSecondaryCollisionSystems(void) const
-{
-    return &_mfSecondaryCollisionSystems;
-}
-
-//! Get the CollisionParticleSystemAffector::_mfSecondaryCollisionSystems field.
-inline
-MFParticleSystemPtr *CollisionParticleSystemAffectorBase::editMFSecondaryCollisionSystems(void)
-{
-    return &_mfSecondaryCollisionSystems;
-}
-
-
 //! Get the value of the CollisionParticleSystemAffector::_sfCollisionDistance field.
+
 inline
 Real32 &CollisionParticleSystemAffectorBase::editCollisionDistance(void)
 {
+    editSField(CollisionDistanceFieldMask);
+
     return _sfCollisionDistance.getValue();
 }
 
 //! Get the value of the CollisionParticleSystemAffector::_sfCollisionDistance field.
 inline
-const Real32 &CollisionParticleSystemAffectorBase::getCollisionDistance(void) const
+      Real32  CollisionParticleSystemAffectorBase::getCollisionDistance(void) const
 {
     return _sfCollisionDistance.getValue();
 }
 
 //! Set the value of the CollisionParticleSystemAffector::_sfCollisionDistance field.
 inline
-void CollisionParticleSystemAffectorBase::setCollisionDistance(const Real32 &value)
+void CollisionParticleSystemAffectorBase::setCollisionDistance(const Real32 value)
 {
+    editSField(CollisionDistanceFieldMask);
+
     _sfCollisionDistance.setValue(value);
 }
 
-
 //! Get the value of the \a index element the CollisionParticleSystemAffector::_mfSecondaryCollisionSystems field.
 inline
-ParticleSystemPtr &CollisionParticleSystemAffectorBase::editSecondaryCollisionSystems(const UInt32 index)
+ParticleSystem * CollisionParticleSystemAffectorBase::getSecondaryCollisionSystems(const UInt32 index) const
 {
     return _mfSecondaryCollisionSystems[index];
 }
 
-//! Get the value of the \a index element the CollisionParticleSystemAffector::_mfSecondaryCollisionSystems field.
-inline
-const ParticleSystemPtr &CollisionParticleSystemAffectorBase::getSecondaryCollisionSystems(const UInt32 index) const
-{
-    return _mfSecondaryCollisionSystems[index];
-}
 
-#ifndef OSG_2_PREP
-//! Get the CollisionParticleSystemAffector::_mfSecondaryCollisionSystems field.
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-MFParticleSystemPtr &CollisionParticleSystemAffectorBase::getSecondaryCollisionSystems(void)
+void CollisionParticleSystemAffectorBase::execSync (      CollisionParticleSystemAffectorBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfSecondaryCollisionSystems;
-}
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-//! Get the CollisionParticleSystemAffector::_mfSecondaryCollisionSystems field.
-inline
-const MFParticleSystemPtr &CollisionParticleSystemAffectorBase::getSecondaryCollisionSystems(void) const
-{
-    return _mfSecondaryCollisionSystems;
-}
+    if(FieldBits::NoField != (CollisionDistanceFieldMask & whichField))
+        _sfCollisionDistance.syncWith(pFrom->_sfCollisionDistance);
 
+    if(FieldBits::NoField != (SecondaryCollisionSystemsFieldMask & whichField))
+        _mfSecondaryCollisionSystems.syncWith(pFrom->_mfSecondaryCollisionSystems,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+}
 #endif
 
+
 inline
-EventConnection CollisionParticleSystemAffectorBase::attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
+const Char8 *CollisionParticleSystemAffectorBase::getClassname(void)
+{
+    return "CollisionParticleSystemAffector";
+}
+
+inline
+EventConnection CollisionParticleSystemAffectorBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
 {
     return _Producer.attachActivity(TheActivity, ProducedEventId);
 }
 
 inline
-bool CollisionParticleSystemAffectorBase::isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const
+bool CollisionParticleSystemAffectorBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
 {
     return _Producer.isActivityAttached(TheActivity, ProducedEventId);
 }
@@ -211,13 +167,13 @@ UInt32 CollisionParticleSystemAffectorBase::getNumActivitiesAttached(UInt32 Prod
 }
 
 inline
-ActivityPtr CollisionParticleSystemAffectorBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
+ActivityRefPtr CollisionParticleSystemAffectorBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
 {
     return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
 }
 
 inline
-void CollisionParticleSystemAffectorBase::detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
+void CollisionParticleSystemAffectorBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
 {
     _Producer.detachActivity(TheActivity, ProducedEventId);
 }
@@ -229,7 +185,7 @@ UInt32 CollisionParticleSystemAffectorBase::getNumProducedEvents(void) const
 }
 
 inline
-const MethodDescription *CollisionParticleSystemAffectorBase::getProducedEventDescription(const Char8 *ProducedEventName) const
+const MethodDescription *CollisionParticleSystemAffectorBase::getProducedEventDescription(const std::string &ProducedEventName) const
 {
     return _Producer.getProducedEventDescription(ProducedEventName);
 }
@@ -241,7 +197,7 @@ const MethodDescription *CollisionParticleSystemAffectorBase::getProducedEventDe
 }
 
 inline
-UInt32 CollisionParticleSystemAffectorBase::getProducedEventId(const Char8 *ProducedEventName) const
+UInt32 CollisionParticleSystemAffectorBase::getProducedEventId(const std::string &ProducedEventName) const
 {
     return _Producer.getProducedEventId(ProducedEventName);
 }
@@ -259,4 +215,7 @@ EventProducerPtr &CollisionParticleSystemAffectorBase::editEventProducer(void)
     return _sfEventProducer.getValue();
 }
 
+OSG_GEN_CONTAINERPTR(CollisionParticleSystemAffector);
+
 OSG_END_NAMESPACE
+

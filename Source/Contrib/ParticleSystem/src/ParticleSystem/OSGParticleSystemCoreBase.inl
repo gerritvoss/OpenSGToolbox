@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,160 +55,135 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &ParticleSystemCoreBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ParticleSystemCoreBase::getClassTypeId(void) 
+OSG::UInt32 ParticleSystemCoreBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-ParticleSystemCorePtr ParticleSystemCoreBase::create(void) 
-{
-    ParticleSystemCorePtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = ParticleSystemCorePtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-ParticleSystemCorePtr ParticleSystemCoreBase::createEmpty(void) 
-{ 
-    ParticleSystemCorePtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 ParticleSystemCoreBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ParticleSystemCore::_sfSortingMode field.
-inline
-SFUInt32 *ParticleSystemCoreBase::getSFSortingMode(void)
-{
-    return &_sfSortingMode;
-}
-
-//! Get the ParticleSystemCore::_mfSort field.
-inline
-MFUInt32 *ParticleSystemCoreBase::getMFSort(void)
-{
-    return &_mfSort;
-}
-
-//! Get the ParticleSystemCore::_sfSystem field.
-inline
-SFParticleSystemPtr *ParticleSystemCoreBase::getSFSystem(void)
-{
-    return &_sfSystem;
-}
-
-//! Get the ParticleSystemCore::_sfDrawer field.
-inline
-SFParticleSystemDrawerPtr *ParticleSystemCoreBase::getSFDrawer(void)
-{
-    return &_sfDrawer;
-}
-
-
 //! Get the value of the ParticleSystemCore::_sfSortingMode field.
+
 inline
-UInt32 &ParticleSystemCoreBase::getSortingMode(void)
+UInt32 &ParticleSystemCoreBase::editSortingMode(void)
 {
+    editSField(SortingModeFieldMask);
+
     return _sfSortingMode.getValue();
 }
 
 //! Get the value of the ParticleSystemCore::_sfSortingMode field.
 inline
-const UInt32 &ParticleSystemCoreBase::getSortingMode(void) const
+      UInt32  ParticleSystemCoreBase::getSortingMode(void) const
 {
     return _sfSortingMode.getValue();
 }
 
 //! Set the value of the ParticleSystemCore::_sfSortingMode field.
 inline
-void ParticleSystemCoreBase::setSortingMode(const UInt32 &value)
+void ParticleSystemCoreBase::setSortingMode(const UInt32 value)
 {
+    editSField(SortingModeFieldMask);
+
     _sfSortingMode.setValue(value);
 }
 
 //! Get the value of the ParticleSystemCore::_sfSystem field.
 inline
-ParticleSystemPtr &ParticleSystemCoreBase::getSystem(void)
-{
-    return _sfSystem.getValue();
-}
-
-//! Get the value of the ParticleSystemCore::_sfSystem field.
-inline
-const ParticleSystemPtr &ParticleSystemCoreBase::getSystem(void) const
+ParticleSystem * ParticleSystemCoreBase::getSystem(void) const
 {
     return _sfSystem.getValue();
 }
 
 //! Set the value of the ParticleSystemCore::_sfSystem field.
 inline
-void ParticleSystemCoreBase::setSystem(const ParticleSystemPtr &value)
+void ParticleSystemCoreBase::setSystem(ParticleSystem * const value)
 {
+    editSField(SystemFieldMask);
+
     _sfSystem.setValue(value);
 }
 
 //! Get the value of the ParticleSystemCore::_sfDrawer field.
 inline
-ParticleSystemDrawerPtr &ParticleSystemCoreBase::getDrawer(void)
-{
-    return _sfDrawer.getValue();
-}
-
-//! Get the value of the ParticleSystemCore::_sfDrawer field.
-inline
-const ParticleSystemDrawerPtr &ParticleSystemCoreBase::getDrawer(void) const
+ParticleSystemDrawer * ParticleSystemCoreBase::getDrawer(void) const
 {
     return _sfDrawer.getValue();
 }
 
 //! Set the value of the ParticleSystemCore::_sfDrawer field.
 inline
-void ParticleSystemCoreBase::setDrawer(const ParticleSystemDrawerPtr &value)
+void ParticleSystemCoreBase::setDrawer(ParticleSystemDrawer * const value)
 {
+    editSField(DrawerFieldMask);
+
     _sfDrawer.setValue(value);
 }
 
-
 //! Get the value of the \a index element the ParticleSystemCore::_mfSort field.
 inline
-UInt32 &ParticleSystemCoreBase::getSort(const UInt32 index)
+      UInt32  ParticleSystemCoreBase::getSort(const UInt32 index) const
 {
     return _mfSort[index];
 }
 
-//! Get the ParticleSystemCore::_mfSort field.
 inline
-MFUInt32 &ParticleSystemCoreBase::getSort(void)
+UInt32 &ParticleSystemCoreBase::editSort(const UInt32 index)
 {
-    return _mfSort;
+    editMField(SortFieldMask, _mfSort);
+
+    return _mfSort[index];
 }
 
-//! Get the ParticleSystemCore::_mfSort field.
+
+
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-const MFUInt32 &ParticleSystemCoreBase::getSort(void) const
+void ParticleSystemCoreBase::execSync (      ParticleSystemCoreBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfSort;
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (SortingModeFieldMask & whichField))
+        _sfSortingMode.syncWith(pFrom->_sfSortingMode);
+
+    if(FieldBits::NoField != (SortFieldMask & whichField))
+        _mfSort.syncWith(pFrom->_mfSort,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (SystemFieldMask & whichField))
+        _sfSystem.syncWith(pFrom->_sfSystem);
+
+    if(FieldBits::NoField != (DrawerFieldMask & whichField))
+        _sfDrawer.syncWith(pFrom->_sfDrawer);
 }
+#endif
+
+
+inline
+const Char8 *ParticleSystemCoreBase::getClassname(void)
+{
+    return "ParticleSystemCore";
+}
+
+
+OSG_GEN_CONTAINERPTR(ParticleSystemCore);
 
 OSG_END_NAMESPACE
-
-#define OSGPARTICLESYSTEMCOREBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

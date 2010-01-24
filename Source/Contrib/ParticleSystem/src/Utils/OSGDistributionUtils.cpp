@@ -28,7 +28,7 @@
 \*---------------------------------------------------------------------------*/
 #include "OSGDistributionUtils.h"
 
-#include <OpenSG/OSGBaseFunctions.h>
+#include "OSGBaseFunctions.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -67,7 +67,7 @@ UInt32 stlLowerBound(std::vector<Real32> vector, UInt32 lowerBound, UInt32 upper
 	UInt32 hi, mid, lo;
 	hi = upperBound;
 	lo = lowerBound;
-	mid = static_cast<UInt32>(osgceil(static_cast<Real32>(lo + hi) / 2.0f));
+	mid = static_cast<UInt32>(osgCeil(static_cast<Real32>(lo + hi) / 2.0f));
 	
 	if (lo == hi)
 	{

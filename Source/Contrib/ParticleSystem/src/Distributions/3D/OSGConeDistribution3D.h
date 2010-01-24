@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Dynamics                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,45 +42,48 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
-
 #include "OSGConeDistribution3DBase.h"
-#include <OpenSG/OSGVecFieldDataType.h>
 
 OSG_BEGIN_NAMESPACE
-/*! \brief ConeDistribution3D class. See \ref 
-           PageDynamicsConeDistribution3D for a description.
+
+/*! \brief ConeDistribution3D class. See \ref
+           PageContribParticleSystemConeDistribution3D for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ConeDistribution3D : public ConeDistribution3DBase
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ConeDistribution3D : public ConeDistribution3DBase
 {
-  private:
-
-    typedef ConeDistribution3DBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
-  public:
 
+  public:
     enum SurfaceOrVolume {VOLUME=0, SURFACE=1};
+
+    typedef ConeDistribution3DBase Inherited;
+    typedef ConeDistribution3D     Self;
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
     virtual Vec3f generate(void) const;
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ConeDistribution3DBase.
@@ -97,20 +100,24 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ConeDistribution3D : public ConeDistribut
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ConeDistribution3D(void); 
+    virtual ~ConeDistribution3D(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ConeDistribution3DBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ConeDistribution3D &source);
 };
 

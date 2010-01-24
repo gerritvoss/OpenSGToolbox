@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,155 +50,208 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEPOINTPARTICLESYSTEMDRAWERINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGPointParticleSystemDrawerBase.h"
 #include "OSGPointParticleSystemDrawer.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  PointParticleSystemDrawerBase::PointSizeScalingFieldMask = 
-    (TypeTraits<BitVector>::One << PointParticleSystemDrawerBase::PointSizeScalingFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  PointParticleSystemDrawerBase::ForcePerParticleSizingFieldMask = 
-    (TypeTraits<BitVector>::One << PointParticleSystemDrawerBase::ForcePerParticleSizingFieldId);
+/*! \class OSG::PointParticleSystemDrawer
+    
+ */
 
-const OSG::BitVector PointParticleSystemDrawerBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Real32          PointParticleSystemDrawerBase::_sfPointSizeScaling
     This value is used to scale the size of the particle and apply that size as the OpenGL point size.
 */
+
 /*! \var bool            PointParticleSystemDrawerBase::_sfForcePerParticleSizing
     This value is used to force changes to the OpenGL point size (via glPointSize) on a per particle basis.  This has the potential to REALLY slow things down because it requires a separate glBegin/glEnd for every particle.
 */
 
-//! PointParticleSystemDrawer description
 
-FieldDescription *PointParticleSystemDrawerBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<PointParticleSystemDrawer *>::_type("PointParticleSystemDrawerPtr", "ParticleSystemDrawerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(PointParticleSystemDrawer *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           PointParticleSystemDrawer *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           PointParticleSystemDrawer *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void PointParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "PointSizeScaling", 
-                     PointSizeScalingFieldId, PointSizeScalingFieldMask,
-                     false,
-                     (FieldAccessMethod) &PointParticleSystemDrawerBase::getSFPointSizeScaling),
-    new FieldDescription(SFBool::getClassType(), 
-                     "ForcePerParticleSizing", 
-                     ForcePerParticleSizingFieldId, ForcePerParticleSizingFieldMask,
-                     false,
-                     (FieldAccessMethod) &PointParticleSystemDrawerBase::getSFForcePerParticleSizing)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType PointParticleSystemDrawerBase::_type(
-    "PointParticleSystemDrawer",
-    "ParticleSystemDrawer",
-    NULL,
-    (PrototypeCreateF) &PointParticleSystemDrawerBase::createEmpty,
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "PointSizeScaling",
+        "This value is used to scale the size of the particle and apply that size as the OpenGL point size.\n",
+        PointSizeScalingFieldId, PointSizeScalingFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&PointParticleSystemDrawer::editHandlePointSizeScaling),
+        static_cast<FieldGetMethodSig >(&PointParticleSystemDrawer::getHandlePointSizeScaling));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "ForcePerParticleSizing",
+        "This value is used to force changes to the OpenGL point size (via glPointSize) on a per particle basis.  This has the potential to REALLY slow things down because it requires a separate glBegin/glEnd for every particle.\n",
+        ForcePerParticleSizingFieldId, ForcePerParticleSizingFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&PointParticleSystemDrawer::editHandleForcePerParticleSizing),
+        static_cast<FieldGetMethodSig >(&PointParticleSystemDrawer::getHandleForcePerParticleSizing));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+PointParticleSystemDrawerBase::TypeObject PointParticleSystemDrawerBase::_type(
+    PointParticleSystemDrawerBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&PointParticleSystemDrawerBase::createEmptyLocal),
     PointParticleSystemDrawer::initMethod,
-    _desc,
-    sizeof(_desc));
+    PointParticleSystemDrawer::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&PointParticleSystemDrawer::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"PointParticleSystemDrawer\"\n"
+    "\tparent=\"ParticleSystemDrawer\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"PointSizeScaling\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\tThis value is used to scale the size of the particle and apply that size as the OpenGL point size.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ForcePerParticleSizing\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\tThis value is used to force changes to the OpenGL point size (via glPointSize) on a per particle basis.  This has the potential to REALLY slow things down because it requires a separate glBegin/glEnd for every particle.\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(PointParticleSystemDrawerBase, PointParticleSystemDrawerPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &PointParticleSystemDrawerBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &PointParticleSystemDrawerBase::getType(void) const 
+FieldContainerType &PointParticleSystemDrawerBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr PointParticleSystemDrawerBase::shallowCopy(void) const 
-{ 
-    PointParticleSystemDrawerPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const PointParticleSystemDrawer *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 PointParticleSystemDrawerBase::getContainerSize(void) const 
-{ 
-    return sizeof(PointParticleSystemDrawer); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void PointParticleSystemDrawerBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &PointParticleSystemDrawerBase::getType(void) const
 {
-    this->executeSyncImpl((PointParticleSystemDrawerBase *) &other, whichField);
+    return _type;
 }
-#else
-void PointParticleSystemDrawerBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 PointParticleSystemDrawerBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((PointParticleSystemDrawerBase *) &other, whichField, sInfo);
+    return sizeof(PointParticleSystemDrawer);
 }
-void PointParticleSystemDrawerBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFReal32 *PointParticleSystemDrawerBase::editSFPointSizeScaling(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(PointSizeScalingFieldMask);
+
+    return &_sfPointSizeScaling;
 }
 
-void PointParticleSystemDrawerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFReal32 *PointParticleSystemDrawerBase::getSFPointSizeScaling(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfPointSizeScaling;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-PointParticleSystemDrawerBase::PointParticleSystemDrawerBase(void) :
-    _sfPointSizeScaling       (Real32(1.0)), 
-    _sfForcePerParticleSizing (bool(false)), 
-    Inherited() 
+SFBool *PointParticleSystemDrawerBase::editSFForcePerParticleSizing(void)
 {
+    editSField(ForcePerParticleSizingFieldMask);
+
+    return &_sfForcePerParticleSizing;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-PointParticleSystemDrawerBase::PointParticleSystemDrawerBase(const PointParticleSystemDrawerBase &source) :
-    _sfPointSizeScaling       (source._sfPointSizeScaling       ), 
-    _sfForcePerParticleSizing (source._sfForcePerParticleSizing ), 
-    Inherited                 (source)
+const SFBool *PointParticleSystemDrawerBase::getSFForcePerParticleSizing(void) const
 {
+    return &_sfForcePerParticleSizing;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-PointParticleSystemDrawerBase::~PointParticleSystemDrawerBase(void)
-{
-}
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 PointParticleSystemDrawerBase::getBinSize(const BitVector &whichField)
+UInt32 PointParticleSystemDrawerBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -206,18 +259,16 @@ UInt32 PointParticleSystemDrawerBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfPointSizeScaling.getBinSize();
     }
-
     if(FieldBits::NoField != (ForcePerParticleSizingFieldMask & whichField))
     {
         returnValue += _sfForcePerParticleSizing.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void PointParticleSystemDrawerBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void PointParticleSystemDrawerBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -225,17 +276,14 @@ void PointParticleSystemDrawerBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfPointSizeScaling.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ForcePerParticleSizingFieldMask & whichField))
     {
         _sfForcePerParticleSizing.copyToBin(pMem);
     }
-
-
 }
 
-void PointParticleSystemDrawerBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void PointParticleSystemDrawerBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -243,93 +291,244 @@ void PointParticleSystemDrawerBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfPointSizeScaling.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ForcePerParticleSizingFieldMask & whichField))
     {
         _sfForcePerParticleSizing.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void PointParticleSystemDrawerBase::executeSyncImpl(      PointParticleSystemDrawerBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+PointParticleSystemDrawerTransitPtr PointParticleSystemDrawerBase::createLocal(BitVector bFlags)
 {
+    PointParticleSystemDrawerTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (PointSizeScalingFieldMask & whichField))
-        _sfPointSizeScaling.syncWith(pOther->_sfPointSizeScaling);
+        fc = dynamic_pointer_cast<PointParticleSystemDrawer>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (ForcePerParticleSizingFieldMask & whichField))
-        _sfForcePerParticleSizing.syncWith(pOther->_sfForcePerParticleSizing);
-
-
-}
-#else
-void PointParticleSystemDrawerBase::executeSyncImpl(      PointParticleSystemDrawerBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (PointSizeScalingFieldMask & whichField))
-        _sfPointSizeScaling.syncWith(pOther->_sfPointSizeScaling);
-
-    if(FieldBits::NoField != (ForcePerParticleSizingFieldMask & whichField))
-        _sfForcePerParticleSizing.syncWith(pOther->_sfForcePerParticleSizing);
-
-
-
+    return fc;
 }
 
-void PointParticleSystemDrawerBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+PointParticleSystemDrawerTransitPtr PointParticleSystemDrawerBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    PointParticleSystemDrawerTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<PointParticleSystemDrawer>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+PointParticleSystemDrawerTransitPtr PointParticleSystemDrawerBase::create(void)
+{
+    PointParticleSystemDrawerTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<PointParticleSystemDrawer>(tmpPtr);
+    }
+
+    return fc;
+}
+
+PointParticleSystemDrawer *PointParticleSystemDrawerBase::createEmptyLocal(BitVector bFlags)
+{
+    PointParticleSystemDrawer *returnValue;
+
+    newPtr<PointParticleSystemDrawer>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+PointParticleSystemDrawer *PointParticleSystemDrawerBase::createEmpty(void)
+{
+    PointParticleSystemDrawer *returnValue;
+
+    newPtr<PointParticleSystemDrawer>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr PointParticleSystemDrawerBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    PointParticleSystemDrawer *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const PointParticleSystemDrawer *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr PointParticleSystemDrawerBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    PointParticleSystemDrawer *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const PointParticleSystemDrawer *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr PointParticleSystemDrawerBase::shallowCopy(void) const
+{
+    PointParticleSystemDrawer *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const PointParticleSystemDrawer *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+PointParticleSystemDrawerBase::PointParticleSystemDrawerBase(void) :
+    Inherited(),
+    _sfPointSizeScaling       (Real32(1.0)),
+    _sfForcePerParticleSizing (bool(false))
+{
+}
+
+PointParticleSystemDrawerBase::PointParticleSystemDrawerBase(const PointParticleSystemDrawerBase &source) :
+    Inherited(source),
+    _sfPointSizeScaling       (source._sfPointSizeScaling       ),
+    _sfForcePerParticleSizing (source._sfForcePerParticleSizing )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+PointParticleSystemDrawerBase::~PointParticleSystemDrawerBase(void)
+{
+}
+
+
+GetFieldHandlePtr PointParticleSystemDrawerBase::getHandlePointSizeScaling (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfPointSizeScaling,
+             this->getType().getFieldDesc(PointSizeScalingFieldId),
+             const_cast<PointParticleSystemDrawerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr PointParticleSystemDrawerBase::editHandlePointSizeScaling(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfPointSizeScaling,
+             this->getType().getFieldDesc(PointSizeScalingFieldId),
+             this));
+
+
+    editSField(PointSizeScalingFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr PointParticleSystemDrawerBase::getHandleForcePerParticleSizing (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfForcePerParticleSizing,
+             this->getType().getFieldDesc(ForcePerParticleSizingFieldId),
+             const_cast<PointParticleSystemDrawerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr PointParticleSystemDrawerBase::editHandleForcePerParticleSizing(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfForcePerParticleSizing,
+             this->getType().getFieldDesc(ForcePerParticleSizingFieldId),
+             this));
+
+
+    editSField(ForcePerParticleSizingFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void PointParticleSystemDrawerBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    PointParticleSystemDrawer *pThis = static_cast<PointParticleSystemDrawer *>(this);
+
+    pThis->execSync(static_cast<PointParticleSystemDrawer *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *PointParticleSystemDrawerBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    PointParticleSystemDrawer *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const PointParticleSystemDrawer *>(pRefAspect),
+                  dynamic_cast<const PointParticleSystemDrawer *>(this));
+
+    return returnValue;
+}
+#endif
+
+void PointParticleSystemDrawerBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<PointParticleSystemDrawerPtr>::_type("PointParticleSystemDrawerPtr", "ParticleSystemDrawerPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(PointParticleSystemDrawerPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(PointParticleSystemDrawerPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGPOINTPARTICLESYSTEMDRAWERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPOINTPARTICLESYSTEMDRAWERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGPOINTPARTICLESYSTEMDRAWERFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

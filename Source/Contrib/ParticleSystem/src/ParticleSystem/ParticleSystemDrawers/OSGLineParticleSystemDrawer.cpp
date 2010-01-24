@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,26 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGLineParticleSystemDrawer.h"
-#include "ParticleSystem/OSGParticleSystem.h"
-#include <OpenSG/OSGDrawable.h>
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::LineParticleSystemDrawer
-
-*/
+// Documentation for this class is emitted in the
+// OSGLineParticleSystemDrawerBase.cpp file.
+// To modify it, please change the .fcd file (OSGLineParticleSystemDrawer.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -69,8 +62,13 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void LineParticleSystemDrawer::initMethod (void)
+void LineParticleSystemDrawer::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -78,10 +76,11 @@ void LineParticleSystemDrawer::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-Action::ResultE LineParticleSystemDrawer::draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort)
+Action::ResultE LineParticleSystemDrawer::draw(DrawEnv *pEnv,
+                                               ParticleSystemUnrecPtr System,
+                                               const MFUInt32& Sort)
 {
  	UInt32 NumParticles(System->getNumParticles());
-	action->getStatistics()->getElem(ParticleSystem::statNParticles)->add(NumParticles);
 
 	bool areEndpointsFadeSame(getEndPointFading().x() == getEndPointFading().y());
 	Color4f Color;
@@ -151,21 +150,22 @@ Action::ResultE LineParticleSystemDrawer::draw(DrawActionBase *action, ParticleS
 			}
 		glEnd();
 	}
-    action->getStatistics()->getElem(Drawable::statNLines)->add(NumParticles);
-    action->getStatistics()->getElem(Drawable::statNVertices)->add(2*NumParticles);
-    action->getStatistics()->getElem(Drawable::statNPrimitives)->add(NumParticles);
-
 
     return Action::Continue;
 }
 
-void LineParticleSystemDrawer::adjustVolume(ParticleSystemPtr System, Volume & volume)
+void LineParticleSystemDrawer::adjustVolume(ParticleSystemUnrecPtr System, Volume & volume)
 {
-    Inherited::adjustVolume(System, volume);
-    //TODO: Implements this to take the SecPosition into account
+    UInt32 NumParticles = System->getNumParticles();
+    for(UInt32 i(0) ; i<NumParticles ; ++i)
+    {
+        volume.extendBy(System->getPosition(i));
+        volume.extendBy(getLineEndpoint(System, i));
+    }
 }
 
-Pnt3f LineParticleSystemDrawer::getLineEndpoint(ParticleSystemPtr System, UInt32 Index)
+Pnt3f LineParticleSystemDrawer::getLineEndpoint(ParticleSystemUnrecPtr System,
+                                                UInt32 Index) const
 {
 	Vec3f Direction;
 
@@ -224,6 +224,42 @@ Pnt3f LineParticleSystemDrawer::getLineEndpoint(ParticleSystemPtr System, UInt32
 	return System->getPosition(Index)+(LineLength*Direction);
 
 }
+
+void LineParticleSystemDrawer::fill(DrawableStatsAttachment *pStat,
+                                    ParticleSystemUnrecPtr System,
+                                    const MFUInt32& Sort)
+{
+    if(pStat == NULL)
+    {
+        FINFO(("LineParticleSystemDrawer::fill(DrawableStatsAttachment *, ParticleSystemUnrecPtr , const MFUInt32& ): "
+               "No attachment given.\n"));
+
+        return;
+    }
+    if(System == NULL)
+    {
+        FINFO(("LineParticleSystemDrawer::fill(DrawableStatsAttachment *, ParticleSystemUnrecPtr , const MFUInt32& ): "
+               "Particle System is NULL.\n"));
+
+        return;
+    }
+
+    UInt32 NumParticles;
+
+    if(Sort.size() > 0)
+    {
+        NumParticles = Sort.getSize();
+    }
+    else
+    {
+        NumParticles = System->getNumParticles();
+    }
+
+    pStat->setVertices(2*NumParticles);
+    pStat->setLines(NumParticles);
+    pStat->setValid(true);
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -246,16 +282,17 @@ LineParticleSystemDrawer::~LineParticleSystemDrawer(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void LineParticleSystemDrawer::changed(BitVector whichField, UInt32 origin)
+void LineParticleSystemDrawer::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void LineParticleSystemDrawer::dump(      UInt32    , 
+void LineParticleSystemDrawer::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump LineParticleSystemDrawer NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

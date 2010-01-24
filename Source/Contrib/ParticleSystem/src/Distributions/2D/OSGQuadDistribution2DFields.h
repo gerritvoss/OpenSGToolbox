@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,75 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGDistribution2DFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class QuadDistribution2D;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! QuadDistribution2DPtr
+OSG_GEN_CONTAINERPTR(QuadDistribution2D);
 
-typedef FCPtr<Distribution2DPtr, QuadDistribution2D> QuadDistribution2DPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpParticleSystemFieldTraits
+/*! \ingroup GrpContribParticleSystemFieldTraits
+    \ingroup GrpLibOSGContribParticleSystem
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<QuadDistribution2DPtr> : 
-    public FieldTraitsRecurseMapper<QuadDistribution2DPtr, true>
+struct FieldTraits<QuadDistribution2D *> :
+    public FieldTraitsFCPtrBase<QuadDistribution2D *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFQuadDistribution2DPtr"; }
-    static const char *getMName(void) { return "MFQuadDistribution2DPtr"; }
+    typedef FieldTraits<QuadDistribution2D *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFQuadDistribution2DPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFQuadDistribution2DPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<QuadDistribution2DPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<QuadDistribution2D *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecQuadDistribution2DPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<QuadDistribution2D *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecQuadDistribution2DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<QuadDistribution2D *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakQuadDistribution2DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<QuadDistribution2D *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdQuadDistribution2DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<QuadDistribution2D *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecQuadDistribution2DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<QuadDistribution2D *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecQuadDistribution2DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<QuadDistribution2D *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakQuadDistribution2DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<QuadDistribution2D *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdQuadDistribution2DPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<QuadDistribution2D *,
+                      RecordedRefCountPolicy  > SFRecQuadDistribution2DPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<QuadDistribution2D *,
+                      UnrecordedRefCountPolicy> SFUnrecQuadDistribution2DPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<QuadDistribution2D *,
+                      WeakRefCountPolicy      > SFWeakQuadDistribution2DPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<QuadDistribution2D *,
+                      NoRefCountPolicy        > SFUncountedQuadDistribution2DPtr;
 
-typedef SField<QuadDistribution2DPtr> SFQuadDistribution2DPtr;
-#endif
 
-#ifndef OSG_COMPILEQUADDISTRIBUTION2DINST
-OSG_DLLEXPORT_DECL1(SField, QuadDistribution2DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<QuadDistribution2D *,
+                      RecordedRefCountPolicy  > MFRecQuadDistribution2DPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<QuadDistribution2D *,
+                      UnrecordedRefCountPolicy> MFUnrecQuadDistribution2DPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<QuadDistribution2D *,
+                      WeakRefCountPolicy      > MFWeakQuadDistribution2DPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<QuadDistribution2D *,
+                      NoRefCountPolicy        > MFUncountedQuadDistribution2DPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldMulti */
 
-typedef MField<QuadDistribution2DPtr> MFQuadDistribution2DPtr;
-#endif
 
-#ifndef OSG_COMPILEQUADDISTRIBUTION2DINST
-OSG_DLLEXPORT_DECL1(MField, QuadDistribution2DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFRecQuadDistribution2DPtr : 
+    public PointerSField<QuadDistribution2D *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUnrecQuadDistribution2DPtr : 
+    public PointerSField<QuadDistribution2D *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFWeakQuadDistribution2DPtr :
+    public PointerSField<QuadDistribution2D *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUncountedQuadDistribution2DPtr :
+    public PointerSField<QuadDistribution2D *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFRecQuadDistribution2DPtr :
+    public PointerMField<QuadDistribution2D *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUnrecQuadDistribution2DPtr :
+    public PointerMField<QuadDistribution2D *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFWeakQuadDistribution2DPtr :
+    public PointerMField<QuadDistribution2D *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUncountedQuadDistribution2DPtr :
+    public PointerMField<QuadDistribution2D *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

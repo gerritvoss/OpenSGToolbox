@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                 Authors: David Kabala , Daniel Guilliams                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGRateParticleDecorator.h"
+#include "OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::RateParticleDecorator
-
-*/
+// Documentation for this class is emitted in the
+// OSGRateParticleDecoratorBase.cpp file.
+// To modify it, please change the .fcd file (OSGRateParticleDecorator.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,15 +63,21 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void RateParticleDecorator::initMethod (void)
+void RateParticleDecorator::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-bool RateParticleDecorator::generate(ParticleSystemPtr System, const Time& elps)
+
+bool RateParticleDecorator::generate(ParticleSystemRefPtr System, const Time& elps)
 {
 	setTimeSinceLastGeneration(getTimeSinceLastGeneration()+elps);
 
@@ -89,6 +91,7 @@ bool RateParticleDecorator::generate(ParticleSystemPtr System, const Time& elps)
 
 	return false;
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -111,41 +114,17 @@ RateParticleDecorator::~RateParticleDecorator(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void RateParticleDecorator::changed(BitVector whichField, UInt32 origin)
+void RateParticleDecorator::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void RateParticleDecorator::dump(      UInt32    , 
+void RateParticleDecorator::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump RateParticleDecorator NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGRATEPARTICLEDECORATORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGRATEPARTICLEDECORATORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGRATEPARTICLEDECORATORFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

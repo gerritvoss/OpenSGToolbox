@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,75 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGDistribution1DFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class GaussianNormalDistribution1D;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! GaussianNormalDistribution1DPtr
+OSG_GEN_CONTAINERPTR(GaussianNormalDistribution1D);
 
-typedef FCPtr<Distribution1DPtr, GaussianNormalDistribution1D> GaussianNormalDistribution1DPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpParticleSystemFieldTraits
+/*! \ingroup GrpContribParticleSystemFieldTraits
+    \ingroup GrpLibOSGContribParticleSystem
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<GaussianNormalDistribution1DPtr> : 
-    public FieldTraitsRecurseMapper<GaussianNormalDistribution1DPtr, true>
+struct FieldTraits<GaussianNormalDistribution1D *> :
+    public FieldTraitsFCPtrBase<GaussianNormalDistribution1D *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFGaussianNormalDistribution1DPtr"; }
-    static const char *getMName(void) { return "MFGaussianNormalDistribution1DPtr"; }
+    typedef FieldTraits<GaussianNormalDistribution1D *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFGaussianNormalDistribution1DPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFGaussianNormalDistribution1DPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<GaussianNormalDistribution1DPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<GaussianNormalDistribution1D *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecGaussianNormalDistribution1DPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<GaussianNormalDistribution1D *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecGaussianNormalDistribution1DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GaussianNormalDistribution1D *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakGaussianNormalDistribution1DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GaussianNormalDistribution1D *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdGaussianNormalDistribution1DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GaussianNormalDistribution1D *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecGaussianNormalDistribution1DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GaussianNormalDistribution1D *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecGaussianNormalDistribution1DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GaussianNormalDistribution1D *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakGaussianNormalDistribution1DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GaussianNormalDistribution1D *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdGaussianNormalDistribution1DPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<GaussianNormalDistribution1D *,
+                      RecordedRefCountPolicy  > SFRecGaussianNormalDistribution1DPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<GaussianNormalDistribution1D *,
+                      UnrecordedRefCountPolicy> SFUnrecGaussianNormalDistribution1DPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<GaussianNormalDistribution1D *,
+                      WeakRefCountPolicy      > SFWeakGaussianNormalDistribution1DPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<GaussianNormalDistribution1D *,
+                      NoRefCountPolicy        > SFUncountedGaussianNormalDistribution1DPtr;
 
-typedef SField<GaussianNormalDistribution1DPtr> SFGaussianNormalDistribution1DPtr;
-#endif
 
-#ifndef OSG_COMPILEGAUSSIANNORMALDISTRIBUTION1DINST
-OSG_DLLEXPORT_DECL1(SField, GaussianNormalDistribution1DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<GaussianNormalDistribution1D *,
+                      RecordedRefCountPolicy  > MFRecGaussianNormalDistribution1DPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<GaussianNormalDistribution1D *,
+                      UnrecordedRefCountPolicy> MFUnrecGaussianNormalDistribution1DPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<GaussianNormalDistribution1D *,
+                      WeakRefCountPolicy      > MFWeakGaussianNormalDistribution1DPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<GaussianNormalDistribution1D *,
+                      NoRefCountPolicy        > MFUncountedGaussianNormalDistribution1DPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldMulti */
 
-typedef MField<GaussianNormalDistribution1DPtr> MFGaussianNormalDistribution1DPtr;
-#endif
 
-#ifndef OSG_COMPILEGAUSSIANNORMALDISTRIBUTION1DINST
-OSG_DLLEXPORT_DECL1(MField, GaussianNormalDistribution1DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFRecGaussianNormalDistribution1DPtr : 
+    public PointerSField<GaussianNormalDistribution1D *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUnrecGaussianNormalDistribution1DPtr : 
+    public PointerSField<GaussianNormalDistribution1D *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFWeakGaussianNormalDistribution1DPtr :
+    public PointerSField<GaussianNormalDistribution1D *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUncountedGaussianNormalDistribution1DPtr :
+    public PointerSField<GaussianNormalDistribution1D *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFRecGaussianNormalDistribution1DPtr :
+    public PointerMField<GaussianNormalDistribution1D *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUnrecGaussianNormalDistribution1DPtr :
+    public PointerMField<GaussianNormalDistribution1D *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFWeakGaussianNormalDistribution1DPtr :
+    public PointerMField<GaussianNormalDistribution1D *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUncountedGaussianNormalDistribution1DPtr :
+    public PointerMField<GaussianNormalDistribution1D *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

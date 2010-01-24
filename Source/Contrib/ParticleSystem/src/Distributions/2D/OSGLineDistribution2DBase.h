@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,64 +58,73 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGDistribution2D.h" // Parent
 
-#include <OpenSG/OSGPnt2fFields.h> // Point1 type
-#include <OpenSG/OSGPnt2fFields.h> // Point2 type
+#include "OSGVecFields.h"               // Point1 type
 
 #include "OSGLineDistribution2DFields.h"
+
+
 OSG_BEGIN_NAMESPACE
 
 class LineDistribution2D;
-class BinaryDataHandler;
 
 //! \brief LineDistribution2D Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING LineDistribution2DBase : public Distribution2D
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING LineDistribution2DBase : public Distribution2D
 {
-  private:
-
-    typedef Distribution2D    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef LineDistribution2DPtr  Ptr;
+    typedef Distribution2D Inherited;
+    typedef Distribution2D ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(LineDistribution2D);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
         Point1FieldId = Inherited::NextFieldId,
         Point2FieldId = Point1FieldId + 1,
-        NextFieldId   = Point2FieldId + 1
+        NextFieldId = Point2FieldId + 1
     };
 
-    static const OSG::BitVector Point1FieldMask;
-    static const OSG::BitVector Point2FieldMask;
+    static const OSG::BitVector Point1FieldMask =
+        (TypeTraits<BitVector>::One << Point1FieldId);
+    static const OSG::BitVector Point2FieldMask =
+        (TypeTraits<BitVector>::One << Point2FieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFPnt2f           SFPoint1Type;
+    typedef SFPnt2f           SFPoint2Type;
 
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -125,30 +134,30 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING LineDistribution2DBase : public Distribut
     /*! \{                                                                 */
 
 
-           SFPnt2f             *editSFPoint1         (void);
-     const SFPnt2f             *getSFPoint1         (void) const;
+                  SFPnt2f             *editSFPoint1         (void);
+            const SFPnt2f             *getSFPoint1          (void) const;
 
-           SFPnt2f             *editSFPoint2         (void);
-     const SFPnt2f             *getSFPoint2         (void) const;
+                  SFPnt2f             *editSFPoint2         (void);
+            const SFPnt2f             *getSFPoint2          (void) const;
 
 
-           Pnt2f               &editPoint1         (void);
-     const Pnt2f               &getPoint1         (void) const;
+                  Pnt2f               &editPoint1         (void);
+            const Pnt2f               &getPoint1          (void) const;
 
-           Pnt2f               &editPoint2         (void);
-     const Pnt2f               &getPoint2         (void) const;
+                  Pnt2f               &editPoint2         (void);
+            const Pnt2f               &getPoint2          (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setPoint1         ( const Pnt2f &value );
-     void setPoint2         ( const Pnt2f &value );
+            void setPoint1         (const Pnt2f &value);
+            void setPoint2         (const Pnt2f &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -156,39 +165,57 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING LineDistribution2DBase : public Distribut
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  LineDistribution2DPtr      create          (void); 
-    static  LineDistribution2DPtr      createEmpty     (void); 
+    static  LineDistribution2DTransitPtr  create          (void);
+    static  LineDistribution2D           *createEmpty     (void);
+
+    static  LineDistribution2DTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  LineDistribution2D            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  LineDistribution2DTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFPnt2f             _sfPoint1;
-    SFPnt2f             _sfPoint2;
+    SFPnt2f           _sfPoint1;
+    SFPnt2f           _sfPoint2;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -203,66 +230,80 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING LineDistribution2DBase : public Distribut
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~LineDistribution2DBase(void); 
+    virtual ~LineDistribution2DBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandlePoint1          (void) const;
+    EditFieldHandlePtr editHandlePoint1         (void);
+    GetFieldHandlePtr  getHandlePoint2          (void) const;
+    EditFieldHandlePtr editHandlePoint2         (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      LineDistribution2DBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      LineDistribution2DBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      LineDistribution2DBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const LineDistribution2DBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef LineDistribution2DBase *LineDistribution2DBaseP;
-
-typedef osgIF<LineDistribution2DBase::isNodeCore,
-              CoredNodePtr<LineDistribution2D>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet LineDistribution2DNodePtr;
-
-typedef RefPtr<LineDistribution2DPtr> LineDistribution2DRefPtr;
 
 OSG_END_NAMESPACE
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Dynamics                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,47 +42,50 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGPerlinNoiseDistribution2DBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief PerlinNoiseDistribution2D class. See \ref 
-           PageDynamicsPerlinNoiseDistribution2D for a description.
+/*! \brief PerlinNoiseDistribution2D class. See \ref
+           PageContribParticleSystemPerlinNoiseDistribution2D for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING PerlinNoiseDistribution2D : public PerlinNoiseDistribution2DBase
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING PerlinNoiseDistribution2D : public PerlinNoiseDistribution2DBase
 {
-  private:
-
-    typedef PerlinNoiseDistribution2DBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
 	enum InterpolationType {COSINE = 1,LINEAR = 0};	
+
+    typedef PerlinNoiseDistribution2DBase Inherited;
+    typedef PerlinNoiseDistribution2D     Self;
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
-    /*! \}   */
+    /*! \}                                                                 */
 
     virtual Vec2f generate(void) const;
 
 	Real32 generate(Pnt2f t) const;
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in PerlinNoiseDistribution2DBase.
@@ -99,20 +102,24 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING PerlinNoiseDistribution2D : public Perlin
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~PerlinNoiseDistribution2D(void); 
+    virtual ~PerlinNoiseDistribution2D(void);
 
-    /*! \}*/
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
 
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class PerlinNoiseDistribution2DBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const PerlinNoiseDistribution2D &source);
 };
 

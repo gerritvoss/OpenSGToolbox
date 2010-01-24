@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Dynamics                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,28 +40,22 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGGeoSurfaceDistribution3D.h"
-#include <OpenSG/OSGVecFieldDataType.h>
-#include <OpenSG/OSGTriangleIterator.h>
-#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
-#include "Utils/OSGDistributionUtils.h"
-
-#include <algorithm>
+#include "OSGTriangleIterator.h"
+#include "OSGRandomPoolManager.h"
+#include "OSGDistributionUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::GeoSurfaceDistribution3D
-An GeoSurfaceDistribution3D. 	
-*/
+// Documentation for this class is emitted in the
+// OSGGeoSurfaceDistribution3DBase.cpp file.
+// To modify it, please change the .fcd file (OSGGeoSurfaceDistribution3D.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -71,8 +65,13 @@ An GeoSurfaceDistribution3D.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void GeoSurfaceDistribution3D::initMethod (void)
+void GeoSurfaceDistribution3D::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -91,7 +90,7 @@ Vec3f GeoSurfaceDistribution3D::generate(void) const
 void GeoSurfaceDistribution3D::generate(Pnt3f& Pos, Vec3f& Normal, Vec3f& Tangent) const
 {
 
-	if(getSurface() != NullFC && mAreaVector.size() > 0)
+	if(getSurface() != NULL && mAreaVector.size() > 0)
 	{
 	    Real32 Area( RandomPoolManager::getRandomReal32(0.0f, mAreaVector.back()) );
 	   
@@ -126,9 +125,9 @@ void GeoSurfaceDistribution3D::generate(Pnt3f& Pos, Vec3f& Normal, Vec3f& Tangen
 			+ t*(n3 - n1);
 
 
-	    Vec3f t1 = ti.getTexCoords7(0),
-			  t2 = ti.getTexCoords7(1),
-			  t3 = ti.getTexCoords7(2);
+	    Vec3f t1(ti.getTexCoords7(0).x(),ti.getTexCoords7(0).y(),0.0f),
+			  t2(ti.getTexCoords7(1).x(),ti.getTexCoords7(1).y(),0.0f),
+			  t3(ti.getTexCoords7(2).x(),ti.getTexCoords7(2).y(),0.0f);
 
 		Tangent = t1
 	     	+ s*(t2 - t1)
@@ -146,7 +145,7 @@ void GeoSurfaceDistribution3D::updateSurfaceArea(void)
 {
 	mAreaVector.clear();
 	
-	if(getSurface() != NullFC)
+	if(getSurface() != NULL)
 	{
 		TriangleIterator ti(getSurface());
 
@@ -163,7 +162,7 @@ void GeoSurfaceDistribution3D::updateSurfaceArea(void)
 			Real32 sideC =  p3.dist(p1); //osgsqrt((p3.x() - p1.x())*(p3.x() - p1.x()) + (p3.y() - p1.y())*(p3.y() - p1.y()) + (p3.z() - p1.z())*(p3.z() - p1.z()));
 			
 			//Heron's formula
-			Real32 area = (osgsqrt((sideA + sideB + sideC)*(sideA + sideB - sideC)*(sideB + sideC - sideA)*(sideC + sideA - sideB)))/4.0;
+			Real32 area = (osgSqrt((sideA + sideB + sideC)*(sideA + sideB - sideC)*(sideB + sideC - sideA)*(sideC + sideA - sideB)))/4.0;
 			
 			if(mAreaVector.size() ==0)
 			{
@@ -177,6 +176,7 @@ void GeoSurfaceDistribution3D::updateSurfaceArea(void)
 		}
 	}
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -199,10 +199,12 @@ GeoSurfaceDistribution3D::~GeoSurfaceDistribution3D(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void GeoSurfaceDistribution3D::changed(BitVector whichField, UInt32 origin)
+void GeoSurfaceDistribution3D::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
-	
+    Inherited::changed(whichField, origin, details);
+
 	if(whichField & SurfaceFieldMask)
 	{
 		//Update Surface Area Vector
@@ -210,7 +212,7 @@ void GeoSurfaceDistribution3D::changed(BitVector whichField, UInt32 origin)
 	}
 }
 
-void GeoSurfaceDistribution3D::dump(      UInt32    , 
+void GeoSurfaceDistribution3D::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump GeoSurfaceDistribution3D NI" << std::endl;

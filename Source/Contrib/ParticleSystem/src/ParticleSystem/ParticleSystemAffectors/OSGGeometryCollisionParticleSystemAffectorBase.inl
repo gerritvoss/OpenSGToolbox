@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,16 +55,15 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &GeometryCollisionParticleSystemAffectorBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 GeometryCollisionParticleSystemAffectorBase::getClassTypeId(void) 
+OSG::UInt32 GeometryCollisionParticleSystemAffectorBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
+    return _type.getId();
+}
 //! access the producer type of the class
 inline
 const EventProducerType &GeometryCollisionParticleSystemAffectorBase::getProducerClassType(void)
@@ -81,125 +78,75 @@ UInt32 GeometryCollisionParticleSystemAffectorBase::getProducerClassTypeId(void)
     return _producerType.getId();
 }
 
-//! create a new instance of the class
 inline
-GeometryCollisionParticleSystemAffectorPtr GeometryCollisionParticleSystemAffectorBase::create(void) 
+OSG::UInt16 GeometryCollisionParticleSystemAffectorBase::getClassGroupId(void)
 {
-    GeometryCollisionParticleSystemAffectorPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = GeometryCollisionParticleSystemAffectorPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getGroupId();
 }
-
-//! create an empty new instance of the class, do not copy the prototype
-inline
-GeometryCollisionParticleSystemAffectorPtr GeometryCollisionParticleSystemAffectorBase::createEmpty(void) 
-{ 
-    GeometryCollisionParticleSystemAffectorPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
-}
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the GeometryCollisionParticleSystemAffector::_mfCollisionAffectors field.
-inline
-const MFParticleAffectorPtr *GeometryCollisionParticleSystemAffectorBase::getMFCollisionAffectors(void) const
-{
-    return &_mfCollisionAffectors;
-}
-
-//! Get the GeometryCollisionParticleSystemAffector::_mfCollisionAffectors field.
-inline
-MFParticleAffectorPtr *GeometryCollisionParticleSystemAffectorBase::editMFCollisionAffectors(void)
-{
-    return &_mfCollisionAffectors;
-}
-
-//! Get the GeometryCollisionParticleSystemAffector::_sfCollisionNode field.
-inline
-const SFNodePtr *GeometryCollisionParticleSystemAffectorBase::getSFCollisionNode(void) const
-{
-    return &_sfCollisionNode;
-}
-
-//! Get the GeometryCollisionParticleSystemAffector::_sfCollisionNode field.
-inline
-SFNodePtr *GeometryCollisionParticleSystemAffectorBase::editSFCollisionNode(void)
-{
-    return &_sfCollisionNode;
-}
-
 
 //! Get the value of the GeometryCollisionParticleSystemAffector::_sfCollisionNode field.
 inline
-NodePtr &GeometryCollisionParticleSystemAffectorBase::editCollisionNode(void)
-{
-    return _sfCollisionNode.getValue();
-}
-
-//! Get the value of the GeometryCollisionParticleSystemAffector::_sfCollisionNode field.
-inline
-const NodePtr &GeometryCollisionParticleSystemAffectorBase::getCollisionNode(void) const
+Node * GeometryCollisionParticleSystemAffectorBase::getCollisionNode(void) const
 {
     return _sfCollisionNode.getValue();
 }
 
 //! Set the value of the GeometryCollisionParticleSystemAffector::_sfCollisionNode field.
 inline
-void GeometryCollisionParticleSystemAffectorBase::setCollisionNode(const NodePtr &value)
+void GeometryCollisionParticleSystemAffectorBase::setCollisionNode(Node * const value)
 {
+    editSField(CollisionNodeFieldMask);
+
     _sfCollisionNode.setValue(value);
 }
 
-
 //! Get the value of the \a index element the GeometryCollisionParticleSystemAffector::_mfCollisionAffectors field.
 inline
-ParticleAffectorPtr &GeometryCollisionParticleSystemAffectorBase::editCollisionAffectors(const UInt32 index)
+ParticleAffector * GeometryCollisionParticleSystemAffectorBase::getCollisionAffectors(const UInt32 index) const
 {
     return _mfCollisionAffectors[index];
 }
 
-//! Get the value of the \a index element the GeometryCollisionParticleSystemAffector::_mfCollisionAffectors field.
-inline
-const ParticleAffectorPtr &GeometryCollisionParticleSystemAffectorBase::getCollisionAffectors(const UInt32 index) const
-{
-    return _mfCollisionAffectors[index];
-}
 
-#ifndef OSG_2_PREP
-//! Get the GeometryCollisionParticleSystemAffector::_mfCollisionAffectors field.
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-MFParticleAffectorPtr &GeometryCollisionParticleSystemAffectorBase::getCollisionAffectors(void)
+void GeometryCollisionParticleSystemAffectorBase::execSync (      GeometryCollisionParticleSystemAffectorBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfCollisionAffectors;
-}
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-//! Get the GeometryCollisionParticleSystemAffector::_mfCollisionAffectors field.
-inline
-const MFParticleAffectorPtr &GeometryCollisionParticleSystemAffectorBase::getCollisionAffectors(void) const
-{
-    return _mfCollisionAffectors;
-}
+    if(FieldBits::NoField != (CollisionAffectorsFieldMask & whichField))
+        _mfCollisionAffectors.syncWith(pFrom->_mfCollisionAffectors,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
 
+    if(FieldBits::NoField != (CollisionNodeFieldMask & whichField))
+        _sfCollisionNode.syncWith(pFrom->_sfCollisionNode);
+}
 #endif
 
+
 inline
-EventConnection GeometryCollisionParticleSystemAffectorBase::attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
+const Char8 *GeometryCollisionParticleSystemAffectorBase::getClassname(void)
+{
+    return "GeometryCollisionParticleSystemAffector";
+}
+
+inline
+EventConnection GeometryCollisionParticleSystemAffectorBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
 {
     return _Producer.attachActivity(TheActivity, ProducedEventId);
 }
 
 inline
-bool GeometryCollisionParticleSystemAffectorBase::isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const
+bool GeometryCollisionParticleSystemAffectorBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
 {
     return _Producer.isActivityAttached(TheActivity, ProducedEventId);
 }
@@ -211,13 +158,13 @@ UInt32 GeometryCollisionParticleSystemAffectorBase::getNumActivitiesAttached(UIn
 }
 
 inline
-ActivityPtr GeometryCollisionParticleSystemAffectorBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
+ActivityRefPtr GeometryCollisionParticleSystemAffectorBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
 {
     return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
 }
 
 inline
-void GeometryCollisionParticleSystemAffectorBase::detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
+void GeometryCollisionParticleSystemAffectorBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
 {
     _Producer.detachActivity(TheActivity, ProducedEventId);
 }
@@ -229,7 +176,7 @@ UInt32 GeometryCollisionParticleSystemAffectorBase::getNumProducedEvents(void) c
 }
 
 inline
-const MethodDescription *GeometryCollisionParticleSystemAffectorBase::getProducedEventDescription(const Char8 *ProducedEventName) const
+const MethodDescription *GeometryCollisionParticleSystemAffectorBase::getProducedEventDescription(const std::string &ProducedEventName) const
 {
     return _Producer.getProducedEventDescription(ProducedEventName);
 }
@@ -241,7 +188,7 @@ const MethodDescription *GeometryCollisionParticleSystemAffectorBase::getProduce
 }
 
 inline
-UInt32 GeometryCollisionParticleSystemAffectorBase::getProducedEventId(const Char8 *ProducedEventName) const
+UInt32 GeometryCollisionParticleSystemAffectorBase::getProducedEventId(const std::string &ProducedEventName) const
 {
     return _Producer.getProducedEventId(ProducedEventName);
 }
@@ -259,4 +206,7 @@ EventProducerPtr &GeometryCollisionParticleSystemAffectorBase::editEventProducer
     return _sfEventProducer.getValue();
 }
 
+OSG_GEN_CONTAINERPTR(GeometryCollisionParticleSystemAffector);
+
 OSG_END_NAMESPACE
+

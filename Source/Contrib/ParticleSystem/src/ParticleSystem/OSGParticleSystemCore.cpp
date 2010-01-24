@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala                                                   *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,35 +40,28 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
+#include <cstdlib>
+#include <cstdio>
+
+#include <OSGConfig.h>
+
+#include "OSGParticleSystemCore.h"
+#include "OSGIntersectAction.h"
+#include "OSGRenderAction.h"
+#include "OSGSimpleGeometry.h"
+#include "OSGCamera.h"
+#include "OSGMatrix.h"
+#include "OSGQuaternion.h"
 #include <stdio.h>
 #include <vector>
 #include <iterator>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGIntersectAction.h>
-#include <OpenSG/OSGRenderAction.h>
-#include <OpenSG/OSGSimpleGeometry.h>
-#include <OpenSG/OSGCamera.h>
-#include <OpenSG/OSGMatrix.h>
-#include <OpenSG/OSGQuaternion.h>
-
-#include "OSGParticleSystemCore.h"
-
-
-
 OSG_BEGIN_NAMESPACE
 
-
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::ParticleSystemCore
-
-*/
+// Documentation for this class is emitted in the
+// OSGParticleSystemCoreBase.cpp file.
+// To modify it, please change the .fcd file (OSGParticleSystemCore.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -77,24 +70,32 @@ OSG_BEGIN_NAMESPACE
 ParticleSystemCore::ParticleSortByViewPosition ParticleSystemCore::TheSorter = ParticleSystemCore::ParticleSortByViewPosition();
 
 StatElemDesc<StatTimeElem> ParticleSystemCore::statParticleSortTime("ParticleSortTime", 
-                                                      "time for particles to be sorted");
+                                                                    "time for particles to be sorted");
+
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ParticleSystemCore::initMethod (void)
+void ParticleSystemCore::initMethod(InitPhase ePhase)
 {
-    DrawAction::registerEnterDefault(getClassType(),
-        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, ParticleSystemCorePtr,
-              CNodePtr, Action *>(&ParticleSystemCore::drawActionHandler));
+    Inherited::initMethod(ePhase);
 
-    IntersectAction::registerEnterDefault(getClassType(),
-        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, ParticleSystemCorePtr,
-              CNodePtr, Action *>(&ParticleSystemCore::intersect));
+    if(ePhase == TypeObject::SystemPost)
+    {
+        RenderAction::registerEnterDefault(
+            ParticleSystemCore::getClassType(),
+            reinterpret_cast<Action::Callback>(
+                &MaterialDrawable::renderActionEnterHandler));
 
-    RenderAction::registerEnterDefault(getClassType(),
-        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, ParticleSystemCorePtr,
-              CNodePtr, Action *>(&ParticleSystemCore::renderActionHandler));
+        RenderAction::registerLeaveDefault(
+            ParticleSystemCore::getClassType(),
+            reinterpret_cast<Action::Callback>(
+                &MaterialDrawable::renderActionLeaveHandler));
+
+        IntersectAction::registerEnterDefault(
+            ParticleSystemCore::getClassType(),
+            reinterpret_cast<Action::Callback>(&ParticleSystemCore::intersect));
+    }
 }
 
 
@@ -102,24 +103,24 @@ void ParticleSystemCore::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-Action::ResultE ParticleSystemCore::drawPrimitives (DrawActionBase *action)
+Action::ResultE ParticleSystemCore::drawPrimitives (DrawEnv *pEnv)
 {
     //If I have a Drawer tell it to draw the particles
-    if(getDrawer() != NullFC && getSystem() != NullFC)
+    if(getDrawer() != NULL && getSystem() != NULL)
     {
 		
 		checkAndInitializeSort();
-		sortParticles(action);
+		sortParticles(pEnv);
 
-		getDrawer()->draw(action, getSystem(), getSort());
+		getDrawer()->draw(pEnv, getSystem(), *getMFSort());
     }
     else
     {
-        if(getDrawer() == NullFC)
+        if(getDrawer() == NULL)
         {
             FWARNING(("ParticleSystemCore::draw: ParticleSystemDrawer is Null."));
         }
-        if(getSystem() == NullFC)
+        if(getSystem() == NULL)
         {
             FWARNING(("ParticleSystemCore::draw: ParticleSystem is Null."));
         }
@@ -128,7 +129,7 @@ Action::ResultE ParticleSystemCore::drawPrimitives (DrawActionBase *action)
     return Action::Continue;
 }
 
-std::vector<UInt32> ParticleSystemCore::intersect(const Line& Ray, Real32 IntersectionDistance) const
+std::vector<UInt32> ParticleSystemCore::intersectLine(const Line& Ray, Real32 IntersectionDistance) const
 {
     return getSystem()->intersect(Ray,IntersectionDistance,-1, getParents().front());
 }
@@ -136,68 +137,36 @@ std::vector<UInt32> ParticleSystemCore::intersect(const Line& Ray, Real32 Inters
 void ParticleSystemCore::checkAndInitializeSort(void)
 {
 
-	if(getSort().size() != getSystem()->getNumParticles() && getSortingMode() != NONE)
+	if(getMFSort()->size() != getSystem()->getNumParticles() && getSortingMode() != NONE)
 	{	// re-init _mfSort if there is a discrepency between number of particles in each
-		getSort().resize(getSystem()->getNumParticles());
+		editMFSort()->resize(getSystem()->getNumParticles());
 		//initialize _mfSort
 		for(UInt32 i(0); i < getSystem()->getNumParticles(); ++i)
 		{
-			getSort()[i] = i;
+			editSort(i) = i;
 		}
 	}
 
 }
 
-Action::ResultE ParticleSystemCore::drawActionHandler( Action* action )
+void ParticleSystemCore::fill(DrawableStatsAttachment *pStat)
 {
-    DrawAction *a = dynamic_cast<DrawAction*>(action);
-    Material::DrawFunctor func;
-
-    func=osgTypedMethodFunctor1ObjPtr(&(*this), 
-                                      &ParticleSystemCore::drawPrimitives);
-
-    if(a->getMaterial() != NULL)
+    if(getDrawer() == NULL)
     {
-        a->getMaterial()->draw(func, a);
+        FINFO(("ParticleSystemCore::fill(DrawableStatsAttachment *): "
+               "No Drawer Attached.\n"));
+
+        return;
     }
-    else if ( getMaterial() != NullFC )
+    if(getSystem() == NULL)
     {
-        getMaterial()->draw( func, a );
-    }
-    else
-    {
-        getDefaultMaterial()->draw( func, a );
-        FWARNING(("MaterialDrawable::draw:: no material!\n"));;
-    }
-    return Action::Continue;
-}
+        FINFO(("ParticleSystemCore::fill(DrawableStatsAttachment *): "
+               "No System Attached.\n"));
 
-Action::ResultE ParticleSystemCore::renderActionHandler( Action* action )
-{
-    RenderAction *a = dynamic_cast<RenderAction *>(action);
-
-    Material::DrawFunctor func;
-    func = osgTypedMethodFunctor1ObjPtr(this, 
-                                        &ParticleSystemCore::drawPrimitives);
-
-    Material* m = a->getMaterial();
-
-    if(m == NULL)
-    {
-        if(getMaterial() != NullFC)
-        {
-            m = getMaterial().getCPtr();
-        }
-        else
-        {
-            m = getDefaultMaterial().getCPtr();
-            FNOTICE(("MaterialDrawable::render: no Material!?!\n"));
-        }
+        return;
     }
 
-    a->dropFunctor(func, m);
-
-    return Action::Continue;
+    getDrawer()->fill(pStat, getSystem(), *getMFSort());
 }
 
 Action::ResultE ParticleSystemCore::intersect( Action* action )
@@ -211,22 +180,22 @@ void ParticleSystemCore::adjustVolume(Volume & volume)
     //Particle Drawer
 	Inherited::adjustVolume(volume);
 
-    if(getDrawer() != NullFC && getSystem() != NullFC)
+    if(getDrawer() != NULL && getSystem() != NULL)
     {
         getDrawer()->adjustVolume(getSystem(), volume);
     }
 }
 
 
-void ParticleSystemCore::sortParticles(DrawActionBase *action)
+void ParticleSystemCore::sortParticles(DrawEnv *pEnv)
 {
     //This should be called if the ParticleSystem has
     //just finished an update
 
 	//extract camera position
 	Pnt3f CameraLocation(0.0,0.0,0.0);
-	action->getCameraToWorld().mult(CameraLocation);
-    if(getSystem() != NullFC && getSortingMode() != NONE && _mfSort.size() > 0)
+    pEnv->getCameraToWorld().mult(CameraLocation,CameraLocation);
+    if(getSystem() != NULL && getSortingMode() != NONE && _mfSort.size() > 0)
     {
 		// initialize sort funcion struct
 		TheSorter = ParticleSortByViewPosition(getSystem(),CameraLocation,true);
@@ -251,13 +220,13 @@ void ParticleSystemCore::sortParticles(DrawActionBase *action)
     }
 }
 
-ParticleSystemCore::ParticleSortByViewPosition::ParticleSortByViewPosition(ParticleSystemPtr TheSystem, Pnt3f TheCameraPos, bool SortByMinimum) 
-	: _System(TheSystem), _CameraPos(TheCameraPos), _SortByMinimum(SortByMinimum)
+ParticleSystemCore::ParticleSortByViewPosition::ParticleSortByViewPosition(const ParticleSystem* TheSystem, Pnt3f TheCameraPos, bool SortByMinimum) 
+	: _System(TheSystem), _CameraPos(TheCameraPos.subZero()), _SortByMinimum(SortByMinimum)
 {
 }
 
 ParticleSystemCore::ParticleSortByViewPosition::ParticleSortByViewPosition() 
-	: _System(NULL), _CameraPos(Pnt3f(0.0,0.0,0.0)), _SortByMinimum(true)
+	: _System(NULL), _CameraPos(Vec3f(0.0,0.0,0.0)), _SortByMinimum(true)
 {
 }
 
@@ -298,7 +267,6 @@ int qSortComp(const void * a, const void * b)
 	return ret;
 }
 
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -307,13 +275,13 @@ int qSortComp(const void * a, const void * b)
 
 ParticleSystemCore::ParticleSystemCore(void) :
     Inherited(),
-    _SystemUpdateListener(ParticleSystemCorePtr(this))
+    _SystemUpdateListener(ParticleSystemCoreRefPtr(this))
 {
 }
 
 ParticleSystemCore::ParticleSystemCore(const ParticleSystemCore &source) :
     Inherited(source),
-    _SystemUpdateListener(ParticleSystemCorePtr(this))
+    _SystemUpdateListener(ParticleSystemCoreRefPtr(this))
 {
 }
 
@@ -323,140 +291,128 @@ ParticleSystemCore::~ParticleSystemCore(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void ParticleSystemCore::changed(BitVector whichField, UInt32 origin)
+void ParticleSystemCore::changed(ConstFieldMaskArg whichField, 
+                                 UInt32            origin,
+                                 BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 
     if(whichField & SystemFieldMask &&
-        getSystem() != NullFC)
+       getSystem() != NULL)
     {
         getSystem()->addParticleSystemListener(&_SystemUpdateListener);
     }
     if(((whichField & SystemFieldMask) || (whichField & ParentsFieldMask))
-        && getParents().size() > 0)
+       && _mfParents.size() > 0)
     {
-        beginEditCP(getSystem(), ParticleSystem::BeaconFieldMask);
-            getSystem()->setBeacon(getParents().front());
-        endEditCP(getSystem(), ParticleSystem::BeaconFieldMask);
+        getSystem()->setBeacon(dynamic_cast<Node*>(_mfParents.front()));
+    }
+    if((whichField & ParentsFieldMask)
+       && _mfParents.size() > 1)
+    {
+        SWARNING << "ParticleSystemCore: Cannot have a single instance of"
+                    "ParticleSystemCore attached to more than 1 Node." << std::cout;
     }
 
     if(whichField & SystemFieldMask ||
        whichField & DrawerFieldMask)
     {
-         for(UInt32 i = 0; i < getParents().size(); i++)
-         {
-             getParents()[i]->invalidateVolume();
-         }
+        for(UInt32 i = 0; i < _mfParents.size(); i++)
+        {
+            _mfParents[i]->invalidateVolume();
+        }
     }
 
-	if((whichField & SystemFieldMask) || (whichField & SortFieldMask))
-	{
-		if(getSystem() != NullFC)
-		{
-			getSort().resize(getSystem()->getNumParticles());
-			//initialize _mfSort
-			for(UInt32 i(0); i < getSystem()->getNumParticles(); ++i)
-			{
-				getSort()[i] = i;
-			}
-		}
-		else
-		{
-			getSort().clear();
-		}
-	}
+    if((whichField & SystemFieldMask) || (whichField & SortFieldMask))
+    {
+        if(getSystem() != NULL)
+        {
+            if(getMFSort()->size() != getSystem()->getNumParticles())
+            {
+                editMFSort()->resize(getSystem()->getNumParticles());
+
+                //initialize _mfSort
+                for(UInt32 i(0); i < getSystem()->getNumParticles(); ++i)
+                {
+                    editSort(i) = i;
+                }
+            }
+        }
+        else
+        {
+            if(getMFSort()->size() != 0)
+            {
+                editMFSort()->clear();
+            }
+        }
+    }
 }
 
-void ParticleSystemCore::dump(      UInt32    , 
-                         const BitVector ) const
+void ParticleSystemCore::dump(      UInt32    ,
+                                    const BitVector ) const
 {
     SLOG << "Dump ParticleSystemCore NI" << std::endl;
 }
 
-void ParticleSystemCore::SystemUpdateListener::systemUpdated(const ParticleSystemEventPtr e)
+void ParticleSystemCore::SystemUpdateListener::systemUpdated(const ParticleSystemEventUnrecPtr e)
 {
     //Do nothing
 }
 
-void ParticleSystemCore::SystemUpdateListener::volumeChanged(const ParticleSystemEventPtr e)
+void ParticleSystemCore::SystemUpdateListener::volumeChanged(const ParticleSystemEventUnrecPtr e)
 {
-     for(UInt32 i = 0; i < _Core->getParents().size(); i++)
-     {
-         _Core->getParents()[i]->invalidateVolume();
-     }
+    for(UInt32 i = 0; i < _Core->getParents().size(); i++)
+    {
+        _Core->getParents()[i]->invalidateVolume();
+    }
 }
 
-void ParticleSystemCore::SystemUpdateListener::particleGenerated(const ParticleEventPtr e)
+void ParticleSystemCore::SystemUpdateListener::particleGenerated(const ParticleEventUnrecPtr e)
 {
-	_Core->handleParticleGenerated(e);
+    _Core->handleParticleGenerated(e);
 }
 
-void ParticleSystemCore::SystemUpdateListener::particleKilled(const ParticleEventPtr e)
+void ParticleSystemCore::SystemUpdateListener::particleKilled(const ParticleEventUnrecPtr e)
 {
-	_Core->handleParticleKilled(e);
+    _Core->handleParticleKilled(e);
 }
 
-void ParticleSystemCore::SystemUpdateListener::particleStolen(const ParticleEventPtr e)
+void ParticleSystemCore::SystemUpdateListener::particleStolen(const ParticleEventUnrecPtr e)
 {
-	_Core->handleParticleStolen(e);
+    _Core->handleParticleStolen(e);
 }
 
 
-void ParticleSystemCore::handleParticleGenerated(const ParticleEventPtr e)
+void ParticleSystemCore::handleParticleGenerated(const ParticleEventUnrecPtr e)
 {
-	//add particle to _mfSort
-	if(getSortingMode() != NONE) getSort().addValue(getSort().size());
+    //add particle to _mfSort
+    if(getSortingMode() != NONE) editMFSort()->push_back(getMFSort()->size());
 }
 
-void ParticleSystemCore::handleParticleKilled(const ParticleEventPtr e)
+void ParticleSystemCore::handleParticleKilled(const ParticleEventUnrecPtr e)
 {
-	// remove highest indexed particle from _mfSort
-	for(MFUInt32::iterator theItor = _mfSort.begin(); theItor != _mfSort.end(); ++theItor)
-	{
-		if((*theItor) == _mfSort.size() - 1 ) 
-		{
-			_mfSort.erase(theItor);
-			break;
-		}
-	}
+    // remove highest indexed particle from _mfSort
+    for(MFUInt32::iterator theItor = _mfSort.begin(); theItor != _mfSort.end(); ++theItor)
+    {
+        if((*theItor) == _mfSort.size() - 1 ) 
+        {
+            _mfSort.erase(theItor);
+            break;
+        }
+    }
 }
 
-void ParticleSystemCore::handleParticleStolen(const ParticleEventPtr e)
+void ParticleSystemCore::handleParticleStolen(const ParticleEventUnrecPtr e)
 {
-	// remove particle from _mfSort
-	for(MFUInt32::iterator theItor = _mfSort.begin(); theItor != _mfSort.end(); ++theItor)
-	{
-		if((int)*theItor == _mfSort.size() - 1 ) 
-		{
-			_mfSort.erase(theItor);
-			break;
-		}
-	}
+    // remove particle from _mfSort
+    for(MFUInt32::iterator theItor = _mfSort.begin(); theItor != _mfSort.end(); ++theItor)
+    {
+        if((int)*theItor == _mfSort.size() - 1 ) 
+        {
+            _mfSort.erase(theItor);
+            break;
+        }
+    }
 }
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGPARTICLESYSTEMCOREBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPARTICLESYSTEMCOREBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGPARTICLESYSTEMCOREFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
-

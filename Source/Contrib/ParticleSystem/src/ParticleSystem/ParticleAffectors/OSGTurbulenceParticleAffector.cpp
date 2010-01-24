@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                 Authors: David Kabala , Daniel Guilliams                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,27 +40,24 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGMatrix.h>
-#include <OpenSG/OSGQuaternion.h>
+#include <OSGConfig.h>
 
 #include "OSGTurbulenceParticleAffector.h"
-#include "ParticleSystem/OSGParticleSystem.h"
+#include "OSGMatrix.h"
+#include "OSGQuaternion.h"
+#include "OSGPerlinNoiseDistribution1D.h"
+
+#include "OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::TurbulenceParticleAffector
-
-*/
+// Documentation for this class is emitted in the
+// OSGTurbulenceParticleAffectorBase.cpp file.
+// To modify it, please change the .fcd file (OSGTurbulenceParticleAffector.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -70,8 +67,13 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void TurbulenceParticleAffector::initMethod (void)
+void TurbulenceParticleAffector::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -79,9 +81,9 @@ void TurbulenceParticleAffector::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool TurbulenceParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps)
+bool TurbulenceParticleAffector::affect(ParticleSystemRefPtr System, Int32 ParticleIndex, const Time& elps)
 {
-	if(getBeacon() != NullFC)
+	if(getBeacon() != NULL)
 	{	
 		Matrix BeaconToWorld(getBeacon()->getToWorld());
 		Vec3f translation, tmp;
@@ -104,7 +106,8 @@ bool TurbulenceParticleAffector::affect(ParticleSystemPtr System, Int32 Particle
 			Zparam = getPerlinDistribution()->generate(pos[2]);
 
 			Vec3f fieldAffect(Vec3f(Xparam, Yparam, Zparam));
-			fieldAffect *= getAmplitude()* (elps/(osg::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax())));
+			fieldAffect = fieldAffect * (getAmplitude()*
+                                          (elps/(OSG::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax()))));
 
 			System->setVelocity(System->getVelocity(ParticleIndex) + fieldAffect, ParticleIndex);
 
@@ -113,19 +116,20 @@ bool TurbulenceParticleAffector::affect(ParticleSystemPtr System, Int32 Particle
 
 	return false;
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
-bool TurbulenceParticleAffector::distributionIsNotInitialized()
+bool TurbulenceParticleAffector::distributionIsNotInitialized(void)
 {
-	PerlinNoiseDistribution1DPtr dist(getPerlinDistribution());
-	
-	return (1.0f != getAmplitude() ||
-		dist->getPersistance() != getPersistance() ||
-		dist->getOctaves() != getOctaves() ||
-		dist->getInterpolationType() != getInterpolationType() ||
-		dist->getFrequency() != getFrequency());
+    PerlinNoiseDistribution1DRefPtr dist(getPerlinDistribution());
+
+    return (1.0f != getAmplitude() ||
+            dist->getPersistance() != getPersistance() ||
+            dist->getOctaves() != getOctaves() ||
+            dist->getInterpolationType() != getInterpolationType() ||
+            dist->getFrequency() != getFrequency());
 }
 
 /*----------------------- constructors & destructors ----------------------*/
@@ -146,66 +150,62 @@ TurbulenceParticleAffector::~TurbulenceParticleAffector(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void TurbulenceParticleAffector::changed(BitVector whichField, UInt32 origin)
+void TurbulenceParticleAffector::onCreate(const TurbulenceParticleAffector *Id)
 {
-    Inherited::changed(whichField, origin);
-
-	if(getPerlinDistribution() == NullFC || distributionIsNotInitialized())
-	{
-		setPerlinDistribution(osg::PerlinNoiseDistribution1D::create());
-		beginEditCP(getPerlinDistribution());
-			getPerlinDistribution()->setFrequency(getFrequency());
-			getPerlinDistribution()->setPersistance(getPersistance());
-			getPerlinDistribution()->setOctaves(getOctaves());
-			getPerlinDistribution()->setAmplitude(1.0f);
-			getPerlinDistribution()->setInterpolationType(getInterpolationType());
-			getPerlinDistribution()->setPhase(getPhase()[0]);
-			getPerlinDistribution()->setUseSmoothing(true);
-		endEditCP(getPerlinDistribution());
-	}
-	if(whichField & PersistanceFieldMask)
-	{
-		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::PersistanceFieldMask);
-			getPerlinDistribution()->setPersistance(getPersistance());
-		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::PersistanceFieldMask);
-	} 
-	else if (whichField & FrequencyFieldMask)
-	{
-		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::FrequencyFieldMask);
-			getPerlinDistribution()->setFrequency(getFrequency());
-		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::FrequencyFieldMask);
-	} 
-	else if (whichField & InterpolationTypeFieldMask)
-	{
-		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::InterpolationTypeFieldMask);
-			getPerlinDistribution()->setInterpolationType(getInterpolationType());
-		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::InterpolationTypeFieldMask);
-	} 
-	else if (whichField & OctavesFieldMask)
-	{
-		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::OctavesFieldMask);
-			getPerlinDistribution()->setOctaves(getOctaves());
-		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::OctavesFieldMask);
-	} 
-	else if (whichField & AmplitudeFieldMask )
-	{
-		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::AmplitudeFieldMask);
-			getPerlinDistribution()->setAmplitude(1.0f);
-		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::AmplitudeFieldMask);
-	}
-	else if (whichField & PhaseFieldMask )
-	{
-		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::PhaseFieldMask);
-			getPerlinDistribution()->setPhase(getPhase()[0]);
-		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::PhaseFieldMask);
-	}
+    PerlinNoiseDistribution1DRefPtr Dist = PerlinNoiseDistribution1D::create();
+    this->setPerlinDistribution(Dist);
 }
 
-void TurbulenceParticleAffector::dump(      UInt32    , 
+void TurbulenceParticleAffector::onDestroy()
+{
+}
+
+void TurbulenceParticleAffector::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
+{
+    Inherited::changed(whichField, origin, details);
+
+    if(distributionIsNotInitialized())
+    {
+        getPerlinDistribution()->setFrequency(getFrequency());
+        getPerlinDistribution()->setPersistance(getPersistance());
+        getPerlinDistribution()->setOctaves(getOctaves());
+        getPerlinDistribution()->setAmplitude(1.0f);
+        getPerlinDistribution()->setInterpolationType(getInterpolationType());
+        getPerlinDistribution()->setPhase(getPhase()[0]);
+        getPerlinDistribution()->setUseSmoothing(true);
+    }
+    if(whichField & PersistanceFieldMask)
+    {
+        getPerlinDistribution()->setPersistance(getPersistance());
+    } 
+    else if (whichField & FrequencyFieldMask)
+    {
+        getPerlinDistribution()->setFrequency(getFrequency());
+    } 
+    else if (whichField & InterpolationTypeFieldMask)
+    {
+        getPerlinDistribution()->setInterpolationType(getInterpolationType());
+    } 
+    else if (whichField & OctavesFieldMask)
+    {
+        getPerlinDistribution()->setOctaves(getOctaves());
+    } 
+    else if (whichField & AmplitudeFieldMask )
+    {
+        getPerlinDistribution()->setAmplitude(1.0f);
+    }
+    else if (whichField & PhaseFieldMask )
+    {
+        getPerlinDistribution()->setPhase(getPhase()[0]);
+    }
+}
+
+void TurbulenceParticleAffector::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump TurbulenceParticleAffector NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

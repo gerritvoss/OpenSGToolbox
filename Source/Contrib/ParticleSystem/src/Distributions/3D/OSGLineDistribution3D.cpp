@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Dynamics                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,23 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGLineDistribution3D.h"
-#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
+#include "OSGRandomPoolManager.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::LineDistribution3D
-An LineDistribution3D. 	
-*/
+// Documentation for this class is emitted in the
+// OSGLineDistribution3DBase.cpp file.
+// To modify it, please change the .fcd file (OSGLineDistribution3D.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -66,8 +63,13 @@ An LineDistribution3D.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void LineDistribution3D::initMethod (void)
+void LineDistribution3D::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -102,16 +104,17 @@ LineDistribution3D::~LineDistribution3D(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void LineDistribution3D::changed(BitVector whichField, UInt32 origin)
+void LineDistribution3D::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void LineDistribution3D::dump(      UInt32    , 
+void LineDistribution3D::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump LineDistribution3D NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

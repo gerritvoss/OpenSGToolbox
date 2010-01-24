@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Dynamics                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,23 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGGaussianNormalDistribution2D.h"
-#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
+#include "OSGRandomPoolManager.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::GaussianNormalDistribution2D
-An GaussianNormalDistribution2D. 	
-*/
+// Documentation for this class is emitted in the
+// OSGGaussianNormalDistribution2DBase.cpp file.
+// To modify it, please change the .fcd file (OSGGaussianNormalDistribution2D.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -66,23 +63,30 @@ An GaussianNormalDistribution2D.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void GaussianNormalDistribution2D::initMethod (void)
+void GaussianNormalDistribution2D::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
 Vec2f GaussianNormalDistribution2D::generate(void) const
 {
     //Use the Box-Muller method for generating 3 normally distributed values
-    Real32 X(osgsqrt(-2.0f * osglog(1.0f - RandomPoolManager::getRandomReal32(0.0,1.0)))* osgcos(6.283185f * RandomPoolManager::getRandomReal32(0.0,1.0))*getStandardDeviationX() + getMean().x());
+    Real32 X(osgSqrt(-2.0f * osgLog(1.0f - RandomPoolManager::getRandomReal32(0.0,1.0)))* osgCos(6.283185f * RandomPoolManager::getRandomReal32(0.0,1.0))*getStandardDeviationX() + getMean().x());
 
-    Real32 Y(osgsqrt(-2.0f * osglog(1.0f - RandomPoolManager::getRandomReal32(0.0,1.0)))* osgcos(6.283185f * RandomPoolManager::getRandomReal32(0.0,1.0))*getStandardDeviationY() + getMean().y());
+    Real32 Y(osgSqrt(-2.0f * osgLog(1.0f - RandomPoolManager::getRandomReal32(0.0,1.0)))* osgCos(6.283185f * RandomPoolManager::getRandomReal32(0.0,1.0))*getStandardDeviationY() + getMean().y());
     
     return Vec2f(X, Y);
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -105,16 +109,17 @@ GaussianNormalDistribution2D::~GaussianNormalDistribution2D(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void GaussianNormalDistribution2D::changed(BitVector whichField, UInt32 origin)
+void GaussianNormalDistribution2D::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void GaussianNormalDistribution2D::dump(      UInt32    , 
+void GaussianNormalDistribution2D::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump GaussianNormalDistribution2D NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

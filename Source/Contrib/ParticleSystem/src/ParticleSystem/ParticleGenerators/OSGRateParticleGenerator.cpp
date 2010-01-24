@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,26 +40,22 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
+#include <OSGConfig.h>
 
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
 #include "OSGRateParticleGenerator.h"
-#include "ParticleSystem/OSGParticleSystem.h"
-
+#include "OSGRandomPoolManager.h"
+#include "OSGRateParticleGenerator.h"
+#include "OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::RateParticleGenerator
-
-*/
+// Documentation for this class is emitted in the
+// OSGRateParticleGeneratorBase.cpp file.
+// To modify it, please change the .fcd file (OSGRateParticleGenerator.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -69,8 +65,13 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void RateParticleGenerator::initMethod (void)
+void RateParticleGenerator::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -78,7 +79,7 @@ void RateParticleGenerator::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool RateParticleGenerator::generate(ParticleSystemPtr System, const Time& elps)
+bool RateParticleGenerator::generate(ParticleSystemRefPtr System, const Time& elps)
 {
 	setTimeSinceLastGeneration(getTimeSinceLastGeneration()+elps);
 	Real32 SecPerParticle(0.0f);
@@ -120,8 +121,8 @@ bool RateParticleGenerator::generate(ParticleSystemPtr System, const Time& elps)
 
 RateParticleGenerator::RateParticleGenerator(void) :
     Inherited(),
-		_IsRateZero(false),
-        _NormalDistribution(0.0,1.0)
+    _IsRateZero(false),
+    _NormalDistribution(0.0,1.0)
 {
 }
 
@@ -138,9 +139,11 @@ RateParticleGenerator::~RateParticleGenerator(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void RateParticleGenerator::changed(BitVector whichField, UInt32 origin)
+void RateParticleGenerator::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 
     if(whichField & GenerationRateFieldMask)
     {
@@ -158,32 +161,10 @@ void RateParticleGenerator::changed(BitVector whichField, UInt32 origin)
     }
 }
 
-void RateParticleGenerator::dump(      UInt32    , 
+void RateParticleGenerator::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump RateParticleGenerator NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,132 +55,131 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &CollectiveGravityParticleSystemAffectorBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 CollectiveGravityParticleSystemAffectorBase::getClassTypeId(void) 
+OSG::UInt32 CollectiveGravityParticleSystemAffectorBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-CollectiveGravityParticleSystemAffectorPtr CollectiveGravityParticleSystemAffectorBase::create(void) 
-{
-    CollectiveGravityParticleSystemAffectorPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = CollectiveGravityParticleSystemAffectorPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-CollectiveGravityParticleSystemAffectorPtr CollectiveGravityParticleSystemAffectorBase::createEmpty(void) 
-{ 
-    CollectiveGravityParticleSystemAffectorPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 CollectiveGravityParticleSystemAffectorBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the CollectiveGravityParticleSystemAffector::_sfParticleMass field.
-inline
-SFReal32 *CollectiveGravityParticleSystemAffectorBase::getSFParticleMass(void)
-{
-    return &_sfParticleMass;
-}
-
-//! Get the CollectiveGravityParticleSystemAffector::_sfGravitationalConstant field.
-inline
-SFReal32 *CollectiveGravityParticleSystemAffectorBase::getSFGravitationalConstant(void)
-{
-    return &_sfGravitationalConstant;
-}
-
-//! Get the CollectiveGravityParticleSystemAffector::_sfParticleMassSource field.
-inline
-SFUInt32 *CollectiveGravityParticleSystemAffectorBase::getSFParticleMassSource(void)
-{
-    return &_sfParticleMassSource;
-}
-
-
 //! Get the value of the CollectiveGravityParticleSystemAffector::_sfParticleMass field.
+
 inline
-Real32 &CollectiveGravityParticleSystemAffectorBase::getParticleMass(void)
+Real32 &CollectiveGravityParticleSystemAffectorBase::editParticleMass(void)
 {
+    editSField(ParticleMassFieldMask);
+
     return _sfParticleMass.getValue();
 }
 
 //! Get the value of the CollectiveGravityParticleSystemAffector::_sfParticleMass field.
 inline
-const Real32 &CollectiveGravityParticleSystemAffectorBase::getParticleMass(void) const
+      Real32  CollectiveGravityParticleSystemAffectorBase::getParticleMass(void) const
 {
     return _sfParticleMass.getValue();
 }
 
 //! Set the value of the CollectiveGravityParticleSystemAffector::_sfParticleMass field.
 inline
-void CollectiveGravityParticleSystemAffectorBase::setParticleMass(const Real32 &value)
+void CollectiveGravityParticleSystemAffectorBase::setParticleMass(const Real32 value)
 {
+    editSField(ParticleMassFieldMask);
+
     _sfParticleMass.setValue(value);
 }
-
 //! Get the value of the CollectiveGravityParticleSystemAffector::_sfGravitationalConstant field.
+
 inline
-Real32 &CollectiveGravityParticleSystemAffectorBase::getGravitationalConstant(void)
+Real32 &CollectiveGravityParticleSystemAffectorBase::editGravitationalConstant(void)
 {
+    editSField(GravitationalConstantFieldMask);
+
     return _sfGravitationalConstant.getValue();
 }
 
 //! Get the value of the CollectiveGravityParticleSystemAffector::_sfGravitationalConstant field.
 inline
-const Real32 &CollectiveGravityParticleSystemAffectorBase::getGravitationalConstant(void) const
+      Real32  CollectiveGravityParticleSystemAffectorBase::getGravitationalConstant(void) const
 {
     return _sfGravitationalConstant.getValue();
 }
 
 //! Set the value of the CollectiveGravityParticleSystemAffector::_sfGravitationalConstant field.
 inline
-void CollectiveGravityParticleSystemAffectorBase::setGravitationalConstant(const Real32 &value)
+void CollectiveGravityParticleSystemAffectorBase::setGravitationalConstant(const Real32 value)
 {
+    editSField(GravitationalConstantFieldMask);
+
     _sfGravitationalConstant.setValue(value);
 }
-
 //! Get the value of the CollectiveGravityParticleSystemAffector::_sfParticleMassSource field.
+
 inline
-UInt32 &CollectiveGravityParticleSystemAffectorBase::getParticleMassSource(void)
+UInt32 &CollectiveGravityParticleSystemAffectorBase::editParticleMassSource(void)
 {
+    editSField(ParticleMassSourceFieldMask);
+
     return _sfParticleMassSource.getValue();
 }
 
 //! Get the value of the CollectiveGravityParticleSystemAffector::_sfParticleMassSource field.
 inline
-const UInt32 &CollectiveGravityParticleSystemAffectorBase::getParticleMassSource(void) const
+      UInt32  CollectiveGravityParticleSystemAffectorBase::getParticleMassSource(void) const
 {
     return _sfParticleMassSource.getValue();
 }
 
 //! Set the value of the CollectiveGravityParticleSystemAffector::_sfParticleMassSource field.
 inline
-void CollectiveGravityParticleSystemAffectorBase::setParticleMassSource(const UInt32 &value)
+void CollectiveGravityParticleSystemAffectorBase::setParticleMassSource(const UInt32 value)
 {
+    editSField(ParticleMassSourceFieldMask);
+
     _sfParticleMassSource.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void CollectiveGravityParticleSystemAffectorBase::execSync (      CollectiveGravityParticleSystemAffectorBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGCOLLECTIVEGRAVITYPARTICLESYSTEMAFFECTORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (ParticleMassFieldMask & whichField))
+        _sfParticleMass.syncWith(pFrom->_sfParticleMass);
+
+    if(FieldBits::NoField != (GravitationalConstantFieldMask & whichField))
+        _sfGravitationalConstant.syncWith(pFrom->_sfGravitationalConstant);
+
+    if(FieldBits::NoField != (ParticleMassSourceFieldMask & whichField))
+        _sfParticleMassSource.syncWith(pFrom->_sfParticleMassSource);
+}
+#endif
+
+
+inline
+const Char8 *CollectiveGravityParticleSystemAffectorBase::getClassname(void)
+{
+    return "CollectiveGravityParticleSystemAffector";
+}
+
+
+OSG_GEN_CONTAINERPTR(CollectiveGravityParticleSystemAffector);
+
+OSG_END_NAMESPACE
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,26 +40,21 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
-#include <boost/bind.hpp>
+#include <OSGConfig.h>
 
 #include "OSGCollisionParticleSystemAffector.h"
-#include "ParticleSystem/OSGParticleSystem.h"
+#include "OSGParticleSystem.h"
+#include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::CollisionParticleSystemAffector
-
-*/
+// Documentation for this class is emitted in the
+// OSGCollisionParticleSystemAffectorBase.cpp file.
+// To modify it, please change the .fcd file (OSGCollisionParticleSystemAffector.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -69,8 +64,13 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void CollisionParticleSystemAffector::initMethod (void)
+void CollisionParticleSystemAffector::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -78,11 +78,11 @@ void CollisionParticleSystemAffector::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void CollisionParticleSystemAffector::affect(ParticleSystemPtr System, const Time& elps)
+void CollisionParticleSystemAffector::affect(ParticleSystemRefPtr System, const Time& elps)
 {
     UInt32 PrimaryNumParticles(System->getNumParticles());
     Real32 MinDistSqr(getCollisionDistance() * getCollisionDistance());
-    DynamicVolume PrimaryVolume,SecondaryVolume;
+    BoxVolume PrimaryVolume,SecondaryVolume;
     Matrix PrimaryMat(System->getBeacon()->getToWorld()),SecondaryMat;
 
     //Get the World Volume of the primary particle System
@@ -92,7 +92,7 @@ void CollisionParticleSystemAffector::affect(ParticleSystemPtr System, const Tim
     Pnt3f PrimaryPos,SecondaryPos;
 
     //Loop through all of the Collidable Systems
-    for(UInt32 i(0) ; i<getSecondaryCollisionSystems().size() ; ++i)
+    for(UInt32 i(0) ; i<getMFSecondaryCollisionSystems()->size() ; ++i)
     {
         //Get the Volume of the Secondary System in world space
         SecondaryMat = System->getBeacon()->getToWorld();
@@ -116,7 +116,7 @@ void CollisionParticleSystemAffector::affect(ParticleSystemPtr System, const Tim
                     //Check if the points are close enough
                     if(MinDistSqr >= PrimaryPos.dist2(SecondaryPos))
                     {
-                        produceCollision(ParticleCollisionEvent::create(CollisionParticleSystemAffectorPtr(this),
+                        produceCollision(ParticleCollisionEvent::create(CollisionParticleSystemAffectorRefPtr(this),
                                     getTimeStamp(),
                                     System,
                                     PrimaryIndex,
@@ -153,7 +153,8 @@ void CollisionParticleSystemAffector::removeParticleCollisionListener(ParticleCo
    }
 }
 
-void CollisionParticleSystemAffector::produceCollision(const ParticleCollisionEventPtr Event)
+void CollisionParticleSystemAffector::produceCollision(const
+                                                       ParticleCollisionEventUnrecPtr Event)
 {
     for(ParticleCollisionListenerSetItor SetItor(_ParticleCollisionListeners.begin()) ; SetItor != _ParticleCollisionListeners.end() ; ++SetItor)
     {
@@ -184,17 +185,17 @@ CollisionParticleSystemAffector::~CollisionParticleSystemAffector(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void CollisionParticleSystemAffector::changed(BitVector whichField, UInt32 origin)
+void CollisionParticleSystemAffector::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void CollisionParticleSystemAffector::dump(      UInt32    , 
+void CollisionParticleSystemAffector::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump CollisionParticleSystemAffector NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -38,8 +38,6 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 inline 
@@ -51,79 +49,79 @@ bool ParticleSystem::GreaterThanUInt32::operator()(const UInt32 s1, const UInt32
 inline
 void ParticleSystem::setPosition(const Pnt3f& Pos, const UInt32& Index)
 {
-    getInternalPositions()[Index] = Pos;
+    editInternalPositions(Index) = Pos;
 }
 
 inline
 const Pnt3f& ParticleSystem::getPosition(const UInt32& Index) const
 {
-	return getInternalPositions()[Index];
+	return getInternalPositions(Index);
 }
 
 inline
 UInt32 ParticleSystem::getNumParticles(void) const
 {
-	return getInternalPositions().getSize();
+	return getMFInternalPositions()->size();
 }
 
 inline
 UInt32 ParticleSystem::getNumSecPositions(void) const
 {
-	return getInternalSecPositions().getSize();
+	return getMFInternalSecPositions()->size();
 }
 
 inline
 UInt32 ParticleSystem::getNumNormals(void) const
 {
-	return getInternalNormals().getSize();
+	return getMFInternalNormals()->size();
 }
 
 inline
 UInt32 ParticleSystem::getNumColors(void) const
 {
-	return getInternalColors().getSize();
+	return getMFInternalColors()->size();
 }
 
 inline
 UInt32 ParticleSystem::getNumSizes(void) const
 {
-	return getInternalSizes().getSize();
+	return getMFInternalSizes()->size();
 }
 
 inline
 UInt32 ParticleSystem::getNumLifespans(void) const
 {
-	return getInternalLifespans().getSize();
+	return getMFInternalLifespans()->size();
 }
 
 inline
 UInt32 ParticleSystem::getNumAges(void) const
 {
-	return getInternalAges().getSize();
+	return getMFInternalAges()->size();
 }
 
 inline
 UInt32 ParticleSystem::getNumVelocities(void) const
 {
-	return getInternalVelocities().getSize();
+	return getMFInternalVelocities()->size();
 }
 
 inline
 UInt32 ParticleSystem::getNumSecVelocities(void) const
 {
-	return getInternalSecVelocities().getSize();
+	return getMFInternalSecVelocities()->size();
 }
 
 inline
 UInt32 ParticleSystem::getNumAccelerations(void) const
 {
-	return getInternalAccelerations().getSize();
+	return getMFInternalAccelerations()->size();
 }
 
 inline
 UInt32 ParticleSystem::getNumAttributes(void) const
 {
-	return getInternalAttributes().getSize();
+	return getMFInternalAttributes()->size();
 }
 
 inline
@@ -147,5 +145,11 @@ void ParticleSystem::detachUpdateProducer(void)
 {
     _UpdateEventConnection.disconnect();
 }
-OSG_END_NAMESPACE
 
+inline
+bool ParticleSystem::isUpdating(void) const
+{
+    return _isUpdating;
+}
+
+OSG_END_NAMESPACE

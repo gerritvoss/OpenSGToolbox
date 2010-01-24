@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,246 +50,537 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEDISCPARTICLESYSTEMDRAWERINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGDiscParticleSystemDrawerBase.h"
 #include "OSGDiscParticleSystemDrawer.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  DiscParticleSystemDrawerBase::RadiusFieldMask = 
-    (TypeTraits<BitVector>::One << DiscParticleSystemDrawerBase::RadiusFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  DiscParticleSystemDrawerBase::SegmentsFieldMask = 
-    (TypeTraits<BitVector>::One << DiscParticleSystemDrawerBase::SegmentsFieldId);
+/*! \class OSG::DiscParticleSystemDrawer
+    
+ */
 
-const OSG::BitVector  DiscParticleSystemDrawerBase::NormalSourceFieldMask = 
-    (TypeTraits<BitVector>::One << DiscParticleSystemDrawerBase::NormalSourceFieldId);
-
-const OSG::BitVector  DiscParticleSystemDrawerBase::NormalFieldMask = 
-    (TypeTraits<BitVector>::One << DiscParticleSystemDrawerBase::NormalFieldId);
-
-const OSG::BitVector  DiscParticleSystemDrawerBase::UpSourceFieldMask = 
-    (TypeTraits<BitVector>::One << DiscParticleSystemDrawerBase::UpSourceFieldId);
-
-const OSG::BitVector  DiscParticleSystemDrawerBase::UpFieldMask = 
-    (TypeTraits<BitVector>::One << DiscParticleSystemDrawerBase::UpFieldId);
-
-const OSG::BitVector  DiscParticleSystemDrawerBase::UseNormalAsObjectSpaceRotationFieldMask = 
-    (TypeTraits<BitVector>::One << DiscParticleSystemDrawerBase::UseNormalAsObjectSpaceRotationFieldId);
-
-const OSG::BitVector  DiscParticleSystemDrawerBase::CenterAlphaFieldMask = 
-    (TypeTraits<BitVector>::One << DiscParticleSystemDrawerBase::CenterAlphaFieldId);
-
-const OSG::BitVector  DiscParticleSystemDrawerBase::EdgeAlphaFieldMask = 
-    (TypeTraits<BitVector>::One << DiscParticleSystemDrawerBase::EdgeAlphaFieldId);
-
-const OSG::BitVector DiscParticleSystemDrawerBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Real32          DiscParticleSystemDrawerBase::_sfRadius
     This value is used to scale the size of the particle and apply that size to the radius for that disc.
 */
+
 /*! \var UInt32          DiscParticleSystemDrawerBase::_sfSegments
     The number of segments to use to render the disc.
 */
+
 /*! \var UInt32          DiscParticleSystemDrawerBase::_sfNormalSource
-    This enum is used to determine what is used for the direction of the line.    NORMAL_POSITION_CHANGE uses the diference between Position and SecPosition.    NORMAL_VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.    NORMAL_VELOCITY uses the velocity.    NORMAL_ACCELERATION uses the acceleration.    NORMAL_PARTICLE_NORMAL uses the normal of the particle.    NORMAL_VIEW_DIRECTION uses the z axis of the view space.    NORMAL_VIEW_POSITION uses the the direction from the particle to the view position.    NORMAL_STATIC uses the normal of this drawer.
+    This enum is used to determine what is used for the direction of the line.
+    NORMAL_POSITION_CHANGE uses the diference between Position and SecPosition.
+    NORMAL_VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.
+    NORMAL_VELOCITY uses the velocity.
+    NORMAL_ACCELERATION uses the acceleration.
+    NORMAL_PARTICLE_NORMAL uses the normal of the particle.
+    NORMAL_VIEW_DIRECTION uses the z axis of the view space.
+    NORMAL_VIEW_POSITION uses the the direction from the particle to the view position.
+    NORMAL_STATIC uses the normal of this drawer.
 */
+
 /*! \var Vec3f           DiscParticleSystemDrawerBase::_sfNormal
     The direction to use as Normal when aligning particles.  This is only used if the NormalSource is STATIC.
 */
+
 /*! \var UInt32          DiscParticleSystemDrawerBase::_sfUpSource
-    This enum is used to determine what is used for the direction of the line.    UP_POSITION_CHANGE uses the diference between Position and SecPosition.    UP_VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.    UP_VELOCITY uses the velocity.    UP_ACCELERATION uses the acceleration.    UP_PARTICLE_NORMAL uses the normal of the particle.    UP_VIEW_DIRECTION uses the y axis of the view space.    UP_STATIC uses the normal of this drawer.
+    This enum is used to determine what is used for the direction of the line.
+    UP_POSITION_CHANGE uses the diference between Position and SecPosition.
+    UP_VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.
+    UP_VELOCITY uses the velocity.
+    UP_ACCELERATION uses the acceleration.
+    UP_PARTICLE_NORMAL uses the normal of the particle.
+    UP_VIEW_DIRECTION uses the y axis of the view space.
+    UP_STATIC uses the normal of this drawer.
 */
+
 /*! \var Vec3f           DiscParticleSystemDrawerBase::_sfUp
     The direction to use as Up when aligning particles.  This is only used if the UpSource is STATIC.
 */
+
 /*! \var bool            DiscParticleSystemDrawerBase::_sfUseNormalAsObjectSpaceRotation
     
 */
+
 /*! \var Real32          DiscParticleSystemDrawerBase::_sfCenterAlpha
     
 */
+
 /*! \var Real32          DiscParticleSystemDrawerBase::_sfEdgeAlpha
     
 */
 
-//! DiscParticleSystemDrawer description
 
-FieldDescription *DiscParticleSystemDrawerBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<DiscParticleSystemDrawer *>::_type("DiscParticleSystemDrawerPtr", "ParticleSystemDrawerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(DiscParticleSystemDrawer *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           DiscParticleSystemDrawer *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           DiscParticleSystemDrawer *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void DiscParticleSystemDrawerBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Radius", 
-                     RadiusFieldId, RadiusFieldMask,
-                     false,
-                     (FieldAccessMethod) &DiscParticleSystemDrawerBase::getSFRadius),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "Segments", 
-                     SegmentsFieldId, SegmentsFieldMask,
-                     false,
-                     (FieldAccessMethod) &DiscParticleSystemDrawerBase::getSFSegments),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "NormalSource", 
-                     NormalSourceFieldId, NormalSourceFieldMask,
-                     false,
-                     (FieldAccessMethod) &DiscParticleSystemDrawerBase::getSFNormalSource),
-    new FieldDescription(SFVec3f::getClassType(), 
-                     "Normal", 
-                     NormalFieldId, NormalFieldMask,
-                     false,
-                     (FieldAccessMethod) &DiscParticleSystemDrawerBase::getSFNormal),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "UpSource", 
-                     UpSourceFieldId, UpSourceFieldMask,
-                     false,
-                     (FieldAccessMethod) &DiscParticleSystemDrawerBase::getSFUpSource),
-    new FieldDescription(SFVec3f::getClassType(), 
-                     "Up", 
-                     UpFieldId, UpFieldMask,
-                     false,
-                     (FieldAccessMethod) &DiscParticleSystemDrawerBase::getSFUp),
-    new FieldDescription(SFBool::getClassType(), 
-                     "UseNormalAsObjectSpaceRotation", 
-                     UseNormalAsObjectSpaceRotationFieldId, UseNormalAsObjectSpaceRotationFieldMask,
-                     false,
-                     (FieldAccessMethod) &DiscParticleSystemDrawerBase::getSFUseNormalAsObjectSpaceRotation),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "CenterAlpha", 
-                     CenterAlphaFieldId, CenterAlphaFieldMask,
-                     false,
-                     (FieldAccessMethod) &DiscParticleSystemDrawerBase::getSFCenterAlpha),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "EdgeAlpha", 
-                     EdgeAlphaFieldId, EdgeAlphaFieldMask,
-                     false,
-                     (FieldAccessMethod) &DiscParticleSystemDrawerBase::getSFEdgeAlpha)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType DiscParticleSystemDrawerBase::_type(
-    "DiscParticleSystemDrawer",
-    "ParticleSystemDrawer",
-    NULL,
-    (PrototypeCreateF) &DiscParticleSystemDrawerBase::createEmpty,
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Radius",
+        "This value is used to scale the size of the particle and apply that size to the radius for that disc.\n",
+        RadiusFieldId, RadiusFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DiscParticleSystemDrawer::editHandleRadius),
+        static_cast<FieldGetMethodSig >(&DiscParticleSystemDrawer::getHandleRadius));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "Segments",
+        "The number of segments to use to render the disc.\n",
+        SegmentsFieldId, SegmentsFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DiscParticleSystemDrawer::editHandleSegments),
+        static_cast<FieldGetMethodSig >(&DiscParticleSystemDrawer::getHandleSegments));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "NormalSource",
+        "This enum is used to determine what is used for the direction of the line.\n"
+        "NORMAL_POSITION_CHANGE uses the diference between Position and SecPosition.\n"
+        "NORMAL_VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.\n"
+        "NORMAL_VELOCITY uses the velocity.\n"
+        "NORMAL_ACCELERATION uses the acceleration.\n"
+        "NORMAL_PARTICLE_NORMAL uses the normal of the particle.\n"
+        "NORMAL_VIEW_DIRECTION uses the z axis of the view space.\n"
+        "NORMAL_VIEW_POSITION uses the the direction from the particle to the view position.\n"
+        "NORMAL_STATIC uses the normal of this drawer.\n",
+        NormalSourceFieldId, NormalSourceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DiscParticleSystemDrawer::editHandleNormalSource),
+        static_cast<FieldGetMethodSig >(&DiscParticleSystemDrawer::getHandleNormalSource));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFVec3f::Description(
+        SFVec3f::getClassType(),
+        "Normal",
+        "The direction to use as Normal when aligning particles.  This is only used if the NormalSource is STATIC.\n",
+        NormalFieldId, NormalFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DiscParticleSystemDrawer::editHandleNormal),
+        static_cast<FieldGetMethodSig >(&DiscParticleSystemDrawer::getHandleNormal));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "UpSource",
+        "This enum is used to determine what is used for the direction of the line.\n"
+        "UP_POSITION_CHANGE uses the diference between Position and SecPosition.\n"
+        "UP_VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.\n"
+        "UP_VELOCITY uses the velocity.\n"
+        "UP_ACCELERATION uses the acceleration.\n"
+        "UP_PARTICLE_NORMAL uses the normal of the particle.\n"
+        "UP_VIEW_DIRECTION uses the y axis of the view space.\n"
+        "UP_STATIC uses the normal of this drawer.\n",
+        UpSourceFieldId, UpSourceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DiscParticleSystemDrawer::editHandleUpSource),
+        static_cast<FieldGetMethodSig >(&DiscParticleSystemDrawer::getHandleUpSource));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFVec3f::Description(
+        SFVec3f::getClassType(),
+        "Up",
+        "The direction to use as Up when aligning particles.  This is only used if the UpSource is STATIC.\n",
+        UpFieldId, UpFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DiscParticleSystemDrawer::editHandleUp),
+        static_cast<FieldGetMethodSig >(&DiscParticleSystemDrawer::getHandleUp));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "UseNormalAsObjectSpaceRotation",
+        "",
+        UseNormalAsObjectSpaceRotationFieldId, UseNormalAsObjectSpaceRotationFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DiscParticleSystemDrawer::editHandleUseNormalAsObjectSpaceRotation),
+        static_cast<FieldGetMethodSig >(&DiscParticleSystemDrawer::getHandleUseNormalAsObjectSpaceRotation));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "CenterAlpha",
+        "",
+        CenterAlphaFieldId, CenterAlphaFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DiscParticleSystemDrawer::editHandleCenterAlpha),
+        static_cast<FieldGetMethodSig >(&DiscParticleSystemDrawer::getHandleCenterAlpha));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "EdgeAlpha",
+        "",
+        EdgeAlphaFieldId, EdgeAlphaFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DiscParticleSystemDrawer::editHandleEdgeAlpha),
+        static_cast<FieldGetMethodSig >(&DiscParticleSystemDrawer::getHandleEdgeAlpha));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+DiscParticleSystemDrawerBase::TypeObject DiscParticleSystemDrawerBase::_type(
+    DiscParticleSystemDrawerBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&DiscParticleSystemDrawerBase::createEmptyLocal),
     DiscParticleSystemDrawer::initMethod,
-    _desc,
-    sizeof(_desc));
+    DiscParticleSystemDrawer::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&DiscParticleSystemDrawer::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"DiscParticleSystemDrawer\"\n"
+    "\tparent=\"ParticleSystemDrawer\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"Radius\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.5\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\tThis value is used to scale the size of the particle and apply that size to the radius for that disc.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Segments\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"12\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\tThe number of segments to use to render the disc.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"NormalSource\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"DiscParticleSystemDrawer::NORMAL_VIEW_DIRECTION\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\tThis enum is used to determine what is used for the direction of the line.\n"
+    "   NORMAL_POSITION_CHANGE uses the diference between Position and SecPosition.\n"
+    "   NORMAL_VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.\n"
+    "   NORMAL_VELOCITY uses the velocity.\n"
+    "   NORMAL_ACCELERATION uses the acceleration.\n"
+    "   NORMAL_PARTICLE_NORMAL uses the normal of the particle.\n"
+    "   NORMAL_VIEW_DIRECTION uses the z axis of the view space.\n"
+    "   NORMAL_VIEW_POSITION uses the the direction from the particle to the view position.\n"
+    "   NORMAL_STATIC uses the normal of this drawer.\n"
+    "\t</Field>\n"
+    "   <Field\n"
+    "\t\tname=\"Normal\"\n"
+    "\t\ttype=\"Vec3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1.0,0.0,0.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   The direction to use as Normal when aligning particles.  This is only used if the NormalSource is STATIC.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"UpSource\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"DiscParticleSystemDrawer::UP_VIEW_DIRECTION\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\tThis enum is used to determine what is used for the direction of the line.\n"
+    "   UP_POSITION_CHANGE uses the diference between Position and SecPosition.\n"
+    "   UP_VELOCITY_CHANGE uses the difference between Velocity and SecVelocity.\n"
+    "   UP_VELOCITY uses the velocity.\n"
+    "   UP_ACCELERATION uses the acceleration.\n"
+    "   UP_PARTICLE_NORMAL uses the normal of the particle.\n"
+    "   UP_VIEW_DIRECTION uses the y axis of the view space.\n"
+    "   UP_STATIC uses the normal of this drawer.\n"
+    "\t</Field>\n"
+    "   <Field\n"
+    "\t\tname=\"Up\"\n"
+    "\t\ttype=\"Vec3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,1.0,0.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   The direction to use as Up when aligning particles.  This is only used if the UpSource is STATIC.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"UseNormalAsObjectSpaceRotation\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"CenterAlpha\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"EdgeAlpha\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(DiscParticleSystemDrawerBase, DiscParticleSystemDrawerPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &DiscParticleSystemDrawerBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &DiscParticleSystemDrawerBase::getType(void) const 
+FieldContainerType &DiscParticleSystemDrawerBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr DiscParticleSystemDrawerBase::shallowCopy(void) const 
-{ 
-    DiscParticleSystemDrawerPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const DiscParticleSystemDrawer *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 DiscParticleSystemDrawerBase::getContainerSize(void) const 
-{ 
-    return sizeof(DiscParticleSystemDrawer); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DiscParticleSystemDrawerBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &DiscParticleSystemDrawerBase::getType(void) const
 {
-    this->executeSyncImpl((DiscParticleSystemDrawerBase *) &other, whichField);
+    return _type;
 }
-#else
-void DiscParticleSystemDrawerBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 DiscParticleSystemDrawerBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((DiscParticleSystemDrawerBase *) &other, whichField, sInfo);
+    return sizeof(DiscParticleSystemDrawer);
 }
-void DiscParticleSystemDrawerBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFReal32 *DiscParticleSystemDrawerBase::editSFRadius(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(RadiusFieldMask);
+
+    return &_sfRadius;
 }
 
-void DiscParticleSystemDrawerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFReal32 *DiscParticleSystemDrawerBase::getSFRadius(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfRadius;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-DiscParticleSystemDrawerBase::DiscParticleSystemDrawerBase(void) :
-    _sfRadius                 (Real32(0.5)), 
-    _sfSegments               (UInt32(12)), 
-    _sfNormalSource           (UInt32(DiscParticleSystemDrawer::NORMAL_VIEW_DIRECTION)), 
-    _sfNormal                 (Vec3f(1.0,0.0,0.0)), 
-    _sfUpSource               (UInt32(DiscParticleSystemDrawer::UP_VIEW_DIRECTION)), 
-    _sfUp                     (Vec3f(0.0,1.0,0.0)), 
-    _sfUseNormalAsObjectSpaceRotation(bool(false)), 
-    _sfCenterAlpha            (Real32(1.0)), 
-    _sfEdgeAlpha              (Real32(1.0)), 
-    Inherited() 
+SFUInt32 *DiscParticleSystemDrawerBase::editSFSegments(void)
 {
+    editSField(SegmentsFieldMask);
+
+    return &_sfSegments;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-DiscParticleSystemDrawerBase::DiscParticleSystemDrawerBase(const DiscParticleSystemDrawerBase &source) :
-    _sfRadius                 (source._sfRadius                 ), 
-    _sfSegments               (source._sfSegments               ), 
-    _sfNormalSource           (source._sfNormalSource           ), 
-    _sfNormal                 (source._sfNormal                 ), 
-    _sfUpSource               (source._sfUpSource               ), 
-    _sfUp                     (source._sfUp                     ), 
-    _sfUseNormalAsObjectSpaceRotation(source._sfUseNormalAsObjectSpaceRotation), 
-    _sfCenterAlpha            (source._sfCenterAlpha            ), 
-    _sfEdgeAlpha              (source._sfEdgeAlpha              ), 
-    Inherited                 (source)
+const SFUInt32 *DiscParticleSystemDrawerBase::getSFSegments(void) const
 {
+    return &_sfSegments;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-DiscParticleSystemDrawerBase::~DiscParticleSystemDrawerBase(void)
+SFUInt32 *DiscParticleSystemDrawerBase::editSFNormalSource(void)
 {
+    editSField(NormalSourceFieldMask);
+
+    return &_sfNormalSource;
 }
+
+const SFUInt32 *DiscParticleSystemDrawerBase::getSFNormalSource(void) const
+{
+    return &_sfNormalSource;
+}
+
+
+SFVec3f *DiscParticleSystemDrawerBase::editSFNormal(void)
+{
+    editSField(NormalFieldMask);
+
+    return &_sfNormal;
+}
+
+const SFVec3f *DiscParticleSystemDrawerBase::getSFNormal(void) const
+{
+    return &_sfNormal;
+}
+
+
+SFUInt32 *DiscParticleSystemDrawerBase::editSFUpSource(void)
+{
+    editSField(UpSourceFieldMask);
+
+    return &_sfUpSource;
+}
+
+const SFUInt32 *DiscParticleSystemDrawerBase::getSFUpSource(void) const
+{
+    return &_sfUpSource;
+}
+
+
+SFVec3f *DiscParticleSystemDrawerBase::editSFUp(void)
+{
+    editSField(UpFieldMask);
+
+    return &_sfUp;
+}
+
+const SFVec3f *DiscParticleSystemDrawerBase::getSFUp(void) const
+{
+    return &_sfUp;
+}
+
+
+SFBool *DiscParticleSystemDrawerBase::editSFUseNormalAsObjectSpaceRotation(void)
+{
+    editSField(UseNormalAsObjectSpaceRotationFieldMask);
+
+    return &_sfUseNormalAsObjectSpaceRotation;
+}
+
+const SFBool *DiscParticleSystemDrawerBase::getSFUseNormalAsObjectSpaceRotation(void) const
+{
+    return &_sfUseNormalAsObjectSpaceRotation;
+}
+
+
+SFReal32 *DiscParticleSystemDrawerBase::editSFCenterAlpha(void)
+{
+    editSField(CenterAlphaFieldMask);
+
+    return &_sfCenterAlpha;
+}
+
+const SFReal32 *DiscParticleSystemDrawerBase::getSFCenterAlpha(void) const
+{
+    return &_sfCenterAlpha;
+}
+
+
+SFReal32 *DiscParticleSystemDrawerBase::editSFEdgeAlpha(void)
+{
+    editSField(EdgeAlphaFieldMask);
+
+    return &_sfEdgeAlpha;
+}
+
+const SFReal32 *DiscParticleSystemDrawerBase::getSFEdgeAlpha(void) const
+{
+    return &_sfEdgeAlpha;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 DiscParticleSystemDrawerBase::getBinSize(const BitVector &whichField)
+UInt32 DiscParticleSystemDrawerBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -297,53 +588,44 @@ UInt32 DiscParticleSystemDrawerBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfRadius.getBinSize();
     }
-
     if(FieldBits::NoField != (SegmentsFieldMask & whichField))
     {
         returnValue += _sfSegments.getBinSize();
     }
-
     if(FieldBits::NoField != (NormalSourceFieldMask & whichField))
     {
         returnValue += _sfNormalSource.getBinSize();
     }
-
     if(FieldBits::NoField != (NormalFieldMask & whichField))
     {
         returnValue += _sfNormal.getBinSize();
     }
-
     if(FieldBits::NoField != (UpSourceFieldMask & whichField))
     {
         returnValue += _sfUpSource.getBinSize();
     }
-
     if(FieldBits::NoField != (UpFieldMask & whichField))
     {
         returnValue += _sfUp.getBinSize();
     }
-
     if(FieldBits::NoField != (UseNormalAsObjectSpaceRotationFieldMask & whichField))
     {
         returnValue += _sfUseNormalAsObjectSpaceRotation.getBinSize();
     }
-
     if(FieldBits::NoField != (CenterAlphaFieldMask & whichField))
     {
         returnValue += _sfCenterAlpha.getBinSize();
     }
-
     if(FieldBits::NoField != (EdgeAlphaFieldMask & whichField))
     {
         returnValue += _sfEdgeAlpha.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void DiscParticleSystemDrawerBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void DiscParticleSystemDrawerBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -351,52 +633,42 @@ void DiscParticleSystemDrawerBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfRadius.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SegmentsFieldMask & whichField))
     {
         _sfSegments.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (NormalSourceFieldMask & whichField))
     {
         _sfNormalSource.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (NormalFieldMask & whichField))
     {
         _sfNormal.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (UpSourceFieldMask & whichField))
     {
         _sfUpSource.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (UpFieldMask & whichField))
     {
         _sfUp.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (UseNormalAsObjectSpaceRotationFieldMask & whichField))
     {
         _sfUseNormalAsObjectSpaceRotation.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (CenterAlphaFieldMask & whichField))
     {
         _sfCenterAlpha.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EdgeAlphaFieldMask & whichField))
     {
         _sfEdgeAlpha.copyToBin(pMem);
     }
-
-
 }
 
-void DiscParticleSystemDrawerBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void DiscParticleSystemDrawerBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -404,170 +676,461 @@ void DiscParticleSystemDrawerBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfRadius.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SegmentsFieldMask & whichField))
     {
         _sfSegments.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (NormalSourceFieldMask & whichField))
     {
         _sfNormalSource.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (NormalFieldMask & whichField))
     {
         _sfNormal.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (UpSourceFieldMask & whichField))
     {
         _sfUpSource.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (UpFieldMask & whichField))
     {
         _sfUp.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (UseNormalAsObjectSpaceRotationFieldMask & whichField))
     {
         _sfUseNormalAsObjectSpaceRotation.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (CenterAlphaFieldMask & whichField))
     {
         _sfCenterAlpha.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EdgeAlphaFieldMask & whichField))
     {
         _sfEdgeAlpha.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DiscParticleSystemDrawerBase::executeSyncImpl(      DiscParticleSystemDrawerBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+DiscParticleSystemDrawerTransitPtr DiscParticleSystemDrawerBase::createLocal(BitVector bFlags)
 {
+    DiscParticleSystemDrawerTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (RadiusFieldMask & whichField))
-        _sfRadius.syncWith(pOther->_sfRadius);
+        fc = dynamic_pointer_cast<DiscParticleSystemDrawer>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (SegmentsFieldMask & whichField))
-        _sfSegments.syncWith(pOther->_sfSegments);
-
-    if(FieldBits::NoField != (NormalSourceFieldMask & whichField))
-        _sfNormalSource.syncWith(pOther->_sfNormalSource);
-
-    if(FieldBits::NoField != (NormalFieldMask & whichField))
-        _sfNormal.syncWith(pOther->_sfNormal);
-
-    if(FieldBits::NoField != (UpSourceFieldMask & whichField))
-        _sfUpSource.syncWith(pOther->_sfUpSource);
-
-    if(FieldBits::NoField != (UpFieldMask & whichField))
-        _sfUp.syncWith(pOther->_sfUp);
-
-    if(FieldBits::NoField != (UseNormalAsObjectSpaceRotationFieldMask & whichField))
-        _sfUseNormalAsObjectSpaceRotation.syncWith(pOther->_sfUseNormalAsObjectSpaceRotation);
-
-    if(FieldBits::NoField != (CenterAlphaFieldMask & whichField))
-        _sfCenterAlpha.syncWith(pOther->_sfCenterAlpha);
-
-    if(FieldBits::NoField != (EdgeAlphaFieldMask & whichField))
-        _sfEdgeAlpha.syncWith(pOther->_sfEdgeAlpha);
-
-
-}
-#else
-void DiscParticleSystemDrawerBase::executeSyncImpl(      DiscParticleSystemDrawerBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (RadiusFieldMask & whichField))
-        _sfRadius.syncWith(pOther->_sfRadius);
-
-    if(FieldBits::NoField != (SegmentsFieldMask & whichField))
-        _sfSegments.syncWith(pOther->_sfSegments);
-
-    if(FieldBits::NoField != (NormalSourceFieldMask & whichField))
-        _sfNormalSource.syncWith(pOther->_sfNormalSource);
-
-    if(FieldBits::NoField != (NormalFieldMask & whichField))
-        _sfNormal.syncWith(pOther->_sfNormal);
-
-    if(FieldBits::NoField != (UpSourceFieldMask & whichField))
-        _sfUpSource.syncWith(pOther->_sfUpSource);
-
-    if(FieldBits::NoField != (UpFieldMask & whichField))
-        _sfUp.syncWith(pOther->_sfUp);
-
-    if(FieldBits::NoField != (UseNormalAsObjectSpaceRotationFieldMask & whichField))
-        _sfUseNormalAsObjectSpaceRotation.syncWith(pOther->_sfUseNormalAsObjectSpaceRotation);
-
-    if(FieldBits::NoField != (CenterAlphaFieldMask & whichField))
-        _sfCenterAlpha.syncWith(pOther->_sfCenterAlpha);
-
-    if(FieldBits::NoField != (EdgeAlphaFieldMask & whichField))
-        _sfEdgeAlpha.syncWith(pOther->_sfEdgeAlpha);
-
-
-
+    return fc;
 }
 
-void DiscParticleSystemDrawerBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+DiscParticleSystemDrawerTransitPtr DiscParticleSystemDrawerBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    DiscParticleSystemDrawerTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<DiscParticleSystemDrawer>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+DiscParticleSystemDrawerTransitPtr DiscParticleSystemDrawerBase::create(void)
+{
+    DiscParticleSystemDrawerTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<DiscParticleSystemDrawer>(tmpPtr);
+    }
+
+    return fc;
+}
+
+DiscParticleSystemDrawer *DiscParticleSystemDrawerBase::createEmptyLocal(BitVector bFlags)
+{
+    DiscParticleSystemDrawer *returnValue;
+
+    newPtr<DiscParticleSystemDrawer>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+DiscParticleSystemDrawer *DiscParticleSystemDrawerBase::createEmpty(void)
+{
+    DiscParticleSystemDrawer *returnValue;
+
+    newPtr<DiscParticleSystemDrawer>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr DiscParticleSystemDrawerBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    DiscParticleSystemDrawer *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DiscParticleSystemDrawer *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DiscParticleSystemDrawerBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    DiscParticleSystemDrawer *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DiscParticleSystemDrawer *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DiscParticleSystemDrawerBase::shallowCopy(void) const
+{
+    DiscParticleSystemDrawer *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const DiscParticleSystemDrawer *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+DiscParticleSystemDrawerBase::DiscParticleSystemDrawerBase(void) :
+    Inherited(),
+    _sfRadius                 (Real32(0.5)),
+    _sfSegments               (UInt32(12)),
+    _sfNormalSource           (UInt32(DiscParticleSystemDrawer::NORMAL_VIEW_DIRECTION)),
+    _sfNormal                 (Vec3f(1.0,0.0,0.0)),
+    _sfUpSource               (UInt32(DiscParticleSystemDrawer::UP_VIEW_DIRECTION)),
+    _sfUp                     (Vec3f(0.0,1.0,0.0)),
+    _sfUseNormalAsObjectSpaceRotation(bool(false)),
+    _sfCenterAlpha            (Real32(1.0)),
+    _sfEdgeAlpha              (Real32(1.0))
+{
+}
+
+DiscParticleSystemDrawerBase::DiscParticleSystemDrawerBase(const DiscParticleSystemDrawerBase &source) :
+    Inherited(source),
+    _sfRadius                 (source._sfRadius                 ),
+    _sfSegments               (source._sfSegments               ),
+    _sfNormalSource           (source._sfNormalSource           ),
+    _sfNormal                 (source._sfNormal                 ),
+    _sfUpSource               (source._sfUpSource               ),
+    _sfUp                     (source._sfUp                     ),
+    _sfUseNormalAsObjectSpaceRotation(source._sfUseNormalAsObjectSpaceRotation),
+    _sfCenterAlpha            (source._sfCenterAlpha            ),
+    _sfEdgeAlpha              (source._sfEdgeAlpha              )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+DiscParticleSystemDrawerBase::~DiscParticleSystemDrawerBase(void)
+{
+}
+
+
+GetFieldHandlePtr DiscParticleSystemDrawerBase::getHandleRadius          (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfRadius,
+             this->getType().getFieldDesc(RadiusFieldId),
+             const_cast<DiscParticleSystemDrawerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DiscParticleSystemDrawerBase::editHandleRadius         (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfRadius,
+             this->getType().getFieldDesc(RadiusFieldId),
+             this));
+
+
+    editSField(RadiusFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DiscParticleSystemDrawerBase::getHandleSegments        (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfSegments,
+             this->getType().getFieldDesc(SegmentsFieldId),
+             const_cast<DiscParticleSystemDrawerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DiscParticleSystemDrawerBase::editHandleSegments       (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfSegments,
+             this->getType().getFieldDesc(SegmentsFieldId),
+             this));
+
+
+    editSField(SegmentsFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DiscParticleSystemDrawerBase::getHandleNormalSource    (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfNormalSource,
+             this->getType().getFieldDesc(NormalSourceFieldId),
+             const_cast<DiscParticleSystemDrawerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DiscParticleSystemDrawerBase::editHandleNormalSource   (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfNormalSource,
+             this->getType().getFieldDesc(NormalSourceFieldId),
+             this));
+
+
+    editSField(NormalSourceFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DiscParticleSystemDrawerBase::getHandleNormal          (void) const
+{
+    SFVec3f::GetHandlePtr returnValue(
+        new  SFVec3f::GetHandle(
+             &_sfNormal,
+             this->getType().getFieldDesc(NormalFieldId),
+             const_cast<DiscParticleSystemDrawerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DiscParticleSystemDrawerBase::editHandleNormal         (void)
+{
+    SFVec3f::EditHandlePtr returnValue(
+        new  SFVec3f::EditHandle(
+             &_sfNormal,
+             this->getType().getFieldDesc(NormalFieldId),
+             this));
+
+
+    editSField(NormalFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DiscParticleSystemDrawerBase::getHandleUpSource        (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfUpSource,
+             this->getType().getFieldDesc(UpSourceFieldId),
+             const_cast<DiscParticleSystemDrawerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DiscParticleSystemDrawerBase::editHandleUpSource       (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfUpSource,
+             this->getType().getFieldDesc(UpSourceFieldId),
+             this));
+
+
+    editSField(UpSourceFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DiscParticleSystemDrawerBase::getHandleUp              (void) const
+{
+    SFVec3f::GetHandlePtr returnValue(
+        new  SFVec3f::GetHandle(
+             &_sfUp,
+             this->getType().getFieldDesc(UpFieldId),
+             const_cast<DiscParticleSystemDrawerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DiscParticleSystemDrawerBase::editHandleUp             (void)
+{
+    SFVec3f::EditHandlePtr returnValue(
+        new  SFVec3f::EditHandle(
+             &_sfUp,
+             this->getType().getFieldDesc(UpFieldId),
+             this));
+
+
+    editSField(UpFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DiscParticleSystemDrawerBase::getHandleUseNormalAsObjectSpaceRotation (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfUseNormalAsObjectSpaceRotation,
+             this->getType().getFieldDesc(UseNormalAsObjectSpaceRotationFieldId),
+             const_cast<DiscParticleSystemDrawerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DiscParticleSystemDrawerBase::editHandleUseNormalAsObjectSpaceRotation(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfUseNormalAsObjectSpaceRotation,
+             this->getType().getFieldDesc(UseNormalAsObjectSpaceRotationFieldId),
+             this));
+
+
+    editSField(UseNormalAsObjectSpaceRotationFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DiscParticleSystemDrawerBase::getHandleCenterAlpha     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfCenterAlpha,
+             this->getType().getFieldDesc(CenterAlphaFieldId),
+             const_cast<DiscParticleSystemDrawerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DiscParticleSystemDrawerBase::editHandleCenterAlpha    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfCenterAlpha,
+             this->getType().getFieldDesc(CenterAlphaFieldId),
+             this));
+
+
+    editSField(CenterAlphaFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DiscParticleSystemDrawerBase::getHandleEdgeAlpha       (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfEdgeAlpha,
+             this->getType().getFieldDesc(EdgeAlphaFieldId),
+             const_cast<DiscParticleSystemDrawerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DiscParticleSystemDrawerBase::editHandleEdgeAlpha      (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfEdgeAlpha,
+             this->getType().getFieldDesc(EdgeAlphaFieldId),
+             this));
+
+
+    editSField(EdgeAlphaFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void DiscParticleSystemDrawerBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    DiscParticleSystemDrawer *pThis = static_cast<DiscParticleSystemDrawer *>(this);
+
+    pThis->execSync(static_cast<DiscParticleSystemDrawer *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *DiscParticleSystemDrawerBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    DiscParticleSystemDrawer *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const DiscParticleSystemDrawer *>(pRefAspect),
+                  dynamic_cast<const DiscParticleSystemDrawer *>(this));
+
+    return returnValue;
+}
+#endif
+
+void DiscParticleSystemDrawerBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<DiscParticleSystemDrawerPtr>::_type("DiscParticleSystemDrawerPtr", "ParticleSystemDrawerPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(DiscParticleSystemDrawerPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(DiscParticleSystemDrawerPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGDISCPARTICLESYSTEMDRAWERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDISCPARTICLESYSTEMDRAWERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDISCPARTICLESYSTEMDRAWERFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

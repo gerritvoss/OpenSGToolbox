@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,104 +55,103 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &PointParticleSystemDrawerBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 PointParticleSystemDrawerBase::getClassTypeId(void) 
+OSG::UInt32 PointParticleSystemDrawerBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-PointParticleSystemDrawerPtr PointParticleSystemDrawerBase::create(void) 
-{
-    PointParticleSystemDrawerPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = PointParticleSystemDrawerPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-PointParticleSystemDrawerPtr PointParticleSystemDrawerBase::createEmpty(void) 
-{ 
-    PointParticleSystemDrawerPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 PointParticleSystemDrawerBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the PointParticleSystemDrawer::_sfPointSizeScaling field.
-inline
-SFReal32 *PointParticleSystemDrawerBase::getSFPointSizeScaling(void)
-{
-    return &_sfPointSizeScaling;
-}
-
-//! Get the PointParticleSystemDrawer::_sfForcePerParticleSizing field.
-inline
-SFBool *PointParticleSystemDrawerBase::getSFForcePerParticleSizing(void)
-{
-    return &_sfForcePerParticleSizing;
-}
-
-
 //! Get the value of the PointParticleSystemDrawer::_sfPointSizeScaling field.
+
 inline
-Real32 &PointParticleSystemDrawerBase::getPointSizeScaling(void)
+Real32 &PointParticleSystemDrawerBase::editPointSizeScaling(void)
 {
+    editSField(PointSizeScalingFieldMask);
+
     return _sfPointSizeScaling.getValue();
 }
 
 //! Get the value of the PointParticleSystemDrawer::_sfPointSizeScaling field.
 inline
-const Real32 &PointParticleSystemDrawerBase::getPointSizeScaling(void) const
+      Real32  PointParticleSystemDrawerBase::getPointSizeScaling(void) const
 {
     return _sfPointSizeScaling.getValue();
 }
 
 //! Set the value of the PointParticleSystemDrawer::_sfPointSizeScaling field.
 inline
-void PointParticleSystemDrawerBase::setPointSizeScaling(const Real32 &value)
+void PointParticleSystemDrawerBase::setPointSizeScaling(const Real32 value)
 {
+    editSField(PointSizeScalingFieldMask);
+
     _sfPointSizeScaling.setValue(value);
 }
-
 //! Get the value of the PointParticleSystemDrawer::_sfForcePerParticleSizing field.
+
 inline
-bool &PointParticleSystemDrawerBase::getForcePerParticleSizing(void)
+bool &PointParticleSystemDrawerBase::editForcePerParticleSizing(void)
 {
+    editSField(ForcePerParticleSizingFieldMask);
+
     return _sfForcePerParticleSizing.getValue();
 }
 
 //! Get the value of the PointParticleSystemDrawer::_sfForcePerParticleSizing field.
 inline
-const bool &PointParticleSystemDrawerBase::getForcePerParticleSizing(void) const
+      bool  PointParticleSystemDrawerBase::getForcePerParticleSizing(void) const
 {
     return _sfForcePerParticleSizing.getValue();
 }
 
 //! Set the value of the PointParticleSystemDrawer::_sfForcePerParticleSizing field.
 inline
-void PointParticleSystemDrawerBase::setForcePerParticleSizing(const bool &value)
+void PointParticleSystemDrawerBase::setForcePerParticleSizing(const bool value)
 {
+    editSField(ForcePerParticleSizingFieldMask);
+
     _sfForcePerParticleSizing.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void PointParticleSystemDrawerBase::execSync (      PointParticleSystemDrawerBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGPOINTPARTICLESYSTEMDRAWERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (PointSizeScalingFieldMask & whichField))
+        _sfPointSizeScaling.syncWith(pFrom->_sfPointSizeScaling);
+
+    if(FieldBits::NoField != (ForcePerParticleSizingFieldMask & whichField))
+        _sfForcePerParticleSizing.syncWith(pFrom->_sfForcePerParticleSizing);
+}
+#endif
+
+
+inline
+const Char8 *PointParticleSystemDrawerBase::getClassname(void)
+{
+    return "PointParticleSystemDrawer";
+}
+
+
+OSG_GEN_CONTAINERPTR(PointParticleSystemDrawer);
+
+OSG_END_NAMESPACE
 

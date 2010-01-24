@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,142 +50,166 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILECONSERVEVELOCITYPARTICLEAFFECTORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGConserveVelocityParticleAffectorBase.h"
 #include "OSGConserveVelocityParticleAffector.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ConserveVelocityParticleAffectorBase::ConserveFieldMask = 
-    (TypeTraits<BitVector>::One << ConserveVelocityParticleAffectorBase::ConserveFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector ConserveVelocityParticleAffectorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::ConserveVelocityParticleAffector
+    
+ */
 
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Real32          ConserveVelocityParticleAffectorBase::_sfConserve
     
 */
 
-//! ConserveVelocityParticleAffector description
 
-FieldDescription *ConserveVelocityParticleAffectorBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ConserveVelocityParticleAffector *>::_type("ConserveVelocityParticleAffectorPtr", "ParticleAffectorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ConserveVelocityParticleAffector *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ConserveVelocityParticleAffector *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ConserveVelocityParticleAffector *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ConserveVelocityParticleAffectorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Conserve", 
-                     ConserveFieldId, ConserveFieldMask,
-                     false,
-                     (FieldAccessMethod) &ConserveVelocityParticleAffectorBase::getSFConserve)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType ConserveVelocityParticleAffectorBase::_type(
-    "ConserveVelocityParticleAffector",
-    "ParticleAffector",
-    NULL,
-    (PrototypeCreateF) &ConserveVelocityParticleAffectorBase::createEmpty,
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Conserve",
+        "",
+        ConserveFieldId, ConserveFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ConserveVelocityParticleAffector::editHandleConserve),
+        static_cast<FieldGetMethodSig >(&ConserveVelocityParticleAffector::getHandleConserve));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+ConserveVelocityParticleAffectorBase::TypeObject ConserveVelocityParticleAffectorBase::_type(
+    ConserveVelocityParticleAffectorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ConserveVelocityParticleAffectorBase::createEmptyLocal),
     ConserveVelocityParticleAffector::initMethod,
-    _desc,
-    sizeof(_desc));
+    ConserveVelocityParticleAffector::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ConserveVelocityParticleAffector::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ConserveVelocityParticleAffector\"\n"
+    "\tparent=\"ParticleAffector\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com), Daniel Guilliams           \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"Conserve\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.000\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(ConserveVelocityParticleAffectorBase, ConserveVelocityParticleAffectorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ConserveVelocityParticleAffectorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ConserveVelocityParticleAffectorBase::getType(void) const 
+FieldContainerType &ConserveVelocityParticleAffectorBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr ConserveVelocityParticleAffectorBase::shallowCopy(void) const 
-{ 
-    ConserveVelocityParticleAffectorPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const ConserveVelocityParticleAffector *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 ConserveVelocityParticleAffectorBase::getContainerSize(void) const 
-{ 
-    return sizeof(ConserveVelocityParticleAffector); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ConserveVelocityParticleAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &ConserveVelocityParticleAffectorBase::getType(void) const
 {
-    this->executeSyncImpl((ConserveVelocityParticleAffectorBase *) &other, whichField);
+    return _type;
 }
-#else
-void ConserveVelocityParticleAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 ConserveVelocityParticleAffectorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((ConserveVelocityParticleAffectorBase *) &other, whichField, sInfo);
+    return sizeof(ConserveVelocityParticleAffector);
 }
-void ConserveVelocityParticleAffectorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFReal32 *ConserveVelocityParticleAffectorBase::editSFConserve(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(ConserveFieldMask);
+
+    return &_sfConserve;
 }
 
-void ConserveVelocityParticleAffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFReal32 *ConserveVelocityParticleAffectorBase::getSFConserve(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-ConserveVelocityParticleAffectorBase::ConserveVelocityParticleAffectorBase(void) :
-    _sfConserve               (Real32(1.000)), 
-    Inherited() 
-{
+    return &_sfConserve;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-ConserveVelocityParticleAffectorBase::ConserveVelocityParticleAffectorBase(const ConserveVelocityParticleAffectorBase &source) :
-    _sfConserve               (source._sfConserve               ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-ConserveVelocityParticleAffectorBase::~ConserveVelocityParticleAffectorBase(void)
-{
-}
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ConserveVelocityParticleAffectorBase::getBinSize(const BitVector &whichField)
+UInt32 ConserveVelocityParticleAffectorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -194,12 +218,11 @@ UInt32 ConserveVelocityParticleAffectorBase::getBinSize(const BitVector &whichFi
         returnValue += _sfConserve.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ConserveVelocityParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ConserveVelocityParticleAffectorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -207,12 +230,10 @@ void ConserveVelocityParticleAffectorBase::copyToBin(      BinaryDataHandler &pM
     {
         _sfConserve.copyToBin(pMem);
     }
-
-
 }
 
-void ConserveVelocityParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ConserveVelocityParticleAffectorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -220,82 +241,213 @@ void ConserveVelocityParticleAffectorBase::copyFromBin(      BinaryDataHandler &
     {
         _sfConserve.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ConserveVelocityParticleAffectorBase::executeSyncImpl(      ConserveVelocityParticleAffectorBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ConserveVelocityParticleAffectorTransitPtr ConserveVelocityParticleAffectorBase::createLocal(BitVector bFlags)
 {
+    ConserveVelocityParticleAffectorTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (ConserveFieldMask & whichField))
-        _sfConserve.syncWith(pOther->_sfConserve);
+        fc = dynamic_pointer_cast<ConserveVelocityParticleAffector>(tmpPtr);
+    }
 
-
-}
-#else
-void ConserveVelocityParticleAffectorBase::executeSyncImpl(      ConserveVelocityParticleAffectorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ConserveFieldMask & whichField))
-        _sfConserve.syncWith(pOther->_sfConserve);
-
-
-
+    return fc;
 }
 
-void ConserveVelocityParticleAffectorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ConserveVelocityParticleAffectorTransitPtr ConserveVelocityParticleAffectorBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ConserveVelocityParticleAffectorTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<ConserveVelocityParticleAffector>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ConserveVelocityParticleAffectorTransitPtr ConserveVelocityParticleAffectorBase::create(void)
+{
+    ConserveVelocityParticleAffectorTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<ConserveVelocityParticleAffector>(tmpPtr);
+    }
+
+    return fc;
+}
+
+ConserveVelocityParticleAffector *ConserveVelocityParticleAffectorBase::createEmptyLocal(BitVector bFlags)
+{
+    ConserveVelocityParticleAffector *returnValue;
+
+    newPtr<ConserveVelocityParticleAffector>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+ConserveVelocityParticleAffector *ConserveVelocityParticleAffectorBase::createEmpty(void)
+{
+    ConserveVelocityParticleAffector *returnValue;
+
+    newPtr<ConserveVelocityParticleAffector>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ConserveVelocityParticleAffectorBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    ConserveVelocityParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ConserveVelocityParticleAffector *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ConserveVelocityParticleAffectorBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    ConserveVelocityParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ConserveVelocityParticleAffector *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ConserveVelocityParticleAffectorBase::shallowCopy(void) const
+{
+    ConserveVelocityParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const ConserveVelocityParticleAffector *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ConserveVelocityParticleAffectorBase::ConserveVelocityParticleAffectorBase(void) :
+    Inherited(),
+    _sfConserve               (Real32(1.000))
+{
+}
+
+ConserveVelocityParticleAffectorBase::ConserveVelocityParticleAffectorBase(const ConserveVelocityParticleAffectorBase &source) :
+    Inherited(source),
+    _sfConserve               (source._sfConserve               )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ConserveVelocityParticleAffectorBase::~ConserveVelocityParticleAffectorBase(void)
+{
+}
+
+
+GetFieldHandlePtr ConserveVelocityParticleAffectorBase::getHandleConserve        (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfConserve,
+             this->getType().getFieldDesc(ConserveFieldId),
+             const_cast<ConserveVelocityParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ConserveVelocityParticleAffectorBase::editHandleConserve       (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfConserve,
+             this->getType().getFieldDesc(ConserveFieldId),
+             this));
+
+
+    editSField(ConserveFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ConserveVelocityParticleAffectorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ConserveVelocityParticleAffector *pThis = static_cast<ConserveVelocityParticleAffector *>(this);
+
+    pThis->execSync(static_cast<ConserveVelocityParticleAffector *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ConserveVelocityParticleAffectorBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    ConserveVelocityParticleAffector *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const ConserveVelocityParticleAffector *>(pRefAspect),
+                  dynamic_cast<const ConserveVelocityParticleAffector *>(this));
+
+    return returnValue;
+}
+#endif
+
+void ConserveVelocityParticleAffectorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ConserveVelocityParticleAffectorPtr>::_type("ConserveVelocityParticleAffectorPtr", "ParticleAffectorPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(ConserveVelocityParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ConserveVelocityParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGCONSERVEVELOCITYPARTICLEAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCONSERVEVELOCITYPARTICLEAFFECTORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCONSERVEVELOCITYPARTICLEAFFECTORFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,45 +42,48 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
-
 #include "OSGParticleSystemAffectorBase.h"
-#include "ParticleSystem/OSGParticleSystemFields.h"
+#include "OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ParticleSystemAffector class. See \ref 
-           PageParticleSystemParticleSystemAffector for a description.
+/*! \brief ParticleSystemAffector class. See \ref
+           PageContribParticleSystemParticleSystemAffector for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemAffector : public ParticleSystemAffectorBase
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemAffector : public ParticleSystemAffectorBase
 {
-  private:
-
-    typedef ParticleSystemAffectorBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef ParticleSystemAffectorBase Inherited;
+    typedef ParticleSystemAffector     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual void affect(ParticleSystemPtr System, const Time& elps) = 0;
+
+    virtual void affect(ParticleSystemRefPtr System, const Time& elps) = 0;
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ParticleSystemAffectorBase.
@@ -97,20 +100,24 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemAffector : public ParticleS
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ParticleSystemAffector(void); 
+    virtual ~ParticleSystemAffector(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ParticleSystemAffectorBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ParticleSystemAffector &source);
 };
 
@@ -120,7 +127,5 @@ OSG_END_NAMESPACE
 
 #include "OSGParticleSystemAffectorBase.inl"
 #include "OSGParticleSystemAffector.inl"
-
-#define OSGPARTICLESYSTEMAFFECTOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGPARTICLESYSTEMAFFECTOR_H_ */

@@ -3,17 +3,20 @@
 <FieldContainer
 	name="ParticleSystemCore"
 	parent="MaterialDrawable"
-	library="ParticleSystem"
-	pointerfieldtypes="both"
+    library="ContribParticleSystem"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="true"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 	<Field
 		name="SortingMode"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -27,6 +30,7 @@
 	<Field
 		name="Sort"
 		type="UInt32"
+        category="data"
 		cardinality="multi"
 		visibility="external"
 		access="protected"
@@ -34,22 +38,22 @@
 	</Field>
 	<Field
 		name="System"
-		type="ParticleSystemPtr"
+		type="ParticleSystem"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="ParticleSystem/OSGParticleSystem.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="Drawer"
-		type="ParticleSystemDrawerPtr"
+		type="ParticleSystemDrawer"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="ParticleSystem/ParticleSystemDrawers/OSGParticleSystemDrawer.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 </FieldContainer>

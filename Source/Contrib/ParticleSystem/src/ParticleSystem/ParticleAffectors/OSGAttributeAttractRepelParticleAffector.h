@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,44 +42,52 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGAttributeAttractRepelParticleAffectorBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief AttributeAttractRepelParticleAffector class. See \ref 
-           PageParticleSystemAttributeAttractRepelParticleAffector for a description.
+/*! \brief AttributeAttractRepelParticleAffector class. See \ref
+           PageContribParticleSystemAttributeAttractRepelParticleAffector for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING AttributeAttractRepelParticleAffector : public AttributeAttractRepelParticleAffectorBase
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING AttributeAttractRepelParticleAffector : public AttributeAttractRepelParticleAffectorBase
 {
-  private:
-
-    typedef AttributeAttractRepelParticleAffectorBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
-	  enum ParticleAttributes{POSITION_ATTRIBUTE, VELOCITY_ATTRIBUTE};
+    enum ParticleAttributes
+    {
+        POSITION_ATTRIBUTE = 0,
+        VELOCITY_ATTRIBUTE = 1
+    };
+
+    typedef AttributeAttractRepelParticleAffectorBase Inherited;
+    typedef AttributeAttractRepelParticleAffector     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual bool affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps);
+
+    virtual bool affect(ParticleSystemRefPtr System, Int32 ParticleIndex, const Time& elps);
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in AttributeAttractRepelParticleAffectorBase.
@@ -96,20 +104,24 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING AttributeAttractRepelParticleAffector : p
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~AttributeAttractRepelParticleAffector(void); 
+    virtual ~AttributeAttractRepelParticleAffector(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class AttributeAttractRepelParticleAffectorBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const AttributeAttractRepelParticleAffector &source);
 };
 
@@ -119,7 +131,5 @@ OSG_END_NAMESPACE
 
 #include "OSGAttributeAttractRepelParticleAffectorBase.inl"
 #include "OSGAttributeAttractRepelParticleAffector.inl"
-
-#define OSGATTRIBUTEATTRACTREPELPARTICLEAFFECTOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGATTRIBUTEATTRACTREPELPARTICLEAFFECTOR_H_ */

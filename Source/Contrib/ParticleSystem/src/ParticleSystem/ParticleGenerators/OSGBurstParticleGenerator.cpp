@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,27 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGBurstParticleGenerator.h"
-#include "ParticleSystem/OSGParticleSystem.h"
-//#include "ParticleSystem/OSGRateParticleGeneratorBase.h"
-
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::BurstParticleGenerator
-
-*/
+// Documentation for this class is emitted in the
+// OSGBurstParticleGeneratorBase.cpp file.
+// To modify it, please change the .fcd file (OSGBurstParticleGenerator.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -70,8 +62,13 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void BurstParticleGenerator::initMethod (void)
+void BurstParticleGenerator::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -79,7 +76,7 @@ void BurstParticleGenerator::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool BurstParticleGenerator::generate(ParticleSystemPtr System, const Time& elps)
+bool BurstParticleGenerator::generate(ParticleSystemRefPtr System, const Time& elps)
 {
 	for(int i(0);i<getBurstAmount();i++)
 	{
@@ -110,41 +107,17 @@ BurstParticleGenerator::~BurstParticleGenerator(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void BurstParticleGenerator::changed(BitVector whichField, UInt32 origin)
+void BurstParticleGenerator::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void BurstParticleGenerator::dump(      UInt32    , 
+void BurstParticleGenerator::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump BurstParticleGenerator NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGBURSTPARTICLEGENERATORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGBURSTPARTICLEGENERATORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGBURSTPARTICLEGENERATORFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

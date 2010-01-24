@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,113 +55,56 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &UniformParticleAffectorBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 UniformParticleAffectorBase::getClassTypeId(void) 
+OSG::UInt32 UniformParticleAffectorBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-UniformParticleAffectorPtr UniformParticleAffectorBase::create(void) 
-{
-    UniformParticleAffectorPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = UniformParticleAffectorPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-UniformParticleAffectorPtr UniformParticleAffectorBase::createEmpty(void) 
-{ 
-    UniformParticleAffectorPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 UniformParticleAffectorBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the UniformParticleAffector::_sfMagnitude field.
-inline
-SFReal32 *UniformParticleAffectorBase::getSFMagnitude(void)
-{
-    return &_sfMagnitude;
-}
-
-//! Get the UniformParticleAffector::_sfDirection field.
-inline
-SFVec3f *UniformParticleAffectorBase::getSFDirection(void)
-{
-    return &_sfDirection;
-}
-
-//! Get the UniformParticleAffector::_sfAttenuation field.
-inline
-SFReal32 *UniformParticleAffectorBase::getSFAttenuation(void)
-{
-    return &_sfAttenuation;
-}
-
-//! Get the UniformParticleAffector::_sfMaxDistance field.
-inline
-SFReal32 *UniformParticleAffectorBase::getSFMaxDistance(void)
-{
-    return &_sfMaxDistance;
-}
-
-//! Get the UniformParticleAffector::_sfBeacon field.
-inline
-SFNodePtr *UniformParticleAffectorBase::getSFBeacon(void)
-{
-    return &_sfBeacon;
-}
-
-//! Get the UniformParticleAffector::_sfParticleMass field.
-inline
-SFReal32 *UniformParticleAffectorBase::getSFParticleMass(void)
-{
-    return &_sfParticleMass;
-}
-
-
 //! Get the value of the UniformParticleAffector::_sfMagnitude field.
+
 inline
-Real32 &UniformParticleAffectorBase::getMagnitude(void)
+Real32 &UniformParticleAffectorBase::editMagnitude(void)
 {
+    editSField(MagnitudeFieldMask);
+
     return _sfMagnitude.getValue();
 }
 
 //! Get the value of the UniformParticleAffector::_sfMagnitude field.
 inline
-const Real32 &UniformParticleAffectorBase::getMagnitude(void) const
+      Real32  UniformParticleAffectorBase::getMagnitude(void) const
 {
     return _sfMagnitude.getValue();
 }
 
 //! Set the value of the UniformParticleAffector::_sfMagnitude field.
 inline
-void UniformParticleAffectorBase::setMagnitude(const Real32 &value)
+void UniformParticleAffectorBase::setMagnitude(const Real32 value)
 {
+    editSField(MagnitudeFieldMask);
+
     _sfMagnitude.setValue(value);
 }
-
 //! Get the value of the UniformParticleAffector::_sfDirection field.
+
 inline
-Vec3f &UniformParticleAffectorBase::getDirection(void)
+Vec3f &UniformParticleAffectorBase::editDirection(void)
 {
+    editSField(DirectionFieldMask);
+
     return _sfDirection.getValue();
 }
 
@@ -178,95 +119,142 @@ const Vec3f &UniformParticleAffectorBase::getDirection(void) const
 inline
 void UniformParticleAffectorBase::setDirection(const Vec3f &value)
 {
+    editSField(DirectionFieldMask);
+
     _sfDirection.setValue(value);
 }
-
 //! Get the value of the UniformParticleAffector::_sfAttenuation field.
+
 inline
-Real32 &UniformParticleAffectorBase::getAttenuation(void)
+Real32 &UniformParticleAffectorBase::editAttenuation(void)
 {
+    editSField(AttenuationFieldMask);
+
     return _sfAttenuation.getValue();
 }
 
 //! Get the value of the UniformParticleAffector::_sfAttenuation field.
 inline
-const Real32 &UniformParticleAffectorBase::getAttenuation(void) const
+      Real32  UniformParticleAffectorBase::getAttenuation(void) const
 {
     return _sfAttenuation.getValue();
 }
 
 //! Set the value of the UniformParticleAffector::_sfAttenuation field.
 inline
-void UniformParticleAffectorBase::setAttenuation(const Real32 &value)
+void UniformParticleAffectorBase::setAttenuation(const Real32 value)
 {
+    editSField(AttenuationFieldMask);
+
     _sfAttenuation.setValue(value);
 }
-
 //! Get the value of the UniformParticleAffector::_sfMaxDistance field.
+
 inline
-Real32 &UniformParticleAffectorBase::getMaxDistance(void)
+Real32 &UniformParticleAffectorBase::editMaxDistance(void)
 {
+    editSField(MaxDistanceFieldMask);
+
     return _sfMaxDistance.getValue();
 }
 
 //! Get the value of the UniformParticleAffector::_sfMaxDistance field.
 inline
-const Real32 &UniformParticleAffectorBase::getMaxDistance(void) const
+      Real32  UniformParticleAffectorBase::getMaxDistance(void) const
 {
     return _sfMaxDistance.getValue();
 }
 
 //! Set the value of the UniformParticleAffector::_sfMaxDistance field.
 inline
-void UniformParticleAffectorBase::setMaxDistance(const Real32 &value)
+void UniformParticleAffectorBase::setMaxDistance(const Real32 value)
 {
+    editSField(MaxDistanceFieldMask);
+
     _sfMaxDistance.setValue(value);
 }
 
 //! Get the value of the UniformParticleAffector::_sfBeacon field.
 inline
-NodePtr &UniformParticleAffectorBase::getBeacon(void)
-{
-    return _sfBeacon.getValue();
-}
-
-//! Get the value of the UniformParticleAffector::_sfBeacon field.
-inline
-const NodePtr &UniformParticleAffectorBase::getBeacon(void) const
+Node * UniformParticleAffectorBase::getBeacon(void) const
 {
     return _sfBeacon.getValue();
 }
 
 //! Set the value of the UniformParticleAffector::_sfBeacon field.
 inline
-void UniformParticleAffectorBase::setBeacon(const NodePtr &value)
+void UniformParticleAffectorBase::setBeacon(Node * const value)
 {
+    editSField(BeaconFieldMask);
+
     _sfBeacon.setValue(value);
 }
-
 //! Get the value of the UniformParticleAffector::_sfParticleMass field.
+
 inline
-Real32 &UniformParticleAffectorBase::getParticleMass(void)
+Real32 &UniformParticleAffectorBase::editParticleMass(void)
 {
+    editSField(ParticleMassFieldMask);
+
     return _sfParticleMass.getValue();
 }
 
 //! Get the value of the UniformParticleAffector::_sfParticleMass field.
 inline
-const Real32 &UniformParticleAffectorBase::getParticleMass(void) const
+      Real32  UniformParticleAffectorBase::getParticleMass(void) const
 {
     return _sfParticleMass.getValue();
 }
 
 //! Set the value of the UniformParticleAffector::_sfParticleMass field.
 inline
-void UniformParticleAffectorBase::setParticleMass(const Real32 &value)
+void UniformParticleAffectorBase::setParticleMass(const Real32 value)
 {
+    editSField(ParticleMassFieldMask);
+
     _sfParticleMass.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void UniformParticleAffectorBase::execSync (      UniformParticleAffectorBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGUNIFORMPARTICLEAFFECTORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (MagnitudeFieldMask & whichField))
+        _sfMagnitude.syncWith(pFrom->_sfMagnitude);
+
+    if(FieldBits::NoField != (DirectionFieldMask & whichField))
+        _sfDirection.syncWith(pFrom->_sfDirection);
+
+    if(FieldBits::NoField != (AttenuationFieldMask & whichField))
+        _sfAttenuation.syncWith(pFrom->_sfAttenuation);
+
+    if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
+        _sfMaxDistance.syncWith(pFrom->_sfMaxDistance);
+
+    if(FieldBits::NoField != (BeaconFieldMask & whichField))
+        _sfBeacon.syncWith(pFrom->_sfBeacon);
+
+    if(FieldBits::NoField != (ParticleMassFieldMask & whichField))
+        _sfParticleMass.syncWith(pFrom->_sfParticleMass);
+}
+#endif
+
+
+inline
+const Char8 *UniformParticleAffectorBase::getClassname(void)
+{
+    return "UniformParticleAffector";
+}
+
+
+OSG_GEN_CONTAINERPTR(UniformParticleAffector);
+
+OSG_END_NAMESPACE
 

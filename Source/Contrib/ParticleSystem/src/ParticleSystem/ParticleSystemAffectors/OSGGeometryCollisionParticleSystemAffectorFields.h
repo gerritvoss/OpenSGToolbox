@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,75 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGParticleSystemAffectorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class GeometryCollisionParticleSystemAffector;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! GeometryCollisionParticleSystemAffectorPtr
+OSG_GEN_CONTAINERPTR(GeometryCollisionParticleSystemAffector);
 
-typedef FCPtr<ParticleSystemAffectorPtr, GeometryCollisionParticleSystemAffector> GeometryCollisionParticleSystemAffectorPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpParticleSystemFieldTraits
+/*! \ingroup GrpContribParticleSystemFieldTraits
+    \ingroup GrpLibOSGContribParticleSystem
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<GeometryCollisionParticleSystemAffectorPtr> : 
-    public FieldTraitsRecurseMapper<GeometryCollisionParticleSystemAffectorPtr, true>
+struct FieldTraits<GeometryCollisionParticleSystemAffector *> :
+    public FieldTraitsFCPtrBase<GeometryCollisionParticleSystemAffector *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFGeometryCollisionParticleSystemAffectorPtr"; }
-    static const char *getMName(void) { return "MFGeometryCollisionParticleSystemAffectorPtr"; }
+    typedef FieldTraits<GeometryCollisionParticleSystemAffector *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFGeometryCollisionParticleSystemAffectorPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFGeometryCollisionParticleSystemAffectorPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<GeometryCollisionParticleSystemAffectorPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<GeometryCollisionParticleSystemAffector *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecGeometryCollisionParticleSystemAffectorPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<GeometryCollisionParticleSystemAffector *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecGeometryCollisionParticleSystemAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GeometryCollisionParticleSystemAffector *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakGeometryCollisionParticleSystemAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GeometryCollisionParticleSystemAffector *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdGeometryCollisionParticleSystemAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GeometryCollisionParticleSystemAffector *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecGeometryCollisionParticleSystemAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GeometryCollisionParticleSystemAffector *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecGeometryCollisionParticleSystemAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GeometryCollisionParticleSystemAffector *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakGeometryCollisionParticleSystemAffectorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GeometryCollisionParticleSystemAffector *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdGeometryCollisionParticleSystemAffectorPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<GeometryCollisionParticleSystemAffector *,
+                      RecordedRefCountPolicy  > SFRecGeometryCollisionParticleSystemAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<GeometryCollisionParticleSystemAffector *,
+                      UnrecordedRefCountPolicy> SFUnrecGeometryCollisionParticleSystemAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<GeometryCollisionParticleSystemAffector *,
+                      WeakRefCountPolicy      > SFWeakGeometryCollisionParticleSystemAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<GeometryCollisionParticleSystemAffector *,
+                      NoRefCountPolicy        > SFUncountedGeometryCollisionParticleSystemAffectorPtr;
 
-typedef SField<GeometryCollisionParticleSystemAffectorPtr> SFGeometryCollisionParticleSystemAffectorPtr;
-#endif
 
-#ifndef OSG_COMPILEGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORINST
-OSG_DLLEXPORT_DECL1(SField, GeometryCollisionParticleSystemAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<GeometryCollisionParticleSystemAffector *,
+                      RecordedRefCountPolicy  > MFRecGeometryCollisionParticleSystemAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<GeometryCollisionParticleSystemAffector *,
+                      UnrecordedRefCountPolicy> MFUnrecGeometryCollisionParticleSystemAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<GeometryCollisionParticleSystemAffector *,
+                      WeakRefCountPolicy      > MFWeakGeometryCollisionParticleSystemAffectorPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<GeometryCollisionParticleSystemAffector *,
+                      NoRefCountPolicy        > MFUncountedGeometryCollisionParticleSystemAffectorPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldMulti */
 
-typedef MField<GeometryCollisionParticleSystemAffectorPtr> MFGeometryCollisionParticleSystemAffectorPtr;
-#endif
 
-#ifndef OSG_COMPILEGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORINST
-OSG_DLLEXPORT_DECL1(MField, GeometryCollisionParticleSystemAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFRecGeometryCollisionParticleSystemAffectorPtr : 
+    public PointerSField<GeometryCollisionParticleSystemAffector *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUnrecGeometryCollisionParticleSystemAffectorPtr : 
+    public PointerSField<GeometryCollisionParticleSystemAffector *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFWeakGeometryCollisionParticleSystemAffectorPtr :
+    public PointerSField<GeometryCollisionParticleSystemAffector *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUncountedGeometryCollisionParticleSystemAffectorPtr :
+    public PointerSField<GeometryCollisionParticleSystemAffector *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFRecGeometryCollisionParticleSystemAffectorPtr :
+    public PointerMField<GeometryCollisionParticleSystemAffector *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUnrecGeometryCollisionParticleSystemAffectorPtr :
+    public PointerMField<GeometryCollisionParticleSystemAffector *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFWeakGeometryCollisionParticleSystemAffectorPtr :
+    public PointerMField<GeometryCollisionParticleSystemAffector *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUncountedGeometryCollisionParticleSystemAffectorPtr :
+    public PointerMField<GeometryCollisionParticleSystemAffector *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

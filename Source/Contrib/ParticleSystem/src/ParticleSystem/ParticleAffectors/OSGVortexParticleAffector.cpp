@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                 Authors: David Kabala , Daniel Guilliams                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,27 +40,23 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGMatrix.h>
-#include <OpenSG/OSGQuaternion.h>
+#include <OSGConfig.h>
 
 #include "OSGVortexParticleAffector.h"
-#include "ParticleSystem/OSGParticleSystem.h"
+#include "OSGMatrix.h"
+#include "OSGQuaternion.h"
+
+#include "OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::VortexParticleAffector
-
-*/
+// Documentation for this class is emitted in the
+// OSGVortexParticleAffectorBase.cpp file.
+// To modify it, please change the .fcd file (OSGVortexParticleAffector.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -70,8 +66,13 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void VortexParticleAffector::initMethod (void)
+void VortexParticleAffector::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -79,9 +80,9 @@ void VortexParticleAffector::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool VortexParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps)
+bool VortexParticleAffector::affect(ParticleSystemRefPtr System, Int32 ParticleIndex, const Time& elps)
 {
-	if(getBeacon() != NullFC)
+	if(getBeacon() != NULL)
 	{
 		Matrix BeaconToWorld(getBeacon()->getToWorld());
 		Vec3f translation, tmp;
@@ -96,7 +97,9 @@ bool VortexParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleInde
 			Vec3f particleDirectionFromVortex(particlePos.x() - translation.x(), particlePos.y() - translation.y(), particlePos.z() - translation.z());
 			particleDirectionFromVortex = particleDirectionFromVortex.cross(getVortexAxis());
 			particleDirectionFromVortex.normalize();
-			particleDirectionFromVortex *= (-getMagnitude() * elps)/osg::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax());
+			particleDirectionFromVortex = particleDirectionFromVortex *
+                ((-getMagnitude() *
+                  elps)/OSG::osgClamp<Real32>(1.0f,std::pow(distanceFromAffector,getAttenuation()),TypeTraits<Real32>::getMax()));
 			System->setVelocity(particleDirectionFromVortex + System->getVelocity(ParticleIndex),ParticleIndex);
 		}
 	}
@@ -126,41 +129,17 @@ VortexParticleAffector::~VortexParticleAffector(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void VortexParticleAffector::changed(BitVector whichField, UInt32 origin)
+void VortexParticleAffector::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void VortexParticleAffector::dump(      UInt32    , 
+void VortexParticleAffector::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump VortexParticleAffector NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGVORTEXPARTICLEAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGVORTEXPARTICLEAFFECTORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGVORTEXPARTICLEAFFECTORFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

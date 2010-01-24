@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,27 +40,21 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
-
+#include <OSGConfig.h>
 
 #include "OSGAgeSizeParticleAffector.h"
+#include "OSGParticleSystem.h"
+#include "OSGInterpolations.h"
 
-#include "ParticleSystem/OSGParticleSystem.h"
-#include <OpenSG/Toolbox/OSGInterpolations.h>
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::AgeSizeParticleAffector
-
-*/
+// Documentation for this class is emitted in the
+// OSGAgeSizeParticleAffectorBase.cpp file.
+// To modify it, please change the .fcd file (OSGAgeSizeParticleAffector.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -70,8 +64,13 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void AgeSizeParticleAffector::initMethod (void)
+void AgeSizeParticleAffector::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -79,9 +78,10 @@ void AgeSizeParticleAffector::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool AgeSizeParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps)
+
+bool AgeSizeParticleAffector::affect(ParticleSystemRefPtr System, Int32 ParticleIndex, const Time& elps)
 {
-	if(getAges().size()!=getSizes().size())
+	if(getMFAges()->size()!=getMFSizes()->size())
 	{
 		return false;
 	}
@@ -96,18 +96,18 @@ bool AgeSizeParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleInd
         }
 
 		time = (Age)/(Lifespan);
-		for( ;i<getAges().size() && time>getAges(i);++i)
+		for( ;i<getMFAges()->size() && time>getAges(i);++i)
 		{
 			
 		}
 
-		if(i == getAges().size())
+		if(i == getMFSizes()->size())
 		{
-			System->setSize(getSizes().back(),ParticleIndex);
+			System->setSize(getMFSizes()->back(),ParticleIndex);
 		}
 		else if(i == 0.0)
 		{
-			System->setSize(getSizes().front(),ParticleIndex);
+			System->setSize(getMFSizes()->front(),ParticleIndex);
 		}
 		else
 		{
@@ -145,41 +145,17 @@ AgeSizeParticleAffector::~AgeSizeParticleAffector(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void AgeSizeParticleAffector::changed(BitVector whichField, UInt32 origin)
+void AgeSizeParticleAffector::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void AgeSizeParticleAffector::dump(      UInt32    , 
+void AgeSizeParticleAffector::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump AgeSizeParticleAffector NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGAGESIZEPARTICLEAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGAGESIZEPARTICLEAFFECTORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGAGESIZEPARTICLEAFFECTORFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

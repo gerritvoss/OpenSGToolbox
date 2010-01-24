@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,194 +50,326 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEAGEFADEPARTICLEAFFECTORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGAgeFadeParticleAffectorBase.h"
 #include "OSGAgeFadeParticleAffector.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  AgeFadeParticleAffectorBase::FadeInTimeFieldMask = 
-    (TypeTraits<BitVector>::One << AgeFadeParticleAffectorBase::FadeInTimeFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  AgeFadeParticleAffectorBase::FadeOutTimeFieldMask = 
-    (TypeTraits<BitVector>::One << AgeFadeParticleAffectorBase::FadeOutTimeFieldId);
+/*! \class OSG::AgeFadeParticleAffector
+    
+ */
 
-const OSG::BitVector  AgeFadeParticleAffectorBase::FadeToAlphaFieldMask = 
-    (TypeTraits<BitVector>::One << AgeFadeParticleAffectorBase::FadeToAlphaFieldId);
-
-const OSG::BitVector  AgeFadeParticleAffectorBase::StartAlphaFieldMask = 
-    (TypeTraits<BitVector>::One << AgeFadeParticleAffectorBase::StartAlphaFieldId);
-
-const OSG::BitVector  AgeFadeParticleAffectorBase::EndAlphaFieldMask = 
-    (TypeTraits<BitVector>::One << AgeFadeParticleAffectorBase::EndAlphaFieldId);
-
-const OSG::BitVector AgeFadeParticleAffectorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Real32          AgeFadeParticleAffectorBase::_sfFadeInTime
     
 */
+
 /*! \var Real32          AgeFadeParticleAffectorBase::_sfFadeOutTime
     
 */
+
 /*! \var Real32          AgeFadeParticleAffectorBase::_sfFadeToAlpha
     
 */
+
 /*! \var Real32          AgeFadeParticleAffectorBase::_sfStartAlpha
     
 */
+
 /*! \var Real32          AgeFadeParticleAffectorBase::_sfEndAlpha
     
 */
 
-//! AgeFadeParticleAffector description
 
-FieldDescription *AgeFadeParticleAffectorBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<AgeFadeParticleAffector *>::_type("AgeFadeParticleAffectorPtr", "ParticleAffectorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(AgeFadeParticleAffector *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           AgeFadeParticleAffector *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           AgeFadeParticleAffector *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void AgeFadeParticleAffectorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "FadeInTime", 
-                     FadeInTimeFieldId, FadeInTimeFieldMask,
-                     false,
-                     (FieldAccessMethod) &AgeFadeParticleAffectorBase::getSFFadeInTime),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "FadeOutTime", 
-                     FadeOutTimeFieldId, FadeOutTimeFieldMask,
-                     false,
-                     (FieldAccessMethod) &AgeFadeParticleAffectorBase::getSFFadeOutTime),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "FadeToAlpha", 
-                     FadeToAlphaFieldId, FadeToAlphaFieldMask,
-                     false,
-                     (FieldAccessMethod) &AgeFadeParticleAffectorBase::getSFFadeToAlpha),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "StartAlpha", 
-                     StartAlphaFieldId, StartAlphaFieldMask,
-                     false,
-                     (FieldAccessMethod) &AgeFadeParticleAffectorBase::getSFStartAlpha),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "EndAlpha", 
-                     EndAlphaFieldId, EndAlphaFieldMask,
-                     false,
-                     (FieldAccessMethod) &AgeFadeParticleAffectorBase::getSFEndAlpha)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType AgeFadeParticleAffectorBase::_type(
-    "AgeFadeParticleAffector",
-    "ParticleAffector",
-    NULL,
-    (PrototypeCreateF) &AgeFadeParticleAffectorBase::createEmpty,
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "FadeInTime",
+        "",
+        FadeInTimeFieldId, FadeInTimeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AgeFadeParticleAffector::editHandleFadeInTime),
+        static_cast<FieldGetMethodSig >(&AgeFadeParticleAffector::getHandleFadeInTime));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "FadeOutTime",
+        "",
+        FadeOutTimeFieldId, FadeOutTimeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AgeFadeParticleAffector::editHandleFadeOutTime),
+        static_cast<FieldGetMethodSig >(&AgeFadeParticleAffector::getHandleFadeOutTime));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "FadeToAlpha",
+        "",
+        FadeToAlphaFieldId, FadeToAlphaFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AgeFadeParticleAffector::editHandleFadeToAlpha),
+        static_cast<FieldGetMethodSig >(&AgeFadeParticleAffector::getHandleFadeToAlpha));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "StartAlpha",
+        "",
+        StartAlphaFieldId, StartAlphaFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AgeFadeParticleAffector::editHandleStartAlpha),
+        static_cast<FieldGetMethodSig >(&AgeFadeParticleAffector::getHandleStartAlpha));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "EndAlpha",
+        "",
+        EndAlphaFieldId, EndAlphaFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AgeFadeParticleAffector::editHandleEndAlpha),
+        static_cast<FieldGetMethodSig >(&AgeFadeParticleAffector::getHandleEndAlpha));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+AgeFadeParticleAffectorBase::TypeObject AgeFadeParticleAffectorBase::_type(
+    AgeFadeParticleAffectorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&AgeFadeParticleAffectorBase::createEmptyLocal),
     AgeFadeParticleAffector::initMethod,
-    _desc,
-    sizeof(_desc));
+    AgeFadeParticleAffector::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&AgeFadeParticleAffector::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"AgeFadeParticleAffector\"\n"
+    "\tparent=\"ParticleAffector\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com), Daniel Guilliams           \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"FadeInTime\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FadeOutTime\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FadeToAlpha\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"StartAlpha\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"EndAlpha\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(AgeFadeParticleAffectorBase, AgeFadeParticleAffectorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &AgeFadeParticleAffectorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &AgeFadeParticleAffectorBase::getType(void) const 
+FieldContainerType &AgeFadeParticleAffectorBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr AgeFadeParticleAffectorBase::shallowCopy(void) const 
-{ 
-    AgeFadeParticleAffectorPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const AgeFadeParticleAffector *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 AgeFadeParticleAffectorBase::getContainerSize(void) const 
-{ 
-    return sizeof(AgeFadeParticleAffector); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void AgeFadeParticleAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &AgeFadeParticleAffectorBase::getType(void) const
 {
-    this->executeSyncImpl((AgeFadeParticleAffectorBase *) &other, whichField);
+    return _type;
 }
-#else
-void AgeFadeParticleAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 AgeFadeParticleAffectorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((AgeFadeParticleAffectorBase *) &other, whichField, sInfo);
+    return sizeof(AgeFadeParticleAffector);
 }
-void AgeFadeParticleAffectorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFReal32 *AgeFadeParticleAffectorBase::editSFFadeInTime(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(FadeInTimeFieldMask);
+
+    return &_sfFadeInTime;
 }
 
-void AgeFadeParticleAffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFReal32 *AgeFadeParticleAffectorBase::getSFFadeInTime(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfFadeInTime;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-AgeFadeParticleAffectorBase::AgeFadeParticleAffectorBase(void) :
-    _sfFadeInTime             (Real32(1.0f)), 
-    _sfFadeOutTime            (Real32(1.0f)), 
-    _sfFadeToAlpha            (Real32(1.0f)), 
-    _sfStartAlpha             (Real32(0.0f)), 
-    _sfEndAlpha               (Real32(0.0f)), 
-    Inherited() 
+SFReal32 *AgeFadeParticleAffectorBase::editSFFadeOutTime(void)
 {
+    editSField(FadeOutTimeFieldMask);
+
+    return &_sfFadeOutTime;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-AgeFadeParticleAffectorBase::AgeFadeParticleAffectorBase(const AgeFadeParticleAffectorBase &source) :
-    _sfFadeInTime             (source._sfFadeInTime             ), 
-    _sfFadeOutTime            (source._sfFadeOutTime            ), 
-    _sfFadeToAlpha            (source._sfFadeToAlpha            ), 
-    _sfStartAlpha             (source._sfStartAlpha             ), 
-    _sfEndAlpha               (source._sfEndAlpha               ), 
-    Inherited                 (source)
+const SFReal32 *AgeFadeParticleAffectorBase::getSFFadeOutTime(void) const
 {
+    return &_sfFadeOutTime;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-AgeFadeParticleAffectorBase::~AgeFadeParticleAffectorBase(void)
+SFReal32 *AgeFadeParticleAffectorBase::editSFFadeToAlpha(void)
 {
+    editSField(FadeToAlphaFieldMask);
+
+    return &_sfFadeToAlpha;
 }
+
+const SFReal32 *AgeFadeParticleAffectorBase::getSFFadeToAlpha(void) const
+{
+    return &_sfFadeToAlpha;
+}
+
+
+SFReal32 *AgeFadeParticleAffectorBase::editSFStartAlpha(void)
+{
+    editSField(StartAlphaFieldMask);
+
+    return &_sfStartAlpha;
+}
+
+const SFReal32 *AgeFadeParticleAffectorBase::getSFStartAlpha(void) const
+{
+    return &_sfStartAlpha;
+}
+
+
+SFReal32 *AgeFadeParticleAffectorBase::editSFEndAlpha(void)
+{
+    editSField(EndAlphaFieldMask);
+
+    return &_sfEndAlpha;
+}
+
+const SFReal32 *AgeFadeParticleAffectorBase::getSFEndAlpha(void) const
+{
+    return &_sfEndAlpha;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 AgeFadeParticleAffectorBase::getBinSize(const BitVector &whichField)
+UInt32 AgeFadeParticleAffectorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -245,33 +377,28 @@ UInt32 AgeFadeParticleAffectorBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfFadeInTime.getBinSize();
     }
-
     if(FieldBits::NoField != (FadeOutTimeFieldMask & whichField))
     {
         returnValue += _sfFadeOutTime.getBinSize();
     }
-
     if(FieldBits::NoField != (FadeToAlphaFieldMask & whichField))
     {
         returnValue += _sfFadeToAlpha.getBinSize();
     }
-
     if(FieldBits::NoField != (StartAlphaFieldMask & whichField))
     {
         returnValue += _sfStartAlpha.getBinSize();
     }
-
     if(FieldBits::NoField != (EndAlphaFieldMask & whichField))
     {
         returnValue += _sfEndAlpha.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void AgeFadeParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void AgeFadeParticleAffectorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -279,32 +406,26 @@ void AgeFadeParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfFadeInTime.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FadeOutTimeFieldMask & whichField))
     {
         _sfFadeOutTime.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FadeToAlphaFieldMask & whichField))
     {
         _sfFadeToAlpha.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (StartAlphaFieldMask & whichField))
     {
         _sfStartAlpha.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EndAlphaFieldMask & whichField))
     {
         _sfEndAlpha.copyToBin(pMem);
     }
-
-
 }
 
-void AgeFadeParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void AgeFadeParticleAffectorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -312,126 +433,337 @@ void AgeFadeParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfFadeInTime.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FadeOutTimeFieldMask & whichField))
     {
         _sfFadeOutTime.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FadeToAlphaFieldMask & whichField))
     {
         _sfFadeToAlpha.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (StartAlphaFieldMask & whichField))
     {
         _sfStartAlpha.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EndAlphaFieldMask & whichField))
     {
         _sfEndAlpha.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void AgeFadeParticleAffectorBase::executeSyncImpl(      AgeFadeParticleAffectorBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+AgeFadeParticleAffectorTransitPtr AgeFadeParticleAffectorBase::createLocal(BitVector bFlags)
 {
+    AgeFadeParticleAffectorTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (FadeInTimeFieldMask & whichField))
-        _sfFadeInTime.syncWith(pOther->_sfFadeInTime);
+        fc = dynamic_pointer_cast<AgeFadeParticleAffector>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (FadeOutTimeFieldMask & whichField))
-        _sfFadeOutTime.syncWith(pOther->_sfFadeOutTime);
-
-    if(FieldBits::NoField != (FadeToAlphaFieldMask & whichField))
-        _sfFadeToAlpha.syncWith(pOther->_sfFadeToAlpha);
-
-    if(FieldBits::NoField != (StartAlphaFieldMask & whichField))
-        _sfStartAlpha.syncWith(pOther->_sfStartAlpha);
-
-    if(FieldBits::NoField != (EndAlphaFieldMask & whichField))
-        _sfEndAlpha.syncWith(pOther->_sfEndAlpha);
-
-
-}
-#else
-void AgeFadeParticleAffectorBase::executeSyncImpl(      AgeFadeParticleAffectorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (FadeInTimeFieldMask & whichField))
-        _sfFadeInTime.syncWith(pOther->_sfFadeInTime);
-
-    if(FieldBits::NoField != (FadeOutTimeFieldMask & whichField))
-        _sfFadeOutTime.syncWith(pOther->_sfFadeOutTime);
-
-    if(FieldBits::NoField != (FadeToAlphaFieldMask & whichField))
-        _sfFadeToAlpha.syncWith(pOther->_sfFadeToAlpha);
-
-    if(FieldBits::NoField != (StartAlphaFieldMask & whichField))
-        _sfStartAlpha.syncWith(pOther->_sfStartAlpha);
-
-    if(FieldBits::NoField != (EndAlphaFieldMask & whichField))
-        _sfEndAlpha.syncWith(pOther->_sfEndAlpha);
-
-
-
+    return fc;
 }
 
-void AgeFadeParticleAffectorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+AgeFadeParticleAffectorTransitPtr AgeFadeParticleAffectorBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    AgeFadeParticleAffectorTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<AgeFadeParticleAffector>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+AgeFadeParticleAffectorTransitPtr AgeFadeParticleAffectorBase::create(void)
+{
+    AgeFadeParticleAffectorTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<AgeFadeParticleAffector>(tmpPtr);
+    }
+
+    return fc;
+}
+
+AgeFadeParticleAffector *AgeFadeParticleAffectorBase::createEmptyLocal(BitVector bFlags)
+{
+    AgeFadeParticleAffector *returnValue;
+
+    newPtr<AgeFadeParticleAffector>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+AgeFadeParticleAffector *AgeFadeParticleAffectorBase::createEmpty(void)
+{
+    AgeFadeParticleAffector *returnValue;
+
+    newPtr<AgeFadeParticleAffector>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr AgeFadeParticleAffectorBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    AgeFadeParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const AgeFadeParticleAffector *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr AgeFadeParticleAffectorBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    AgeFadeParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const AgeFadeParticleAffector *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr AgeFadeParticleAffectorBase::shallowCopy(void) const
+{
+    AgeFadeParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const AgeFadeParticleAffector *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+AgeFadeParticleAffectorBase::AgeFadeParticleAffectorBase(void) :
+    Inherited(),
+    _sfFadeInTime             (Real32(1.0f)),
+    _sfFadeOutTime            (Real32(1.0f)),
+    _sfFadeToAlpha            (Real32(1.0f)),
+    _sfStartAlpha             (Real32(0.0f)),
+    _sfEndAlpha               (Real32(0.0f))
+{
+}
+
+AgeFadeParticleAffectorBase::AgeFadeParticleAffectorBase(const AgeFadeParticleAffectorBase &source) :
+    Inherited(source),
+    _sfFadeInTime             (source._sfFadeInTime             ),
+    _sfFadeOutTime            (source._sfFadeOutTime            ),
+    _sfFadeToAlpha            (source._sfFadeToAlpha            ),
+    _sfStartAlpha             (source._sfStartAlpha             ),
+    _sfEndAlpha               (source._sfEndAlpha               )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+AgeFadeParticleAffectorBase::~AgeFadeParticleAffectorBase(void)
+{
+}
+
+
+GetFieldHandlePtr AgeFadeParticleAffectorBase::getHandleFadeInTime      (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfFadeInTime,
+             this->getType().getFieldDesc(FadeInTimeFieldId),
+             const_cast<AgeFadeParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AgeFadeParticleAffectorBase::editHandleFadeInTime     (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfFadeInTime,
+             this->getType().getFieldDesc(FadeInTimeFieldId),
+             this));
+
+
+    editSField(FadeInTimeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AgeFadeParticleAffectorBase::getHandleFadeOutTime     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfFadeOutTime,
+             this->getType().getFieldDesc(FadeOutTimeFieldId),
+             const_cast<AgeFadeParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AgeFadeParticleAffectorBase::editHandleFadeOutTime    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfFadeOutTime,
+             this->getType().getFieldDesc(FadeOutTimeFieldId),
+             this));
+
+
+    editSField(FadeOutTimeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AgeFadeParticleAffectorBase::getHandleFadeToAlpha     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfFadeToAlpha,
+             this->getType().getFieldDesc(FadeToAlphaFieldId),
+             const_cast<AgeFadeParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AgeFadeParticleAffectorBase::editHandleFadeToAlpha    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfFadeToAlpha,
+             this->getType().getFieldDesc(FadeToAlphaFieldId),
+             this));
+
+
+    editSField(FadeToAlphaFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AgeFadeParticleAffectorBase::getHandleStartAlpha      (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfStartAlpha,
+             this->getType().getFieldDesc(StartAlphaFieldId),
+             const_cast<AgeFadeParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AgeFadeParticleAffectorBase::editHandleStartAlpha     (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfStartAlpha,
+             this->getType().getFieldDesc(StartAlphaFieldId),
+             this));
+
+
+    editSField(StartAlphaFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AgeFadeParticleAffectorBase::getHandleEndAlpha        (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfEndAlpha,
+             this->getType().getFieldDesc(EndAlphaFieldId),
+             const_cast<AgeFadeParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AgeFadeParticleAffectorBase::editHandleEndAlpha       (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfEndAlpha,
+             this->getType().getFieldDesc(EndAlphaFieldId),
+             this));
+
+
+    editSField(EndAlphaFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void AgeFadeParticleAffectorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    AgeFadeParticleAffector *pThis = static_cast<AgeFadeParticleAffector *>(this);
+
+    pThis->execSync(static_cast<AgeFadeParticleAffector *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *AgeFadeParticleAffectorBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    AgeFadeParticleAffector *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const AgeFadeParticleAffector *>(pRefAspect),
+                  dynamic_cast<const AgeFadeParticleAffector *>(this));
+
+    return returnValue;
+}
+#endif
+
+void AgeFadeParticleAffectorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<AgeFadeParticleAffectorPtr>::_type("AgeFadeParticleAffectorPtr", "ParticleAffectorPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(AgeFadeParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(AgeFadeParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGAGEFADEPARTICLEAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGAGEFADEPARTICLEAFFECTORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGAGEFADEPARTICLEAFFECTORFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

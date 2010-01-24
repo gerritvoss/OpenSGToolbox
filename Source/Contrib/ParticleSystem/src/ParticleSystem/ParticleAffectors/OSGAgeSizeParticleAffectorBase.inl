@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,104 +55,91 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &AgeSizeParticleAffectorBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 AgeSizeParticleAffectorBase::getClassTypeId(void) 
+OSG::UInt32 AgeSizeParticleAffectorBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-AgeSizeParticleAffectorPtr AgeSizeParticleAffectorBase::create(void) 
-{
-    AgeSizeParticleAffectorPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = AgeSizeParticleAffectorPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-AgeSizeParticleAffectorPtr AgeSizeParticleAffectorBase::createEmpty(void) 
-{ 
-    AgeSizeParticleAffectorPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 AgeSizeParticleAffectorBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
-
-//! Get the AgeSizeParticleAffector::_mfAges field.
-inline
-MFReal32 *AgeSizeParticleAffectorBase::getMFAges(void)
-{
-    return &_mfAges;
-}
-
-//! Get the AgeSizeParticleAffector::_mfSizes field.
-inline
-MFVec3f *AgeSizeParticleAffectorBase::getMFSizes(void)
-{
-    return &_mfSizes;
-}
-
 
 
 //! Get the value of the \a index element the AgeSizeParticleAffector::_mfAges field.
 inline
-Real32 &AgeSizeParticleAffectorBase::getAges(const UInt32 index)
+      Real32  AgeSizeParticleAffectorBase::getAges(const UInt32 index) const
 {
     return _mfAges[index];
 }
 
-//! Get the AgeSizeParticleAffector::_mfAges field.
 inline
-MFReal32 &AgeSizeParticleAffectorBase::getAges(void)
+Real32 &AgeSizeParticleAffectorBase::editAges(const UInt32 index)
 {
-    return _mfAges;
+    editMField(AgesFieldMask, _mfAges);
+
+    return _mfAges[index];
 }
 
-//! Get the AgeSizeParticleAffector::_mfAges field.
-inline
-const MFReal32 &AgeSizeParticleAffectorBase::getAges(void) const
-{
-    return _mfAges;
-}
 
 //! Get the value of the \a index element the AgeSizeParticleAffector::_mfSizes field.
 inline
-Vec3f &AgeSizeParticleAffectorBase::getSizes(const UInt32 index)
+const Vec3f &AgeSizeParticleAffectorBase::getSizes(const UInt32 index) const
 {
     return _mfSizes[index];
 }
 
-//! Get the AgeSizeParticleAffector::_mfSizes field.
 inline
-MFVec3f &AgeSizeParticleAffectorBase::getSizes(void)
+Vec3f &AgeSizeParticleAffectorBase::editSizes(const UInt32 index)
 {
-    return _mfSizes;
+    editMField(SizesFieldMask, _mfSizes);
+
+    return _mfSizes[index];
 }
 
-//! Get the AgeSizeParticleAffector::_mfSizes field.
+
+
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-const MFVec3f &AgeSizeParticleAffectorBase::getSizes(void) const
+void AgeSizeParticleAffectorBase::execSync (      AgeSizeParticleAffectorBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfSizes;
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (AgesFieldMask & whichField))
+        _mfAges.syncWith(pFrom->_mfAges,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (SizesFieldMask & whichField))
+        _mfSizes.syncWith(pFrom->_mfSizes,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
 }
+#endif
+
+
+inline
+const Char8 *AgeSizeParticleAffectorBase::getClassname(void)
+{
+    return "AgeSizeParticleAffector";
+}
+
+
+OSG_GEN_CONTAINERPTR(AgeSizeParticleAffector);
 
 OSG_END_NAMESPACE
-
-#define OSGAGESIZEPARTICLEAFFECTORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

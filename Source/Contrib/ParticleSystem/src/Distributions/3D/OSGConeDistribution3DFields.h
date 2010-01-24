@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,75 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGDistribution3DFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class ConeDistribution3D;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! ConeDistribution3DPtr
+OSG_GEN_CONTAINERPTR(ConeDistribution3D);
 
-typedef FCPtr<Distribution3DPtr, ConeDistribution3D> ConeDistribution3DPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpParticleSystemFieldTraits
+/*! \ingroup GrpContribParticleSystemFieldTraits
+    \ingroup GrpLibOSGContribParticleSystem
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<ConeDistribution3DPtr> : 
-    public FieldTraitsRecurseMapper<ConeDistribution3DPtr, true>
+struct FieldTraits<ConeDistribution3D *> :
+    public FieldTraitsFCPtrBase<ConeDistribution3D *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFConeDistribution3DPtr"; }
-    static const char *getMName(void) { return "MFConeDistribution3DPtr"; }
+    typedef FieldTraits<ConeDistribution3D *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFConeDistribution3DPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFConeDistribution3DPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<ConeDistribution3DPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<ConeDistribution3D *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecConeDistribution3DPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<ConeDistribution3D *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecConeDistribution3DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ConeDistribution3D *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakConeDistribution3DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ConeDistribution3D *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdConeDistribution3DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ConeDistribution3D *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecConeDistribution3DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ConeDistribution3D *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecConeDistribution3DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ConeDistribution3D *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakConeDistribution3DPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ConeDistribution3D *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdConeDistribution3DPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<ConeDistribution3D *,
+                      RecordedRefCountPolicy  > SFRecConeDistribution3DPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<ConeDistribution3D *,
+                      UnrecordedRefCountPolicy> SFUnrecConeDistribution3DPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<ConeDistribution3D *,
+                      WeakRefCountPolicy      > SFWeakConeDistribution3DPtr;
+/*! \ingroup GrpContribParticleSystemFieldSFields */
+typedef PointerSField<ConeDistribution3D *,
+                      NoRefCountPolicy        > SFUncountedConeDistribution3DPtr;
 
-typedef SField<ConeDistribution3DPtr> SFConeDistribution3DPtr;
-#endif
 
-#ifndef OSG_COMPILECONEDISTRIBUTION3DINST
-OSG_DLLEXPORT_DECL1(SField, ConeDistribution3DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<ConeDistribution3D *,
+                      RecordedRefCountPolicy  > MFRecConeDistribution3DPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<ConeDistribution3D *,
+                      UnrecordedRefCountPolicy> MFUnrecConeDistribution3DPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<ConeDistribution3D *,
+                      WeakRefCountPolicy      > MFWeakConeDistribution3DPtr;
+/*! \ingroup GrpContribParticleSystemFieldMFields */
+typedef PointerMField<ConeDistribution3D *,
+                      NoRefCountPolicy        > MFUncountedConeDistribution3DPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldMulti */
 
-typedef MField<ConeDistribution3DPtr> MFConeDistribution3DPtr;
-#endif
 
-#ifndef OSG_COMPILECONEDISTRIBUTION3DINST
-OSG_DLLEXPORT_DECL1(MField, ConeDistribution3DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFRecConeDistribution3DPtr : 
+    public PointerSField<ConeDistribution3D *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUnrecConeDistribution3DPtr : 
+    public PointerSField<ConeDistribution3D *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFWeakConeDistribution3DPtr :
+    public PointerSField<ConeDistribution3D *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldSFields \ingroup GrpLibOSGContribParticleSystem */
+struct SFUncountedConeDistribution3DPtr :
+    public PointerSField<ConeDistribution3D *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFRecConeDistribution3DPtr :
+    public PointerMField<ConeDistribution3D *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUnrecConeDistribution3DPtr :
+    public PointerMField<ConeDistribution3D *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFWeakConeDistribution3DPtr :
+    public PointerMField<ConeDistribution3D *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribParticleSystemFieldMFields \ingroup GrpLibOSGContribParticleSystem */
+struct MFUncountedConeDistribution3DPtr :
+    public PointerMField<ConeDistribution3D *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

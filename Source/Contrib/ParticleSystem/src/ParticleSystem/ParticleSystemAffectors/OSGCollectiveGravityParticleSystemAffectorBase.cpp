@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,168 +50,246 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILECOLLECTIVEGRAVITYPARTICLESYSTEMAFFECTORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGCollectiveGravityParticleSystemAffectorBase.h"
 #include "OSGCollectiveGravityParticleSystemAffector.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  CollectiveGravityParticleSystemAffectorBase::ParticleMassFieldMask = 
-    (TypeTraits<BitVector>::One << CollectiveGravityParticleSystemAffectorBase::ParticleMassFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  CollectiveGravityParticleSystemAffectorBase::GravitationalConstantFieldMask = 
-    (TypeTraits<BitVector>::One << CollectiveGravityParticleSystemAffectorBase::GravitationalConstantFieldId);
+/*! \class OSG::CollectiveGravityParticleSystemAffector
+    
+ */
 
-const OSG::BitVector  CollectiveGravityParticleSystemAffectorBase::ParticleMassSourceFieldMask = 
-    (TypeTraits<BitVector>::One << CollectiveGravityParticleSystemAffectorBase::ParticleMassSourceFieldId);
-
-const OSG::BitVector CollectiveGravityParticleSystemAffectorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Real32          CollectiveGravityParticleSystemAffectorBase::_sfParticleMass
     
 */
+
 /*! \var Real32          CollectiveGravityParticleSystemAffectorBase::_sfGravitationalConstant
     
 */
+
 /*! \var UInt32          CollectiveGravityParticleSystemAffectorBase::_sfParticleMassSource
     
 */
 
-//! CollectiveGravityParticleSystemAffector description
 
-FieldDescription *CollectiveGravityParticleSystemAffectorBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<CollectiveGravityParticleSystemAffector *>::_type("CollectiveGravityParticleSystemAffectorPtr", "ParticleSystemAffectorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(CollectiveGravityParticleSystemAffector *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           CollectiveGravityParticleSystemAffector *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           CollectiveGravityParticleSystemAffector *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void CollectiveGravityParticleSystemAffectorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "ParticleMass", 
-                     ParticleMassFieldId, ParticleMassFieldMask,
-                     false,
-                     (FieldAccessMethod) &CollectiveGravityParticleSystemAffectorBase::getSFParticleMass),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "GravitationalConstant", 
-                     GravitationalConstantFieldId, GravitationalConstantFieldMask,
-                     false,
-                     (FieldAccessMethod) &CollectiveGravityParticleSystemAffectorBase::getSFGravitationalConstant),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "ParticleMassSource", 
-                     ParticleMassSourceFieldId, ParticleMassSourceFieldMask,
-                     false,
-                     (FieldAccessMethod) &CollectiveGravityParticleSystemAffectorBase::getSFParticleMassSource)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType CollectiveGravityParticleSystemAffectorBase::_type(
-    "CollectiveGravityParticleSystemAffector",
-    "ParticleSystemAffector",
-    NULL,
-    (PrototypeCreateF) &CollectiveGravityParticleSystemAffectorBase::createEmpty,
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "ParticleMass",
+        "",
+        ParticleMassFieldId, ParticleMassFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&CollectiveGravityParticleSystemAffector::editHandleParticleMass),
+        static_cast<FieldGetMethodSig >(&CollectiveGravityParticleSystemAffector::getHandleParticleMass));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "GravitationalConstant",
+        "",
+        GravitationalConstantFieldId, GravitationalConstantFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&CollectiveGravityParticleSystemAffector::editHandleGravitationalConstant),
+        static_cast<FieldGetMethodSig >(&CollectiveGravityParticleSystemAffector::getHandleGravitationalConstant));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "ParticleMassSource",
+        "",
+        ParticleMassSourceFieldId, ParticleMassSourceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&CollectiveGravityParticleSystemAffector::editHandleParticleMassSource),
+        static_cast<FieldGetMethodSig >(&CollectiveGravityParticleSystemAffector::getHandleParticleMassSource));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+CollectiveGravityParticleSystemAffectorBase::TypeObject CollectiveGravityParticleSystemAffectorBase::_type(
+    CollectiveGravityParticleSystemAffectorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&CollectiveGravityParticleSystemAffectorBase::createEmptyLocal),
     CollectiveGravityParticleSystemAffector::initMethod,
-    _desc,
-    sizeof(_desc));
+    CollectiveGravityParticleSystemAffector::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&CollectiveGravityParticleSystemAffector::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"CollectiveGravityParticleSystemAffector\"\n"
+    "\tparent=\"ParticleSystemAffector\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com), Daniel Guilliams           \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"ParticleMass\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"10000.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"GravitationalConstant\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.0000000000667300\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ParticleMassSource\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"CollectiveGravityParticleSystemAffector::MASS_STATIC\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(CollectiveGravityParticleSystemAffectorBase, CollectiveGravityParticleSystemAffectorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &CollectiveGravityParticleSystemAffectorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &CollectiveGravityParticleSystemAffectorBase::getType(void) const 
+FieldContainerType &CollectiveGravityParticleSystemAffectorBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr CollectiveGravityParticleSystemAffectorBase::shallowCopy(void) const 
-{ 
-    CollectiveGravityParticleSystemAffectorPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const CollectiveGravityParticleSystemAffector *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 CollectiveGravityParticleSystemAffectorBase::getContainerSize(void) const 
-{ 
-    return sizeof(CollectiveGravityParticleSystemAffector); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void CollectiveGravityParticleSystemAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &CollectiveGravityParticleSystemAffectorBase::getType(void) const
 {
-    this->executeSyncImpl((CollectiveGravityParticleSystemAffectorBase *) &other, whichField);
+    return _type;
 }
-#else
-void CollectiveGravityParticleSystemAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 CollectiveGravityParticleSystemAffectorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((CollectiveGravityParticleSystemAffectorBase *) &other, whichField, sInfo);
+    return sizeof(CollectiveGravityParticleSystemAffector);
 }
-void CollectiveGravityParticleSystemAffectorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFReal32 *CollectiveGravityParticleSystemAffectorBase::editSFParticleMass(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(ParticleMassFieldMask);
+
+    return &_sfParticleMass;
 }
 
-void CollectiveGravityParticleSystemAffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFReal32 *CollectiveGravityParticleSystemAffectorBase::getSFParticleMass(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfParticleMass;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-CollectiveGravityParticleSystemAffectorBase::CollectiveGravityParticleSystemAffectorBase(void) :
-    _sfParticleMass           (Real32(10000.0f)), 
-    _sfGravitationalConstant  (Real32(0.0000000000667300)), 
-    _sfParticleMassSource     (UInt32(CollectiveGravityParticleSystemAffector::MASS_STATIC)), 
-    Inherited() 
+SFReal32 *CollectiveGravityParticleSystemAffectorBase::editSFGravitationalConstant(void)
 {
+    editSField(GravitationalConstantFieldMask);
+
+    return &_sfGravitationalConstant;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-CollectiveGravityParticleSystemAffectorBase::CollectiveGravityParticleSystemAffectorBase(const CollectiveGravityParticleSystemAffectorBase &source) :
-    _sfParticleMass           (source._sfParticleMass           ), 
-    _sfGravitationalConstant  (source._sfGravitationalConstant  ), 
-    _sfParticleMassSource     (source._sfParticleMassSource     ), 
-    Inherited                 (source)
+const SFReal32 *CollectiveGravityParticleSystemAffectorBase::getSFGravitationalConstant(void) const
 {
+    return &_sfGravitationalConstant;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-CollectiveGravityParticleSystemAffectorBase::~CollectiveGravityParticleSystemAffectorBase(void)
+SFUInt32 *CollectiveGravityParticleSystemAffectorBase::editSFParticleMassSource(void)
 {
+    editSField(ParticleMassSourceFieldMask);
+
+    return &_sfParticleMassSource;
 }
+
+const SFUInt32 *CollectiveGravityParticleSystemAffectorBase::getSFParticleMassSource(void) const
+{
+    return &_sfParticleMassSource;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 CollectiveGravityParticleSystemAffectorBase::getBinSize(const BitVector &whichField)
+UInt32 CollectiveGravityParticleSystemAffectorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -219,23 +297,20 @@ UInt32 CollectiveGravityParticleSystemAffectorBase::getBinSize(const BitVector &
     {
         returnValue += _sfParticleMass.getBinSize();
     }
-
     if(FieldBits::NoField != (GravitationalConstantFieldMask & whichField))
     {
         returnValue += _sfGravitationalConstant.getBinSize();
     }
-
     if(FieldBits::NoField != (ParticleMassSourceFieldMask & whichField))
     {
         returnValue += _sfParticleMassSource.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void CollectiveGravityParticleSystemAffectorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void CollectiveGravityParticleSystemAffectorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -243,22 +318,18 @@ void CollectiveGravityParticleSystemAffectorBase::copyToBin(      BinaryDataHand
     {
         _sfParticleMass.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (GravitationalConstantFieldMask & whichField))
     {
         _sfGravitationalConstant.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ParticleMassSourceFieldMask & whichField))
     {
         _sfParticleMassSource.copyToBin(pMem);
     }
-
-
 }
 
-void CollectiveGravityParticleSystemAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void CollectiveGravityParticleSystemAffectorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -266,104 +337,275 @@ void CollectiveGravityParticleSystemAffectorBase::copyFromBin(      BinaryDataHa
     {
         _sfParticleMass.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (GravitationalConstantFieldMask & whichField))
     {
         _sfGravitationalConstant.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ParticleMassSourceFieldMask & whichField))
     {
         _sfParticleMassSource.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void CollectiveGravityParticleSystemAffectorBase::executeSyncImpl(      CollectiveGravityParticleSystemAffectorBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+CollectiveGravityParticleSystemAffectorTransitPtr CollectiveGravityParticleSystemAffectorBase::createLocal(BitVector bFlags)
 {
+    CollectiveGravityParticleSystemAffectorTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (ParticleMassFieldMask & whichField))
-        _sfParticleMass.syncWith(pOther->_sfParticleMass);
+        fc = dynamic_pointer_cast<CollectiveGravityParticleSystemAffector>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (GravitationalConstantFieldMask & whichField))
-        _sfGravitationalConstant.syncWith(pOther->_sfGravitationalConstant);
-
-    if(FieldBits::NoField != (ParticleMassSourceFieldMask & whichField))
-        _sfParticleMassSource.syncWith(pOther->_sfParticleMassSource);
-
-
-}
-#else
-void CollectiveGravityParticleSystemAffectorBase::executeSyncImpl(      CollectiveGravityParticleSystemAffectorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ParticleMassFieldMask & whichField))
-        _sfParticleMass.syncWith(pOther->_sfParticleMass);
-
-    if(FieldBits::NoField != (GravitationalConstantFieldMask & whichField))
-        _sfGravitationalConstant.syncWith(pOther->_sfGravitationalConstant);
-
-    if(FieldBits::NoField != (ParticleMassSourceFieldMask & whichField))
-        _sfParticleMassSource.syncWith(pOther->_sfParticleMassSource);
-
-
-
+    return fc;
 }
 
-void CollectiveGravityParticleSystemAffectorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+CollectiveGravityParticleSystemAffectorTransitPtr CollectiveGravityParticleSystemAffectorBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    CollectiveGravityParticleSystemAffectorTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<CollectiveGravityParticleSystemAffector>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+CollectiveGravityParticleSystemAffectorTransitPtr CollectiveGravityParticleSystemAffectorBase::create(void)
+{
+    CollectiveGravityParticleSystemAffectorTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<CollectiveGravityParticleSystemAffector>(tmpPtr);
+    }
+
+    return fc;
+}
+
+CollectiveGravityParticleSystemAffector *CollectiveGravityParticleSystemAffectorBase::createEmptyLocal(BitVector bFlags)
+{
+    CollectiveGravityParticleSystemAffector *returnValue;
+
+    newPtr<CollectiveGravityParticleSystemAffector>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+CollectiveGravityParticleSystemAffector *CollectiveGravityParticleSystemAffectorBase::createEmpty(void)
+{
+    CollectiveGravityParticleSystemAffector *returnValue;
+
+    newPtr<CollectiveGravityParticleSystemAffector>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr CollectiveGravityParticleSystemAffectorBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    CollectiveGravityParticleSystemAffector *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const CollectiveGravityParticleSystemAffector *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr CollectiveGravityParticleSystemAffectorBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    CollectiveGravityParticleSystemAffector *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const CollectiveGravityParticleSystemAffector *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr CollectiveGravityParticleSystemAffectorBase::shallowCopy(void) const
+{
+    CollectiveGravityParticleSystemAffector *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const CollectiveGravityParticleSystemAffector *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+CollectiveGravityParticleSystemAffectorBase::CollectiveGravityParticleSystemAffectorBase(void) :
+    Inherited(),
+    _sfParticleMass           (Real32(10000.0f)),
+    _sfGravitationalConstant  (Real32(0.0000000000667300)),
+    _sfParticleMassSource     (UInt32(CollectiveGravityParticleSystemAffector::MASS_STATIC))
+{
+}
+
+CollectiveGravityParticleSystemAffectorBase::CollectiveGravityParticleSystemAffectorBase(const CollectiveGravityParticleSystemAffectorBase &source) :
+    Inherited(source),
+    _sfParticleMass           (source._sfParticleMass           ),
+    _sfGravitationalConstant  (source._sfGravitationalConstant  ),
+    _sfParticleMassSource     (source._sfParticleMassSource     )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+CollectiveGravityParticleSystemAffectorBase::~CollectiveGravityParticleSystemAffectorBase(void)
+{
+}
+
+
+GetFieldHandlePtr CollectiveGravityParticleSystemAffectorBase::getHandleParticleMass    (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfParticleMass,
+             this->getType().getFieldDesc(ParticleMassFieldId),
+             const_cast<CollectiveGravityParticleSystemAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr CollectiveGravityParticleSystemAffectorBase::editHandleParticleMass   (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfParticleMass,
+             this->getType().getFieldDesc(ParticleMassFieldId),
+             this));
+
+
+    editSField(ParticleMassFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr CollectiveGravityParticleSystemAffectorBase::getHandleGravitationalConstant (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfGravitationalConstant,
+             this->getType().getFieldDesc(GravitationalConstantFieldId),
+             const_cast<CollectiveGravityParticleSystemAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr CollectiveGravityParticleSystemAffectorBase::editHandleGravitationalConstant(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfGravitationalConstant,
+             this->getType().getFieldDesc(GravitationalConstantFieldId),
+             this));
+
+
+    editSField(GravitationalConstantFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr CollectiveGravityParticleSystemAffectorBase::getHandleParticleMassSource (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfParticleMassSource,
+             this->getType().getFieldDesc(ParticleMassSourceFieldId),
+             const_cast<CollectiveGravityParticleSystemAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr CollectiveGravityParticleSystemAffectorBase::editHandleParticleMassSource(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfParticleMassSource,
+             this->getType().getFieldDesc(ParticleMassSourceFieldId),
+             this));
+
+
+    editSField(ParticleMassSourceFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void CollectiveGravityParticleSystemAffectorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    CollectiveGravityParticleSystemAffector *pThis = static_cast<CollectiveGravityParticleSystemAffector *>(this);
+
+    pThis->execSync(static_cast<CollectiveGravityParticleSystemAffector *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *CollectiveGravityParticleSystemAffectorBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    CollectiveGravityParticleSystemAffector *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const CollectiveGravityParticleSystemAffector *>(pRefAspect),
+                  dynamic_cast<const CollectiveGravityParticleSystemAffector *>(this));
+
+    return returnValue;
+}
+#endif
+
+void CollectiveGravityParticleSystemAffectorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<CollectiveGravityParticleSystemAffectorPtr>::_type("CollectiveGravityParticleSystemAffectorPtr", "ParticleSystemAffectorPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(CollectiveGravityParticleSystemAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(CollectiveGravityParticleSystemAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGCOLLECTIVEGRAVITYPARTICLESYSTEMAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCOLLECTIVEGRAVITYPARTICLESYSTEMAFFECTORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCOLLECTIVEGRAVITYPARTICLESYSTEMAFFECTORFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

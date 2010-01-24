@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Dynamics                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGPerlinNoiseDistribution2D.h"
-#include <OpenSG/Toolbox/OSGPerlinNoise.h>
+#include "OSGPerlinNoise.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::PerlinNoiseDistribution2D
-A PerlinNoiseDistribution2D. 	
-*/
+// Documentation for this class is emitted in the
+// OSGPerlinNoiseDistribution2DBase.cpp file.
+// To modify it, please change the .fcd file (OSGPerlinNoiseDistribution2D.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -68,18 +63,19 @@ A PerlinNoiseDistribution2D.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void PerlinNoiseDistribution2D::initMethod (void)
+void PerlinNoiseDistribution2D::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-
-/*-------------------------------------------------------------------------*\
- -  private                                                                 -
-\*-------------------------------------------------------------------------*/
 
 Vec2f PerlinNoiseDistribution2D::generate(void) const
 {
@@ -90,6 +86,10 @@ Real32 PerlinNoiseDistribution2D::generate(Pnt2f t) const
 {	
 	return calcPerlinNoise(t,getAmplitude(),getFrequency(),getPhase(),getPersistance(),getOctaves(),getInterpolationType(),getUseSmoothing());
 }
+
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
@@ -109,16 +109,17 @@ PerlinNoiseDistribution2D::~PerlinNoiseDistribution2D(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void PerlinNoiseDistribution2D::changed(BitVector whichField, UInt32 origin)
+void PerlinNoiseDistribution2D::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void PerlinNoiseDistribution2D::dump(      UInt32    , 
+void PerlinNoiseDistribution2D::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump PerlinNoiseDistribution2D NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,83 +58,100 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include <OpenSG/OSGGroup.h> // Parent
+#include "OSGGroup.h" // Parent
 
-#include "ParticleSystem/OSGParticleSystem.h" // System type
-#include <OpenSG/OSGNodeFields.h> // PrototypeNode type
-#include <OpenSG/OSGVec3fFields.h> // SizeScaling type
-#include <OpenSG/OSGNodeFields.h> // ParticleNodes type
-#include <OpenSG/OSGUInt32Fields.h> // NormalSource type
-#include <OpenSG/OSGVec3fFields.h> // Normal type
-#include <OpenSG/OSGUInt32Fields.h> // UpSource type
-#include <OpenSG/OSGVec3fFields.h> // Up type
+#include "OSGParticleSystemFields.h"    // System type
+#include "OSGNodeFields.h"              // PrototypeNode type
+#include "OSGVecFields.h"               // SizeScaling type
+#include "OSGSysFields.h"               // NormalSource type
 
 #include "OSGNodeParticleSystemCoreFields.h"
+
 
 OSG_BEGIN_NAMESPACE
 
 class NodeParticleSystemCore;
-class BinaryDataHandler;
 
 //! \brief NodeParticleSystemCore Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemCoreBase : public Group
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING NodeParticleSystemCoreBase : public Group
 {
-  private:
-
-    typedef Group    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef NodeParticleSystemCorePtr  Ptr;
+    typedef Group Inherited;
+    typedef Group ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(NodeParticleSystemCore);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        SystemFieldId        = Inherited::NextFieldId,
-        PrototypeNodeFieldId = SystemFieldId        + 1,
-        SizeScalingFieldId   = PrototypeNodeFieldId + 1,
-        ParticleNodesFieldId = SizeScalingFieldId   + 1,
-        NormalSourceFieldId  = ParticleNodesFieldId + 1,
-        NormalFieldId        = NormalSourceFieldId  + 1,
-        UpSourceFieldId      = NormalFieldId        + 1,
-        UpFieldId            = UpSourceFieldId      + 1,
-        NextFieldId          = UpFieldId            + 1
+        SystemFieldId = Inherited::NextFieldId,
+        PrototypeNodeFieldId = SystemFieldId + 1,
+        SizeScalingFieldId = PrototypeNodeFieldId + 1,
+        ParticleNodesFieldId = SizeScalingFieldId + 1,
+        NormalSourceFieldId = ParticleNodesFieldId + 1,
+        NormalFieldId = NormalSourceFieldId + 1,
+        UpSourceFieldId = NormalFieldId + 1,
+        UpFieldId = UpSourceFieldId + 1,
+        NextFieldId = UpFieldId + 1
     };
 
-    static const OSG::BitVector SystemFieldMask;
-    static const OSG::BitVector PrototypeNodeFieldMask;
-    static const OSG::BitVector SizeScalingFieldMask;
-    static const OSG::BitVector ParticleNodesFieldMask;
-    static const OSG::BitVector NormalSourceFieldMask;
-    static const OSG::BitVector NormalFieldMask;
-    static const OSG::BitVector UpSourceFieldMask;
-    static const OSG::BitVector UpFieldMask;
+    static const OSG::BitVector SystemFieldMask =
+        (TypeTraits<BitVector>::One << SystemFieldId);
+    static const OSG::BitVector PrototypeNodeFieldMask =
+        (TypeTraits<BitVector>::One << PrototypeNodeFieldId);
+    static const OSG::BitVector SizeScalingFieldMask =
+        (TypeTraits<BitVector>::One << SizeScalingFieldId);
+    static const OSG::BitVector ParticleNodesFieldMask =
+        (TypeTraits<BitVector>::One << ParticleNodesFieldId);
+    static const OSG::BitVector NormalSourceFieldMask =
+        (TypeTraits<BitVector>::One << NormalSourceFieldId);
+    static const OSG::BitVector NormalFieldMask =
+        (TypeTraits<BitVector>::One << NormalFieldId);
+    static const OSG::BitVector UpSourceFieldMask =
+        (TypeTraits<BitVector>::One << UpSourceFieldId);
+    static const OSG::BitVector UpFieldMask =
+        (TypeTraits<BitVector>::One << UpFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecParticleSystemPtr SFSystemType;
+    typedef SFUnrecNodePtr    SFPrototypeNodeType;
+    typedef SFVec3f           SFSizeScalingType;
+    typedef MFUnrecNodePtr    MFParticleNodesType;
+    typedef SFUInt32          SFNormalSourceType;
+    typedef SFVec3f           SFNormalType;
+    typedef SFUInt32          SFUpSourceType;
+    typedef SFVec3f           SFUpType;
 
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -143,45 +160,67 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemCoreBase : public Group
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFParticleSystemPtr *getSFSystem         (void);
-           SFNodePtr           *getSFPrototypeNode  (void);
-           SFVec3f             *getSFSizeScaling    (void);
-           SFUInt32            *getSFNormalSource   (void);
-           SFVec3f             *getSFNormal         (void);
-           SFUInt32            *getSFUpSource       (void);
-           SFVec3f             *getSFUp             (void);
+            const SFUnrecParticleSystemPtr *getSFSystem         (void) const;
+                  SFUnrecParticleSystemPtr *editSFSystem         (void);
+            const SFUnrecNodePtr      *getSFPrototypeNode  (void) const;
+                  SFUnrecNodePtr      *editSFPrototypeNode  (void);
 
-           ParticleSystemPtr   &getSystem         (void);
-     const ParticleSystemPtr   &getSystem         (void) const;
-           NodePtr             &getPrototypeNode  (void);
-     const NodePtr             &getPrototypeNode  (void) const;
-           Vec3f               &getSizeScaling    (void);
-     const Vec3f               &getSizeScaling    (void) const;
-           UInt32              &getNormalSource   (void);
-     const UInt32              &getNormalSource   (void) const;
-           Vec3f               &getNormal         (void);
-     const Vec3f               &getNormal         (void) const;
-           UInt32              &getUpSource       (void);
-     const UInt32              &getUpSource       (void) const;
-           Vec3f               &getUp             (void);
-     const Vec3f               &getUp             (void) const;
+                  SFVec3f             *editSFSizeScaling    (void);
+            const SFVec3f             *getSFSizeScaling     (void) const;
+
+                  SFUInt32            *editSFNormalSource   (void);
+            const SFUInt32            *getSFNormalSource    (void) const;
+
+                  SFVec3f             *editSFNormal         (void);
+            const SFVec3f             *getSFNormal          (void) const;
+
+                  SFUInt32            *editSFUpSource       (void);
+            const SFUInt32            *getSFUpSource        (void) const;
+
+                  SFVec3f             *editSFUp             (void);
+            const SFVec3f             *getSFUp              (void) const;
+
+
+                  ParticleSystem * getSystem         (void) const;
+
+                  Node * getPrototypeNode  (void) const;
+
+                  Vec3f               &editSizeScaling    (void);
+            const Vec3f               &getSizeScaling     (void) const;
+
+                  UInt32              &editNormalSource   (void);
+                  UInt32               getNormalSource    (void) const;
+
+                  Vec3f               &editNormal         (void);
+            const Vec3f               &getNormal          (void) const;
+
+                  UInt32              &editUpSource       (void);
+                  UInt32               getUpSource        (void) const;
+
+                  Vec3f               &editUp             (void);
+            const Vec3f               &getUp              (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setSystem         ( const ParticleSystemPtr &value );
-     void setPrototypeNode  ( const NodePtr &value );
-     void setSizeScaling    ( const Vec3f &value );
-     void setNormalSource   ( const UInt32 &value );
-     void setNormal         ( const Vec3f &value );
-     void setUpSource       ( const UInt32 &value );
-     void setUp             ( const Vec3f &value );
+            void setSystem         (ParticleSystem * const value);
+            void setPrototypeNode  (Node * const value);
+            void setSizeScaling    (const Vec3f &value);
+            void setNormalSource   (const UInt32 value);
+            void setNormal         (const Vec3f &value);
+            void setUpSource       (const UInt32 value);
+            void setUp             (const Vec3f &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -189,45 +228,63 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemCoreBase : public Group
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  NodeParticleSystemCorePtr      create          (void); 
-    static  NodeParticleSystemCorePtr      createEmpty     (void); 
+    static  NodeParticleSystemCoreTransitPtr  create          (void);
+    static  NodeParticleSystemCore           *createEmpty     (void);
+
+    static  NodeParticleSystemCoreTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  NodeParticleSystemCore            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  NodeParticleSystemCoreTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFParticleSystemPtr   _sfSystem;
-    SFNodePtr           _sfPrototypeNode;
-    SFVec3f             _sfSizeScaling;
-    MFNodePtr           _mfParticleNodes;
-    SFUInt32            _sfNormalSource;
-    SFVec3f             _sfNormal;
-    SFUInt32            _sfUpSource;
-    SFVec3f             _sfUp;
+    SFUnrecParticleSystemPtr _sfSystem;
+    SFUnrecNodePtr    _sfPrototypeNode;
+    SFVec3f           _sfSizeScaling;
+    MFUnrecNodePtr    _mfParticleNodes;
+    SFUInt32          _sfNormalSource;
+    SFVec3f           _sfNormal;
+    SFUInt32          _sfUpSource;
+    SFVec3f           _sfUp;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -242,18 +299,47 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemCoreBase : public Group
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~NodeParticleSystemCoreBase(void); 
+    virtual ~NodeParticleSystemCoreBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const NodeParticleSystemCore *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleSystem          (void) const;
+    EditFieldHandlePtr editHandleSystem         (void);
+    GetFieldHandlePtr  getHandlePrototypeNode   (void) const;
+    EditFieldHandlePtr editHandlePrototypeNode  (void);
+    GetFieldHandlePtr  getHandleSizeScaling     (void) const;
+    EditFieldHandlePtr editHandleSizeScaling    (void);
+    GetFieldHandlePtr  getHandleParticleNodes   (void) const;
+    EditFieldHandlePtr editHandleParticleNodes  (void);
+    GetFieldHandlePtr  getHandleNormalSource    (void) const;
+    EditFieldHandlePtr editHandleNormalSource   (void);
+    GetFieldHandlePtr  getHandleNormal          (void) const;
+    EditFieldHandlePtr editHandleNormal         (void);
+    GetFieldHandlePtr  getHandleUpSource        (void) const;
+    EditFieldHandlePtr editHandleUpSource       (void);
+    GetFieldHandlePtr  getHandleUp              (void) const;
+    EditFieldHandlePtr editHandleUp             (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFNodePtr           *getMFParticleNodes  (void);
+            const MFUnrecNodePtr      *getMFParticleNodes   (void) const;
+                  MFUnrecNodePtr      *editMFParticleNodes  (void);
 
-           NodePtr             &getParticleNodes  (UInt32 index);
-           MFNodePtr           &getParticleNodes  (void);
-     const MFNodePtr           &getParticleNodes  (void) const;
+
+                  Node * getParticleNodes  (const UInt32 index) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -263,65 +349,72 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemCoreBase : public Group
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    void pushToParticleNodes           (Node * const value   );
+    void assignParticleNodes           (const MFUnrecNodePtr    &value);
+    void removeFromParticleNodes (UInt32                uiIndex );
+    void removeObjFromParticleNodes(Node * const value   );
+    void clearParticleNodes            (void                          );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      NodeParticleSystemCoreBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      NodeParticleSystemCoreBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      NodeParticleSystemCoreBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const NodeParticleSystemCoreBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef NodeParticleSystemCoreBase *NodeParticleSystemCoreBaseP;
 
-typedef osgIF<NodeParticleSystemCoreBase::isNodeCore,
-              CoredNodePtr<NodeParticleSystemCore>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet NodeParticleSystemCoreNodePtr;
-
-typedef RefPtr<NodeParticleSystemCorePtr> NodeParticleSystemCoreRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGNODEPARTICLESYSTEMCOREBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGNODEPARTICLESYSTEMCOREBASE_H_ */

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,172 +50,288 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEDISTANCEPARTICLEAFFECTORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGNode.h"                    // DistanceFromNode Class
+#include "OSGCamera.h"                  // DistanceFromCamera Class
 
 #include "OSGDistanceParticleAffectorBase.h"
 #include "OSGDistanceParticleAffector.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  DistanceParticleAffectorBase::DistanceFromSourceFieldMask = 
-    (TypeTraits<BitVector>::One << DistanceParticleAffectorBase::DistanceFromSourceFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  DistanceParticleAffectorBase::DistanceFromNodeFieldMask = 
-    (TypeTraits<BitVector>::One << DistanceParticleAffectorBase::DistanceFromNodeFieldId);
+/*! \class OSG::DistanceParticleAffector
+    
+ */
 
-const OSG::BitVector  DistanceParticleAffectorBase::ParticleSystemNodeFieldMask = 
-    (TypeTraits<BitVector>::One << DistanceParticleAffectorBase::ParticleSystemNodeFieldId);
-
-const OSG::BitVector  DistanceParticleAffectorBase::DistanceFromCameraFieldMask = 
-    (TypeTraits<BitVector>::One << DistanceParticleAffectorBase::DistanceFromCameraFieldId);
-
-const OSG::BitVector DistanceParticleAffectorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var UInt32          DistanceParticleAffectorBase::_sfDistanceFromSource
     
 */
-/*! \var NodePtr         DistanceParticleAffectorBase::_sfDistanceFromNode
-    
-*/
-/*! \var NodePtr         DistanceParticleAffectorBase::_sfParticleSystemNode
-    
-*/
-/*! \var CameraPtr       DistanceParticleAffectorBase::_sfDistanceFromCamera
+
+/*! \var Node *          DistanceParticleAffectorBase::_sfDistanceFromNode
     
 */
 
-//! DistanceParticleAffector description
+/*! \var Node *          DistanceParticleAffectorBase::_sfParticleSystemNode
+    
+*/
 
-FieldDescription *DistanceParticleAffectorBase::_desc[] = 
+/*! \var Camera *        DistanceParticleAffectorBase::_sfDistanceFromCamera
+    
+*/
+
+
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<DistanceParticleAffector *>::_type("DistanceParticleAffectorPtr", "ParticleAffectorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(DistanceParticleAffector *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           DistanceParticleAffector *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           DistanceParticleAffector *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void DistanceParticleAffectorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "DistanceFromSource", 
-                     DistanceFromSourceFieldId, DistanceFromSourceFieldMask,
-                     false,
-                     (FieldAccessMethod) &DistanceParticleAffectorBase::getSFDistanceFromSource),
-    new FieldDescription(SFNodePtr::getClassType(), 
-                     "DistanceFromNode", 
-                     DistanceFromNodeFieldId, DistanceFromNodeFieldMask,
-                     false,
-                     (FieldAccessMethod) &DistanceParticleAffectorBase::getSFDistanceFromNode),
-    new FieldDescription(SFNodePtr::getClassType(), 
-                     "ParticleSystemNode", 
-                     ParticleSystemNodeFieldId, ParticleSystemNodeFieldMask,
-                     false,
-                     (FieldAccessMethod) &DistanceParticleAffectorBase::getSFParticleSystemNode),
-    new FieldDescription(SFCameraPtr::getClassType(), 
-                     "DistanceFromCamera", 
-                     DistanceFromCameraFieldId, DistanceFromCameraFieldMask,
-                     false,
-                     (FieldAccessMethod) &DistanceParticleAffectorBase::getSFDistanceFromCamera)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType DistanceParticleAffectorBase::_type(
-    "DistanceParticleAffector",
-    "ParticleAffector",
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "DistanceFromSource",
+        "",
+        DistanceFromSourceFieldId, DistanceFromSourceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DistanceParticleAffector::editHandleDistanceFromSource),
+        static_cast<FieldGetMethodSig >(&DistanceParticleAffector::getHandleDistanceFromSource));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecNodePtr::Description(
+        SFUnrecNodePtr::getClassType(),
+        "DistanceFromNode",
+        "",
+        DistanceFromNodeFieldId, DistanceFromNodeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DistanceParticleAffector::editHandleDistanceFromNode),
+        static_cast<FieldGetMethodSig >(&DistanceParticleAffector::getHandleDistanceFromNode));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecNodePtr::Description(
+        SFUnrecNodePtr::getClassType(),
+        "ParticleSystemNode",
+        "",
+        ParticleSystemNodeFieldId, ParticleSystemNodeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DistanceParticleAffector::editHandleParticleSystemNode),
+        static_cast<FieldGetMethodSig >(&DistanceParticleAffector::getHandleParticleSystemNode));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecCameraPtr::Description(
+        SFUnrecCameraPtr::getClassType(),
+        "DistanceFromCamera",
+        "",
+        DistanceFromCameraFieldId, DistanceFromCameraFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DistanceParticleAffector::editHandleDistanceFromCamera),
+        static_cast<FieldGetMethodSig >(&DistanceParticleAffector::getHandleDistanceFromCamera));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+DistanceParticleAffectorBase::TypeObject DistanceParticleAffectorBase::_type(
+    DistanceParticleAffectorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
     NULL,
-    NULL, 
     DistanceParticleAffector::initMethod,
-    _desc,
-    sizeof(_desc));
+    DistanceParticleAffector::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&DistanceParticleAffector::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"DistanceParticleAffector\"\n"
+    "\tparent=\"ParticleAffector\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"abstract\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com), Daniel Guilliams           \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"DistanceFromSource\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"DistanceParticleAffector::DISTANCE_FROM_CAMERA\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"DistanceFromNode\"\n"
+    "\t\ttype=\"Node\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ParticleSystemNode\"\n"
+    "\t\ttype=\"Node\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"DistanceFromCamera\"\n"
+    "\t\ttype=\"Camera\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(DistanceParticleAffectorBase, DistanceParticleAffectorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &DistanceParticleAffectorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &DistanceParticleAffectorBase::getType(void) const 
+FieldContainerType &DistanceParticleAffectorBase::getType(void)
 {
     return _type;
-} 
-
-
-UInt32 DistanceParticleAffectorBase::getContainerSize(void) const 
-{ 
-    return sizeof(DistanceParticleAffector); 
 }
 
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DistanceParticleAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &DistanceParticleAffectorBase::getType(void) const
 {
-    this->executeSyncImpl((DistanceParticleAffectorBase *) &other, whichField);
+    return _type;
 }
-#else
-void DistanceParticleAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 DistanceParticleAffectorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((DistanceParticleAffectorBase *) &other, whichField, sInfo);
+    return sizeof(DistanceParticleAffector);
 }
-void DistanceParticleAffectorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFUInt32 *DistanceParticleAffectorBase::editSFDistanceFromSource(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(DistanceFromSourceFieldMask);
+
+    return &_sfDistanceFromSource;
 }
 
-void DistanceParticleAffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFUInt32 *DistanceParticleAffectorBase::getSFDistanceFromSource(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfDistanceFromSource;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-DistanceParticleAffectorBase::DistanceParticleAffectorBase(void) :
-    _sfDistanceFromSource     (UInt32(DistanceParticleAffector::DISTANCE_FROM_CAMERA)), 
-    _sfDistanceFromNode       (NodePtr(NullFC)), 
-    _sfParticleSystemNode     (NodePtr(NullFC)), 
-    _sfDistanceFromCamera     (CameraPtr(NullFC)), 
-    Inherited() 
+//! Get the DistanceParticleAffector::_sfDistanceFromNode field.
+const SFUnrecNodePtr *DistanceParticleAffectorBase::getSFDistanceFromNode(void) const
 {
+    return &_sfDistanceFromNode;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-DistanceParticleAffectorBase::DistanceParticleAffectorBase(const DistanceParticleAffectorBase &source) :
-    _sfDistanceFromSource     (source._sfDistanceFromSource     ), 
-    _sfDistanceFromNode       (source._sfDistanceFromNode       ), 
-    _sfParticleSystemNode     (source._sfParticleSystemNode     ), 
-    _sfDistanceFromCamera     (source._sfDistanceFromCamera     ), 
-    Inherited                 (source)
+SFUnrecNodePtr      *DistanceParticleAffectorBase::editSFDistanceFromNode(void)
 {
+    editSField(DistanceFromNodeFieldMask);
+
+    return &_sfDistanceFromNode;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-DistanceParticleAffectorBase::~DistanceParticleAffectorBase(void)
+//! Get the DistanceParticleAffector::_sfParticleSystemNode field.
+const SFUnrecNodePtr *DistanceParticleAffectorBase::getSFParticleSystemNode(void) const
 {
+    return &_sfParticleSystemNode;
 }
+
+SFUnrecNodePtr      *DistanceParticleAffectorBase::editSFParticleSystemNode(void)
+{
+    editSField(ParticleSystemNodeFieldMask);
+
+    return &_sfParticleSystemNode;
+}
+
+//! Get the DistanceParticleAffector::_sfDistanceFromCamera field.
+const SFUnrecCameraPtr *DistanceParticleAffectorBase::getSFDistanceFromCamera(void) const
+{
+    return &_sfDistanceFromCamera;
+}
+
+SFUnrecCameraPtr    *DistanceParticleAffectorBase::editSFDistanceFromCamera(void)
+{
+    editSField(DistanceFromCameraFieldMask);
+
+    return &_sfDistanceFromCamera;
+}
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 DistanceParticleAffectorBase::getBinSize(const BitVector &whichField)
+UInt32 DistanceParticleAffectorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -223,28 +339,24 @@ UInt32 DistanceParticleAffectorBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfDistanceFromSource.getBinSize();
     }
-
     if(FieldBits::NoField != (DistanceFromNodeFieldMask & whichField))
     {
         returnValue += _sfDistanceFromNode.getBinSize();
     }
-
     if(FieldBits::NoField != (ParticleSystemNodeFieldMask & whichField))
     {
         returnValue += _sfParticleSystemNode.getBinSize();
     }
-
     if(FieldBits::NoField != (DistanceFromCameraFieldMask & whichField))
     {
         returnValue += _sfDistanceFromCamera.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void DistanceParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void DistanceParticleAffectorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -252,27 +364,22 @@ void DistanceParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfDistanceFromSource.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DistanceFromNodeFieldMask & whichField))
     {
         _sfDistanceFromNode.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ParticleSystemNodeFieldMask & whichField))
     {
         _sfParticleSystemNode.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DistanceFromCameraFieldMask & whichField))
     {
         _sfDistanceFromCamera.copyToBin(pMem);
     }
-
-
 }
 
-void DistanceParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void DistanceParticleAffectorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -280,115 +387,207 @@ void DistanceParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfDistanceFromSource.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DistanceFromNodeFieldMask & whichField))
     {
         _sfDistanceFromNode.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ParticleSystemNodeFieldMask & whichField))
     {
         _sfParticleSystemNode.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DistanceFromCameraFieldMask & whichField))
     {
         _sfDistanceFromCamera.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DistanceParticleAffectorBase::executeSyncImpl(      DistanceParticleAffectorBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+DistanceParticleAffectorBase::DistanceParticleAffectorBase(void) :
+    Inherited(),
+    _sfDistanceFromSource     (UInt32(DistanceParticleAffector::DISTANCE_FROM_CAMERA)),
+    _sfDistanceFromNode       (NULL),
+    _sfParticleSystemNode     (NULL),
+    _sfDistanceFromCamera     (NULL)
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-    if(FieldBits::NoField != (DistanceFromSourceFieldMask & whichField))
-        _sfDistanceFromSource.syncWith(pOther->_sfDistanceFromSource);
-
-    if(FieldBits::NoField != (DistanceFromNodeFieldMask & whichField))
-        _sfDistanceFromNode.syncWith(pOther->_sfDistanceFromNode);
-
-    if(FieldBits::NoField != (ParticleSystemNodeFieldMask & whichField))
-        _sfParticleSystemNode.syncWith(pOther->_sfParticleSystemNode);
-
-    if(FieldBits::NoField != (DistanceFromCameraFieldMask & whichField))
-        _sfDistanceFromCamera.syncWith(pOther->_sfDistanceFromCamera);
-
-
-}
-#else
-void DistanceParticleAffectorBase::executeSyncImpl(      DistanceParticleAffectorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (DistanceFromSourceFieldMask & whichField))
-        _sfDistanceFromSource.syncWith(pOther->_sfDistanceFromSource);
-
-    if(FieldBits::NoField != (DistanceFromNodeFieldMask & whichField))
-        _sfDistanceFromNode.syncWith(pOther->_sfDistanceFromNode);
-
-    if(FieldBits::NoField != (ParticleSystemNodeFieldMask & whichField))
-        _sfParticleSystemNode.syncWith(pOther->_sfParticleSystemNode);
-
-    if(FieldBits::NoField != (DistanceFromCameraFieldMask & whichField))
-        _sfDistanceFromCamera.syncWith(pOther->_sfDistanceFromCamera);
-
-
-
 }
 
-void DistanceParticleAffectorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+DistanceParticleAffectorBase::DistanceParticleAffectorBase(const DistanceParticleAffectorBase &source) :
+    Inherited(source),
+    _sfDistanceFromSource     (source._sfDistanceFromSource     ),
+    _sfDistanceFromNode       (NULL),
+    _sfParticleSystemNode     (NULL),
+    _sfDistanceFromCamera     (NULL)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
+
+/*-------------------------- destructors ----------------------------------*/
+
+DistanceParticleAffectorBase::~DistanceParticleAffectorBase(void)
+{
+}
+
+void DistanceParticleAffectorBase::onCreate(const DistanceParticleAffector *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        DistanceParticleAffector *pThis = static_cast<DistanceParticleAffector *>(this);
+
+        pThis->setDistanceFromNode(source->getDistanceFromNode());
+
+        pThis->setParticleSystemNode(source->getParticleSystemNode());
+
+        pThis->setDistanceFromCamera(source->getDistanceFromCamera());
+    }
+}
+
+GetFieldHandlePtr DistanceParticleAffectorBase::getHandleDistanceFromSource (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfDistanceFromSource,
+             this->getType().getFieldDesc(DistanceFromSourceFieldId),
+             const_cast<DistanceParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DistanceParticleAffectorBase::editHandleDistanceFromSource(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfDistanceFromSource,
+             this->getType().getFieldDesc(DistanceFromSourceFieldId),
+             this));
+
+
+    editSField(DistanceFromSourceFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DistanceParticleAffectorBase::getHandleDistanceFromNode (void) const
+{
+    SFUnrecNodePtr::GetHandlePtr returnValue(
+        new  SFUnrecNodePtr::GetHandle(
+             &_sfDistanceFromNode,
+             this->getType().getFieldDesc(DistanceFromNodeFieldId),
+             const_cast<DistanceParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DistanceParticleAffectorBase::editHandleDistanceFromNode(void)
+{
+    SFUnrecNodePtr::EditHandlePtr returnValue(
+        new  SFUnrecNodePtr::EditHandle(
+             &_sfDistanceFromNode,
+             this->getType().getFieldDesc(DistanceFromNodeFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DistanceParticleAffector::setDistanceFromNode,
+                    static_cast<DistanceParticleAffector *>(this), _1));
+
+    editSField(DistanceFromNodeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DistanceParticleAffectorBase::getHandleParticleSystemNode (void) const
+{
+    SFUnrecNodePtr::GetHandlePtr returnValue(
+        new  SFUnrecNodePtr::GetHandle(
+             &_sfParticleSystemNode,
+             this->getType().getFieldDesc(ParticleSystemNodeFieldId),
+             const_cast<DistanceParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DistanceParticleAffectorBase::editHandleParticleSystemNode(void)
+{
+    SFUnrecNodePtr::EditHandlePtr returnValue(
+        new  SFUnrecNodePtr::EditHandle(
+             &_sfParticleSystemNode,
+             this->getType().getFieldDesc(ParticleSystemNodeFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DistanceParticleAffector::setParticleSystemNode,
+                    static_cast<DistanceParticleAffector *>(this), _1));
+
+    editSField(ParticleSystemNodeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DistanceParticleAffectorBase::getHandleDistanceFromCamera (void) const
+{
+    SFUnrecCameraPtr::GetHandlePtr returnValue(
+        new  SFUnrecCameraPtr::GetHandle(
+             &_sfDistanceFromCamera,
+             this->getType().getFieldDesc(DistanceFromCameraFieldId),
+             const_cast<DistanceParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DistanceParticleAffectorBase::editHandleDistanceFromCamera(void)
+{
+    SFUnrecCameraPtr::EditHandlePtr returnValue(
+        new  SFUnrecCameraPtr::EditHandle(
+             &_sfDistanceFromCamera,
+             this->getType().getFieldDesc(DistanceFromCameraFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DistanceParticleAffector::setDistanceFromCamera,
+                    static_cast<DistanceParticleAffector *>(this), _1));
+
+    editSField(DistanceFromCameraFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void DistanceParticleAffectorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    DistanceParticleAffector *pThis = static_cast<DistanceParticleAffector *>(this);
+
+    pThis->execSync(static_cast<DistanceParticleAffector *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+
+void DistanceParticleAffectorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<DistanceParticleAffector *>(this)->setDistanceFromNode(NULL);
+
+    static_cast<DistanceParticleAffector *>(this)->setParticleSystemNode(NULL);
+
+    static_cast<DistanceParticleAffector *>(this)->setDistanceFromCamera(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<DistanceParticleAffectorPtr>::_type("DistanceParticleAffectorPtr", "ParticleAffectorPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(DistanceParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(DistanceParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGDISTANCEPARTICLEAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDISTANCEPARTICLEAFFECTORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDISTANCEPARTICLEAFFECTORFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

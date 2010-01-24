@@ -3,18 +3,21 @@
 <FieldContainer
 	name="PerlinNoiseDistribution2D"
 	parent="Distribution2D"
-	library="ParticleSystem"
-	pointerfieldtypes="both"
+    library="ContribParticleSystem"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com), Daniel Guilliams           "
 >
 A PerlinNoiseDistribution2D.
 	<Field
 		name="Frequency"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -24,6 +27,7 @@ A PerlinNoiseDistribution2D.
 	<Field
 		name="Persistance"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -33,6 +37,7 @@ A PerlinNoiseDistribution2D.
 	<Field
 		name="Octaves"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -42,6 +47,7 @@ A PerlinNoiseDistribution2D.
 		<Field
 		name="Amplitude"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -51,6 +57,7 @@ A PerlinNoiseDistribution2D.
 	<Field
 		name="InterpolationType"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="PerlinNoiseDistribution2D::COSINE"
@@ -63,6 +70,7 @@ A PerlinNoiseDistribution2D.
 	<Field
 		name="Phase"
 		type="Vec2f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -72,6 +80,7 @@ A PerlinNoiseDistribution2D.
 	<Field
 		name="UseSmoothing"
 		type="bool"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,86 +58,103 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGParticleAffector.h" // Parent
 
-#include <OpenSG/OSGReal32Fields.h> // Magnitude type
-#include <OpenSG/OSGBoolFields.h> // UseDirection type
-#include <OpenSG/OSGVec3fFields.h> // Direction type
-#include <OpenSG/OSGReal32Fields.h> // Attenuation type
-#include <OpenSG/OSGReal32Fields.h> // SpeedAttenuation type
-#include <OpenSG/OSGReal32Fields.h> // MaxDistance type
-#include <OpenSG/OSGReal32Fields.h> // MotionAttenuation type
-#include <OpenSG/OSGReal32Fields.h> // InheritVelocity type
-#include <OpenSG/OSGNodeFields.h> // Beacon type
+#include "OSGSysFields.h"               // Magnitude type
+#include "OSGVecFields.h"               // Direction type
+#include "OSGNodeFields.h"              // Beacon type
 
 #include "OSGDragParticleAffectorFields.h"
+
 
 OSG_BEGIN_NAMESPACE
 
 class DragParticleAffector;
-class BinaryDataHandler;
 
 //! \brief DragParticleAffector Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING DragParticleAffectorBase : public ParticleAffector
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DragParticleAffectorBase : public ParticleAffector
 {
-  private:
-
-    typedef ParticleAffector    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef DragParticleAffectorPtr  Ptr;
+    typedef ParticleAffector Inherited;
+    typedef ParticleAffector ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(DragParticleAffector);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        MagnitudeFieldId         = Inherited::NextFieldId,
-        UseDirectionFieldId      = MagnitudeFieldId         + 1,
-        DirectionFieldId         = UseDirectionFieldId      + 1,
-        AttenuationFieldId       = DirectionFieldId         + 1,
-        SpeedAttenuationFieldId  = AttenuationFieldId       + 1,
-        MaxDistanceFieldId       = SpeedAttenuationFieldId  + 1,
-        MotionAttenuationFieldId = MaxDistanceFieldId       + 1,
-        InheritVelocityFieldId   = MotionAttenuationFieldId + 1,
-        BeaconFieldId            = InheritVelocityFieldId   + 1,
-        NextFieldId              = BeaconFieldId            + 1
+        MagnitudeFieldId = Inherited::NextFieldId,
+        UseDirectionFieldId = MagnitudeFieldId + 1,
+        DirectionFieldId = UseDirectionFieldId + 1,
+        AttenuationFieldId = DirectionFieldId + 1,
+        SpeedAttenuationFieldId = AttenuationFieldId + 1,
+        MaxDistanceFieldId = SpeedAttenuationFieldId + 1,
+        MotionAttenuationFieldId = MaxDistanceFieldId + 1,
+        InheritVelocityFieldId = MotionAttenuationFieldId + 1,
+        BeaconFieldId = InheritVelocityFieldId + 1,
+        NextFieldId = BeaconFieldId + 1
     };
 
-    static const OSG::BitVector MagnitudeFieldMask;
-    static const OSG::BitVector UseDirectionFieldMask;
-    static const OSG::BitVector DirectionFieldMask;
-    static const OSG::BitVector AttenuationFieldMask;
-    static const OSG::BitVector SpeedAttenuationFieldMask;
-    static const OSG::BitVector MaxDistanceFieldMask;
-    static const OSG::BitVector MotionAttenuationFieldMask;
-    static const OSG::BitVector InheritVelocityFieldMask;
-    static const OSG::BitVector BeaconFieldMask;
+    static const OSG::BitVector MagnitudeFieldMask =
+        (TypeTraits<BitVector>::One << MagnitudeFieldId);
+    static const OSG::BitVector UseDirectionFieldMask =
+        (TypeTraits<BitVector>::One << UseDirectionFieldId);
+    static const OSG::BitVector DirectionFieldMask =
+        (TypeTraits<BitVector>::One << DirectionFieldId);
+    static const OSG::BitVector AttenuationFieldMask =
+        (TypeTraits<BitVector>::One << AttenuationFieldId);
+    static const OSG::BitVector SpeedAttenuationFieldMask =
+        (TypeTraits<BitVector>::One << SpeedAttenuationFieldId);
+    static const OSG::BitVector MaxDistanceFieldMask =
+        (TypeTraits<BitVector>::One << MaxDistanceFieldId);
+    static const OSG::BitVector MotionAttenuationFieldMask =
+        (TypeTraits<BitVector>::One << MotionAttenuationFieldId);
+    static const OSG::BitVector InheritVelocityFieldMask =
+        (TypeTraits<BitVector>::One << InheritVelocityFieldId);
+    static const OSG::BitVector BeaconFieldMask =
+        (TypeTraits<BitVector>::One << BeaconFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFReal32          SFMagnitudeType;
+    typedef SFBool            SFUseDirectionType;
+    typedef SFVec3f           SFDirectionType;
+    typedef SFReal32          SFAttenuationType;
+    typedef SFReal32          SFSpeedAttenuationType;
+    typedef SFReal32          SFMaxDistanceType;
+    typedef SFReal32          SFMotionAttenuationType;
+    typedef SFReal32          SFInheritVelocityType;
+    typedef SFUnrecNodePtr    SFBeaconType;
 
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -146,53 +163,83 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DragParticleAffectorBase : public Particl
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *getSFMagnitude      (void);
-           SFBool              *getSFUseDirection   (void);
-           SFVec3f             *getSFDirection      (void);
-           SFReal32            *getSFAttenuation    (void);
-           SFReal32            *getSFSpeedAttenuation(void);
-           SFReal32            *getSFMaxDistance    (void);
-           SFReal32            *getSFMotionAttenuation(void);
-           SFReal32            *getSFInheritVelocity(void);
-           SFNodePtr           *getSFBeacon         (void);
 
-           Real32              &getMagnitude      (void);
-     const Real32              &getMagnitude      (void) const;
-           bool                &getUseDirection   (void);
-     const bool                &getUseDirection   (void) const;
-           Vec3f               &getDirection      (void);
-     const Vec3f               &getDirection      (void) const;
-           Real32              &getAttenuation    (void);
-     const Real32              &getAttenuation    (void) const;
-           Real32              &getSpeedAttenuation(void);
-     const Real32              &getSpeedAttenuation(void) const;
-           Real32              &getMaxDistance    (void);
-     const Real32              &getMaxDistance    (void) const;
-           Real32              &getMotionAttenuation(void);
-     const Real32              &getMotionAttenuation(void) const;
-           Real32              &getInheritVelocity(void);
-     const Real32              &getInheritVelocity(void) const;
-           NodePtr             &getBeacon         (void);
-     const NodePtr             &getBeacon         (void) const;
+                  SFReal32            *editSFMagnitude      (void);
+            const SFReal32            *getSFMagnitude       (void) const;
+
+                  SFBool              *editSFUseDirection   (void);
+            const SFBool              *getSFUseDirection    (void) const;
+
+                  SFVec3f             *editSFDirection      (void);
+            const SFVec3f             *getSFDirection       (void) const;
+
+                  SFReal32            *editSFAttenuation    (void);
+            const SFReal32            *getSFAttenuation     (void) const;
+
+                  SFReal32            *editSFSpeedAttenuation(void);
+            const SFReal32            *getSFSpeedAttenuation (void) const;
+
+                  SFReal32            *editSFMaxDistance    (void);
+            const SFReal32            *getSFMaxDistance     (void) const;
+
+                  SFReal32            *editSFMotionAttenuation(void);
+            const SFReal32            *getSFMotionAttenuation (void) const;
+
+                  SFReal32            *editSFInheritVelocity(void);
+            const SFReal32            *getSFInheritVelocity (void) const;
+            const SFUnrecNodePtr      *getSFBeacon         (void) const;
+                  SFUnrecNodePtr      *editSFBeacon         (void);
+
+
+                  Real32              &editMagnitude      (void);
+                  Real32               getMagnitude       (void) const;
+
+                  bool                &editUseDirection   (void);
+                  bool                 getUseDirection    (void) const;
+
+                  Vec3f               &editDirection      (void);
+            const Vec3f               &getDirection       (void) const;
+
+                  Real32              &editAttenuation    (void);
+                  Real32               getAttenuation     (void) const;
+
+                  Real32              &editSpeedAttenuation(void);
+                  Real32               getSpeedAttenuation (void) const;
+
+                  Real32              &editMaxDistance    (void);
+                  Real32               getMaxDistance     (void) const;
+
+                  Real32              &editMotionAttenuation(void);
+                  Real32               getMotionAttenuation (void) const;
+
+                  Real32              &editInheritVelocity(void);
+                  Real32               getInheritVelocity (void) const;
+
+                  Node * getBeacon         (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setMagnitude      ( const Real32 &value );
-     void setUseDirection   ( const bool &value );
-     void setDirection      ( const Vec3f &value );
-     void setAttenuation    ( const Real32 &value );
-     void setSpeedAttenuation( const Real32 &value );
-     void setMaxDistance    ( const Real32 &value );
-     void setMotionAttenuation( const Real32 &value );
-     void setInheritVelocity( const Real32 &value );
-     void setBeacon         ( const NodePtr &value );
+            void setMagnitude      (const Real32 value);
+            void setUseDirection   (const bool value);
+            void setDirection      (const Vec3f &value);
+            void setAttenuation    (const Real32 value);
+            void setSpeedAttenuation(const Real32 value);
+            void setMaxDistance    (const Real32 value);
+            void setMotionAttenuation(const Real32 value);
+            void setInheritVelocity(const Real32 value);
+            void setBeacon         (Node * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -200,46 +247,64 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DragParticleAffectorBase : public Particl
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  DragParticleAffectorPtr      create          (void); 
-    static  DragParticleAffectorPtr      createEmpty     (void); 
+    static  DragParticleAffectorTransitPtr  create          (void);
+    static  DragParticleAffector           *createEmpty     (void);
+
+    static  DragParticleAffectorTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  DragParticleAffector            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  DragParticleAffectorTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFReal32            _sfMagnitude;
-    SFBool              _sfUseDirection;
-    SFVec3f             _sfDirection;
-    SFReal32            _sfAttenuation;
-    SFReal32            _sfSpeedAttenuation;
-    SFReal32            _sfMaxDistance;
-    SFReal32            _sfMotionAttenuation;
-    SFReal32            _sfInheritVelocity;
-    SFNodePtr           _sfBeacon;
+    SFReal32          _sfMagnitude;
+    SFBool            _sfUseDirection;
+    SFVec3f           _sfDirection;
+    SFReal32          _sfAttenuation;
+    SFReal32          _sfSpeedAttenuation;
+    SFReal32          _sfMaxDistance;
+    SFReal32          _sfMotionAttenuation;
+    SFReal32          _sfInheritVelocity;
+    SFUnrecNodePtr    _sfBeacon;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -254,69 +319,96 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DragParticleAffectorBase : public Particl
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DragParticleAffectorBase(void); 
+    virtual ~DragParticleAffectorBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const DragParticleAffector *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleMagnitude       (void) const;
+    EditFieldHandlePtr editHandleMagnitude      (void);
+    GetFieldHandlePtr  getHandleUseDirection    (void) const;
+    EditFieldHandlePtr editHandleUseDirection   (void);
+    GetFieldHandlePtr  getHandleDirection       (void) const;
+    EditFieldHandlePtr editHandleDirection      (void);
+    GetFieldHandlePtr  getHandleAttenuation     (void) const;
+    EditFieldHandlePtr editHandleAttenuation    (void);
+    GetFieldHandlePtr  getHandleSpeedAttenuation (void) const;
+    EditFieldHandlePtr editHandleSpeedAttenuation(void);
+    GetFieldHandlePtr  getHandleMaxDistance     (void) const;
+    EditFieldHandlePtr editHandleMaxDistance    (void);
+    GetFieldHandlePtr  getHandleMotionAttenuation (void) const;
+    EditFieldHandlePtr editHandleMotionAttenuation(void);
+    GetFieldHandlePtr  getHandleInheritVelocity (void) const;
+    EditFieldHandlePtr editHandleInheritVelocity(void);
+    GetFieldHandlePtr  getHandleBeacon          (void) const;
+    EditFieldHandlePtr editHandleBeacon         (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      DragParticleAffectorBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      DragParticleAffectorBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      DragParticleAffectorBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const DragParticleAffectorBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef DragParticleAffectorBase *DragParticleAffectorBaseP;
 
-typedef osgIF<DragParticleAffectorBase::isNodeCore,
-              CoredNodePtr<DragParticleAffector>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet DragParticleAffectorNodePtr;
-
-typedef RefPtr<DragParticleAffectorPtr> DragParticleAffectorRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGDRAGPARTICLEAFFECTORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGDRAGPARTICLEAFFECTORBASE_H_ */

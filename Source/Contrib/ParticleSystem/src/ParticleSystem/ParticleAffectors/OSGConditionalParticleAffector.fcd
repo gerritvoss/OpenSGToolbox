@@ -3,17 +3,20 @@
 <FieldContainer
 	name="ConditionalParticleAffector"
 	parent="ParticleAffector"
-	library="ParticleSystem"
-	pointerfieldtypes="both"
+    library="ContribParticleSystem"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com), Daniel Guilliams           "
 >
 	<Field
 		name="ConditionalAttribute"
 		type="std::string"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -23,6 +26,7 @@
     <Field
 		name="ConditionalOperator"
 		type="UInt8"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -32,6 +36,7 @@
     <Field
 		name="ConditionalValue"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -40,11 +45,11 @@
 	</Field>
     <Field
         name="Affectors"
-        type="ParticleAffectorPtr"
+        type="ParticleAffector"
+        category="pointer"
         cardinality="multi"
         visibility="external"
         access="public"
-        defaultValue=""
 	>
 	</Field>
 </FieldContainer>

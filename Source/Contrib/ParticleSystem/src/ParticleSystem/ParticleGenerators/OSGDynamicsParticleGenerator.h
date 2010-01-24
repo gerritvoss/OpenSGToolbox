@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,48 +36,50 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGPARTICLESYSTEMPARTICLEGENERATOR_H_
-#define _OSGPARTICLESYSTEMPARTICLEGENERATOR_H_
+#ifndef _OSGDYNAMICSPARTICLEGENERATOR_H_
+#define _OSGDYNAMICSPARTICLEGENERATOR_H_
 #ifdef __sgi
 #pragma once
 #endif
-
-#include <OpenSG/OSGConfig.h>
 
 #include "OSGDynamicsParticleGeneratorBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DynamicsParticleGenerator class. See \ref 
-           PageParticleSystemDynamicsParticleGenerator for a description.
+/*! \brief DynamicsParticleGenerator class. See \ref
+           PageContribParticleSystemDynamicsParticleGenerator for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING DynamicsParticleGenerator : public DynamicsParticleGeneratorBase
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DynamicsParticleGenerator : public DynamicsParticleGeneratorBase
 {
-  private:
-
-    typedef DynamicsParticleGeneratorBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef DynamicsParticleGeneratorBase Inherited;
+    typedef DynamicsParticleGenerator     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in DynamicsParticleGeneratorBase.
@@ -89,27 +91,32 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DynamicsParticleGenerator : public Dynami
     DynamicsParticleGenerator(void);
     DynamicsParticleGenerator(const DynamicsParticleGenerator &source);
 
-	void generateDynamic(ParticleSystemPtr System, Real32 AdditionalAging = 0.0f) const;
-
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DynamicsParticleGenerator(void); 
+    virtual ~DynamicsParticleGenerator(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+
+	void generateDynamic(ParticleSystemRefPtr System, Real32 AdditionalAging = 0.0f) const;
+
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class DynamicsParticleGeneratorBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const DynamicsParticleGenerator &source);
 };
 
@@ -120,4 +127,4 @@ OSG_END_NAMESPACE
 #include "OSGDynamicsParticleGeneratorBase.inl"
 #include "OSGDynamicsParticleGenerator.inl"
 
-#endif /* _OSGPARTICLESYSTEMPARTICLEGENERATOR_H_ */
+#endif /* _OSGDYNAMICSPARTICLEGENERATOR_H_ */

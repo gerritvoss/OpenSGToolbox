@@ -3,122 +3,124 @@
 <FieldContainer
 	name="DynamicsParticleGenerator"
 	parent="ParticleGenerator"
-	library="ParticleSystem"
-	pointerfieldtypes="both"
+    library="ContribParticleSystem"
+    pointerfieldtypes="both"
 	structure="abstract"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com), Daniel Guilliams           "
 >
 	<Field
 		name="PositionDistribution"
-		type="Distribution3DPtr"
+		type="Distribution3D"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="NullFC"
-		header="Distributions/3D/OSGDistribution3DFields.h"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="SecPositionDistribution"
-		type="Distribution3DPtr"
+		type="Distribution3D"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="NullFC"
-		header="Distributions/3D/OSGDistribution3DFields.h"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="NormalDistribution"
-		type="Distribution3DPtr"
+		type="Distribution3D"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="NullFC"
-		header="Distributions/3D/OSGDistribution3DFields.h"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="ColorDistribution"
-		type="Distribution3DPtr"
+		type="Distribution3D"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="NullFC"
-		header="Distributions/3D/OSGDistribution3DFields.h"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="TransparencyDistribution"
-		type="Distribution1DPtr"
+		type="Distribution1D"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="NullFC"
-		header="Distributions/1D/OSGDistribution1DFields.h"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="SizeDistribution"
-		type="Distribution3DPtr"
+		type="Distribution3D"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="NullFC"
-		header="Distributions/3D/OSGDistribution3DFields.h"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="LifespanDistribution"
-		type="Distribution1DPtr"
+		type="Distribution1D"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="NullFC"
-		header="Distributions/1D/OSGDistribution1DFields.h"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="AgeDistribution"
-		type="Distribution1DPtr"
+		type="Distribution1D"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="NullFC"
-		header="Distributions/1D/OSGDistribution1DFields.h"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="VelocityDistribution"
-		type="Distribution3DPtr"
+		type="Distribution3D"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="NullFC"
-		header="Distributions/3D/OSGDistribution3DFields.h"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="SecVelocityDistribution"
-		type="Distribution3DPtr"
+		type="Distribution3D"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="NullFC"
-		header="Distributions/3D/OSGDistribution3DFields.h"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="AccelerationDistribution"
-		type="Distribution3DPtr"
+		type="Distribution3D"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="NullFC"
-		header="Distributions/3D/OSGDistribution3DFields.h"
+		defaultValue="NULL"
 	>
 	</Field>
 </FieldContainer>

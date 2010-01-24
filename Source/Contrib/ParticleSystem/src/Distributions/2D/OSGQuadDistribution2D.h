@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Dynamics                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,40 +42,48 @@
 #pragma once
 #endif
 
-#include "OSGParticleSystemDef.h"
-
 #include "OSGQuadDistribution2DBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING QuadDistribution2D : public QuadDistribution2DBase
-{
-  private:
+/*! \brief QuadDistribution2D class. See \ref
+           PageContribParticleSystemQuadDistribution2D for a description.
+*/
 
-    typedef QuadDistribution2DBase Inherited;
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING QuadDistribution2D : public QuadDistribution2DBase
+{
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
     enum SurfaceOrEdge {SURFACE=0, EDGE=1};
+
+    typedef QuadDistribution2DBase Inherited;
+    typedef QuadDistribution2D     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
     virtual Vec2f generate(void) const;
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in QuadDistribution2DBase.
@@ -92,20 +100,24 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING QuadDistribution2D : public QuadDistribut
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~QuadDistribution2D(void); 
+    virtual ~QuadDistribution2D(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class QuadDistribution2DBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const QuadDistribution2D &source);
 };
 

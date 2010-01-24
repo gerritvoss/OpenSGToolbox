@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,234 +50,447 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILESPHEREDISTRIBUTION3DINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGSphereDistribution3DBase.h"
 #include "OSGSphereDistribution3D.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  SphereDistribution3DBase::CenterFieldMask = 
-    (TypeTraits<BitVector>::One << SphereDistribution3DBase::CenterFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  SphereDistribution3DBase::InnerRadiusFieldMask = 
-    (TypeTraits<BitVector>::One << SphereDistribution3DBase::InnerRadiusFieldId);
+/*! \class OSG::SphereDistribution3D
+    An SphereDistribution3D.
+ */
 
-const OSG::BitVector  SphereDistribution3DBase::OuterRadiusFieldMask = 
-    (TypeTraits<BitVector>::One << SphereDistribution3DBase::OuterRadiusFieldId);
-
-const OSG::BitVector  SphereDistribution3DBase::MinThetaFieldMask = 
-    (TypeTraits<BitVector>::One << SphereDistribution3DBase::MinThetaFieldId);
-
-const OSG::BitVector  SphereDistribution3DBase::MaxThetaFieldMask = 
-    (TypeTraits<BitVector>::One << SphereDistribution3DBase::MaxThetaFieldId);
-
-const OSG::BitVector  SphereDistribution3DBase::MinZFieldMask = 
-    (TypeTraits<BitVector>::One << SphereDistribution3DBase::MinZFieldId);
-
-const OSG::BitVector  SphereDistribution3DBase::MaxZFieldMask = 
-    (TypeTraits<BitVector>::One << SphereDistribution3DBase::MaxZFieldId);
-
-const OSG::BitVector  SphereDistribution3DBase::SurfaceOrVolumeFieldMask = 
-    (TypeTraits<BitVector>::One << SphereDistribution3DBase::SurfaceOrVolumeFieldId);
-
-const OSG::BitVector SphereDistribution3DBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Pnt3f           SphereDistribution3DBase::_sfCenter
     
 */
+
 /*! \var Real32          SphereDistribution3DBase::_sfInnerRadius
     
 */
+
 /*! \var Real32          SphereDistribution3DBase::_sfOuterRadius
     
 */
+
 /*! \var Real32          SphereDistribution3DBase::_sfMinTheta
     
 */
+
 /*! \var Real32          SphereDistribution3DBase::_sfMaxTheta
     
 */
+
 /*! \var Real32          SphereDistribution3DBase::_sfMinZ
     
 */
+
 /*! \var Real32          SphereDistribution3DBase::_sfMaxZ
     
 */
+
 /*! \var UInt32          SphereDistribution3DBase::_sfSurfaceOrVolume
     
 */
 
-//! SphereDistribution3D description
 
-FieldDescription *SphereDistribution3DBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<SphereDistribution3D *>::_type("SphereDistribution3DPtr", "Distribution3DPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(SphereDistribution3D *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           SphereDistribution3D *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           SphereDistribution3D *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void SphereDistribution3DBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFPnt3f::getClassType(), 
-                     "Center", 
-                     CenterFieldId, CenterFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&SphereDistribution3DBase::editSFCenter)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "InnerRadius", 
-                     InnerRadiusFieldId, InnerRadiusFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&SphereDistribution3DBase::editSFInnerRadius)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "OuterRadius", 
-                     OuterRadiusFieldId, OuterRadiusFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&SphereDistribution3DBase::editSFOuterRadius)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "MinTheta", 
-                     MinThetaFieldId, MinThetaFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&SphereDistribution3DBase::editSFMinTheta)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "MaxTheta", 
-                     MaxThetaFieldId, MaxThetaFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&SphereDistribution3DBase::editSFMaxTheta)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "MinZ", 
-                     MinZFieldId, MinZFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&SphereDistribution3DBase::editSFMinZ)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "MaxZ", 
-                     MaxZFieldId, MaxZFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&SphereDistribution3DBase::editSFMaxZ)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "SurfaceOrVolume", 
-                     SurfaceOrVolumeFieldId, SurfaceOrVolumeFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&SphereDistribution3DBase::editSFSurfaceOrVolume))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType SphereDistribution3DBase::_type(
-    "SphereDistribution3D",
-    "Distribution3D",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&SphereDistribution3DBase::createEmpty),
+    pDesc = new SFPnt3f::Description(
+        SFPnt3f::getClassType(),
+        "Center",
+        "",
+        CenterFieldId, CenterFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SphereDistribution3D::editHandleCenter),
+        static_cast<FieldGetMethodSig >(&SphereDistribution3D::getHandleCenter));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "InnerRadius",
+        "",
+        InnerRadiusFieldId, InnerRadiusFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SphereDistribution3D::editHandleInnerRadius),
+        static_cast<FieldGetMethodSig >(&SphereDistribution3D::getHandleInnerRadius));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "OuterRadius",
+        "",
+        OuterRadiusFieldId, OuterRadiusFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SphereDistribution3D::editHandleOuterRadius),
+        static_cast<FieldGetMethodSig >(&SphereDistribution3D::getHandleOuterRadius));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "MinTheta",
+        "",
+        MinThetaFieldId, MinThetaFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SphereDistribution3D::editHandleMinTheta),
+        static_cast<FieldGetMethodSig >(&SphereDistribution3D::getHandleMinTheta));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "MaxTheta",
+        "",
+        MaxThetaFieldId, MaxThetaFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SphereDistribution3D::editHandleMaxTheta),
+        static_cast<FieldGetMethodSig >(&SphereDistribution3D::getHandleMaxTheta));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "MinZ",
+        "",
+        MinZFieldId, MinZFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SphereDistribution3D::editHandleMinZ),
+        static_cast<FieldGetMethodSig >(&SphereDistribution3D::getHandleMinZ));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "MaxZ",
+        "",
+        MaxZFieldId, MaxZFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SphereDistribution3D::editHandleMaxZ),
+        static_cast<FieldGetMethodSig >(&SphereDistribution3D::getHandleMaxZ));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "SurfaceOrVolume",
+        "",
+        SurfaceOrVolumeFieldId, SurfaceOrVolumeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SphereDistribution3D::editHandleSurfaceOrVolume),
+        static_cast<FieldGetMethodSig >(&SphereDistribution3D::getHandleSurfaceOrVolume));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+SphereDistribution3DBase::TypeObject SphereDistribution3DBase::_type(
+    SphereDistribution3DBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&SphereDistribution3DBase::createEmptyLocal),
     SphereDistribution3D::initMethod,
-    _desc,
-    sizeof(_desc));
+    SphereDistribution3D::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&SphereDistribution3D::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"SphereDistribution3D\"\n"
+    "\tparent=\"Distribution3D\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "An SphereDistribution3D.\n"
+    "\t<Field\n"
+    "\t\tname=\"Center\"\n"
+    "\t\ttype=\"Pnt3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InnerRadius\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"OuterRadius\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MinTheta\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MaxTheta\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"6.28319\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MinZ\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"-1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MaxZ\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SurfaceOrVolume\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"SphereDistribution3D::VOLUME\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "An SphereDistribution3D.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(SphereDistribution3DBase, SphereDistribution3DPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &SphereDistribution3DBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &SphereDistribution3DBase::getType(void) const 
+FieldContainerType &SphereDistribution3DBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr SphereDistribution3DBase::shallowCopy(void) const 
-{ 
-    SphereDistribution3DPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const SphereDistribution3D *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 SphereDistribution3DBase::getContainerSize(void) const 
-{ 
-    return sizeof(SphereDistribution3D); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void SphereDistribution3DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &SphereDistribution3DBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<SphereDistribution3DBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void SphereDistribution3DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 SphereDistribution3DBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((SphereDistribution3DBase *) &other, whichField, sInfo);
+    return sizeof(SphereDistribution3D);
 }
-void SphereDistribution3DBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFPnt3f *SphereDistribution3DBase::editSFCenter(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(CenterFieldMask);
+
+    return &_sfCenter;
 }
 
-void SphereDistribution3DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFPnt3f *SphereDistribution3DBase::getSFCenter(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfCenter;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-SphereDistribution3DBase::SphereDistribution3DBase(void) :
-    _sfCenter                 (Pnt3f(0.0,0.0,0.0)), 
-    _sfInnerRadius            (Real32(0.0)), 
-    _sfOuterRadius            (Real32(1.0)), 
-    _sfMinTheta               (Real32(0.0)), 
-    _sfMaxTheta               (Real32(6.28319)), 
-    _sfMinZ                   (Real32(-1.0)), 
-    _sfMaxZ                   (Real32(1.0)), 
-    _sfSurfaceOrVolume        (UInt32(SphereDistribution3D::VOLUME)), 
-    Inherited() 
+SFReal32 *SphereDistribution3DBase::editSFInnerRadius(void)
 {
+    editSField(InnerRadiusFieldMask);
+
+    return &_sfInnerRadius;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-SphereDistribution3DBase::SphereDistribution3DBase(const SphereDistribution3DBase &source) :
-    _sfCenter                 (source._sfCenter                 ), 
-    _sfInnerRadius            (source._sfInnerRadius            ), 
-    _sfOuterRadius            (source._sfOuterRadius            ), 
-    _sfMinTheta               (source._sfMinTheta               ), 
-    _sfMaxTheta               (source._sfMaxTheta               ), 
-    _sfMinZ                   (source._sfMinZ                   ), 
-    _sfMaxZ                   (source._sfMaxZ                   ), 
-    _sfSurfaceOrVolume        (source._sfSurfaceOrVolume        ), 
-    Inherited                 (source)
+const SFReal32 *SphereDistribution3DBase::getSFInnerRadius(void) const
 {
+    return &_sfInnerRadius;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-SphereDistribution3DBase::~SphereDistribution3DBase(void)
+SFReal32 *SphereDistribution3DBase::editSFOuterRadius(void)
 {
+    editSField(OuterRadiusFieldMask);
+
+    return &_sfOuterRadius;
 }
+
+const SFReal32 *SphereDistribution3DBase::getSFOuterRadius(void) const
+{
+    return &_sfOuterRadius;
+}
+
+
+SFReal32 *SphereDistribution3DBase::editSFMinTheta(void)
+{
+    editSField(MinThetaFieldMask);
+
+    return &_sfMinTheta;
+}
+
+const SFReal32 *SphereDistribution3DBase::getSFMinTheta(void) const
+{
+    return &_sfMinTheta;
+}
+
+
+SFReal32 *SphereDistribution3DBase::editSFMaxTheta(void)
+{
+    editSField(MaxThetaFieldMask);
+
+    return &_sfMaxTheta;
+}
+
+const SFReal32 *SphereDistribution3DBase::getSFMaxTheta(void) const
+{
+    return &_sfMaxTheta;
+}
+
+
+SFReal32 *SphereDistribution3DBase::editSFMinZ(void)
+{
+    editSField(MinZFieldMask);
+
+    return &_sfMinZ;
+}
+
+const SFReal32 *SphereDistribution3DBase::getSFMinZ(void) const
+{
+    return &_sfMinZ;
+}
+
+
+SFReal32 *SphereDistribution3DBase::editSFMaxZ(void)
+{
+    editSField(MaxZFieldMask);
+
+    return &_sfMaxZ;
+}
+
+const SFReal32 *SphereDistribution3DBase::getSFMaxZ(void) const
+{
+    return &_sfMaxZ;
+}
+
+
+SFUInt32 *SphereDistribution3DBase::editSFSurfaceOrVolume(void)
+{
+    editSField(SurfaceOrVolumeFieldMask);
+
+    return &_sfSurfaceOrVolume;
+}
+
+const SFUInt32 *SphereDistribution3DBase::getSFSurfaceOrVolume(void) const
+{
+    return &_sfSurfaceOrVolume;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 SphereDistribution3DBase::getBinSize(const BitVector &whichField)
+UInt32 SphereDistribution3DBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -285,48 +498,40 @@ UInt32 SphereDistribution3DBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfCenter.getBinSize();
     }
-
     if(FieldBits::NoField != (InnerRadiusFieldMask & whichField))
     {
         returnValue += _sfInnerRadius.getBinSize();
     }
-
     if(FieldBits::NoField != (OuterRadiusFieldMask & whichField))
     {
         returnValue += _sfOuterRadius.getBinSize();
     }
-
     if(FieldBits::NoField != (MinThetaFieldMask & whichField))
     {
         returnValue += _sfMinTheta.getBinSize();
     }
-
     if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
     {
         returnValue += _sfMaxTheta.getBinSize();
     }
-
     if(FieldBits::NoField != (MinZFieldMask & whichField))
     {
         returnValue += _sfMinZ.getBinSize();
     }
-
     if(FieldBits::NoField != (MaxZFieldMask & whichField))
     {
         returnValue += _sfMaxZ.getBinSize();
     }
-
     if(FieldBits::NoField != (SurfaceOrVolumeFieldMask & whichField))
     {
         returnValue += _sfSurfaceOrVolume.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void SphereDistribution3DBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void SphereDistribution3DBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -334,47 +539,38 @@ void SphereDistribution3DBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfCenter.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InnerRadiusFieldMask & whichField))
     {
         _sfInnerRadius.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (OuterRadiusFieldMask & whichField))
     {
         _sfOuterRadius.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MinThetaFieldMask & whichField))
     {
         _sfMinTheta.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
     {
         _sfMaxTheta.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MinZFieldMask & whichField))
     {
         _sfMinZ.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxZFieldMask & whichField))
     {
         _sfMaxZ.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SurfaceOrVolumeFieldMask & whichField))
     {
         _sfSurfaceOrVolume.copyToBin(pMem);
     }
-
-
 }
 
-void SphereDistribution3DBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void SphereDistribution3DBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -382,139 +578,430 @@ void SphereDistribution3DBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfCenter.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InnerRadiusFieldMask & whichField))
     {
         _sfInnerRadius.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (OuterRadiusFieldMask & whichField))
     {
         _sfOuterRadius.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MinThetaFieldMask & whichField))
     {
         _sfMinTheta.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
     {
         _sfMaxTheta.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MinZFieldMask & whichField))
     {
         _sfMinZ.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxZFieldMask & whichField))
     {
         _sfMaxZ.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SurfaceOrVolumeFieldMask & whichField))
     {
         _sfSurfaceOrVolume.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void SphereDistribution3DBase::executeSyncImpl(      SphereDistribution3DBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+SphereDistribution3DTransitPtr SphereDistribution3DBase::createLocal(BitVector bFlags)
 {
+    SphereDistribution3DTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (CenterFieldMask & whichField))
-        _sfCenter.syncWith(pOther->_sfCenter);
+        fc = dynamic_pointer_cast<SphereDistribution3D>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (InnerRadiusFieldMask & whichField))
-        _sfInnerRadius.syncWith(pOther->_sfInnerRadius);
-
-    if(FieldBits::NoField != (OuterRadiusFieldMask & whichField))
-        _sfOuterRadius.syncWith(pOther->_sfOuterRadius);
-
-    if(FieldBits::NoField != (MinThetaFieldMask & whichField))
-        _sfMinTheta.syncWith(pOther->_sfMinTheta);
-
-    if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
-        _sfMaxTheta.syncWith(pOther->_sfMaxTheta);
-
-    if(FieldBits::NoField != (MinZFieldMask & whichField))
-        _sfMinZ.syncWith(pOther->_sfMinZ);
-
-    if(FieldBits::NoField != (MaxZFieldMask & whichField))
-        _sfMaxZ.syncWith(pOther->_sfMaxZ);
-
-    if(FieldBits::NoField != (SurfaceOrVolumeFieldMask & whichField))
-        _sfSurfaceOrVolume.syncWith(pOther->_sfSurfaceOrVolume);
-
-
-}
-#else
-void SphereDistribution3DBase::executeSyncImpl(      SphereDistribution3DBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (CenterFieldMask & whichField))
-        _sfCenter.syncWith(pOther->_sfCenter);
-
-    if(FieldBits::NoField != (InnerRadiusFieldMask & whichField))
-        _sfInnerRadius.syncWith(pOther->_sfInnerRadius);
-
-    if(FieldBits::NoField != (OuterRadiusFieldMask & whichField))
-        _sfOuterRadius.syncWith(pOther->_sfOuterRadius);
-
-    if(FieldBits::NoField != (MinThetaFieldMask & whichField))
-        _sfMinTheta.syncWith(pOther->_sfMinTheta);
-
-    if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
-        _sfMaxTheta.syncWith(pOther->_sfMaxTheta);
-
-    if(FieldBits::NoField != (MinZFieldMask & whichField))
-        _sfMinZ.syncWith(pOther->_sfMinZ);
-
-    if(FieldBits::NoField != (MaxZFieldMask & whichField))
-        _sfMaxZ.syncWith(pOther->_sfMaxZ);
-
-    if(FieldBits::NoField != (SurfaceOrVolumeFieldMask & whichField))
-        _sfSurfaceOrVolume.syncWith(pOther->_sfSurfaceOrVolume);
-
-
-
+    return fc;
 }
 
-void SphereDistribution3DBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+SphereDistribution3DTransitPtr SphereDistribution3DBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    SphereDistribution3DTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<SphereDistribution3D>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+SphereDistribution3DTransitPtr SphereDistribution3DBase::create(void)
+{
+    SphereDistribution3DTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<SphereDistribution3D>(tmpPtr);
+    }
+
+    return fc;
+}
+
+SphereDistribution3D *SphereDistribution3DBase::createEmptyLocal(BitVector bFlags)
+{
+    SphereDistribution3D *returnValue;
+
+    newPtr<SphereDistribution3D>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+SphereDistribution3D *SphereDistribution3DBase::createEmpty(void)
+{
+    SphereDistribution3D *returnValue;
+
+    newPtr<SphereDistribution3D>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr SphereDistribution3DBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    SphereDistribution3D *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const SphereDistribution3D *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr SphereDistribution3DBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    SphereDistribution3D *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const SphereDistribution3D *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr SphereDistribution3DBase::shallowCopy(void) const
+{
+    SphereDistribution3D *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const SphereDistribution3D *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+SphereDistribution3DBase::SphereDistribution3DBase(void) :
+    Inherited(),
+    _sfCenter                 (Pnt3f(0.0,0.0,0.0)),
+    _sfInnerRadius            (Real32(0.0)),
+    _sfOuterRadius            (Real32(1.0)),
+    _sfMinTheta               (Real32(0.0)),
+    _sfMaxTheta               (Real32(6.28319)),
+    _sfMinZ                   (Real32(-1.0)),
+    _sfMaxZ                   (Real32(1.0)),
+    _sfSurfaceOrVolume        (UInt32(SphereDistribution3D::VOLUME))
+{
+}
+
+SphereDistribution3DBase::SphereDistribution3DBase(const SphereDistribution3DBase &source) :
+    Inherited(source),
+    _sfCenter                 (source._sfCenter                 ),
+    _sfInnerRadius            (source._sfInnerRadius            ),
+    _sfOuterRadius            (source._sfOuterRadius            ),
+    _sfMinTheta               (source._sfMinTheta               ),
+    _sfMaxTheta               (source._sfMaxTheta               ),
+    _sfMinZ                   (source._sfMinZ                   ),
+    _sfMaxZ                   (source._sfMaxZ                   ),
+    _sfSurfaceOrVolume        (source._sfSurfaceOrVolume        )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+SphereDistribution3DBase::~SphereDistribution3DBase(void)
+{
+}
+
+
+GetFieldHandlePtr SphereDistribution3DBase::getHandleCenter          (void) const
+{
+    SFPnt3f::GetHandlePtr returnValue(
+        new  SFPnt3f::GetHandle(
+             &_sfCenter,
+             this->getType().getFieldDesc(CenterFieldId),
+             const_cast<SphereDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SphereDistribution3DBase::editHandleCenter         (void)
+{
+    SFPnt3f::EditHandlePtr returnValue(
+        new  SFPnt3f::EditHandle(
+             &_sfCenter,
+             this->getType().getFieldDesc(CenterFieldId),
+             this));
+
+
+    editSField(CenterFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SphereDistribution3DBase::getHandleInnerRadius     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfInnerRadius,
+             this->getType().getFieldDesc(InnerRadiusFieldId),
+             const_cast<SphereDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SphereDistribution3DBase::editHandleInnerRadius    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfInnerRadius,
+             this->getType().getFieldDesc(InnerRadiusFieldId),
+             this));
+
+
+    editSField(InnerRadiusFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SphereDistribution3DBase::getHandleOuterRadius     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfOuterRadius,
+             this->getType().getFieldDesc(OuterRadiusFieldId),
+             const_cast<SphereDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SphereDistribution3DBase::editHandleOuterRadius    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfOuterRadius,
+             this->getType().getFieldDesc(OuterRadiusFieldId),
+             this));
+
+
+    editSField(OuterRadiusFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SphereDistribution3DBase::getHandleMinTheta        (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMinTheta,
+             this->getType().getFieldDesc(MinThetaFieldId),
+             const_cast<SphereDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SphereDistribution3DBase::editHandleMinTheta       (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMinTheta,
+             this->getType().getFieldDesc(MinThetaFieldId),
+             this));
+
+
+    editSField(MinThetaFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SphereDistribution3DBase::getHandleMaxTheta        (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMaxTheta,
+             this->getType().getFieldDesc(MaxThetaFieldId),
+             const_cast<SphereDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SphereDistribution3DBase::editHandleMaxTheta       (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMaxTheta,
+             this->getType().getFieldDesc(MaxThetaFieldId),
+             this));
+
+
+    editSField(MaxThetaFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SphereDistribution3DBase::getHandleMinZ            (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMinZ,
+             this->getType().getFieldDesc(MinZFieldId),
+             const_cast<SphereDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SphereDistribution3DBase::editHandleMinZ           (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMinZ,
+             this->getType().getFieldDesc(MinZFieldId),
+             this));
+
+
+    editSField(MinZFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SphereDistribution3DBase::getHandleMaxZ            (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMaxZ,
+             this->getType().getFieldDesc(MaxZFieldId),
+             const_cast<SphereDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SphereDistribution3DBase::editHandleMaxZ           (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMaxZ,
+             this->getType().getFieldDesc(MaxZFieldId),
+             this));
+
+
+    editSField(MaxZFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SphereDistribution3DBase::getHandleSurfaceOrVolume (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfSurfaceOrVolume,
+             this->getType().getFieldDesc(SurfaceOrVolumeFieldId),
+             const_cast<SphereDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SphereDistribution3DBase::editHandleSurfaceOrVolume(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfSurfaceOrVolume,
+             this->getType().getFieldDesc(SurfaceOrVolumeFieldId),
+             this));
+
+
+    editSField(SurfaceOrVolumeFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void SphereDistribution3DBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    SphereDistribution3D *pThis = static_cast<SphereDistribution3D *>(this);
+
+    pThis->execSync(static_cast<SphereDistribution3D *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *SphereDistribution3DBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    SphereDistribution3D *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const SphereDistribution3D *>(pRefAspect),
+                  dynamic_cast<const SphereDistribution3D *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<SphereDistribution3DPtr>::_type("SphereDistribution3DPtr", "Distribution3DPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(SphereDistribution3DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(SphereDistribution3DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+void SphereDistribution3DBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

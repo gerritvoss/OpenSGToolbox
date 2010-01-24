@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,88 +58,108 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGConfig.h"
+#include "OSGContribParticleSystemDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGParticleAffector.h" // Parent
 
-#include "Distributions/1D/OSGPerlinNoiseDistribution1DFields.h" // PerlinDistribution type
-#include <OpenSG/OSGReal32Fields.h> // Amplitude type
-#include <OpenSG/OSGUInt32Fields.h> // InterpolationType type
-#include <OpenSG/OSGVec3fFields.h> // Phase type
-#include <OpenSG/OSGReal32Fields.h> // Persistance type
-#include <OpenSG/OSGReal32Fields.h> // Frequency type
-#include <OpenSG/OSGUInt32Fields.h> // Octaves type
-#include <OpenSG/OSGNodeFields.h> // Beacon type
-#include <OpenSG/OSGReal32Fields.h> // Attenuation type
-#include <OpenSG/OSGReal32Fields.h> // MaxDistance type
+#include "OSGPerlinNoiseDistribution1DFields.h" // PerlinDistribution type
+#include "OSGSysFields.h"               // Amplitude type
+#include "OSGVecFields.h"               // Phase type
+#include "OSGNodeFields.h"              // Beacon type
 
 #include "OSGTurbulenceParticleAffectorFields.h"
+
+
 OSG_BEGIN_NAMESPACE
 
 class TurbulenceParticleAffector;
-class BinaryDataHandler;
 
 //! \brief TurbulenceParticleAffector Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING TurbulenceParticleAffectorBase : public ParticleAffector
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING TurbulenceParticleAffectorBase : public ParticleAffector
 {
-  private:
-
-    typedef ParticleAffector    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef TurbulenceParticleAffectorPtr  Ptr;
+    typedef ParticleAffector Inherited;
+    typedef ParticleAffector ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(TurbulenceParticleAffector);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
         PerlinDistributionFieldId = Inherited::NextFieldId,
-        AmplitudeFieldId          = PerlinDistributionFieldId + 1,
-        InterpolationTypeFieldId  = AmplitudeFieldId          + 1,
-        PhaseFieldId              = InterpolationTypeFieldId  + 1,
-        PersistanceFieldId        = PhaseFieldId              + 1,
-        FrequencyFieldId          = PersistanceFieldId        + 1,
-        OctavesFieldId            = FrequencyFieldId          + 1,
-        BeaconFieldId             = OctavesFieldId            + 1,
-        AttenuationFieldId        = BeaconFieldId             + 1,
-        MaxDistanceFieldId        = AttenuationFieldId        + 1,
-        NextFieldId               = MaxDistanceFieldId        + 1
+        AmplitudeFieldId = PerlinDistributionFieldId + 1,
+        InterpolationTypeFieldId = AmplitudeFieldId + 1,
+        PhaseFieldId = InterpolationTypeFieldId + 1,
+        PersistanceFieldId = PhaseFieldId + 1,
+        FrequencyFieldId = PersistanceFieldId + 1,
+        OctavesFieldId = FrequencyFieldId + 1,
+        BeaconFieldId = OctavesFieldId + 1,
+        AttenuationFieldId = BeaconFieldId + 1,
+        MaxDistanceFieldId = AttenuationFieldId + 1,
+        NextFieldId = MaxDistanceFieldId + 1
     };
 
-    static const OSG::BitVector PerlinDistributionFieldMask;
-    static const OSG::BitVector AmplitudeFieldMask;
-    static const OSG::BitVector InterpolationTypeFieldMask;
-    static const OSG::BitVector PhaseFieldMask;
-    static const OSG::BitVector PersistanceFieldMask;
-    static const OSG::BitVector FrequencyFieldMask;
-    static const OSG::BitVector OctavesFieldMask;
-    static const OSG::BitVector BeaconFieldMask;
-    static const OSG::BitVector AttenuationFieldMask;
-    static const OSG::BitVector MaxDistanceFieldMask;
+    static const OSG::BitVector PerlinDistributionFieldMask =
+        (TypeTraits<BitVector>::One << PerlinDistributionFieldId);
+    static const OSG::BitVector AmplitudeFieldMask =
+        (TypeTraits<BitVector>::One << AmplitudeFieldId);
+    static const OSG::BitVector InterpolationTypeFieldMask =
+        (TypeTraits<BitVector>::One << InterpolationTypeFieldId);
+    static const OSG::BitVector PhaseFieldMask =
+        (TypeTraits<BitVector>::One << PhaseFieldId);
+    static const OSG::BitVector PersistanceFieldMask =
+        (TypeTraits<BitVector>::One << PersistanceFieldId);
+    static const OSG::BitVector FrequencyFieldMask =
+        (TypeTraits<BitVector>::One << FrequencyFieldId);
+    static const OSG::BitVector OctavesFieldMask =
+        (TypeTraits<BitVector>::One << OctavesFieldId);
+    static const OSG::BitVector BeaconFieldMask =
+        (TypeTraits<BitVector>::One << BeaconFieldId);
+    static const OSG::BitVector AttenuationFieldMask =
+        (TypeTraits<BitVector>::One << AttenuationFieldId);
+    static const OSG::BitVector MaxDistanceFieldMask =
+        (TypeTraits<BitVector>::One << MaxDistanceFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecPerlinNoiseDistribution1DPtr SFPerlinDistributionType;
+    typedef SFReal32          SFAmplitudeType;
+    typedef SFUInt32          SFInterpolationTypeType;
+    typedef SFVec3f           SFPhaseType;
+    typedef SFReal32          SFPersistanceType;
+    typedef SFReal32          SFFrequencyType;
+    typedef SFUInt32          SFOctavesType;
+    typedef SFUnrecNodePtr    SFBeaconType;
+    typedef SFReal32          SFAttenuationType;
+    typedef SFReal32          SFMaxDistanceType;
 
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -148,87 +168,88 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING TurbulenceParticleAffectorBase : public P
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+            const SFUnrecPerlinNoiseDistribution1DPtr *getSFPerlinDistribution(void) const;
+                  SFUnrecPerlinNoiseDistribution1DPtr *editSFPerlinDistribution(void);
 
-           SFPerlinNoiseDistribution1DPtr *editSFPerlinDistribution(void);
-     const SFPerlinNoiseDistribution1DPtr *getSFPerlinDistribution(void) const;
+                  SFReal32            *editSFAmplitude      (void);
+            const SFReal32            *getSFAmplitude       (void) const;
 
-           SFReal32            *editSFAmplitude      (void);
-     const SFReal32            *getSFAmplitude      (void) const;
+                  SFUInt32            *editSFInterpolationType(void);
+            const SFUInt32            *getSFInterpolationType (void) const;
 
-           SFUInt32            *editSFInterpolationType(void);
-     const SFUInt32            *getSFInterpolationType(void) const;
+                  SFVec3f             *editSFPhase          (void);
+            const SFVec3f             *getSFPhase           (void) const;
 
-           SFVec3f             *editSFPhase          (void);
-     const SFVec3f             *getSFPhase          (void) const;
+                  SFReal32            *editSFPersistance    (void);
+            const SFReal32            *getSFPersistance     (void) const;
 
-           SFReal32            *editSFPersistance    (void);
-     const SFReal32            *getSFPersistance    (void) const;
+                  SFReal32            *editSFFrequency      (void);
+            const SFReal32            *getSFFrequency       (void) const;
 
-           SFReal32            *editSFFrequency      (void);
-     const SFReal32            *getSFFrequency      (void) const;
+                  SFUInt32            *editSFOctaves        (void);
+            const SFUInt32            *getSFOctaves         (void) const;
+            const SFUnrecNodePtr      *getSFBeacon         (void) const;
+                  SFUnrecNodePtr      *editSFBeacon         (void);
 
-           SFUInt32            *editSFOctaves        (void);
-     const SFUInt32            *getSFOctaves        (void) const;
+                  SFReal32            *editSFAttenuation    (void);
+            const SFReal32            *getSFAttenuation     (void) const;
 
-           SFNodePtr           *editSFBeacon         (void);
-     const SFNodePtr           *getSFBeacon         (void) const;
-
-           SFReal32            *editSFAttenuation    (void);
-     const SFReal32            *getSFAttenuation    (void) const;
-
-           SFReal32            *editSFMaxDistance    (void);
-     const SFReal32            *getSFMaxDistance    (void) const;
+                  SFReal32            *editSFMaxDistance    (void);
+            const SFReal32            *getSFMaxDistance     (void) const;
 
 
-           PerlinNoiseDistribution1DPtr &editPerlinDistribution(void);
-     const PerlinNoiseDistribution1DPtr &getPerlinDistribution(void) const;
+                  PerlinNoiseDistribution1D * getPerlinDistribution(void) const;
 
-           Real32              &editAmplitude      (void);
-     const Real32              &getAmplitude      (void) const;
+                  Real32              &editAmplitude      (void);
+                  Real32               getAmplitude       (void) const;
 
-           UInt32              &editInterpolationType(void);
-     const UInt32              &getInterpolationType(void) const;
+                  UInt32              &editInterpolationType(void);
+                  UInt32               getInterpolationType (void) const;
 
-           Vec3f               &editPhase          (void);
-     const Vec3f               &getPhase          (void) const;
+                  Vec3f               &editPhase          (void);
+            const Vec3f               &getPhase           (void) const;
 
-           Real32              &editPersistance    (void);
-     const Real32              &getPersistance    (void) const;
+                  Real32              &editPersistance    (void);
+                  Real32               getPersistance     (void) const;
 
-           Real32              &editFrequency      (void);
-     const Real32              &getFrequency      (void) const;
+                  Real32              &editFrequency      (void);
+                  Real32               getFrequency       (void) const;
 
-           UInt32              &editOctaves        (void);
-     const UInt32              &getOctaves        (void) const;
+                  UInt32              &editOctaves        (void);
+                  UInt32               getOctaves         (void) const;
 
-           NodePtr             &editBeacon         (void);
-     const NodePtr             &getBeacon         (void) const;
+                  Node * getBeacon         (void) const;
 
-           Real32              &editAttenuation    (void);
-     const Real32              &getAttenuation    (void) const;
+                  Real32              &editAttenuation    (void);
+                  Real32               getAttenuation     (void) const;
 
-           Real32              &editMaxDistance    (void);
-     const Real32              &getMaxDistance    (void) const;
+                  Real32              &editMaxDistance    (void);
+                  Real32               getMaxDistance     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setPerlinDistribution( const PerlinNoiseDistribution1DPtr &value );
-     void setAmplitude      ( const Real32 &value );
-     void setInterpolationType( const UInt32 &value );
-     void setPhase          ( const Vec3f &value );
-     void setPersistance    ( const Real32 &value );
-     void setFrequency      ( const Real32 &value );
-     void setOctaves        ( const UInt32 &value );
-     void setBeacon         ( const NodePtr &value );
-     void setAttenuation    ( const Real32 &value );
-     void setMaxDistance    ( const Real32 &value );
+            void setPerlinDistribution(PerlinNoiseDistribution1D * const value);
+            void setAmplitude      (const Real32 value);
+            void setInterpolationType(const UInt32 value);
+            void setPhase          (const Vec3f &value);
+            void setPersistance    (const Real32 value);
+            void setFrequency      (const Real32 value);
+            void setOctaves        (const UInt32 value);
+            void setBeacon         (Node * const value);
+            void setAttenuation    (const Real32 value);
+            void setMaxDistance    (const Real32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -236,47 +257,65 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING TurbulenceParticleAffectorBase : public P
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  TurbulenceParticleAffectorPtr      create          (void); 
-    static  TurbulenceParticleAffectorPtr      createEmpty     (void); 
+    static  TurbulenceParticleAffectorTransitPtr  create          (void);
+    static  TurbulenceParticleAffector           *createEmpty     (void);
+
+    static  TurbulenceParticleAffectorTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  TurbulenceParticleAffector            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  TurbulenceParticleAffectorTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFPerlinNoiseDistribution1DPtr   _sfPerlinDistribution;
-    SFReal32            _sfAmplitude;
-    SFUInt32            _sfInterpolationType;
-    SFVec3f             _sfPhase;
-    SFReal32            _sfPersistance;
-    SFReal32            _sfFrequency;
-    SFUInt32            _sfOctaves;
-    SFNodePtr           _sfBeacon;
-    SFReal32            _sfAttenuation;
-    SFReal32            _sfMaxDistance;
+    SFUnrecPerlinNoiseDistribution1DPtr _sfPerlinDistribution;
+    SFReal32          _sfAmplitude;
+    SFUInt32          _sfInterpolationType;
+    SFVec3f           _sfPhase;
+    SFReal32          _sfPersistance;
+    SFReal32          _sfFrequency;
+    SFUInt32          _sfOctaves;
+    SFUnrecNodePtr    _sfBeacon;
+    SFReal32          _sfAttenuation;
+    SFReal32          _sfMaxDistance;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -291,66 +330,97 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING TurbulenceParticleAffectorBase : public P
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TurbulenceParticleAffectorBase(void); 
+    virtual ~TurbulenceParticleAffectorBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const TurbulenceParticleAffector *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandlePerlinDistribution (void) const;
+    EditFieldHandlePtr editHandlePerlinDistribution(void);
+    GetFieldHandlePtr  getHandleAmplitude       (void) const;
+    EditFieldHandlePtr editHandleAmplitude      (void);
+    GetFieldHandlePtr  getHandleInterpolationType (void) const;
+    EditFieldHandlePtr editHandleInterpolationType(void);
+    GetFieldHandlePtr  getHandlePhase           (void) const;
+    EditFieldHandlePtr editHandlePhase          (void);
+    GetFieldHandlePtr  getHandlePersistance     (void) const;
+    EditFieldHandlePtr editHandlePersistance    (void);
+    GetFieldHandlePtr  getHandleFrequency       (void) const;
+    EditFieldHandlePtr editHandleFrequency      (void);
+    GetFieldHandlePtr  getHandleOctaves         (void) const;
+    EditFieldHandlePtr editHandleOctaves        (void);
+    GetFieldHandlePtr  getHandleBeacon          (void) const;
+    EditFieldHandlePtr editHandleBeacon         (void);
+    GetFieldHandlePtr  getHandleAttenuation     (void) const;
+    EditFieldHandlePtr editHandleAttenuation    (void);
+    GetFieldHandlePtr  getHandleMaxDistance     (void) const;
+    EditFieldHandlePtr editHandleMaxDistance    (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      TurbulenceParticleAffectorBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      TurbulenceParticleAffectorBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      TurbulenceParticleAffectorBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const TurbulenceParticleAffectorBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef TurbulenceParticleAffectorBase *TurbulenceParticleAffectorBaseP;
-
-typedef osgIF<TurbulenceParticleAffectorBase::isNodeCore,
-              CoredNodePtr<TurbulenceParticleAffector>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet TurbulenceParticleAffectorNodePtr;
-
-typedef RefPtr<TurbulenceParticleAffectorPtr> TurbulenceParticleAffectorRefPtr;
 
 OSG_END_NAMESPACE
 

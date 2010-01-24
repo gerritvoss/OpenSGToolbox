@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,47 +42,50 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
-
 #include "OSGParticleGeneratorBase.h"
-#include "ParticleSystem/OSGParticleSystemFields.h"
-#include <OpenSG/Toolbox/OSGStringToUInt32MapType.h>
+#include "OSGParticleSystemFields.h"
+#include "OSGStringToUInt32MapType.h"
+#include "OSGNode.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ParticleGenerator class. See \ref 
-           PageParticleSystemParticleGenerator for a description.
+/*! \brief ParticleGenerator class. See \ref
+           PageContribParticleSystemParticleGenerator for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGenerator : public ParticleGeneratorBase
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleGenerator : public ParticleGeneratorBase
 {
-  private:
-
-    typedef ParticleGeneratorBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef ParticleGeneratorBase Inherited;
+    typedef ParticleGenerator     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
-    virtual bool generate(ParticleSystemPtr System, const Time& elps) = 0;
+    virtual bool generate(ParticleSystemRefPtr System, const Time& elps) = 0;
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ParticleGeneratorBase.
@@ -99,32 +102,38 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGenerator : public ParticleGenera
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ParticleGenerator(void); 
+    virtual ~ParticleGenerator(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
     
-    virtual void generate(ParticleSystemPtr System,
-		Pnt3f& PositionReturnValue, 
-		Pnt3f& SecPositionReturnValue, 
-		Vec3f& NormalReturnValue,
-		Color4f& ColorReturnValue,
-		Vec3f& SizeReturnValue,
-		Time& LifespanReturnValue,
-		Time& AgeReturnValue,
-		Vec3f& VelocityReturnValue,
-		Vec3f& SecVelocityReturnValue,
-		Vec3f& AccelerationReturnValue,
-        StringToUInt32Map& AttributeReturnValue) const;
+    virtual void generate(ParticleSystemRefPtr System,
+                          Pnt3f& PositionReturnValue, 
+                          Pnt3f& SecPositionReturnValue, 
+                          Vec3f& NormalReturnValue,
+                          Color4f& ColorReturnValue,
+                          Vec3f& SizeReturnValue,
+                          Time& LifespanReturnValue,
+                          Time& AgeReturnValue,
+                          Vec3f& VelocityReturnValue,
+                          Vec3f& SecVelocityReturnValue,
+                          Vec3f& AccelerationReturnValue,
+                          StringToUInt32Map& AttributeReturnValue) const;
+
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ParticleGeneratorBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ParticleGenerator &source);
 };
 
@@ -134,7 +143,5 @@ OSG_END_NAMESPACE
 
 #include "OSGParticleGeneratorBase.inl"
 #include "OSGParticleGenerator.inl"
-
-#define OSGPARTICLEGENERATOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGPARTICLEGENERATOR_H_ */

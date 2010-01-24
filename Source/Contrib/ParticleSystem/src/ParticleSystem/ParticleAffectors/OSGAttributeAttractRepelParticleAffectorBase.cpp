@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,207 +50,366 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEATTRIBUTEATTRACTREPELPARTICLEAFFECTORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGAttributeAttractRepelParticleAffectorBase.h"
 #include "OSGAttributeAttractRepelParticleAffector.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  AttributeAttractRepelParticleAffectorBase::AttributeAffectedFieldMask = 
-    (TypeTraits<BitVector>::One << AttributeAttractRepelParticleAffectorBase::AttributeAffectedFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  AttributeAttractRepelParticleAffectorBase::MinDistanceFieldMask = 
-    (TypeTraits<BitVector>::One << AttributeAttractRepelParticleAffectorBase::MinDistanceFieldId);
+/*! \class OSG::AttributeAttractRepelParticleAffector
+    l
+ */
 
-const OSG::BitVector  AttributeAttractRepelParticleAffectorBase::MaxDistanceFieldMask = 
-    (TypeTraits<BitVector>::One << AttributeAttractRepelParticleAffectorBase::MaxDistanceFieldId);
-
-const OSG::BitVector  AttributeAttractRepelParticleAffectorBase::QuadraticFieldMask = 
-    (TypeTraits<BitVector>::One << AttributeAttractRepelParticleAffectorBase::QuadraticFieldId);
-
-const OSG::BitVector  AttributeAttractRepelParticleAffectorBase::LinearFieldMask = 
-    (TypeTraits<BitVector>::One << AttributeAttractRepelParticleAffectorBase::LinearFieldId);
-
-const OSG::BitVector  AttributeAttractRepelParticleAffectorBase::ConstantFieldMask = 
-    (TypeTraits<BitVector>::One << AttributeAttractRepelParticleAffectorBase::ConstantFieldId);
-
-const OSG::BitVector AttributeAttractRepelParticleAffectorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var UInt32          AttributeAttractRepelParticleAffectorBase::_sfAttributeAffected
     
 */
+
 /*! \var Real32          AttributeAttractRepelParticleAffectorBase::_sfMinDistance
     
 */
+
 /*! \var Real32          AttributeAttractRepelParticleAffectorBase::_sfMaxDistance
     
 */
+
 /*! \var Real32          AttributeAttractRepelParticleAffectorBase::_sfQuadratic
     
 */
+
 /*! \var Real32          AttributeAttractRepelParticleAffectorBase::_sfLinear
     
 */
+
 /*! \var Real32          AttributeAttractRepelParticleAffectorBase::_sfConstant
     
 */
 
-//! AttributeAttractRepelParticleAffector description
 
-FieldDescription *AttributeAttractRepelParticleAffectorBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<AttributeAttractRepelParticleAffector *>::_type("AttributeAttractRepelParticleAffectorPtr", "ParticleAffectorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(AttributeAttractRepelParticleAffector *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           AttributeAttractRepelParticleAffector *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           AttributeAttractRepelParticleAffector *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void AttributeAttractRepelParticleAffectorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "AttributeAffected", 
-                     AttributeAffectedFieldId, AttributeAffectedFieldMask,
-                     false,
-                     (FieldAccessMethod) &AttributeAttractRepelParticleAffectorBase::getSFAttributeAffected),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "MinDistance", 
-                     MinDistanceFieldId, MinDistanceFieldMask,
-                     false,
-                     (FieldAccessMethod) &AttributeAttractRepelParticleAffectorBase::getSFMinDistance),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "MaxDistance", 
-                     MaxDistanceFieldId, MaxDistanceFieldMask,
-                     false,
-                     (FieldAccessMethod) &AttributeAttractRepelParticleAffectorBase::getSFMaxDistance),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Quadratic", 
-                     QuadraticFieldId, QuadraticFieldMask,
-                     false,
-                     (FieldAccessMethod) &AttributeAttractRepelParticleAffectorBase::getSFQuadratic),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Linear", 
-                     LinearFieldId, LinearFieldMask,
-                     false,
-                     (FieldAccessMethod) &AttributeAttractRepelParticleAffectorBase::getSFLinear),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Constant", 
-                     ConstantFieldId, ConstantFieldMask,
-                     false,
-                     (FieldAccessMethod) &AttributeAttractRepelParticleAffectorBase::getSFConstant)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType AttributeAttractRepelParticleAffectorBase::_type(
-    "AttributeAttractRepelParticleAffector",
-    "ParticleAffector",
-    NULL,
-    (PrototypeCreateF) &AttributeAttractRepelParticleAffectorBase::createEmpty,
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "AttributeAffected",
+        "",
+        AttributeAffectedFieldId, AttributeAffectedFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AttributeAttractRepelParticleAffector::editHandleAttributeAffected),
+        static_cast<FieldGetMethodSig >(&AttributeAttractRepelParticleAffector::getHandleAttributeAffected));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "MinDistance",
+        "",
+        MinDistanceFieldId, MinDistanceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AttributeAttractRepelParticleAffector::editHandleMinDistance),
+        static_cast<FieldGetMethodSig >(&AttributeAttractRepelParticleAffector::getHandleMinDistance));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "MaxDistance",
+        "",
+        MaxDistanceFieldId, MaxDistanceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AttributeAttractRepelParticleAffector::editHandleMaxDistance),
+        static_cast<FieldGetMethodSig >(&AttributeAttractRepelParticleAffector::getHandleMaxDistance));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Quadratic",
+        "",
+        QuadraticFieldId, QuadraticFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AttributeAttractRepelParticleAffector::editHandleQuadratic),
+        static_cast<FieldGetMethodSig >(&AttributeAttractRepelParticleAffector::getHandleQuadratic));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Linear",
+        "",
+        LinearFieldId, LinearFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AttributeAttractRepelParticleAffector::editHandleLinear),
+        static_cast<FieldGetMethodSig >(&AttributeAttractRepelParticleAffector::getHandleLinear));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Constant",
+        "",
+        ConstantFieldId, ConstantFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AttributeAttractRepelParticleAffector::editHandleConstant),
+        static_cast<FieldGetMethodSig >(&AttributeAttractRepelParticleAffector::getHandleConstant));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+AttributeAttractRepelParticleAffectorBase::TypeObject AttributeAttractRepelParticleAffectorBase::_type(
+    AttributeAttractRepelParticleAffectorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&AttributeAttractRepelParticleAffectorBase::createEmptyLocal),
     AttributeAttractRepelParticleAffector::initMethod,
-    _desc,
-    sizeof(_desc));
+    AttributeAttractRepelParticleAffector::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&AttributeAttractRepelParticleAffector::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"AttributeAttractRepelParticleAffector\"\n"
+    "\tparent=\"ParticleAffector\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com), Daniel Guilliams           \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"AttributeAffected\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"AttributeAttractRepelParticleAffector::POSITION_ATTRIBUTE\"\n"
+    "\t>\n"
+    "\t</Field>l\n"
+    "\t<Field\n"
+    "\t\tname=\"MinDistance\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MaxDistance\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"100.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Quadratic\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Linear\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Constant\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "l\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(AttributeAttractRepelParticleAffectorBase, AttributeAttractRepelParticleAffectorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &AttributeAttractRepelParticleAffectorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &AttributeAttractRepelParticleAffectorBase::getType(void) const 
+FieldContainerType &AttributeAttractRepelParticleAffectorBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr AttributeAttractRepelParticleAffectorBase::shallowCopy(void) const 
-{ 
-    AttributeAttractRepelParticleAffectorPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const AttributeAttractRepelParticleAffector *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 AttributeAttractRepelParticleAffectorBase::getContainerSize(void) const 
-{ 
-    return sizeof(AttributeAttractRepelParticleAffector); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void AttributeAttractRepelParticleAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &AttributeAttractRepelParticleAffectorBase::getType(void) const
 {
-    this->executeSyncImpl((AttributeAttractRepelParticleAffectorBase *) &other, whichField);
+    return _type;
 }
-#else
-void AttributeAttractRepelParticleAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 AttributeAttractRepelParticleAffectorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((AttributeAttractRepelParticleAffectorBase *) &other, whichField, sInfo);
+    return sizeof(AttributeAttractRepelParticleAffector);
 }
-void AttributeAttractRepelParticleAffectorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFUInt32 *AttributeAttractRepelParticleAffectorBase::editSFAttributeAffected(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(AttributeAffectedFieldMask);
+
+    return &_sfAttributeAffected;
 }
 
-void AttributeAttractRepelParticleAffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFUInt32 *AttributeAttractRepelParticleAffectorBase::getSFAttributeAffected(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfAttributeAffected;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-AttributeAttractRepelParticleAffectorBase::AttributeAttractRepelParticleAffectorBase(void) :
-    _sfAttributeAffected      (UInt32(AttributeAttractRepelParticleAffector::POSITION_ATTRIBUTE)), 
-    _sfMinDistance            (Real32(0.0)), 
-    _sfMaxDistance            (Real32(100.0)), 
-    _sfQuadratic              (Real32(1.0f)), 
-    _sfLinear                 (Real32(1.0f)), 
-    _sfConstant               (Real32(1.0f)), 
-    Inherited() 
+SFReal32 *AttributeAttractRepelParticleAffectorBase::editSFMinDistance(void)
 {
+    editSField(MinDistanceFieldMask);
+
+    return &_sfMinDistance;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-AttributeAttractRepelParticleAffectorBase::AttributeAttractRepelParticleAffectorBase(const AttributeAttractRepelParticleAffectorBase &source) :
-    _sfAttributeAffected      (source._sfAttributeAffected      ), 
-    _sfMinDistance            (source._sfMinDistance            ), 
-    _sfMaxDistance            (source._sfMaxDistance            ), 
-    _sfQuadratic              (source._sfQuadratic              ), 
-    _sfLinear                 (source._sfLinear                 ), 
-    _sfConstant               (source._sfConstant               ), 
-    Inherited                 (source)
+const SFReal32 *AttributeAttractRepelParticleAffectorBase::getSFMinDistance(void) const
 {
+    return &_sfMinDistance;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-AttributeAttractRepelParticleAffectorBase::~AttributeAttractRepelParticleAffectorBase(void)
+SFReal32 *AttributeAttractRepelParticleAffectorBase::editSFMaxDistance(void)
 {
+    editSField(MaxDistanceFieldMask);
+
+    return &_sfMaxDistance;
 }
+
+const SFReal32 *AttributeAttractRepelParticleAffectorBase::getSFMaxDistance(void) const
+{
+    return &_sfMaxDistance;
+}
+
+
+SFReal32 *AttributeAttractRepelParticleAffectorBase::editSFQuadratic(void)
+{
+    editSField(QuadraticFieldMask);
+
+    return &_sfQuadratic;
+}
+
+const SFReal32 *AttributeAttractRepelParticleAffectorBase::getSFQuadratic(void) const
+{
+    return &_sfQuadratic;
+}
+
+
+SFReal32 *AttributeAttractRepelParticleAffectorBase::editSFLinear(void)
+{
+    editSField(LinearFieldMask);
+
+    return &_sfLinear;
+}
+
+const SFReal32 *AttributeAttractRepelParticleAffectorBase::getSFLinear(void) const
+{
+    return &_sfLinear;
+}
+
+
+SFReal32 *AttributeAttractRepelParticleAffectorBase::editSFConstant(void)
+{
+    editSField(ConstantFieldMask);
+
+    return &_sfConstant;
+}
+
+const SFReal32 *AttributeAttractRepelParticleAffectorBase::getSFConstant(void) const
+{
+    return &_sfConstant;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 AttributeAttractRepelParticleAffectorBase::getBinSize(const BitVector &whichField)
+UInt32 AttributeAttractRepelParticleAffectorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -258,38 +417,32 @@ UInt32 AttributeAttractRepelParticleAffectorBase::getBinSize(const BitVector &wh
     {
         returnValue += _sfAttributeAffected.getBinSize();
     }
-
     if(FieldBits::NoField != (MinDistanceFieldMask & whichField))
     {
         returnValue += _sfMinDistance.getBinSize();
     }
-
     if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
     {
         returnValue += _sfMaxDistance.getBinSize();
     }
-
     if(FieldBits::NoField != (QuadraticFieldMask & whichField))
     {
         returnValue += _sfQuadratic.getBinSize();
     }
-
     if(FieldBits::NoField != (LinearFieldMask & whichField))
     {
         returnValue += _sfLinear.getBinSize();
     }
-
     if(FieldBits::NoField != (ConstantFieldMask & whichField))
     {
         returnValue += _sfConstant.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void AttributeAttractRepelParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void AttributeAttractRepelParticleAffectorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -297,37 +450,30 @@ void AttributeAttractRepelParticleAffectorBase::copyToBin(      BinaryDataHandle
     {
         _sfAttributeAffected.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MinDistanceFieldMask & whichField))
     {
         _sfMinDistance.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
     {
         _sfMaxDistance.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (QuadraticFieldMask & whichField))
     {
         _sfQuadratic.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (LinearFieldMask & whichField))
     {
         _sfLinear.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ConstantFieldMask & whichField))
     {
         _sfConstant.copyToBin(pMem);
     }
-
-
 }
 
-void AttributeAttractRepelParticleAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void AttributeAttractRepelParticleAffectorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -335,137 +481,368 @@ void AttributeAttractRepelParticleAffectorBase::copyFromBin(      BinaryDataHand
     {
         _sfAttributeAffected.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MinDistanceFieldMask & whichField))
     {
         _sfMinDistance.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
     {
         _sfMaxDistance.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (QuadraticFieldMask & whichField))
     {
         _sfQuadratic.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (LinearFieldMask & whichField))
     {
         _sfLinear.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ConstantFieldMask & whichField))
     {
         _sfConstant.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void AttributeAttractRepelParticleAffectorBase::executeSyncImpl(      AttributeAttractRepelParticleAffectorBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+AttributeAttractRepelParticleAffectorTransitPtr AttributeAttractRepelParticleAffectorBase::createLocal(BitVector bFlags)
 {
+    AttributeAttractRepelParticleAffectorTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (AttributeAffectedFieldMask & whichField))
-        _sfAttributeAffected.syncWith(pOther->_sfAttributeAffected);
+        fc = dynamic_pointer_cast<AttributeAttractRepelParticleAffector>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (MinDistanceFieldMask & whichField))
-        _sfMinDistance.syncWith(pOther->_sfMinDistance);
-
-    if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
-        _sfMaxDistance.syncWith(pOther->_sfMaxDistance);
-
-    if(FieldBits::NoField != (QuadraticFieldMask & whichField))
-        _sfQuadratic.syncWith(pOther->_sfQuadratic);
-
-    if(FieldBits::NoField != (LinearFieldMask & whichField))
-        _sfLinear.syncWith(pOther->_sfLinear);
-
-    if(FieldBits::NoField != (ConstantFieldMask & whichField))
-        _sfConstant.syncWith(pOther->_sfConstant);
-
-
-}
-#else
-void AttributeAttractRepelParticleAffectorBase::executeSyncImpl(      AttributeAttractRepelParticleAffectorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (AttributeAffectedFieldMask & whichField))
-        _sfAttributeAffected.syncWith(pOther->_sfAttributeAffected);
-
-    if(FieldBits::NoField != (MinDistanceFieldMask & whichField))
-        _sfMinDistance.syncWith(pOther->_sfMinDistance);
-
-    if(FieldBits::NoField != (MaxDistanceFieldMask & whichField))
-        _sfMaxDistance.syncWith(pOther->_sfMaxDistance);
-
-    if(FieldBits::NoField != (QuadraticFieldMask & whichField))
-        _sfQuadratic.syncWith(pOther->_sfQuadratic);
-
-    if(FieldBits::NoField != (LinearFieldMask & whichField))
-        _sfLinear.syncWith(pOther->_sfLinear);
-
-    if(FieldBits::NoField != (ConstantFieldMask & whichField))
-        _sfConstant.syncWith(pOther->_sfConstant);
-
-
-
+    return fc;
 }
 
-void AttributeAttractRepelParticleAffectorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+AttributeAttractRepelParticleAffectorTransitPtr AttributeAttractRepelParticleAffectorBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    AttributeAttractRepelParticleAffectorTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<AttributeAttractRepelParticleAffector>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+AttributeAttractRepelParticleAffectorTransitPtr AttributeAttractRepelParticleAffectorBase::create(void)
+{
+    AttributeAttractRepelParticleAffectorTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<AttributeAttractRepelParticleAffector>(tmpPtr);
+    }
+
+    return fc;
+}
+
+AttributeAttractRepelParticleAffector *AttributeAttractRepelParticleAffectorBase::createEmptyLocal(BitVector bFlags)
+{
+    AttributeAttractRepelParticleAffector *returnValue;
+
+    newPtr<AttributeAttractRepelParticleAffector>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+AttributeAttractRepelParticleAffector *AttributeAttractRepelParticleAffectorBase::createEmpty(void)
+{
+    AttributeAttractRepelParticleAffector *returnValue;
+
+    newPtr<AttributeAttractRepelParticleAffector>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr AttributeAttractRepelParticleAffectorBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    AttributeAttractRepelParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const AttributeAttractRepelParticleAffector *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr AttributeAttractRepelParticleAffectorBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    AttributeAttractRepelParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const AttributeAttractRepelParticleAffector *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr AttributeAttractRepelParticleAffectorBase::shallowCopy(void) const
+{
+    AttributeAttractRepelParticleAffector *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const AttributeAttractRepelParticleAffector *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+AttributeAttractRepelParticleAffectorBase::AttributeAttractRepelParticleAffectorBase(void) :
+    Inherited(),
+    _sfAttributeAffected      (UInt32(AttributeAttractRepelParticleAffector::POSITION_ATTRIBUTE)),
+    _sfMinDistance            (Real32(0.0)),
+    _sfMaxDistance            (Real32(100.0)),
+    _sfQuadratic              (Real32(1.0f)),
+    _sfLinear                 (Real32(1.0f)),
+    _sfConstant               (Real32(1.0f))
+{
+}
+
+AttributeAttractRepelParticleAffectorBase::AttributeAttractRepelParticleAffectorBase(const AttributeAttractRepelParticleAffectorBase &source) :
+    Inherited(source),
+    _sfAttributeAffected      (source._sfAttributeAffected      ),
+    _sfMinDistance            (source._sfMinDistance            ),
+    _sfMaxDistance            (source._sfMaxDistance            ),
+    _sfQuadratic              (source._sfQuadratic              ),
+    _sfLinear                 (source._sfLinear                 ),
+    _sfConstant               (source._sfConstant               )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+AttributeAttractRepelParticleAffectorBase::~AttributeAttractRepelParticleAffectorBase(void)
+{
+}
+
+
+GetFieldHandlePtr AttributeAttractRepelParticleAffectorBase::getHandleAttributeAffected (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfAttributeAffected,
+             this->getType().getFieldDesc(AttributeAffectedFieldId),
+             const_cast<AttributeAttractRepelParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AttributeAttractRepelParticleAffectorBase::editHandleAttributeAffected(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfAttributeAffected,
+             this->getType().getFieldDesc(AttributeAffectedFieldId),
+             this));
+
+
+    editSField(AttributeAffectedFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AttributeAttractRepelParticleAffectorBase::getHandleMinDistance     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMinDistance,
+             this->getType().getFieldDesc(MinDistanceFieldId),
+             const_cast<AttributeAttractRepelParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AttributeAttractRepelParticleAffectorBase::editHandleMinDistance    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMinDistance,
+             this->getType().getFieldDesc(MinDistanceFieldId),
+             this));
+
+
+    editSField(MinDistanceFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AttributeAttractRepelParticleAffectorBase::getHandleMaxDistance     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMaxDistance,
+             this->getType().getFieldDesc(MaxDistanceFieldId),
+             const_cast<AttributeAttractRepelParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AttributeAttractRepelParticleAffectorBase::editHandleMaxDistance    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMaxDistance,
+             this->getType().getFieldDesc(MaxDistanceFieldId),
+             this));
+
+
+    editSField(MaxDistanceFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AttributeAttractRepelParticleAffectorBase::getHandleQuadratic       (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfQuadratic,
+             this->getType().getFieldDesc(QuadraticFieldId),
+             const_cast<AttributeAttractRepelParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AttributeAttractRepelParticleAffectorBase::editHandleQuadratic      (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfQuadratic,
+             this->getType().getFieldDesc(QuadraticFieldId),
+             this));
+
+
+    editSField(QuadraticFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AttributeAttractRepelParticleAffectorBase::getHandleLinear          (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfLinear,
+             this->getType().getFieldDesc(LinearFieldId),
+             const_cast<AttributeAttractRepelParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AttributeAttractRepelParticleAffectorBase::editHandleLinear         (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfLinear,
+             this->getType().getFieldDesc(LinearFieldId),
+             this));
+
+
+    editSField(LinearFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AttributeAttractRepelParticleAffectorBase::getHandleConstant        (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfConstant,
+             this->getType().getFieldDesc(ConstantFieldId),
+             const_cast<AttributeAttractRepelParticleAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AttributeAttractRepelParticleAffectorBase::editHandleConstant       (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfConstant,
+             this->getType().getFieldDesc(ConstantFieldId),
+             this));
+
+
+    editSField(ConstantFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void AttributeAttractRepelParticleAffectorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    AttributeAttractRepelParticleAffector *pThis = static_cast<AttributeAttractRepelParticleAffector *>(this);
+
+    pThis->execSync(static_cast<AttributeAttractRepelParticleAffector *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *AttributeAttractRepelParticleAffectorBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    AttributeAttractRepelParticleAffector *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const AttributeAttractRepelParticleAffector *>(pRefAspect),
+                  dynamic_cast<const AttributeAttractRepelParticleAffector *>(this));
+
+    return returnValue;
+}
+#endif
+
+void AttributeAttractRepelParticleAffectorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<AttributeAttractRepelParticleAffectorPtr>::_type("AttributeAttractRepelParticleAffectorPtr", "ParticleAffectorPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(AttributeAttractRepelParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(AttributeAttractRepelParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGATTRIBUTEATTRACTREPELPARTICLEAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGATTRIBUTEATTRACTREPELPARTICLEAFFECTORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGATTRIBUTEATTRACTREPELPARTICLEAFFECTORFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

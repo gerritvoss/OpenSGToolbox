@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,80 +55,66 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &GeoSurfaceDistribution3DBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 GeoSurfaceDistribution3DBase::getClassTypeId(void) 
+OSG::UInt32 GeoSurfaceDistribution3DBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-GeoSurfaceDistribution3DPtr GeoSurfaceDistribution3DBase::create(void) 
-{
-    GeoSurfaceDistribution3DPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = GeoSurfaceDistribution3DPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-GeoSurfaceDistribution3DPtr GeoSurfaceDistribution3DBase::createEmpty(void) 
-{ 
-    GeoSurfaceDistribution3DPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 GeoSurfaceDistribution3DBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the GeoSurfaceDistribution3D::_sfSurface field.
-inline
-const SFGeometryPtr *GeoSurfaceDistribution3DBase::getSFSurface(void) const
-{
-    return &_sfSurface;
-}
-
-//! Get the GeoSurfaceDistribution3D::_sfSurface field.
-inline
-SFGeometryPtr *GeoSurfaceDistribution3DBase::editSFSurface(void)
-{
-    return &_sfSurface;
-}
-
 
 //! Get the value of the GeoSurfaceDistribution3D::_sfSurface field.
 inline
-GeometryPtr &GeoSurfaceDistribution3DBase::editSurface(void)
-{
-    return _sfSurface.getValue();
-}
-
-//! Get the value of the GeoSurfaceDistribution3D::_sfSurface field.
-inline
-const GeometryPtr &GeoSurfaceDistribution3DBase::getSurface(void) const
+Geometry * GeoSurfaceDistribution3DBase::getSurface(void) const
 {
     return _sfSurface.getValue();
 }
 
 //! Set the value of the GeoSurfaceDistribution3D::_sfSurface field.
 inline
-void GeoSurfaceDistribution3DBase::setSurface(const GeometryPtr &value)
+void GeoSurfaceDistribution3DBase::setSurface(Geometry * const value)
 {
+    editSField(SurfaceFieldMask);
+
     _sfSurface.setValue(value);
 }
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void GeoSurfaceDistribution3DBase::execSync (      GeoSurfaceDistribution3DBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (SurfaceFieldMask & whichField))
+        _sfSurface.syncWith(pFrom->_sfSurface);
+}
+#endif
+
+
+inline
+const Char8 *GeoSurfaceDistribution3DBase::getClassname(void)
+{
+    return "GeoSurfaceDistribution3D";
+}
+
+
+OSG_GEN_CONTAINERPTR(GeoSurfaceDistribution3D);
+
 OSG_END_NAMESPACE
+

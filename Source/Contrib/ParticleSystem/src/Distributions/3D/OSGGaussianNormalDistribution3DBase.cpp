@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,182 +50,287 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEGAUSSIANNORMALDISTRIBUTION3DINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGGaussianNormalDistribution3DBase.h"
 #include "OSGGaussianNormalDistribution3D.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  GaussianNormalDistribution3DBase::MeanFieldMask = 
-    (TypeTraits<BitVector>::One << GaussianNormalDistribution3DBase::MeanFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  GaussianNormalDistribution3DBase::StandardDeviationXFieldMask = 
-    (TypeTraits<BitVector>::One << GaussianNormalDistribution3DBase::StandardDeviationXFieldId);
+/*! \class OSG::GaussianNormalDistribution3D
+    An GaussianNormaDistribution2D.
+ */
 
-const OSG::BitVector  GaussianNormalDistribution3DBase::StandardDeviationYFieldMask = 
-    (TypeTraits<BitVector>::One << GaussianNormalDistribution3DBase::StandardDeviationYFieldId);
-
-const OSG::BitVector  GaussianNormalDistribution3DBase::StandardDeviationZFieldMask = 
-    (TypeTraits<BitVector>::One << GaussianNormalDistribution3DBase::StandardDeviationZFieldId);
-
-const OSG::BitVector GaussianNormalDistribution3DBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Pnt3f           GaussianNormalDistribution3DBase::_sfMean
     
 */
+
 /*! \var Real32          GaussianNormalDistribution3DBase::_sfStandardDeviationX
     
 */
+
 /*! \var Real32          GaussianNormalDistribution3DBase::_sfStandardDeviationY
     
 */
+
 /*! \var Real32          GaussianNormalDistribution3DBase::_sfStandardDeviationZ
     
 */
 
-//! GaussianNormalDistribution3D description
 
-FieldDescription *GaussianNormalDistribution3DBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<GaussianNormalDistribution3D *>::_type("GaussianNormalDistribution3DPtr", "Distribution3DPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(GaussianNormalDistribution3D *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           GaussianNormalDistribution3D *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           GaussianNormalDistribution3D *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void GaussianNormalDistribution3DBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFPnt3f::getClassType(), 
-                     "Mean", 
-                     MeanFieldId, MeanFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&GaussianNormalDistribution3DBase::editSFMean)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "StandardDeviationX", 
-                     StandardDeviationXFieldId, StandardDeviationXFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&GaussianNormalDistribution3DBase::editSFStandardDeviationX)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "StandardDeviationY", 
-                     StandardDeviationYFieldId, StandardDeviationYFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&GaussianNormalDistribution3DBase::editSFStandardDeviationY)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "StandardDeviationZ", 
-                     StandardDeviationZFieldId, StandardDeviationZFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&GaussianNormalDistribution3DBase::editSFStandardDeviationZ))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType GaussianNormalDistribution3DBase::_type(
-    "GaussianNormalDistribution3D",
-    "Distribution3D",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&GaussianNormalDistribution3DBase::createEmpty),
+    pDesc = new SFPnt3f::Description(
+        SFPnt3f::getClassType(),
+        "Mean",
+        "",
+        MeanFieldId, MeanFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GaussianNormalDistribution3D::editHandleMean),
+        static_cast<FieldGetMethodSig >(&GaussianNormalDistribution3D::getHandleMean));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "StandardDeviationX",
+        "",
+        StandardDeviationXFieldId, StandardDeviationXFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GaussianNormalDistribution3D::editHandleStandardDeviationX),
+        static_cast<FieldGetMethodSig >(&GaussianNormalDistribution3D::getHandleStandardDeviationX));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "StandardDeviationY",
+        "",
+        StandardDeviationYFieldId, StandardDeviationYFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GaussianNormalDistribution3D::editHandleStandardDeviationY),
+        static_cast<FieldGetMethodSig >(&GaussianNormalDistribution3D::getHandleStandardDeviationY));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "StandardDeviationZ",
+        "",
+        StandardDeviationZFieldId, StandardDeviationZFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GaussianNormalDistribution3D::editHandleStandardDeviationZ),
+        static_cast<FieldGetMethodSig >(&GaussianNormalDistribution3D::getHandleStandardDeviationZ));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+GaussianNormalDistribution3DBase::TypeObject GaussianNormalDistribution3DBase::_type(
+    GaussianNormalDistribution3DBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&GaussianNormalDistribution3DBase::createEmptyLocal),
     GaussianNormalDistribution3D::initMethod,
-    _desc,
-    sizeof(_desc));
+    GaussianNormalDistribution3D::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&GaussianNormalDistribution3D::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"GaussianNormalDistribution3D\"\n"
+    "\tparent=\"Distribution3D\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "An GaussianNormaDistribution2D.\n"
+    "\t<Field\n"
+    "\t\tname=\"Mean\"\n"
+    "\t\ttype=\"Pnt3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"StandardDeviationX\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"StandardDeviationY\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"StandardDeviationZ\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "An GaussianNormaDistribution2D.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(GaussianNormalDistribution3DBase, GaussianNormalDistribution3DPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &GaussianNormalDistribution3DBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &GaussianNormalDistribution3DBase::getType(void) const 
+FieldContainerType &GaussianNormalDistribution3DBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr GaussianNormalDistribution3DBase::shallowCopy(void) const 
-{ 
-    GaussianNormalDistribution3DPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const GaussianNormalDistribution3D *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 GaussianNormalDistribution3DBase::getContainerSize(void) const 
-{ 
-    return sizeof(GaussianNormalDistribution3D); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void GaussianNormalDistribution3DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &GaussianNormalDistribution3DBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<GaussianNormalDistribution3DBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void GaussianNormalDistribution3DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 GaussianNormalDistribution3DBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((GaussianNormalDistribution3DBase *) &other, whichField, sInfo);
+    return sizeof(GaussianNormalDistribution3D);
 }
-void GaussianNormalDistribution3DBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFPnt3f *GaussianNormalDistribution3DBase::editSFMean(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(MeanFieldMask);
+
+    return &_sfMean;
 }
 
-void GaussianNormalDistribution3DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFPnt3f *GaussianNormalDistribution3DBase::getSFMean(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfMean;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-GaussianNormalDistribution3DBase::GaussianNormalDistribution3DBase(void) :
-    _sfMean                   (Pnt3f(0.0,0.0,0.0)), 
-    _sfStandardDeviationX     (Real32(1.0)), 
-    _sfStandardDeviationY     (Real32(1.0)), 
-    _sfStandardDeviationZ     (Real32(1.0)), 
-    Inherited() 
+SFReal32 *GaussianNormalDistribution3DBase::editSFStandardDeviationX(void)
 {
+    editSField(StandardDeviationXFieldMask);
+
+    return &_sfStandardDeviationX;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-GaussianNormalDistribution3DBase::GaussianNormalDistribution3DBase(const GaussianNormalDistribution3DBase &source) :
-    _sfMean                   (source._sfMean                   ), 
-    _sfStandardDeviationX     (source._sfStandardDeviationX     ), 
-    _sfStandardDeviationY     (source._sfStandardDeviationY     ), 
-    _sfStandardDeviationZ     (source._sfStandardDeviationZ     ), 
-    Inherited                 (source)
+const SFReal32 *GaussianNormalDistribution3DBase::getSFStandardDeviationX(void) const
 {
+    return &_sfStandardDeviationX;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-GaussianNormalDistribution3DBase::~GaussianNormalDistribution3DBase(void)
+SFReal32 *GaussianNormalDistribution3DBase::editSFStandardDeviationY(void)
 {
+    editSField(StandardDeviationYFieldMask);
+
+    return &_sfStandardDeviationY;
 }
+
+const SFReal32 *GaussianNormalDistribution3DBase::getSFStandardDeviationY(void) const
+{
+    return &_sfStandardDeviationY;
+}
+
+
+SFReal32 *GaussianNormalDistribution3DBase::editSFStandardDeviationZ(void)
+{
+    editSField(StandardDeviationZFieldMask);
+
+    return &_sfStandardDeviationZ;
+}
+
+const SFReal32 *GaussianNormalDistribution3DBase::getSFStandardDeviationZ(void) const
+{
+    return &_sfStandardDeviationZ;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 GaussianNormalDistribution3DBase::getBinSize(const BitVector &whichField)
+UInt32 GaussianNormalDistribution3DBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -233,28 +338,24 @@ UInt32 GaussianNormalDistribution3DBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfMean.getBinSize();
     }
-
     if(FieldBits::NoField != (StandardDeviationXFieldMask & whichField))
     {
         returnValue += _sfStandardDeviationX.getBinSize();
     }
-
     if(FieldBits::NoField != (StandardDeviationYFieldMask & whichField))
     {
         returnValue += _sfStandardDeviationY.getBinSize();
     }
-
     if(FieldBits::NoField != (StandardDeviationZFieldMask & whichField))
     {
         returnValue += _sfStandardDeviationZ.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void GaussianNormalDistribution3DBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void GaussianNormalDistribution3DBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -262,27 +363,22 @@ void GaussianNormalDistribution3DBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfMean.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (StandardDeviationXFieldMask & whichField))
     {
         _sfStandardDeviationX.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (StandardDeviationYFieldMask & whichField))
     {
         _sfStandardDeviationY.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (StandardDeviationZFieldMask & whichField))
     {
         _sfStandardDeviationZ.copyToBin(pMem);
     }
-
-
 }
 
-void GaussianNormalDistribution3DBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void GaussianNormalDistribution3DBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -290,95 +386,306 @@ void GaussianNormalDistribution3DBase::copyFromBin(      BinaryDataHandler &pMem
     {
         _sfMean.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (StandardDeviationXFieldMask & whichField))
     {
         _sfStandardDeviationX.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (StandardDeviationYFieldMask & whichField))
     {
         _sfStandardDeviationY.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (StandardDeviationZFieldMask & whichField))
     {
         _sfStandardDeviationZ.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void GaussianNormalDistribution3DBase::executeSyncImpl(      GaussianNormalDistribution3DBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+GaussianNormalDistribution3DTransitPtr GaussianNormalDistribution3DBase::createLocal(BitVector bFlags)
 {
+    GaussianNormalDistribution3DTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (MeanFieldMask & whichField))
-        _sfMean.syncWith(pOther->_sfMean);
+        fc = dynamic_pointer_cast<GaussianNormalDistribution3D>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (StandardDeviationXFieldMask & whichField))
-        _sfStandardDeviationX.syncWith(pOther->_sfStandardDeviationX);
-
-    if(FieldBits::NoField != (StandardDeviationYFieldMask & whichField))
-        _sfStandardDeviationY.syncWith(pOther->_sfStandardDeviationY);
-
-    if(FieldBits::NoField != (StandardDeviationZFieldMask & whichField))
-        _sfStandardDeviationZ.syncWith(pOther->_sfStandardDeviationZ);
-
-
-}
-#else
-void GaussianNormalDistribution3DBase::executeSyncImpl(      GaussianNormalDistribution3DBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (MeanFieldMask & whichField))
-        _sfMean.syncWith(pOther->_sfMean);
-
-    if(FieldBits::NoField != (StandardDeviationXFieldMask & whichField))
-        _sfStandardDeviationX.syncWith(pOther->_sfStandardDeviationX);
-
-    if(FieldBits::NoField != (StandardDeviationYFieldMask & whichField))
-        _sfStandardDeviationY.syncWith(pOther->_sfStandardDeviationY);
-
-    if(FieldBits::NoField != (StandardDeviationZFieldMask & whichField))
-        _sfStandardDeviationZ.syncWith(pOther->_sfStandardDeviationZ);
-
-
-
+    return fc;
 }
 
-void GaussianNormalDistribution3DBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+GaussianNormalDistribution3DTransitPtr GaussianNormalDistribution3DBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    GaussianNormalDistribution3DTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<GaussianNormalDistribution3D>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+GaussianNormalDistribution3DTransitPtr GaussianNormalDistribution3DBase::create(void)
+{
+    GaussianNormalDistribution3DTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<GaussianNormalDistribution3D>(tmpPtr);
+    }
+
+    return fc;
+}
+
+GaussianNormalDistribution3D *GaussianNormalDistribution3DBase::createEmptyLocal(BitVector bFlags)
+{
+    GaussianNormalDistribution3D *returnValue;
+
+    newPtr<GaussianNormalDistribution3D>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+GaussianNormalDistribution3D *GaussianNormalDistribution3DBase::createEmpty(void)
+{
+    GaussianNormalDistribution3D *returnValue;
+
+    newPtr<GaussianNormalDistribution3D>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr GaussianNormalDistribution3DBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    GaussianNormalDistribution3D *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const GaussianNormalDistribution3D *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr GaussianNormalDistribution3DBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    GaussianNormalDistribution3D *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const GaussianNormalDistribution3D *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr GaussianNormalDistribution3DBase::shallowCopy(void) const
+{
+    GaussianNormalDistribution3D *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const GaussianNormalDistribution3D *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+GaussianNormalDistribution3DBase::GaussianNormalDistribution3DBase(void) :
+    Inherited(),
+    _sfMean                   (Pnt3f(0.0,0.0,0.0)),
+    _sfStandardDeviationX     (Real32(1.0)),
+    _sfStandardDeviationY     (Real32(1.0)),
+    _sfStandardDeviationZ     (Real32(1.0))
+{
+}
+
+GaussianNormalDistribution3DBase::GaussianNormalDistribution3DBase(const GaussianNormalDistribution3DBase &source) :
+    Inherited(source),
+    _sfMean                   (source._sfMean                   ),
+    _sfStandardDeviationX     (source._sfStandardDeviationX     ),
+    _sfStandardDeviationY     (source._sfStandardDeviationY     ),
+    _sfStandardDeviationZ     (source._sfStandardDeviationZ     )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+GaussianNormalDistribution3DBase::~GaussianNormalDistribution3DBase(void)
+{
+}
+
+
+GetFieldHandlePtr GaussianNormalDistribution3DBase::getHandleMean            (void) const
+{
+    SFPnt3f::GetHandlePtr returnValue(
+        new  SFPnt3f::GetHandle(
+             &_sfMean,
+             this->getType().getFieldDesc(MeanFieldId),
+             const_cast<GaussianNormalDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GaussianNormalDistribution3DBase::editHandleMean           (void)
+{
+    SFPnt3f::EditHandlePtr returnValue(
+        new  SFPnt3f::EditHandle(
+             &_sfMean,
+             this->getType().getFieldDesc(MeanFieldId),
+             this));
+
+
+    editSField(MeanFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr GaussianNormalDistribution3DBase::getHandleStandardDeviationX (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfStandardDeviationX,
+             this->getType().getFieldDesc(StandardDeviationXFieldId),
+             const_cast<GaussianNormalDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GaussianNormalDistribution3DBase::editHandleStandardDeviationX(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfStandardDeviationX,
+             this->getType().getFieldDesc(StandardDeviationXFieldId),
+             this));
+
+
+    editSField(StandardDeviationXFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr GaussianNormalDistribution3DBase::getHandleStandardDeviationY (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfStandardDeviationY,
+             this->getType().getFieldDesc(StandardDeviationYFieldId),
+             const_cast<GaussianNormalDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GaussianNormalDistribution3DBase::editHandleStandardDeviationY(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfStandardDeviationY,
+             this->getType().getFieldDesc(StandardDeviationYFieldId),
+             this));
+
+
+    editSField(StandardDeviationYFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr GaussianNormalDistribution3DBase::getHandleStandardDeviationZ (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfStandardDeviationZ,
+             this->getType().getFieldDesc(StandardDeviationZFieldId),
+             const_cast<GaussianNormalDistribution3DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GaussianNormalDistribution3DBase::editHandleStandardDeviationZ(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfStandardDeviationZ,
+             this->getType().getFieldDesc(StandardDeviationZFieldId),
+             this));
+
+
+    editSField(StandardDeviationZFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void GaussianNormalDistribution3DBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    GaussianNormalDistribution3D *pThis = static_cast<GaussianNormalDistribution3D *>(this);
+
+    pThis->execSync(static_cast<GaussianNormalDistribution3D *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *GaussianNormalDistribution3DBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    GaussianNormalDistribution3D *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const GaussianNormalDistribution3D *>(pRefAspect),
+                  dynamic_cast<const GaussianNormalDistribution3D *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<GaussianNormalDistribution3DPtr>::_type("GaussianNormalDistribution3DPtr", "Distribution3DPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(GaussianNormalDistribution3DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(GaussianNormalDistribution3DPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+void GaussianNormalDistribution3DBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

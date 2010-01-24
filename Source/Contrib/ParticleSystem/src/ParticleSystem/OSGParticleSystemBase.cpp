@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,468 +50,1272 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEPARTICLESYSTEMINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGNode.h"                    // Beacon Class
+#include "OSGParticleGenerator.h"       // Generators Class
+#include "OSGParticleAffector.h"        // Affectors Class
+#include "OSGParticleSystemAffector.h"  // SystemAffectors Class
 
 #include "OSGParticleSystemBase.h"
 #include "OSGParticleSystem.h"
 
+#include <boost/bind.hpp>
+
+#include "OSGEvent.h"
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ParticleSystemBase::BeaconFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::BeaconFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  ParticleSystemBase::InternalPositionsFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::InternalPositionsFieldId);
+/*! \class OSG::ParticleSystem
+    
+ */
 
-const OSG::BitVector  ParticleSystemBase::InternalSecPositionsFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::InternalSecPositionsFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  ParticleSystemBase::InternalNormalsFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::InternalNormalsFieldId);
-
-const OSG::BitVector  ParticleSystemBase::InternalColorsFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::InternalColorsFieldId);
-
-const OSG::BitVector  ParticleSystemBase::InternalSizesFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::InternalSizesFieldId);
-
-const OSG::BitVector  ParticleSystemBase::InternalLifespansFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::InternalLifespansFieldId);
-
-const OSG::BitVector  ParticleSystemBase::InternalAgesFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::InternalAgesFieldId);
-
-const OSG::BitVector  ParticleSystemBase::InternalVelocitiesFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::InternalVelocitiesFieldId);
-
-const OSG::BitVector  ParticleSystemBase::InternalSecVelocitiesFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::InternalSecVelocitiesFieldId);
-
-const OSG::BitVector  ParticleSystemBase::InternalAccelerationsFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::InternalAccelerationsFieldId);
-
-const OSG::BitVector  ParticleSystemBase::InternalAttributesFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::InternalAttributesFieldId);
-
-const OSG::BitVector  ParticleSystemBase::MaxParticlesFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::MaxParticlesFieldId);
-
-const OSG::BitVector  ParticleSystemBase::DynamicFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::DynamicFieldId);
-
-const OSG::BitVector  ParticleSystemBase::UpdateSecAttribsFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::UpdateSecAttribsFieldId);
-
-const OSG::BitVector  ParticleSystemBase::LastElapsedTimeFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::LastElapsedTimeFieldId);
-
-const OSG::BitVector  ParticleSystemBase::GeneratorsFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::GeneratorsFieldId);
-
-const OSG::BitVector  ParticleSystemBase::AffectorsFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::AffectorsFieldId);
-
-const OSG::BitVector  ParticleSystemBase::SystemAffectorsFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::SystemAffectorsFieldId);
-
-const OSG::BitVector  ParticleSystemBase::VolumeFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::VolumeFieldId);
-
-const OSG::BitVector  ParticleSystemBase::MaxParticleSizeFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemBase::MaxParticleSizeFieldId);
-
-const OSG::BitVector  ParticleSystemBase::EventProducerFieldMask =
-    (TypeTraits<BitVector>::One << ParticleSystemBase::EventProducerFieldId);
-
-const OSG::BitVector ParticleSystemBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var NodePtr         ParticleSystemBase::_sfBeacon
+/*! \var Node *          ParticleSystemBase::_sfBeacon
     
 */
+
 /*! \var Pnt3f           ParticleSystemBase::_mfInternalPositions
-    The positions of the particles. This is the primary defining          information for a particle.
+    The positions of the particles. This is the primary defining
+    information for a particle.
 */
+
 /*! \var Pnt3f           ParticleSystemBase::_mfInternalSecPositions
-    The secondary position of the particle. This information is only used          by a few rendering modes, e.g. the streak mode. Usually it represents          the particle's last position.
+    The secondary position of the particle. This information is only used
+    by a few rendering modes, e.g. the streak mode. Usually it represents
+    the particle's last position.
 */
+
 /*! \var Vec3f           ParticleSystemBase::_mfInternalNormals
-    Most particles will be automatically aligned to the view          direction. If normals are set they will be used to define the          direction the particles are facing.
+    Most particles will be automatically aligned to the view
+    direction. If normals are set they will be used to define the
+    direction the particles are facing.
 */
+
 /*! \var Color4f         ParticleSystemBase::_mfInternalColors
     The particle colors (optional).
 */
+
 /*! \var Vec3f           ParticleSystemBase::_mfInternalSizes
-    The particle sizes. If not set (1,1,1) will be used, if only one entry          is set, it will be used for all particles. If the number of sizes if          equal to the number of positions every particle will get its own size.          Most modes only use the X coordinate of the vector. Particles with size 0          are ignored.
+    The particle sizes. If not set (1,1,1) will be used, if only one entry
+    is set, it will be used for all particles. If the number of sizes if
+    equal to the number of positions every particle will get its own size.
+    Most modes only use the X coordinate of the vector. Particles with size 0
+    are ignored.
 */
+
 /*! \var Time            ParticleSystemBase::_mfInternalLifespans
     The particle lifespan. If set to less than 0, then the particle is considered eternal.
 */
+
 /*! \var Time            ParticleSystemBase::_mfInternalAges
     The particle age.
 */
+
 /*! \var Vec3f           ParticleSystemBase::_mfInternalVelocities
-    The particle velocities. If not set (0,0,0) will be used, if only one entry          is set, it will be used for all particles. If the number of velocities is          equal to the number of positions every particle will get its own velocity.          If no velocities are present, then the position will not be updated regarding velocity.
+    The particle velocities. If not set (0,0,0) will be used, if only one entry
+    is set, it will be used for all particles. If the number of velocities is
+    equal to the number of positions every particle will get its own velocity.
+    If no velocities are present, then the position will not be updated regarding velocity.
 */
+
 /*! \var Vec3f           ParticleSystemBase::_mfInternalSecVelocities
-    The particle secVelocities. This is the velocity of the particle last update.  This is used          for the VelocityDirQuads draw mode.
+    The particle secVelocities. This is the velocity of the particle last update.  This is used
+    for the VelocityDirQuads draw mode.
 */
+
 /*! \var Vec3f           ParticleSystemBase::_mfInternalAccelerations
-    The particle accelerations If not set (0,0,0) will be used, if only one entry          is set, it will be used for all particles. If the number of accelerations is          equal to the number of positions every particle will get its own acceleration.          If no accelerations are present, then the position will not be updated regarding acceleration.
+    The particle accelerations If not set (0,0,0) will be used, if only one entry
+    is set, it will be used for all particles. If the number of accelerations is
+    equal to the number of positions every particle will get its own acceleration.
+    If no accelerations are present, then the position will not be updated regarding acceleration.
 */
+
 /*! \var StringToUInt32Map ParticleSystemBase::_mfInternalAttributes
     A per-particle attribute map.  Used for storing user-defined data to particles.
 */
+
 /*! \var UInt32          ParticleSystemBase::_sfMaxParticles
     
 */
+
 /*! \var bool            ParticleSystemBase::_sfDynamic
-    Hint to tell the system whether particles are expected to change position or          not. Is used to speed up sorting.
+    Hint to tell the system whether particles are expected to change position or
+    not. Is used to speed up sorting.
 */
+
 /*! \var bool            ParticleSystemBase::_sfUpdateSecAttribs
-    If true then the secondary position, and velocity will be updated every frame to     the previous value of position and velocity respectively.
+    If true then the secondary position, and velocity will be updated every frame to
+    the previous value of position and velocity respectively.
 */
+
 /*! \var Time            ParticleSystemBase::_sfLastElapsedTime
     This value holds the value of the last elapsed time.
 */
-/*! \var ParticleGeneratorPtr ParticleSystemBase::_mfGenerators
+
+/*! \var ParticleGenerator * ParticleSystemBase::_mfGenerators
     List of Particle Generators.
 */
-/*! \var ParticleAffectorPtr ParticleSystemBase::_mfAffectors
+
+/*! \var ParticleAffector * ParticleSystemBase::_mfAffectors
     List of Particle Affectors.  These are applied on a per particle basis.
 */
-/*! \var ParticleSystemAffectorPtr ParticleSystemBase::_mfSystemAffectors
+
+/*! \var ParticleSystemAffector * ParticleSystemBase::_mfSystemAffectors
     List of Particle System Affectors.  These are applied to the entire system of particles and can allow for particle-to-particle interaction.
 */
-/*! \var DynamicVolume   ParticleSystemBase::_sfVolume
+
+/*! \var BoxVolume       ParticleSystemBase::_sfVolume
     The volume of the particles in this particle system.  In the particle system's coordinate space
 */
+
 /*! \var Vec3f           ParticleSystemBase::_sfMaxParticleSize
     The Size of the Largest particle in this system
 */
 
-//! ParticleSystem description
 
-FieldDescription *ParticleSystemBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ParticleSystem *>::_type("ParticleSystemPtr", "AttachmentContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ParticleSystem *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ParticleSystem *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ParticleSystem *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ParticleSystemBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFNodePtr::getClassType(), 
-                     "Beacon", 
-                     BeaconFieldId, BeaconFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editSFBeacon)),
-    new FieldDescription(MFPnt3f::getClassType(), 
-                     "InternalPositions", 
-                     InternalPositionsFieldId, InternalPositionsFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFInternalPositions)),
-    new FieldDescription(MFPnt3f::getClassType(), 
-                     "InternalSecPositions", 
-                     InternalSecPositionsFieldId, InternalSecPositionsFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFInternalSecPositions)),
-    new FieldDescription(MFVec3f::getClassType(), 
-                     "InternalNormals", 
-                     InternalNormalsFieldId, InternalNormalsFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFInternalNormals)),
-    new FieldDescription(MFColor4f::getClassType(), 
-                     "InternalColors", 
-                     InternalColorsFieldId, InternalColorsFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFInternalColors)),
-    new FieldDescription(MFVec3f::getClassType(), 
-                     "InternalSizes", 
-                     InternalSizesFieldId, InternalSizesFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFInternalSizes)),
-    new FieldDescription(MFTime::getClassType(), 
-                     "InternalLifespans", 
-                     InternalLifespansFieldId, InternalLifespansFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFInternalLifespans)),
-    new FieldDescription(MFTime::getClassType(), 
-                     "InternalAges", 
-                     InternalAgesFieldId, InternalAgesFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFInternalAges)),
-    new FieldDescription(MFVec3f::getClassType(), 
-                     "InternalVelocities", 
-                     InternalVelocitiesFieldId, InternalVelocitiesFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFInternalVelocities)),
-    new FieldDescription(MFVec3f::getClassType(), 
-                     "InternalSecVelocities", 
-                     InternalSecVelocitiesFieldId, InternalSecVelocitiesFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFInternalSecVelocities)),
-    new FieldDescription(MFVec3f::getClassType(), 
-                     "InternalAccelerations", 
-                     InternalAccelerationsFieldId, InternalAccelerationsFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFInternalAccelerations)),
-    new FieldDescription(MFStringToUInt32Map::getClassType(), 
-                     "InternalAttributes", 
-                     InternalAttributesFieldId, InternalAttributesFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFInternalAttributes)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "MaxParticles", 
-                     MaxParticlesFieldId, MaxParticlesFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editSFMaxParticles)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "Dynamic", 
-                     DynamicFieldId, DynamicFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editSFDynamic)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "UpdateSecAttribs", 
-                     UpdateSecAttribsFieldId, UpdateSecAttribsFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editSFUpdateSecAttribs)),
-    new FieldDescription(SFTime::getClassType(), 
-                     "LastElapsedTime", 
-                     LastElapsedTimeFieldId, LastElapsedTimeFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editSFLastElapsedTime)),
-    new FieldDescription(MFParticleGeneratorPtr::getClassType(), 
-                     "Generators", 
-                     GeneratorsFieldId, GeneratorsFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFGenerators)),
-    new FieldDescription(MFParticleAffectorPtr::getClassType(), 
-                     "Affectors", 
-                     AffectorsFieldId, AffectorsFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFAffectors)),
-    new FieldDescription(MFParticleSystemAffectorPtr::getClassType(), 
-                     "SystemAffectors", 
-                     SystemAffectorsFieldId, SystemAffectorsFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFSystemAffectors)),
-    new FieldDescription(SFDynamicVolume::getClassType(), 
-                     "Volume", 
-                     VolumeFieldId, VolumeFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editSFVolume)),
-    new FieldDescription(SFVec3f::getClassType(), 
-                     "MaxParticleSize", 
-                     MaxParticleSizeFieldId, MaxParticleSizeFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editSFMaxParticleSize))
-    , 
-    new FieldDescription(SFEventProducerPtr::getClassType(), 
-                     "EventProducer", 
-                     EventProducerFieldId,EventProducerFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editSFEventProducer))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType ParticleSystemBase::_type(
-    "ParticleSystem",
-    "AttachmentContainer",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&ParticleSystemBase::createEmpty),
+    pDesc = new SFUnrecNodePtr::Description(
+        SFUnrecNodePtr::getClassType(),
+        "Beacon",
+        "",
+        BeaconFieldId, BeaconFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystem::editHandleBeacon),
+        static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleBeacon));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFPnt3f::Description(
+        MFPnt3f::getClassType(),
+        "InternalPositions",
+        "The positions of the particles. This is the primary defining\n"
+        "information for a particle.\n",
+        InternalPositionsFieldId, InternalPositionsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystem::editHandleInternalPositions),
+        static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleInternalPositions));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFPnt3f::Description(
+        MFPnt3f::getClassType(),
+        "InternalSecPositions",
+        "The secondary position of the particle. This information is only used\n"
+        "by a few rendering modes, e.g. the streak mode. Usually it represents\n"
+        "the particle's last position.\n",
+        InternalSecPositionsFieldId, InternalSecPositionsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystem::editHandleInternalSecPositions),
+        static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleInternalSecPositions));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFVec3f::Description(
+        MFVec3f::getClassType(),
+        "InternalNormals",
+        "Most particles will be automatically aligned to the view\n"
+        "direction. If normals are set they will be used to define the\n"
+        "direction the particles are facing.\n",
+        InternalNormalsFieldId, InternalNormalsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystem::editHandleInternalNormals),
+        static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleInternalNormals));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFColor4f::Description(
+        MFColor4f::getClassType(),
+        "InternalColors",
+        "The particle colors (optional).\n",
+        InternalColorsFieldId, InternalColorsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystem::editHandleInternalColors),
+        static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleInternalColors));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFVec3f::Description(
+        MFVec3f::getClassType(),
+        "InternalSizes",
+        "The particle sizes. If not set (1,1,1) will be used, if only one entry\n"
+        "is set, it will be used for all particles. If the number of sizes if\n"
+        "equal to the number of positions every particle will get its own size.\n"
+        "Most modes only use the X coordinate of the vector. Particles with size 0\n"
+        "are ignored.\n",
+        InternalSizesFieldId, InternalSizesFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystem::editHandleInternalSizes),
+        static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleInternalSizes));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFTime::Description(
+        MFTime::getClassType(),
+        "InternalLifespans",
+        "The particle lifespan. If set to less than 0, then the particle is considered eternal.\n",
+        InternalLifespansFieldId, InternalLifespansFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystem::editHandleInternalLifespans),
+        static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleInternalLifespans));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFTime::Description(
+        MFTime::getClassType(),
+        "InternalAges",
+        "The particle age.\n",
+        InternalAgesFieldId, InternalAgesFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystem::editHandleInternalAges),
+        static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleInternalAges));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFVec3f::Description(
+        MFVec3f::getClassType(),
+        "InternalVelocities",
+        "The particle velocities. If not set (0,0,0) will be used, if only one entry\n"
+        "is set, it will be used for all particles. If the number of velocities is\n"
+        "equal to the number of positions every particle will get its own velocity.\n"
+        "If no velocities are present, then the position will not be updated regarding velocity.\n",
+        InternalVelocitiesFieldId, InternalVelocitiesFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystem::editHandleInternalVelocities),
+        static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleInternalVelocities));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFVec3f::Description(
+        MFVec3f::getClassType(),
+        "InternalSecVelocities",
+        "The particle secVelocities. This is the velocity of the particle last update.  This is used\n"
+        "for the VelocityDirQuads draw mode.\n",
+        InternalSecVelocitiesFieldId, InternalSecVelocitiesFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystem::editHandleInternalSecVelocities),
+        static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleInternalSecVelocities));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFVec3f::Description(
+        MFVec3f::getClassType(),
+        "InternalAccelerations",
+        "The particle accelerations If not set (0,0,0) will be used, if only one entry\n"
+        "is set, it will be used for all particles. If the number of accelerations is\n"
+        "equal to the number of positions every particle will get its own acceleration.\n"
+        "If no accelerations are present, then the position will not be updated regarding acceleration.\n",
+        InternalAccelerationsFieldId, InternalAccelerationsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystem::editHandleInternalAccelerations),
+        static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleInternalAccelerations));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFStringToUInt32Map::Description(
+        MFStringToUInt32Map::getClassType(),
+        "InternalAttributes",
+        "A per-particle attribute map.  Used for storing user-defined data to particles.\n",
+        InternalAttributesFieldId, InternalAttributesFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystem::editHandleInternalAttributes),
+        static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleInternalAttributes));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "MaxParticles",
+        "",
+        MaxParticlesFieldId, MaxParticlesFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystem::editHandleMaxParticles),
+        static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleMaxParticles));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Dynamic",
+        "Hint to tell the system whether particles are expected to change position or\n"
+        "not. Is used to speed up sorting.\n",
+        DynamicFieldId, DynamicFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystem::editHandleDynamic),
+        static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleDynamic));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "UpdateSecAttribs",
+        "If true then the secondary position, and velocity will be updated every frame to\n"
+        "the previous value of position and velocity respectively.\n",
+        UpdateSecAttribsFieldId, UpdateSecAttribsFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystem::editHandleUpdateSecAttribs),
+        static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleUpdateSecAttribs));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFTime::Description(
+        SFTime::getClassType(),
+        "LastElapsedTime",
+        "This value holds the value of the last elapsed time.\n",
+        LastElapsedTimeFieldId, LastElapsedTimeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystem::editHandleLastElapsedTime),
+        static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleLastElapsedTime));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFUnrecParticleGeneratorPtr::Description(
+        MFUnrecParticleGeneratorPtr::getClassType(),
+        "Generators",
+        "List of Particle Generators.\n",
+        GeneratorsFieldId, GeneratorsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystem::editHandleGenerators),
+        static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleGenerators));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFUnrecParticleAffectorPtr::Description(
+        MFUnrecParticleAffectorPtr::getClassType(),
+        "Affectors",
+        "List of Particle Affectors.  These are applied on a per particle basis.\n",
+        AffectorsFieldId, AffectorsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystem::editHandleAffectors),
+        static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleAffectors));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFUnrecParticleSystemAffectorPtr::Description(
+        MFUnrecParticleSystemAffectorPtr::getClassType(),
+        "SystemAffectors",
+        "List of Particle System Affectors.  These are applied to the entire system of particles and can allow for particle-to-particle interaction.\n",
+        SystemAffectorsFieldId, SystemAffectorsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystem::editHandleSystemAffectors),
+        static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleSystemAffectors));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBoxVolume::Description(
+        SFBoxVolume::getClassType(),
+        "Volume",
+        "The volume of the particles in this particle system.  In the particle system's coordinate space\n",
+        VolumeFieldId, VolumeFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystem::editHandleVolume),
+        static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleVolume));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFVec3f::Description(
+        SFVec3f::getClassType(),
+        "MaxParticleSize",
+        "The Size of the Largest particle in this system\n",
+        MaxParticleSizeFieldId, MaxParticleSizeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ParticleSystem::editHandleMaxParticleSize),
+        static_cast<FieldGetMethodSig >(&ParticleSystem::getHandleMaxParticleSize));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFEventProducerPtr::Description(
+        SFEventProducerPtr::getClassType(),
+        "EventProducer",
+        "Event Producer",
+        EventProducerFieldId,EventProducerFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast     <FieldEditMethodSig>(&ParticleSystem::invalidEditField),
+        static_cast     <FieldGetMethodSig >(&ParticleSystem::invalidGetField));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+ParticleSystemBase::TypeObject ParticleSystemBase::_type(
+    ParticleSystemBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ParticleSystemBase::createEmptyLocal),
     ParticleSystem::initMethod,
-    _desc,
-    sizeof(_desc));
+    ParticleSystem::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ParticleSystem::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ParticleSystem\"\n"
+    "\tparent=\"AttachmentContainer\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"Beacon\"\n"
+    "\t\ttype=\"Node\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalPositions\"\n"
+    "\t\ttype=\"Pnt3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "        The positions of the particles. This is the primary defining\n"
+    "        information for a particle.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalSecPositions\"\n"
+    "\t\ttype=\"Pnt3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "        The secondary position of the particle. This information is only used\n"
+    "        by a few rendering modes, e.g. the streak mode. Usually it represents\n"
+    "        the particle's last position.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalNormals\"\n"
+    "\t\ttype=\"Vec3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "        Most particles will be automatically aligned to the view\n"
+    "        direction. If normals are set they will be used to define the\n"
+    "        direction the particles are facing.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalColors\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\tThe particle colors (optional).\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalSizes\"\n"
+    "\t\ttype=\"Vec3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "        The particle sizes. If not set (1,1,1) will be used, if only one entry\n"
+    "        is set, it will be used for all particles. If the number of sizes if\n"
+    "        equal to the number of positions every particle will get its own size.\n"
+    "        Most modes only use the X coordinate of the vector. Particles with size 0\n"
+    "        are ignored.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalLifespans\"\n"
+    "\t\ttype=\"Time\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "        The particle lifespan. If set to less than 0, then the particle is considered eternal.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalAges\"\n"
+    "\t\ttype=\"Time\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "        The particle age.\n"
+    "\t</Field>\n"
+    "   \n"
+    "\t<Field\n"
+    "\t\tname=\"InternalVelocities\"\n"
+    "\t\ttype=\"Vec3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "        The particle velocities. If not set (0,0,0) will be used, if only one entry\n"
+    "        is set, it will be used for all particles. If the number of velocities is\n"
+    "        equal to the number of positions every particle will get its own velocity.\n"
+    "        If no velocities are present, then the position will not be updated regarding velocity.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalSecVelocities\"\n"
+    "\t\ttype=\"Vec3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "        The particle secVelocities. This is the velocity of the particle last update.  This is used\n"
+    "        for the VelocityDirQuads draw mode.\n"
+    "\t</Field>\n"
+    "   \n"
+    "\t<Field\n"
+    "\t\tname=\"InternalAccelerations\"\n"
+    "\t\ttype=\"Vec3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "        The particle accelerations If not set (0,0,0) will be used, if only one entry\n"
+    "        is set, it will be used for all particles. If the number of accelerations is\n"
+    "        equal to the number of positions every particle will get its own acceleration.\n"
+    "        If no accelerations are present, then the position will not be updated regarding acceleration.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalAttributes\"\n"
+    "\t\ttype=\"StringToUInt32Map\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "   A per-particle attribute map.  Used for storing user-defined data to particles.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MaxParticles\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"4294967295\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "   \n"
+    "\t<Field\n"
+    "\t\tname=\"Dynamic\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"true\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "        Hint to tell the system whether particles are expected to change position or\n"
+    "        not. Is used to speed up sorting.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"UpdateSecAttribs\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   If true then the secondary position, and velocity will be updated every frame to\n"
+    "   the previous value of position and velocity respectively.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"LastElapsedTime\"\n"
+    "\t\ttype=\"Time\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\tThis value holds the value of the last elapsed time.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Generators\"\n"
+    "\t\ttype=\"ParticleGenerator\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   List of Particle Generators.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Affectors\"\n"
+    "\t\ttype=\"ParticleAffector\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   List of Particle Affectors.  These are applied on a per particle basis.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SystemAffectors\"\n"
+    "\t\ttype=\"ParticleSystemAffector\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   List of Particle System Affectors.  These are applied to the entire system of particles and can allow for particle-to-particle interaction.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Volume\"\n"
+    "\t\ttype=\"BoxVolume\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "    The volume of the particles in this particle system.  In the particle system's coordinate space\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MaxParticleSize\"\n"
+    "\t\ttype=\"Vec3f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "        defaultValue=\"0.0f,0.0f,0.0f\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "    The Size of the Largest particle in this system\n"
+    "\t</Field>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"SystemUpdated\"\n"
+    "\t\ttype=\"ParticleSystemEvent\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"VolumeChanged\"\n"
+    "\t\ttype=\"ParticleSystemEvent\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"ParticleGenerated\"\n"
+    "\t\ttype=\"ParticleEvent\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"ParticleKilled\"\n"
+    "\t\ttype=\"ParticleEvent\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"ParticleStolen\"\n"
+    "\t\ttype=\"ParticleEvent\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
 //! ParticleSystem Produced Methods
 
 MethodDescription *ParticleSystemBase::_methodDesc[] =
 {
     new MethodDescription("SystemUpdated", 
+                    "",
                      SystemUpdatedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("VolumeChanged", 
+                    "",
                      VolumeChangedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("ParticleGenerated", 
+                    "",
                      ParticleGeneratedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("ParticleKilled", 
+                    "",
                      ParticleKilledMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("ParticleStolen", 
+                    "",
                      ParticleStolenMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod())
 };
 
 EventProducerType ParticleSystemBase::_producerType(
     "ParticleSystemProducerType",
     "EventProducerType",
-    NULL,
+    "",
     InitEventProducerFunctor(),
     _methodDesc,
     sizeof(_methodDesc));
-//OSG_FIELD_CONTAINER_DEF(ParticleSystemBase, ParticleSystemPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ParticleSystemBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ParticleSystemBase::getType(void) const 
+FieldContainerType &ParticleSystemBase::getType(void)
 {
     return _type;
-} 
+}
+
+const FieldContainerType &ParticleSystemBase::getType(void) const
+{
+    return _type;
+}
 
 const EventProducerType &ParticleSystemBase::getProducerType(void) const
 {
     return _producerType;
 }
 
-
-FieldContainerPtr ParticleSystemBase::shallowCopy(void) const 
-{ 
-    ParticleSystemPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const ParticleSystem *>(this)); 
-
-    return returnValue; 
-}
-
-UInt32 ParticleSystemBase::getContainerSize(void) const 
-{ 
-    return sizeof(ParticleSystem); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ParticleSystemBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+UInt32 ParticleSystemBase::getContainerSize(void) const
 {
-    this->executeSyncImpl(static_cast<ParticleSystemBase *>(&other),
-                          whichField);
+    return sizeof(ParticleSystem);
 }
-#else
-void ParticleSystemBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the ParticleSystem::_sfBeacon field.
+const SFUnrecNodePtr *ParticleSystemBase::getSFBeacon(void) const
 {
-    this->executeSyncImpl((ParticleSystemBase *) &other, whichField, sInfo);
+    return &_sfBeacon;
 }
-void ParticleSystemBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+SFUnrecNodePtr      *ParticleSystemBase::editSFBeacon         (void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(BeaconFieldMask);
+
+    return &_sfBeacon;
 }
 
-void ParticleSystemBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+MFPnt3f *ParticleSystemBase::editMFInternalPositions(void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editMField(InternalPositionsFieldMask, _mfInternalPositions);
 
-    _mfInternalPositions.terminateShare(uiAspect, this->getContainerSize());
-    _mfInternalSecPositions.terminateShare(uiAspect, this->getContainerSize());
-    _mfInternalNormals.terminateShare(uiAspect, this->getContainerSize());
-    _mfInternalColors.terminateShare(uiAspect, this->getContainerSize());
-    _mfInternalSizes.terminateShare(uiAspect, this->getContainerSize());
-    _mfInternalLifespans.terminateShare(uiAspect, this->getContainerSize());
-    _mfInternalAges.terminateShare(uiAspect, this->getContainerSize());
-    _mfInternalVelocities.terminateShare(uiAspect, this->getContainerSize());
-    _mfInternalSecVelocities.terminateShare(uiAspect, this->getContainerSize());
-    _mfInternalAccelerations.terminateShare(uiAspect, this->getContainerSize());
-    _mfInternalAttributes.terminateShare(uiAspect, this->getContainerSize());
-    _mfGenerators.terminateShare(uiAspect, this->getContainerSize());
-    _mfAffectors.terminateShare(uiAspect, this->getContainerSize());
-    _mfSystemAffectors.terminateShare(uiAspect, this->getContainerSize());
+    return &_mfInternalPositions;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-ParticleSystemBase::ParticleSystemBase(void) :
-    _Producer(&getProducerType()),
-    _sfBeacon                 (NodePtr(NullFC)), 
-    _mfInternalPositions      (), 
-    _mfInternalSecPositions   (), 
-    _mfInternalNormals        (), 
-    _mfInternalColors         (), 
-    _mfInternalSizes          (), 
-    _mfInternalLifespans      (), 
-    _mfInternalAges           (), 
-    _mfInternalVelocities     (), 
-    _mfInternalSecVelocities  (), 
-    _mfInternalAccelerations  (), 
-    _mfInternalAttributes     (), 
-    _sfMaxParticles           (UInt32(4294967295)), 
-    _sfDynamic                (bool(true)), 
-    _sfUpdateSecAttribs       (), 
-    _sfLastElapsedTime        (Time(0.0)), 
-    _mfGenerators             (), 
-    _mfAffectors              (), 
-    _mfSystemAffectors        (), 
-    _sfVolume                 (), 
-    _sfMaxParticleSize        (Vec3f(0.0f,0.0f,0.0f)), 
-    _sfEventProducer(&_Producer),
-    Inherited() 
+const MFPnt3f *ParticleSystemBase::getMFInternalPositions(void) const
 {
+    return &_mfInternalPositions;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-ParticleSystemBase::ParticleSystemBase(const ParticleSystemBase &source) :
-    _Producer(&source.getProducerType()),
-    _sfBeacon                 (source._sfBeacon                 ), 
-    _mfInternalPositions      (source._mfInternalPositions      ), 
-    _mfInternalSecPositions   (source._mfInternalSecPositions   ), 
-    _mfInternalNormals        (source._mfInternalNormals        ), 
-    _mfInternalColors         (source._mfInternalColors         ), 
-    _mfInternalSizes          (source._mfInternalSizes          ), 
-    _mfInternalLifespans      (source._mfInternalLifespans      ), 
-    _mfInternalAges           (source._mfInternalAges           ), 
-    _mfInternalVelocities     (source._mfInternalVelocities     ), 
-    _mfInternalSecVelocities  (source._mfInternalSecVelocities  ), 
-    _mfInternalAccelerations  (source._mfInternalAccelerations  ), 
-    _mfInternalAttributes     (source._mfInternalAttributes     ), 
-    _sfMaxParticles           (source._sfMaxParticles           ), 
-    _sfDynamic                (source._sfDynamic                ), 
-    _sfUpdateSecAttribs       (source._sfUpdateSecAttribs       ), 
-    _sfLastElapsedTime        (source._sfLastElapsedTime        ), 
-    _mfGenerators             (source._mfGenerators             ), 
-    _mfAffectors              (source._mfAffectors              ), 
-    _mfSystemAffectors        (source._mfSystemAffectors        ), 
-    _sfVolume                 (source._sfVolume                 ), 
-    _sfMaxParticleSize        (source._sfMaxParticleSize        ), 
-    _sfEventProducer(&_Producer),
-    Inherited                 (source)
+MFPnt3f *ParticleSystemBase::editMFInternalSecPositions(void)
 {
+    editMField(InternalSecPositionsFieldMask, _mfInternalSecPositions);
+
+    return &_mfInternalSecPositions;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-ParticleSystemBase::~ParticleSystemBase(void)
+const MFPnt3f *ParticleSystemBase::getMFInternalSecPositions(void) const
 {
+    return &_mfInternalSecPositions;
 }
+
+
+MFVec3f *ParticleSystemBase::editMFInternalNormals(void)
+{
+    editMField(InternalNormalsFieldMask, _mfInternalNormals);
+
+    return &_mfInternalNormals;
+}
+
+const MFVec3f *ParticleSystemBase::getMFInternalNormals(void) const
+{
+    return &_mfInternalNormals;
+}
+
+
+MFColor4f *ParticleSystemBase::editMFInternalColors(void)
+{
+    editMField(InternalColorsFieldMask, _mfInternalColors);
+
+    return &_mfInternalColors;
+}
+
+const MFColor4f *ParticleSystemBase::getMFInternalColors(void) const
+{
+    return &_mfInternalColors;
+}
+
+
+MFVec3f *ParticleSystemBase::editMFInternalSizes(void)
+{
+    editMField(InternalSizesFieldMask, _mfInternalSizes);
+
+    return &_mfInternalSizes;
+}
+
+const MFVec3f *ParticleSystemBase::getMFInternalSizes(void) const
+{
+    return &_mfInternalSizes;
+}
+
+
+MFTime *ParticleSystemBase::editMFInternalLifespans(void)
+{
+    editMField(InternalLifespansFieldMask, _mfInternalLifespans);
+
+    return &_mfInternalLifespans;
+}
+
+const MFTime *ParticleSystemBase::getMFInternalLifespans(void) const
+{
+    return &_mfInternalLifespans;
+}
+
+
+MFTime *ParticleSystemBase::editMFInternalAges(void)
+{
+    editMField(InternalAgesFieldMask, _mfInternalAges);
+
+    return &_mfInternalAges;
+}
+
+const MFTime *ParticleSystemBase::getMFInternalAges(void) const
+{
+    return &_mfInternalAges;
+}
+
+
+MFVec3f *ParticleSystemBase::editMFInternalVelocities(void)
+{
+    editMField(InternalVelocitiesFieldMask, _mfInternalVelocities);
+
+    return &_mfInternalVelocities;
+}
+
+const MFVec3f *ParticleSystemBase::getMFInternalVelocities(void) const
+{
+    return &_mfInternalVelocities;
+}
+
+
+MFVec3f *ParticleSystemBase::editMFInternalSecVelocities(void)
+{
+    editMField(InternalSecVelocitiesFieldMask, _mfInternalSecVelocities);
+
+    return &_mfInternalSecVelocities;
+}
+
+const MFVec3f *ParticleSystemBase::getMFInternalSecVelocities(void) const
+{
+    return &_mfInternalSecVelocities;
+}
+
+
+MFVec3f *ParticleSystemBase::editMFInternalAccelerations(void)
+{
+    editMField(InternalAccelerationsFieldMask, _mfInternalAccelerations);
+
+    return &_mfInternalAccelerations;
+}
+
+const MFVec3f *ParticleSystemBase::getMFInternalAccelerations(void) const
+{
+    return &_mfInternalAccelerations;
+}
+
+
+MFStringToUInt32Map *ParticleSystemBase::editMFInternalAttributes(void)
+{
+    editMField(InternalAttributesFieldMask, _mfInternalAttributes);
+
+    return &_mfInternalAttributes;
+}
+
+const MFStringToUInt32Map *ParticleSystemBase::getMFInternalAttributes(void) const
+{
+    return &_mfInternalAttributes;
+}
+
+
+SFUInt32 *ParticleSystemBase::editSFMaxParticles(void)
+{
+    editSField(MaxParticlesFieldMask);
+
+    return &_sfMaxParticles;
+}
+
+const SFUInt32 *ParticleSystemBase::getSFMaxParticles(void) const
+{
+    return &_sfMaxParticles;
+}
+
+
+SFBool *ParticleSystemBase::editSFDynamic(void)
+{
+    editSField(DynamicFieldMask);
+
+    return &_sfDynamic;
+}
+
+const SFBool *ParticleSystemBase::getSFDynamic(void) const
+{
+    return &_sfDynamic;
+}
+
+
+SFBool *ParticleSystemBase::editSFUpdateSecAttribs(void)
+{
+    editSField(UpdateSecAttribsFieldMask);
+
+    return &_sfUpdateSecAttribs;
+}
+
+const SFBool *ParticleSystemBase::getSFUpdateSecAttribs(void) const
+{
+    return &_sfUpdateSecAttribs;
+}
+
+
+SFTime *ParticleSystemBase::editSFLastElapsedTime(void)
+{
+    editSField(LastElapsedTimeFieldMask);
+
+    return &_sfLastElapsedTime;
+}
+
+const SFTime *ParticleSystemBase::getSFLastElapsedTime(void) const
+{
+    return &_sfLastElapsedTime;
+}
+
+
+//! Get the ParticleSystem::_mfGenerators field.
+const MFUnrecParticleGeneratorPtr *ParticleSystemBase::getMFGenerators(void) const
+{
+    return &_mfGenerators;
+}
+
+MFUnrecParticleGeneratorPtr *ParticleSystemBase::editMFGenerators     (void)
+{
+    editMField(GeneratorsFieldMask, _mfGenerators);
+
+    return &_mfGenerators;
+}
+
+//! Get the ParticleSystem::_mfAffectors field.
+const MFUnrecParticleAffectorPtr *ParticleSystemBase::getMFAffectors(void) const
+{
+    return &_mfAffectors;
+}
+
+MFUnrecParticleAffectorPtr *ParticleSystemBase::editMFAffectors      (void)
+{
+    editMField(AffectorsFieldMask, _mfAffectors);
+
+    return &_mfAffectors;
+}
+
+//! Get the ParticleSystem::_mfSystemAffectors field.
+const MFUnrecParticleSystemAffectorPtr *ParticleSystemBase::getMFSystemAffectors(void) const
+{
+    return &_mfSystemAffectors;
+}
+
+MFUnrecParticleSystemAffectorPtr *ParticleSystemBase::editMFSystemAffectors(void)
+{
+    editMField(SystemAffectorsFieldMask, _mfSystemAffectors);
+
+    return &_mfSystemAffectors;
+}
+
+SFBoxVolume *ParticleSystemBase::editSFVolume(void)
+{
+    editSField(VolumeFieldMask);
+
+    return &_sfVolume;
+}
+
+const SFBoxVolume *ParticleSystemBase::getSFVolume(void) const
+{
+    return &_sfVolume;
+}
+
+
+SFVec3f *ParticleSystemBase::editSFMaxParticleSize(void)
+{
+    editSField(MaxParticleSizeFieldMask);
+
+    return &_sfMaxParticleSize;
+}
+
+const SFVec3f *ParticleSystemBase::getSFMaxParticleSize(void) const
+{
+    return &_sfMaxParticleSize;
+}
+
+
+
+
+void ParticleSystemBase::pushToGenerators(ParticleGenerator * const value)
+{
+    editMField(GeneratorsFieldMask, _mfGenerators);
+
+    _mfGenerators.push_back(value);
+}
+
+void ParticleSystemBase::assignGenerators(const MFUnrecParticleGeneratorPtr &value)
+{
+    MFUnrecParticleGeneratorPtr::const_iterator elemIt  =
+        value.begin();
+    MFUnrecParticleGeneratorPtr::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<ParticleSystem *>(this)->clearGenerators();
+
+    while(elemIt != elemEnd)
+    {
+        this->pushToGenerators(*elemIt);
+
+        ++elemIt;
+    }
+}
+
+void ParticleSystemBase::removeFromGenerators(UInt32 uiIndex)
+{
+    if(uiIndex < _mfGenerators.size())
+    {
+        editMField(GeneratorsFieldMask, _mfGenerators);
+
+        _mfGenerators.erase(uiIndex);
+    }
+}
+
+void ParticleSystemBase::removeObjFromGenerators(ParticleGenerator * const value)
+{
+    Int32 iElemIdx = _mfGenerators.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(GeneratorsFieldMask, _mfGenerators);
+
+        _mfGenerators.erase(iElemIdx);
+    }
+}
+void ParticleSystemBase::clearGenerators(void)
+{
+    editMField(GeneratorsFieldMask, _mfGenerators);
+
+
+    _mfGenerators.clear();
+}
+
+void ParticleSystemBase::pushToAffectors(ParticleAffector * const value)
+{
+    editMField(AffectorsFieldMask, _mfAffectors);
+
+    _mfAffectors.push_back(value);
+}
+
+void ParticleSystemBase::assignAffectors(const MFUnrecParticleAffectorPtr &value)
+{
+    MFUnrecParticleAffectorPtr::const_iterator elemIt  =
+        value.begin();
+    MFUnrecParticleAffectorPtr::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<ParticleSystem *>(this)->clearAffectors();
+
+    while(elemIt != elemEnd)
+    {
+        this->pushToAffectors(*elemIt);
+
+        ++elemIt;
+    }
+}
+
+void ParticleSystemBase::removeFromAffectors(UInt32 uiIndex)
+{
+    if(uiIndex < _mfAffectors.size())
+    {
+        editMField(AffectorsFieldMask, _mfAffectors);
+
+        _mfAffectors.erase(uiIndex);
+    }
+}
+
+void ParticleSystemBase::removeObjFromAffectors(ParticleAffector * const value)
+{
+    Int32 iElemIdx = _mfAffectors.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(AffectorsFieldMask, _mfAffectors);
+
+        _mfAffectors.erase(iElemIdx);
+    }
+}
+void ParticleSystemBase::clearAffectors(void)
+{
+    editMField(AffectorsFieldMask, _mfAffectors);
+
+
+    _mfAffectors.clear();
+}
+
+void ParticleSystemBase::pushToSystemAffectors(ParticleSystemAffector * const value)
+{
+    editMField(SystemAffectorsFieldMask, _mfSystemAffectors);
+
+    _mfSystemAffectors.push_back(value);
+}
+
+void ParticleSystemBase::assignSystemAffectors(const MFUnrecParticleSystemAffectorPtr &value)
+{
+    MFUnrecParticleSystemAffectorPtr::const_iterator elemIt  =
+        value.begin();
+    MFUnrecParticleSystemAffectorPtr::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<ParticleSystem *>(this)->clearSystemAffectors();
+
+    while(elemIt != elemEnd)
+    {
+        this->pushToSystemAffectors(*elemIt);
+
+        ++elemIt;
+    }
+}
+
+void ParticleSystemBase::removeFromSystemAffectors(UInt32 uiIndex)
+{
+    if(uiIndex < _mfSystemAffectors.size())
+    {
+        editMField(SystemAffectorsFieldMask, _mfSystemAffectors);
+
+        _mfSystemAffectors.erase(uiIndex);
+    }
+}
+
+void ParticleSystemBase::removeObjFromSystemAffectors(ParticleSystemAffector * const value)
+{
+    Int32 iElemIdx = _mfSystemAffectors.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(SystemAffectorsFieldMask, _mfSystemAffectors);
+
+        _mfSystemAffectors.erase(iElemIdx);
+    }
+}
+void ParticleSystemBase::clearSystemAffectors(void)
+{
+    editMField(SystemAffectorsFieldMask, _mfSystemAffectors);
+
+
+    _mfSystemAffectors.clear();
+}
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ParticleSystemBase::getBinSize(const BitVector &whichField)
+UInt32 ParticleSystemBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -519,118 +1323,96 @@ UInt32 ParticleSystemBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfBeacon.getBinSize();
     }
-
     if(FieldBits::NoField != (InternalPositionsFieldMask & whichField))
     {
         returnValue += _mfInternalPositions.getBinSize();
     }
-
     if(FieldBits::NoField != (InternalSecPositionsFieldMask & whichField))
     {
         returnValue += _mfInternalSecPositions.getBinSize();
     }
-
     if(FieldBits::NoField != (InternalNormalsFieldMask & whichField))
     {
         returnValue += _mfInternalNormals.getBinSize();
     }
-
     if(FieldBits::NoField != (InternalColorsFieldMask & whichField))
     {
         returnValue += _mfInternalColors.getBinSize();
     }
-
     if(FieldBits::NoField != (InternalSizesFieldMask & whichField))
     {
         returnValue += _mfInternalSizes.getBinSize();
     }
-
     if(FieldBits::NoField != (InternalLifespansFieldMask & whichField))
     {
         returnValue += _mfInternalLifespans.getBinSize();
     }
-
     if(FieldBits::NoField != (InternalAgesFieldMask & whichField))
     {
         returnValue += _mfInternalAges.getBinSize();
     }
-
     if(FieldBits::NoField != (InternalVelocitiesFieldMask & whichField))
     {
         returnValue += _mfInternalVelocities.getBinSize();
     }
-
     if(FieldBits::NoField != (InternalSecVelocitiesFieldMask & whichField))
     {
         returnValue += _mfInternalSecVelocities.getBinSize();
     }
-
     if(FieldBits::NoField != (InternalAccelerationsFieldMask & whichField))
     {
         returnValue += _mfInternalAccelerations.getBinSize();
     }
-
     if(FieldBits::NoField != (InternalAttributesFieldMask & whichField))
     {
         returnValue += _mfInternalAttributes.getBinSize();
     }
-
     if(FieldBits::NoField != (MaxParticlesFieldMask & whichField))
     {
         returnValue += _sfMaxParticles.getBinSize();
     }
-
     if(FieldBits::NoField != (DynamicFieldMask & whichField))
     {
         returnValue += _sfDynamic.getBinSize();
     }
-
     if(FieldBits::NoField != (UpdateSecAttribsFieldMask & whichField))
     {
         returnValue += _sfUpdateSecAttribs.getBinSize();
     }
-
     if(FieldBits::NoField != (LastElapsedTimeFieldMask & whichField))
     {
         returnValue += _sfLastElapsedTime.getBinSize();
     }
-
     if(FieldBits::NoField != (GeneratorsFieldMask & whichField))
     {
         returnValue += _mfGenerators.getBinSize();
     }
-
     if(FieldBits::NoField != (AffectorsFieldMask & whichField))
     {
         returnValue += _mfAffectors.getBinSize();
     }
-
     if(FieldBits::NoField != (SystemAffectorsFieldMask & whichField))
     {
         returnValue += _mfSystemAffectors.getBinSize();
     }
-
     if(FieldBits::NoField != (VolumeFieldMask & whichField))
     {
         returnValue += _sfVolume.getBinSize();
     }
-
     if(FieldBits::NoField != (MaxParticleSizeFieldMask & whichField))
     {
         returnValue += _sfMaxParticleSize.getBinSize();
     }
-
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
     {
         returnValue += _sfEventProducer.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ParticleSystemBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ParticleSystemBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -638,117 +1420,94 @@ void ParticleSystemBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfBeacon.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalPositionsFieldMask & whichField))
     {
         _mfInternalPositions.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalSecPositionsFieldMask & whichField))
     {
         _mfInternalSecPositions.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalNormalsFieldMask & whichField))
     {
         _mfInternalNormals.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalColorsFieldMask & whichField))
     {
         _mfInternalColors.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalSizesFieldMask & whichField))
     {
         _mfInternalSizes.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalLifespansFieldMask & whichField))
     {
         _mfInternalLifespans.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalAgesFieldMask & whichField))
     {
         _mfInternalAges.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalVelocitiesFieldMask & whichField))
     {
         _mfInternalVelocities.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalSecVelocitiesFieldMask & whichField))
     {
         _mfInternalSecVelocities.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalAccelerationsFieldMask & whichField))
     {
         _mfInternalAccelerations.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalAttributesFieldMask & whichField))
     {
         _mfInternalAttributes.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxParticlesFieldMask & whichField))
     {
         _sfMaxParticles.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DynamicFieldMask & whichField))
     {
         _sfDynamic.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (UpdateSecAttribsFieldMask & whichField))
     {
         _sfUpdateSecAttribs.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (LastElapsedTimeFieldMask & whichField))
     {
         _sfLastElapsedTime.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (GeneratorsFieldMask & whichField))
     {
         _mfGenerators.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (AffectorsFieldMask & whichField))
     {
         _mfAffectors.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SystemAffectorsFieldMask & whichField))
     {
         _mfSystemAffectors.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (VolumeFieldMask & whichField))
     {
         _sfVolume.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxParticleSizeFieldMask & whichField))
     {
         _sfMaxParticleSize.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
     {
         _sfEventProducer.copyToBin(pMem);
     }
-
-
 }
 
-void ParticleSystemBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ParticleSystemBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -756,332 +1515,984 @@ void ParticleSystemBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfBeacon.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalPositionsFieldMask & whichField))
     {
         _mfInternalPositions.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalSecPositionsFieldMask & whichField))
     {
         _mfInternalSecPositions.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalNormalsFieldMask & whichField))
     {
         _mfInternalNormals.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalColorsFieldMask & whichField))
     {
         _mfInternalColors.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalSizesFieldMask & whichField))
     {
         _mfInternalSizes.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalLifespansFieldMask & whichField))
     {
         _mfInternalLifespans.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalAgesFieldMask & whichField))
     {
         _mfInternalAges.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalVelocitiesFieldMask & whichField))
     {
         _mfInternalVelocities.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalSecVelocitiesFieldMask & whichField))
     {
         _mfInternalSecVelocities.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalAccelerationsFieldMask & whichField))
     {
         _mfInternalAccelerations.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalAttributesFieldMask & whichField))
     {
         _mfInternalAttributes.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxParticlesFieldMask & whichField))
     {
         _sfMaxParticles.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DynamicFieldMask & whichField))
     {
         _sfDynamic.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (UpdateSecAttribsFieldMask & whichField))
     {
         _sfUpdateSecAttribs.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (LastElapsedTimeFieldMask & whichField))
     {
         _sfLastElapsedTime.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (GeneratorsFieldMask & whichField))
     {
         _mfGenerators.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (AffectorsFieldMask & whichField))
     {
         _mfAffectors.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SystemAffectorsFieldMask & whichField))
     {
         _mfSystemAffectors.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (VolumeFieldMask & whichField))
     {
         _sfVolume.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxParticleSizeFieldMask & whichField))
     {
         _sfMaxParticleSize.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
     {
         _sfEventProducer.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ParticleSystemBase::executeSyncImpl(      ParticleSystemBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ParticleSystemTransitPtr ParticleSystemBase::createLocal(BitVector bFlags)
 {
+    ParticleSystemTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (BeaconFieldMask & whichField))
-        _sfBeacon.syncWith(pOther->_sfBeacon);
+        fc = dynamic_pointer_cast<ParticleSystem>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (InternalPositionsFieldMask & whichField))
-        _mfInternalPositions.syncWith(pOther->_mfInternalPositions);
-
-    if(FieldBits::NoField != (InternalSecPositionsFieldMask & whichField))
-        _mfInternalSecPositions.syncWith(pOther->_mfInternalSecPositions);
-
-    if(FieldBits::NoField != (InternalNormalsFieldMask & whichField))
-        _mfInternalNormals.syncWith(pOther->_mfInternalNormals);
-
-    if(FieldBits::NoField != (InternalColorsFieldMask & whichField))
-        _mfInternalColors.syncWith(pOther->_mfInternalColors);
-
-    if(FieldBits::NoField != (InternalSizesFieldMask & whichField))
-        _mfInternalSizes.syncWith(pOther->_mfInternalSizes);
-
-    if(FieldBits::NoField != (InternalLifespansFieldMask & whichField))
-        _mfInternalLifespans.syncWith(pOther->_mfInternalLifespans);
-
-    if(FieldBits::NoField != (InternalAgesFieldMask & whichField))
-        _mfInternalAges.syncWith(pOther->_mfInternalAges);
-
-    if(FieldBits::NoField != (InternalVelocitiesFieldMask & whichField))
-        _mfInternalVelocities.syncWith(pOther->_mfInternalVelocities);
-
-    if(FieldBits::NoField != (InternalSecVelocitiesFieldMask & whichField))
-        _mfInternalSecVelocities.syncWith(pOther->_mfInternalSecVelocities);
-
-    if(FieldBits::NoField != (InternalAccelerationsFieldMask & whichField))
-        _mfInternalAccelerations.syncWith(pOther->_mfInternalAccelerations);
-
-    if(FieldBits::NoField != (InternalAttributesFieldMask & whichField))
-        _mfInternalAttributes.syncWith(pOther->_mfInternalAttributes);
-
-    if(FieldBits::NoField != (MaxParticlesFieldMask & whichField))
-        _sfMaxParticles.syncWith(pOther->_sfMaxParticles);
-
-    if(FieldBits::NoField != (DynamicFieldMask & whichField))
-        _sfDynamic.syncWith(pOther->_sfDynamic);
-
-    if(FieldBits::NoField != (UpdateSecAttribsFieldMask & whichField))
-        _sfUpdateSecAttribs.syncWith(pOther->_sfUpdateSecAttribs);
-
-    if(FieldBits::NoField != (LastElapsedTimeFieldMask & whichField))
-        _sfLastElapsedTime.syncWith(pOther->_sfLastElapsedTime);
-
-    if(FieldBits::NoField != (GeneratorsFieldMask & whichField))
-        _mfGenerators.syncWith(pOther->_mfGenerators);
-
-    if(FieldBits::NoField != (AffectorsFieldMask & whichField))
-        _mfAffectors.syncWith(pOther->_mfAffectors);
-
-    if(FieldBits::NoField != (SystemAffectorsFieldMask & whichField))
-        _mfSystemAffectors.syncWith(pOther->_mfSystemAffectors);
-
-    if(FieldBits::NoField != (VolumeFieldMask & whichField))
-        _sfVolume.syncWith(pOther->_sfVolume);
-
-    if(FieldBits::NoField != (MaxParticleSizeFieldMask & whichField))
-        _sfMaxParticleSize.syncWith(pOther->_sfMaxParticleSize);
-
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-        _sfEventProducer.syncWith(pOther->_sfEventProducer);
-
-
-}
-#else
-void ParticleSystemBase::executeSyncImpl(      ParticleSystemBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (BeaconFieldMask & whichField))
-        _sfBeacon.syncWith(pOther->_sfBeacon);
-
-    if(FieldBits::NoField != (MaxParticlesFieldMask & whichField))
-        _sfMaxParticles.syncWith(pOther->_sfMaxParticles);
-
-    if(FieldBits::NoField != (DynamicFieldMask & whichField))
-        _sfDynamic.syncWith(pOther->_sfDynamic);
-
-    if(FieldBits::NoField != (UpdateSecAttribsFieldMask & whichField))
-        _sfUpdateSecAttribs.syncWith(pOther->_sfUpdateSecAttribs);
-
-    if(FieldBits::NoField != (LastElapsedTimeFieldMask & whichField))
-        _sfLastElapsedTime.syncWith(pOther->_sfLastElapsedTime);
-
-    if(FieldBits::NoField != (VolumeFieldMask & whichField))
-        _sfVolume.syncWith(pOther->_sfVolume);
-
-    if(FieldBits::NoField != (MaxParticleSizeFieldMask & whichField))
-        _sfMaxParticleSize.syncWith(pOther->_sfMaxParticleSize);
-
-
-    if(FieldBits::NoField != (InternalPositionsFieldMask & whichField))
-        _mfInternalPositions.syncWith(pOther->_mfInternalPositions, sInfo);
-
-    if(FieldBits::NoField != (InternalSecPositionsFieldMask & whichField))
-        _mfInternalSecPositions.syncWith(pOther->_mfInternalSecPositions, sInfo);
-
-    if(FieldBits::NoField != (InternalNormalsFieldMask & whichField))
-        _mfInternalNormals.syncWith(pOther->_mfInternalNormals, sInfo);
-
-    if(FieldBits::NoField != (InternalColorsFieldMask & whichField))
-        _mfInternalColors.syncWith(pOther->_mfInternalColors, sInfo);
-
-    if(FieldBits::NoField != (InternalSizesFieldMask & whichField))
-        _mfInternalSizes.syncWith(pOther->_mfInternalSizes, sInfo);
-
-    if(FieldBits::NoField != (InternalLifespansFieldMask & whichField))
-        _mfInternalLifespans.syncWith(pOther->_mfInternalLifespans, sInfo);
-
-    if(FieldBits::NoField != (InternalAgesFieldMask & whichField))
-        _mfInternalAges.syncWith(pOther->_mfInternalAges, sInfo);
-
-    if(FieldBits::NoField != (InternalVelocitiesFieldMask & whichField))
-        _mfInternalVelocities.syncWith(pOther->_mfInternalVelocities, sInfo);
-
-    if(FieldBits::NoField != (InternalSecVelocitiesFieldMask & whichField))
-        _mfInternalSecVelocities.syncWith(pOther->_mfInternalSecVelocities, sInfo);
-
-    if(FieldBits::NoField != (InternalAccelerationsFieldMask & whichField))
-        _mfInternalAccelerations.syncWith(pOther->_mfInternalAccelerations, sInfo);
-
-    if(FieldBits::NoField != (InternalAttributesFieldMask & whichField))
-        _mfInternalAttributes.syncWith(pOther->_mfInternalAttributes, sInfo);
-
-    if(FieldBits::NoField != (GeneratorsFieldMask & whichField))
-        _mfGenerators.syncWith(pOther->_mfGenerators, sInfo);
-
-    if(FieldBits::NoField != (AffectorsFieldMask & whichField))
-        _mfAffectors.syncWith(pOther->_mfAffectors, sInfo);
-
-    if(FieldBits::NoField != (SystemAffectorsFieldMask & whichField))
-        _mfSystemAffectors.syncWith(pOther->_mfSystemAffectors, sInfo);
-
-
+    return fc;
 }
 
-void ParticleSystemBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ParticleSystemTransitPtr ParticleSystemBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ParticleSystemTransitPtr fc;
 
-    if(FieldBits::NoField != (InternalPositionsFieldMask & whichField))
-        _mfInternalPositions.beginEdit(uiAspect, uiContainerSize);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
-    if(FieldBits::NoField != (InternalSecPositionsFieldMask & whichField))
-        _mfInternalSecPositions.beginEdit(uiAspect, uiContainerSize);
+        fc = dynamic_pointer_cast<ParticleSystem>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (InternalNormalsFieldMask & whichField))
-        _mfInternalNormals.beginEdit(uiAspect, uiContainerSize);
+    return fc;
+}
 
-    if(FieldBits::NoField != (InternalColorsFieldMask & whichField))
-        _mfInternalColors.beginEdit(uiAspect, uiContainerSize);
+//! create a new instance of the class
+ParticleSystemTransitPtr ParticleSystemBase::create(void)
+{
+    ParticleSystemTransitPtr fc;
 
-    if(FieldBits::NoField != (InternalSizesFieldMask & whichField))
-        _mfInternalSizes.beginEdit(uiAspect, uiContainerSize);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
 
-    if(FieldBits::NoField != (InternalLifespansFieldMask & whichField))
-        _mfInternalLifespans.beginEdit(uiAspect, uiContainerSize);
+        fc = dynamic_pointer_cast<ParticleSystem>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (InternalAgesFieldMask & whichField))
-        _mfInternalAges.beginEdit(uiAspect, uiContainerSize);
+    return fc;
+}
 
-    if(FieldBits::NoField != (InternalVelocitiesFieldMask & whichField))
-        _mfInternalVelocities.beginEdit(uiAspect, uiContainerSize);
+ParticleSystem *ParticleSystemBase::createEmptyLocal(BitVector bFlags)
+{
+    ParticleSystem *returnValue;
 
-    if(FieldBits::NoField != (InternalSecVelocitiesFieldMask & whichField))
-        _mfInternalSecVelocities.beginEdit(uiAspect, uiContainerSize);
+    newPtr<ParticleSystem>(returnValue, bFlags);
 
-    if(FieldBits::NoField != (InternalAccelerationsFieldMask & whichField))
-        _mfInternalAccelerations.beginEdit(uiAspect, uiContainerSize);
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
 
-    if(FieldBits::NoField != (InternalAttributesFieldMask & whichField))
-        _mfInternalAttributes.beginEdit(uiAspect, uiContainerSize);
+    return returnValue;
+}
 
-    if(FieldBits::NoField != (GeneratorsFieldMask & whichField))
-        _mfGenerators.beginEdit(uiAspect, uiContainerSize);
+//! create an empty new instance of the class, do not copy the prototype
+ParticleSystem *ParticleSystemBase::createEmpty(void)
+{
+    ParticleSystem *returnValue;
 
-    if(FieldBits::NoField != (AffectorsFieldMask & whichField))
-        _mfAffectors.beginEdit(uiAspect, uiContainerSize);
+    newPtr<ParticleSystem>(returnValue, Thread::getCurrentLocalFlags());
 
-    if(FieldBits::NoField != (SystemAffectorsFieldMask & whichField))
-        _mfSystemAffectors.beginEdit(uiAspect, uiContainerSize);
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
 
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ParticleSystemBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    ParticleSystem *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ParticleSystem *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ParticleSystemBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    ParticleSystem *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ParticleSystem *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ParticleSystemBase::shallowCopy(void) const
+{
+    ParticleSystem *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const ParticleSystem *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ParticleSystemBase::ParticleSystemBase(void) :
+    _Producer(&getProducerType()),
+    Inherited(),
+    _sfBeacon                 (NULL),
+    _mfInternalPositions      (),
+    _mfInternalSecPositions   (),
+    _mfInternalNormals        (),
+    _mfInternalColors         (),
+    _mfInternalSizes          (),
+    _mfInternalLifespans      (),
+    _mfInternalAges           (),
+    _mfInternalVelocities     (),
+    _mfInternalSecVelocities  (),
+    _mfInternalAccelerations  (),
+    _mfInternalAttributes     (),
+    _sfMaxParticles           (UInt32(4294967295)),
+    _sfDynamic                (bool(true)),
+    _sfUpdateSecAttribs       (),
+    _sfLastElapsedTime        (Time(0.0)),
+    _mfGenerators             (),
+    _mfAffectors              (),
+    _mfSystemAffectors        (),
+    _sfVolume                 (),
+    _sfMaxParticleSize        (Vec3f(0.0f,0.0f,0.0f))
+    ,_sfEventProducer(&_Producer)
+{
+}
+
+ParticleSystemBase::ParticleSystemBase(const ParticleSystemBase &source) :
+    _Producer(&source.getProducerType()),
+    Inherited(source),
+    _sfBeacon                 (NULL),
+    _mfInternalPositions      (source._mfInternalPositions      ),
+    _mfInternalSecPositions   (source._mfInternalSecPositions   ),
+    _mfInternalNormals        (source._mfInternalNormals        ),
+    _mfInternalColors         (source._mfInternalColors         ),
+    _mfInternalSizes          (source._mfInternalSizes          ),
+    _mfInternalLifespans      (source._mfInternalLifespans      ),
+    _mfInternalAges           (source._mfInternalAges           ),
+    _mfInternalVelocities     (source._mfInternalVelocities     ),
+    _mfInternalSecVelocities  (source._mfInternalSecVelocities  ),
+    _mfInternalAccelerations  (source._mfInternalAccelerations  ),
+    _mfInternalAttributes     (source._mfInternalAttributes     ),
+    _sfMaxParticles           (source._sfMaxParticles           ),
+    _sfDynamic                (source._sfDynamic                ),
+    _sfUpdateSecAttribs       (source._sfUpdateSecAttribs       ),
+    _sfLastElapsedTime        (source._sfLastElapsedTime        ),
+    _mfGenerators             (),
+    _mfAffectors              (),
+    _mfSystemAffectors        (),
+    _sfVolume                 (source._sfVolume                 ),
+    _sfMaxParticleSize        (source._sfMaxParticleSize        )
+    ,_sfEventProducer(&_Producer)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ParticleSystemBase::~ParticleSystemBase(void)
+{
+}
+
+void ParticleSystemBase::onCreate(const ParticleSystem *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        ParticleSystem *pThis = static_cast<ParticleSystem *>(this);
+
+        pThis->setBeacon(source->getBeacon());
+
+        MFUnrecParticleGeneratorPtr::const_iterator GeneratorsIt  =
+            source->_mfGenerators.begin();
+        MFUnrecParticleGeneratorPtr::const_iterator GeneratorsEnd =
+            source->_mfGenerators.end  ();
+
+        while(GeneratorsIt != GeneratorsEnd)
+        {
+            pThis->pushToGenerators(*GeneratorsIt);
+
+            ++GeneratorsIt;
+        }
+
+        MFUnrecParticleAffectorPtr::const_iterator AffectorsIt  =
+            source->_mfAffectors.begin();
+        MFUnrecParticleAffectorPtr::const_iterator AffectorsEnd =
+            source->_mfAffectors.end  ();
+
+        while(AffectorsIt != AffectorsEnd)
+        {
+            pThis->pushToAffectors(*AffectorsIt);
+
+            ++AffectorsIt;
+        }
+
+        MFUnrecParticleSystemAffectorPtr::const_iterator SystemAffectorsIt  =
+            source->_mfSystemAffectors.begin();
+        MFUnrecParticleSystemAffectorPtr::const_iterator SystemAffectorsEnd =
+            source->_mfSystemAffectors.end  ();
+
+        while(SystemAffectorsIt != SystemAffectorsEnd)
+        {
+            pThis->pushToSystemAffectors(*SystemAffectorsIt);
+
+            ++SystemAffectorsIt;
+        }
+    }
+}
+
+GetFieldHandlePtr ParticleSystemBase::getHandleBeacon          (void) const
+{
+    SFUnrecNodePtr::GetHandlePtr returnValue(
+        new  SFUnrecNodePtr::GetHandle(
+             &_sfBeacon,
+             this->getType().getFieldDesc(BeaconFieldId),
+             const_cast<ParticleSystemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemBase::editHandleBeacon         (void)
+{
+    SFUnrecNodePtr::EditHandlePtr returnValue(
+        new  SFUnrecNodePtr::EditHandle(
+             &_sfBeacon,
+             this->getType().getFieldDesc(BeaconFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ParticleSystem::setBeacon,
+                    static_cast<ParticleSystem *>(this), _1));
+
+    editSField(BeaconFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleSystemBase::getHandleInternalPositions (void) const
+{
+    MFPnt3f::GetHandlePtr returnValue(
+        new  MFPnt3f::GetHandle(
+             &_mfInternalPositions,
+             this->getType().getFieldDesc(InternalPositionsFieldId),
+             const_cast<ParticleSystemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemBase::editHandleInternalPositions(void)
+{
+    MFPnt3f::EditHandlePtr returnValue(
+        new  MFPnt3f::EditHandle(
+             &_mfInternalPositions,
+             this->getType().getFieldDesc(InternalPositionsFieldId),
+             this));
+
+
+    editMField(InternalPositionsFieldMask, _mfInternalPositions);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleSystemBase::getHandleInternalSecPositions (void) const
+{
+    MFPnt3f::GetHandlePtr returnValue(
+        new  MFPnt3f::GetHandle(
+             &_mfInternalSecPositions,
+             this->getType().getFieldDesc(InternalSecPositionsFieldId),
+             const_cast<ParticleSystemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemBase::editHandleInternalSecPositions(void)
+{
+    MFPnt3f::EditHandlePtr returnValue(
+        new  MFPnt3f::EditHandle(
+             &_mfInternalSecPositions,
+             this->getType().getFieldDesc(InternalSecPositionsFieldId),
+             this));
+
+
+    editMField(InternalSecPositionsFieldMask, _mfInternalSecPositions);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleSystemBase::getHandleInternalNormals (void) const
+{
+    MFVec3f::GetHandlePtr returnValue(
+        new  MFVec3f::GetHandle(
+             &_mfInternalNormals,
+             this->getType().getFieldDesc(InternalNormalsFieldId),
+             const_cast<ParticleSystemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemBase::editHandleInternalNormals(void)
+{
+    MFVec3f::EditHandlePtr returnValue(
+        new  MFVec3f::EditHandle(
+             &_mfInternalNormals,
+             this->getType().getFieldDesc(InternalNormalsFieldId),
+             this));
+
+
+    editMField(InternalNormalsFieldMask, _mfInternalNormals);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleSystemBase::getHandleInternalColors  (void) const
+{
+    MFColor4f::GetHandlePtr returnValue(
+        new  MFColor4f::GetHandle(
+             &_mfInternalColors,
+             this->getType().getFieldDesc(InternalColorsFieldId),
+             const_cast<ParticleSystemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemBase::editHandleInternalColors (void)
+{
+    MFColor4f::EditHandlePtr returnValue(
+        new  MFColor4f::EditHandle(
+             &_mfInternalColors,
+             this->getType().getFieldDesc(InternalColorsFieldId),
+             this));
+
+
+    editMField(InternalColorsFieldMask, _mfInternalColors);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleSystemBase::getHandleInternalSizes   (void) const
+{
+    MFVec3f::GetHandlePtr returnValue(
+        new  MFVec3f::GetHandle(
+             &_mfInternalSizes,
+             this->getType().getFieldDesc(InternalSizesFieldId),
+             const_cast<ParticleSystemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemBase::editHandleInternalSizes  (void)
+{
+    MFVec3f::EditHandlePtr returnValue(
+        new  MFVec3f::EditHandle(
+             &_mfInternalSizes,
+             this->getType().getFieldDesc(InternalSizesFieldId),
+             this));
+
+
+    editMField(InternalSizesFieldMask, _mfInternalSizes);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleSystemBase::getHandleInternalLifespans (void) const
+{
+    MFTime::GetHandlePtr returnValue(
+        new  MFTime::GetHandle(
+             &_mfInternalLifespans,
+             this->getType().getFieldDesc(InternalLifespansFieldId),
+             const_cast<ParticleSystemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemBase::editHandleInternalLifespans(void)
+{
+    MFTime::EditHandlePtr returnValue(
+        new  MFTime::EditHandle(
+             &_mfInternalLifespans,
+             this->getType().getFieldDesc(InternalLifespansFieldId),
+             this));
+
+
+    editMField(InternalLifespansFieldMask, _mfInternalLifespans);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleSystemBase::getHandleInternalAges    (void) const
+{
+    MFTime::GetHandlePtr returnValue(
+        new  MFTime::GetHandle(
+             &_mfInternalAges,
+             this->getType().getFieldDesc(InternalAgesFieldId),
+             const_cast<ParticleSystemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemBase::editHandleInternalAges   (void)
+{
+    MFTime::EditHandlePtr returnValue(
+        new  MFTime::EditHandle(
+             &_mfInternalAges,
+             this->getType().getFieldDesc(InternalAgesFieldId),
+             this));
+
+
+    editMField(InternalAgesFieldMask, _mfInternalAges);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleSystemBase::getHandleInternalVelocities (void) const
+{
+    MFVec3f::GetHandlePtr returnValue(
+        new  MFVec3f::GetHandle(
+             &_mfInternalVelocities,
+             this->getType().getFieldDesc(InternalVelocitiesFieldId),
+             const_cast<ParticleSystemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemBase::editHandleInternalVelocities(void)
+{
+    MFVec3f::EditHandlePtr returnValue(
+        new  MFVec3f::EditHandle(
+             &_mfInternalVelocities,
+             this->getType().getFieldDesc(InternalVelocitiesFieldId),
+             this));
+
+
+    editMField(InternalVelocitiesFieldMask, _mfInternalVelocities);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleSystemBase::getHandleInternalSecVelocities (void) const
+{
+    MFVec3f::GetHandlePtr returnValue(
+        new  MFVec3f::GetHandle(
+             &_mfInternalSecVelocities,
+             this->getType().getFieldDesc(InternalSecVelocitiesFieldId),
+             const_cast<ParticleSystemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemBase::editHandleInternalSecVelocities(void)
+{
+    MFVec3f::EditHandlePtr returnValue(
+        new  MFVec3f::EditHandle(
+             &_mfInternalSecVelocities,
+             this->getType().getFieldDesc(InternalSecVelocitiesFieldId),
+             this));
+
+
+    editMField(InternalSecVelocitiesFieldMask, _mfInternalSecVelocities);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleSystemBase::getHandleInternalAccelerations (void) const
+{
+    MFVec3f::GetHandlePtr returnValue(
+        new  MFVec3f::GetHandle(
+             &_mfInternalAccelerations,
+             this->getType().getFieldDesc(InternalAccelerationsFieldId),
+             const_cast<ParticleSystemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemBase::editHandleInternalAccelerations(void)
+{
+    MFVec3f::EditHandlePtr returnValue(
+        new  MFVec3f::EditHandle(
+             &_mfInternalAccelerations,
+             this->getType().getFieldDesc(InternalAccelerationsFieldId),
+             this));
+
+
+    editMField(InternalAccelerationsFieldMask, _mfInternalAccelerations);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleSystemBase::getHandleInternalAttributes (void) const
+{
+    MFStringToUInt32Map::GetHandlePtr returnValue(
+        new  MFStringToUInt32Map::GetHandle(
+             &_mfInternalAttributes,
+             this->getType().getFieldDesc(InternalAttributesFieldId),
+             const_cast<ParticleSystemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemBase::editHandleInternalAttributes(void)
+{
+    MFStringToUInt32Map::EditHandlePtr returnValue(
+        new  MFStringToUInt32Map::EditHandle(
+             &_mfInternalAttributes,
+             this->getType().getFieldDesc(InternalAttributesFieldId),
+             this));
+
+
+    editMField(InternalAttributesFieldMask, _mfInternalAttributes);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleSystemBase::getHandleMaxParticles    (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfMaxParticles,
+             this->getType().getFieldDesc(MaxParticlesFieldId),
+             const_cast<ParticleSystemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemBase::editHandleMaxParticles   (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfMaxParticles,
+             this->getType().getFieldDesc(MaxParticlesFieldId),
+             this));
+
+
+    editSField(MaxParticlesFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleSystemBase::getHandleDynamic         (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfDynamic,
+             this->getType().getFieldDesc(DynamicFieldId),
+             const_cast<ParticleSystemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemBase::editHandleDynamic        (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfDynamic,
+             this->getType().getFieldDesc(DynamicFieldId),
+             this));
+
+
+    editSField(DynamicFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleSystemBase::getHandleUpdateSecAttribs (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfUpdateSecAttribs,
+             this->getType().getFieldDesc(UpdateSecAttribsFieldId),
+             const_cast<ParticleSystemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemBase::editHandleUpdateSecAttribs(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfUpdateSecAttribs,
+             this->getType().getFieldDesc(UpdateSecAttribsFieldId),
+             this));
+
+
+    editSField(UpdateSecAttribsFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleSystemBase::getHandleLastElapsedTime (void) const
+{
+    SFTime::GetHandlePtr returnValue(
+        new  SFTime::GetHandle(
+             &_sfLastElapsedTime,
+             this->getType().getFieldDesc(LastElapsedTimeFieldId),
+             const_cast<ParticleSystemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemBase::editHandleLastElapsedTime(void)
+{
+    SFTime::EditHandlePtr returnValue(
+        new  SFTime::EditHandle(
+             &_sfLastElapsedTime,
+             this->getType().getFieldDesc(LastElapsedTimeFieldId),
+             this));
+
+
+    editSField(LastElapsedTimeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleSystemBase::getHandleGenerators      (void) const
+{
+    MFUnrecParticleGeneratorPtr::GetHandlePtr returnValue(
+        new  MFUnrecParticleGeneratorPtr::GetHandle(
+             &_mfGenerators,
+             this->getType().getFieldDesc(GeneratorsFieldId),
+             const_cast<ParticleSystemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemBase::editHandleGenerators     (void)
+{
+    MFUnrecParticleGeneratorPtr::EditHandlePtr returnValue(
+        new  MFUnrecParticleGeneratorPtr::EditHandle(
+             &_mfGenerators,
+             this->getType().getFieldDesc(GeneratorsFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&ParticleSystem::pushToGenerators,
+                    static_cast<ParticleSystem *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&ParticleSystem::removeFromGenerators,
+                    static_cast<ParticleSystem *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&ParticleSystem::removeObjFromGenerators,
+                    static_cast<ParticleSystem *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&ParticleSystem::clearGenerators,
+                    static_cast<ParticleSystem *>(this)));
+
+    editMField(GeneratorsFieldMask, _mfGenerators);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleSystemBase::getHandleAffectors       (void) const
+{
+    MFUnrecParticleAffectorPtr::GetHandlePtr returnValue(
+        new  MFUnrecParticleAffectorPtr::GetHandle(
+             &_mfAffectors,
+             this->getType().getFieldDesc(AffectorsFieldId),
+             const_cast<ParticleSystemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemBase::editHandleAffectors      (void)
+{
+    MFUnrecParticleAffectorPtr::EditHandlePtr returnValue(
+        new  MFUnrecParticleAffectorPtr::EditHandle(
+             &_mfAffectors,
+             this->getType().getFieldDesc(AffectorsFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&ParticleSystem::pushToAffectors,
+                    static_cast<ParticleSystem *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&ParticleSystem::removeFromAffectors,
+                    static_cast<ParticleSystem *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&ParticleSystem::removeObjFromAffectors,
+                    static_cast<ParticleSystem *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&ParticleSystem::clearAffectors,
+                    static_cast<ParticleSystem *>(this)));
+
+    editMField(AffectorsFieldMask, _mfAffectors);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleSystemBase::getHandleSystemAffectors (void) const
+{
+    MFUnrecParticleSystemAffectorPtr::GetHandlePtr returnValue(
+        new  MFUnrecParticleSystemAffectorPtr::GetHandle(
+             &_mfSystemAffectors,
+             this->getType().getFieldDesc(SystemAffectorsFieldId),
+             const_cast<ParticleSystemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemBase::editHandleSystemAffectors(void)
+{
+    MFUnrecParticleSystemAffectorPtr::EditHandlePtr returnValue(
+        new  MFUnrecParticleSystemAffectorPtr::EditHandle(
+             &_mfSystemAffectors,
+             this->getType().getFieldDesc(SystemAffectorsFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&ParticleSystem::pushToSystemAffectors,
+                    static_cast<ParticleSystem *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&ParticleSystem::removeFromSystemAffectors,
+                    static_cast<ParticleSystem *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&ParticleSystem::removeObjFromSystemAffectors,
+                    static_cast<ParticleSystem *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&ParticleSystem::clearSystemAffectors,
+                    static_cast<ParticleSystem *>(this)));
+
+    editMField(SystemAffectorsFieldMask, _mfSystemAffectors);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleSystemBase::getHandleVolume          (void) const
+{
+    SFBoxVolume::GetHandlePtr returnValue(
+        new  SFBoxVolume::GetHandle(
+             &_sfVolume,
+             this->getType().getFieldDesc(VolumeFieldId),
+             const_cast<ParticleSystemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemBase::editHandleVolume         (void)
+{
+    SFBoxVolume::EditHandlePtr returnValue(
+        new  SFBoxVolume::EditHandle(
+             &_sfVolume,
+             this->getType().getFieldDesc(VolumeFieldId),
+             this));
+
+
+    editSField(VolumeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ParticleSystemBase::getHandleMaxParticleSize (void) const
+{
+    SFVec3f::GetHandlePtr returnValue(
+        new  SFVec3f::GetHandle(
+             &_sfMaxParticleSize,
+             this->getType().getFieldDesc(MaxParticleSizeFieldId),
+             const_cast<ParticleSystemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ParticleSystemBase::editHandleMaxParticleSize(void)
+{
+    SFVec3f::EditHandlePtr returnValue(
+        new  SFVec3f::EditHandle(
+             &_sfMaxParticleSize,
+             this->getType().getFieldDesc(MaxParticleSizeFieldId),
+             this));
+
+
+    editSField(MaxParticleSizeFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ParticleSystemBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ParticleSystem *pThis = static_cast<ParticleSystem *>(this);
+
+    pThis->execSync(static_cast<ParticleSystem *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ParticleSystemBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    ParticleSystem *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const ParticleSystem *>(pRefAspect),
+                  dynamic_cast<const ParticleSystem *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ParticleSystemPtr>::_type("ParticleSystemPtr", "AttachmentContainerPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(ParticleSystemPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ParticleSystemPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+void ParticleSystemBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<ParticleSystem *>(this)->setBeacon(NULL);
+
+    static_cast<ParticleSystem *>(this)->clearGenerators();
+
+    static_cast<ParticleSystem *>(this)->clearAffectors();
+
+    static_cast<ParticleSystem *>(this)->clearSystemAffectors();
+
+#ifdef OSG_MT_CPTR_ASPECT
+    AspectOffsetStore oOffsets;
+
+    _pAspectStore->fillOffsetArray(oOffsets, this);
+#endif
+
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfInternalPositions.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfInternalSecPositions.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfInternalNormals.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfInternalColors.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfInternalSizes.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfInternalLifespans.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfInternalAges.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfInternalVelocities.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfInternalSecVelocities.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfInternalAccelerations.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfInternalAttributes.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+}
 
 
 OSG_END_NAMESPACE
-

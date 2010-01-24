@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,43 +42,47 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGParticleDistribution3DBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ParticleDistribution3D class. See \ref 
-           PageParticleSystemParticleDistribution3D for a description.
+/*! \brief ParticleDistribution3D class. See \ref
+           PageContribParticleSystemParticleDistribution3D for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleDistribution3D : public ParticleDistribution3DBase
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleDistribution3D : public ParticleDistribution3DBase
 {
-  private:
-
-    typedef ParticleDistribution3DBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef ParticleDistribution3DBase Inherited;
+    typedef ParticleDistribution3D     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
     virtual Vec3f generate(void) const;
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ParticleDistribution3DBase.
@@ -95,20 +99,24 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleDistribution3D : public ParticleD
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ParticleDistribution3D(void); 
+    virtual ~ParticleDistribution3D(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ParticleDistribution3DBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ParticleDistribution3D &source);
 };
 

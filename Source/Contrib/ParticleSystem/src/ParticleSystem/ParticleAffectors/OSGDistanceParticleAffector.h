@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,45 +42,53 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
-
 #include "OSGDistanceParticleAffectorBase.h"
+#include "OSGCamera.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DistanceParticleAffector class. See \ref 
-           PageParticleSystemDistanceParticleAffector for a description.
+/*! \brief DistanceParticleAffector class. See \ref
+           PageContribParticleSystemDistanceParticleAffector for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING DistanceParticleAffector : public DistanceParticleAffectorBase
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING DistanceParticleAffector : public DistanceParticleAffectorBase
 {
-  private:
-
-    typedef DistanceParticleAffectorBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
-	  enum DistanceSource {DISTANCE_FROM_CAMERA=0, DISTANCE_FROM_NODE=1};
+    enum DistanceSource
+    {
+        DISTANCE_FROM_CAMERA = 0,
+        DISTANCE_FROM_NODE   = 1
+    };
+
+    typedef DistanceParticleAffectorBase Inherited;
+    typedef DistanceParticleAffector     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual bool affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps);
+
+    virtual bool affect(ParticleSystemRefPtr System, Int32 ParticleIndex, const Time& elps);
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in DistanceParticleAffectorBase.
@@ -97,21 +105,27 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DistanceParticleAffector : public Distanc
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DistanceParticleAffector(void); 
+    virtual ~DistanceParticleAffector(void);
 
     /*! \}                                                                 */
-    virtual bool affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps, const Vec3f& Displacement) = 0;
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+
+    virtual bool affect(ParticleSystemRefPtr System, Int32 ParticleIndex, const Time& elps, const Vec3f& Displacement) = 0;
     
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class DistanceParticleAffectorBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const DistanceParticleAffector &source);
 };
 
@@ -121,7 +135,5 @@ OSG_END_NAMESPACE
 
 #include "OSGDistanceParticleAffectorBase.inl"
 #include "OSGDistanceParticleAffector.inl"
-
-#define OSGDISTANCEPARTICLEAFFECTOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGDISTANCEPARTICLEAFFECTOR_H_ */

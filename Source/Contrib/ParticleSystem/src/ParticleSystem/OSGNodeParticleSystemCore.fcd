@@ -3,30 +3,33 @@
 <FieldContainer
 	name="NodeParticleSystemCore"
 	parent="Group"
-	library="ParticleSystem"
-	pointerfieldtypes="both"
+    library="ContribParticleSystem"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="true"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 	<Field
 		name="System"
-		type="ParticleSystemPtr"
+		type="ParticleSystem"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="ParticleSystem/OSGParticleSystem.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="PrototypeNode"
-		type="NodePtr"
+		type="Node"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 		access="public"
 	>
 	PrototypeNode is the node that clones are made of for each particle.
@@ -34,6 +37,7 @@
 	<Field
 		name="SizeScaling"
 		type="Vec3f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1.0,1.0,1.0"
@@ -43,7 +47,8 @@
 	</Field>
 	<Field
 		name="ParticleNodes"
-		type="NodePtr"
+		type="Node"
+        category="pointer"
 		cardinality="multi"
 		visibility="internal"
 		defaultValue=""
@@ -53,6 +58,7 @@
 	<Field
 		name="NormalSource"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NodeParticleSystemCore::NORMAL_PARTICLE_NORMAL"
@@ -71,6 +77,7 @@
    <Field
 		name="Normal"
 		type="Vec3f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1.0,0.0,0.0"
@@ -81,6 +88,7 @@
 	<Field
 		name="UpSource"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NodeParticleSystemCore::UP_VIEW_DIRECTION"
@@ -98,6 +106,7 @@
    <Field
 		name="Up"
 		type="Vec3f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,1.0,0.0"

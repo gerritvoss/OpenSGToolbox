@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Daniel Guilliams           *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,360 +55,218 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &SurfaceParticleGeneratorBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 SurfaceParticleGeneratorBase::getClassTypeId(void) 
+OSG::UInt32 SurfaceParticleGeneratorBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-SurfaceParticleGeneratorPtr SurfaceParticleGeneratorBase::create(void) 
-{
-    SurfaceParticleGeneratorPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = SurfaceParticleGeneratorPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-SurfaceParticleGeneratorPtr SurfaceParticleGeneratorBase::createEmpty(void) 
-{ 
-    SurfaceParticleGeneratorPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 SurfaceParticleGeneratorBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the SurfaceParticleGenerator::_sfPositionVelocityDistribution field.
-inline
-const SFGeoSurfaceDistribution3DPtr *SurfaceParticleGeneratorBase::getSFPositionVelocityDistribution(void) const
-{
-    return &_sfPositionVelocityDistribution;
-}
-
-//! Get the SurfaceParticleGenerator::_sfPositionVelocityDistribution field.
-inline
-SFGeoSurfaceDistribution3DPtr *SurfaceParticleGeneratorBase::editSFPositionVelocityDistribution(void)
-{
-    return &_sfPositionVelocityDistribution;
-}
-
-//! Get the SurfaceParticleGenerator::_sfNormalDistribution field.
-inline
-const SFDistribution3DPtr *SurfaceParticleGeneratorBase::getSFNormalDistribution(void) const
-{
-    return &_sfNormalDistribution;
-}
-
-//! Get the SurfaceParticleGenerator::_sfNormalDistribution field.
-inline
-SFDistribution3DPtr *SurfaceParticleGeneratorBase::editSFNormalDistribution(void)
-{
-    return &_sfNormalDistribution;
-}
-
-//! Get the SurfaceParticleGenerator::_sfColorDistribution field.
-inline
-const SFDistribution3DPtr *SurfaceParticleGeneratorBase::getSFColorDistribution(void) const
-{
-    return &_sfColorDistribution;
-}
-
-//! Get the SurfaceParticleGenerator::_sfColorDistribution field.
-inline
-SFDistribution3DPtr *SurfaceParticleGeneratorBase::editSFColorDistribution(void)
-{
-    return &_sfColorDistribution;
-}
-
-//! Get the SurfaceParticleGenerator::_sfTransparencyDistribution field.
-inline
-const SFDistribution1DPtr *SurfaceParticleGeneratorBase::getSFTransparencyDistribution(void) const
-{
-    return &_sfTransparencyDistribution;
-}
-
-//! Get the SurfaceParticleGenerator::_sfTransparencyDistribution field.
-inline
-SFDistribution1DPtr *SurfaceParticleGeneratorBase::editSFTransparencyDistribution(void)
-{
-    return &_sfTransparencyDistribution;
-}
-
-//! Get the SurfaceParticleGenerator::_sfSizeDistribution field.
-inline
-const SFDistribution3DPtr *SurfaceParticleGeneratorBase::getSFSizeDistribution(void) const
-{
-    return &_sfSizeDistribution;
-}
-
-//! Get the SurfaceParticleGenerator::_sfSizeDistribution field.
-inline
-SFDistribution3DPtr *SurfaceParticleGeneratorBase::editSFSizeDistribution(void)
-{
-    return &_sfSizeDistribution;
-}
-
-//! Get the SurfaceParticleGenerator::_sfLifespanDistribution field.
-inline
-const SFDistribution1DPtr *SurfaceParticleGeneratorBase::getSFLifespanDistribution(void) const
-{
-    return &_sfLifespanDistribution;
-}
-
-//! Get the SurfaceParticleGenerator::_sfLifespanDistribution field.
-inline
-SFDistribution1DPtr *SurfaceParticleGeneratorBase::editSFLifespanDistribution(void)
-{
-    return &_sfLifespanDistribution;
-}
-
-//! Get the SurfaceParticleGenerator::_sfAgeDistribution field.
-inline
-const SFDistribution1DPtr *SurfaceParticleGeneratorBase::getSFAgeDistribution(void) const
-{
-    return &_sfAgeDistribution;
-}
-
-//! Get the SurfaceParticleGenerator::_sfAgeDistribution field.
-inline
-SFDistribution1DPtr *SurfaceParticleGeneratorBase::editSFAgeDistribution(void)
-{
-    return &_sfAgeDistribution;
-}
-
-//! Get the SurfaceParticleGenerator::_sfSpeedDistribution field.
-inline
-const SFDistribution1DPtr *SurfaceParticleGeneratorBase::getSFSpeedDistribution(void) const
-{
-    return &_sfSpeedDistribution;
-}
-
-//! Get the SurfaceParticleGenerator::_sfSpeedDistribution field.
-inline
-SFDistribution1DPtr *SurfaceParticleGeneratorBase::editSFSpeedDistribution(void)
-{
-    return &_sfSpeedDistribution;
-}
-
-//! Get the SurfaceParticleGenerator::_sfAccelerationDistribution field.
-inline
-const SFDistribution3DPtr *SurfaceParticleGeneratorBase::getSFAccelerationDistribution(void) const
-{
-    return &_sfAccelerationDistribution;
-}
-
-//! Get the SurfaceParticleGenerator::_sfAccelerationDistribution field.
-inline
-SFDistribution3DPtr *SurfaceParticleGeneratorBase::editSFAccelerationDistribution(void)
-{
-    return &_sfAccelerationDistribution;
-}
-
 
 //! Get the value of the SurfaceParticleGenerator::_sfPositionVelocityDistribution field.
 inline
-GeoSurfaceDistribution3DPtr &SurfaceParticleGeneratorBase::editPositionVelocityDistribution(void)
-{
-    return _sfPositionVelocityDistribution.getValue();
-}
-
-//! Get the value of the SurfaceParticleGenerator::_sfPositionVelocityDistribution field.
-inline
-const GeoSurfaceDistribution3DPtr &SurfaceParticleGeneratorBase::getPositionVelocityDistribution(void) const
+GeoSurfaceDistribution3D * SurfaceParticleGeneratorBase::getPositionVelocityDistribution(void) const
 {
     return _sfPositionVelocityDistribution.getValue();
 }
 
 //! Set the value of the SurfaceParticleGenerator::_sfPositionVelocityDistribution field.
 inline
-void SurfaceParticleGeneratorBase::setPositionVelocityDistribution(const GeoSurfaceDistribution3DPtr &value)
+void SurfaceParticleGeneratorBase::setPositionVelocityDistribution(GeoSurfaceDistribution3D * const value)
 {
+    editSField(PositionVelocityDistributionFieldMask);
+
     _sfPositionVelocityDistribution.setValue(value);
 }
 
 //! Get the value of the SurfaceParticleGenerator::_sfNormalDistribution field.
 inline
-Distribution3DPtr &SurfaceParticleGeneratorBase::editNormalDistribution(void)
-{
-    return _sfNormalDistribution.getValue();
-}
-
-//! Get the value of the SurfaceParticleGenerator::_sfNormalDistribution field.
-inline
-const Distribution3DPtr &SurfaceParticleGeneratorBase::getNormalDistribution(void) const
+Distribution3D * SurfaceParticleGeneratorBase::getNormalDistribution(void) const
 {
     return _sfNormalDistribution.getValue();
 }
 
 //! Set the value of the SurfaceParticleGenerator::_sfNormalDistribution field.
 inline
-void SurfaceParticleGeneratorBase::setNormalDistribution(const Distribution3DPtr &value)
+void SurfaceParticleGeneratorBase::setNormalDistribution(Distribution3D * const value)
 {
+    editSField(NormalDistributionFieldMask);
+
     _sfNormalDistribution.setValue(value);
 }
 
 //! Get the value of the SurfaceParticleGenerator::_sfColorDistribution field.
 inline
-Distribution3DPtr &SurfaceParticleGeneratorBase::editColorDistribution(void)
-{
-    return _sfColorDistribution.getValue();
-}
-
-//! Get the value of the SurfaceParticleGenerator::_sfColorDistribution field.
-inline
-const Distribution3DPtr &SurfaceParticleGeneratorBase::getColorDistribution(void) const
+Distribution3D * SurfaceParticleGeneratorBase::getColorDistribution(void) const
 {
     return _sfColorDistribution.getValue();
 }
 
 //! Set the value of the SurfaceParticleGenerator::_sfColorDistribution field.
 inline
-void SurfaceParticleGeneratorBase::setColorDistribution(const Distribution3DPtr &value)
+void SurfaceParticleGeneratorBase::setColorDistribution(Distribution3D * const value)
 {
+    editSField(ColorDistributionFieldMask);
+
     _sfColorDistribution.setValue(value);
 }
 
 //! Get the value of the SurfaceParticleGenerator::_sfTransparencyDistribution field.
 inline
-Distribution1DPtr &SurfaceParticleGeneratorBase::editTransparencyDistribution(void)
-{
-    return _sfTransparencyDistribution.getValue();
-}
-
-//! Get the value of the SurfaceParticleGenerator::_sfTransparencyDistribution field.
-inline
-const Distribution1DPtr &SurfaceParticleGeneratorBase::getTransparencyDistribution(void) const
+Distribution1D * SurfaceParticleGeneratorBase::getTransparencyDistribution(void) const
 {
     return _sfTransparencyDistribution.getValue();
 }
 
 //! Set the value of the SurfaceParticleGenerator::_sfTransparencyDistribution field.
 inline
-void SurfaceParticleGeneratorBase::setTransparencyDistribution(const Distribution1DPtr &value)
+void SurfaceParticleGeneratorBase::setTransparencyDistribution(Distribution1D * const value)
 {
+    editSField(TransparencyDistributionFieldMask);
+
     _sfTransparencyDistribution.setValue(value);
 }
 
 //! Get the value of the SurfaceParticleGenerator::_sfSizeDistribution field.
 inline
-Distribution3DPtr &SurfaceParticleGeneratorBase::editSizeDistribution(void)
-{
-    return _sfSizeDistribution.getValue();
-}
-
-//! Get the value of the SurfaceParticleGenerator::_sfSizeDistribution field.
-inline
-const Distribution3DPtr &SurfaceParticleGeneratorBase::getSizeDistribution(void) const
+Distribution3D * SurfaceParticleGeneratorBase::getSizeDistribution(void) const
 {
     return _sfSizeDistribution.getValue();
 }
 
 //! Set the value of the SurfaceParticleGenerator::_sfSizeDistribution field.
 inline
-void SurfaceParticleGeneratorBase::setSizeDistribution(const Distribution3DPtr &value)
+void SurfaceParticleGeneratorBase::setSizeDistribution(Distribution3D * const value)
 {
+    editSField(SizeDistributionFieldMask);
+
     _sfSizeDistribution.setValue(value);
 }
 
 //! Get the value of the SurfaceParticleGenerator::_sfLifespanDistribution field.
 inline
-Distribution1DPtr &SurfaceParticleGeneratorBase::editLifespanDistribution(void)
-{
-    return _sfLifespanDistribution.getValue();
-}
-
-//! Get the value of the SurfaceParticleGenerator::_sfLifespanDistribution field.
-inline
-const Distribution1DPtr &SurfaceParticleGeneratorBase::getLifespanDistribution(void) const
+Distribution1D * SurfaceParticleGeneratorBase::getLifespanDistribution(void) const
 {
     return _sfLifespanDistribution.getValue();
 }
 
 //! Set the value of the SurfaceParticleGenerator::_sfLifespanDistribution field.
 inline
-void SurfaceParticleGeneratorBase::setLifespanDistribution(const Distribution1DPtr &value)
+void SurfaceParticleGeneratorBase::setLifespanDistribution(Distribution1D * const value)
 {
+    editSField(LifespanDistributionFieldMask);
+
     _sfLifespanDistribution.setValue(value);
 }
 
 //! Get the value of the SurfaceParticleGenerator::_sfAgeDistribution field.
 inline
-Distribution1DPtr &SurfaceParticleGeneratorBase::editAgeDistribution(void)
-{
-    return _sfAgeDistribution.getValue();
-}
-
-//! Get the value of the SurfaceParticleGenerator::_sfAgeDistribution field.
-inline
-const Distribution1DPtr &SurfaceParticleGeneratorBase::getAgeDistribution(void) const
+Distribution1D * SurfaceParticleGeneratorBase::getAgeDistribution(void) const
 {
     return _sfAgeDistribution.getValue();
 }
 
 //! Set the value of the SurfaceParticleGenerator::_sfAgeDistribution field.
 inline
-void SurfaceParticleGeneratorBase::setAgeDistribution(const Distribution1DPtr &value)
+void SurfaceParticleGeneratorBase::setAgeDistribution(Distribution1D * const value)
 {
+    editSField(AgeDistributionFieldMask);
+
     _sfAgeDistribution.setValue(value);
 }
 
 //! Get the value of the SurfaceParticleGenerator::_sfSpeedDistribution field.
 inline
-Distribution1DPtr &SurfaceParticleGeneratorBase::editSpeedDistribution(void)
-{
-    return _sfSpeedDistribution.getValue();
-}
-
-//! Get the value of the SurfaceParticleGenerator::_sfSpeedDistribution field.
-inline
-const Distribution1DPtr &SurfaceParticleGeneratorBase::getSpeedDistribution(void) const
+Distribution1D * SurfaceParticleGeneratorBase::getSpeedDistribution(void) const
 {
     return _sfSpeedDistribution.getValue();
 }
 
 //! Set the value of the SurfaceParticleGenerator::_sfSpeedDistribution field.
 inline
-void SurfaceParticleGeneratorBase::setSpeedDistribution(const Distribution1DPtr &value)
+void SurfaceParticleGeneratorBase::setSpeedDistribution(Distribution1D * const value)
 {
+    editSField(SpeedDistributionFieldMask);
+
     _sfSpeedDistribution.setValue(value);
 }
 
 //! Get the value of the SurfaceParticleGenerator::_sfAccelerationDistribution field.
 inline
-Distribution3DPtr &SurfaceParticleGeneratorBase::editAccelerationDistribution(void)
-{
-    return _sfAccelerationDistribution.getValue();
-}
-
-//! Get the value of the SurfaceParticleGenerator::_sfAccelerationDistribution field.
-inline
-const Distribution3DPtr &SurfaceParticleGeneratorBase::getAccelerationDistribution(void) const
+Distribution3D * SurfaceParticleGeneratorBase::getAccelerationDistribution(void) const
 {
     return _sfAccelerationDistribution.getValue();
 }
 
 //! Set the value of the SurfaceParticleGenerator::_sfAccelerationDistribution field.
 inline
-void SurfaceParticleGeneratorBase::setAccelerationDistribution(const Distribution3DPtr &value)
+void SurfaceParticleGeneratorBase::setAccelerationDistribution(Distribution3D * const value)
 {
+    editSField(AccelerationDistributionFieldMask);
+
     _sfAccelerationDistribution.setValue(value);
 }
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void SurfaceParticleGeneratorBase::execSync (      SurfaceParticleGeneratorBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (PositionVelocityDistributionFieldMask & whichField))
+        _sfPositionVelocityDistribution.syncWith(pFrom->_sfPositionVelocityDistribution);
+
+    if(FieldBits::NoField != (NormalDistributionFieldMask & whichField))
+        _sfNormalDistribution.syncWith(pFrom->_sfNormalDistribution);
+
+    if(FieldBits::NoField != (ColorDistributionFieldMask & whichField))
+        _sfColorDistribution.syncWith(pFrom->_sfColorDistribution);
+
+    if(FieldBits::NoField != (TransparencyDistributionFieldMask & whichField))
+        _sfTransparencyDistribution.syncWith(pFrom->_sfTransparencyDistribution);
+
+    if(FieldBits::NoField != (SizeDistributionFieldMask & whichField))
+        _sfSizeDistribution.syncWith(pFrom->_sfSizeDistribution);
+
+    if(FieldBits::NoField != (LifespanDistributionFieldMask & whichField))
+        _sfLifespanDistribution.syncWith(pFrom->_sfLifespanDistribution);
+
+    if(FieldBits::NoField != (AgeDistributionFieldMask & whichField))
+        _sfAgeDistribution.syncWith(pFrom->_sfAgeDistribution);
+
+    if(FieldBits::NoField != (SpeedDistributionFieldMask & whichField))
+        _sfSpeedDistribution.syncWith(pFrom->_sfSpeedDistribution);
+
+    if(FieldBits::NoField != (AccelerationDistributionFieldMask & whichField))
+        _sfAccelerationDistribution.syncWith(pFrom->_sfAccelerationDistribution);
+}
+#endif
+
+
+inline
+const Char8 *SurfaceParticleGeneratorBase::getClassname(void)
+{
+    return "SurfaceParticleGenerator";
+}
+
+
+OSG_GEN_CONTAINERPTR(SurfaceParticleGenerator);
+
 OSG_END_NAMESPACE
+

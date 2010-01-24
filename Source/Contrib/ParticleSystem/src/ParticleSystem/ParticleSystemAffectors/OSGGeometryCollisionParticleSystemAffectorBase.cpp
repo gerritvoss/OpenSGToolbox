@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,192 +50,301 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGParticleAffector.h"        // CollisionAffectors Class
+#include "OSGNode.h"                    // CollisionNode Class
 
 #include "OSGGeometryCollisionParticleSystemAffectorBase.h"
 #include "OSGGeometryCollisionParticleSystemAffector.h"
 
+#include <boost/bind.hpp>
+
+#include "OSGEvent.h"
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  GeometryCollisionParticleSystemAffectorBase::CollisionAffectorsFieldMask = 
-    (TypeTraits<BitVector>::One << GeometryCollisionParticleSystemAffectorBase::CollisionAffectorsFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  GeometryCollisionParticleSystemAffectorBase::CollisionNodeFieldMask = 
-    (TypeTraits<BitVector>::One << GeometryCollisionParticleSystemAffectorBase::CollisionNodeFieldId);
-
-const OSG::BitVector  GeometryCollisionParticleSystemAffectorBase::EventProducerFieldMask =
-    (TypeTraits<BitVector>::One << GeometryCollisionParticleSystemAffectorBase::EventProducerFieldId);
-
-const OSG::BitVector GeometryCollisionParticleSystemAffectorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var ParticleAffectorPtr GeometryCollisionParticleSystemAffectorBase::_mfCollisionAffectors
+/*! \class OSG::GeometryCollisionParticleSystemAffector
     
-*/
-/*! \var NodePtr         GeometryCollisionParticleSystemAffectorBase::_sfCollisionNode
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
+
+/*! \var ParticleAffector * GeometryCollisionParticleSystemAffectorBase::_mfCollisionAffectors
     
 */
 
-//! GeometryCollisionParticleSystemAffector description
+/*! \var Node *          GeometryCollisionParticleSystemAffectorBase::_sfCollisionNode
+    
+*/
 
-FieldDescription *GeometryCollisionParticleSystemAffectorBase::_desc[] = 
+
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<GeometryCollisionParticleSystemAffector *>::_type("GeometryCollisionParticleSystemAffectorPtr", "ParticleSystemAffectorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(GeometryCollisionParticleSystemAffector *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           GeometryCollisionParticleSystemAffector *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           GeometryCollisionParticleSystemAffector *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void GeometryCollisionParticleSystemAffectorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(MFParticleAffectorPtr::getClassType(), 
-                     "CollisionAffectors", 
-                     CollisionAffectorsFieldId, CollisionAffectorsFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&GeometryCollisionParticleSystemAffectorBase::editMFCollisionAffectors)),
-    new FieldDescription(SFNodePtr::getClassType(), 
-                     "CollisionNode", 
-                     CollisionNodeFieldId, CollisionNodeFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&GeometryCollisionParticleSystemAffectorBase::editSFCollisionNode))
-    , 
-    new FieldDescription(SFEventProducerPtr::getClassType(), 
-                     "EventProducer", 
-                     EventProducerFieldId,EventProducerFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&GeometryCollisionParticleSystemAffectorBase::editSFEventProducer))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType GeometryCollisionParticleSystemAffectorBase::_type(
-    "GeometryCollisionParticleSystemAffector",
-    "ParticleSystemAffector",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&GeometryCollisionParticleSystemAffectorBase::createEmpty),
+    pDesc = new MFUnrecParticleAffectorPtr::Description(
+        MFUnrecParticleAffectorPtr::getClassType(),
+        "CollisionAffectors",
+        "",
+        CollisionAffectorsFieldId, CollisionAffectorsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GeometryCollisionParticleSystemAffector::editHandleCollisionAffectors),
+        static_cast<FieldGetMethodSig >(&GeometryCollisionParticleSystemAffector::getHandleCollisionAffectors));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecNodePtr::Description(
+        SFUnrecNodePtr::getClassType(),
+        "CollisionNode",
+        "",
+        CollisionNodeFieldId, CollisionNodeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GeometryCollisionParticleSystemAffector::editHandleCollisionNode),
+        static_cast<FieldGetMethodSig >(&GeometryCollisionParticleSystemAffector::getHandleCollisionNode));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFEventProducerPtr::Description(
+        SFEventProducerPtr::getClassType(),
+        "EventProducer",
+        "Event Producer",
+        EventProducerFieldId,EventProducerFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast     <FieldEditMethodSig>(&GeometryCollisionParticleSystemAffector::invalidEditField),
+        static_cast     <FieldGetMethodSig >(&GeometryCollisionParticleSystemAffector::invalidGetField));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+GeometryCollisionParticleSystemAffectorBase::TypeObject GeometryCollisionParticleSystemAffectorBase::_type(
+    GeometryCollisionParticleSystemAffectorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&GeometryCollisionParticleSystemAffectorBase::createEmptyLocal),
     GeometryCollisionParticleSystemAffector::initMethod,
-    _desc,
-    sizeof(_desc));
+    GeometryCollisionParticleSystemAffector::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&GeometryCollisionParticleSystemAffector::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"GeometryCollisionParticleSystemAffector\"\n"
+    "\tparent=\"ParticleSystemAffector\"\n"
+    "    library=\"ContribParticleSystem\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"CollisionAffectors\"\n"
+    "\t\ttype=\"ParticleAffector\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"CollisionNode\"\n"
+    "\t\ttype=\"Node\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"ParticleCollision\"\n"
+    "\t\ttype=\"ParticleEvent\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
 //! GeometryCollisionParticleSystemAffector Produced Methods
 
 MethodDescription *GeometryCollisionParticleSystemAffectorBase::_methodDesc[] =
 {
     new MethodDescription("ParticleCollision", 
+                    "",
                      ParticleCollisionMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod())
 };
 
 EventProducerType GeometryCollisionParticleSystemAffectorBase::_producerType(
     "GeometryCollisionParticleSystemAffectorProducerType",
     "EventProducerType",
-    NULL,
+    "",
     InitEventProducerFunctor(),
     _methodDesc,
     sizeof(_methodDesc));
-//OSG_FIELD_CONTAINER_DEF(GeometryCollisionParticleSystemAffectorBase, GeometryCollisionParticleSystemAffectorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &GeometryCollisionParticleSystemAffectorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &GeometryCollisionParticleSystemAffectorBase::getType(void) const 
+FieldContainerType &GeometryCollisionParticleSystemAffectorBase::getType(void)
 {
     return _type;
-} 
+}
+
+const FieldContainerType &GeometryCollisionParticleSystemAffectorBase::getType(void) const
+{
+    return _type;
+}
 
 const EventProducerType &GeometryCollisionParticleSystemAffectorBase::getProducerType(void) const
 {
     return _producerType;
 }
 
-
-FieldContainerPtr GeometryCollisionParticleSystemAffectorBase::shallowCopy(void) const 
-{ 
-    GeometryCollisionParticleSystemAffectorPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const GeometryCollisionParticleSystemAffector *>(this)); 
-
-    return returnValue; 
-}
-
-UInt32 GeometryCollisionParticleSystemAffectorBase::getContainerSize(void) const 
-{ 
-    return sizeof(GeometryCollisionParticleSystemAffector); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void GeometryCollisionParticleSystemAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+UInt32 GeometryCollisionParticleSystemAffectorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl(static_cast<GeometryCollisionParticleSystemAffectorBase *>(&other),
-                          whichField);
+    return sizeof(GeometryCollisionParticleSystemAffector);
 }
-#else
-void GeometryCollisionParticleSystemAffectorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the GeometryCollisionParticleSystemAffector::_mfCollisionAffectors field.
+const MFUnrecParticleAffectorPtr *GeometryCollisionParticleSystemAffectorBase::getMFCollisionAffectors(void) const
 {
-    this->executeSyncImpl((GeometryCollisionParticleSystemAffectorBase *) &other, whichField, sInfo);
+    return &_mfCollisionAffectors;
 }
-void GeometryCollisionParticleSystemAffectorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+MFUnrecParticleAffectorPtr *GeometryCollisionParticleSystemAffectorBase::editMFCollisionAffectors(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editMField(CollisionAffectorsFieldMask, _mfCollisionAffectors);
+
+    return &_mfCollisionAffectors;
 }
 
-void GeometryCollisionParticleSystemAffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+//! Get the GeometryCollisionParticleSystemAffector::_sfCollisionNode field.
+const SFUnrecNodePtr *GeometryCollisionParticleSystemAffectorBase::getSFCollisionNode(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
-    _mfCollisionAffectors.terminateShare(uiAspect, this->getContainerSize());
+    return &_sfCollisionNode;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-GeometryCollisionParticleSystemAffectorBase::GeometryCollisionParticleSystemAffectorBase(void) :
-    _Producer(&getProducerType()),
-    _mfCollisionAffectors     (), 
-    _sfCollisionNode          (NodePtr(NullFC)), 
-    _sfEventProducer(&_Producer),
-    Inherited() 
+SFUnrecNodePtr      *GeometryCollisionParticleSystemAffectorBase::editSFCollisionNode  (void)
 {
+    editSField(CollisionNodeFieldMask);
+
+    return &_sfCollisionNode;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-GeometryCollisionParticleSystemAffectorBase::GeometryCollisionParticleSystemAffectorBase(const GeometryCollisionParticleSystemAffectorBase &source) :
-    _Producer(&source.getProducerType()),
-    _mfCollisionAffectors     (source._mfCollisionAffectors     ), 
-    _sfCollisionNode          (source._sfCollisionNode          ), 
-    _sfEventProducer(&_Producer),
-    Inherited                 (source)
+
+void GeometryCollisionParticleSystemAffectorBase::pushToCollisionAffectors(ParticleAffector * const value)
 {
+    editMField(CollisionAffectorsFieldMask, _mfCollisionAffectors);
+
+    _mfCollisionAffectors.push_back(value);
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-GeometryCollisionParticleSystemAffectorBase::~GeometryCollisionParticleSystemAffectorBase(void)
+void GeometryCollisionParticleSystemAffectorBase::assignCollisionAffectors(const MFUnrecParticleAffectorPtr &value)
 {
+    MFUnrecParticleAffectorPtr::const_iterator elemIt  =
+        value.begin();
+    MFUnrecParticleAffectorPtr::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<GeometryCollisionParticleSystemAffector *>(this)->clearCollisionAffectors();
+
+    while(elemIt != elemEnd)
+    {
+        this->pushToCollisionAffectors(*elemIt);
+
+        ++elemIt;
+    }
 }
+
+void GeometryCollisionParticleSystemAffectorBase::removeFromCollisionAffectors(UInt32 uiIndex)
+{
+    if(uiIndex < _mfCollisionAffectors.size())
+    {
+        editMField(CollisionAffectorsFieldMask, _mfCollisionAffectors);
+
+        _mfCollisionAffectors.erase(uiIndex);
+    }
+}
+
+void GeometryCollisionParticleSystemAffectorBase::removeObjFromCollisionAffectors(ParticleAffector * const value)
+{
+    Int32 iElemIdx = _mfCollisionAffectors.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(CollisionAffectorsFieldMask, _mfCollisionAffectors);
+
+        _mfCollisionAffectors.erase(iElemIdx);
+    }
+}
+void GeometryCollisionParticleSystemAffectorBase::clearCollisionAffectors(void)
+{
+    editMField(CollisionAffectorsFieldMask, _mfCollisionAffectors);
+
+
+    _mfCollisionAffectors.clear();
+}
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 GeometryCollisionParticleSystemAffectorBase::getBinSize(const BitVector &whichField)
+UInt32 GeometryCollisionParticleSystemAffectorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -243,23 +352,20 @@ UInt32 GeometryCollisionParticleSystemAffectorBase::getBinSize(const BitVector &
     {
         returnValue += _mfCollisionAffectors.getBinSize();
     }
-
     if(FieldBits::NoField != (CollisionNodeFieldMask & whichField))
     {
         returnValue += _sfCollisionNode.getBinSize();
     }
-
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
     {
         returnValue += _sfEventProducer.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void GeometryCollisionParticleSystemAffectorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void GeometryCollisionParticleSystemAffectorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -267,22 +373,18 @@ void GeometryCollisionParticleSystemAffectorBase::copyToBin(      BinaryDataHand
     {
         _mfCollisionAffectors.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (CollisionNodeFieldMask & whichField))
     {
         _sfCollisionNode.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
     {
         _sfEventProducer.copyToBin(pMem);
     }
-
-
 }
 
-void GeometryCollisionParticleSystemAffectorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void GeometryCollisionParticleSystemAffectorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -290,84 +392,294 @@ void GeometryCollisionParticleSystemAffectorBase::copyFromBin(      BinaryDataHa
     {
         _mfCollisionAffectors.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (CollisionNodeFieldMask & whichField))
     {
         _sfCollisionNode.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
     {
         _sfEventProducer.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void GeometryCollisionParticleSystemAffectorBase::executeSyncImpl(      GeometryCollisionParticleSystemAffectorBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+GeometryCollisionParticleSystemAffectorTransitPtr GeometryCollisionParticleSystemAffectorBase::createLocal(BitVector bFlags)
 {
+    GeometryCollisionParticleSystemAffectorTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (CollisionAffectorsFieldMask & whichField))
-        _mfCollisionAffectors.syncWith(pOther->_mfCollisionAffectors);
+        fc = dynamic_pointer_cast<GeometryCollisionParticleSystemAffector>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (CollisionNodeFieldMask & whichField))
-        _sfCollisionNode.syncWith(pOther->_sfCollisionNode);
-
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-        _sfEventProducer.syncWith(pOther->_sfEventProducer);
-
-
-}
-#else
-void GeometryCollisionParticleSystemAffectorBase::executeSyncImpl(      GeometryCollisionParticleSystemAffectorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (CollisionNodeFieldMask & whichField))
-        _sfCollisionNode.syncWith(pOther->_sfCollisionNode);
-
-
-    if(FieldBits::NoField != (CollisionAffectorsFieldMask & whichField))
-        _mfCollisionAffectors.syncWith(pOther->_mfCollisionAffectors, sInfo);
-
-
+    return fc;
 }
 
-void GeometryCollisionParticleSystemAffectorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+GeometryCollisionParticleSystemAffectorTransitPtr GeometryCollisionParticleSystemAffectorBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    GeometryCollisionParticleSystemAffectorTransitPtr fc;
 
-    if(FieldBits::NoField != (CollisionAffectorsFieldMask & whichField))
-        _mfCollisionAffectors.beginEdit(uiAspect, uiContainerSize);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
+        fc = dynamic_pointer_cast<GeometryCollisionParticleSystemAffector>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+GeometryCollisionParticleSystemAffectorTransitPtr GeometryCollisionParticleSystemAffectorBase::create(void)
+{
+    GeometryCollisionParticleSystemAffectorTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<GeometryCollisionParticleSystemAffector>(tmpPtr);
+    }
+
+    return fc;
+}
+
+GeometryCollisionParticleSystemAffector *GeometryCollisionParticleSystemAffectorBase::createEmptyLocal(BitVector bFlags)
+{
+    GeometryCollisionParticleSystemAffector *returnValue;
+
+    newPtr<GeometryCollisionParticleSystemAffector>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+GeometryCollisionParticleSystemAffector *GeometryCollisionParticleSystemAffectorBase::createEmpty(void)
+{
+    GeometryCollisionParticleSystemAffector *returnValue;
+
+    newPtr<GeometryCollisionParticleSystemAffector>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr GeometryCollisionParticleSystemAffectorBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    GeometryCollisionParticleSystemAffector *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const GeometryCollisionParticleSystemAffector *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr GeometryCollisionParticleSystemAffectorBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    GeometryCollisionParticleSystemAffector *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const GeometryCollisionParticleSystemAffector *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr GeometryCollisionParticleSystemAffectorBase::shallowCopy(void) const
+{
+    GeometryCollisionParticleSystemAffector *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const GeometryCollisionParticleSystemAffector *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+GeometryCollisionParticleSystemAffectorBase::GeometryCollisionParticleSystemAffectorBase(void) :
+    _Producer(&getProducerType()),
+    Inherited(),
+    _mfCollisionAffectors     (),
+    _sfCollisionNode          (NULL)
+    ,_sfEventProducer(&_Producer)
+{
+}
+
+GeometryCollisionParticleSystemAffectorBase::GeometryCollisionParticleSystemAffectorBase(const GeometryCollisionParticleSystemAffectorBase &source) :
+    _Producer(&source.getProducerType()),
+    Inherited(source),
+    _mfCollisionAffectors     (),
+    _sfCollisionNode          (NULL)
+    ,_sfEventProducer(&_Producer)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+GeometryCollisionParticleSystemAffectorBase::~GeometryCollisionParticleSystemAffectorBase(void)
+{
+}
+
+void GeometryCollisionParticleSystemAffectorBase::onCreate(const GeometryCollisionParticleSystemAffector *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        GeometryCollisionParticleSystemAffector *pThis = static_cast<GeometryCollisionParticleSystemAffector *>(this);
+
+        MFUnrecParticleAffectorPtr::const_iterator CollisionAffectorsIt  =
+            source->_mfCollisionAffectors.begin();
+        MFUnrecParticleAffectorPtr::const_iterator CollisionAffectorsEnd =
+            source->_mfCollisionAffectors.end  ();
+
+        while(CollisionAffectorsIt != CollisionAffectorsEnd)
+        {
+            pThis->pushToCollisionAffectors(*CollisionAffectorsIt);
+
+            ++CollisionAffectorsIt;
+        }
+
+        pThis->setCollisionNode(source->getCollisionNode());
+    }
+}
+
+GetFieldHandlePtr GeometryCollisionParticleSystemAffectorBase::getHandleCollisionAffectors (void) const
+{
+    MFUnrecParticleAffectorPtr::GetHandlePtr returnValue(
+        new  MFUnrecParticleAffectorPtr::GetHandle(
+             &_mfCollisionAffectors,
+             this->getType().getFieldDesc(CollisionAffectorsFieldId),
+             const_cast<GeometryCollisionParticleSystemAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GeometryCollisionParticleSystemAffectorBase::editHandleCollisionAffectors(void)
+{
+    MFUnrecParticleAffectorPtr::EditHandlePtr returnValue(
+        new  MFUnrecParticleAffectorPtr::EditHandle(
+             &_mfCollisionAffectors,
+             this->getType().getFieldDesc(CollisionAffectorsFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&GeometryCollisionParticleSystemAffector::pushToCollisionAffectors,
+                    static_cast<GeometryCollisionParticleSystemAffector *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&GeometryCollisionParticleSystemAffector::removeFromCollisionAffectors,
+                    static_cast<GeometryCollisionParticleSystemAffector *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&GeometryCollisionParticleSystemAffector::removeObjFromCollisionAffectors,
+                    static_cast<GeometryCollisionParticleSystemAffector *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&GeometryCollisionParticleSystemAffector::clearCollisionAffectors,
+                    static_cast<GeometryCollisionParticleSystemAffector *>(this)));
+
+    editMField(CollisionAffectorsFieldMask, _mfCollisionAffectors);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr GeometryCollisionParticleSystemAffectorBase::getHandleCollisionNode   (void) const
+{
+    SFUnrecNodePtr::GetHandlePtr returnValue(
+        new  SFUnrecNodePtr::GetHandle(
+             &_sfCollisionNode,
+             this->getType().getFieldDesc(CollisionNodeFieldId),
+             const_cast<GeometryCollisionParticleSystemAffectorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GeometryCollisionParticleSystemAffectorBase::editHandleCollisionNode  (void)
+{
+    SFUnrecNodePtr::EditHandlePtr returnValue(
+        new  SFUnrecNodePtr::EditHandle(
+             &_sfCollisionNode,
+             this->getType().getFieldDesc(CollisionNodeFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&GeometryCollisionParticleSystemAffector::setCollisionNode,
+                    static_cast<GeometryCollisionParticleSystemAffector *>(this), _1));
+
+    editSField(CollisionNodeFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void GeometryCollisionParticleSystemAffectorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    GeometryCollisionParticleSystemAffector *pThis = static_cast<GeometryCollisionParticleSystemAffector *>(this);
+
+    pThis->execSync(static_cast<GeometryCollisionParticleSystemAffector *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *GeometryCollisionParticleSystemAffectorBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    GeometryCollisionParticleSystemAffector *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const GeometryCollisionParticleSystemAffector *>(pRefAspect),
+                  dynamic_cast<const GeometryCollisionParticleSystemAffector *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<GeometryCollisionParticleSystemAffectorPtr>::_type("GeometryCollisionParticleSystemAffectorPtr", "ParticleSystemAffectorPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(GeometryCollisionParticleSystemAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(GeometryCollisionParticleSystemAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
+void GeometryCollisionParticleSystemAffectorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<GeometryCollisionParticleSystemAffector *>(this)->clearCollisionAffectors();
+
+    static_cast<GeometryCollisionParticleSystemAffector *>(this)->setCollisionNode(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-

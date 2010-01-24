@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGParticleCollisionEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::ParticleCollisionEvent
-
-*/
+// Documentation for this class is emitted in the
+// OSGParticleCollisionEventBase.cpp file.
+// To modify it, please change the .fcd file (OSGParticleCollisionEvent.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,18 +62,23 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ParticleCollisionEvent::initMethod (void)
+void ParticleCollisionEvent::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-ParticleCollisionEventPtr ParticleCollisionEvent::create(  FieldContainerPtr Source,
-                                            Time TimeStamp,
-                                            ParticleSystemPtr PrimarySystem,
-                                            UInt32 PrimaryIndex,
-                                            ParticleSystemPtr SecondarySystem,
-                                            UInt32 SecondaryIndex)
+ParticleCollisionEventTransitPtr ParticleCollisionEvent::create(FieldContainerRefPtr Source,
+                                                                Time TimeStamp,
+                                                                ParticleSystemRefPtr PrimarySystem,
+                                                                UInt32 PrimaryIndex,
+                                                                ParticleSystemRefPtr SecondarySystem,
+                                                                UInt32 SecondaryIndex)
 {
-    ParticleCollisionEventPtr TheEvent = ParticleCollisionEvent::createEmpty();
+    ParticleCollisionEvent* TheEvent = ParticleCollisionEvent::createEmpty();
 
     TheEvent->setSource(Source);
     TheEvent->setTimeStamp(TimeStamp);
@@ -87,7 +87,7 @@ ParticleCollisionEventPtr ParticleCollisionEvent::create(  FieldContainerPtr Sou
     TheEvent->setSecondarySystem(SecondarySystem);
     TheEvent->setSecondaryParticleIndex(SecondaryIndex);
 
-    return TheEvent;
+    return ParticleCollisionEventTransitPtr(TheEvent);
 }
 
 /***************************************************************************\
@@ -116,17 +116,17 @@ ParticleCollisionEvent::~ParticleCollisionEvent(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void ParticleCollisionEvent::changed(BitVector whichField, UInt32 origin)
+void ParticleCollisionEvent::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void ParticleCollisionEvent::dump(      UInt32    , 
+void ParticleCollisionEvent::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump ParticleCollisionEvent NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,44 +42,46 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGParticleSystemEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ParticleSystemEvent class. See \ref 
-           PageParticleSystemParticleSystemEvent for a description.
+/*! \brief ParticleSystemEvent class. See \ref
+           PageContribParticleSystemParticleSystemEvent for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemEvent : public ParticleSystemEventBase
+class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemEvent : public ParticleSystemEventBase
 {
-  private:
-
-    typedef ParticleSystemEventBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef ParticleSystemEventBase Inherited;
+    typedef ParticleSystemEvent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    static ParticleSystemEventPtr create(  FieldContainerPtr Source,
-                                            Time TimeStamp); 
+    static ParticleSystemEventTransitPtr create(  FieldContainerRefPtr Source,
+                                                  Time TimeStamp); 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ParticleSystemEventBase.
@@ -96,20 +98,24 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemEvent : public ParticleSyst
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ParticleSystemEvent(void); 
+    virtual ~ParticleSystemEvent(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ParticleSystemEventBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ParticleSystemEvent &source);
 };
 

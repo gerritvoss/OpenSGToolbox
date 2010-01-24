@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,26 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEPARTICLESYSTEMLIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGDiscParticleSystemDrawer.h"
-#include "ParticleSystem/OSGParticleSystem.h"
-#include <OpenSG/OSGDrawable.h>
+#include "OSGDrawable.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::DiscParticleSystemDrawer
-
-*/
+// Documentation for this class is emitted in the
+// OSGDiscParticleSystemDrawerBase.cpp file.
+// To modify it, please change the .fcd file (OSGDiscParticleSystemDrawer.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -69,8 +63,13 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DiscParticleSystemDrawer::initMethod (void)
+void DiscParticleSystemDrawer::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -78,102 +77,98 @@ void DiscParticleSystemDrawer::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-Action::ResultE DiscParticleSystemDrawer::draw(DrawActionBase *action, ParticleSystemPtr System, const MFUInt32& Sort)
+Action::ResultE DiscParticleSystemDrawer::draw(DrawEnv *pEnv,
+                                               ParticleSystemUnrecPtr System,
+                                               const MFUInt32& Sort)
 {
-	bool isSorted(Sort.getSize() > 0);
-	UInt32 NumParticles;
-	
-	Color4f Color;
-	bool areFadesSame(getCenterAlpha() == getEdgeAlpha());
+    bool isSorted(Sort.getSize() > 0);
+    UInt32 NumParticles;
 
-	if(isSorted)
-	{
-		NumParticles = Sort.getSize();
-	}
-	else
-	{
-		NumParticles = System->getNumParticles();
-	}
+    Color4f Color;
+    bool areFadesSame(getCenterAlpha() == getEdgeAlpha());
 
-	action->getStatistics()->getElem(ParticleSystem::statNParticles)->add(NumParticles);
+    if(isSorted)
+    {
+        NumParticles = Sort.getSize();
+    }
+    else
+    {
+        NumParticles = System->getNumParticles();
+    }
 
-	UInt32 Index;
+    UInt32 Index;
 
-	for(UInt32 i(0); i<NumParticles;++i)
-	{
-		if(isSorted)
-		{
-			Index = Sort[i];
-		}
-		else
-		{
-			Index = i;
-		}
-	//Loop through all particles
-		//Get The Normal of the Particle
-		Vec3f Normal = getQuadNormal(action,System, Index);
+    for(UInt32 i(0); i<NumParticles;++i)
+    {
+        if(isSorted)
+        {
+            Index = Sort[i];
+        }
+        else
+        {
+            Index = i;
+        }
+        //Loop through all particles
+        //Get The Normal of the Particle
+        Vec3f Normal = getQuadNormal(pEnv,System, Index);
 
 
-	    //Calculate the Binormal as the cross between Normal and Up
-	    Vec3f Binormal = getQuadUpDir(action,  System, Index).cross(Normal);
-		
-		//Get the Up Direction of the Particle
-		Vec3f Up = Normal.cross(Binormal);
+        //Calculate the Binormal as the cross between Normal and Up
+        Vec3f Binormal = getQuadUpDir(pEnv,  System, Index).cross(Normal);
 
-		//Determine Local Space of the Particle
+        //Get the Up Direction of the Particle
+        Vec3f Up = Normal.cross(Binormal);
 
-		Pnt3f Position = System->getPosition(Index);
+        //Determine Local Space of the Particle
 
-		//Determine the Width and Height of the quad
-		Real32 Width = System->getSize(Index).x()*getRadius(),
-			   Height =System->getSize(Index).y()*getRadius();
+        Pnt3f Position = System->getPosition(Index);
 
-		glBegin(GL_TRIANGLE_FAN);
-			//Draw the Disc
-			glNormal3fv(Normal.getValues());
-			
-			//Color for center point
-			Color = System->getColor(i);
-			glColor4f(Color.red(), Color.green(), Color.blue(), Color.alpha() * getCenterAlpha());
+        //Determine the Width and Height of the quad
+        Real32 Width = System->getSize(Index).x()*getRadius(),
+               Height =System->getSize(Index).y()*getRadius();
 
-			
-			//Center Point
-			glTexCoord2f(0.0f,0.0f);
-			glVertex3fv(Position.getValues());
+        glBegin(GL_TRIANGLE_FAN);
+        //Draw the Disc
+        glNormal3fv(Normal.getValues());
 
-			//Color for edges
-			if(!areFadesSame)
-			{
-				glColor4f(Color.red(), Color.green(), Color.blue(), Color.alpha() * getEdgeAlpha());
-			}
+        //Color for center point
+        Color = System->getColor(i);
+        glColor4f(Color.red(), Color.green(), Color.blue(), Color.alpha() * getCenterAlpha());
 
-			//Edge points
-			for(UInt32 j(0) ; j<_DiscPoints.size() ; ++j)
-			{
-				glTexCoord2fv(_DiscPoints[j].getValues());
-				glVertex3f(Position.x() + Width*_DiscPoints[j].x()*Binormal.x() + Height*_DiscPoints[j].y()*Up.x(),
-					       Position.y() + Width*_DiscPoints[j].x()*Binormal.y() + Height*_DiscPoints[j].y()*Up.y(),
-						   Position.z() + Width*_DiscPoints[j].x()*Binormal.z() + Height*_DiscPoints[j].y()*Up.z()
-					       );
-			}
-		glEnd();
-	}
-	
-    action->getStatistics()->getElem(Drawable::statNTriangles)->add((_DiscPoints.size()-1)*NumParticles);
-    action->getStatistics()->getElem(Drawable::statNVertices)->add((_DiscPoints.size()-1)*3*NumParticles);
-    action->getStatistics()->getElem(Drawable::statNPrimitives)->add((_DiscPoints.size()-1)*NumParticles);
 
-	//Generate a local space for the particle
+        //Center Point
+        glTexCoord2f(0.0f,0.0f);
+        glVertex3fv(Position.getValues());
+
+        //Color for edges
+        if(!areFadesSame)
+        {
+            glColor4f(Color.red(), Color.green(), Color.blue(), Color.alpha() * getEdgeAlpha());
+        }
+
+        //Edge points
+        for(UInt32 j(0) ; j<_DiscPoints.size() ; ++j)
+        {
+            glTexCoord2fv(_DiscPoints[j].getValues());
+            glVertex3f(Position.x() + Width*_DiscPoints[j].x()*Binormal.x() + Height*_DiscPoints[j].y()*Up.x(),
+                       Position.y() + Width*_DiscPoints[j].x()*Binormal.y() + Height*_DiscPoints[j].y()*Up.y(),
+                       Position.z() + Width*_DiscPoints[j].x()*Binormal.z() + Height*_DiscPoints[j].y()*Up.z()
+                      );
+        }
+        glEnd();
+    }
+
+    //Generate a local space for the particle
     return Action::Continue;
 }
 
-void DiscParticleSystemDrawer::adjustVolume(ParticleSystemPtr System, Volume & volume)
+void DiscParticleSystemDrawer::adjustVolume(ParticleSystemUnrecPtr System, Volume & volume)
 {
     //Get The Volume of the Particle System
-	Pnt3f MinVolPoint,MaxVolPoint;
+    Pnt3f MinVolPoint,MaxVolPoint;
     System->getVolume().getBounds(MinVolPoint,MaxVolPoint);
 
-	Real32 Width, Height, Max(0.0f);
+    Real32 Width, Height, Max(0.0f);
 
     //Maximum of Length and Height
     if(System->getNumParticles() > 0)
@@ -185,108 +180,146 @@ void DiscParticleSystemDrawer::adjustVolume(ParticleSystemPtr System, Volume & v
     volume.extendBy( MaxVolPoint + Vec3f(Max) );
 }
 
-/*-------------------------------------------------------------------------*\
- -  private                                                                 -
-\*-------------------------------------------------------------------------*/
-
-Vec3f DiscParticleSystemDrawer::getQuadNormal(DrawActionBase *action,ParticleSystemPtr System, UInt32 Index)
+void DiscParticleSystemDrawer::fill(DrawableStatsAttachment *pStat,
+                                    ParticleSystemUnrecPtr System,
+                                    const MFUInt32& Sort)
 {
-	Vec3f Direction;
-	
-	switch(getNormalSource())
-	{
-	case NORMAL_POSITION_CHANGE:
-		Direction = System->getPositionChange(Index);
-			Direction.normalize();
-		break;
-	case NORMAL_VELOCITY_CHANGE:
-		Direction = System->getVelocityChange(Index);
-			Direction.normalize();
-		break;
-	case NORMAL_VELOCITY:
-		Direction = System->getVelocity(Index);
-			Direction.normalize();
-		break;
-	case NORMAL_ACCELERATION:
-		Direction = System->getAcceleration(Index);
-			Direction.normalize();
-		break;
-	case NORMAL_PARTICLE_NORMAL:
-		Direction = System->getNormal(Index);
-		break;
-	case NORMAL_VIEW_POSITION:
-		{
-			//TODO: make this more efficient
-			Matrix ModelView = action->getCameraToWorld();
-			Vec3f Position(ModelView[0][3],ModelView[1][3],ModelView[2][3]);
-			Direction = Position - System->getPosition(Index);
-			Direction.normalize();
-		
-		break;
-		}
-	case NORMAL_STATIC:
-		Direction = getNormal();
-			break;
-	case NORMAL_VIEW_DIRECTION:
-	default:
-		{
-			//TODO: make this more efficient
-			Matrix ModelView = action->getCameraToWorld();
-			Direction.setValues(ModelView[2][0],ModelView[2][1],ModelView[2][2]);
-		break;
-		}
-	}
-	return Direction;
+    if(pStat == NULL)
+    {
+        FINFO(("DiscParticleSystemDrawer::fill(DrawableStatsAttachment *, ParticleSystemUnrecPtr , const MFUInt32& ): "
+               "No attachment given.\n"));
+
+        return;
+    }
+    if(System == NULL)
+    {
+        FINFO(("DiscParticleSystemDrawer::fill(DrawableStatsAttachment *, ParticleSystemUnrecPtr , const MFUInt32& ): "
+               "Particle System is NULL.\n"));
+
+        return;
+    }
+
+    UInt32 NumParticles;
+
+    if(Sort.size() > 0)
+    {
+        NumParticles = Sort.getSize();
+    }
+    else
+    {
+        NumParticles = System->getNumParticles();
+    }
+
+    pStat->setVertices((_DiscPoints.size()-1)*3*NumParticles);
+    pStat->setTriangles((_DiscPoints.size()-1)*NumParticles);
+    pStat->setValid(true);
 }
 
-Vec3f DiscParticleSystemDrawer::getQuadUpDir(DrawActionBase *action,ParticleSystemPtr System, UInt32 Index)
-{
-	Vec3f Direction;
-	
-	switch(getUpSource())
-	{
-	case UP_POSITION_CHANGE:
-		Direction = System->getPositionChange(Index);
-		break;
-	case UP_VELOCITY_CHANGE:
-		Direction = System->getVelocityChange(Index);
-		break;
-	case UP_VELOCITY:
-		Direction = System->getVelocity(Index);
-		break;
-	case UP_ACCELERATION:
-		Direction = System->getAcceleration(Index);
-		break;
-	case UP_PARTICLE_NORMAL:
-		Direction = System->getNormal(Index);
-		break;
-	case UP_STATIC:
-		Direction = getUp();
-		break;
-	case UP_VIEW_DIRECTION:
-	default:
-		{
-			//TODO: make this more efficient
-			Matrix ModelView = action->getCameraToWorld();
-			Direction.setValues(ModelView[1][0],ModelView[1][1],ModelView[1][2]);
-		break;
-		}
-	}
+/*-------------------------------------------------------------------------*\
+  -  private                                                                 -
+  \*-------------------------------------------------------------------------*/
 
-	return Direction;
+Vec3f DiscParticleSystemDrawer::getQuadNormal(DrawEnv *pEnv,ParticleSystemUnrecPtr System, UInt32 Index)
+{
+    Vec3f Direction;
+
+    switch(getNormalSource())
+    {
+        case NORMAL_POSITION_CHANGE:
+            Direction = System->getPositionChange(Index);
+            Direction.normalize();
+            break;
+        case NORMAL_VELOCITY_CHANGE:
+            Direction = System->getVelocityChange(Index);
+            Direction.normalize();
+            break;
+        case NORMAL_VELOCITY:
+            Direction = System->getVelocity(Index);
+            Direction.normalize();
+            break;
+        case NORMAL_ACCELERATION:
+            Direction = System->getAcceleration(Index);
+            Direction.normalize();
+            break;
+        case NORMAL_PARTICLE_NORMAL:
+            Direction = System->getNormal(Index);
+            break;
+        case NORMAL_VIEW_POSITION:
+            {
+                //TODO: make this more efficient
+                Matrix ModelView(pEnv->getCameraViewing()); 
+
+                Pnt3f Position(ModelView[3][0],ModelView[3][1],ModelView[3][2]);
+                Direction = Position - System->getPosition(Index);
+                Direction.normalize();
+
+                break;
+            }
+        case NORMAL_STATIC:
+            Direction = getNormal();
+            break;
+        case NORMAL_VIEW_DIRECTION:
+        default:
+            {
+                //TODO: make this more efficient
+                Matrix ModelView(pEnv->getCameraViewing()); 
+                ModelView.mult(pEnv->getObjectToWorld());
+                Direction.setValues(ModelView[0][2],ModelView[1][2],ModelView[2][2]);
+                break;
+            }
+    }
+    return Direction;
+}
+
+Vec3f DiscParticleSystemDrawer::getQuadUpDir(DrawEnv *pEnv,ParticleSystemUnrecPtr System, UInt32 Index)
+{
+    Vec3f Direction;
+
+    switch(getUpSource())
+    {
+        case UP_POSITION_CHANGE:
+            Direction = System->getPositionChange(Index);
+            break;
+        case UP_VELOCITY_CHANGE:
+            Direction = System->getVelocityChange(Index);
+            break;
+        case UP_VELOCITY:
+            Direction = System->getVelocity(Index);
+            break;
+        case UP_ACCELERATION:
+            Direction = System->getAcceleration(Index);
+            break;
+        case UP_PARTICLE_NORMAL:
+            Direction = System->getNormal(Index);
+            break;
+        case UP_STATIC:
+            Direction = getUp();
+            break;
+        case UP_VIEW_DIRECTION:
+        default:
+            {
+                //TODO: make this more efficient
+                Matrix ModelView(pEnv->getCameraViewing()); 
+                ModelView.mult(pEnv->getObjectToWorld());
+                Direction.setValues(ModelView[0][1],ModelView[1][1],ModelView[2][1]);
+                break;
+            }
+    }
+
+    return Direction;
 }
 
 void DiscParticleSystemDrawer::updateDiscPoints(void)
 {
-	_DiscPoints.clear();
-	const Real32 PI(3.14159f);
-	for(UInt32 i(0) ; i<=getSegments() ; ++i)
-	{
-		_DiscPoints.push_back(
-			Pnt2f(osgcos(static_cast<Real32>(i)/static_cast<Real32>(getSegments()) * 2.0 * PI),
-			      osgsin(static_cast<Real32>(i)/static_cast<Real32>(getSegments()) * 2.0 * PI))
-			);
-	}
+    _DiscPoints.clear();
+    const Real32 PI(3.14159f);
+    for(UInt32 i(0) ; i<=getSegments() ; ++i)
+    {
+        _DiscPoints.push_back(
+                              Pnt2f(osgCos(static_cast<Real32>(i)/static_cast<Real32>(getSegments()) * 2.0 * PI),
+                                    osgSin(static_cast<Real32>(i)/static_cast<Real32>(getSegments()) * 2.0 * PI))
+                             );
+    }
 }
 
 /*----------------------- constructors & destructors ----------------------*/
@@ -294,12 +327,12 @@ void DiscParticleSystemDrawer::updateDiscPoints(void)
 DiscParticleSystemDrawer::DiscParticleSystemDrawer(void) :
     Inherited()
 {
-	updateDiscPoints();
+    updateDiscPoints();
 }
 
 DiscParticleSystemDrawer::DiscParticleSystemDrawer(const DiscParticleSystemDrawer &source) :
     Inherited(source),
-		_DiscPoints(source._DiscPoints)
+    _DiscPoints(source._DiscPoints)
 {
 }
 
@@ -309,46 +342,22 @@ DiscParticleSystemDrawer::~DiscParticleSystemDrawer(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void DiscParticleSystemDrawer::changed(BitVector whichField, UInt32 origin)
+void DiscParticleSystemDrawer::changed(ConstFieldMaskArg whichField, 
+                                       UInt32            origin,
+                                       BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 
-	if(whichField & SegmentsFieldMask)
-	{
-		updateDiscPoints();
-	}
+    if(whichField & SegmentsFieldMask)
+    {
+        updateDiscPoints();
+    }
 }
 
-void DiscParticleSystemDrawer::dump(      UInt32    , 
-                         const BitVector ) const
+void DiscParticleSystemDrawer::dump(      UInt32    ,
+                                          const BitVector ) const
 {
     SLOG << "Dump DiscParticleSystemDrawer NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGDISCPARTICLESYSTEMDRAWERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDISCPARTICLESYSTEMDRAWERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDISCPARTICLESYSTEMDRAWERFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-
