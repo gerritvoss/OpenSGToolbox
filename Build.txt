@@ -1,0 +1,33 @@
+
+- tested on Linux only
+
+- checkout 
+
+  git://github.com/gerritvoss/OpenSGDevMaster_Toolbox.git
+
+  and
+
+  git://github.com/gerritvoss/OpenSGToolbox.git
+
+- edit the <OpenSG Root>/CMakeCacheInitial.txt file to match your setup/paths
+
+- run cmake to initially configure the build (note the CMakeCacheInitial.txt
+  file is only read once during the first configure run), e.g.:
+
+  on the same dir level as <OpenSG Root> do
+
+  mkdir OpenSGDevMaster_Toolbox.build
+  cd OpenSGDevMaster_Toolbox.build
+
+  cmake ../OpenSGDevMaster_Toolbox.git
+
+ - build
+
+  this should build OpenSG with everything under 
+
+  <Toolbox_Root>/Source/Base and
+  <Toolbox_Root>/Source/System
+
+  included.
+
+gerrit
