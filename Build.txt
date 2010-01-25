@@ -9,7 +9,9 @@
 
   git://github.com/gerritvoss/OpenSGToolbox.git
 
-- edit the <OpenSG Root>/CMakeCacheInitial.txt file to match your setup/paths
+- rename/copy the <OpenSG Root>/CMakeCacheInitial.txt.ref to  
+  <OpenSG Root>/CMakeCacheInitial.txt and edit the file to match 
+  your setup/paths
 
 - run cmake to initially configure the build (note the CMakeCacheInitial.txt
   file is only read once during the first configure run), e.g.:
