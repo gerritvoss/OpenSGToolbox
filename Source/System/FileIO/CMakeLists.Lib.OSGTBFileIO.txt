@@ -28,6 +28,16 @@ OSG_ADD_DIRECTORY("Utils")
 OSG_ADD_DIRECTORY("Attachments")
 OSG_ADD_DIRECTORY("XML")
 
+IF(${OSG_CMAKE_PASS} STREQUAL "OSGSETUP")
+  INSTALL(FILES 
+          XML/rapidxml.h XML/rapidxml_iterators.h XML/rapidxml_print.h
+          XML/rapidxml_utils.h XML/rapidxml-license.txt
+          DESTINATION include/OpenSG
+          PERMISSIONS OWNER_WRITE OWNER_READ
+                      GROUP_READ
+                      WORLD_READ)
+ENDIF(${OSG_CMAKE_PASS} STREQUAL "OSGSETUP")
+
 ##############################################################################
 # setup build
 ##############################################################################

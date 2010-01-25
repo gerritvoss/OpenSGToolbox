@@ -33,22 +33,22 @@ OSG_STORE_PROJECT_DEPENDENCIES()
 # collect sources
 ##############################################################################
 
-OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}")
 
-OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/ParticleSystem/Events")
-OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/ParticleSystem/MultipleParticleSystemAffectors")
-OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/ParticleSystem/ParticleSystemAffectors")
-OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/ParticleSystem/ParticleSystemDrawers")
-OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/ParticleSystem/ParticleGenerators")
-OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/ParticleSystem/ParticleAffectors")
-OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/ParticleSystem")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/ParticleSystem/Events")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/ParticleSystem/MultipleParticleSystemAffectors")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/ParticleSystem/ParticleSystemAffectors")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/ParticleSystem/ParticleSystemDrawers")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/ParticleSystem/ParticleGenerators")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/ParticleSystem/ParticleAffectors")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/ParticleSystem")
 
-OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/Utils")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Utils")
 
-OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/Distributions")
-OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/Distributions/1D")
-OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/Distributions/2D")
-OSG_ADD_DIRECTORY("Source/Contrib/ParticleSystem/src/Distributions/3D")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Distributions")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Distributions/1D")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Distributions/2D")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Distributions/3D")
 
 ##############################################################################
 # setup build
