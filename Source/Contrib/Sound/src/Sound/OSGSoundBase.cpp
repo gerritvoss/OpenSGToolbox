@@ -112,7 +112,7 @@ OSG_BEGIN_NAMESPACE
     Whether or not this sound should be streamed.
 */
 
-/*! \var Path            SoundBase::_sfFile
+/*! \var BoostPath       SoundBase::_sfFile
     The Path to the sound file to load this sound from.
 */
 
@@ -160,7 +160,6 @@ void SoundBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "Velocity",
@@ -172,7 +171,6 @@ void SoundBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Sound::getHandleVelocity));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -186,7 +184,6 @@ void SoundBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Pan",
@@ -198,7 +195,6 @@ void SoundBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Sound::getHandlePan));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -212,7 +208,6 @@ void SoundBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFInt32::Description(
         SFInt32::getClassType(),
         "Looping",
@@ -224,7 +219,6 @@ void SoundBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Sound::getHandleLooping));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
@@ -238,9 +232,8 @@ void SoundBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
-    pDesc = new SFPath::Description(
-        SFPath::getClassType(),
+    pDesc = new SFBoostPath::Description(
+        SFBoostPath::getClassType(),
         "File",
         "The Path to the sound file to load this sound from.\n",
         FileFieldId, FileFieldMask,
@@ -250,7 +243,6 @@ void SoundBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Sound::getHandleFile));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
@@ -263,7 +255,6 @@ void SoundBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Sound::getHandleEnable3D));
 
     oType.addInitialDesc(pDesc);
-
     pDesc = new SFEventProducerPtr::Description(
         SFEventProducerPtr::getClassType(),
         "EventProducer",
@@ -384,7 +375,7 @@ SoundBase::TypeObject SoundBase::_type(
     "\t</Field>\n"
     "\t<Field\n"
     "\t\tname=\"File\"\n"
-    "\t\ttype=\"Path\"\n"
+    "\t\ttype=\"BoostPath\"\n"
     "        category=\"data\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
@@ -596,14 +587,14 @@ const SFBool *SoundBase::getSFStreaming(void) const
 }
 
 
-SFPath *SoundBase::editSFFile(void)
+SFBoostPath *SoundBase::editSFFile(void)
 {
     editSField(FileFieldMask);
 
     return &_sfFile;
 }
 
-const SFPath *SoundBase::getSFFile(void) const
+const SFBoostPath *SoundBase::getSFFile(void) const
 {
     return &_sfFile;
 }
@@ -992,8 +983,8 @@ EditFieldHandlePtr SoundBase::editHandleStreaming      (void)
 
 GetFieldHandlePtr SoundBase::getHandleFile            (void) const
 {
-    SFPath::GetHandlePtr returnValue(
-        new  SFPath::GetHandle(
+    SFBoostPath::GetHandlePtr returnValue(
+        new  SFBoostPath::GetHandle(
              &_sfFile,
              this->getType().getFieldDesc(FileFieldId),
              const_cast<SoundBase *>(this)));
@@ -1003,8 +994,8 @@ GetFieldHandlePtr SoundBase::getHandleFile            (void) const
 
 EditFieldHandlePtr SoundBase::editHandleFile           (void)
 {
-    SFPath::EditHandlePtr returnValue(
-        new  SFPath::EditHandle(
+    SFBoostPath::EditHandlePtr returnValue(
+        new  SFBoostPath::EditHandle(
              &_sfFile,
              this->getType().getFieldDesc(FileFieldId),
              this));

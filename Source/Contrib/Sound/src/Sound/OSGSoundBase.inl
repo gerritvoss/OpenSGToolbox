@@ -264,7 +264,7 @@ void SoundBase::setStreaming(const bool value)
 //! Get the value of the Sound::_sfFile field.
 
 inline
-Path &SoundBase::editFile(void)
+BoostPath &SoundBase::editFile(void)
 {
     editSField(FileFieldMask);
 
@@ -273,14 +273,14 @@ Path &SoundBase::editFile(void)
 
 //! Get the value of the Sound::_sfFile field.
 inline
-const Path &SoundBase::getFile(void) const
+const BoostPath &SoundBase::getFile(void) const
 {
     return _sfFile.getValue();
 }
 
 //! Set the value of the Sound::_sfFile field.
 inline
-void SoundBase::setFile(const Path &value)
+void SoundBase::setFile(const BoostPath &value)
 {
     editSField(FileFieldMask);
 

@@ -93,7 +93,7 @@ A Sound Interface.
 	</Field>
 	<Field
 		name="File"
-		type="Path"
+		type="BoostPath"
         category="data"
 		cardinality="single"
 		visibility="external"

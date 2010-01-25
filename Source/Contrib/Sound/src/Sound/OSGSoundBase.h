@@ -67,7 +67,7 @@
 
 #include "OSGVecFields.h"               // Position type
 #include "OSGSysFields.h"               // Volume type
-#include "OSGPathFields.h"              // File type
+#include "OSGBoostPathFields.h"         // File type
 
 #include "OSGSoundFields.h"
 
@@ -76,7 +76,6 @@
 #include "OSGEventProducerType.h"
 #include "OSGMethodDescription.h"
 #include "OSGEventProducerPtrType.h"
-
 
 OSG_BEGIN_NAMESPACE
 
@@ -145,7 +144,7 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundBase : public AttachmentContainer
     typedef SFReal32          SFFrequencyType;
     typedef SFInt32           SFLoopingType;
     typedef SFBool            SFStreamingType;
-    typedef SFPath            SFFileType;
+    typedef SFBoostPath       SFFileType;
     typedef SFBool            SFEnable3DType;
     typedef SFEventProducerPtr          SFEventProducerType;
 
@@ -159,7 +158,6 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundBase : public AttachmentContainer
         SoundEndedMethodId = SoundLoopedMethodId + 1,
         NextProducedMethodId = SoundEndedMethodId + 1
     };
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -208,8 +206,8 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundBase : public AttachmentContainer
                   SFBool              *editSFStreaming      (void);
             const SFBool              *getSFStreaming       (void) const;
 
-                  SFPath              *editSFFile           (void);
-            const SFPath              *getSFFile            (void) const;
+                  SFBoostPath         *editSFFile           (void);
+            const SFBoostPath         *getSFFile            (void) const;
 
                   SFBool              *editSFEnable3D       (void);
             const SFBool              *getSFEnable3D        (void) const;
@@ -236,8 +234,8 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundBase : public AttachmentContainer
                   bool                &editStreaming      (void);
                   bool                 getStreaming       (void) const;
 
-                  Path                &editFile           (void);
-            const Path                &getFile            (void) const;
+                  BoostPath           &editFile           (void);
+            const BoostPath           &getFile            (void) const;
 
                   bool                &editEnable3D       (void);
                   bool                 getEnable3D        (void) const;
@@ -254,7 +252,7 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundBase : public AttachmentContainer
             void setFrequency      (const Real32 value);
             void setLooping        (const Int32 value);
             void setStreaming      (const bool value);
-            void setFile           (const Path &value);
+            void setFile           (const BoostPath &value);
             void setEnable3D       (const bool value);
 
     /*! \}                                                                 */
@@ -299,7 +297,6 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundBase : public AttachmentContainer
     EventProducerPtr   &editEventProducer  (void);
 
     /*! \}                                                                 */
-
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -326,7 +323,7 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundBase : public AttachmentContainer
     SFReal32          _sfFrequency;
     SFInt32           _sfLooping;
     SFBool            _sfStreaming;
-    SFPath            _sfFile;
+    SFBoostPath       _sfFile;
     SFBool            _sfEnable3D;
     SFEventProducerPtr _sfEventProducer;
 
