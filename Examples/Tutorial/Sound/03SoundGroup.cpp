@@ -226,19 +226,19 @@ int main(int argc, char **argv)
     SoundManager::the()->setCamera(mgr->getCamera());
 
     ZapSound = SoundManager::the()->createSound();
-        ZapSound->setFile(Path("./Data/zap.wav"));
+        ZapSound->setFile(BoostPath("./Data/zap.wav"));
         ZapSound->setVolume(1.0);
         ZapSound->setStreaming(false);
         ZapSound->setLooping(1);
 
     ClickSound = SoundManager::the()->createSound();
-        ClickSound->setFile(Path("./Data/click.wav"));
+        ClickSound->setFile(BoostPath("./Data/click.wav"));
         ClickSound->setVolume(1.0);
         ClickSound->setStreaming(false);
         ClickSound->setLooping(1);
 
     PopSound = SoundManager::the()->createSound();
-        PopSound->setFile(Path("./Data/pop.wav"));
+        PopSound->setFile(BoostPath("./Data/pop.wav"));
         PopSound->setVolume(1.0);
         PopSound->setStreaming(false);
         PopSound->setLooping(1);

@@ -330,7 +330,7 @@ int main(int argc, char **argv)
 
     FCFileType::FCTypeVector IgnoreTypes;
     //Save the Field Containers to a xml file
-    FCFileHandler::the()->write(Containers,Path("./Data/TestFieldContainers.xml"),IgnoreTypes);
+    FCFileHandler::the()->write(Containers,BoostPath("./Data/TestFieldContainers.xml"),IgnoreTypes);
 
     //Open Window
     Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);

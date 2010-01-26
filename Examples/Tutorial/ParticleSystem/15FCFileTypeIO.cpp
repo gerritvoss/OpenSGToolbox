@@ -139,16 +139,16 @@ int main(int argc, char **argv)
 
     /* Set up complete, now performing XML import */
 
-    Path ExecutableDirectory(argv[0]);
+    BoostPath ExecutableDirectory(argv[0]);
     ExecutableDirectory.remove_leaf();
-    Path FilePath;
+    BoostPath FilePath;
     if(argc > 1)
     {
-        FilePath  = Path(argv[1]);
+        FilePath  = BoostPath(argv[1]);
     }
     else
     {
-        FilePath = Path("./Data/mayaExport1.xml");
+        FilePath = BoostPath("./Data/mayaExport1.xml");
     }
 
     if(!boost::filesystem::exists(FilePath))
