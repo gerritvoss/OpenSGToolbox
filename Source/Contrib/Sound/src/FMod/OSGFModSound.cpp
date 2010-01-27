@@ -45,7 +45,7 @@
 
 #include <OSGConfig.h>
 
-#ifdef _OSG_USE_FMOD_
+#ifdef OSG_WITH_FMOD
 
 #include "OSGFModSoundManager.h"
 #include "OSGFModSound.h"

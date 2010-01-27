@@ -45,7 +45,7 @@
 #include "OSGConfig.h"
 #include "OSGContribSoundDef.h"
 
-#ifdef _OSG_USE_FMOD_
+#ifdef OSG_WITH_FMOD
 
 #include "OSGSoundManager.h"
 
@@ -127,6 +127,6 @@ OSG_END_NAMESPACE
 #include "OSGFModSoundManager.inl"
 
 
-#endif /* _OSG_USE_FMOD_ */
+#endif /* OSG_WITH_FMOD */
 
 #endif /* _OSGFMODSOUNDMANAGER_H_ */

@@ -42,7 +42,7 @@
 #pragma once
 #endif
 
-#ifdef _OSG_USE_FMOD_
+#ifdef OSG_WITH_FMOD
 
 #include "OSGFModSoundBase.h"
 #include "fmod.hpp"
@@ -181,6 +181,6 @@ OSG_END_NAMESPACE
 #include "OSGFModSoundBase.inl"
 #include "OSGFModSound.inl"
 
-#endif /* _OSG_USE_FMOD_ */
+#endif /* OSG_WITH_FMOD */
 
 #endif /* _OSGFMODSOUND_H_ */

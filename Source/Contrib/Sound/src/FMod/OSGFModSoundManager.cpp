@@ -47,7 +47,7 @@
 
 #include "OSGFModSoundManager.h"
 
-#ifdef _OSG_USE_FMOD_
+#ifdef OSG_WITH_FMOD
 #include "OSGFModSound.h"
 
 //fmod include files
@@ -259,4 +259,4 @@ FModSoundManager::~FModSoundManager(void)
 
 OSG_END_NAMESPACE
 
-#endif /* _OSG_USE_FMOD_ */
+#endif /* OSG_WITH_FMOD */
