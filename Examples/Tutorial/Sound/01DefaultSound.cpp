@@ -214,7 +214,7 @@ int main(int argc, char **argv)
 
     //Create Pop Sound
     ZapSound = SoundManager::the()->createSound();
-    ZapSound->setFile(Path("./Data/zap.wav"));
+    ZapSound->setFile(BoostPath("./Data/zap.wav"));
     ZapSound->setVolume(1.0);
     ZapSound->setStreaming(false);
     ZapSound->setLooping(1);
@@ -224,7 +224,7 @@ int main(int argc, char **argv)
 
     //Create Click Sound
     ClickSound = SoundManager::the()->createSound();
-    ClickSound->setFile(Path("./Data/click.wav"));
+    ClickSound->setFile(BoostPath("./Data/click.wav"));
     ClickSound->setVolume(1.0);
     ClickSound->setStreaming(false);
     ClickSound->setLooping(0);

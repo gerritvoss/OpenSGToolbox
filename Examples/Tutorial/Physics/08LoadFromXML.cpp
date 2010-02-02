@@ -172,7 +172,7 @@ int main(int argc, char **argv)
 
     //Setup Physics Scene
     FCFileType::FCPtrStore NewContainers;
-    NewContainers = FCFileHandler::the()->read(Path("Data/08PhysicsData.xml"));
+    NewContainers = FCFileHandler::the()->read(BoostPath("Data/08PhysicsData.xml"));
 
     FCFileType::FCPtrStore::iterator Itor;
     for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
@@ -204,7 +204,7 @@ int main(int argc, char **argv)
 
     FCFileType::FCPtrStore SaveContainers;
     SaveContainers.insert(rootNode);
-    FCFileHandler::the()->write(SaveContainers, Path("08Output.xml"));
+    FCFileHandler::the()->write(SaveContainers, BoostPath("08Output.xml"));
 
     //Find the Physics Space Node
     spaceGroupNode = dynamic_pointer_cast<Node>(getFieldContainer("Physics Space Group Node"));

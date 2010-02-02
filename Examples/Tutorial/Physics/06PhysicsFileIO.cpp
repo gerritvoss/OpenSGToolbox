@@ -323,7 +323,7 @@ PhysicsJointUnrecPtr buildHingeJointMesh(void)
     PhysicsHingeJointUnrecPtr TutorialHingeJoint;
 
     FCFileType::FCPtrStore Containers;
-    Containers = FCFileHandler::the()->read(Path("./Data/06HingeJoint.xml"));
+    Containers = FCFileHandler::the()->read(BoostPath("./Data/06HingeJoint.xml"));
 
     for(FCFileType::FCPtrStore::iterator Itor(Containers.begin()) ; Itor != Containers.end() ; ++Itor)
     {

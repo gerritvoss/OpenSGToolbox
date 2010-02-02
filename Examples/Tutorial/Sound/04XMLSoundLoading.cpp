@@ -225,7 +225,7 @@ int main(int argc, char **argv)
 
     //Load Sound Definitions
 	FCFileType::FCPtrStore NewContainers;
-    NewContainers = FCFileHandler::the()->read(Path("Data/04SoundData.xml"));
+    NewContainers = FCFileHandler::the()->read(BoostPath("Data/04SoundData.xml"));
 
     FCFileType::FCPtrStore::iterator Itor;
     TutorialSoundListener TheSoundListerner;

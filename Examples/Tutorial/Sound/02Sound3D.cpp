@@ -247,7 +247,7 @@ int main(int argc, char **argv)
     SoundManager::the()->setCamera(mgr->getCamera());
 
     PopSound = SoundManager::the()->createSound();
-        PopSound->setFile(Path("./Data/pop.wav"));
+        PopSound->setFile(BoostPath("./Data/pop.wav"));
         PopSound->setVolume(1.0);
         PopSound->setStreaming(false);
         PopSound->setLooping(-1);
