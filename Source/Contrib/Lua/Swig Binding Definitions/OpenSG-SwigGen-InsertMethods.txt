@@ -1,4 +1,4 @@
-These values need to be inserted in the swig_osg_FieldContainerPtr_methods array that is defined in OSG_wrap.cpp after every swig code generation.
+These values need to be inserted in the swig_OSG_FieldContainerRefPtr_methods array that is defined in OSG_wrap.cpp after every swig code generation.
 
 
     { "getFieldValue",getFieldValue},
@@ -9,10 +9,10 @@ These values need to be inserted in the swig_osg_FieldContainerPtr_methods array
 
 Add the following to the end of the file OSG_wrap.cpp after code generation
 
-
-#include "Bindings/OSG_wrap.h"
-void push_FieldContainer_on_lua(lua_State* L, osg::FieldContainerPtr value)
+#include "OSG_wrap.h"
+void push_FieldContainer_on_lua(lua_State* L, OSG::FieldContainerRefPtr value)
 {
-    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) value);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1);
+    OSG::FieldContainerRefPtr * resultptr = new OSG::FieldContainerRefPtr((const OSG::FieldContainerRefPtr &) value);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__FieldContainerRefPtr,1);
 }
+
