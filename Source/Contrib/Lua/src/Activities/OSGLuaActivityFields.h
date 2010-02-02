@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,75 +54,110 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribLuaDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGLuaDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/Toolbox/OSGActivityFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class LuaActivity;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! LuaActivityPtr
+OSG_GEN_CONTAINERPTR(LuaActivity);
 
-typedef FCPtr<ActivityPtr, LuaActivity> LuaActivityPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpLuaFieldTraits
+/*! \ingroup GrpContribLuaFieldTraits
+    \ingroup GrpLibOSGContribLua
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<LuaActivityPtr> : 
-    public FieldTraitsRecurseMapper<LuaActivityPtr, true>
+struct FieldTraits<LuaActivity *> :
+    public FieldTraitsFCPtrBase<LuaActivity *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFLuaActivityPtr"; }
-    static const char *getMName(void) { return "MFLuaActivityPtr"; }
+    typedef FieldTraits<LuaActivity *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBLUA_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFLuaActivityPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<LuaActivityPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<LuaActivity *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecLuaActivityPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<LuaActivity *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecLuaActivityPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<LuaActivity *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakLuaActivityPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<LuaActivity *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdLuaActivityPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpLuaFieldSingle */
 
-typedef SField<LuaActivityPtr> SFLuaActivityPtr;
-#endif
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribLuaFieldSFields */
+typedef PointerSField<LuaActivity *,
+                      RecordedRefCountPolicy  > SFRecLuaActivityPtr;
+/*! \ingroup GrpContribLuaFieldSFields */
+typedef PointerSField<LuaActivity *,
+                      UnrecordedRefCountPolicy> SFUnrecLuaActivityPtr;
+/*! \ingroup GrpContribLuaFieldSFields */
+typedef PointerSField<LuaActivity *,
+                      WeakRefCountPolicy      > SFWeakLuaActivityPtr;
+/*! \ingroup GrpContribLuaFieldSFields */
+typedef PointerSField<LuaActivity *,
+                      NoRefCountPolicy        > SFUncountedLuaActivityPtr;
 
-#ifndef OSG_COMPILELUAACTIVITYINST
-OSG_DLLEXPORT_DECL1(SField, LuaActivityPtr, OSG_LUALIB_DLLTMPLMAPPING)
-#endif
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpLuaFieldMulti */
 
-typedef MField<LuaActivityPtr> MFLuaActivityPtr;
-#endif
 
-#ifndef OSG_COMPILELUAACTIVITYINST
-OSG_DLLEXPORT_DECL1(MField, LuaActivityPtr, OSG_LUALIB_DLLTMPLMAPPING)
-#endif
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribLuaFieldSFields \ingroup GrpLibOSGContribLua */
+struct SFRecLuaActivityPtr : 
+    public PointerSField<LuaActivity *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribLuaFieldSFields \ingroup GrpLibOSGContribLua */
+struct SFUnrecLuaActivityPtr : 
+    public PointerSField<LuaActivity *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribLuaFieldSFields \ingroup GrpLibOSGContribLua */
+struct SFWeakLuaActivityPtr :
+    public PointerSField<LuaActivity *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribLuaFieldSFields \ingroup GrpLibOSGContribLua */
+struct SFUncountedLuaActivityPtr :
+    public PointerSField<LuaActivity *,
+                         NoRefCountPolicy> {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILELUALIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGLuaErrorEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::LuaErrorEvent
-
-*/
+// Documentation for this class is emitted in the
+// OSGLuaErrorEventBase.cpp file.
+// To modify it, please change the .fcd file (OSGLuaErrorEvent.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,18 +62,23 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void LuaErrorEvent::initMethod (void)
+void LuaErrorEvent::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-LuaErrorEventPtr LuaErrorEvent::create(  FieldContainerPtr Source,
-                                    Time TimeStamp,
-                                    lua_State* State,
-                                    int LuaStatus,
-                                    const std::list<std::string>& StackTrace,
-                                    bool EnableStackTrace)
+LuaErrorEventTransitPtr LuaErrorEvent::create(FieldContainerRefPtr Source,
+                                              Time TimeStamp,
+                                              lua_State* State,
+                                              int LuaStatus,
+                                              const std::list<std::string>& StackTrace,
+                                              bool EnableStackTrace)
 {
-    LuaErrorEventPtr TheEvent = LuaErrorEvent::createEmpty();
+    LuaErrorEvent* TheEvent = LuaErrorEvent::createEmpty();
 
     TheEvent->setSource(Source);
     TheEvent->setTimeStamp(TimeStamp);
@@ -92,8 +92,9 @@ LuaErrorEventPtr LuaErrorEvent::create(  FieldContainerPtr Source,
     }
     TheEvent->setStackTraceEnabled(EnableStackTrace);
 
-    return TheEvent;
+    return LuaErrorEventTransitPtr(TheEvent);
 }
+
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -121,17 +122,17 @@ LuaErrorEvent::~LuaErrorEvent(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void LuaErrorEvent::changed(BitVector whichField, UInt32 origin)
+void LuaErrorEvent::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void LuaErrorEvent::dump(      UInt32    , 
+void LuaErrorEvent::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump LuaErrorEvent NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

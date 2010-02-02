@@ -4,6 +4,8 @@
  *                                                                           *
  *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
+ *                                                                           *
  *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -38,18 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-OSG_BEGIN_NAMESPACE
 
-inline
-const lua_State* LuaErrorEvent::getLuaState(void) const
+#include "OSGConfig.h"
+#include "OSGBaseInitFunctions.h"
+
+#define SVN_REVISION "382"
+
+/*! Append our version to the library versions string 
+*/
+static bool versionAdder(void)
 {
-    return static_cast<const lua_State*>(getLuaStateVoidP());
+    OSG::addLibraryVersion("OSGContribLua:           " OSG_VERSION_STRING 
+                           "\tRev: "               SVN_REVISION );    
+    return true;
 }
 
-inline
-std::string LuaErrorEvent::getErrorString(void) const
-{
-    return lua_tostring(const_cast<lua_State*>(getLuaState()), -1);
-}
-
-OSG_END_NAMESPACE
+static OSG::StaticInitFuncWrapper versionAdderWrapper(versionAdder);

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,29 +40,24 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILELUALIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGLuaActivity.h"
-#include "Manager/OSGLuaManager.h"
-#include "Bindings/OSG_wrap.h"
-#include <OpenSG/Toolbox/OSGFilePathAttachment.h>
+#include "OSGLuaManager.h"
+#include "OSG_wrap.h"
+#include "OSGFilePathAttachment.h"
 #include <fstream>
 #include <sstream>
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::LuaActivity
-
-*/
+// Documentation for this class is emitted in the
+// OSGLuaActivityBase.cpp file.
+// To modify it, please change the .fcd file (OSGLuaActivity.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -72,14 +67,19 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void LuaActivity::initMethod (void)
+void LuaActivity::initMethod(InitPhase ePhase)
 {
-    FilePathAttachment::registerHandler(LuaActivity::getClassType(),LuaActivity::createLuaActivity);
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::Static)
+    {
+        FilePathAttachment::registerHandler(LuaActivity::getClassType(),LuaActivity::createLuaActivity);
+    }
 }
 
-FieldContainerPtr LuaActivity::createLuaActivity( const Path& FilePath )
+FieldContainerTransitPtr LuaActivity::createLuaActivity( const BoostPath& FilePath )
 {
-    LuaActivityPtr Result = LuaActivity::create();
+    LuaActivity* Result = LuaActivity::createEmpty();
     FilePathAttachment::setFilePath(Result, FilePath);
 
     std::ifstream TheFile;
@@ -94,25 +94,24 @@ FieldContainerPtr LuaActivity::createLuaActivity( const Path& FilePath )
             Code << TheFile.rdbuf();
             TheFile.close();
 
-            beginEditCP(Result, LuaActivity::CodeFieldMask);
                 Result->setCode(Code.str());
-            endEditCP(Result, LuaActivity::CodeFieldMask);
         }
-        return Result;
+        return FieldContainerTransitPtr(Result);
     }
     catch(std::fstream::failure &f)
     {
         SWARNING << "LuaActivity::createLuaActivity(): Error reading file" << FilePath.string() << ": " << f.what() << std::endl;
-        return NullFC;
+        return FieldContainerTransitPtr(NULL);
     }
 
 }
+
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
-void LuaActivity::eventProduced(const EventPtr EventDetails, UInt32 ProducedEventId)
+void LuaActivity::eventProduced(const EventUnrecPtr EventDetails, UInt32 ProducedEventId)
 {
     if(!getCode().empty())
     {
@@ -130,7 +129,7 @@ void LuaActivity::eventProduced(const EventPtr EventDetails, UInt32 ProducedEven
         lua_getglobal(LuaState, getEntryFunction().c_str());
 
         //Push on the arguments
-        push_FieldContainer_on_lua(LuaState, EventDetails);   //Argument 1: the EventPtr
+        push_FieldContainer_on_lua(LuaState, EventDetails);   //Argument 1: the EventUnrecPtr
 
         lua_pushnumber(LuaState,ProducedEventId);             //Argument 2: the ProducedEvent ID
 
@@ -166,17 +165,17 @@ LuaActivity::~LuaActivity(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void LuaActivity::changed(BitVector whichField, UInt32 origin)
+void LuaActivity::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void LuaActivity::dump(      UInt32    , 
+void LuaActivity::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump LuaActivity NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

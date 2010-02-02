@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,156 +50,204 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILELUAACTIVITYINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGLuaActivityBase.h"
 #include "OSGLuaActivity.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  LuaActivityBase::CodeFieldMask = 
-    (TypeTraits<BitVector>::One << LuaActivityBase::CodeFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  LuaActivityBase::EntryFunctionFieldMask = 
-    (TypeTraits<BitVector>::One << LuaActivityBase::EntryFunctionFieldId);
+/*! \class OSG::LuaActivity
+    
+ */
 
-const OSG::BitVector LuaActivityBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var std::string     LuaActivityBase::_sfCode
     
 */
+
 /*! \var std::string     LuaActivityBase::_sfEntryFunction
     
 */
 
-//! LuaActivity description
 
-FieldDescription *LuaActivityBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<LuaActivity *>::_type("LuaActivityPtr", "ActivityPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(LuaActivity *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           LuaActivity *,
+                           0);
+
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void LuaActivityBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFString::getClassType(), 
-                     "Code", 
-                     CodeFieldId, CodeFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&LuaActivityBase::editSFCode)),
-    new FieldDescription(SFString::getClassType(), 
-                     "EntryFunction", 
-                     EntryFunctionFieldId, EntryFunctionFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&LuaActivityBase::editSFEntryFunction))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType LuaActivityBase::_type(
-    "LuaActivity",
-    "Activity",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&LuaActivityBase::createEmpty),
+    pDesc = new SFString::Description(
+        SFString::getClassType(),
+        "Code",
+        "",
+        CodeFieldId, CodeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&LuaActivity::editHandleCode),
+        static_cast<FieldGetMethodSig >(&LuaActivity::getHandleCode));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFString::Description(
+        SFString::getClassType(),
+        "EntryFunction",
+        "",
+        EntryFunctionFieldId, EntryFunctionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&LuaActivity::editHandleEntryFunction),
+        static_cast<FieldGetMethodSig >(&LuaActivity::getHandleEntryFunction));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+LuaActivityBase::TypeObject LuaActivityBase::_type(
+    LuaActivityBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&LuaActivityBase::createEmptyLocal),
     LuaActivity::initMethod,
-    _desc,
-    sizeof(_desc));
+    LuaActivity::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&LuaActivity::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"LuaActivity\"\n"
+    "\tparent=\"Activity\"\n"
+    "    library=\"ContribLua\"\n"
+    "    pointerfieldtypes=\"single\"\n"
+    "    structure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    isBundle=\"true\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"Code\"\n"
+    "\t\ttype=\"std::string\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "        defaultValue=\"\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"EntryFunction\"\n"
+    "\t\ttype=\"std::string\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "        defaultValue=\"\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(LuaActivityBase, LuaActivityPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &LuaActivityBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &LuaActivityBase::getType(void) const 
+FieldContainerType &LuaActivityBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr LuaActivityBase::shallowCopy(void) const 
-{ 
-    LuaActivityPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const LuaActivity *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 LuaActivityBase::getContainerSize(void) const 
-{ 
-    return sizeof(LuaActivity); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void LuaActivityBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &LuaActivityBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<LuaActivityBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void LuaActivityBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 LuaActivityBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((LuaActivityBase *) &other, whichField, sInfo);
+    return sizeof(LuaActivity);
 }
-void LuaActivityBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFString *LuaActivityBase::editSFCode(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(CodeFieldMask);
+
+    return &_sfCode;
 }
 
-void LuaActivityBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFString *LuaActivityBase::getSFCode(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfCode;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-LuaActivityBase::LuaActivityBase(void) :
-    _sfCode                   (), 
-    _sfEntryFunction          (), 
-    Inherited() 
+SFString *LuaActivityBase::editSFEntryFunction(void)
 {
+    editSField(EntryFunctionFieldMask);
+
+    return &_sfEntryFunction;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-LuaActivityBase::LuaActivityBase(const LuaActivityBase &source) :
-    _sfCode                   (source._sfCode                   ), 
-    _sfEntryFunction          (source._sfEntryFunction          ), 
-    Inherited                 (source)
+const SFString *LuaActivityBase::getSFEntryFunction(void) const
 {
+    return &_sfEntryFunction;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-LuaActivityBase::~LuaActivityBase(void)
-{
-}
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 LuaActivityBase::getBinSize(const BitVector &whichField)
+UInt32 LuaActivityBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -207,18 +255,16 @@ UInt32 LuaActivityBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfCode.getBinSize();
     }
-
     if(FieldBits::NoField != (EntryFunctionFieldMask & whichField))
     {
         returnValue += _sfEntryFunction.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void LuaActivityBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void LuaActivityBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -226,17 +272,14 @@ void LuaActivityBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfCode.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EntryFunctionFieldMask & whichField))
     {
         _sfEntryFunction.copyToBin(pMem);
     }
-
-
 }
 
-void LuaActivityBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void LuaActivityBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -244,73 +287,217 @@ void LuaActivityBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfCode.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EntryFunctionFieldMask & whichField))
     {
         _sfEntryFunction.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void LuaActivityBase::executeSyncImpl(      LuaActivityBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+LuaActivityTransitPtr LuaActivityBase::createLocal(BitVector bFlags)
 {
+    LuaActivityTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (CodeFieldMask & whichField))
-        _sfCode.syncWith(pOther->_sfCode);
+        fc = dynamic_pointer_cast<LuaActivity>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (EntryFunctionFieldMask & whichField))
-        _sfEntryFunction.syncWith(pOther->_sfEntryFunction);
-
-
-}
-#else
-void LuaActivityBase::executeSyncImpl(      LuaActivityBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (CodeFieldMask & whichField))
-        _sfCode.syncWith(pOther->_sfCode);
-
-    if(FieldBits::NoField != (EntryFunctionFieldMask & whichField))
-        _sfEntryFunction.syncWith(pOther->_sfEntryFunction);
-
-
-
+    return fc;
 }
 
-void LuaActivityBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+LuaActivityTransitPtr LuaActivityBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    LuaActivityTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<LuaActivity>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+LuaActivityTransitPtr LuaActivityBase::create(void)
+{
+    return createLocal();
+}
+
+LuaActivity *LuaActivityBase::createEmptyLocal(BitVector bFlags)
+{
+    LuaActivity *returnValue;
+
+    newPtr<LuaActivity>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+LuaActivity *LuaActivityBase::createEmpty(void)
+{
+    return createEmptyLocal();
+}
+
+
+FieldContainerTransitPtr LuaActivityBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    LuaActivity *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const LuaActivity *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr LuaActivityBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    LuaActivity *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const LuaActivity *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr LuaActivityBase::shallowCopy(void) const
+{
+    return shallowCopyLocal();
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+LuaActivityBase::LuaActivityBase(void) :
+    Inherited(),
+    _sfCode                   (),
+    _sfEntryFunction          ()
+{
+}
+
+LuaActivityBase::LuaActivityBase(const LuaActivityBase &source) :
+    Inherited(source),
+    _sfCode                   (source._sfCode                   ),
+    _sfEntryFunction          (source._sfEntryFunction          )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+LuaActivityBase::~LuaActivityBase(void)
+{
+}
+
+
+GetFieldHandlePtr LuaActivityBase::getHandleCode            (void) const
+{
+    SFString::GetHandlePtr returnValue(
+        new  SFString::GetHandle(
+             &_sfCode,
+             this->getType().getFieldDesc(CodeFieldId),
+             const_cast<LuaActivityBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr LuaActivityBase::editHandleCode           (void)
+{
+    SFString::EditHandlePtr returnValue(
+        new  SFString::EditHandle(
+             &_sfCode,
+             this->getType().getFieldDesc(CodeFieldId),
+             this));
+
+
+    editSField(CodeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr LuaActivityBase::getHandleEntryFunction   (void) const
+{
+    SFString::GetHandlePtr returnValue(
+        new  SFString::GetHandle(
+             &_sfEntryFunction,
+             this->getType().getFieldDesc(EntryFunctionFieldId),
+             const_cast<LuaActivityBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr LuaActivityBase::editHandleEntryFunction  (void)
+{
+    SFString::EditHandlePtr returnValue(
+        new  SFString::EditHandle(
+             &_sfEntryFunction,
+             this->getType().getFieldDesc(EntryFunctionFieldId),
+             this));
+
+
+    editSField(EntryFunctionFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void LuaActivityBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    LuaActivity *pThis = static_cast<LuaActivity *>(this);
+
+    pThis->execSync(static_cast<LuaActivity *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *LuaActivityBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    LuaActivity *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const LuaActivity *>(pRefAspect),
+                  dynamic_cast<const LuaActivity *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<LuaActivityPtr>::_type("LuaActivityPtr", "ActivityPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(LuaActivityPtr, OSG_LUALIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(LuaActivityPtr, OSG_LUALIB_DLLTMPLMAPPING);
+void LuaActivityBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

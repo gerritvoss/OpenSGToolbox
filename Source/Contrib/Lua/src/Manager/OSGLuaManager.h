@@ -42,34 +42,34 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGLuaDef.h"
+#include "OSGConfig.h"
+#include "OSGContribLuaDef.h"
 
 #include "lua.hpp"
 #include <set>
 #include <list>
-#include "Events/OSGLuaListener.h"
+#include "OSGLuaListener.h"
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
-#include <OpenSG/Toolbox/OSGEventProducer.h>
-#include <OpenSG/Toolbox/OSGEventProducerType.h>
-#include <OpenSG/Toolbox/OSGMethodDescription.h>
-#include <OpenSG/Toolbox/OSGPathType.h>
+#include "OSGEventConnection.h"
+#include "OSGEventProducer.h"
+#include "OSGEventProducerType.h"
+#include "OSGMethodDescription.h"
+#include "OSGPathType.h"
 
 #include <boost/function.hpp>
 
 OSG_BEGIN_NAMESPACE
 
 /*! \brief LuaManager class. See \ref 
-           PageSoundLuaManager for a description.
-*/
+  PageSoundLuaManager for a description.
+  */
 
-class OSG_LUALIB_DLLMAPPING LuaManager
+class OSG_CONTRIBLUA_DLLMAPPING LuaManager
 {
     friend class LuaActivity;
 
   private:
-      typedef EventProducer ProducerInherited;
+    typedef EventProducer ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -77,33 +77,33 @@ class OSG_LUALIB_DLLMAPPING LuaManager
 
     enum
     {
-        LuaErrorMethodId      = 1,
-        NextMethodId              = LuaErrorMethodId            + 1
+        LuaErrorMethodId = 1,
+        NextMethodId     = LuaErrorMethodId            + 1
     };
-      
+
     static LuaManager* the(void);
 
 
     void runScript(const std::string& Script);
-    void runScript(const Path& ScriptPath);
+    void runScript(const BoostPath& ScriptPath);
 
     static void report_errors(lua_State *L, int status);
 
-	static bool init(void);
-	bool recreateLuaState(void);
-	bool openLuaBindingLib(OpenBoundLuaLibFunctor OpenFunc);
-	static bool uninit(void);
+    static bool init(void);
+    bool recreateLuaState(void);
+    bool openLuaBindingLib(OpenBoundLuaLibFunctor OpenFunc);
+    static bool uninit(void);
 
-	void setPackagePath(const std::string& Pattern);
-	std::string getPackagePath(void) const;
+    void setPackagePath(const std::string& Pattern);
+    std::string getPackagePath(void) const;
 
-	void setPackageCPath(const std::string& Pattern);
-	std::string getPackageCPath(void) const;
+    void setPackageCPath(const std::string& Pattern);
+    std::string getPackageCPath(void) const;
 
-    EventConnection addLuaListener(LuaListenerPtr Listener);
-    bool isLuaListenerAttached(LuaListenerPtr Listener) const;
-    void removeLuaListener(LuaListenerPtr Listener);
-    
+    EventConnection addLuaListener(LuaListenerRefPtr Listener);
+    bool isLuaListenerAttached(LuaListenerRefPtr Listener) const;
+    void removeLuaListener(LuaListenerRefPtr Listener);
+
     static void FunctionHook(lua_State *l, lua_Debug *ar);
 
     void setEnableStackTrace(bool Enable);
@@ -114,15 +114,15 @@ class OSG_LUALIB_DLLMAPPING LuaManager
     static        UInt32              getProducerClassTypeId(void); 
     virtual const EventProducerType &getProducerType(void) const; 
 
-    EventConnection attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
-    bool isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const;
-    UInt32 getNumActivitiesAttached(UInt32 ProducedEventId) const;
-    ActivityPtr getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const;
-    void detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
-    UInt32 getNumProducedEvents(void) const;
-    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
-    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
-    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
+    EventConnection          attachActivity(ActivityRefPtr       TheActivity, UInt32 ProducedEventId);
+    bool                     isActivityAttached(ActivityRefPtr   TheActivity, UInt32 ProducedEventId) const;
+    UInt32                   getNumActivitiesAttached(UInt32     ProducedEventId) const;
+    ActivityRefPtr           getAttachedActivity(UInt32          ProducedEventId, UInt32 ActivityIndex) const;
+    void                     detachActivity(ActivityRefPtr       TheActivity, UInt32 ProducedEventId);
+    UInt32                   getNumProducedEvents(void)          const;
+    const MethodDescription *getProducedEventDescription(const   Char8 *ProducedEventName) const;
+    const MethodDescription *getProducedEventDescription(UInt32  ProducedEventId) const;
+    UInt32                   getProducedEventId(const            Char8 *ProducedEventName) const;
 
     lua_State *getLuaState(void);
     /*==========================  PRIVATE  ================================*/
@@ -154,17 +154,17 @@ class OSG_LUALIB_DLLMAPPING LuaManager
     /*! \}                                                                 */
 
     void printStackTrace(void) const;
-    
+
 
     static lua_State *_State;
-    
-	typedef std::set<LuaListenerPtr> LuaListenerSet;
+
+    typedef std::set<LuaListenerRefPtr> LuaListenerSet;
     typedef LuaListenerSet::iterator LuaListenerSetItor;
     typedef LuaListenerSet::const_iterator LuaListenerSetConstItor;
     LuaListenerSet       _LuaListeners;
     std::list<std::string> _LuaStack;
     bool _EnableStackTrace;
-        
+
     void checkError(int Status);
     void produceError(int Status);
 };
@@ -176,3 +176,4 @@ OSG_END_NAMESPACE
 #include "OSGLuaManager.inl"
 
 #endif /* _OSGLUAMANAGER_H_ */
+

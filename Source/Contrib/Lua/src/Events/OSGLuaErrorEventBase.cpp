@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,183 +50,283 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILELUAERROREVENTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGLuaErrorEventBase.h"
 #include "OSGLuaErrorEvent.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  LuaErrorEventBase::LuaStateVoidPFieldMask = 
-    (TypeTraits<BitVector>::One << LuaErrorEventBase::LuaStateVoidPFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  LuaErrorEventBase::StatusFieldMask = 
-    (TypeTraits<BitVector>::One << LuaErrorEventBase::StatusFieldId);
+/*! \class OSG::LuaErrorEvent
+    
+ */
 
-const OSG::BitVector  LuaErrorEventBase::StackTraceFieldMask = 
-    (TypeTraits<BitVector>::One << LuaErrorEventBase::StackTraceFieldId);
-
-const OSG::BitVector  LuaErrorEventBase::StackTraceEnabledFieldMask = 
-    (TypeTraits<BitVector>::One << LuaErrorEventBase::StackTraceEnabledFieldId);
-
-const OSG::BitVector LuaErrorEventBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var VoidP           LuaErrorEventBase::_sfLuaStateVoidP
     
 */
+
 /*! \var Int32           LuaErrorEventBase::_sfStatus
     
 */
+
 /*! \var std::string     LuaErrorEventBase::_mfStackTrace
     
 */
+
 /*! \var bool            LuaErrorEventBase::_sfStackTraceEnabled
     
 */
 
-//! LuaErrorEvent description
 
-FieldDescription *LuaErrorEventBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<LuaErrorEvent *>::_type("LuaErrorEventPtr", "EventPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(LuaErrorEvent *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           LuaErrorEvent *,
+                           0);
+
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void LuaErrorEventBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFVoidP::getClassType(), 
-                     "LuaStateVoidP", 
-                     LuaStateVoidPFieldId, LuaStateVoidPFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&LuaErrorEventBase::editSFLuaStateVoidP)),
-    new FieldDescription(SFInt32::getClassType(), 
-                     "Status", 
-                     StatusFieldId, StatusFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&LuaErrorEventBase::editSFStatus)),
-    new FieldDescription(MFString::getClassType(), 
-                     "StackTrace", 
-                     StackTraceFieldId, StackTraceFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&LuaErrorEventBase::editMFStackTrace)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "StackTraceEnabled", 
-                     StackTraceEnabledFieldId, StackTraceEnabledFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&LuaErrorEventBase::editSFStackTraceEnabled))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType LuaErrorEventBase::_type(
-    "LuaErrorEvent",
-    "Event",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&LuaErrorEventBase::createEmpty),
+    pDesc = new SFVoidP::Description(
+        SFVoidP::getClassType(),
+        "LuaStateVoidP",
+        "",
+        LuaStateVoidPFieldId, LuaStateVoidPFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&LuaErrorEvent::editHandleLuaStateVoidP),
+        static_cast<FieldGetMethodSig >(&LuaErrorEvent::getHandleLuaStateVoidP));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFInt32::Description(
+        SFInt32::getClassType(),
+        "Status",
+        "",
+        StatusFieldId, StatusFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&LuaErrorEvent::editHandleStatus),
+        static_cast<FieldGetMethodSig >(&LuaErrorEvent::getHandleStatus));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFString::Description(
+        MFString::getClassType(),
+        "StackTrace",
+        "",
+        StackTraceFieldId, StackTraceFieldMask,
+        true,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&LuaErrorEvent::editHandleStackTrace),
+        static_cast<FieldGetMethodSig >(&LuaErrorEvent::getHandleStackTrace));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "StackTraceEnabled",
+        "",
+        StackTraceEnabledFieldId, StackTraceEnabledFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&LuaErrorEvent::editHandleStackTraceEnabled),
+        static_cast<FieldGetMethodSig >(&LuaErrorEvent::getHandleStackTraceEnabled));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+LuaErrorEventBase::TypeObject LuaErrorEventBase::_type(
+    LuaErrorEventBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&LuaErrorEventBase::createEmptyLocal),
     LuaErrorEvent::initMethod,
-    _desc,
-    sizeof(_desc));
+    LuaErrorEvent::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&LuaErrorEvent::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"LuaErrorEvent\"\n"
+    "\tparent=\"Event\"\n"
+    "    library=\"ContribLua\"\n"
+    "    pointerfieldtypes=\"single\"\n"
+    "    structure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    isBundle=\"true\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "    <Field\n"
+    "        name=\"LuaStateVoidP\"\n"
+    "        type=\"VoidP\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"internal\"\n"
+    "        access=\"protected\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        publicRead=\"true\"\n"
+    "    >\n"
+    "    </Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Status\"\n"
+    "\t\ttype=\"Int32\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"0\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"StackTrace\"\n"
+    "\t\ttype=\"std::string\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"StackTraceEnabled\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(LuaErrorEventBase, LuaErrorEventPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &LuaErrorEventBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &LuaErrorEventBase::getType(void) const 
+FieldContainerType &LuaErrorEventBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr LuaErrorEventBase::shallowCopy(void) const 
-{ 
-    LuaErrorEventPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const LuaErrorEvent *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 LuaErrorEventBase::getContainerSize(void) const 
-{ 
-    return sizeof(LuaErrorEvent); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void LuaErrorEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &LuaErrorEventBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<LuaErrorEventBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void LuaErrorEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 LuaErrorEventBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((LuaErrorEventBase *) &other, whichField, sInfo);
+    return sizeof(LuaErrorEvent);
 }
-void LuaErrorEventBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFVoidP *LuaErrorEventBase::editSFLuaStateVoidP(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(LuaStateVoidPFieldMask);
+
+    return &_sfLuaStateVoidP;
 }
 
-void LuaErrorEventBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFVoidP *LuaErrorEventBase::getSFLuaStateVoidP(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
-    _mfStackTrace.terminateShare(uiAspect, this->getContainerSize());
+    return &_sfLuaStateVoidP;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-LuaErrorEventBase::LuaErrorEventBase(void) :
-    _sfLuaStateVoidP          (NULL), 
-    _sfStatus                 (Int32(0)), 
-    _mfStackTrace             (), 
-    _sfStackTraceEnabled      (bool(false)), 
-    Inherited() 
+SFInt32 *LuaErrorEventBase::editSFStatus(void)
 {
+    editSField(StatusFieldMask);
+
+    return &_sfStatus;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-LuaErrorEventBase::LuaErrorEventBase(const LuaErrorEventBase &source) :
-    _sfLuaStateVoidP          (source._sfLuaStateVoidP          ), 
-    _sfStatus                 (source._sfStatus                 ), 
-    _mfStackTrace             (source._mfStackTrace             ), 
-    _sfStackTraceEnabled      (source._sfStackTraceEnabled      ), 
-    Inherited                 (source)
+const SFInt32 *LuaErrorEventBase::getSFStatus(void) const
 {
+    return &_sfStatus;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-LuaErrorEventBase::~LuaErrorEventBase(void)
+MFString *LuaErrorEventBase::editMFStackTrace(void)
 {
+    editMField(StackTraceFieldMask, _mfStackTrace);
+
+    return &_mfStackTrace;
 }
+
+const MFString *LuaErrorEventBase::getMFStackTrace(void) const
+{
+    return &_mfStackTrace;
+}
+
+
+SFBool *LuaErrorEventBase::editSFStackTraceEnabled(void)
+{
+    editSField(StackTraceEnabledFieldMask);
+
+    return &_sfStackTraceEnabled;
+}
+
+const SFBool *LuaErrorEventBase::getSFStackTraceEnabled(void) const
+{
+    return &_sfStackTraceEnabled;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 LuaErrorEventBase::getBinSize(const BitVector &whichField)
+UInt32 LuaErrorEventBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -234,28 +334,24 @@ UInt32 LuaErrorEventBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfLuaStateVoidP.getBinSize();
     }
-
     if(FieldBits::NoField != (StatusFieldMask & whichField))
     {
         returnValue += _sfStatus.getBinSize();
     }
-
     if(FieldBits::NoField != (StackTraceFieldMask & whichField))
     {
         returnValue += _mfStackTrace.getBinSize();
     }
-
     if(FieldBits::NoField != (StackTraceEnabledFieldMask & whichField))
     {
         returnValue += _sfStackTraceEnabled.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void LuaErrorEventBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void LuaErrorEventBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -263,27 +359,22 @@ void LuaErrorEventBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfLuaStateVoidP.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (StatusFieldMask & whichField))
     {
         _sfStatus.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (StackTraceFieldMask & whichField))
     {
         _mfStackTrace.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (StackTraceEnabledFieldMask & whichField))
     {
         _sfStackTraceEnabled.copyToBin(pMem);
     }
-
-
 }
 
-void LuaErrorEventBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void LuaErrorEventBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -291,96 +382,288 @@ void LuaErrorEventBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfLuaStateVoidP.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (StatusFieldMask & whichField))
     {
         _sfStatus.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (StackTraceFieldMask & whichField))
     {
         _mfStackTrace.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (StackTraceEnabledFieldMask & whichField))
     {
         _sfStackTraceEnabled.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void LuaErrorEventBase::executeSyncImpl(      LuaErrorEventBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+LuaErrorEventTransitPtr LuaErrorEventBase::createLocal(BitVector bFlags)
 {
+    LuaErrorEventTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (LuaStateVoidPFieldMask & whichField))
-        _sfLuaStateVoidP.syncWith(pOther->_sfLuaStateVoidP);
+        fc = dynamic_pointer_cast<LuaErrorEvent>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (StatusFieldMask & whichField))
-        _sfStatus.syncWith(pOther->_sfStatus);
-
-    if(FieldBits::NoField != (StackTraceFieldMask & whichField))
-        _mfStackTrace.syncWith(pOther->_mfStackTrace);
-
-    if(FieldBits::NoField != (StackTraceEnabledFieldMask & whichField))
-        _sfStackTraceEnabled.syncWith(pOther->_sfStackTraceEnabled);
-
-
-}
-#else
-void LuaErrorEventBase::executeSyncImpl(      LuaErrorEventBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (LuaStateVoidPFieldMask & whichField))
-        _sfLuaStateVoidP.syncWith(pOther->_sfLuaStateVoidP);
-
-    if(FieldBits::NoField != (StatusFieldMask & whichField))
-        _sfStatus.syncWith(pOther->_sfStatus);
-
-    if(FieldBits::NoField != (StackTraceEnabledFieldMask & whichField))
-        _sfStackTraceEnabled.syncWith(pOther->_sfStackTraceEnabled);
-
-
-    if(FieldBits::NoField != (StackTraceFieldMask & whichField))
-        _mfStackTrace.syncWith(pOther->_mfStackTrace, sInfo);
-
-
+    return fc;
 }
 
-void LuaErrorEventBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+LuaErrorEventTransitPtr LuaErrorEventBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    LuaErrorEventTransitPtr fc;
 
-    if(FieldBits::NoField != (StackTraceFieldMask & whichField))
-        _mfStackTrace.beginEdit(uiAspect, uiContainerSize);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
+        fc = dynamic_pointer_cast<LuaErrorEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+LuaErrorEventTransitPtr LuaErrorEventBase::create(void)
+{
+    return createLocal();
+}
+
+LuaErrorEvent *LuaErrorEventBase::createEmptyLocal(BitVector bFlags)
+{
+    LuaErrorEvent *returnValue;
+
+    newPtr<LuaErrorEvent>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+LuaErrorEvent *LuaErrorEventBase::createEmpty(void)
+{
+    return createEmptyLocal();
+}
+
+
+FieldContainerTransitPtr LuaErrorEventBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    LuaErrorEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const LuaErrorEvent *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr LuaErrorEventBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    LuaErrorEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const LuaErrorEvent *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr LuaErrorEventBase::shallowCopy(void) const
+{
+    return shallowCopyLocal();
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+LuaErrorEventBase::LuaErrorEventBase(void) :
+    Inherited(),
+    _sfLuaStateVoidP          (NULL),
+    _sfStatus                 (Int32(0)),
+    _mfStackTrace             (),
+    _sfStackTraceEnabled      (bool(false))
+{
+}
+
+LuaErrorEventBase::LuaErrorEventBase(const LuaErrorEventBase &source) :
+    Inherited(source),
+    _sfLuaStateVoidP          (source._sfLuaStateVoidP          ),
+    _sfStatus                 (source._sfStatus                 ),
+    _mfStackTrace             (source._mfStackTrace             ),
+    _sfStackTraceEnabled      (source._sfStackTraceEnabled      )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+LuaErrorEventBase::~LuaErrorEventBase(void)
+{
+}
+
+
+GetFieldHandlePtr LuaErrorEventBase::getHandleLuaStateVoidP   (void) const
+{
+    SFVoidP::GetHandlePtr returnValue(
+        new  SFVoidP::GetHandle(
+             &_sfLuaStateVoidP,
+             this->getType().getFieldDesc(LuaStateVoidPFieldId),
+             const_cast<LuaErrorEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr LuaErrorEventBase::editHandleLuaStateVoidP  (void)
+{
+    SFVoidP::EditHandlePtr returnValue(
+        new  SFVoidP::EditHandle(
+             &_sfLuaStateVoidP,
+             this->getType().getFieldDesc(LuaStateVoidPFieldId),
+             this));
+
+
+    editSField(LuaStateVoidPFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr LuaErrorEventBase::getHandleStatus          (void) const
+{
+    SFInt32::GetHandlePtr returnValue(
+        new  SFInt32::GetHandle(
+             &_sfStatus,
+             this->getType().getFieldDesc(StatusFieldId),
+             const_cast<LuaErrorEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr LuaErrorEventBase::editHandleStatus         (void)
+{
+    SFInt32::EditHandlePtr returnValue(
+        new  SFInt32::EditHandle(
+             &_sfStatus,
+             this->getType().getFieldDesc(StatusFieldId),
+             this));
+
+
+    editSField(StatusFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr LuaErrorEventBase::getHandleStackTrace      (void) const
+{
+    MFString::GetHandlePtr returnValue(
+        new  MFString::GetHandle(
+             &_mfStackTrace,
+             this->getType().getFieldDesc(StackTraceFieldId),
+             const_cast<LuaErrorEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr LuaErrorEventBase::editHandleStackTrace     (void)
+{
+    MFString::EditHandlePtr returnValue(
+        new  MFString::EditHandle(
+             &_mfStackTrace,
+             this->getType().getFieldDesc(StackTraceFieldId),
+             this));
+
+
+    editMField(StackTraceFieldMask, _mfStackTrace);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr LuaErrorEventBase::getHandleStackTraceEnabled (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfStackTraceEnabled,
+             this->getType().getFieldDesc(StackTraceEnabledFieldId),
+             const_cast<LuaErrorEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr LuaErrorEventBase::editHandleStackTraceEnabled(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfStackTraceEnabled,
+             this->getType().getFieldDesc(StackTraceEnabledFieldId),
+             this));
+
+
+    editSField(StackTraceEnabledFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void LuaErrorEventBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    LuaErrorEvent *pThis = static_cast<LuaErrorEvent *>(this);
+
+    pThis->execSync(static_cast<LuaErrorEvent *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *LuaErrorEventBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    LuaErrorEvent *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const LuaErrorEvent *>(pRefAspect),
+                  dynamic_cast<const LuaErrorEvent *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<LuaErrorEventPtr>::_type("LuaErrorEventPtr", "EventPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(LuaErrorEventPtr, OSG_LUALIB_DLLTMPLMAPPING);
+void LuaErrorEventBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+#ifdef OSG_MT_CPTR_ASPECT
+    AspectOffsetStore oOffsets;
+
+    _pAspectStore->fillOffsetArray(oOffsets, this);
+#endif
+
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfStackTrace.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+}
 
 
 OSG_END_NAMESPACE
-

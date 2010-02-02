@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,71 +58,80 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGLuaDef.h"
+#include "OSGConfig.h"
+#include "OSGContribLuaDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h> // Parent
+#include "OSGEvent.h" // Parent
 
-#include <OpenSG/OSGSFSysTypes.h> // LuaStateVoidP type
-#include <OpenSG/OSGInt32Fields.h> // Status type
-#include <OpenSG/OSGStringFields.h> // StackTrace type
-#include <OpenSG/OSGBoolFields.h> // StackTraceEnabled type
+#include "OSGSysFields.h"               // LuaStateVoidP type
+#include "OSGBaseFields.h"              // StackTrace type
 
 #include "OSGLuaErrorEventFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class LuaErrorEvent;
-class BinaryDataHandler;
 
 //! \brief LuaErrorEvent Base Class.
 
-class OSG_LUALIB_DLLMAPPING LuaErrorEventBase : public Event
+class OSG_CONTRIBLUA_DLLMAPPING LuaErrorEventBase : public Event
 {
-  private:
-
-    typedef Event    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef LuaErrorEventPtr  Ptr;
+    typedef Event Inherited;
+    typedef Event ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(LuaErrorEvent);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        LuaStateVoidPFieldId     = Inherited::NextFieldId,
-        StatusFieldId            = LuaStateVoidPFieldId     + 1,
-        StackTraceFieldId        = StatusFieldId            + 1,
-        StackTraceEnabledFieldId = StackTraceFieldId        + 1,
-        NextFieldId              = StackTraceEnabledFieldId + 1
+        LuaStateVoidPFieldId = Inherited::NextFieldId,
+        StatusFieldId = LuaStateVoidPFieldId + 1,
+        StackTraceFieldId = StatusFieldId + 1,
+        StackTraceEnabledFieldId = StackTraceFieldId + 1,
+        NextFieldId = StackTraceEnabledFieldId + 1
     };
 
-    static const OSG::BitVector LuaStateVoidPFieldMask;
-    static const OSG::BitVector StatusFieldMask;
-    static const OSG::BitVector StackTraceFieldMask;
-    static const OSG::BitVector StackTraceEnabledFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector LuaStateVoidPFieldMask =
+        (TypeTraits<BitVector>::One << LuaStateVoidPFieldId);
+    static const OSG::BitVector StatusFieldMask =
+        (TypeTraits<BitVector>::One << StatusFieldId);
+    static const OSG::BitVector StackTraceFieldMask =
+        (TypeTraits<BitVector>::One << StackTraceFieldId);
+    static const OSG::BitVector StackTraceEnabledFieldMask =
+        (TypeTraits<BitVector>::One << StackTraceEnabledFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFVoidP           SFLuaStateVoidPType;
+    typedef SFInt32           SFStatusType;
+    typedef MFString          MFStackTraceType;
+    typedef SFBool            SFStackTraceEnabledType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -131,19 +140,23 @@ class OSG_LUALIB_DLLMAPPING LuaErrorEventBase : public Event
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-     const SFVoidP             *getSFLuaStateVoidP  (void) const;
-     const SFInt32             *getSFStatus         (void) const;
-     const MFString            *getMFStackTrace     (void) const;
-     const SFBool              *getSFStackTraceEnabled(void) const;
+
+            const SFVoidP             *getSFLuaStateVoidP   (void) const;
+
+            const SFInt32             *getSFStatus          (void) const;
+
+            const MFString            *getMFStackTrace      (void) const;
+
+            const SFBool              *getSFStackTraceEnabled (void) const;
 
 
-     const void*               getLuaStateVoidP  (void) const;
+            const void*               getLuaStateVoidP   (void) const;
 
-     const Int32               &getStatus         (void) const;
+                  Int32                getStatus          (void) const;
 
-     const bool                &getStackTraceEnabled(void) const;
+            const std::string         &getStackTrace      (const UInt32 index) const;
 
-     const std::string         &getStackTrace     (const UInt32 index) const;
+                  bool                 getStackTraceEnabled (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -153,7 +166,7 @@ class OSG_LUALIB_DLLMAPPING LuaErrorEventBase : public Event
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -161,11 +174,11 @@ class OSG_LUALIB_DLLMAPPING LuaErrorEventBase : public Event
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -173,29 +186,46 @@ class OSG_LUALIB_DLLMAPPING LuaErrorEventBase : public Event
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  LuaErrorEventPtr      create          (void); 
-    static  LuaErrorEventPtr      createEmpty     (void); 
+    static  LuaErrorEventTransitPtr  create          (void);
+    static  LuaErrorEvent           *createEmpty     (void);
+
+    static  LuaErrorEventTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  LuaErrorEvent            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  LuaErrorEventTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFVoidP             _sfLuaStateVoidP;
-    SFInt32             _sfStatus;
-    MFString            _mfStackTrace;
-    SFBool              _sfStackTraceEnabled;
+    SFVoidP           _sfLuaStateVoidP;
+    SFInt32           _sfStatus;
+    MFString          _mfStackTrace;
+    SFBool            _sfStackTraceEnabled;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -210,90 +240,121 @@ class OSG_LUALIB_DLLMAPPING LuaErrorEventBase : public Event
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~LuaErrorEventBase(void); 
+    virtual ~LuaErrorEventBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleLuaStateVoidP   (void) const;
+    EditFieldHandlePtr editHandleLuaStateVoidP  (void);
+    GetFieldHandlePtr  getHandleStatus          (void) const;
+    EditFieldHandlePtr editHandleStatus         (void);
+    GetFieldHandlePtr  getHandleStackTrace      (void) const;
+    EditFieldHandlePtr editHandleStackTrace     (void);
+    GetFieldHandlePtr  getHandleStackTraceEnabled (void) const;
+    EditFieldHandlePtr editHandleStackTraceEnabled(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFVoidP             *editSFLuaStateVoidP  (void);
-           SFInt32             *editSFStatus         (void);
-           MFString            *editMFStackTrace     (void);
-           SFBool              *editSFStackTraceEnabled(void);
 
-           void*               editLuaStateVoidP  (void);
-           Int32               &editStatus         (void);
-           bool                &editStackTraceEnabled(void);
-           std::string         &editStackTrace     (UInt32 index);
+                  SFVoidP             *editSFLuaStateVoidP  (void);
+
+                  SFInt32             *editSFStatus         (void);
+
+                  MFString            *editMFStackTrace     (void);
+
+                  SFBool              *editSFStackTraceEnabled(void);
+
+
+                  void*               &editLuaStateVoidP  (void);
+
+                  Int32               &editStatus         (void);
+
+                  std::string         &editStackTrace     (const UInt32 index);
+
+                  bool                &editStackTraceEnabled(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setLuaStateVoidP  (void* value);
-     void setStatus         (const Int32 &value);
-     void setStackTraceEnabled(const bool &value);
+            void setLuaStateVoidP  (void* value);
+            void setStatus         (const Int32 value);
+            void setStackTraceEnabled(const bool value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      LuaErrorEventBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      LuaErrorEventBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      LuaErrorEventBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const LuaErrorEventBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef LuaErrorEventBase *LuaErrorEventBaseP;
-
-typedef osgIF<LuaErrorEventBase::isNodeCore,
-              CoredNodePtr<LuaErrorEvent>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet LuaErrorEventNodePtr;
-
-typedef RefPtr<LuaErrorEventPtr> LuaErrorEventRefPtr;
 
 OSG_END_NAMESPACE
 

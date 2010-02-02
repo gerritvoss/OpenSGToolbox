@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,106 +55,31 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &LuaErrorEventBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 LuaErrorEventBase::getClassTypeId(void) 
+OSG::UInt32 LuaErrorEventBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-LuaErrorEventPtr LuaErrorEventBase::create(void) 
-{
-    LuaErrorEventPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = LuaErrorEventPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-LuaErrorEventPtr LuaErrorEventBase::createEmpty(void) 
-{ 
-    LuaErrorEventPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 LuaErrorEventBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the LuaErrorEvent::_sfLuaStateVoidP field.
-inline
-const SFVoidP *LuaErrorEventBase::getSFLuaStateVoidP(void) const
-{
-    return &_sfLuaStateVoidP;
-}
-
-//! Get the LuaErrorEvent::_sfLuaStateVoidP field.
-inline
-SFVoidP *LuaErrorEventBase::editSFLuaStateVoidP(void)
-{
-    return &_sfLuaStateVoidP;
-}
-
-//! Get the LuaErrorEvent::_sfStatus field.
-inline
-const SFInt32 *LuaErrorEventBase::getSFStatus(void) const
-{
-    return &_sfStatus;
-}
-
-//! Get the LuaErrorEvent::_sfStatus field.
-inline
-SFInt32 *LuaErrorEventBase::editSFStatus(void)
-{
-    return &_sfStatus;
-}
-
-//! Get the LuaErrorEvent::_mfStackTrace field.
-inline
-const MFString *LuaErrorEventBase::getMFStackTrace(void) const
-{
-    return &_mfStackTrace;
-}
-
-//! Get the LuaErrorEvent::_mfStackTrace field.
-inline
-MFString *LuaErrorEventBase::editMFStackTrace(void)
-{
-    return &_mfStackTrace;
-}
-
-//! Get the LuaErrorEvent::_sfStackTraceEnabled field.
-inline
-const SFBool *LuaErrorEventBase::getSFStackTraceEnabled(void) const
-{
-    return &_sfStackTraceEnabled;
-}
-
-//! Get the LuaErrorEvent::_sfStackTraceEnabled field.
-inline
-SFBool *LuaErrorEventBase::editSFStackTraceEnabled(void)
-{
-    return &_sfStackTraceEnabled;
-}
-
-
 //! Get the value of the LuaErrorEvent::_sfLuaStateVoidP field.
+
 inline
-void* LuaErrorEventBase::editLuaStateVoidP(void)
+void* &LuaErrorEventBase::editLuaStateVoidP(void)
 {
+    editSField(LuaStateVoidPFieldMask);
+
     return _sfLuaStateVoidP.getValue();
 }
 
@@ -171,57 +94,59 @@ const void* LuaErrorEventBase::getLuaStateVoidP(void) const
 inline
 void LuaErrorEventBase::setLuaStateVoidP(void* value)
 {
+    editSField(LuaStateVoidPFieldMask);
+
     _sfLuaStateVoidP.setValue(value);
 }
-
 //! Get the value of the LuaErrorEvent::_sfStatus field.
+
 inline
 Int32 &LuaErrorEventBase::editStatus(void)
 {
+    editSField(StatusFieldMask);
+
     return _sfStatus.getValue();
 }
 
 //! Get the value of the LuaErrorEvent::_sfStatus field.
 inline
-const Int32 &LuaErrorEventBase::getStatus(void) const
+      Int32  LuaErrorEventBase::getStatus(void) const
 {
     return _sfStatus.getValue();
 }
 
 //! Set the value of the LuaErrorEvent::_sfStatus field.
 inline
-void LuaErrorEventBase::setStatus(const Int32 &value)
+void LuaErrorEventBase::setStatus(const Int32 value)
 {
+    editSField(StatusFieldMask);
+
     _sfStatus.setValue(value);
 }
-
 //! Get the value of the LuaErrorEvent::_sfStackTraceEnabled field.
+
 inline
 bool &LuaErrorEventBase::editStackTraceEnabled(void)
 {
+    editSField(StackTraceEnabledFieldMask);
+
     return _sfStackTraceEnabled.getValue();
 }
 
 //! Get the value of the LuaErrorEvent::_sfStackTraceEnabled field.
 inline
-const bool &LuaErrorEventBase::getStackTraceEnabled(void) const
+      bool  LuaErrorEventBase::getStackTraceEnabled(void) const
 {
     return _sfStackTraceEnabled.getValue();
 }
 
 //! Set the value of the LuaErrorEvent::_sfStackTraceEnabled field.
 inline
-void LuaErrorEventBase::setStackTraceEnabled(const bool &value)
+void LuaErrorEventBase::setStackTraceEnabled(const bool value)
 {
+    editSField(StackTraceEnabledFieldMask);
+
     _sfStackTraceEnabled.setValue(value);
-}
-
-
-//! Get the value of the \a index element the LuaErrorEvent::_mfStackTrace field.
-inline
-std::string &LuaErrorEventBase::editStackTrace(const UInt32 index)
-{
-    return _mfStackTrace[index];
 }
 
 //! Get the value of the \a index element the LuaErrorEvent::_mfStackTrace field.
@@ -230,6 +155,51 @@ const std::string &LuaErrorEventBase::getStackTrace(const UInt32 index) const
 {
     return _mfStackTrace[index];
 }
+
+inline
+std::string &LuaErrorEventBase::editStackTrace(const UInt32 index)
+{
+    editMField(StackTraceFieldMask, _mfStackTrace);
+
+    return _mfStackTrace[index];
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void LuaErrorEventBase::execSync (      LuaErrorEventBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (LuaStateVoidPFieldMask & whichField))
+        _sfLuaStateVoidP.syncWith(pFrom->_sfLuaStateVoidP);
+
+    if(FieldBits::NoField != (StatusFieldMask & whichField))
+        _sfStatus.syncWith(pFrom->_sfStatus);
+
+    if(FieldBits::NoField != (StackTraceFieldMask & whichField))
+        _mfStackTrace.syncWith(pFrom->_mfStackTrace,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (StackTraceEnabledFieldMask & whichField))
+        _sfStackTraceEnabled.syncWith(pFrom->_sfStackTraceEnabled);
+}
+#endif
+
+
+inline
+const Char8 *LuaErrorEventBase::getClassname(void)
+{
+    return "LuaErrorEvent";
+}
+OSG_GEN_CONTAINERPTR(LuaErrorEvent);
 
 OSG_END_NAMESPACE
 

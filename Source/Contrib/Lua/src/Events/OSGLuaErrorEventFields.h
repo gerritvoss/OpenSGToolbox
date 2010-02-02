@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,64 +54,110 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribLuaDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGLuaDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/Toolbox/OSGEventFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class LuaErrorEvent;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! LuaErrorEventPtr
+OSG_GEN_CONTAINERPTR(LuaErrorEvent);
 
-typedef FCPtr<EventPtr, LuaErrorEvent> LuaErrorEventPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpLuaFieldTraits
+/*! \ingroup GrpContribLuaFieldTraits
+    \ingroup GrpLibOSGContribLua
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<LuaErrorEventPtr> : 
-    public FieldTraitsRecurseMapper<LuaErrorEventPtr, true>
+struct FieldTraits<LuaErrorEvent *> :
+    public FieldTraitsFCPtrBase<LuaErrorEvent *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFLuaErrorEventPtr"; }
+    typedef FieldTraits<LuaErrorEvent *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBLUA_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFLuaErrorEventPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<LuaErrorEventPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<LuaErrorEvent *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecLuaErrorEventPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<LuaErrorEvent *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecLuaErrorEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<LuaErrorEvent *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakLuaErrorEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<LuaErrorEvent *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdLuaErrorEventPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpLuaFieldSingle */
 
-typedef SField<LuaErrorEventPtr> SFLuaErrorEventPtr;
-#endif
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribLuaFieldSFields */
+typedef PointerSField<LuaErrorEvent *,
+                      RecordedRefCountPolicy  > SFRecLuaErrorEventPtr;
+/*! \ingroup GrpContribLuaFieldSFields */
+typedef PointerSField<LuaErrorEvent *,
+                      UnrecordedRefCountPolicy> SFUnrecLuaErrorEventPtr;
+/*! \ingroup GrpContribLuaFieldSFields */
+typedef PointerSField<LuaErrorEvent *,
+                      WeakRefCountPolicy      > SFWeakLuaErrorEventPtr;
+/*! \ingroup GrpContribLuaFieldSFields */
+typedef PointerSField<LuaErrorEvent *,
+                      NoRefCountPolicy        > SFUncountedLuaErrorEventPtr;
 
-#ifndef OSG_COMPILELUAERROREVENTINST
-OSG_DLLEXPORT_DECL1(SField, LuaErrorEventPtr, OSG_LUALIB_DLLTMPLMAPPING)
-#endif
+
+
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribLuaFieldSFields \ingroup GrpLibOSGContribLua */
+struct SFRecLuaErrorEventPtr : 
+    public PointerSField<LuaErrorEvent *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribLuaFieldSFields \ingroup GrpLibOSGContribLua */
+struct SFUnrecLuaErrorEventPtr : 
+    public PointerSField<LuaErrorEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribLuaFieldSFields \ingroup GrpLibOSGContribLua */
+struct SFWeakLuaErrorEventPtr :
+    public PointerSField<LuaErrorEvent *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribLuaFieldSFields \ingroup GrpLibOSGContribLua */
+struct SFUncountedLuaErrorEventPtr :
+    public PointerSField<LuaErrorEvent *,
+                         NoRefCountPolicy> {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

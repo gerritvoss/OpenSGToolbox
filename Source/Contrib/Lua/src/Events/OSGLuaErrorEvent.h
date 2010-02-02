@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,55 +42,57 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGLuaErrorEventBase.h"
 #include "lua.hpp"
 #include <list>
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief LuaErrorEvent class. See \ref 
-           PageLuaLuaErrorEvent for a description.
+/*! \brief LuaErrorEvent class. See \ref
+           PageContribLuaLuaErrorEvent for a description.
 */
 
-class OSG_LUALIB_DLLMAPPING LuaErrorEvent : public LuaErrorEventBase
+class OSG_CONTRIBLUA_DLLMAPPING LuaErrorEvent : public LuaErrorEventBase
 {
-  private:
-
-    typedef LuaErrorEventBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef LuaErrorEventBase Inherited;
+    typedef LuaErrorEvent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
     const lua_State* getLuaState(void) const;
+
     std::string      getErrorString(void) const;
 
-    static  LuaErrorEventPtr      create( FieldContainerPtr Source,
-                                        Time TimeStamp,
-                                        lua_State* State,
-                                        int LuaStatus,
-                                        const std::list<std::string>& StackTrace,
-                                        bool EnableStackTrace); 
-
+    static  LuaErrorEventTransitPtr      create( FieldContainerRefPtr Source,
+                                                 Time TimeStamp,
+                                                 lua_State* State,
+                                                 int LuaStatus,
+                                                 const std::list<std::string>& StackTrace,
+                                                 bool EnableStackTrace); 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in LuaErrorEventBase.
@@ -107,20 +109,24 @@ class OSG_LUALIB_DLLMAPPING LuaErrorEvent : public LuaErrorEventBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~LuaErrorEvent(void); 
+    virtual ~LuaErrorEvent(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class LuaErrorEventBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const LuaErrorEvent &source);
 };
 

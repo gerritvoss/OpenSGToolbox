@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,78 +55,31 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &LuaActivityBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 LuaActivityBase::getClassTypeId(void) 
+OSG::UInt32 LuaActivityBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-LuaActivityPtr LuaActivityBase::create(void) 
-{
-    LuaActivityPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = LuaActivityPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-LuaActivityPtr LuaActivityBase::createEmpty(void) 
-{ 
-    LuaActivityPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 LuaActivityBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the LuaActivity::_sfCode field.
-inline
-const SFString *LuaActivityBase::getSFCode(void) const
-{
-    return &_sfCode;
-}
-
-//! Get the LuaActivity::_sfCode field.
-inline
-SFString *LuaActivityBase::editSFCode(void)
-{
-    return &_sfCode;
-}
-
-//! Get the LuaActivity::_sfEntryFunction field.
-inline
-const SFString *LuaActivityBase::getSFEntryFunction(void) const
-{
-    return &_sfEntryFunction;
-}
-
-//! Get the LuaActivity::_sfEntryFunction field.
-inline
-SFString *LuaActivityBase::editSFEntryFunction(void)
-{
-    return &_sfEntryFunction;
-}
-
-
 //! Get the value of the LuaActivity::_sfCode field.
+
 inline
 std::string &LuaActivityBase::editCode(void)
 {
+    editSField(CodeFieldMask);
+
     return _sfCode.getValue();
 }
 
@@ -143,13 +94,17 @@ const std::string &LuaActivityBase::getCode(void) const
 inline
 void LuaActivityBase::setCode(const std::string &value)
 {
+    editSField(CodeFieldMask);
+
     _sfCode.setValue(value);
 }
-
 //! Get the value of the LuaActivity::_sfEntryFunction field.
+
 inline
 std::string &LuaActivityBase::editEntryFunction(void)
 {
+    editSField(EntryFunctionFieldMask);
+
     return _sfEntryFunction.getValue();
 }
 
@@ -164,9 +119,37 @@ const std::string &LuaActivityBase::getEntryFunction(void) const
 inline
 void LuaActivityBase::setEntryFunction(const std::string &value)
 {
+    editSField(EntryFunctionFieldMask);
+
     _sfEntryFunction.setValue(value);
 }
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void LuaActivityBase::execSync (      LuaActivityBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (CodeFieldMask & whichField))
+        _sfCode.syncWith(pFrom->_sfCode);
+
+    if(FieldBits::NoField != (EntryFunctionFieldMask & whichField))
+        _sfEntryFunction.syncWith(pFrom->_sfEntryFunction);
+}
+#endif
+
+
+inline
+const Char8 *LuaActivityBase::getClassname(void)
+{
+    return "LuaActivity";
+}
+OSG_GEN_CONTAINERPTR(LuaActivity);
 
 OSG_END_NAMESPACE
 

@@ -38,7 +38,7 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -58,7 +58,7 @@ UInt32 LuaManager::getProducerClassTypeId(void)
 
 
 inline
-bool LuaManager::isLuaListenerAttached(LuaListenerPtr Listener) const
+bool LuaManager::isLuaListenerAttached(LuaListenerRefPtr Listener) const
 {
     return _LuaListeners.find(Listener) != _LuaListeners.end();
 }
@@ -77,13 +77,13 @@ bool LuaManager::getEnableStackTrace(void) const
 
 
 inline
-EventConnection LuaManager::attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
+EventConnection LuaManager::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
 {
     return _Producer.attachActivity(TheActivity, ProducedEventId);
 }
 
 inline
-bool LuaManager::isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const
+bool LuaManager::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
 {
     return _Producer.isActivityAttached(TheActivity, ProducedEventId);
 }
@@ -95,13 +95,13 @@ UInt32 LuaManager::getNumActivitiesAttached(UInt32 ProducedEventId) const
 }
 
 inline
-ActivityPtr LuaManager::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
+ActivityRefPtr LuaManager::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
 {
     return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
 }
 
 inline
-void LuaManager::detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
+void LuaManager::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
 {
     _Producer.detachActivity(TheActivity, ProducedEventId);
 }

@@ -33,23 +33,23 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGLuaDef.h"
+#include "OSGConfig.h"
+#include "OSGContribLuaDef.h"
 
-#include <OpenSG/Toolbox/OSGEventListener.h>
+#include "OSGEventListener.h"
 #include "OSGLuaErrorEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_LUALIB_DLLMAPPING LuaListener : public EventListener
+class OSG_CONTRIBLUA_DLLMAPPING LuaListener : public EventListener
 {
     /*=========================  PUBLIC  ===============================*/
   public:
   
-    virtual void error(const LuaErrorEventPtr e) = 0;
+    virtual void error(const LuaErrorEventUnrecPtr e) = 0;
 };
 
-typedef LuaListener* LuaListenerPtr;
+typedef LuaListener* LuaListenerRefPtr;
 
 OSG_END_NAMESPACE
 
