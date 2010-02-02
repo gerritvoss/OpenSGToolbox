@@ -1,10 +1,10 @@
 
 // General OpenSG configuration, needed everywhere
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGBaseFunctions.h>
+#include "OSGConfig.h"
+#include "OSGBaseFunctions.h"
 
 #include <string>
-#include <OpenSG/Lua/OSGLuaManager.h>
+#include "OSGLuaManager.h"
 
 // activate the opensg namespace
 OSG_USING_NAMESPACE
@@ -37,29 +37,30 @@ std::string genFactorialScript(void)
 std::string genOpenSGScript(void)
 {
     std::string Script(
-"    -- call OpenSG's osgrand function\n"
-    
-
 "    quat1 = OSG.Quaternion()\n"
-"    print( quat1:length())\n"
+"    print('Quat length: ', quat1:length())\n"
 "    mat1 = OSG.Matrix(2.0,0.0,0.0,0.0, 0.0,1.0,0.0,0.0, 0.0,0.0,1.0,0.0, 0.0,0.0,0.0,1.0)\n"
-"    print( mat1:det())\n"
+"    print('Matrix Det: ', mat1:det())\n"
 "    vec1 = OSG.Vec3f(0.0,1.0,0.0)\n"
 "    pnt1 = OSG.Pnt3f(0.0,1.0,0.0)\n"
 "    pnt2 = OSG.Pnt3f(1.0,0.0,0.0)\n"
-"    print(pnt1:dist(pnt2))\n"
-"    print(pnt1:isZero())\n"
-"    print(OSG.version())\n"
+"    print('Distance From pnt1 to pnt2: ',pnt1:dist(pnt2))\n"
+"    print('Is pnt1 Zero: ',pnt1:isZero())\n"
+"    print('OpenSG Version: ',OSG.version())\n"
 
 "    color1 = OSG.Color3f(0.0, 1.0, 0.0)\n"
 "    color2 = OSG.Color3f(1.0, 0.0, 0.0)\n"
 "    color3 = color1 + color2\n"
-"    print(color3:red())\n"
-"    print(color3:green())\n"
-"    print(color3:blue())\n"
-"    FCFact = OSG.FieldContainerFactory_the()\n"
-"    temp = FCFact:createFieldContainer(\"Node\")\n"
-"    --print(temp:getTypeId())\n");
+"    print('Color: ',color3:red(), color3:green(), color3:blue())\n"
+
+"    temp2 = OSG.createFieldContainer(\"Transform\")\n"
+"    temp2:setFieldValue(\"matrix\",mat1)\n"
+
+"    temp = OSG.createFieldContainer(\"Node\")\n"
+"    temp:setFieldValue(\"core\",temp2)\n"
+
+"    print('Matrix Det: ', temp:getFieldValue(\"core\"):getFieldValue(\"matrix\"):det())\n"
+"    print('Node TravMask: ',temp:getFieldValue(\"travMask\"))\n");
 
     return Script;
 
