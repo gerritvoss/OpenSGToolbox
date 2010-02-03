@@ -36,486 +36,306 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifdef OSG_DOC_FILES_IN_MODULE
-/*! \file OSGEventProducerFactory.cpp
-    \ingroup GrpSystemEventProducer
- */
-#endif
-
-#include <stdlib.h>
-#include <stdio.h>
-
-#include "OSGConfig.h"
-
-#include <iostream>
-#include <string>
-
 #include "OSGEventProducerFactory.h"
-#include "OSGEventProducerType.h"
-#include "OSGMethodDescription.h"
 
-#include "OSGFieldType.h"
+#include "OSGFactoryController.h"
+#include "OSGLog.h"
+#include "OSGTypeBase.h"
 
-OSG_USING_NAMESPACE
+#include "OSGSingletonHolder.ins"
 
-EventProducerFactory *EventProducerFactory::_the = NULL;
+#include <algorithm>
+#include <functional>
 
-EventProducerFactory::TypeMapIterator 
-                       EventProducerFactory::_defaultTypeMapIt;
+OSG_BEGIN_NAMESPACE
 
-EventProducerMapper::~EventProducerMapper()
+//---------------------------------------------------------------------------
+//  Class
+//---------------------------------------------------------------------------
+
+OSG_SINGLETON_INST(EventProducerFactoryBase, addPostFactoryExitFunction)
+
+template class SingletonHolder<EventProducerFactoryBase>;
+
+/***************************************************************************\
+ *                               Types                                     *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+/*-------------------------------------------------------------------------*\
+ -  private                                                                -
+\*-------------------------------------------------------------------------*/
+
+/*-------------------------------------------------------------------------*\
+ -  protected                                                              -
+\*-------------------------------------------------------------------------*/
+
+void EventProducerFactoryBase::writeTypeDot(FILE     *pOut,
+                                   TypeBase *pTypeBase)
 {
-}
+    fprintf(pOut, "    OpenSG%s [shape=record,label=\"%s - %s\"]\n", 
+            pTypeBase->getCName(),
+            pTypeBase->getCName(),
+            pTypeBase->isInitialized() ? "Init" : "UnInit");
 
-/*-------------------------------------------------------------------------*/
-/*                                The                                      */
-
-EventProducerFactory *EventProducerFactory::the(void)
-{
-    if(_the == NULL)
-        _the = new EventProducerFactory();
-
-    return _the;
-}
-
-/*-------------------------------------------------------------------------*/
-/*                               Types                                     */
-
-EventProducerType *EventProducerFactory::findType(UInt32 uiTypeId) const
-{
-    TypeIdMapConstIt  typeIt;
-    EventProducerType    *pType = NULL;
-
-    if(_pTypeIdMap)
+    if(pTypeBase->getCParentName() != NULL)
     {
-        typeIt = _pTypeIdMap->find(uiTypeId);
-        pType   = (typeIt == _pTypeIdMap->end()) ? NULL : (*typeIt).second;
+        fprintf(pOut, 
+                "    OpenSG%s -> OpenSG%s\n", 
+                pTypeBase->getCParentName(), 
+                pTypeBase->getCName());
     }
-
-    return pType;
 }
 
-EventProducerType *EventProducerFactory::findType(const std::string &szName) const
-{
-    TypeNameMapCnstIt   typeIt;
-    EventProducerType *pType = NULL;
+/*-------------------------------------------------------------------------*\
+ -  public                                                                 -
+\*-------------------------------------------------------------------------*/
 
-    if(_pTypeNameMap)
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+/*-------------------------------------------------------------------------*\
+ -  private                                                                -
+\*-------------------------------------------------------------------------*/
+
+/*-------------------------------------------------------------------------*\
+ -  protected                                                              -
+\*-------------------------------------------------------------------------*/
+
+/*------------- constructors & destructors --------------------------------*/
+
+EventProducerFactoryBase::EventProducerFactoryBase(void) :
+     Inherited    ("TypeFactory"),
+    _vTypeNameMaps(             ),
+    _vTypeStore   (             )
+{
+    _vTypeStore.reserve  (512 );
+    _vTypeStore.push_back(NULL);
+
+    _vTypeNameMaps.push_back(new TypeNameMap);
+
+    FactoryController::the()->registerFactory(this);
+}
+
+EventProducerFactoryBase::EventProducerFactoryBase(const Char8 *szName) :
+     Inherited    (szName),
+    _vTypeNameMaps(      ),
+    _vTypeStore   (      )
+{
+    _vTypeStore.reserve  (512 );
+    _vTypeStore.push_back(NULL);
+
+    _vTypeNameMaps.push_back(new TypeNameMap);
+
+    FactoryController::the()->registerFactory(this);
+}
+
+EventProducerFactoryBase::~EventProducerFactoryBase(void)
+{
+}
+
+bool EventProducerFactoryBase::initialize(void)
+{
+    TypeStoreIt typeIt  = _vTypeStore.begin();
+    TypeStoreIt typeEnd = _vTypeStore.end  ();
+
+    while(typeIt != typeEnd)
     {
-        typeIt = _pTypeNameMap->find(szName);
-        pType  = (typeIt == _pTypeNameMap->end()) ? NULL : (*typeIt).second;
+        if((*typeIt) != NULL)
+            (*typeIt)->initialize();
+
+        ++typeIt;
     }
-
-    return pType;
-}
-
-UInt32 EventProducerFactory::getNumTypes(void) const
-{
-    return _pTypeNameMap ? _pTypeNameMap->size() : 0;
-}
-
-EventProducerType *EventProducerFactory::findUninitializedType(
-    const std::string &szName) const
-{
-    EventProducerType *returnValue = NULL;
-
-    if(_pUnitTypesStore == NULL || szName.empty())
-        return returnValue;
-
-    for(UInt32 i = 0; i < _pUnitTypesStore->size(); i++)
-    {
-        if(szName.compare((*_pUnitTypesStore)[i]->getName()) == 0)
-        {
-            returnValue = (*_pUnitTypesStore)[i];
-            break;
-        }
-    }
-
-    return returnValue;
-}
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-bool EventProducerFactory::initializePendingTypes(void)
-{
-    bool                returnValue = true;
-    EventProducerType *pType       = NULL;
-
-    if(_bInitialized == false)
-        return false;
-
-    SINFO << "OSGEventProducerFactory init pending types" << std::endl;
-
-    if(_pUnitTypesStore != NULL)
-    {
-#ifndef OSG_EMBEDDED
-        if(_pMapLock != NULL)
-            _pMapLock->acquire();
-#endif
-
-        UninitTypeStoreIt uninitIt = _pUnitTypesStore->begin();
-
-        while(uninitIt != _pUnitTypesStore->end())
-        {
-            pType = *uninitIt;
-
-            if(pType->isInitialized() == true)
-            {
-                uninitIt = _pUnitTypesStore->erase(uninitIt);
-
-//                (*_pTypeIdMap  )[pType->getId()                 ] = pType;
-
-                TypeIdMap::value_type val(pType->getId(), pType);
-
-                _pTypeIdMap->insert(val);
-
-                (*_pTypeNameMap)[pType->getName()] = pType;
-            }
-            else
-            {
-                if(pType->initialize() == true)
-                {
-                    uninitIt = _pUnitTypesStore->erase(uninitIt);
-
-//                  (*_pTypeIdMap  )[pType->getId()                 ] = pType;
-
-                    TypeIdMap::value_type val(pType->getId(), pType);
-                    
-                    _pTypeIdMap->insert(val);
-
-                    (*_pTypeNameMap)[pType->getName()] = pType;
-                }
-                else
-                {
-                    returnValue = false;
-
-                    uninitIt++;
-                }
-            }
-        }
-
-#ifndef OSG_EMBEDDED
-        if(_pMapLock != NULL)
-            _pMapLock->release();
-#endif
-
-        PINFO << "("
-                 << returnValue
-                 << "|"
-                 << _pUnitTypesStore->size()
-                 << ")"
-                 << std::endl;
-    }
-
-    return returnValue;
-}
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-EventProducerFactory::TypeMapIterator EventProducerFactory::beginTypes(void)
-{
-    TypeMapIterator returnValue = _defaultTypeMapIt;
-
-    if(_pTypeIdMap != NULL)
-    {
-        returnValue = _pTypeIdMap->begin();
-    }
-
-    return returnValue;
-}
-
-EventProducerFactory::TypeMapIterator EventProducerFactory::endTypes(void)
-{
-    TypeMapIterator returnValue = _defaultTypeMapIt;
-
-    if(_pTypeIdMap != NULL)
-    {
-        returnValue = _pTypeIdMap->end();
-    }
-
-    return returnValue;
-}
-
-
-/*-------------------------------------------------------------------------*/
-/*                               Groups                                    */
-
-UInt16 EventProducerFactory::findGroupId(const std::string &szName) const
-{
-    GroupMapConstIt gIt;
-
-    if (_pGroupMap)
-    {
-        gIt = _pGroupMap->find(szName);
-        return ((gIt == _pGroupMap->end()) ? 0 : (*gIt).second);
-    }
-
-    return 0;
-}
-
-const std::string EventProducerFactory::findGroupName(UInt16 uiGroupId) const
-{
-    GroupMapConstIt gIt;
-
-    for(gIt = _pGroupMap->begin(); gIt != _pGroupMap->end(); gIt++)
-    {
-        if((*gIt).second == uiGroupId)
-            return (*gIt).first;
-    }
-
-    return std::string("");
-}
-
-UInt16 EventProducerFactory::getNumGroups (void) const
-{
-    return _pGroupMap ? _pGroupMap->size() : 0;
-}
-
-
-/*-------------------------------------------------------------------------*/
-/*                               Create                                    */
-
-/*EventProducerPtr EventProducerFactory::createEventProducer(
-    const std::string &name) const
-{
-    EventProducerPtr returnValue;
-
-    const EventProducerType *pType = findType(name);
-
-    if(pType != NULL)
-        returnValue = pType->createEventProducer();
-
-    return returnValue;
-}*/
-
-/*-------------------------------------------------------------------------*/
-/*                                Get                                      */
-
-/*const EventProducerFactory::EventProducerStore *
-    EventProducerFactory::getEventProducerStore(void) const
-{
-    return _pEventProducerStore;
-}*/
-
-
-/*-------------------------------------------------------------------------*/
-/*                            Static Init                                  */
-
-bool EventProducerFactory::initializeFactory(void)
-{
-    bool returnValue = the()->initialize();
-
-    return returnValue;
-}
-
-bool EventProducerFactory::terminateFactory(void)
-{
-    return the()->terminate();
-}
-
-/*-------------------------------------------------------------------------*/
-/*                            Constructors                                 */
-
-EventProducerFactory::EventProducerFactory(void) :
-    _bInitialized        (false),
-    _pTypeIdMap          (NULL ),
-    _pTypeNameMap        (NULL ),
-    _pGroupMap           (NULL ),
-    _pUnitTypesStore     (NULL ),
-    //_pEventProducerStore(NULL ),
-    _pStoreLock          (NULL ),
-    _pMapLock            (NULL ),
-    _pMapper             (NULL ),
-    _throw_invalid_pointer_exception(false)
-{
-    addPostFactoryInitFunction      (&EventProducerFactory::initializeFactory);
-
-    addPostFactoryExitFunction(&EventProducerFactory::terminateFactory );
-
-    initTypeMap();
-}
-
-/*-------------------------------------------------------------------------*/
-/*                             Destructor                                  */
-
-EventProducerFactory::~EventProducerFactory(void)
-{
-}
-
-/*-------------------------------------------------------------------------*/
-/*                                Init                                     */
-
-bool EventProducerFactory::initialize(void)
-{
-    TypeIdMapIt typeIt;
-
-    if(_bInitialized == true)
-        return true;
-
-    SINFO << "init singleton EventProducerFactory" << std::endl;
-
-    _pStoreLock = ThreadManager::the()->getLock(
-        "OSGEventProducerFactory::_pStoreLock",false);
-
-    //addRefP(_pStoreLock);
-
-    _pMapLock   = ThreadManager::the()->getLock(
-        "OSGEventProducerFactory::_pMapLock",false);
-
-    //addRefP(_pMapLock);
-
-    //FDEBUG( ("Got shore lock %p, Got map %p",
-             //_pStoreLock, _pMapLock) );
-
-    _bInitialized = true;
-
-    initializePendingTypes();
-
-    return _pStoreLock != NULL && _pMapLock != NULL;
-}
-
-bool EventProducerFactory::terminate(void)
-{
-    TypeIdMapIt typeIt;
-
-    SINFO << "terminate singleton EventProducerFactory" << std::endl;
-
-    if(_bInitialized == false)
-        return true;
-
-    if(_pTypeIdMap != NULL)
-    {
-        int i = 0;
-        for(  typeIt  = _pTypeIdMap->begin();
-              typeIt != _pTypeIdMap->end();
-            ++typeIt)
-        {
-            (*typeIt).second->terminate();
-
-            i++;
-        }
-    }
-
-    //subRefP(_pStoreLock);
-    //subRefP(_pMapLock);
-
-    _bInitialized = false;
 
     return true;
 }
 
-void EventProducerFactory::initTypeMap(void)
+bool EventProducerFactoryBase::initializeFactoryPost(void)
 {
-    if(_pTypeIdMap   == NULL &&
-       _pTypeNameMap == NULL)
-    {
-        _pTypeIdMap      = new TypeIdMap;
-        _pTypeNameMap    = new TypeNameMap;
-        _pGroupMap       = new GroupMap;
-        _pUnitTypesStore = new UninitializedTypeStore;
-    }
+    return true;
 }
 
-/*-------------------------------------------------------------------------*/
-/*                              Register                                   */
+bool EventProducerFactoryBase::terminate(void)
+{
+    for(UInt32 i = 0; i < _vTypeNameMaps.size(); ++i)
+    {
+        delete _vTypeNameMaps[i];
+    }
 
-UInt32 EventProducerFactory::registerType(EventProducerType *pType)
+    _vTypeNameMaps.clear();
+
+    return true;
+}
+
+bool EventProducerFactoryBase::onLoadInitialize(void)
+{
+    return true;
+}
+
+/*-------------------------------------------------------------------------*\
+ -  public                                                                 -
+\*-------------------------------------------------------------------------*/
+
+UInt32 EventProducerFactoryBase::registerType(TypeBase *pType)
 {
     UInt32 returnValue = 0;
-#ifndef OSG_EMBEDDED
-    if(_pMapLock != NULL)
-        _pMapLock->acquire();
-#endif
-
-    if(pType->getId() != 0)
-    {
-        _pUnitTypesStore->push_back(pType);
-    }
-
-#ifndef OSG_EMBEDDED
-    if(_pMapLock != NULL)
-        _pMapLock->release();
-#endif
-
-    return returnValue;
-}
-
-UInt16 EventProducerFactory::registerGroup(const std::string &szName)
-{
-    UInt16 returnValue;
-
-    if(szName.empty())
-    {
-        SWARNING << "EventProducer Group without name" << std::endl;
-        return 0;
-    }
-
-    returnValue = findGroupId(szName);
-
-    if(returnValue == 0)
-    {
-#ifndef OSG_EMBEDDED
-        if(_pMapLock != NULL)
-            _pMapLock->acquire();
-#endif
-
-        returnValue                         = _pGroupMap->size() + 1;
-
-        (*_pGroupMap)[szName] = returnValue;
-
-#ifndef OSG_EMBEDDED
-        if(_pMapLock != NULL)
-            _pMapLock->release();
-#endif
-    }
-
-    return returnValue;
-}
-
-void EventProducerFactory::unregisterType(EventProducerType *pType)
-{
-    TypeIdMapIt   typeIdIt;
-    TypeNameMapIt typeNameIt;
 
     if(pType == NULL)
+    {
+        SWARNING << "no data store given" << endLog;
+
+        return returnValue;
+    }
+
+    if(pType->getName().empty() == true) 
+    {
+        SWARNING << "DataElementType without name" << endLog;
+
+        return returnValue;
+    }
+
+    UInt32 uiTypeId = findTypeId(pType->getCName    (), 
+                                 pType->getNameSpace());
+
+    if(uiTypeId != 0)
+    {
+        if(pType != findType(uiTypeId))
+        {
+            SWARNING << "ERROR: Can't add a second "
+                     << "type with the name " << pType->getCName() 
+                     << "(" << pType << ")"
+                     << endLog;
+        }
+        else
+        {
+            SWARNING << "Do not run ctr twice "
+                     << "type with the name " << pType->getCName() 
+                     << "(" << pType << ")"
+                     << endLog;
+
+//            findType(uiTypeId)->dump();
+
+            returnValue = uiTypeId;
+        }
+
+        return returnValue;
+    }
+
+    returnValue = _vTypeStore.size();
+
+    _vTypeStore.push_back(pType);
+
+    while(_vTypeNameMaps.size() <= pType->getNameSpace())
+    {
+        _vTypeNameMaps.push_back(new TypeNameMap);
+
+        PINFO << "Added namespace : " << _vTypeNameMaps.size() << endLog;
+    }
+
+    (*(_vTypeNameMaps[pType->getNameSpace()]))
+        [pType->getName()] = returnValue;
+
+
+    FDEBUG(("Registered type %s | %d (%p)\n", pType->getCName(), returnValue,
+                                              pType)); 
+
+    return returnValue;
+}
+
+UInt32 EventProducerFactoryBase::findTypeId(const Char8 *szName,
+                                   const UInt32 uiNameSpace)
+{
+    TypeNameMapConstIt typeIt;
+    UInt32             uiTypeId = 0;
+
+    if(szName == NULL)
+        return uiTypeId;
+
+    if(_vTypeNameMaps.size() <= uiNameSpace)
+        return uiTypeId;
+
+    TypeNameMap *pMap = _vTypeNameMaps[uiNameSpace];
+
+    typeIt   = pMap->find(std::string(szName));
+
+    uiTypeId = (typeIt == pMap->end()) ? 0 : (*typeIt).second;
+
+    return uiTypeId;
+}
+
+TypeBase *EventProducerFactoryBase::findType(UInt32 uiTypeId)
+{
+    if(uiTypeId < _vTypeStore.size())
+    {
+        return _vTypeStore[uiTypeId];
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+TypeBase *EventProducerFactoryBase::findType(const Char8    *szName,
+                                    const UInt32    uiNameSpace)
+{
+    UInt32 uiTypeId = findTypeId(szName, uiNameSpace);
+
+    return findType(uiTypeId);
+}
+
+UInt32 EventProducerFactoryBase::getNumTypes(void)
+{
+    return _vTypeStore.size();
+}
+
+void EventProducerFactoryBase::writeTypeGraph(FILE *pOut)
+{
+    if(pOut == NULL)
         return;
 
-    if(_pTypeIdMap)
+    fprintf(pOut, "digraph OSGTypeGraph\n{\n");
+
+/* CHECK
+    for_each(_vTypeStore.begin(), 
+             _vTypeStore.end(),
+             bind1st(ptr_fun(writeTypeDot), pOut));
+ */
+
+    fprintf(pOut, "    rankdir=LR;\n");
+    fprintf(pOut, "    size=\"120,200\";\n");
+    fprintf(pOut, "    page=\"8.2677,11.69\";\n");
+    fprintf(pOut, "    radio=auto;\n");
+
+    for(UInt32 i = 1; i < _vTypeStore.size(); i++)
     {
-        UInt32 uiId =  pType->getId();
-
-        typeIdIt    = _pTypeIdMap->find(uiId);
-
-        if(typeIdIt != _pTypeIdMap->end())
-        {
-            _pTypeIdMap->erase(typeIdIt);
-        }
+        writeTypeDot(pOut, _vTypeStore[i]);
     }
 
-    if(_pTypeNameMap)
-    {
-        typeNameIt = _pTypeNameMap->find(pType->getName());
-
-        if(typeNameIt != _pTypeNameMap->end())
-        {
-            _pTypeNameMap->erase(typeNameIt);
-        }
-    }
+    fprintf(pOut, "}\n");
 }
 
-bool EventProducerFactory::pluginInit(void)
+void EventProducerFactoryBase::writeTypeGraph(const Char8 *szFilename)
 {
-    return EventProducerFactory::the()->initializePendingTypes();
+    if(szFilename == NULL)
+        return;
+
+    FILE *pOut = fopen(szFilename, "w");
+
+    if(pOut == NULL)
+        return;
+
+    writeTypeGraph(pOut);
+
+    if(pOut != NULL)
+        fclose(pOut);
 }
 
-bool EventProducerFactory::registerPlugin(void)
-{
-    if(GlobalSystemState == Running)
-        addPostFactoryInitFunction(&EventProducerFactory::pluginInit);
-
-    return true;
-}
+OSG_END_NAMESPACE

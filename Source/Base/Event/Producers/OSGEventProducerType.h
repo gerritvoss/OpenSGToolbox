@@ -166,24 +166,18 @@ class OSG_BASE_DLLMAPPING EventProducerType : public TypeBase
     /*! \{                                                                 */
 
     UInt16              _uiGroupId;
+    std::string            _szGroupName;
 
     bool                _bInitialized;
-    //bool                _bDescsAddable;
 
     EventProducerType *_pParent;
     std::string                _szParentName;
-    std::string            _szGroupName;
-
-    //FieldContainerPtr   _pPrototype;
-    //PrototypeCreateF    _fPrototypeCreate;
 
     MethodDescription  **_pDesc;
     UInt32              _uiDescByteCounter;
 
     DescMap             _mDescMap;
     DescVec             _vDescVec;
-
-    bool                _bCopy;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -197,7 +191,6 @@ class OSG_BASE_DLLMAPPING EventProducerType : public TypeBase
     /*! \name             Intialization / Termination                      */
     /*! \{                                                                 */
 
-    //bool initPrototype   (void);
     bool initMethods      (void);
     bool initParentMethods(void);
 
@@ -211,7 +204,7 @@ class OSG_BASE_DLLMAPPING EventProducerType : public TypeBase
 
     typedef TypeBase Inherited;
 
-    friend class EventProducerFactory;
+    friend class EventProducerFactoryBase;
 
     /*!\brief prohibit default function (move to 'public' if needed) */
     void operator =(const EventProducerType &source);

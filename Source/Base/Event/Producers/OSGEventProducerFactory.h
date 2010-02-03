@@ -42,240 +42,202 @@
 #include "OSGConfig.h"
 #include "OSGBaseDef.h"
 
-#include "OSGLock.h"
-#include "OSGBaseTypes.h"
-#include "OSGException.h"
-#include "OSGFieldContainerFactory.h"
+#include "OSGFactoryBase.h"
+#include "OSGSingletonHolder.h"
+#include "OSGTypeBase.h"
+
 #include <map>
 #include <vector>
 
 OSG_BEGIN_NAMESPACE
 
-class EventProducerType;
+//---------------------------------------------------------------------------
+//  Forward References
+//---------------------------------------------------------------------------
+
+
+//---------------------------------------------------------------------------
+//   Types
+//---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
 //  Class
 //---------------------------------------------------------------------------
 
-/*! \ingroup GrpSystemEventProducer
+/*! \brief Accessible via #TypeFactory
+    \ingroup GrpBaseBaseTypeSystem
+    \ingroup GrpBaseBase
+    \ingroup GrpLibOSGBase
  */
 
-struct OSG_BASE_DLLMAPPING EventProducerMapper
+class OSG_BASE_DLLMAPPING EventProducerFactoryBase : public FactoryBase
 {
-    virtual ~EventProducerMapper();
-    
-    virtual UInt32 map(UInt32 uiId) = 0;
-};
+  public:
 
-//---------------------------------------------------------------------------
-//  Class
-//---------------------------------------------------------------------------
+    //-----------------------------------------------------------------------
+    //   constants                                                           
+    //-----------------------------------------------------------------------
 
-/*! \ingroup GrpSystemEventProducer
- */
+    //-----------------------------------------------------------------------
+    //   enums                                                               
+    //-----------------------------------------------------------------------
 
-class OSG_BASE_DLLMAPPING EventProducerFactory
-{
-    /*=========================  PROTECTED  ===============================*/
+    //-----------------------------------------------------------------------
+    //   types                                                               
+    //-----------------------------------------------------------------------
 
-  protected:
-
-    typedef std::map   <UInt32,       
-                        EventProducerType        *> TypeIdMap;
-    typedef std::map   <std::string, 
-                        EventProducerType        *> TypeNameMap;
-    typedef std::map   <std::string, 
-                        UInt16                     > GroupMap;
-
-    typedef std::vector<EventProducerType        *> UninitializedTypeStore;
-    //typedef std::vector<EventProducerPtr          > EventProducerStore;
-
-    typedef TypeIdMap             ::iterator         TypeIdMapIt;
-    typedef TypeNameMap           ::iterator         TypeNameMapIt;
-    typedef GroupMap              ::iterator         GroupMapIt;
-    typedef UninitializedTypeStore::iterator         UninitTypeStoreIt;
-    //typedef EventProducerStore   ::iterator         EventProducerStoreIt;
-
-    typedef TypeIdMap             ::const_iterator   TypeIdMapConstIt;
-    typedef TypeNameMap           ::const_iterator   TypeNameMapCnstIt;
-    typedef GroupMap              ::const_iterator   GroupMapConstIt;
-
-
-    /*==========================  PUBLIC  =================================*/
-
-  public :
-
-    typedef TypeIdMapIt TypeMapIterator;
-
-    static EventProducerFactory *the(void);
-
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Types                                    */
-    /*! \{                                                                 */
-        
-    EventProducerType *findType    (      UInt32  uiTypeId) const;
-    EventProducerType *findType    (const std::string &szName  ) const;
-    UInt32              getNumTypes (void                  ) const;
-
-
-    EventProducerType *findUninitializedType (const std::string &szName) const;
-
-    bool                initializePendingTypes(      void          );
-
-    TypeMapIterator     beginTypes            (      void          );
-    TypeMapIterator     endTypes              (      void          );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Groups                                   */
-    /*! \{                                                                 */
-
-          UInt16  findGroupId  (const std::string &szName   ) const;
-    const std::string findGroupName(      UInt16  uiGroupId) const;
-        
-          UInt16  getNumGroups (      void             ) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Mapper                                  */
-    /*! \{                                                                 */
-
-    void setMapper(EventProducerMapper *pMapper);
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                  Get EventProducer                          */
-    /*! \{                                                                 */
-
-    //EventProducerPtr getContainer      (UInt32 uiEventProducerId) const;
-    //EventProducerPtr getMappedContainer(UInt32 uiEventProducerId) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name              Create Base EventProducer                      */
-    /*! \{                                                                 */
-
-    //EventProducerPtr createEventProducer(const std::string &name) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name               Write FCD From Name                            */
-    /*! \{                                                                 */
-
-    void writeFCD(const std::string &name, std::ostream *out = NULL);
-    
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name               Get Containerstore                             */
-    /*! \{                                                                 */
-
-    //const EventProducerStore *getEventProducerStore(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                 Invalid Pointer                              */
-    /*! \{                                                                 */
-
-    void setThrowInvalidPointerException(bool s);
-    bool getThrowInvalidPointerException(void) const;
-    void checkThrowInvalidPointerException(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                 Plugin init                                  */
-    /*! \{                                                                 */
-
-    static bool registerPlugin(void);
-
-    /*! \}                                                                 */
-    /*=========================  PROTECTED  ===============================*/
-
-  protected:
-
-    static EventProducerFactory *_the;
-
-    static TypeMapIterator        _defaultTypeMapIt;
-
-    /*---------------------------------------------------------------------*/
-    /*! \name             Intialization / Termination                      */
-    /*! \{                                                                 */
-
-    static bool initializeFactory(void);
-    static bool terminateFactory (void);
-    static bool pluginInit       (void);
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Member                                  */
-    /*! \{                                                                 */
-
-    bool                    _bInitialized;
-
-    TypeIdMap              *_pTypeIdMap;
-    TypeNameMap            *_pTypeNameMap;
-    GroupMap               *_pGroupMap;
-    UninitializedTypeStore *_pUnitTypesStore;
-    //EventProducerStore    *_pEventProducerStore;
-
-
-#ifndef OSG_EMBEDDED
-    LockRefPtr                   _pStoreLock;
-    LockRefPtr                   _pMapLock;
-#endif
-
-    EventProducerMapper   *_pMapper;
-
-    bool                    _throw_invalid_pointer_exception;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Constructors                               */
-    /*! \{                                                                 */
-
-    EventProducerFactory(void);
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Destructor                                 */
-    /*! \{                                                                 */
-
-    virtual ~EventProducerFactory(void); 
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name         Instance Initialization / Termination                */
-    /*! \{                                                                 */
-
-    bool   initialize (void);
-    bool   terminate  (void);
-
-    void   initTypeMap(void);
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Register                                  */
-    /*! \{                                                                 */
-
-    //bool   unregisterEventProducer(const EventProducerPtr  &pEventProducer);
-    //UInt32   registerEventProducer(const EventProducerPtr  &pEventProducer);
-
-    UInt32 registerType            (      EventProducerType *pType          );
-    UInt16 registerGroup           (const std::string &szName         );
-    void   unregisterType          (      EventProducerType *pType          );
-
-    /*! \}                                                                 */
-    /*==========================  PRIVATE  ================================*/
+    typedef FactoryBase Inherited;
 
   private:
 
-    friend class EventProducerType;
-    friend class EventProducer;
+    //-----------------------------------------------------------------------
+    //   enums                                                               
+    //-----------------------------------------------------------------------
 
-    /*!\brief prohibit default function (move to 'public' if needed) */
-    EventProducerFactory(const EventProducerFactory &source);
-    /*!\brief prohibit default function (move to 'public' if needed) */
-    void operator =(const EventProducerFactory &source);
+    //-----------------------------------------------------------------------
+    //   types                                                               
+    //-----------------------------------------------------------------------
+
+    typedef std::map   <std::string, UInt32>   TypeNameMap;
+
+    typedef TypeNameMap::iterator              TypeNameMapIt;
+    typedef TypeNameMap::const_iterator        TypeNameMapConstIt;
+
+    typedef std::vector<TypeBase           *>  TypeStore;
+
+    typedef TypeStore::iterator                TypeStoreIt;
+    typedef TypeStore::const_iterator          TypeStoreConstIt;
+
+    typedef std::vector<TypeNameMap        *>  TypeMapsStore;
+
+    //-----------------------------------------------------------------------
+    //   friend classes                                                      
+    //-----------------------------------------------------------------------
+
+    template <class SingletonT>
+    friend class SingletonHolder;
+
+    friend class FactoryControllerBase;
+
+    //-----------------------------------------------------------------------
+    //   friend functions                                                    
+    //-----------------------------------------------------------------------
+
+    //-----------------------------------------------------------------------
+    //   class variables                                                     
+    //-----------------------------------------------------------------------
+
+    //-----------------------------------------------------------------------
+    //   class functions                                                     
+    //-----------------------------------------------------------------------
+
+    //-----------------------------------------------------------------------
+    //   instance variables                                                  
+    //-----------------------------------------------------------------------
+
+    //-----------------------------------------------------------------------
+    //   instance functions                                                  
+    //-----------------------------------------------------------------------
+
+    //! \brief prohibit default function (move to 'public' if needed) 
+    EventProducerFactoryBase(const EventProducerFactoryBase &source);
+    //! \brief prohibit default function (move to 'public' if needed) 
+    void operator =(const EventProducerFactoryBase &source);
+
+  protected:
+
+    //-----------------------------------------------------------------------
+    //   constants                                                           
+    //-----------------------------------------------------------------------
+
+    static const UInt32 GlobalNamespace = TypeBase::GlobalNamespace;
+
+    //-----------------------------------------------------------------------
+    //   enums                                                               
+    //-----------------------------------------------------------------------
+
+    //-----------------------------------------------------------------------
+    //   types                                                               
+    //-----------------------------------------------------------------------
+
+    //-----------------------------------------------------------------------
+    //   class variables                                                     
+    //-----------------------------------------------------------------------
+
+    //-----------------------------------------------------------------------
+    //   class functions                                                     
+    //-----------------------------------------------------------------------
+
+    static void writeTypeDot(FILE     *pOut,
+                             TypeBase *pTypeBase);
+
+    //-----------------------------------------------------------------------
+    //   instance variables                                                  
+    //-----------------------------------------------------------------------
+
+    TypeMapsStore _vTypeNameMaps;
+    TypeStore     _vTypeStore;
+
+    //-----------------------------------------------------------------------
+    //   instance functions                                                  
+    //-----------------------------------------------------------------------
+
+    EventProducerFactoryBase(void);
+    EventProducerFactoryBase(const Char8 *szName);
+
+    virtual ~EventProducerFactoryBase(void); 
+
+    virtual bool initialize           (void);
+    virtual bool terminate            (void);
+
+    virtual bool onLoadInitialize     (void);
+
+    virtual bool initializeFactoryPost(void);
+
+  public :
+
+    //-----------------------------------------------------------------------
+    //   class functions                                                     
+    //-----------------------------------------------------------------------
+
+    //-----------------------------------------------------------------------
+    //   instance functions                                                  
+    //-----------------------------------------------------------------------
+
+    UInt32 registerType(TypeBase *pType);
+
+    /*---------------------------------------------------------------------*/
+
+    UInt32    findTypeId(const Char8    *szName,
+                         const UInt32    uiNameSpace = GlobalNamespace);
+
+    TypeBase *findType  (      UInt32    uiTypeId       );
+    TypeBase *findType  (const Char8    *szName,
+                         const UInt32    uiNameSpace = GlobalNamespace);
+
+    /*---------------------------------------------------------------------*/
+
+    UInt32 getNumTypes(void);
+
+    /*---------------------------------------------------------------------*/
+
+    void writeTypeGraph(      FILE     *pOut      );
+    void writeTypeGraph(const Char8    *szFilename);
 };
+
+#if defined(WIN32)
+#    if !defined(OSG_COMPILE_TYPEFACTORY)
+//OSG_BASE_EXPIMP_TMPL 
+//template class OSG_BASE_DLLMAPPING SingletonHolder<EventProducerFactoryBase>;
+#    endif
+#endif
+
+/*! \typedef OSG::SingletonHolder<OSG::EventProducerFactoryBase> TypeFactory;
+    \ingroup GrpBaseBaseTypeSystem
+    \relatesalso OSG::EventProducerFactoryBase
+ */
+
+typedef OSG::SingletonHolder<OSG::EventProducerFactoryBase> EventProducerFactory;
 
 OSG_END_NAMESPACE
 

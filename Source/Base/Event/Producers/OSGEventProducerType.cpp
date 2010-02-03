@@ -65,8 +65,8 @@ void EventProducerType::registerType(const std::string &szGroupName)
 {
     EventProducerFactory::the()->registerType (this);
 
-    _uiGroupId = EventProducerFactory::the()->registerGroup(
-        !szGroupName.empty() ? szGroupName : _szName);
+    //_uiGroupId = EventProducerFactory::the()->registerGroup(
+        //!szGroupName.empty() ? szGroupName : _szName);
 }
 
 /*-------------------------------------------------------------------------*/
@@ -82,13 +82,13 @@ EventProducerType::EventProducerType(const std::string &szName,
      Inherited        (szName.c_str(), 
                        szParentName.c_str()     ),
     _uiGroupId        (0                ),
+    _szGroupName      (szGroupName      ),
 
     _bInitialized     (false            ),
     
     _pParent          (NULL             ),
 
     _szParentName     (szParentName     ),
-    _szGroupName      (szGroupName      ),
 
     //_pPrototype       (NullFC           ),
     //_fPrototypeCreate (fPrototypeCreate ),
@@ -97,8 +97,7 @@ EventProducerType::EventProducerType(const std::string &szName,
     _uiDescByteCounter(uiDescByteCounter),
 
     _mDescMap         (                 ),
-    _vDescVec         (0                ),
-    _bCopy            (false            )
+    _vDescVec         (0                )
 {
     registerType(szGroupName);
 
@@ -110,13 +109,13 @@ EventProducerType::EventProducerType(const EventProducerType &obj) :
 
      Inherited        (obj                   ),
     _uiGroupId        (obj._uiGroupId        ),
+    _szGroupName      (obj._szGroupName      ),
 
     _bInitialized     (false                 ),
     
     _pParent          (obj._pParent          ),
 
     _szParentName     (obj._szParentName     ),
-    _szGroupName      (obj._szGroupName      ),
 
     //_pPrototype       (obj._pPrototype       ),
     //_fPrototypeCreate (obj._fPrototypeCreate ),
@@ -125,8 +124,7 @@ EventProducerType::EventProducerType(const EventProducerType &obj) :
     _uiDescByteCounter(obj._uiDescByteCounter),
 
     _mDescMap         (                      ),
-    _vDescVec         (0                     ),
-    _bCopy            (true                  )
+    _vDescVec         (0                     )
 {
     //if(_pPrototype != NullFC)
     //    addRefCP(_pPrototype);
@@ -145,10 +143,6 @@ EventProducerType::~EventProducerType(void)
     if(GlobalSystemState != Shutdown)
     {
         terminate();
-        if(_bCopy == false)
-        {
-            EventProducerFactory::the()->unregisterType(this);
-        }
     }
 }
 
@@ -358,14 +352,7 @@ bool EventProducerType::initParentMethods(void)
     if(!_szParentName.empty())
     {
         _pParent =
-            EventProducerFactory::the()->findType(_szParentName);
-
-        if(_pParent == NULL)
-        {
-            _pParent =
-                EventProducerFactory::the()->findUninitializedType(
-                    _szParentName);
-        }
+            dynamic_cast<EventProducerType*>(EventProducerFactory::the()->findType(_szParentName.c_str()));
 
         if(_pParent != NULL)
         {
