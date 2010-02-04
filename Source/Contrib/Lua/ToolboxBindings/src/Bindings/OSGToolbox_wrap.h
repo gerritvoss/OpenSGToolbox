@@ -2,12 +2,12 @@
 #ifndef _OSGTOOLBOX_LUA_WRAP_H_
 #define _OSGTOOLBOX_LUA_WRAP_H_
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGToolboxLuaBindingsDef.h"
+#include "OSGConfig.h"
+#include "OSGContribLuaToolboxDef.h"
 
 #include <lua.hpp>
-#include <OpenSG/Lua/OSGLuaManager.h>
+#include "OSGLuaManager.h"
 
-osg::LuaManager::OpenBoundLuaLibFunctor  OSG_TOOLBOXLUABINDINGSLIB_DLLMAPPING getOSGToolboxLuaBindingsLibFunctor(void);
+OSG::LuaManager::OpenBoundLuaLibFunctor  OSG_CONTRIBLUATOOLBOX_DLLMAPPING getOSGToolboxLuaBindingsLibFunctor(void);
 
 #endif

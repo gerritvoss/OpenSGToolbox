@@ -5,97 +5,103 @@
 %include <lua/std_map.i>
 %include <lua/std_vector.i>
 %{
-#include <OpenSG/Input/OSGWindowEventProducer.h>
-#include <OpenSG/Input/OSGKeyEvent.h>
-#include <OpenSG/Sound/OSGSound.h>
-#include <OpenSG/Sound/OSGSoundGroup.h>
-#include <OpenSG/Sound/OSGSoundManager.h>
-#include <OpenSG/Animation/OSGAnimation.h>
-#include <OpenSG/UserInterface/OSGComponent.h>
-#include <OpenSG/ParticleSystem/OSGParticleSystem.h>
-#include <OpenSG/ParticleSystem/OSGDistribution1D.h>
-#include <OpenSG/ParticleSystem/OSGDistribution2D.h>
-#include <OpenSG/ParticleSystem/OSGDistribution3D.h>
-#include <OpenSG/Physics/OSGPhysicsHandler.h>
-#include <OpenSG/Physics/OSGPhysicsBody.h>
-#include <OpenSG/Physics/OSGPhysicsSpace.h>
-#include <OpenSG/Physics/OSGPhysicsWorld.h>
+#include "OSGWindowEventProducer.h"
+#include "OSGKeyEvent.h"
 
+#include "OSGSound.h"
+#include "OSGSoundGroup.h"
+#include "OSGSoundManager.h"
 
-#include <OpenSG/OSGFieldContainerType.h>
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGFieldDescription.h>
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGAttachment.h>
-#include <OpenSG/OSGAttachmentContainer.h>
-#include <OpenSG/OSGSimpleAttachments.h>
-#include <OpenSG/OSGAttachmentContainerPtr.h>
-#include <OpenSG/OSGSimpleGeometry.h>
-#include <OpenSG/OSGGeoFunctions.h>
-#include <OpenSG/OSGNode.h>
-#include <OpenSG/OSGNodeCore.h>
-#include <OpenSG/OSGGeometry.h>
-#include <OpenSG/OSGViewport.h>
-#include <OpenSG/OSGCamera.h>
-#include <OpenSG/OSGImage.h>
-#include <OpenSG/OSGSysFieldDataType.h>
-#include <OpenSG/OSGVecFieldDataType.h>
-#include <OpenSG/OSGMathFieldDataType.h>
-#include <OpenSG/OSGSFVecTypes.h>
-#include <OpenSG/OSGSFMathTypes.h>
-#include <OpenSG/OSGSFSysTypes.h>
-#include <OpenSG/OSGMFVecTypes.h>
-#include <OpenSG/OSGMFMathTypes.h>
-#include <OpenSG/OSGMFSysTypes.h>
-#include <OpenSG/OSGMFBaseTypes.h>
-#include <OpenSG/OSGFieldContainerFields.h>
-#include <OpenSG/Toolbox/OSGFieldContainerUtils.h>
-#include <OpenSG/Toolbox/OSGActivity.h>
-#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include "OSGAnimation.h"
 
-#include <OpenSG/Video/OSGVideoWrapper.h>
-#include <OpenSG/Video/OSGVideoManager.h>
+/*#include "OSGComponent.h"*/
+
+#include "OSGParticleSystem.h"
+#include "OSGDistribution1D.h"
+#include "OSGDistribution2D.h"
+#include "OSGDistribution3D.h"
+
+#include "OSGPhysicsHandler.h"
+#include "OSGPhysicsBody.h"
+#include "OSGPhysicsSpace.h"
+#include "OSGPhysicsWorld.h"
+
+/*#include "OSGVideoWrapper.h"*/
+/*#include "OSGVideoManager.h"*/
+
+#include "OSGFieldContainerType.h"
+#include "OSGFieldContainer.h"
+#include "OSGFieldDescriptionBase.h"
+#include "OSGBaseTypes.h"
+#include "OSGAttachment.h"
+#include "OSGAttachmentContainer.h"
+#include "OSGNameAttachment.h"
+#include "OSGAttachmentContainer.h"
+#include "OSGSimpleGeometry.h"
+#include "OSGGeoFunctions.h"
+#include "OSGNode.h"
+#include "OSGNodeCore.h"
+#include "OSGGeometry.h"
+#include "OSGViewport.h"
+#include "OSGCamera.h"
+#include "OSGImage.h"
+#include "OSGTextureObjChunk.h"
+#include "OSGMathFields.h"
+#include "OSGSysFields.h"
+#include "OSGBaseFields.h"
+#include "OSGVecFields.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGContainerUtils.h"
+#include "OSGActivity.h"
+#include "OSGEventProducerType.h"
+#include "OSGEventProducer.h"
+#include "OSGActivity.h"
         
 %}
 
 namespace std {
-    %template(UInt32Vec) vector<osg::UInt32>;
-    %template(StringToUInt32Map) map<string, osg::UInt32>;
+    %template(UInt32Vec) vector<OSG::UInt32>;
+    %template(StringToUInt32Map) map<string, OSG::UInt32>;
 }
     
 
-namespace osg {
+namespace OSG {
 
     class WindowEventProducer;
     class Sound;
     class Animation;
-    class Component;
+    /*class Component;*/
     class ParticleSystem;
     class PhysicsBody;
     class PhysicsHandler;
     class PhysicsWorld;
     
     /******************************************************/
-    /*              WindowEventProducerPtr                             */
+    /*              WindowEventProducerRefPtr                             */
     /******************************************************/
-    class WindowEventProducerPtr : public AttachmentContainerPtr
+    class WindowEventProducerRefPtr : public AttachmentContainerRefPtr
     {
       public:
-         WindowEventProducerPtr(void);
-         WindowEventProducerPtr(const WindowEventProducerPtr               &source);
-         /*WindowEventProducerPtr(const NullFieldContainerPtr &source);*/
+         WindowEventProducerRefPtr(void);
+         WindowEventProducerRefPtr(const WindowEventProducerRefPtr               &source);
+         /*WindowEventProducerRefPtr(const NullFieldContainerRefPtr &source);*/
 
 
-        ~WindowEventProducerPtr(void); 
+        ~WindowEventProducerRefPtr(void); 
         WindowEventProducer *operator->(void);
-        
-        static WindowEventProducerPtr dcast(const FieldContainerPtr oIn);
+    };
+    %extend WindowEventProducerRefPtr
+    {
+        static WindowEventProducerRefPtr dcast(const FieldContainerRefPtr oIn)
+        {
+            OSG::dynamic_pointer_cast<OSG::WindowEventProducer>(oIn);
+        }
     };
     
     /******************************************************/
     /*                       WindowEventProducer                       */
     /******************************************************/ 
-    class WindowEventProducer : public AttachmentContainerPtr
+    class WindowEventProducer : public AttachmentContainerRefPtr
     {
       public:
 
@@ -111,18 +117,20 @@ namespace osg {
             /*std::string _Filter;*/
         /*};*/
 
-        enum CursorType {CURSOR_POINTER=0, 
-            CURSOR_HAND=1,
-            CURSOR_I_BEAM=2,
-            CURSOR_WAIT=3,
-            CURSOR_RESIZE_W_TO_E=4,
-            CURSOR_RESIZE_N_TO_S=5,
-            CURSOR_RESIZE_NW_TO_SE=6,
-            CURSOR_RESIZE_SW_TO_NE=7,
-            CURSOR_RESIZE_ALL=8,
-            CURSOR_NONE=9};
+        enum CursorType {
+            CURSOR_POINTER         = 0,
+            CURSOR_HAND            = 1,
+            CURSOR_I_BEAM          = 2,
+            CURSOR_WAIT            = 3,
+            CURSOR_RESIZE_W_TO_E   = 4,
+            CURSOR_RESIZE_N_TO_S   = 5,
+            CURSOR_RESIZE_NW_TO_SE = 6,
+            CURSOR_RESIZE_SW_TO_NE = 7,
+            CURSOR_RESIZE_ALL      = 8,
+            CURSOR_NONE            = 9
+        };
 
-        //virtual WindowPtr initWindow(void);
+        //virtual WindowRefPtr initWindow(void);
 
         virtual void openWindow(const Pnt2f& ScreenPosition,
                            const Vec2f& Size,
@@ -225,7 +233,7 @@ namespace osg {
         
         virtual Pnt2f getMousePosition(void) const = 0;
 
-        ViewportPtr windowToViewport(const Pnt2f& WindowPoint, Pnt2f& ViewportPoint);
+        ViewportRefPtr windowToViewport(const Pnt2f& WindowPoint, Pnt2f& ViewportPoint);
 
         virtual std::string getClipboard(void) const = 0;
 
@@ -255,20 +263,25 @@ namespace osg {
     /******************************************************/
     
     /******************************************************/
-    /*                 PhysicsHandlerPtr                  */
+    /*                 PhysicsHandlerRefPtr                  */
     /******************************************************/
-    class PhysicsHandlerPtr : public FieldContainerPtr
+    class PhysicsHandlerRefPtr : public FieldContainerRefPtr
     {
       public:
-         PhysicsHandlerPtr(void);
-         PhysicsHandlerPtr(const PhysicsHandlerPtr               &source);
-         /*PhysicsHandlerPtr(const NullFieldContainerPtr &source);*/
+         PhysicsHandlerRefPtr(void);
+         PhysicsHandlerRefPtr(const PhysicsHandlerRefPtr               &source);
+         /*PhysicsHandlerRefPtr(const NullFieldContainerRefPtr &source);*/
 
 
-        ~PhysicsHandlerPtr(void); 
+        ~PhysicsHandlerRefPtr(void); 
         PhysicsHandler *operator->(void);
-        
-        static PhysicsHandlerPtr dcast(const FieldContainerPtr oIn);
+    };
+    %extend PhysicsHandlerRefPtr
+    {
+        static PhysicsHandlerRefPtr dcast(const FieldContainerRefPtr oIn)
+        {
+            OSG::dynamic_pointer_cast<OSG::PhysicsHandler>(oIn);
+        }
     };
 
     /******************************************************/
@@ -288,20 +301,25 @@ namespace osg {
     };
 
     /******************************************************/
-    /*                 PhysicsWorldPtr                  */
+    /*                 PhysicsWorldRefPtr                  */
     /******************************************************/
-    class PhysicsWorldPtr : public FieldContainerPtr
+    class PhysicsWorldRefPtr : public FieldContainerRefPtr
     {
       public:
-         PhysicsWorldPtr(void);
-         PhysicsWorldPtr(const PhysicsWorldPtr               &source);
-         /*PhysicsWorldPtr(const NullFieldContainerPtr &source);*/
+         PhysicsWorldRefPtr(void);
+         PhysicsWorldRefPtr(const PhysicsWorldRefPtr               &source);
+         /*PhysicsWorldRefPtr(const NullFieldContainerRefPtr &source);*/
 
 
-        ~PhysicsWorldPtr(void); 
+        ~PhysicsWorldRefPtr(void); 
         PhysicsWorld *operator->(void);
-        
-        static PhysicsWorldPtr dcast(const FieldContainerPtr oIn);
+    };
+    %extend PhysicsWorldRefPtr
+    {
+        static PhysicsWorldRefPtr dcast(const FieldContainerRefPtr oIn)
+        {
+            OSG::dynamic_pointer_cast<OSG::PhysicsWorld>(oIn);
+        }
     };
 
     /******************************************************/
@@ -315,7 +333,7 @@ namespace osg {
         //void worldQuickStep(Real32 stepsize);
         void initWorld();
 
-        PhysicsHandlerPtr getParentHandler(void) const;
+        PhysicsHandlerRefPtr getParentHandler(void) const;
 
       protected:
         PhysicsWorld(void);
@@ -325,20 +343,25 @@ namespace osg {
     };
 
     /******************************************************/
-    /*                 PhysicsBodyPtr                  */
+    /*                 PhysicsBodyRefPtr                  */
     /******************************************************/
-    class PhysicsBodyPtr : public FieldContainerPtr
+    class PhysicsBodyRefPtr : public FieldContainerRefPtr
     {
       public:
-         PhysicsBodyPtr(void);
-         PhysicsBodyPtr(const PhysicsBodyPtr               &source);
-         /*PhysicsBodyPtr(const NullFieldContainerPtr &source);*/
+         PhysicsBodyRefPtr(void);
+         PhysicsBodyRefPtr(const PhysicsBodyRefPtr               &source);
+         /*PhysicsBodyRefPtr(const NullFieldContainerRefPtr &source);*/
 
 
-        ~PhysicsBodyPtr(void); 
+        ~PhysicsBodyRefPtr(void); 
         PhysicsBody *operator->(void);
-        
-        static PhysicsBodyPtr dcast(const FieldContainerPtr oIn);
+    };
+    %extend PhysicsBodyRefPtr
+    {
+        static PhysicsBodyRefPtr dcast(const FieldContainerRefPtr oIn)
+        {
+            OSG::dynamic_pointer_cast<OSG::PhysicsBody>(oIn);
+        }
     };
 
     /******************************************************/
@@ -349,7 +372,7 @@ namespace osg {
       public:
       //dBodyID getBodyID(void);
 
-      static  PhysicsBodyPtr      create          (PhysicsWorldPtr World);
+      static  PhysicsBodyRefPtr      create          (PhysicsWorldRefPtr World);
 
       void setEnable(bool enable);
       bool getEnable(void) const;
@@ -414,10 +437,10 @@ namespace osg {
     class PhysicsSpace : public FieldContainer
     {
       public:
-          //void addCollisionContactCategory(UInt64 Category1, UInt64 Category2, CollisionContactParametersPtr ContactParams);
+          //void addCollisionContactCategory(UInt64 Category1, UInt64 Category2, CollisionContactParametersRefPtr ContactParams);
           //void removeCollisionContactCategory(UInt64 Category1, UInt64 Category2);
-          //CollisionContactParametersPtr getCollisionContactCategory(UInt64 Category1, UInt64 Category2);
-          //CollisionContactParametersPtr getCollisionContact(UInt64 Category1, UInt64 Category2);
+          //CollisionContactParametersRefPtr getCollisionContactCategory(UInt64 Category1, UInt64 Category2);
+          //CollisionContactParametersRefPtr getCollisionContact(UInt64 Category1, UInt64 Category2);
     
           
           //void addCollisionListenerCategory();
@@ -433,20 +456,25 @@ namespace osg {
         virtual ~PhysicsSpace(void);
     };
     /******************************************************/
-    /*                 PhysicsSpacePtr                  */
+    /*                 PhysicsSpaceRefPtr                  */
     /******************************************************/
-    class PhysicsSpacePtr : public FieldContainerPtr
+    class PhysicsSpaceRefPtr : public FieldContainerRefPtr
     {
       public:
-         PhysicsSpacePtr(void);
-         PhysicsSpacePtr(const PhysicsSpacePtr               &source);
-         /*PhysicsSpacePtr(const NullFieldContainerPtr &source);*/
+         PhysicsSpaceRefPtr(void);
+         PhysicsSpaceRefPtr(const PhysicsSpaceRefPtr               &source);
+         /*PhysicsSpaceRefPtr(const NullFieldContainerRefPtr &source);*/
 
 
-        ~PhysicsSpacePtr(void); 
+        ~PhysicsSpaceRefPtr(void); 
         PhysicsSpace *operator->(void);
-        
-        static PhysicsSpacePtr dcast(const FieldContainerPtr oIn);
+    };
+    %extend PhysicsSpaceRefPtr
+    {
+        static PhysicsSpaceRefPtr dcast(const FieldContainerRefPtr oIn)
+        {
+            OSG::dynamic_pointer_cast<OSG::PhysicsSpace>(oIn);
+        }
     };
 
     /******************************************************/
@@ -649,20 +677,25 @@ namespace osg {
     /******************************************************/
 
     /******************************************************/
-    /*                 ParticleSystemPtr                       */
+    /*                 ParticleSystemRefPtr                       */
     /******************************************************/
-    class ParticleSystemPtr : public AttachmentContainerPtr
+    class ParticleSystemRefPtr : public AttachmentContainerRefPtr
     {
       public:
-         ParticleSystemPtr(void);
-         ParticleSystemPtr(const ParticleSystemPtr               &source);
-         /*ParticleSystemPtr(const NullFieldContainerPtr &source);*/
+         ParticleSystemRefPtr(void);
+         ParticleSystemRefPtr(const ParticleSystemRefPtr               &source);
+         /*ParticleSystemRefPtr(const NullFieldContainerRefPtr &source);*/
 
 
-        ~ParticleSystemPtr(void); 
+        ~ParticleSystemRefPtr(void); 
         ParticleSystem *operator->(void);
-        
-        static ParticleSystemPtr dcast(const FieldContainerPtr oIn);
+    };
+    %extend VideoManagerRefPtr
+    {
+        static VideoManagerRefPtr dcast(const FieldContainerRefPtr oIn)
+        {
+            OSG::dynamic_pointer_cast<OSG::VideoManager>(oIn);
+        }
     };
     
     /******************************************************/
@@ -686,7 +719,7 @@ namespace osg {
         const Vec3f getVelocityChange(const UInt32& Index) const;
         const Vec3f& getAcceleration(const UInt32& Index) const;
         UInt32 getAttribute(const UInt32& Index, const std::string& AttributeKey) const;
-        const std::map<std::string, osg::UInt32>& getAttributes(const UInt32& Index) const;
+        const std::map<std::string, OSG::UInt32>& getAttributes(const UInt32& Index) const;
     
         void setPosition(const Pnt3f& Pos, const UInt32& Index);
         void setSecPosition(const Pnt3f& SecPosition, const UInt32& Index);
@@ -699,7 +732,7 @@ namespace osg {
         void setSecVelocity(const Vec3f& SecVelocity, const UInt32& Index);
         void setAcceleration(const Vec3f& Acceleration, const UInt32& Index);
         void setAttribute(const std::string& AttributeKey, UInt32 AttributeValue, const UInt32& Index);
-        void setAttributes(const std::map<std::string, osg::UInt32>& Attributes, const UInt32& Index);
+        void setAttributes(const std::map<std::string, OSG::UInt32>& Attributes, const UInt32& Index);
     
         bool addParticle(const Pnt3f& Position,
                          const Pnt3f& SecPosition,
@@ -711,7 +744,7 @@ namespace osg {
                          const Vec3f& Velocity,
                          const Vec3f& SecVelocity,
                          const Vec3f& Acceleration,
-                         const std::map<std::string, osg::UInt32>& Attributes);
+                         const std::map<std::string, OSG::UInt32>& Attributes);
     
         bool addWorldSpaceParticle(const Pnt3f& Position,
                          const Pnt3f& SecPosition,
@@ -723,7 +756,7 @@ namespace osg {
                          const Vec3f& Velocity,
                          const Vec3f& SecVelocity,
                          const Vec3f& Acceleration,
-                         const std::map<std::string, osg::UInt32>& Attributes);
+                         const std::map<std::string, OSG::UInt32>& Attributes);
     
         bool addParticle(const Pnt3f& Position,
                          const Vec3f& Normal,
@@ -743,13 +776,13 @@ namespace osg {
     
         bool killParticle(UInt32 Index, bool KillNextUpdate = false);
     
-        bool attachUpdateListener(WindowEventProducerPtr UpdateProducer);
-        void dettachUpdateListener(WindowEventProducerPtr UpdateProducer);
+        bool attachUpdateListener(WindowEventProducerRefPtr UpdateProducer);
+        void dettachUpdateListener(WindowEventProducerRefPtr UpdateProducer);
         
-        std::vector<UInt32> intersect(const Line& Ray, Real32 MinDistFromRay, Real32 MinDistFromRayOrigin, bool sort = false, NodePtr Beacon = NullFC) const;
-        std::vector<UInt32> intersect(const Pnt3f& p1, const Pnt3f& p2, Real32 IntersectionDistance, NodePtr Beacon = NullFC) const;
-        std::vector<UInt32> intersect(const Volume& Vol, Real32 IntersectionDistance, NodePtr Beacon = NullFC) const;
-        std::vector<UInt32> intersect(const NodePtr CollisionNode, bool sort = false, NodePtr Beacon = NullFC) const;
+        std::vector<UInt32> intersect(const Line& Ray, Real32 MinDistFromRay, Real32 MinDistFromRayOrigin, bool sort = false, NodeRefPtr Beacon = NullFC) const;
+        std::vector<UInt32> intersect(const Pnt3f& p1, const Pnt3f& p2, Real32 IntersectionDistance, NodeRefPtr Beacon = NullFC) const;
+        std::vector<UInt32> intersect(const Volume& Vol, Real32 IntersectionDistance, NodeRefPtr Beacon = NullFC) const;
+        std::vector<UInt32> intersect(const NodeRefPtr CollisionNode, bool sort = false, NodeRefPtr Beacon = NullFC) const;
         
       protected:
             ParticleSystem(void);
@@ -758,140 +791,155 @@ namespace osg {
             virtual ~ParticleSystem(void);
     };
 
+    //[>****************************************************<]
+    //[>                 ComponentRefPtr                       <]
+    //[>****************************************************<]
+    //class ComponentRefPtr : public AttachmentContainerRefPtr
+    //{
+      //public:
+         //ComponentRefPtr(void);
+         //ComponentRefPtr(const ComponentRefPtr               &source);
+         //[>ComponentRefPtr(const NullFieldContainerRefPtr &source);<]
+
+
+        //~ComponentRefPtr(void); 
+        //Component *operator->(void);
+    //};
+    //%extend ComponentRefPtr
+    //{
+        //static ComponentRefPtr dcast(const FieldContainerRefPtr oIn)
+        //{
+            //OSG::dynamic_pointer_cast<OSG::Component>(oIn);
+        //}
+    //};
+
+    //[>****************************************************<]
+    //[>                 Component                       <]
+    //[>****************************************************<]
+    //class Component : public AttachmentContainer
+    //{
+      //public:
+        ////virtual void draw(const GraphicsRefPtr Graphics) const;
+    
+        //virtual void getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
+        //virtual void getClipBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
+        //virtual void getInsideBorderBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
+        //virtual void getBoundsRenderingSurfaceSpace(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
+        //virtual void updateContainerLayout(void);
+        //virtual void updateClipBounds(void);
+        //virtual Vec2f getRequestedSize(void) const;
+        //virtual Vec2f getContentRequestedSize(void) const;
+        //virtual Vec2f getBorderingLength(void) const;
+        
+        ////Mouse Events
+        ////virtual void mouseClicked(const MouseEventRefPtr e);
+        ////virtual void mouseEntered(const MouseEventRefPtr e);
+        /////virtual void mouseExited(const MouseEventRefPtr e);
+        ////virtual void mousePressed(const MouseEventRefPtr e);
+        ////virtual void mouseReleased(const MouseEventRefPtr e);
+    
+        ////Mouse Motion Events
+        ////virtual void mouseMoved(const MouseEventRefPtr e);
+        ////virtual void mouseDragged(const MouseEventRefPtr e);
+    
+        ////Mouse Wheel Events
+        ////virtual void mouseWheelMoved(const MouseWheelEventRefPtr e);
+    
+        ////Key Events
+        ////virtual void keyPressed(const KeyEventRefPtr e);
+        ////virtual void keyReleased(const KeyEventRefPtr e);
+        ////virtual void keyTyped(const KeyEventRefPtr e);
+    
+        ////Focus Events
+        ////virtual void focusGained(const FocusEventRefPtr e);
+        ////virtual void focusLost(const FocusEventRefPtr e);
+    
+        //void setMouseContained(bool Value);
+        //bool getMouseContained(void);
+    
+        //virtual bool takeFocus(bool Temporary = false);
+        
+        //virtual bool isContained(const Pnt2f& p, bool TestAgainstClipBounds = true) const;
+    
+        //virtual Real32 getBaseline(const Real32& x, const Real32& y) const;
+    
+        //virtual Pnt2f getToolTipLocation(Pnt2f MousePosition);
+        ////virtual ToolTipRefPtr createToolTip(void);
+        
+        //virtual Vec2f getPreferredScrollableViewportSize(void);
+    
+        //virtual Int32 getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
+    
+        //virtual bool getScrollableTracksViewportHeight(void);
+    
+        //virtual bool getScrollableTracksViewportWidth(void);
+    
+        //virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
+    
+        //virtual void scrollToPoint(const Pnt2f& PointInComponent);
+    
+        ////static const OSG::BitVector BordersFieldMask;
+        ////virtual void setBorders(BorderRefPtr TheBorder);
+    
+        ////static const OSG::BitVector BackgroundsFieldMask;
+        ////virtual void setBackgrounds(LayerRefPtr TheBackground);
+        
+        ////static const OSG::BitVector ForegroundsFieldMask;
+        ////virtual void setForegrounds(LayerRefPtr TheForeground);
+    
+        //virtual Pnt2f getParentToLocal(const Pnt2f& Location);
+    
+        //virtual Pnt2f getLocalToParent(const Pnt2f& Location);
+    
+      //protected:
+            //Component(void);
+            //Component(const Component &source);
+    
+            //virtual ~Component(void);
+    //};
+
     /******************************************************/
-    /*                 ComponentPtr                       */
+    /*                 VideoWrapperRefPtr                       */
     /******************************************************/
-    class ComponentPtr : public AttachmentContainerPtr
+    /*class VideoWrapperRefPtr : public AttachmentContainerRefPtr
     {
       public:
-         ComponentPtr(void);
-         ComponentPtr(const ComponentPtr               &source);
-         /*ComponentPtr(const NullFieldContainerPtr &source);*/
+         VideoWrapperRefPtr(void);
+         VideoWrapperRefPtr(const VideoWrapperRefPtr               &source);
+         //VideoWrapperRefPtr(const NullFieldContainerRefPtr &source);
 
 
-        ~ComponentPtr(void); 
-        Component *operator->(void);
-        
-        static ComponentPtr dcast(const FieldContainerPtr oIn);
-    };
-
-    /******************************************************/
-    /*                 Component                       */
-    /******************************************************/
-    class Component : public AttachmentContainer
-    {
-      public:
-        //virtual void draw(const GraphicsPtr Graphics) const;
-    
-        virtual void getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
-        virtual void getClipBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
-        virtual void getInsideBorderBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
-        virtual void getBoundsRenderingSurfaceSpace(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
-        virtual void updateContainerLayout(void);
-        virtual void updateClipBounds(void);
-        virtual Vec2f getRequestedSize(void) const;
-        virtual Vec2f getContentRequestedSize(void) const;
-        virtual Vec2f getBorderingLength(void) const;
-        
-        //Mouse Events
-        //virtual void mouseClicked(const MouseEventPtr e);
-        //virtual void mouseEntered(const MouseEventPtr e);
-        ///virtual void mouseExited(const MouseEventPtr e);
-        //virtual void mousePressed(const MouseEventPtr e);
-        //virtual void mouseReleased(const MouseEventPtr e);
-    
-        //Mouse Motion Events
-        //virtual void mouseMoved(const MouseEventPtr e);
-        //virtual void mouseDragged(const MouseEventPtr e);
-    
-        //Mouse Wheel Events
-        //virtual void mouseWheelMoved(const MouseWheelEventPtr e);
-    
-        //Key Events
-        //virtual void keyPressed(const KeyEventPtr e);
-        //virtual void keyReleased(const KeyEventPtr e);
-        //virtual void keyTyped(const KeyEventPtr e);
-    
-        //Focus Events
-        //virtual void focusGained(const FocusEventPtr e);
-        //virtual void focusLost(const FocusEventPtr e);
-    
-        void setMouseContained(bool Value);
-        bool getMouseContained(void);
-    
-        virtual bool takeFocus(bool Temporary = false);
-        
-        virtual bool isContained(const Pnt2f& p, bool TestAgainstClipBounds = true) const;
-    
-        virtual Real32 getBaseline(const Real32& x, const Real32& y) const;
-    
-        virtual Pnt2f getToolTipLocation(Pnt2f MousePosition);
-        //virtual ToolTipPtr createToolTip(void);
-        
-        virtual Vec2f getPreferredScrollableViewportSize(void);
-    
-        virtual Int32 getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
-    
-        virtual bool getScrollableTracksViewportHeight(void);
-    
-        virtual bool getScrollableTracksViewportWidth(void);
-    
-        virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
-    
-        virtual void scrollToPoint(const Pnt2f& PointInComponent);
-    
-        //static const OSG::BitVector BordersFieldMask;
-        //virtual void setBorders(BorderPtr TheBorder);
-    
-        //static const OSG::BitVector BackgroundsFieldMask;
-        //virtual void setBackgrounds(LayerPtr TheBackground);
-        
-        //static const OSG::BitVector ForegroundsFieldMask;
-        //virtual void setForegrounds(LayerPtr TheForeground);
-    
-        virtual Pnt2f getParentToLocal(const Pnt2f& Location);
-    
-        virtual Pnt2f getLocalToParent(const Pnt2f& Location);
-    
-      protected:
-            Component(void);
-            Component(const Component &source);
-    
-            virtual ~Component(void);
-    };
-
-    /******************************************************/
-    /*                 VideoWrapperPtr                       */
-    /******************************************************/
-    /*class VideoWrapperPtr : public AttachmentContainerPtr
-    {
-      public:
-         VideoWrapperPtr(void);
-         VideoWrapperPtr(const VideoWrapperPtr               &source);
-         //VideoWrapperPtr(const NullFieldContainerPtr &source);
-
-
-        ~VideoWrapperPtr(void); 
+        ~VideoWrapperRefPtr(void); 
         VideoWrapper *operator->(void);
-        
-        static VideoWrapperPtr dcast(const FieldContainerPtr oIn);
+    };
+    %extend VideoWrapperRefPtr
+    {
+        static VideoWrapperRefPtr dcast(const FieldContainerRefPtr oIn)
+        {
+            OSG::dynamic_pointer_cast<OSG::VideoWrapper>(oIn);
+        }
     };*/
     
     /******************************************************/
-    /*                 SoundPtr                       */
+    /*                 SoundRefPtr                       */
     /******************************************************/
-    class SoundPtr : public AttachmentContainerPtr
+    class SoundRefPtr : public AttachmentContainerRefPtr
     {
       public:
-         SoundPtr(void);
-         SoundPtr(const SoundPtr               &source);
-         /*SoundPtr(const NullFieldContainerPtr &source);*/
+         SoundRefPtr(void);
+         SoundRefPtr(const SoundRefPtr               &source);
+         /*SoundRefPtr(const NullFieldContainerRefPtr &source);*/
 
 
-        ~SoundPtr(void); 
+        ~SoundRefPtr(void); 
         Sound *operator->(void);
-        
-        static SoundPtr dcast(const FieldContainerPtr oIn);
+    };
+    %extend SoundRefPtr
+    {
+        static SoundRefPtr dcast(const FieldContainerRefPtr oIn)
+        {
+            OSG::dynamic_pointer_cast<OSG::Sound>(oIn);
+        }
     };
     
     /******************************************************/
@@ -936,7 +984,7 @@ namespace osg {
         virtual void setAllChannelPaused(bool paused) = 0;
         virtual void setAllChannelMute(bool shouldMute) = 0;
         
-        static  SoundPtr      create(void); 
+        static  SoundRefPtr      create(void); 
       private:
         Sound(void);
         Sound(const Sound &source);
@@ -954,13 +1002,13 @@ namespace osg {
         static SoundManager* the(void);
     
         //create a new sound object by its integer id
-        virtual SoundPtr createSound(void) const = 0;
+        virtual SoundRefPtr createSound(void) const = 0;
     
-        virtual void setCamera(CameraPtr TheCamera);
-        virtual CameraPtr getCamera(void) const;
+        virtual void setCamera(CameraRefPtr TheCamera);
+        virtual CameraRefPtr getCamera(void) const;
     
-        void attachUpdateProducer(WindowEventProducerPtr TheProducer);
-        void detachUpdateProducer(WindowEventProducerPtr TheProducer);
+        void attachUpdateProducer(WindowEventProducerRefPtr TheProducer);
+        void detachUpdateProducer(WindowEventProducerRefPtr TheProducer);
     
       protected:
         SoundManager(void);
@@ -992,37 +1040,47 @@ namespace osg {
     };
     
     /******************************************************/
-    /*                 SoundGroupPtr                       */
+    /*                 SoundGroupRefPtr                       */
     /******************************************************/
-    class SoundGroupPtr : public AttachmentContainerPtr
+    class SoundGroupRefPtr : public AttachmentContainerRefPtr
     {
       public:
-         SoundGroupPtr(void);
-         SoundGroupPtr(const SoundGroupPtr               &source);
-         /*SoundGroupPtr(const NullFieldContainerPtr &source);*/
+         SoundGroupRefPtr(void);
+         SoundGroupRefPtr(const SoundGroupRefPtr               &source);
+         /*SoundGroupRefPtr(const NullFieldContainerRefPtr &source);*/
 
 
-        ~SoundGroupPtr(void); 
+        ~SoundGroupRefPtr(void); 
         SoundGroup *operator->(void);
-        
-        static SoundGroupPtr dcast(const FieldContainerPtr oIn);
+    };
+    %extend SoundGroupRefPtr
+    {
+        static SoundGroupRefPtr dcast(const FieldContainerRefPtr oIn)
+        {
+            OSG::dynamic_pointer_cast<OSG::SoundGroup>(oIn);
+        }
     };
 
     /******************************************************/
-    /*                 AnimationPtr                       */
+    /*                 AnimationRefPtr                       */
     /******************************************************/
-    class AnimationPtr : public AttachmentContainerPtr
+    class AnimationRefPtr : public AttachmentContainerRefPtr
     {
       public:
-         AnimationPtr(void);
-         AnimationPtr(const AnimationPtr               &source);
-         /*AnimationPtr(const NullFieldContainerPtr &source);*/
+         AnimationRefPtr(void);
+         AnimationRefPtr(const AnimationRefPtr               &source);
+         /*AnimationRefPtr(const NullFieldContainerRefPtr &source);*/
 
 
-        ~AnimationPtr(void); 
+        ~AnimationRefPtr(void); 
         Animation *operator->(void);
-        
-        static AnimationPtr dcast(const FieldContainerPtr oIn);
+    };
+    %extend AnimationRefPtr
+    {
+        static AnimationRefPtr dcast(const FieldContainerRefPtr oIn)
+        {
+            OSG::dynamic_pointer_cast<OSG::Animation>(oIn);
+        }
     };
     
     /******************************************************/
@@ -1032,7 +1090,7 @@ namespace osg {
     {
       public:
         
-        //virtual bool update(const AnimationAdvancerPtr& advancer);
+        //virtual bool update(const AnimationAdvancerRefPtr& advancer);
     
         virtual Real32 getLength(void) const;
         virtual Real32 getCycleLength(void) const = 0;
@@ -1052,81 +1110,86 @@ namespace osg {
     };
 
     
-    /******************************************************/
-    /*                 VideoWrapper                       */
-    /******************************************************/
-    class VideoWrapper : public AttachmentContainer
-    {
-      public:
-        //virtual bool open(const Path& ThePath);
-        virtual bool open(const std::string& ThePath) = 0;
+    //[>****************************************************<]
+    //[>                 VideoWrapper                       <]
+    //[>****************************************************<]
+    //class VideoWrapper : public AttachmentContainer
+    //{
+      //public:
+        ////virtual bool open(const Path& ThePath);
+        //virtual bool open(const std::string& ThePath) = 0;
     
-        virtual bool seek(Int64 SeekPos) = 0;
-        virtual bool jump(Int64 Amount) = 0;
-        virtual bool setRate(Real32 Rate) = 0;
-        virtual Real32 getRate(void) const = 0;
-        virtual bool play(void) = 0;
-        virtual bool pause(void) = 0;
-        virtual bool unpause(void) = 0;
-        virtual bool pauseToggle(void) = 0;
-        virtual bool stop(void) = 0;
-        virtual bool close(void) = 0;
+        //virtual bool seek(Int64 SeekPos) = 0;
+        //virtual bool jump(Int64 Amount) = 0;
+        //virtual bool setRate(Real32 Rate) = 0;
+        //virtual Real32 getRate(void) const = 0;
+        //virtual bool play(void) = 0;
+        //virtual bool pause(void) = 0;
+        //virtual bool unpause(void) = 0;
+        //virtual bool pauseToggle(void) = 0;
+        //virtual bool stop(void) = 0;
+        //virtual bool close(void) = 0;
         
-        virtual bool isPlaying(void) const = 0;
-        virtual bool isStopped(void) const = 0;
-        virtual bool isPaused(void) const = 0;
-        virtual bool isInitialized(void) const = 0;
+        //virtual bool isPlaying(void) const = 0;
+        //virtual bool isStopped(void) const = 0;
+        //virtual bool isPaused(void) const = 0;
+        //virtual bool isInitialized(void) const = 0;
     
-        virtual Int64 getPosition(void) const = 0;
-        virtual Int64 getDuration(void) const = 0;
+        //virtual Int64 getPosition(void) const = 0;
+        //virtual Int64 getDuration(void) const = 0;
     
-        virtual ImagePtr getCurrentFrame(void) = 0;
-        virtual bool updateImage(void) = 0;
-        virtual bool updateTexture(TextureChunkPtr TheTexture);
+        //virtual ImageRefPtr getCurrentFrame(void) = 0;
+        //virtual bool updateImage(void) = 0;
+        //virtual bool updateTexture(TextureChunkRefPtr TheTexture);
     
-        ImagePtr getImage(void) const;
+        //ImageRefPtr getImage(void) const;
     
-        //Events
-        //void addVideoListener(VideoListenerPtr Listener);
-        //void removeVideoListener(VideoListenerPtr Listener);
-      protected:
-        VideoWrapper(void);
-        VideoWrapper(const VideoWrapper &source);
-        virtual ~VideoWrapper(void); 
-    };
+        ////Events
+        ////void addVideoListener(VideoListenerRefPtr Listener);
+        ////void removeVideoListener(VideoListenerRefPtr Listener);
+      //protected:
+        //VideoWrapper(void);
+        //VideoWrapper(const VideoWrapper &source);
+        //virtual ~VideoWrapper(void); 
+    //};
     
-    /******************************************************/
-    /*                 VideoWrapperPtr                       */
-    /******************************************************/
-    class VideoWrapperPtr : public AttachmentContainerPtr
-    {
-      public:
-         VideoWrapperPtr(void);
-         VideoWrapperPtr(const VideoWrapperPtr               &source);
-         /*VideoWrapperPtr(const NullFieldContainerPtr &source);*/
+    //[>****************************************************<]
+    //[>                 VideoWrapperRefPtr                       <]
+    //[>****************************************************<]
+    //class VideoWrapperRefPtr : public AttachmentContainerRefPtr
+    //{
+      //public:
+         //VideoWrapperRefPtr(void);
+         //VideoWrapperRefPtr(const VideoWrapperRefPtr               &source);
+         //[>VideoWrapperRefPtr(const NullFieldContainerRefPtr &source);<]
 
 
-        ~VideoWrapperPtr(void); 
-        VideoWrapper *operator->(void);
-        
-        static VideoWrapperPtr dcast(const FieldContainerPtr oIn);
-    };
+        //~VideoWrapperRefPtr(void); 
+        //VideoWrapper *operator->(void);
+    //};
+    //%extend VideoWrapperRefPtr
+    //{
+        //static VideoWrapperRefPtr dcast(const FieldContainerRefPtr oIn)
+        //{
+            //OSG::dynamic_pointer_cast<OSG::VideoWrapper>(oIn);
+        //}
+    //};
     
-    class VideoManager
-    {
-    public:
-        //virtual void init(int   argc, char *argv[]) = 0;
-        virtual void init(void);
-        virtual void exit(void) = 0;
+    //class VideoManager
+    //{
+    //public:
+        ////virtual void init(int   argc, char *argv[]) = 0;
+        //virtual void init(void);
+        //virtual void exit(void) = 0;
     
-        virtual VideoWrapperPtr createVideoWrapper(void) const = 0;
+        //virtual VideoWrapperRefPtr createVideoWrapper(void) const = 0;
     
-    private:
-    protected:
-    };
+    //private:
+    //protected:
+    //};
 
-    typedef VideoManager* VideoManagerPtr;
-    VideoManagerPtr getDefaultVideoManager(void);
+    //typedef VideoManager* VideoManagerRefPtr;
+    //VideoManagerRefPtr getDefaultVideoManager(void);
     
     /******************************************************/
     /*               Distribution1D                       */
@@ -1143,20 +1206,25 @@ namespace osg {
     };
 
     /******************************************************/
-    /*               Distribution1DPtr                    */
+    /*               Distribution1DRefPtr                    */
     /******************************************************/
-    class Distribution1DPtr : public AttachmentContainerPtr
+    class Distribution1DRefPtr : public AttachmentContainerRefPtr
     {
       public:
-         Distribution1DPtr(void);
-         Distribution1DPtr(const Distribution1DPtr               &source);
-         /*Distribution1DPtr(const NullFieldContainerPtr &source);*/
+         Distribution1DRefPtr(void);
+         Distribution1DRefPtr(const Distribution1DRefPtr               &source);
+         /*Distribution1DRefPtr(const NullFieldContainerRefPtr &source);*/
 
 
-        ~Distribution1DPtr(void); 
+        ~Distribution1DRefPtr(void); 
         Distribution1D *operator->(void);
-        
-        static Distribution1DPtr dcast(const FieldContainerPtr oIn);
+    };
+    %extend Distribution1DRefPtr
+    {
+        static Distribution1DRefPtr dcast(const FieldContainerRefPtr oIn)
+        {
+            OSG::dynamic_pointer_cast<OSG::Distribution1D>(oIn);
+        }
     };
     
     
@@ -1175,20 +1243,25 @@ namespace osg {
     };
 
     /******************************************************/
-    /*               Distribution2DPtr                    */
+    /*               Distribution2DRefPtr                    */
     /******************************************************/
-    class Distribution2DPtr : public AttachmentContainerPtr
+    class Distribution2DRefPtr : public AttachmentContainerRefPtr
     {
       public:
-         Distribution2DPtr(void);
-         Distribution2DPtr(const Distribution2DPtr               &source);
-         /*Distribution2DPtr(const NullFieldContainerPtr &source);*/
+         Distribution2DRefPtr(void);
+         Distribution2DRefPtr(const Distribution2DRefPtr               &source);
+         /*Distribution2DRefPtr(const NullFieldContainerRefPtr &source);*/
 
 
-        ~Distribution2DPtr(void); 
+        ~Distribution2DRefPtr(void); 
         Distribution2D *operator->(void);
-        
-        static Distribution2DPtr dcast(const FieldContainerPtr oIn);
+    };
+    %extend Distribution2DRefPtr
+    {
+        static Distribution2DRefPtr dcast(const FieldContainerRefPtr oIn)
+        {
+            OSG::dynamic_pointer_cast<OSG::Distribution2D>(oIn);
+        }
     };
     
     /******************************************************/
@@ -1206,20 +1279,25 @@ namespace osg {
     };
 
     /******************************************************/
-    /*               Distribution3DPtr                    */
+    /*               Distribution3DRefPtr                    */
     /******************************************************/
-    class Distribution3DPtr : public AttachmentContainerPtr
+    class Distribution3DRefPtr : public AttachmentContainerRefPtr
     {
       public:
-         Distribution3DPtr(void);
-         Distribution3DPtr(const Distribution3DPtr               &source);
-         /*Distribution3DPtr(const NullFieldContainerPtr &source);*/
+         Distribution3DRefPtr(void);
+         Distribution3DRefPtr(const Distribution3DRefPtr               &source);
+         /*Distribution3DRefPtr(const NullFieldContainerRefPtr &source);*/
 
 
-        ~Distribution3DPtr(void); 
+        ~Distribution3DRefPtr(void); 
         Distribution3D *operator->(void);
-        
-        static Distribution3DPtr dcast(const FieldContainerPtr oIn);
+    };
+    %extend Distribution3DRefPtr
+    {
+        static Distribution3DRefPtr dcast(const FieldContainerRefPtr oIn)
+        {
+            OSG::dynamic_pointer_cast<OSG::Distribution3D>(oIn);
+        }
     };
 }
 

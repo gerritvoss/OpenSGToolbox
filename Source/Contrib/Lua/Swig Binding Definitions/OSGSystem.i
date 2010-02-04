@@ -24,15 +24,6 @@
 #include "OSGSysFields.h"
 #include "OSGBaseFields.h"
 #include "OSGVecFields.h"
-/*#include "OSGSysFieldDataType.h"*/
-/*#include "OSGVecFieldDataType.h"*/
-/*#include "OSGMathFieldDataType.h"*/
-/*#include "OSGSFVecTypes.h"*/
-/*#include "OSGSFSysTypes.h"*/
-/*#include "OSGMFVecTypes.h"*/
-/*#include "OSGMFMathTypes.h"*/
-/*#include "OSGMFSysTypes.h"*/
-/*#include "OSGMFBaseTypes.h"*/
 #include "OSGFieldContainerFields.h"
 #include "OSGContainerUtils.h"
 #include "OSGActivity.h"
