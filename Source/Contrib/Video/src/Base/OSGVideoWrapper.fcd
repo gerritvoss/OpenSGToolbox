@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="VideoWrapper"
+	parent="AttachmentContainer"
+	library="ContribVideo"
+    pointerfieldtypes="both"
+    structure="abstract"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
+>
+	<ProducedMethod
+		name="VideoStarted"
+		type="VideoEvent"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="VideoStopped"
+		type="VideoEvent"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="VideoPaused"
+		type="VideoEvent"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="VideoUnpaused"
+		type="VideoEvent"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="VideoEnded"
+		type="VideoEvent"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="VideoCycled"
+		type="VideoEvent"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="VideoOpened"
+		type="VideoEvent"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="VideoClosed"
+		type="VideoEvent"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="VideoSeeked"
+		type="VideoEvent"
+	>
+	</ProducedMethod>
+</FieldContainer>
