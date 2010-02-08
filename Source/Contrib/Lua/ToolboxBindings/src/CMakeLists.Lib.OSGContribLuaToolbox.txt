@@ -10,8 +10,8 @@ OSG_SELECT_PROJECT()
 SET(${PROJECT_NAME}_DEP_OSG_LIB OSGGroup OSGTBFileIO OSGFileIO OSGDrawable
                                 OSGBase OSGSystem OSGDynamics OSGState OSGText
                                 OSGUtil OSGWindow OSGImageFileIO OSGContribPhysics
-                                OSGTBAnimation
-                                #OSGContribVideo OSGContribUserInterface
+                                OSGTBAnimation OSGContribVideo
+                                # OSGContribUserInterface
                                 OSGContribParticleSystem OSGContribSound OSGContribLua)
 SET(${PROJECT_NAME}_DEP_TEST_OSG_LIB)
 

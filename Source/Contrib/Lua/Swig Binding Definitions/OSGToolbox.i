@@ -26,8 +26,8 @@
 #include "OSGPhysicsSpace.h"
 #include "OSGPhysicsWorld.h"
 
-/*#include "OSGVideoWrapper.h"*/
-/*#include "OSGVideoManager.h"*/
+#include "OSGVideoWrapper.h"
+#include "OSGVideoManager.h"
 
 #include "OSGFieldContainerType.h"
 #include "OSGFieldContainer.h"
@@ -690,11 +690,11 @@ namespace OSG {
         ~ParticleSystemRefPtr(void); 
         ParticleSystem *operator->(void);
     };
-    %extend VideoManagerRefPtr
+    %extend ParticleSystemManagerRefPtr
     {
-        static VideoManagerRefPtr dcast(const FieldContainerRefPtr oIn)
+        static ParticleSystemManagerRefPtr dcast(const FieldContainerRefPtr oIn)
         {
-            OSG::dynamic_pointer_cast<OSG::VideoManager>(oIn);
+            OSG::dynamic_pointer_cast<OSG::ParticleSystemManager>(oIn);
         }
     };
     
@@ -897,28 +897,6 @@ namespace OSG {
     
             //virtual ~Component(void);
     //};
-
-    /******************************************************/
-    /*                 VideoWrapperRefPtr                       */
-    /******************************************************/
-    /*class VideoWrapperRefPtr : public AttachmentContainerRefPtr
-    {
-      public:
-         VideoWrapperRefPtr(void);
-         VideoWrapperRefPtr(const VideoWrapperRefPtr               &source);
-         //VideoWrapperRefPtr(const NullFieldContainerRefPtr &source);
-
-
-        ~VideoWrapperRefPtr(void); 
-        VideoWrapper *operator->(void);
-    };
-    %extend VideoWrapperRefPtr
-    {
-        static VideoWrapperRefPtr dcast(const FieldContainerRefPtr oIn)
-        {
-            OSG::dynamic_pointer_cast<OSG::VideoWrapper>(oIn);
-        }
-    };*/
     
     /******************************************************/
     /*                 SoundRefPtr                       */
@@ -1110,86 +1088,87 @@ namespace OSG {
     };
 
     
-    //[>****************************************************<]
-    //[>                 VideoWrapper                       <]
-    //[>****************************************************<]
-    //class VideoWrapper : public AttachmentContainer
-    //{
-      //public:
-        ////virtual bool open(const Path& ThePath);
-        //virtual bool open(const std::string& ThePath) = 0;
+    /****************************************************/
+    /*                VideoWrapper                      */
+    /****************************************************/
+    class VideoWrapper : public AttachmentContainer
+    {
+      public:
+        //virtual bool open(const BoostPath& ThePath);
+        virtual bool open(const std::string& ThePath) = 0;
     
-        //virtual bool seek(Int64 SeekPos) = 0;
-        //virtual bool jump(Int64 Amount) = 0;
-        //virtual bool setRate(Real32 Rate) = 0;
-        //virtual Real32 getRate(void) const = 0;
-        //virtual bool play(void) = 0;
-        //virtual bool pause(void) = 0;
-        //virtual bool unpause(void) = 0;
-        //virtual bool pauseToggle(void) = 0;
-        //virtual bool stop(void) = 0;
-        //virtual bool close(void) = 0;
+        virtual bool seek(Int64 SeekPos) = 0;
+        virtual bool jump(Int64 Amount) = 0;
+        virtual bool setRate(Real32 Rate) = 0;
+        virtual Real32 getRate(void) const = 0;
+        virtual bool play(void) = 0;
+        virtual bool pause(void) = 0;
+        virtual bool unpause(void) = 0;
+        virtual bool pauseToggle(void) = 0;
+        virtual bool stop(void) = 0;
+        virtual bool close(void) = 0;
         
-        //virtual bool isPlaying(void) const = 0;
-        //virtual bool isStopped(void) const = 0;
-        //virtual bool isPaused(void) const = 0;
-        //virtual bool isInitialized(void) const = 0;
+        virtual bool isPlaying(void) const = 0;
+        virtual bool isStopped(void) const = 0;
+        virtual bool isPaused(void) const = 0;
+        virtual bool isInitialized(void) const = 0;
     
-        //virtual Int64 getPosition(void) const = 0;
-        //virtual Int64 getDuration(void) const = 0;
+        virtual Int64 getPosition(void) const = 0;
+        virtual Int64 getDuration(void) const = 0;
     
-        //virtual ImageRefPtr getCurrentFrame(void) = 0;
-        //virtual bool updateImage(void) = 0;
-        //virtual bool updateTexture(TextureChunkRefPtr TheTexture);
+        virtual ImageRefPtr getCurrentFrame(void) = 0;
+        virtual bool updateImage(void) = 0;
+        virtual bool updateTexture(TextureObjChunkRefPtr TheTexture);
     
-        //ImageRefPtr getImage(void) const;
+        ImageRefPtr getImage(void) const;
     
-        ////Events
-        ////void addVideoListener(VideoListenerRefPtr Listener);
-        ////void removeVideoListener(VideoListenerRefPtr Listener);
-      //protected:
-        //VideoWrapper(void);
-        //VideoWrapper(const VideoWrapper &source);
-        //virtual ~VideoWrapper(void); 
-    //};
+        //Events
+        //void addVideoListener(VideoListenerRefPtr Listener);
+        //void removeVideoListener(VideoListenerRefPtr Listener);
+      protected:
+        VideoWrapper(void);
+        VideoWrapper(const VideoWrapper &source);
+        virtual ~VideoWrapper(void); 
+    };
     
-    //[>****************************************************<]
-    //[>                 VideoWrapperRefPtr                       <]
-    //[>****************************************************<]
-    //class VideoWrapperRefPtr : public AttachmentContainerRefPtr
-    //{
-      //public:
-         //VideoWrapperRefPtr(void);
-         //VideoWrapperRefPtr(const VideoWrapperRefPtr               &source);
-         //[>VideoWrapperRefPtr(const NullFieldContainerRefPtr &source);<]
+
+    /******************************************************/
+    /*                 VideoWrapperRefPtr                       */
+    /******************************************************/
+    class VideoWrapperRefPtr : public AttachmentContainerRefPtr
+    {
+      public:
+         VideoWrapperRefPtr(void);
+         VideoWrapperRefPtr(const VideoWrapperRefPtr               &source);
+         //VideoWrapperRefPtr(const NullFieldContainerRefPtr &source);
 
 
-        //~VideoWrapperRefPtr(void); 
-        //VideoWrapper *operator->(void);
-    //};
-    //%extend VideoWrapperRefPtr
-    //{
-        //static VideoWrapperRefPtr dcast(const FieldContainerRefPtr oIn)
-        //{
-            //OSG::dynamic_pointer_cast<OSG::VideoWrapper>(oIn);
-        //}
-    //};
+        ~VideoWrapperRefPtr(void); 
+        VideoWrapper *operator->(void);
+    };
+    %extend VideoWrapperRefPtr
+    {
+        static VideoWrapperRefPtr dcast(const FieldContainerRefPtr oIn)
+        {
+            OSG::dynamic_pointer_cast<OSG::VideoWrapper>(oIn);
+        }
+    };
     
-    //class VideoManager
-    //{
-    //public:
-        ////virtual void init(int   argc, char *argv[]) = 0;
-        //virtual void init(void);
-        //virtual void exit(void) = 0;
+    class VideoManager
+    {
+    public:
+        //virtual void init(int   argc, char *argv[]) = 0;
+        virtual void init(void);
+        virtual void exit(void) = 0;
     
-        //virtual VideoWrapperRefPtr createVideoWrapper(void) const = 0;
+        virtual VideoWrapperRefPtr createVideoWrapper(void) const = 0;
     
-    //private:
-    //protected:
-    //};
+    private:
+    protected:
+    };
 
-    //typedef VideoManager* VideoManagerRefPtr;
-    //VideoManagerRefPtr getDefaultVideoManager(void);
+    typedef VideoManager* VideoManagerPtr;
+    VideoManagerPtr getDefaultVideoManager(void);
     
     /******************************************************/
     /*               Distribution1D                       */
