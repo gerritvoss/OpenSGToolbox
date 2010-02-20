@@ -11,36 +11,36 @@
 // Includes: using GridBagLayout and GridBagLayoutConstraints
 
 // General OpenSG configuration, needed everywhere
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
-#include <OpenSG/OSGSimpleGeometry.h>
+#include "OSGSimpleGeometry.h"
 
 // A little helper to simplify scene management and interaction
-#include <OpenSG/OSGSimpleSceneManager.h>
-#include <OpenSG/OSGNode.h>
-#include <OpenSG/OSGGroup.h>
-#include <OpenSG/OSGViewport.h>
+#include "OSGSimpleSceneManager.h"
+#include "OSGNode.h"
+#include "OSGGroup.h"
+#include "OSGViewport.h"
 
 // The general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
+#include "OSGSceneFileHandler.h"
 
 // Input
-#include <OpenSG/Input/OSGWindowUtils.h>
+#include "OSGWindowUtils.h"
 
 // UserInterface Headers
-#include <OpenSG/UserInterface/OSGUIForeground.h>
-#include <OpenSG/UserInterface/OSGInternalWindow.h>
-#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
-#include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include "OSGUIForeground.h"
+#include "OSGInternalWindow.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGGraphics2D.h"
+#include "OSGLookAndFeelManager.h"
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-WindowEventProducerPtr TutorialWindowEventProducer;
+WindowEventProducerRefPtr TutorialWindow;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -48,14 +48,14 @@ void reshape(Vec2f Size);
 
 
 // 19GridBagLayout Headers
-#include <OpenSG/UserInterface/OSGUIForeground.h>
-#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
-#include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-#include <OpenSG/UserInterface/OSGColorLayer.h>
-#include <OpenSG/UserInterface/OSGGridBagLayout.h>
-#include <OpenSG/UserInterface/OSGGridBagLayoutConstraints.h>
+#include "OSGUIForeground.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGGraphics2D.h"
+#include "OSGButton.h"
+#include "OSGLookAndFeelManager.h"
+#include "OSGColorLayer.h"
+#include "OSGGridBagLayout.h"
+#include "OSGGridBagLayoutConstraints.h"
 
 
 // Create a class to allow for the use of the Ctrl+q
@@ -63,19 +63,19 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEventPtr e)
+   virtual void keyPressed(const KeyEventUnrecPtr e)
    {
        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-            TutorialWindowEventProducer->closeWindow();
+            TutorialWindow->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEventPtr e)
+   virtual void keyReleased(const KeyEventUnrecPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEventPtr e)
+   virtual void keyTyped(const KeyEventUnrecPtr e)
    {
    }
 };
@@ -86,27 +86,25 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    TutorialWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
+    TutorialWindow = createNativeWindow();
+    TutorialWindow->initWindow();
 
-    TutorialWindowEventProducer->setDisplayCallback(display);
-    TutorialWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindow->setDisplayCallback(display);
+    TutorialWindow->setReshapeCallback(reshape);
 
     TutorialKeyListener TheKeyListener;
-    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+    TutorialWindow->addKeyListener(&TheKeyListener);
 
     // Make Torus Node (creates Torus in background of scene)
-    NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
     // Make Main Scene Node and add the Torus
-    NodePtr scene = osg::Node::create();
-    beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        scene->setCore(osg::Group::create());
+    NodeRefPtr scene = OSG::Node::create();
+        scene->setCore(OSG::Group::create());
         scene->addChild(TorusGeometryNode);
-    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
-    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
+    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
 
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
@@ -116,12 +114,12 @@ int main(int argc, char **argv)
                Creates some Button components
 
     ******************************************************/
-    ButtonPtr ExampleButton1 = osg::Button::create();
-    ButtonPtr ExampleButton2 = osg::Button::create();
-    ButtonPtr ExampleButton3 = osg::Button::create();
-    ButtonPtr ExampleButton4 = osg::Button::create();
-    ButtonPtr ExampleButton5 = osg::Button::create();
-    ButtonPtr ExampleButton6 = osg::Button::create();
+    ButtonRefPtr ExampleButton1 = OSG::Button::create();
+    ButtonRefPtr ExampleButton2 = OSG::Button::create();
+    ButtonRefPtr ExampleButton3 = OSG::Button::create();
+    ButtonRefPtr ExampleButton4 = OSG::Button::create();
+    ButtonRefPtr ExampleButton5 = OSG::Button::create();
+    ButtonRefPtr ExampleButton6 = OSG::Button::create();
 
 
     /******************************************************
@@ -139,12 +137,10 @@ int main(int argc, char **argv)
 				Row Height weights equal as above.
 
     ******************************************************/
-    GridBagLayoutPtr MainInternalWindowLayout = osg::GridBagLayout::create();
+    GridBagLayoutRefPtr MainInternalWindowLayout = OSG::GridBagLayout::create();
 
-    beginEditCP(MainInternalWindowLayout, GridBagLayout::ColumnsFieldMask | GridBagLayout::RowsFieldMask);
         MainInternalWindowLayout->setColumns(3);
         MainInternalWindowLayout->setRows(3);
-    endEditCP(MainInternalWindowLayout, GridBagLayout::ColumnsFieldMask | GridBagLayout::RowsFieldMask); 
 
     
     /******************************************************
@@ -207,18 +203,13 @@ int main(int argc, char **argv)
 				center it.
 
     ******************************************************/
-    GridBagLayoutConstraintsPtr ExampleButton1Constraints = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr ExampleButton2Constraints = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr ExampleButton3Constraints = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr ExampleButton4Constraints = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr ExampleButton5Constraints = osg::GridBagLayoutConstraints::create();
-    GridBagLayoutConstraintsPtr ExampleButton6Constraints = osg::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr ExampleButton1Constraints = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr ExampleButton2Constraints = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr ExampleButton3Constraints = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr ExampleButton4Constraints = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr ExampleButton5Constraints = OSG::GridBagLayoutConstraints::create();
+    GridBagLayoutConstraintsRefPtr ExampleButton6Constraints = OSG::GridBagLayoutConstraints::create();
 
-    beginEditCP(ExampleButton1Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask | GridBagLayoutConstraints::GridHeightFieldMask |
-        GridBagLayoutConstraints::GridWidthFieldMask | GridBagLayoutConstraints::FillFieldMask | GridBagLayoutConstraints::WeightXFieldMask | GridBagLayoutConstraints::WeightYFieldMask |
-        GridBagLayoutConstraints::PadBottomFieldMask | GridBagLayoutConstraints::PadLeftFieldMask | GridBagLayoutConstraints::PadRightFieldMask | GridBagLayoutConstraints::PadTopFieldMask |
-        GridBagLayoutConstraints::InternalPadXFieldMask | GridBagLayoutConstraints::InternalPadYFieldMask | GridBagLayoutConstraints::HorizontalAlignmentFieldMask |
-        GridBagLayoutConstraints::VerticalAlignmentFieldMask);
         ExampleButton1Constraints->setGridX(0);
         ExampleButton1Constraints->setGridY(0);
         ExampleButton1Constraints->setGridHeight(2);
@@ -234,133 +225,96 @@ int main(int argc, char **argv)
         ExampleButton1Constraints->setInternalPadY(10);
         ExampleButton1Constraints->setHorizontalAlignment(0.75);
         ExampleButton1Constraints->setVerticalAlignment(0.75);
-    endEditCP(ExampleButton1Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask | GridBagLayoutConstraints::GridHeightFieldMask |
-        GridBagLayoutConstraints::GridWidthFieldMask | GridBagLayoutConstraints::FillFieldMask | GridBagLayoutConstraints::WeightXFieldMask | GridBagLayoutConstraints::WeightYFieldMask |
-        GridBagLayoutConstraints::PadBottomFieldMask | GridBagLayoutConstraints::PadLeftFieldMask | GridBagLayoutConstraints::PadRightFieldMask | GridBagLayoutConstraints::PadTopFieldMask |
-        GridBagLayoutConstraints::InternalPadXFieldMask | GridBagLayoutConstraints::InternalPadYFieldMask | GridBagLayoutConstraints::HorizontalAlignmentFieldMask |
-        GridBagLayoutConstraints::VerticalAlignmentFieldMask);
     
-    beginEditCP(ExampleButton2Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
         ExampleButton2Constraints->setGridX(1);
         ExampleButton2Constraints->setGridY(1);
-    endEditCP(ExampleButton2Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
     
-    beginEditCP(ExampleButton3Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
         ExampleButton3Constraints->setGridX(2);
         ExampleButton3Constraints->setGridY(2);
-    endEditCP(ExampleButton3Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
     
-    beginEditCP(ExampleButton4Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
         ExampleButton4Constraints->setGridX(2);
         ExampleButton4Constraints->setGridY(1);
-    endEditCP(ExampleButton4Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
     
-    beginEditCP(ExampleButton5Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
         ExampleButton5Constraints->setGridX(1);
         ExampleButton5Constraints->setGridY(2);
-    endEditCP(ExampleButton5Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
     
-    beginEditCP(ExampleButton6Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
         ExampleButton6Constraints->setGridX(0);
         ExampleButton6Constraints->setGridY(2);
-    endEditCP(ExampleButton6Constraints, GridBagLayoutConstraints::GridXFieldMask | GridBagLayoutConstraints::GridYFieldMask);
 
 
-    beginEditCP(ExampleButton1, Button::TextFieldMask | Button::ConstraintsFieldMask);
         ExampleButton1->setText("Button1");
         ExampleButton1->setConstraints(ExampleButton1Constraints);
-    endEditCP(ExampleButton1, Button::TextFieldMask |  Button::ConstraintsFieldMask);
 
-    beginEditCP(ExampleButton2, Button::TextFieldMask | Button::ConstraintsFieldMask);
         ExampleButton2->setText("Button2");
         ExampleButton2->setConstraints(ExampleButton2Constraints);
-    endEditCP(ExampleButton2, Button::TextFieldMask |  Button::ConstraintsFieldMask);
 
-    beginEditCP(ExampleButton3, Button::TextFieldMask | Button::ConstraintsFieldMask);
         ExampleButton3->setText("Button3");
         ExampleButton3->setConstraints(ExampleButton3Constraints);
-    endEditCP(ExampleButton3, Button::TextFieldMask |  Button::ConstraintsFieldMask);
 
-    beginEditCP(ExampleButton4, Button::TextFieldMask | Button::ConstraintsFieldMask);
         ExampleButton4->setText("Button4");
         ExampleButton4->setConstraints(ExampleButton4Constraints);
-    endEditCP(ExampleButton4, Button::TextFieldMask |  Button::ConstraintsFieldMask);
 
-    beginEditCP(ExampleButton5, Button::TextFieldMask | Button::ConstraintsFieldMask);
         ExampleButton5->setText("Button5");
         ExampleButton5->setConstraints(ExampleButton5Constraints);
-    endEditCP(ExampleButton5, Button::TextFieldMask |  Button::ConstraintsFieldMask);
     
-    beginEditCP(ExampleButton6, Button::TextFieldMask | Button::ConstraintsFieldMask);
         ExampleButton6->setText("Button6");
         ExampleButton6->setConstraints(ExampleButton6Constraints);
-    endEditCP(ExampleButton6, Button::TextFieldMask |  Button::ConstraintsFieldMask);
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
-    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
-    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
+    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
 
-    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
-	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().push_back(ExampleButton1);
-       MainInternalWindow->getChildren().push_back(ExampleButton2);
-       MainInternalWindow->getChildren().push_back(ExampleButton3);
-       MainInternalWindow->getChildren().push_back(ExampleButton4);
-       MainInternalWindow->getChildren().push_back(ExampleButton5);
-       MainInternalWindow->getChildren().push_back(ExampleButton6);
+    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
+       MainInternalWindow->pushToChildren(ExampleButton1);
+       MainInternalWindow->pushToChildren(ExampleButton2);
+       MainInternalWindow->pushToChildren(ExampleButton3);
+       MainInternalWindow->pushToChildren(ExampleButton4);
+       MainInternalWindow->pushToChildren(ExampleButton5);
+       MainInternalWindow->pushToChildren(ExampleButton6);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
 	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
 	   MainInternalWindow->setDrawTitlebar(false);
 	   MainInternalWindow->setResizable(false);
-    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
 
     // Create the Drawing Surface
-    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
-        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setEventProducer(TutorialWindow);
     
 	TutorialDrawingSurface->openWindow(MainInternalWindow);
 
     // Create the UI Foreground Object
-    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
+    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
 
-    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
-	endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
     // Tell the Manager what to manage
-    mgr->setWindow(MainWindow);
+    mgr->setWindow(TutorialWindow);
     mgr->setRoot(scene);
 
     // Add the UI Foreground Object to the Scene
-    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+        TutorialViewport->addForeground(TutorialUIForeground);
 
     // Show the whole Scene
     mgr->showAll();
 
 
     //Open Window
-    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
-    TutorialWindowEventProducer->openWindow(WinPos,
+    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+    TutorialWindow->openWindow(WinPos,
             WinSize,
             "01RubberBandCamera");
 
     //Enter main Loop
-    TutorialWindowEventProducer->mainLoop();
+    TutorialWindow->mainLoop();
 
     osgExit();
 

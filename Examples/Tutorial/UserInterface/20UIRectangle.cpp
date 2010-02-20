@@ -7,38 +7,38 @@
 // utilizing ActionListeners to add/remove Tabs on mouseclicks
 
 // General OpenSG configuration, needed everywhere
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
-#include <OpenSG/OSGSimpleGeometry.h>
+#include "OSGSimpleGeometry.h"
 
 // A little helper to simplify scene management and interaction
-#include <OpenSG/OSGSimpleSceneManager.h>
-#include <OpenSG/OSGNode.h>
-#include <OpenSG/OSGGroup.h>
-#include <OpenSG/OSGViewport.h>
+#include "OSGSimpleSceneManager.h"
+#include "OSGNode.h"
+#include "OSGGroup.h"
+#include "OSGViewport.h"
 
 // The general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
+#include "OSGSceneFileHandler.h"
 
 // Input
-#include <OpenSG/Input/OSGWindowUtils.h>
+#include "OSGWindowUtils.h"
 
 
 // UserInterface Headers
-#include <OpenSG/UserInterface/OSGUIForeground.h>
-#include <OpenSG/UserInterface/OSGLayers.h>
-#include <OpenSG/UserInterface/OSGInternalWindow.h>
-#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
-#include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include "OSGUIForeground.h"
+#include "OSGLayers.h"
+#include "OSGInternalWindow.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGGraphics2D.h"
+#include "OSGLookAndFeelManager.h"
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-WindowEventProducerPtr TutorialWindowEventProducer;
+WindowEventProducerRefPtr TutorialWindow;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -46,38 +46,38 @@ void reshape(Vec2f Size);
 
 // 15TabPanel Headers
 #include <sstream>
-#include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGBoxLayout.h>
-#include <OpenSG/UserInterface/OSGCardLayout.h>
-//#include <OpenSG/UserInterface/OSGUIDefines.h>
-#include <OpenSG/UserInterface/OSGPanel.h>
-#include <OpenSG/UserInterface/OSGTabPanel.h>
-#include <OpenSG/UserInterface/OSGUIRectangle.h>
+#include "OSGButton.h"
+#include "OSGBoxLayout.h"
+#include "OSGCardLayout.h"
+//#include "OSGUIDefines.h"
+#include "OSGPanel.h"
+#include "OSGTabPanel.h"
+#include "OSGUIRectangle.h"
 
 // Declare some variables/functions up front
-TabPanelPtr ExampleTabPanel;
-ButtonPtr ExampleTabContentA;
-ButtonPtr ExampleTabContentB;
-InternalWindowPtr createMainInternalWindow(void);
+TabPanelRefPtr ExampleTabPanel;
+ButtonRefPtr ExampleTabContentA;
+ButtonRefPtr ExampleTabContentB;
+InternalWindowRefPtr createMainInternalWindow(void);
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEventPtr e)
+   virtual void keyPressed(const KeyEventUnrecPtr e)
    {
        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-            TutorialWindowEventProducer->closeWindow();
+            TutorialWindow->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEventPtr e)
+   virtual void keyReleased(const KeyEventUnrecPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEventPtr e)
+   virtual void keyTyped(const KeyEventUnrecPtr e)
    {
    }
 };
@@ -95,33 +95,23 @@ class AddTabActionListener : public ActionListener
 { 
 public:
 
-   virtual void actionPerformed(const ActionEventPtr e)
+   virtual void actionPerformed(const ActionEventUnrecPtr e)
     {
       
-        ButtonPtr AddedTabButton = Button::create(),
+        ButtonRefPtr AddedTabButton = Button::create(),
         AddedTabContent = Button::create();
-        beginEditCP(AddedTabButton, Button::TextFieldMask);
             AddedTabButton->setText("Tab7");
-        endEditCP(AddedTabButton, Button::TextFieldMask);
 
-        beginEditCP(AddedTabContent, Button::TextFieldMask);
             AddedTabContent->setText("This is where the new Tab content hangs out");
-        endEditCP(AddedTabContent, Button::TextFieldMask);
         
         if( ExampleTabPanel->getTabs().getSize() == 6) 
 		{
-            beginEditCP(ExampleTabPanel, TabPanel::TabsFieldMask);
                 ExampleTabPanel->addTab(AddedTabButton, AddedTabContent);
-            endEditCP(ExampleTabPanel, TabPanel::TabsFieldMask);
         
 			// Change the text on the Tabs
-			beginEditCP(ExampleTabContentA, Button::TextFieldMask);
 				ExampleTabContentA->setText("Remove Tab7 under Tab2!");
-			endEditCP(ExampleTabContentA, Button::TextFieldMask);
 
-			beginEditCP(ExampleTabContentB, Button::TextFieldMask);
 				ExampleTabContentB->setText("Remove Tab7");
-			endEditCP(ExampleTabContentB, Button::TextFieldMask);
 	        
         }
 
@@ -133,23 +123,17 @@ class RemoveTabActionListener : public ActionListener
 {
 public:
 
-   virtual void actionPerformed(const ActionEventPtr e)
+   virtual void actionPerformed(const ActionEventUnrecPtr e)
     {
 
         if( ExampleTabPanel->getTabs().getSize() == 7) 
 		{
-			beginEditCP(ExampleTabPanel, TabPanel::TabsFieldMask);
 				ExampleTabPanel->removeTab(6);
-			endEditCP(ExampleTabPanel, TabPanel::TabsFieldMask);
 	        
-			beginEditCP(ExampleTabContentA, Button::TextFieldMask);
 				ExampleTabContentA->setText("Add another Tab");
-			endEditCP(ExampleTabContentA, Button::TextFieldMask);
 
 			// Change the text on the Tabs
-			beginEditCP(ExampleTabContentB, Button::TextFieldMask);
 				ExampleTabContentB->setText("Add a Tab under Tab1!");
-			endEditCP(ExampleTabContentB, Button::TextFieldMask);
 
         }
     }
@@ -169,25 +153,25 @@ AddTabActionListener TheAddTabActionListener;
 class TutorialMouseListener : public MouseListener
 {
   public:
-    virtual void mouseClicked(const MouseEventPtr e)
+    virtual void mouseClicked(const MouseEventUnrecPtr e)
     {
     }
-    virtual void mouseEntered(const MouseEventPtr e)
+    virtual void mouseEntered(const MouseEventUnrecPtr e)
     {
     }
-    virtual void mouseExited(const MouseEventPtr e)
+    virtual void mouseExited(const MouseEventUnrecPtr e)
     {
     }
-    virtual void mousePressed(const MouseEventPtr e)
+    virtual void mousePressed(const MouseEventUnrecPtr e)
     {
-        if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
+        if(TutorialWindow->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
         {
             mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
         }
     }
-    virtual void mouseReleased(const MouseEventPtr e)
+    virtual void mouseReleased(const MouseEventUnrecPtr e)
     {
-        if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
+        if(TutorialWindow->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
         {
            mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
         }
@@ -197,17 +181,17 @@ class TutorialMouseListener : public MouseListener
 class TutorialMouseMotionListener : public MouseMotionListener
 {
   public:
-    virtual void mouseMoved(const MouseEventPtr e)
+    virtual void mouseMoved(const MouseEventUnrecPtr e)
     {
-        if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
+        if(TutorialWindow->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
         {
             mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
         }
     }
 
-    virtual void mouseDragged(const MouseEventPtr e)
+    virtual void mouseDragged(const MouseEventUnrecPtr e)
     {
-        if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
+        if(TutorialWindow->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
         {
             mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
         }
@@ -220,11 +204,11 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    TutorialWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
+    TutorialWindow = createNativeWindow();
+    TutorialWindow->initWindow();
 
-    TutorialWindowEventProducer->setDisplayCallback(display);
-    TutorialWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindow->setDisplayCallback(display);
+    TutorialWindow->setReshapeCallback(reshape);
 
     /******************************************************
 
@@ -235,23 +219,21 @@ int main(int argc, char **argv)
 
     TutorialMouseListener TheTutorialMouseListener;
     TutorialMouseMotionListener TheTutorialMouseMotionListener;
-    TutorialWindowEventProducer->addMouseListener(&TheTutorialMouseListener);
-    TutorialWindowEventProducer->addMouseMotionListener(&TheTutorialMouseMotionListener);
+    TutorialWindow->addMouseListener(&TheTutorialMouseListener);
+    TutorialWindow->addMouseMotionListener(&TheTutorialMouseMotionListener);
     TutorialKeyListener TheKeyListener;
-    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+    TutorialWindow->addKeyListener(&TheKeyListener);
 
     // Make Torus Node (creates Torus in background of scene)
-    NodePtr TorusGeometryNode = makeTorus(90, 270, 16, 16);
+    NodeRefPtr TorusGeometryNode = makeTorus(90, 270, 16, 16);
 
     // Make Main Scene Node and add the Torus
-    NodePtr scene = osg::Node::create();
-    beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        scene->setCore(osg::Group::create());
+    NodeRefPtr scene = OSG::Node::create();
+        scene->setCore(OSG::Group::create());
         scene->addChild(TorusGeometryNode);
-    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
-    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
+    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
 
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
@@ -265,11 +247,9 @@ int main(int argc, char **argv)
 
     ******************************************************/
 
-    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
-        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setEventProducer(TutorialWindow);
   
 	TutorialDrawingSurface->openWindow(createMainInternalWindow());
 
@@ -315,13 +295,11 @@ int main(int argc, char **argv)
     ******************************************************/   
 
     //Make A 3D Rectangle to draw the UI on
-    UIRectanglePtr ExampleUIRectangle = UIRectangle::create();
-    beginEditCP(ExampleUIRectangle, UIRectangle::PointFieldMask | UIRectangle::WidthFieldMask | UIRectangle::HeightFieldMask | UIRectangle::DrawingSurfaceFieldMask);
+    UIRectangleRefPtr ExampleUIRectangle = UIRectangle::create();
         ExampleUIRectangle->setPoint(Pnt3f(-250,-250,200));
         ExampleUIRectangle->setWidth(500.0);
         ExampleUIRectangle->setHeight(500.0);
         ExampleUIRectangle->setDrawingSurface(TutorialDrawingSurface);
-    endEditCP(ExampleUIRectangle, UIRectangle::PointFieldMask | UIRectangle::WidthFieldMask | UIRectangle::HeightFieldMask | UIRectangle::DrawingSurfaceFieldMask);
     
 	/******************************************************
 
@@ -342,21 +320,17 @@ int main(int argc, char **argv)
 			commented out below).
 
     ******************************************************/   	
-    NodePtr ExampleUIRectangleNode = osg::Node::create();
-    beginEditCP(ExampleUIRectangleNode, Node::CoreFieldMask);
+    NodeRefPtr ExampleUIRectangleNode = OSG::Node::create();
         ExampleUIRectangleNode->setCore(ExampleUIRectangle);
-    endEditCP(ExampleUIRectangleNode, Node::CoreFieldMask);
     
-    beginEditCP(scene, Node::ChildrenFieldMask);
         // Add the UIRectangle as a child to the scene
         scene->addChild(ExampleUIRectangleNode);
-    endEditCP(scene, Node::ChildrenFieldMask);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
     // Tell the Manager what to manage
-    mgr->setWindow(MainWindow);
+    mgr->setWindow(TutorialWindow);
     mgr->setRoot(scene);
     //mgr->setRoot(ExampleUIRectangleNode);
 
@@ -365,14 +339,14 @@ int main(int argc, char **argv)
 
 
     //Open Window
-    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
-    TutorialWindowEventProducer->openWindow(WinPos,
+    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+    TutorialWindow->openWindow(WinPos,
             WinSize,
             "01RubberBandCamera");
 
     //Enter main Loop
-    TutorialWindowEventProducer->mainLoop();
+    TutorialWindow->mainLoop();
 
     osgExit();
 
@@ -393,7 +367,7 @@ void reshape(Vec2f Size)
     mgr->resize(Size.x(), Size.y());
 }
 
-InternalWindowPtr createMainInternalWindow(void)
+InternalWindowRefPtr createMainInternalWindow(void)
 {
     /******************************************************
 
@@ -407,67 +381,45 @@ InternalWindowPtr createMainInternalWindow(void)
 
     ******************************************************/
 
-    ButtonPtr ExampleTabButton1 = osg::Button::create();
-    ButtonPtr ExampleTabButton2 = osg::Button::create();
-    ButtonPtr ExampleTabButton3 = osg::Button::create();
-    ButtonPtr ExampleTabButton4 = osg::Button::create();
-    ButtonPtr ExampleTabButton5 = osg::Button::create();
-    ButtonPtr ExampleTabButton6 = osg::Button::create();
-    ExampleTabContentA = osg::Button::create();
-    ExampleTabContentB = osg::Button::create();
-    ButtonPtr ExampleTabContentC = osg::Button::create();
-    ButtonPtr ExampleTabContentD = osg::Button::create();
-    ButtonPtr ExampleTabContentE = osg::Button::create();
-    ButtonPtr ExampleTabContentF = osg::Button::create();
+    ButtonRefPtr ExampleTabButton1 = OSG::Button::create();
+    ButtonRefPtr ExampleTabButton2 = OSG::Button::create();
+    ButtonRefPtr ExampleTabButton3 = OSG::Button::create();
+    ButtonRefPtr ExampleTabButton4 = OSG::Button::create();
+    ButtonRefPtr ExampleTabButton5 = OSG::Button::create();
+    ButtonRefPtr ExampleTabButton6 = OSG::Button::create();
+    ExampleTabContentA = OSG::Button::create();
+    ExampleTabContentB = OSG::Button::create();
+    ButtonRefPtr ExampleTabContentC = OSG::Button::create();
+    ButtonRefPtr ExampleTabContentD = OSG::Button::create();
+    ButtonRefPtr ExampleTabContentE = OSG::Button::create();
+    ButtonRefPtr ExampleTabContentF = OSG::Button::create();
 
-    beginEditCP(ExampleTabButton1, Button::TextFieldMask);
         ExampleTabButton1->setText("Tab1");
-    endEditCP(ExampleTabButton1, Button::TextFieldMask);
     
-    beginEditCP(ExampleTabButton2, Button::TextFieldMask);
         ExampleTabButton2->setText("Tab2");
-    endEditCP(ExampleTabButton2, Button::TextFieldMask);
         
-    beginEditCP(ExampleTabButton3, Button::TextFieldMask);
         ExampleTabButton3->setText("To Rotate");
-    endEditCP(ExampleTabButton3, Button::TextFieldMask);
         
-    beginEditCP(ExampleTabButton4, Button::TextFieldMask);
         ExampleTabButton4->setText("Tab4");
-    endEditCP(ExampleTabButton4, Button::TextFieldMask);
         
-    beginEditCP(ExampleTabButton5, Button::TextFieldMask);
         ExampleTabButton5->setText("To Zoom");
-    endEditCP(ExampleTabButton5, Button::TextFieldMask);
         
-    beginEditCP(ExampleTabButton6, Button::TextFieldMask);
         ExampleTabButton6->setText("To Move");
-    endEditCP(ExampleTabButton6, Button::TextFieldMask);
     
-    beginEditCP(ExampleTabContentA, Button::TextFieldMask);
         ExampleTabContentA->setText("Add another Tab");
-    endEditCP(ExampleTabContentA, Button::TextFieldMask);
     // Add ActionListener
     ExampleTabContentA->addActionListener( &TheAddTabActionListener);
 
-    beginEditCP(ExampleTabContentB, Button::TextFieldMask);
         ExampleTabContentB->setText("Add a Tab in Tab1!");
-    endEditCP(ExampleTabContentB, Button::TextFieldMask);
     // Add ActionListener
 
     ExampleTabContentB->addActionListener( &TheRemoveTabActionListener);
 
-    beginEditCP(ExampleTabContentC, Button::TextFieldMask);
         ExampleTabContentC->setText("Enable CapsLock, then rotate scene using left Mouse button!");
-    endEditCP(ExampleTabContentC, Button::TextFieldMask);
         
-    beginEditCP(ExampleTabContentD, Button::TextFieldMask);
         ExampleTabContentD->setText("Enable CapsLock, then zoom in and out with right Mouse button and dragging");
-    endEditCP(ExampleTabContentD, Button::TextFieldMask);    
 
-    beginEditCP(ExampleTabContentE, Button::TextFieldMask);
         ExampleTabContentE->setText("Enable CapsLock, then move using center Mouse button");
-    endEditCP(ExampleTabContentE, Button::TextFieldMask);
         
     /******************************************************
 
@@ -476,58 +428,41 @@ InternalWindowPtr createMainInternalWindow(void)
     ******************************************************/
 
     // Create and edit the Panel Buttons
-    ButtonPtr ExampleTabPanelButton1 = osg::Button::create();
-    ButtonPtr ExampleTabPanelButton2 = osg::Button::create();
-    ButtonPtr ExampleTabPanelButton3 = osg::Button::create();
-    ButtonPtr ExampleTabPanelButton4 = osg::Button::create();
-    ButtonPtr ExampleTabPanelButton5 = osg::Button::create();
-    ButtonPtr ExampleTabPanelButton6 = osg::Button::create();
+    ButtonRefPtr ExampleTabPanelButton1 = OSG::Button::create();
+    ButtonRefPtr ExampleTabPanelButton2 = OSG::Button::create();
+    ButtonRefPtr ExampleTabPanelButton3 = OSG::Button::create();
+    ButtonRefPtr ExampleTabPanelButton4 = OSG::Button::create();
+    ButtonRefPtr ExampleTabPanelButton5 = OSG::Button::create();
+    ButtonRefPtr ExampleTabPanelButton6 = OSG::Button::create();
 
-	beginEditCP(ExampleTabPanelButton1, Button::TextFieldMask);
 		ExampleTabPanelButton1->setText("This is a");
-	endEditCP(ExampleTabPanelButton1, Button::TextFieldMask);
 	
-	beginEditCP(ExampleTabPanelButton2, Button::TextFieldMask);
 		ExampleTabPanelButton2->setText("sample");
-	endEditCP(ExampleTabPanelButton2, Button::TextFieldMask);
 	
-	beginEditCP(ExampleTabPanelButton3, Button::TextFieldMask);
 		ExampleTabPanelButton3->setText("UIRectangle");
-	endEditCP(ExampleTabPanelButton3, Button::TextFieldMask);
 	
-	beginEditCP(ExampleTabPanelButton4, Button::TextFieldMask);
 		ExampleTabPanelButton4->setText("containing");
-	endEditCP(ExampleTabPanelButton4, Button::TextFieldMask);
 	
-	beginEditCP(ExampleTabPanelButton5, Button::TextFieldMask);
 		ExampleTabPanelButton5->setText("interactive");
-	endEditCP(ExampleTabPanelButton5, Button::TextFieldMask);
 	
-	beginEditCP(ExampleTabPanelButton6, Button::TextFieldMask);
 		ExampleTabPanelButton6->setText("components");
-	endEditCP(ExampleTabPanelButton6, Button::TextFieldMask);
 
     // Create and edit Panel Layout
-    BoxLayoutPtr TabPanelLayout = osg::BoxLayout::create();
-    beginEditCP(TabPanelLayout, BoxLayout::OrientationFieldMask);
+    BoxLayoutRefPtr TabPanelLayout = OSG::BoxLayout::create();
         TabPanelLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
-    endEditCP(TabPanelLayout, BoxLayout::OrientationFieldMask);
 
     // Create and edit Panel
-    PanelPtr ExampleTabPanelPanel = osg::Panel::create();
-    beginEditCP(ExampleTabPanelPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
+    PanelRefPtr ExampleTabPanelPanel = OSG::Panel::create();
         ExampleTabPanelPanel->setPreferredSize(Vec2f(180, 500));
-        ExampleTabPanelPanel->getChildren().push_back(ExampleTabPanelButton1);
-        ExampleTabPanelPanel->getChildren().push_back(ExampleTabPanelButton2);
-        ExampleTabPanelPanel->getChildren().push_back(ExampleTabPanelButton3);
-        ExampleTabPanelPanel->getChildren().push_back(ExampleTabPanelButton4);
-        ExampleTabPanelPanel->getChildren().push_back(ExampleTabPanelButton5);
-        ExampleTabPanelPanel->getChildren().push_back(ExampleTabPanelButton6);
+        ExampleTabPanelPanel->pushToChildren(ExampleTabPanelButton1);
+        ExampleTabPanelPanel->pushToChildren(ExampleTabPanelButton2);
+        ExampleTabPanelPanel->pushToChildren(ExampleTabPanelButton3);
+        ExampleTabPanelPanel->pushToChildren(ExampleTabPanelButton4);
+        ExampleTabPanelPanel->pushToChildren(ExampleTabPanelButton5);
+        ExampleTabPanelPanel->pushToChildren(ExampleTabPanelButton6);
         ExampleTabPanelPanel->setLayout(TabPanelLayout);
-    endEditCP(ExampleTabPanelPanel, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask);
 
-    ExampleTabPanel = osg::TabPanel::create();
-    beginEditCP(ExampleTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask);
+    ExampleTabPanel = OSG::TabPanel::create();
         ExampleTabPanel->setPreferredSize(Vec2f(350,350));
         ExampleTabPanel->addTab(ExampleTabButton1, ExampleTabContentA);
         ExampleTabPanel->addTab(ExampleTabButton2, ExampleTabContentB);
@@ -537,28 +472,23 @@ InternalWindowPtr createMainInternalWindow(void)
         ExampleTabPanel->addTab(ExampleTabButton6, ExampleTabContentE);
         ExampleTabPanel->setTabAlignment(0.5f);
         ExampleTabPanel->setTabPlacement(TabPanel::PLACEMENT_SOUTH);
-    endEditCP(ExampleTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask);
     ExampleTabPanel->setSelectedIndex(3);
 	
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
-    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
-    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
+    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
 
-    CardLayoutPtr MainInternalWindowLayout = osg::CardLayout::create();
+    CardLayoutRefPtr MainInternalWindowLayout = OSG::CardLayout::create();
 
-    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
-	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().push_back(ExampleTabPanel);
+    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
+       MainInternalWindow->pushToChildren(ExampleTabPanel);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
 	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(1.0f,1.0f));
 	   MainInternalWindow->setDrawTitlebar(false);
 	   MainInternalWindow->setResizable(false);
-    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
 
 	return MainInternalWindow;
 }

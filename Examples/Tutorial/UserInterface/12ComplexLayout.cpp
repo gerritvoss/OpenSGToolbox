@@ -7,77 +7,77 @@
 
 
 // General OpenSG configuration, needed everywhere
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
-#include <OpenSG/OSGSimpleGeometry.h>
+#include "OSGSimpleGeometry.h"
 
 // A little helper to simplify scene management and interaction
-#include <OpenSG/OSGSimpleSceneManager.h>
-#include <OpenSG/OSGNode.h>
-#include <OpenSG/OSGGroup.h>
-#include <OpenSG/OSGViewport.h>
+#include "OSGSimpleSceneManager.h"
+#include "OSGNode.h"
+#include "OSGGroup.h"
+#include "OSGViewport.h"
 
 // The general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
+#include "OSGSceneFileHandler.h"
 
 // Input
-#include <OpenSG/Input/OSGWindowUtils.h>
+#include "OSGWindowUtils.h"
 
 // UserInterface Headers
-#include <OpenSG/UserInterface/OSGUIForeground.h>
-#include <OpenSG/UserInterface/OSGInternalWindow.h>
-#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
-#include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include "OSGUIForeground.h"
+#include "OSGInternalWindow.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGGraphics2D.h"
+#include "OSGLookAndFeelManager.h"
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-WindowEventProducerPtr TutorialWindowEventProducer;
+WindowEventProducerRefPtr TutorialWindow;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
 
 // 12ComplexLayout Headers
-#include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGLabel.h>
-#include <OpenSG/UserInterface/OSGLineBorder.h>
-#include <OpenSG/UserInterface/OSGAbsoluteLayout.h>
-#include <OpenSG/UserInterface/OSGAbsoluteLayoutConstraints.h>
-#include <OpenSG/UserInterface/OSGBoxLayout.h>
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
-#include <OpenSG/UserInterface/OSGContainer.h>
-#include <OpenSG/UserInterface/OSGPanel.h>
-#include <OpenSG/UserInterface/OSGLineBorder.h>
-#include <OpenSG/UserInterface/OSGEmptyBorder.h>
-#include <OpenSG/UserInterface/OSGEtchedBorder.h>
-//#include <OpenSG/UserInterface/OSGUIDefines.h>
-#include <OpenSG/UserInterface/OSGColorLayer.h>
-#include <OpenSG/UserInterface/OSGGradientLayer.h>
-#include <OpenSG/UserInterface/OSGCompoundLayer.h>
+#include "OSGButton.h"
+#include "OSGLabel.h"
+#include "OSGLineBorder.h"
+#include "OSGAbsoluteLayout.h"
+#include "OSGAbsoluteLayoutConstraints.h"
+#include "OSGBoxLayout.h"
+#include "OSGFlowLayout.h"
+#include "OSGComponentContainer.h"
+#include "OSGPanel.h"
+#include "OSGLineBorder.h"
+#include "OSGEmptyBorder.h"
+#include "OSGEtchedBorder.h"
+//#include "OSGUIDefines.h"
+#include "OSGColorLayer.h"
+#include "OSGGradientLayer.h"
+#include "OSGCompoundLayer.h"
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEventPtr e)
+   virtual void keyPressed(const KeyEventUnrecPtr e)
    {
        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-            TutorialWindowEventProducer->closeWindow();
+            TutorialWindow->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEventPtr e)
+   virtual void keyReleased(const KeyEventUnrecPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEventPtr e)
+   virtual void keyTyped(const KeyEventUnrecPtr e)
    {
    }
 };
@@ -88,27 +88,25 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
     
     // Set up Window
-    TutorialWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
+    TutorialWindow = createNativeWindow();
+    TutorialWindow->initWindow();
 
-    TutorialWindowEventProducer->setDisplayCallback(display);
-    TutorialWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindow->setDisplayCallback(display);
+    TutorialWindow->setReshapeCallback(reshape);
 
     TutorialKeyListener TheKeyListener;
-    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+    TutorialWindow->addKeyListener(&TheKeyListener);
 
     // Make Torus Node (creates Torus in background of scene)
-    NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
     // Make Main Scene Node and add the Torus
-    NodePtr scene = osg::Node::create();
-    beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        scene->setCore(osg::Group::create());
+    NodeRefPtr scene = OSG::Node::create();
+        scene->setCore(OSG::Group::create());
         scene->addChild(TorusGeometryNode);
-    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
-    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
+    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
 
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
@@ -119,55 +117,41 @@ int main(int argc, char **argv)
             Create some Backgrounds
 
     ******************************************************/
-    ColorLayerPtr MainFrameBackground = osg::ColorLayer::create();
-    ColorLayerPtr ExamplePanelBackground = osg::ColorLayer::create();
-    ColorLayerPtr ExampleSmallPanelBackground = osg::ColorLayer::create();
-    ColorLayerPtr ExampleLabel1ColorBackground = osg::ColorLayer::create();
-    GradientLayerPtr ExampleLabel1GradientBackground = osg::GradientLayer::create();
-    CompoundLayerPtr ExampleLabel1CompoundBackground = osg::CompoundLayer::create();
+    ColorLayerRefPtr MainFrameBackground = OSG::ColorLayer::create();
+    ColorLayerRefPtr ExamplePanelBackground = OSG::ColorLayer::create();
+    ColorLayerRefPtr ExampleSmallPanelBackground = OSG::ColorLayer::create();
+    ColorLayerRefPtr ExampleLabel1ColorBackground = OSG::ColorLayer::create();
+    GradientLayerRefPtr ExampleLabel1GradientBackground = OSG::GradientLayer::create();
+    CompoundLayerRefPtr ExampleLabel1CompoundBackground = OSG::CompoundLayer::create();
     
-    beginEditCP(MainFrameBackground, ColorLayer::ColorFieldMask);
         MainFrameBackground->setColor(Color4f(0,0,1.0,0.5));
-    endEditCP(MainFrameBackground, ColorLayer::ColorFieldMask);
 
-    beginEditCP(ExamplePanelBackground, ColorLayer::ColorFieldMask);
         ExamplePanelBackground->setColor(Color4f(0.0,0.0,0.0,0.5));
-    endEditCP(ExamplePanelBackground, ColorLayer::ColorFieldMask);
 
-    beginEditCP(ExampleSmallPanelBackground, ColorLayer::ColorFieldMask);
         ExampleSmallPanelBackground->setColor(Color4f(0.0,0.5,0.7,1.0));
-    endEditCP(ExampleSmallPanelBackground, ColorLayer::ColorFieldMask);
     
-    beginEditCP(ExampleLabel1ColorBackground, ColorLayer::ColorFieldMask);
         ExampleLabel1ColorBackground->setColor(Color4f(0.0, 0.0, 0.0, 1.0));
-    endEditCP(ExampleLabel1ColorBackground, ColorLayer::ColorFieldMask);
     
-    beginEditCP(ExampleLabel1GradientBackground, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask | GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask);
-        ExampleLabel1GradientBackground->getColors().push_back(Color4f(1.0, 0.0, 1.0, 0.8));
-		ExampleLabel1GradientBackground->getStops().push_back(0.0);
-        ExampleLabel1GradientBackground->getColors().push_back(Color4f(0.0, 0.0, 1.0, 0.3));
-		ExampleLabel1GradientBackground->getStops().push_back(1.0);
+        ExampleLabel1GradientBackground->editMFColors()->push_back(Color4f(1.0, 0.0, 1.0, 0.8));
+		ExampleLabel1GradientBackground->editMFStops()->push_back(0.0);
+        ExampleLabel1GradientBackground->editMFColors()->push_back(Color4f(0.0, 0.0, 1.0, 0.3));
+		ExampleLabel1GradientBackground->editMFStops()->push_back(1.0);
         ExampleLabel1GradientBackground->setStartPosition(Vec2f(0.0f,0.0f));
         ExampleLabel1GradientBackground->setEndPosition(Vec2f(1.0f,0.0f));
-    endEditCP(ExampleLabel1GradientBackground, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask | GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask);
     
-    beginEditCP(ExampleLabel1CompoundBackground, CompoundLayer::BackgroundsFieldMask);
-        ExampleLabel1CompoundBackground->getBackgrounds().push_back(ExampleLabel1ColorBackground);
-        ExampleLabel1CompoundBackground->getBackgrounds().push_back(ExampleLabel1GradientBackground);
-    endEditCP(ExampleLabel1CompoundBackground, CompoundLayer::BackgroundsFieldMask);
+        ExampleLabel1CompoundBackground->pushToBackgrounds(ExampleLabel1ColorBackground);
+        ExampleLabel1CompoundBackground->pushToBackgrounds(ExampleLabel1GradientBackground);
 
     /******************************************************
             
             Create some Borders
 
     ******************************************************/
-    EtchedBorderPtr ExamplePanelBorder = osg::EtchedBorder::create();
-    EmptyBorderPtr ExampleLabel1Border = osg::EmptyBorder::create();
-    beginEditCP(ExamplePanelBorder, EtchedBorder::HighlightFieldMask | EtchedBorder::ShadowFieldMask | EtchedBorder::WidthFieldMask);
+    EtchedBorderRefPtr ExamplePanelBorder = OSG::EtchedBorder::create();
+    EmptyBorderRefPtr ExampleLabel1Border = OSG::EmptyBorder::create();
         ExamplePanelBorder->setHighlight(Color4f(1.0, 1.0, 1.0, 1.0));
         ExamplePanelBorder->setShadow(Color4f(0.8, 0.8, 0.8, 1.0));
         ExamplePanelBorder->setWidth(6);
-    endEditCP(ExamplePanelBorder, EtchedBorder::HighlightFieldMask | EtchedBorder::ShadowFieldMask | EtchedBorder::WidthFieldMask);
 
     /******************************************************
             
@@ -175,123 +159,85 @@ int main(int argc, char **argv)
 
     ******************************************************/
 
-    LabelPtr ExampleLabel1 = osg::Label::create();
-    ButtonPtr ExampleButton1 = osg::Button::create();
-    ButtonPtr ExampleButton2 = osg::Button::create();
-    ButtonPtr ExampleButton3 = osg::Button::create();
-    ButtonPtr ExampleButton4 = osg::Button::create();
-    ButtonPtr ExampleButton5 = osg::Button::create();
-    ButtonPtr ExampleButton6 = osg::Button::create();
-    ButtonPtr ExampleButton7 = osg::Button::create();
-    ButtonPtr ExampleButton8 = osg::Button::create();
-    ButtonPtr ExampleButton9 = osg::Button::create();
-    ButtonPtr ExampleButton10 = osg::Button::create();
-    ButtonPtr ExampleButton11 = osg::Button::create();
+    LabelRefPtr ExampleLabel1 = OSG::Label::create();
+    ButtonRefPtr ExampleButton1 = OSG::Button::create();
+    ButtonRefPtr ExampleButton2 = OSG::Button::create();
+    ButtonRefPtr ExampleButton3 = OSG::Button::create();
+    ButtonRefPtr ExampleButton4 = OSG::Button::create();
+    ButtonRefPtr ExampleButton5 = OSG::Button::create();
+    ButtonRefPtr ExampleButton6 = OSG::Button::create();
+    ButtonRefPtr ExampleButton7 = OSG::Button::create();
+    ButtonRefPtr ExampleButton8 = OSG::Button::create();
+    ButtonRefPtr ExampleButton9 = OSG::Button::create();
+    ButtonRefPtr ExampleButton10 = OSG::Button::create();
+    ButtonRefPtr ExampleButton11 = OSG::Button::create();
 
 
-    beginEditCP(ExampleLabel1, Button::PreferredSizeFieldMask | Button::BackgroundFieldMask | Button::BorderFieldMask);
         ExampleLabel1->setPreferredSize(Vec2f(800, 50));
         ExampleLabel1->setBackground(ExampleLabel1CompoundBackground);
         ExampleLabel1->setBorder(ExampleLabel1Border);
-    endEditCP(ExampleLabel1, Button::PreferredSizeFieldMask | Button::BackgroundFieldMask | Button::BorderFieldMask);
 
-    beginEditCP(ExampleButton1, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
         ExampleButton1->setPreferredSize(Vec2f(800, 50));
         ExampleButton1->setMaxSize(Vec2f(50, 50));
         ExampleButton1->setText("Resize the Window to Show Diificulties with Using Just One Layout");
-    endEditCP(ExampleButton1, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
-    beginEditCP(ExampleButton2, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
         ExampleButton2->setPreferredSize(Vec2f(50, 50));
         ExampleButton2->setMaxSize(Vec2f(50, 50));
-    endEditCP(ExampleButton2, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
     
-    beginEditCP(ExampleButton3, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
         ExampleButton3->setPreferredSize(Vec2f(50, 50));
         ExampleButton3->setMaxSize(Vec2f(50, 50));
-    endEditCP(ExampleButton3, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
-    beginEditCP(ExampleButton4, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
         ExampleButton4->setPreferredSize(Vec2f(100, 50));
         ExampleButton4->setMaxSize(Vec2f(100, 50));
-    endEditCP(ExampleButton4, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
-    beginEditCP(ExampleButton5, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
         ExampleButton5->setPreferredSize(Vec2f(100, 50));
         ExampleButton5->setMaxSize(Vec2f(100, 50));
-    endEditCP(ExampleButton5, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
-    beginEditCP(ExampleButton6, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
         ExampleButton6->setPreferredSize(Vec2f(100, 50));
         ExampleButton6->setMaxSize(Vec2f(100, 50));
-    endEditCP(ExampleButton6, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
-    beginEditCP(ExampleButton7, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
         ExampleButton7->setPreferredSize(Vec2f(100, 50));
         ExampleButton7->setMaxSize(Vec2f(100, 50));
-    endEditCP(ExampleButton7, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
-    beginEditCP(ExampleButton8, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
         ExampleButton8->setPreferredSize(Vec2f(100, 50));
         ExampleButton8->setMaxSize(Vec2f(100, 50));
-    endEditCP(ExampleButton8, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
-    beginEditCP(ExampleButton9, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
         ExampleButton9->setPreferredSize(Vec2f(100, 50));
         ExampleButton9->setMaxSize(Vec2f(100, 50));
-    endEditCP(ExampleButton9, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
-    beginEditCP(ExampleButton10, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
         ExampleButton10->setPreferredSize(Vec2f(100, 50));
         ExampleButton10->setMaxSize(Vec2f(100, 50));
-    endEditCP(ExampleButton10, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
-    beginEditCP(ExampleButton11, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
         ExampleButton11->setPreferredSize(Vec2f(100, 50));
         ExampleButton11->setMaxSize(Vec2f(100, 50));
-    endEditCP(ExampleButton11, Button::PreferredSizeFieldMask | Button::MaxSizeFieldMask | Button::TextFieldMask);
 
     /******************************************************
 
             Create some Layouts
 
     ******************************************************/
-    FlowLayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
-    BoxLayoutPtr ExamplePanel1Layout = osg::BoxLayout::create();
-    BoxLayoutPtr ExamplePanel2Layout = osg::BoxLayout::create();
-    BoxLayoutPtr ExamplePanel3Layout = osg::BoxLayout::create();
-    BoxLayoutPtr ExamplePanel4Layout = osg::BoxLayout::create();
-    BoxLayoutPtr ExamplePanel5Layout = osg::BoxLayout::create();
-    BoxLayoutPtr ExamplePanel6Layout = osg::BoxLayout::create();
+    FlowLayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
+    BoxLayoutRefPtr ExamplePanel1Layout = OSG::BoxLayout::create();
+    BoxLayoutRefPtr ExamplePanel2Layout = OSG::BoxLayout::create();
+    BoxLayoutRefPtr ExamplePanel3Layout = OSG::BoxLayout::create();
+    BoxLayoutRefPtr ExamplePanel4Layout = OSG::BoxLayout::create();
+    BoxLayoutRefPtr ExamplePanel5Layout = OSG::BoxLayout::create();
+    BoxLayoutRefPtr ExamplePanel6Layout = OSG::BoxLayout::create();
 
-    beginEditCP(ExamplePanel1Layout, BoxLayout::OrientationFieldMask);
 	ExamplePanel1Layout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
-    endEditCP(ExamplePanel1Layout, BoxLayout::OrientationFieldMask);
 
-    beginEditCP(ExamplePanel2Layout, BoxLayout::OrientationFieldMask);
         ExamplePanel2Layout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
-    endEditCP(ExamplePanel2Layout, BoxLayout::OrientationFieldMask);
 
-    beginEditCP(ExamplePanel3Layout, BoxLayout::OrientationFieldMask);
         ExamplePanel3Layout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
-    endEditCP(ExamplePanel3Layout, BoxLayout::OrientationFieldMask);
 
-    beginEditCP(ExamplePanel4Layout, BoxLayout::OrientationFieldMask);
         ExamplePanel4Layout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
-    endEditCP(ExamplePanel4Layout, BoxLayout::OrientationFieldMask);
 
-    beginEditCP(ExamplePanel5Layout, BoxLayout::OrientationFieldMask);
         ExamplePanel5Layout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
-    endEditCP(ExamplePanel5Layout, BoxLayout::OrientationFieldMask);
 
-    beginEditCP(ExamplePanel6Layout, BoxLayout::OrientationFieldMask);
         ExamplePanel6Layout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
-    endEditCP(ExamplePanel6Layout, BoxLayout::OrientationFieldMask);
 
-    beginEditCP(MainInternalWindowLayout, FlowLayout::OrientationFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
 	MainInternalWindowLayout->setOrientation(BoxLayout::HORIZONTAL_ORIENTATION);
         MainInternalWindowLayout->setMinorAxisAlignment(0.5f);
-    endEditCP(MainInternalWindowLayout, FlowLayout::OrientationFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
 
 
 
@@ -301,132 +247,110 @@ int main(int argc, char **argv)
 
 
     ******************************************************/
-    PanelPtr ExamplePanel1 = osg::Panel::create();
-    PanelPtr ExamplePanel2 = osg::Panel::create();
-    PanelPtr ExamplePanel3 = osg::Panel::create();
-    PanelPtr ExamplePanel4 = osg::Panel::create();
-    PanelPtr ExamplePanel5 = osg::Panel::create();
-    PanelPtr ExamplePanel6 = osg::Panel::create();
+    PanelRefPtr ExamplePanel1 = OSG::Panel::create();
+    PanelRefPtr ExamplePanel2 = OSG::Panel::create();
+    PanelRefPtr ExamplePanel3 = OSG::Panel::create();
+    PanelRefPtr ExamplePanel4 = OSG::Panel::create();
+    PanelRefPtr ExamplePanel5 = OSG::Panel::create();
+    PanelRefPtr ExamplePanel6 = OSG::Panel::create();
 
     
     // Edit Panel1, Panel2
-    beginEditCP(ExamplePanel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         ExamplePanel1->setPreferredSize(Vec2f(400, 400));
-        ExamplePanel1->getChildren().push_back(ExampleButton2);
-        ExamplePanel1->getChildren().push_back(ExamplePanel3);
-        ExamplePanel1->getChildren().push_back(ExamplePanel4);
+        ExamplePanel1->pushToChildren(ExampleButton2);
+        ExamplePanel1->pushToChildren(ExamplePanel3);
+        ExamplePanel1->pushToChildren(ExamplePanel4);
         ExamplePanel1->setLayout(ExamplePanel1Layout);
         ExamplePanel1->setBackgrounds(ExamplePanelBackground);
         ExamplePanel1->setBorders(ExamplePanelBorder);
-    endEditCP(ExamplePanel1, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
 
-    beginEditCP(ExamplePanel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
         ExamplePanel2->setPreferredSize(Vec2f(400, 400));
-        ExamplePanel2->getChildren().push_back(ExampleButton3);
-        ExamplePanel2->getChildren().push_back(ExamplePanel5);
-        ExamplePanel2->getChildren().push_back(ExamplePanel6);
+        ExamplePanel2->pushToChildren(ExampleButton3);
+        ExamplePanel2->pushToChildren(ExamplePanel5);
+        ExamplePanel2->pushToChildren(ExamplePanel6);
         ExamplePanel2->setLayout(ExamplePanel2Layout);
         ExamplePanel2->setBackgrounds(ExamplePanelBackground);
         ExamplePanel2->setBorders(ExamplePanelBorder);
-    endEditCP(ExamplePanel2, Panel::PreferredSizeFieldMask | Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::BackgroundsFieldMask | Panel::BordersFieldMask);
     
-    beginEditCP(ExamplePanel3, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundsFieldMask);
-        ExamplePanel3->getChildren().push_back(ExampleButton4);
-        ExamplePanel3->getChildren().push_back(ExampleButton5);
+        ExamplePanel3->pushToChildren(ExampleButton4);
+        ExamplePanel3->pushToChildren(ExampleButton5);
         ExamplePanel3->setLayout(ExamplePanel3Layout);
         ExamplePanel3->setPreferredSize(Vec2f(125, 130));
         ExamplePanel3->setBackgrounds(ExampleSmallPanelBackground);
-    endEditCP(ExamplePanel3, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundsFieldMask);
     
-    beginEditCP(ExamplePanel4, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundsFieldMask);
-        ExamplePanel4->getChildren().push_back(ExampleButton6);
-        ExamplePanel4->getChildren().push_back(ExampleButton7);
+        ExamplePanel4->pushToChildren(ExampleButton6);
+        ExamplePanel4->pushToChildren(ExampleButton7);
         ExamplePanel4->setLayout(ExamplePanel4Layout);
         ExamplePanel4->setPreferredSize(Vec2f(125, 130));
         ExamplePanel4->setBackgrounds(ExampleSmallPanelBackground);
-    endEditCP(ExamplePanel4, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundsFieldMask);
         
-    beginEditCP(ExamplePanel5, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundsFieldMask);
-        ExamplePanel5->getChildren().push_back(ExampleButton8);
-        ExamplePanel5->getChildren().push_back(ExampleButton9);
+        ExamplePanel5->pushToChildren(ExampleButton8);
+        ExamplePanel5->pushToChildren(ExampleButton9);
         ExamplePanel5->setLayout(ExamplePanel5Layout);
         ExamplePanel5->setPreferredSize(Vec2f(125, 130));
         ExamplePanel5->setBackgrounds(ExampleSmallPanelBackground);
-    endEditCP(ExamplePanel5, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundsFieldMask);
         
-    beginEditCP(ExamplePanel6, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundsFieldMask);
-        ExamplePanel6->getChildren().push_back(ExampleButton10);
-        ExamplePanel6->getChildren().push_back(ExampleButton11);
+        ExamplePanel6->pushToChildren(ExampleButton10);
+        ExamplePanel6->pushToChildren(ExampleButton11);
         ExamplePanel6->setLayout(ExamplePanel6Layout);
         ExamplePanel6->setPreferredSize(Vec2f(125, 130));
         ExamplePanel6->setBackgrounds(ExampleSmallPanelBackground);
-    endEditCP(ExamplePanel6, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask | Panel::BackgroundsFieldMask);
 
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
-    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
-    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
+    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
 
-    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
-	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
        MainInternalWindow->setBorder(ExamplePanelBorder);
-       MainInternalWindow->getChildren().push_back(ExampleLabel1);
-       MainInternalWindow->getChildren().push_back(ExampleButton1);
-       MainInternalWindow->getChildren().push_back(ExamplePanel1);
-       MainInternalWindow->getChildren().push_back(ExamplePanel2);
+       MainInternalWindow->pushToChildren(ExampleLabel1);
+       MainInternalWindow->pushToChildren(ExampleButton1);
+       MainInternalWindow->pushToChildren(ExamplePanel1);
+       MainInternalWindow->pushToChildren(ExamplePanel2);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
 	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.8f,0.8f));
 	   MainInternalWindow->setDrawTitlebar(false);
 	   MainInternalWindow->setResizable(false);
-    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
 
     // Create the Drawing Surface
-    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
-        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setEventProducer(TutorialWindow);
 
 	TutorialDrawingSurface->openWindow(MainInternalWindow);
 
     // Create the UI Foreground Object
-    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
+    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
 
-    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
-    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
     // Tell the Manager what to manage
-    mgr->setWindow(MainWindow);
+    mgr->setWindow(TutorialWindow);
     mgr->setRoot(scene);
 
     // Add the UI Foreground Object to the Scene
-    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+        TutorialViewport->addForeground(TutorialUIForeground);
 
     // Show the whole Scene
     mgr->showAll();
 
 
     //Open Window
-    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
-    TutorialWindowEventProducer->openWindow(WinPos,
+    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+    TutorialWindow->openWindow(WinPos,
             WinSize,
-            "01RubberBandCamera");
+            "12ComplexLayout");
 
     //Enter main Loop
-    TutorialWindowEventProducer->mainLoop();
+    TutorialWindow->mainLoop();
 
     osgExit();
 

@@ -6,69 +6,69 @@
 // Includes: Font and Label creation and settings
 
 // General OpenSG configuration, needed everywhere
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
-#include <OpenSG/OSGSimpleGeometry.h>
+#include "OSGSimpleGeometry.h"
 
 // A little helper to simplify scene management and interaction
-#include <OpenSG/OSGSimpleSceneManager.h>
-#include <OpenSG/OSGNode.h>
-#include <OpenSG/OSGGroup.h>
-#include <OpenSG/OSGViewport.h>
+#include "OSGSimpleSceneManager.h"
+#include "OSGNode.h"
+#include "OSGGroup.h"
+#include "OSGViewport.h"
 
 // The general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
+#include "OSGSceneFileHandler.h"
 
 // Input
-#include <OpenSG/Input/OSGWindowUtils.h>
+#include "OSGWindowUtils.h"
 
 // UserInterface Headers
-#include <OpenSG/UserInterface/OSGUIForeground.h>
-#include <OpenSG/UserInterface/OSGInternalWindow.h>
-#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
-#include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include "OSGUIForeground.h"
+#include "OSGInternalWindow.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGGraphics2D.h"
+#include "OSGLookAndFeelManager.h"
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-WindowEventProducerPtr TutorialWindowEventProducer;
+WindowEventProducerRefPtr TutorialWindow;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
 
 // 17Label_Font Headers
-#include <OpenSG/UserInterface/OSGLayers.h>
-#include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
-#include <OpenSG/UserInterface/OSGGradientLayer.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-//#include <OpenSG/UserInterface/OSGUIDefines.h>
-#include <OpenSG/UserInterface/OSGScrollPanel.h>
-#include <OpenSG/OSGTextFaceFactory.h>
+#include "OSGLayers.h"
+#include "OSGButton.h"
+#include "OSGFlowLayout.h"
+#include "OSGGradientLayer.h"
+#include "OSGLookAndFeelManager.h"
+//#include "OSGUIDefines.h"
+#include "OSGScrollPanel.h"
+#include "OSGTextFaceFactory.h"
 #include <map>
 
 // Include Label and Font headerfiles
-#include <OpenSG/UserInterface/OSGLabel.h>
-#include <OpenSG/UserInterface/OSGUIFont.h>
+#include "OSGLabel.h"
+#include "OSGUIFont.h"
 
 // List header files
-#include <OpenSG/UserInterface/OSGList.h>
-#include <OpenSG/UserInterface/OSGListSelectionListener.h>
-#include <OpenSG/UserInterface/OSGDefaultListModel.h>
-#include <OpenSG/UserInterface/OSGDefaultListComponentGenerator.h>
-#include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
-#include <OpenSG/UserInterface/OSGListModel.h>
+#include "OSGList.h"
+#include "OSGListSelectionListener.h"
+#include "OSGDefaultListModel.h"
+#include "OSGDefaultListComponentGenerator.h"
+#include "OSGDefaultListSelectionModel.h"
+#include "OSGListModel.h"
 
 
 // Declare variables upfront 
-std::map<std::string, UIFontPtr> FontMap;
-LabelPtr ExampleLabel;
-ListPtr FontList;
+std::map<std::string, UIFontRefPtr> FontMap;
+LabelRefPtr ExampleLabel;
+ListRefPtr FontList;
 
 // forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -79,19 +79,19 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEventPtr e)
+   virtual void keyPressed(const KeyEventUnrecPtr e)
    {
        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-            TutorialWindowEventProducer->closeWindow();
+            TutorialWindow->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEventPtr e)
+   virtual void keyReleased(const KeyEventUnrecPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEventPtr e)
+   virtual void keyTyped(const KeyEventUnrecPtr e)
    {
    }
 };
@@ -128,16 +128,16 @@ class FontListComponentGenerator : public DefaultListComponentGenerator
   public:
     typedef          DefaultListComponentGenerator Inherited;
     typedef          FontListComponentGenerator Self;
-	typedef          FCPtr<Inherited::Ptr,  Self      > PtrType;
+	typedef          FCRefPtr<Inherited::RefPtr,  Self      > PtrType;
 
 	OSG_FIELD_CONTAINER_DECL(PtrType)
 	
-	virtual ComponentPtr getListComponent(ListPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus)
+	virtual ComponentRefPtr getListComponent(ListRefPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus)
     {
         // Create using the DefaultListComponentGenerator a
         // Label (its default) with the Font name as its text
 
-        ComponentPtr TheComponent = Inherited::getListComponent(Parent, Value, Index, IsSelected, HasFocus);
+        ComponentRefPtr TheComponent = Inherited::getListComponent(Parent, Value, Index, IsSelected, HasFocus);
 
         std::string FontFamilyString;
         // Converts the Fontname to correct type
@@ -151,13 +151,11 @@ class FontListComponentGenerator : public DefaultListComponentGenerator
         }
         
         // Add the required Font to FontMapItor
-        std::map<std::string, UIFontPtr>::iterator FontMapItor = FontMap.find(FontFamilyString);
+        std::map<std::string, UIFontRefPtr>::iterator FontMapItor = FontMap.find(FontFamilyString);
         if(FontMapItor != FontMap.end() && TheComponent->getType().isDerivedFrom(TextComponent::getClassType()))
 	    {
-		    beginEditCP(TheComponent, TextComponent::FontFieldMask);
                 // Set the TextComponent's Font to be its correct Font
-                TextComponent::Ptr::dcast(TheComponent)->setFont((*FontMapItor).second);
-		    beginEditCP(TheComponent, TextComponent::FontFieldMask);
+                dynamic_pointer_cast<TextComponent>(TheComponent)->setFont((*FontMapItor).second);
         }
 
         return TheComponent;
@@ -197,7 +195,7 @@ FieldContainerType FontListComponentGenerator::_type("FontListComponentGenerator
 
 OSG_FIELD_CONTAINER_INL_DEF(FontListComponentGenerator::Self, FontListComponentGenerator::PtrType)
 OSG_FIELD_CONTAINER_DEF(FontListComponentGenerator::Self, FontListComponentGenerator::PtrType)
-typedef FontListComponentGenerator::PtrType FontListComponentGeneratorPtr;
+typedef FontListComponentGenerator::PtrType FontListComponentGeneratorRefPtr;
 
 // Setup a FontListener to change the label's font
 // when a different item in the FontList is
@@ -205,7 +203,7 @@ typedef FontListComponentGenerator::PtrType FontListComponentGeneratorPtr;
 class FontListListener: public ListSelectionListener
 {
   public:
-    virtual void selectionChanged(const ListSelectionEventPtr e)
+    virtual void selectionChanged(const ListSelectionEventUnrecPtr e)
     {
         if(!FontList->getSelectionModel()->isSelectionEmpty())
         {
@@ -221,15 +219,13 @@ class FontListListener: public ListSelectionListener
             // Output selected font
             std::cout << "Setting Font: " << ValueStr << std::endl;
 
-            // Get the Font and create new FontPtr
-            UIFontPtr TheSelectedFont(FontMap[ValueStr]);
+            // Get the Font and create new FontRefPtr
+            UIFontRefPtr TheSelectedFont(FontMap[ValueStr]);
 
-            if(TheSelectedFont != NullFC)
+            if(TheSelectedFont != NULL)
             {
                 // Set the font for ExampleLabel to be selected font
-                beginEditCP(ExampleLabel, Label::FontFieldMask);
                     ExampleLabel->setFont(TheSelectedFont);
-                endEditCP(ExampleLabel, Label::FontFieldMask);
             }
         }
     }
@@ -241,27 +237,25 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    TutorialWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
+    TutorialWindow = createNativeWindow();
+    TutorialWindow->initWindow();
 
-    TutorialWindowEventProducer->setDisplayCallback(display);
-    TutorialWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindow->setDisplayCallback(display);
+    TutorialWindow->setReshapeCallback(reshape);
 
     TutorialKeyListener TheKeyListener;
-    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+    TutorialWindow->addKeyListener(&TheKeyListener);
 
     // Make Torus Node (creates Torus in background of scene)
-    NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
     // Make Main Scene Node and add the Torus
-    NodePtr scene = osg::Node::create();
-    beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        scene->setCore(osg::Group::create());
+    NodeRefPtr scene = OSG::Node::create();
+        scene->setCore(OSG::Group::create());
         scene->addChild(TorusGeometryNode);
-    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
-    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
+    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
 
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
@@ -288,12 +282,10 @@ int main(int argc, char **argv)
     for (unsigned int i =0; i<family.size(); ++i)
     {
         //Create the Fonts
-        UIFontPtr TheFont = UIFont::create();
-        beginEditCP(TheFont, UIFont::FamilyFieldMask | UIFont::SizeFieldMask | UIFont::StyleFieldMask);
+        UIFontRefPtr TheFont = UIFont::create();
             TheFont->setFamily(family[i]);
             TheFont->setSize(16);
             TheFont->setStyle(TextFace::STYLE_PLAIN);
-        endEditCP(TheFont, UIFont::FamilyFieldMask | UIFont::SizeFieldMask | UIFont::StyleFieldMask);
         // Setup the FontMap map to pair the
         // string Font name with a Font with
         // that Font
@@ -324,14 +316,12 @@ int main(int argc, char **argv)
 			changes.
 
     ******************************************************/
-    UIFontPtr ExampleLabelFont = UIFont::create();
-	beginEditCP(ExampleLabelFont, UIFont::FamilyFieldMask | UIFont::SizeFieldMask | UIFont::StyleFieldMask);
+    UIFontRefPtr ExampleLabelFont = UIFont::create();
         //ExampleLabelFont->setFamily("Times New Roman");
 		// Displayed Font will be default (this Font name does NOT exist)
         ExampleLabelFont->setFamily("RandomGibberishFontNameWhichDoesntExist");
         ExampleLabelFont->setSize(25);
         ExampleLabelFont->setStyle(TextFace::STYLE_PLAIN);
-    endEditCP(ExampleLabelFont, UIFont::FamilyFieldMask | UIFont::SizeFieldMask | UIFont::StyleFieldMask);
 
     /******************************************************
 
@@ -357,15 +347,12 @@ int main(int argc, char **argv)
     ******************************************************/
 
 	// Create a GradientBackground to add to the Label
-    GradientLayerPtr ExampleLabelBackground = osg::GradientLayer::create();
-    beginEditCP(ExampleLabelBackground, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask);
+    GradientLayerRefPtr ExampleLabelBackground = OSG::GradientLayer::create();
         ExampleLabelBackground->getColors().push_back(Color4f(1.0, 0.0, 0.0, 1.0));
 		ExampleLabelBackground->getStops().push_back(0.0);
         ExampleLabelBackground->getColors().push_back(Color4f(0.0, 0.0, 1.0, 1.0));
 		ExampleLabelBackground->getStops().push_back(1.0);
-    endEditCP(ExampleLabelBackground, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask);
-    ExampleLabel = osg::Label::create();
-    beginEditCP(ExampleLabel, Label::BackgroundsFieldMask | Label::FontFieldMask | Label::TextFieldMask | Label::TextColorFieldMask | Label::AlignmentFieldMask | Label::PreferredSizeFieldMask | Label::TextSelectableFieldMask);
+    ExampleLabel = OSG::Label::create();
         ExampleLabel->setBackgrounds(ExampleLabelBackground);
         ExampleLabel->setFont(ExampleLabelFont);
         ExampleLabel->setText("Change My Font!");
@@ -374,7 +361,6 @@ int main(int argc, char **argv)
         ExampleLabel->setAlignment(Vec2f(0.5,0.5));
         ExampleLabel->setPreferredSize(Vec2f(200, 50));
         ExampleLabel->setTextSelectable(true);
-    endEditCP(ExampleLabel, Label::BackgroundsFieldMask | Label::FontFieldMask | Label::TextFieldMask | Label::TextColorFieldMask | Label::AlignmentFieldMask | Label::PreferredSizeFieldMask | Label::TextSelectableFieldMask);
     
     /******************************************************
 
@@ -391,10 +377,10 @@ int main(int argc, char **argv)
 
     ******************************************************/
     // Create ListModel Component
-	DefaultListModelPtr ListModel = DefaultListModel::create();
+	DefaultListModelRefPtr ListModel = DefaultListModel::create();
 
     // Display all Fonts available
-    std::map<std::string, UIFontPtr>::iterator FontMapItor;
+    std::map<std::string, UIFontRefPtr>::iterator FontMapItor;
     for (FontMapItor = FontMap.begin(); FontMapItor != FontMap.end() ; ++FontMapItor)
     {
         // Add the Fonts to the List
@@ -402,17 +388,15 @@ int main(int argc, char **argv)
     }
 
     // Creates ComponentGenerator
-	FontListComponentGeneratorPtr TheGenerator = FontListComponentGenerator::create();
+	FontListComponentGeneratorRefPtr TheGenerator = FontListComponentGenerator::create();
 
     // Create the List of Fonts (see 18List for more information)
     FontList = List::create();
-    beginEditCP(FontList, List::PreferredSizeFieldMask | List::OrientationFieldMask | List::CellGeneratorFieldMask | List::ModelFieldMask);
         FontList->setPreferredSize(Vec2f(200, 300));
         FontList->setOrientation(List::VERTICAL_ORIENTATION);
 		FontList->setCellGenerator(TheGenerator);
 		FontList->setModel(ListModel);
-    endEditCP(FontList, List::PreferredSizeFieldMask | List::OrientationFieldMask | List::CellGeneratorFieldMask | List::ModelFieldMask);
-    ListSelectionModelPtr SelectionModel(new DefaultListSelectionModel);
+    ListSelectionModelRefPtr SelectionModel(new DefaultListSelectionModel);
     SelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
     FontList->setSelectionModel(SelectionModel);
 
@@ -420,77 +404,65 @@ int main(int argc, char **argv)
     FontList->getSelectionModel()->addListSelectionListener(&TheFontListListener);
 
     //ScrollPanel
-    ScrollPanelPtr ExampleScrollPanel = ScrollPanel::create();
-    beginEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+    ScrollPanelRefPtr ExampleScrollPanel = ScrollPanel::create();
         ExampleScrollPanel->setPreferredSize(Vec2f(200,300));
         ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
         //ExampleScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-    endEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
     ExampleScrollPanel->setViewComponent(FontList);
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
-    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
-    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
+    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
 
-    FlowLayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
+    FlowLayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
 
-    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
-	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().push_back(ExampleLabel);
-       MainInternalWindow->getChildren().push_back(ExampleScrollPanel);
+    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
+       MainInternalWindow->pushToChildren(ExampleLabel);
+       MainInternalWindow->pushToChildren(ExampleScrollPanel);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
 	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
 	   MainInternalWindow->setDrawTitlebar(false);
 	   MainInternalWindow->setResizable(false);
-    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
 
     // Create the Drawing Surface
-    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
-        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setEventProducer(TutorialWindow);
     
 	TutorialDrawingSurface->openWindow(MainInternalWindow);
 
     // Create the UI Foreground Object
-    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
+    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
 
-    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
-            endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
  
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
     // Tell the Manager what to manage
-    mgr->setWindow(MainWindow);
+    mgr->setWindow(TutorialWindow);
     mgr->setRoot(scene);
 
     // Add the UI Foreground Object to the Scene
-    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+        TutorialViewport->addForeground(TutorialUIForeground);
 
     // Show the whole Scene
     mgr->showAll();
 
 
     //Open Window
-    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
-    TutorialWindowEventProducer->openWindow(WinPos,
+    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+    TutorialWindow->openWindow(WinPos,
             WinSize,
-            "01RubberBandCamera");
+            "17Label_Font");
 
     //Enter main Loop
-    TutorialWindowEventProducer->mainLoop();
+    TutorialWindow->mainLoop();
 
     osgExit();
 

@@ -9,44 +9,44 @@
 
 
 // General OpenSG configuration, needed everywhere
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
-#include <OpenSG/OSGSimpleGeometry.h>
+#include "OSGSimpleGeometry.h"
 
 // A little helper to simplify scene management and interaction
-#include <OpenSG/OSGSimpleSceneManager.h>
-#include <OpenSG/OSGNode.h>
-#include <OpenSG/OSGGroup.h>
-#include <OpenSG/OSGViewport.h>
+#include "OSGSimpleSceneManager.h"
+#include "OSGNode.h"
+#include "OSGGroup.h"
+#include "OSGViewport.h"
 
 // The general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
+#include "OSGSceneFileHandler.h"
 
 // Input
-#include <OpenSG/Input/OSGWindowUtils.h>
+#include "OSGWindowUtils.h"
 
 // UserInterface Headers
-#include <OpenSG/UserInterface/OSGUIForeground.h>
-#include <OpenSG/UserInterface/OSGInternalWindow.h>
-#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
-#include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include "OSGUIForeground.h"
+#include "OSGInternalWindow.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGGraphics2D.h"
+#include "OSGLookAndFeelManager.h"
 
-#include <OpenSG/UserInterface/OSGBorders.h>
-#include <OpenSG/UserInterface/OSGLayers.h>
-#include <OpenSG/UserInterface/OSGUIFont.h>
-#include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGLayoutSpring.h>
-#include <OpenSG/UserInterface/OSGSpringLayout.h>
-#include <OpenSG/UserInterface/OSGSpringLayoutConstraints.h>
+#include "OSGBorders.h"
+#include "OSGLayers.h"
+#include "OSGUIFont.h"
+#include "OSGButton.h"
+#include "OSGLayoutSpring.h"
+#include "OSGSpringLayout.h"
+#include "OSGSpringLayoutConstraints.h"
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-WindowEventProducerPtr TutorialWindowEventProducer;
+WindowEventProducerRefPtr TutorialWindow;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -56,19 +56,19 @@ class TutorialKeyListener : public KeyListener // Key Listener to exit the appli
 {
 public:
 
-   virtual void keyPressed(const KeyEventPtr e)
+   virtual void keyPressed(const KeyEventUnrecPtr e)
    {
        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-            TutorialWindowEventProducer->closeWindow();
+            TutorialWindow->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEventPtr e)
+   virtual void keyReleased(const KeyEventUnrecPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEventPtr e)
+   virtual void keyTyped(const KeyEventUnrecPtr e)
    {
    }
 };
@@ -79,27 +79,25 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    TutorialWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
+    TutorialWindow = createNativeWindow();
+    TutorialWindow->initWindow();
 
-    TutorialWindowEventProducer->setDisplayCallback(display);
-    TutorialWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindow->setDisplayCallback(display);
+    TutorialWindow->setReshapeCallback(reshape);
 
     TutorialKeyListener TheKeyListener;
-    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+    TutorialWindow->addKeyListener(&TheKeyListener);
 
     // Make Torus Node (creates Torus in background of scene)
-    NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
     // Make Main Scene Node and add the Torus
-    NodePtr scene = osg::Node::create();
-    beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        scene->setCore(osg::Group::create());
+    NodeRefPtr scene = OSG::Node::create();
+        scene->setCore(OSG::Group::create());
         scene->addChild(TorusGeometryNode);
-    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
-    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
+    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
 
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
@@ -109,12 +107,12 @@ int main(int argc, char **argv)
                 Creates some Button components
 
     ******************************************************/
-    ButtonPtr ExampleButton1 = osg::Button::create();
-    ButtonPtr ExampleButton2 = osg::Button::create();
-    ButtonPtr ExampleButton3 = osg::Button::create();
-    ButtonPtr ExampleButton4 = osg::Button::create();
-    ButtonPtr ExampleButton5 = osg::Button::create();
-    ButtonPtr ExampleButton6 = osg::Button::create();
+    ButtonRefPtr ExampleButton1 = OSG::Button::create();
+    ButtonRefPtr ExampleButton2 = OSG::Button::create();
+    ButtonRefPtr ExampleButton3 = OSG::Button::create();
+    ButtonRefPtr ExampleButton4 = OSG::Button::create();
+    ButtonRefPtr ExampleButton5 = OSG::Button::create();
+    ButtonRefPtr ExampleButton6 = OSG::Button::create();
 
 
     /******************************************************
@@ -134,12 +132,10 @@ int main(int argc, char **argv)
 
     ******************************************************/
 
-    SpringLayoutPtr MainInternalWindowLayout = osg::SpringLayout::create();
+    SpringLayoutRefPtr MainInternalWindowLayout = OSG::SpringLayout::create();
 
     // OverlayLayout has no options to edit!
-    beginEditCP(MainInternalWindowLayout);
         // NOTHING : )
-    endEditCP(MainInternalWindowLayout); 
 
     
     /******************************************************
@@ -148,37 +144,25 @@ int main(int argc, char **argv)
 
     ******************************************************/
 
-	beginEditCP(ExampleButton1, Button::PreferredSizeFieldMask);
         ExampleButton1->setPreferredSize(Vec2f(50,50));
 		ExampleButton1->setText("Button 1");
-    endEditCP(ExampleButton1, Button::PreferredSizeFieldMask);
 
-	beginEditCP(ExampleButton2, Button::PreferredSizeFieldMask);
         ExampleButton2->setPreferredSize(Vec2f(50,50));
 		ExampleButton2->setText("Button 2");
-    endEditCP(ExampleButton2, Button::PreferredSizeFieldMask);
 
-	beginEditCP(ExampleButton3, Button::PreferredSizeFieldMask);
         ExampleButton3->setPreferredSize(Vec2f(50,50));
 		ExampleButton3->setText("Button 3");
-    endEditCP(ExampleButton3, Button::PreferredSizeFieldMask);
 
-	beginEditCP(ExampleButton4, Button::PreferredSizeFieldMask);
         ExampleButton4->setPreferredSize(Vec2f(50,50));
 		ExampleButton4->setText("Button 4");
-    endEditCP(ExampleButton4, Button::PreferredSizeFieldMask);
 
-	beginEditCP(ExampleButton5, Button::PreferredSizeFieldMask);
         ExampleButton5->setPreferredSize(Vec2f(50,50));
 		ExampleButton5->setText("Button 5");
-    endEditCP(ExampleButton5, Button::PreferredSizeFieldMask);
 
-	beginEditCP(ExampleButton6, Button::PreferredSizeFieldMask);
         ExampleButton6->setPreferredSize(Vec2f(50,50));
 		ExampleButton6->setText("Button 6");
-    endEditCP(ExampleButton6, Button::PreferredSizeFieldMask);
     
-    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
+    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
 
 	// SpringLayoutConstraints Information
 	// It is possible to set the constraint for the Y_EDGE, X_EDGE, BASELINE_EDGE, NORTH_EDGE, SOUTH_EDGE, EAST_EDGE, WEST_EDGE, HEIGHT_EDGE, and/or WIDTH_EDGE of a component.
@@ -223,68 +207,58 @@ int main(int argc, char **argv)
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
-    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
-    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
+    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
 
-	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().push_back(ExampleButton1);
-       MainInternalWindow->getChildren().push_back(ExampleButton2);
-       MainInternalWindow->getChildren().push_back(ExampleButton3);
-	   MainInternalWindow->getChildren().push_back(ExampleButton4);
-       MainInternalWindow->getChildren().push_back(ExampleButton5);
-       MainInternalWindow->getChildren().push_back(ExampleButton6);
+       MainInternalWindow->pushToChildren(ExampleButton1);
+       MainInternalWindow->pushToChildren(ExampleButton2);
+       MainInternalWindow->pushToChildren(ExampleButton3);
+	   MainInternalWindow->pushToChildren(ExampleButton4);
+       MainInternalWindow->pushToChildren(ExampleButton5);
+       MainInternalWindow->pushToChildren(ExampleButton6);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
 	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
 	   MainInternalWindow->setDrawTitlebar(false);
 	   MainInternalWindow->setResizable(false);
-    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
 
     // Create the Drawing Surface
-    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
-        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setEventProducer(TutorialWindow);
     
 	TutorialDrawingSurface->openWindow(MainInternalWindow);
 
     // Create the UI Foreground Object
-    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
+    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
 
-    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
-	endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
     // Tell the Manager what to manage
-    mgr->setWindow(MainWindow);
+    mgr->setWindow(TutorialWindow);
     mgr->setRoot(scene);
 
     // Add the UI Foreground Object to the Scene
-    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+        TutorialViewport->addForeground(TutorialUIForeground);
 
     // Show the whole Scene
     mgr->showAll();
 
 
     //Open Window
-    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
-    TutorialWindowEventProducer->openWindow(WinPos,
+    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+    TutorialWindow->openWindow(WinPos,
             WinSize,
-            "01RubberBandCamera");
+            "36SpringLayout");
 
     //Enter main Loop
-    TutorialWindowEventProducer->mainLoop();
+    TutorialWindow->mainLoop();
 
     osgExit();
 

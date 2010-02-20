@@ -57,52 +57,52 @@ information:
 
 
 // General OpenSG configuration, needed everywhere
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
-#include <OpenSG/OSGSimpleGeometry.h>
+#include "OSGSimpleGeometry.h"
 
 // A little helper to simplify scene management and interaction
-#include <OpenSG/OSGSimpleSceneManager.h>
-#include <OpenSG/OSGNode.h>
-#include <OpenSG/OSGGroup.h>
-#include <OpenSG/OSGViewport.h>
+#include "OSGSimpleSceneManager.h"
+#include "OSGNode.h"
+#include "OSGGroup.h"
+#include "OSGViewport.h"
 
 // The general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
+#include "OSGSceneFileHandler.h"
 
 // Input
-#include <OpenSG/Input/OSGWindowUtils.h>
+#include "OSGWindowUtils.h"
 
 // UserInterface Headers
-#include <OpenSG/UserInterface/OSGUIForeground.h>
-#include <OpenSG/UserInterface/OSGInternalWindow.h>
-#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
-#include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include "OSGUIForeground.h"
+#include "OSGInternalWindow.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGGraphics2D.h"
+#include "OSGLookAndFeelManager.h"
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-WindowEventProducerPtr TutorialWindowEventProducer;
+WindowEventProducerRefPtr TutorialWindow;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
 
 // 04Layer Headers
-#include <OpenSG/UserInterface/OSGLayers.h>
-#include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGLineBorder.h>
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include "OSGLayers.h"
+#include "OSGButton.h"
+#include "OSGLineBorder.h"
+#include "OSGFlowLayout.h"
+#include "OSGLookAndFeelManager.h"
 // Include Layer header files
-#include <OpenSG/OSGChunkMaterial.h>
-#include <OpenSG/OSGMaterialChunk.h>
-#include <OpenSG/OSGTextureChunk.h>
-#include <OpenSG/OSGImageFileHandler.h>
+#include "OSGChunkMaterial.h"
+#include "OSGMaterialChunk.h"
+#include "OSGTextureObjChunk.h"
+#include "OSGImageFileHandler.h"
 
 
 // Create a class to allow for the use of the Ctrl+q
@@ -110,19 +110,19 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEventPtr e)
+   virtual void keyPressed(const KeyEventUnrecPtr e)
    {
        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-            TutorialWindowEventProducer->closeWindow();
+            TutorialWindow->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEventPtr e)
+   virtual void keyReleased(const KeyEventUnrecPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEventPtr e)
+   virtual void keyTyped(const KeyEventUnrecPtr e)
    {
    }
 };
@@ -133,27 +133,25 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     // Set up Window
-    TutorialWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
+    TutorialWindow = createNativeWindow();
+    TutorialWindow->initWindow();
 
-    TutorialWindowEventProducer->setDisplayCallback(display);
-    TutorialWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindow->setDisplayCallback(display);
+    TutorialWindow->setReshapeCallback(reshape);
 
     TutorialKeyListener TheKeyListener;
-    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+    TutorialWindow->addKeyListener(&TheKeyListener);
 
     // Make Torus Node (creates Torus in background of scene)
-    NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
    
 	// Make Main Scene Node and add the Torus
-    NodePtr scene = osg::Node::create();
-    beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        scene->setCore(osg::Group::create());
+    NodeRefPtr scene = OSG::Node::create();
+        scene->setCore(OSG::Group::create());
         scene->addChild(TorusGeometryNode);
-    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
-    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
+    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
 
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
@@ -164,13 +162,13 @@ int main(int argc, char **argv)
 
     ******************************************************/
 
-    ColorLayerPtr ExampleColorLayer = osg::ColorLayer::create();
-    CompoundLayerPtr ExampleCompoundLayer = osg::CompoundLayer::create();
-	EmptyLayerPtr ExampleEmptyLayer = osg::EmptyLayer::create();
-    GradientLayerPtr ExampleGradientLayer = osg::GradientLayer::create();
-    MaterialLayerPtr ExampleMaterialLayer = osg::MaterialLayer::create();
-    TextureLayerPtr ExampleTextureLayer = osg::TextureLayer::create();
-    PatternLayerPtr ExamplePatternLayer = osg::PatternLayer::create();
+    ColorLayerRefPtr ExampleColorLayer = OSG::ColorLayer::create();
+    CompoundLayerRefPtr ExampleCompoundLayer = OSG::CompoundLayer::create();
+	EmptyLayerRefPtr ExampleEmptyLayer = OSG::EmptyLayer::create();
+    GradientLayerRefPtr ExampleGradientLayer = OSG::GradientLayer::create();
+    MaterialLayerRefPtr ExampleMaterialLayer = OSG::MaterialLayer::create();
+    TextureLayerRefPtr ExampleTextureLayer = OSG::TextureLayer::create();
+    PatternLayerRefPtr ExamplePatternLayer = OSG::PatternLayer::create();
 
     /******************************************************
 
@@ -182,9 +180,7 @@ int main(int argc, char **argv)
 
     ******************************************************/
 
-    beginEditCP(ExampleColorLayer, ColorLayer::ColorFieldMask);
         ExampleColorLayer->setColor(Color4f(1.0,0.0,0.0,1.0));
-    endEditCP(ExampleColorLayer, ColorLayer::ColorFieldMask);
 	
     /******************************************************
 
@@ -203,10 +199,8 @@ int main(int argc, char **argv)
 
     ******************************************************/
 
-    beginEditCP(ExampleCompoundLayer, CompoundLayer::BackgroundsFieldMask);
-        ExampleCompoundLayer->getBackgrounds().push_back(ExampleTextureLayer);
-        ExampleCompoundLayer->getBackgrounds().push_back(ExampleGradientLayer);
-    endEditCP(ExampleCompoundLayer, CompoundLayer::BackgroundsFieldMask);
+        ExampleCompoundLayer->pushToBackgrounds(ExampleTextureLayer);
+        ExampleCompoundLayer->pushToBackgrounds(ExampleGradientLayer);
 	
     /******************************************************
 
@@ -215,9 +209,7 @@ int main(int argc, char **argv)
 
     ******************************************************/
 
-	beginEditCP(ExampleEmptyLayer);
 		// Nothing!
-	endEditCP(ExampleEmptyLayer);
 		
     /******************************************************
 
@@ -235,18 +227,16 @@ int main(int argc, char **argv)
 
     ******************************************************/
 
-    beginEditCP(ExampleGradientLayer, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask | GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask | GradientLayer::SpreadMethodFieldMask);
 
-		 ExampleGradientLayer->getColors().push_back(Color4f(1.0, 0.0, 0.0, 1.0));
-		ExampleGradientLayer->getStops().push_back(0.0);
-         ExampleGradientLayer->getColors().push_back(Color4f(0.0, 1.0, 0.0, 0.75));
-		ExampleGradientLayer->getStops().push_back(0.5);
-         ExampleGradientLayer->getColors().push_back(Color4f(0.0, 0.0, 1.0, 0.5));
-		ExampleGradientLayer->getStops().push_back(1.0);
-         ExampleGradientLayer->setStartPosition(Vec2f(0.2f,0.2f));
-         ExampleGradientLayer->setEndPosition(Vec2f(.6f,0.6f));
-         ExampleGradientLayer->setSpreadMethod(GradientLayer::SPREAD_REFLECT);
-    endEditCP(ExampleGradientLayer, GradientLayer::ColorsFieldMask | GradientLayer::StopsFieldMask | GradientLayer::StartPositionFieldMask | GradientLayer::EndPositionFieldMask | GradientLayer::SpreadMethodFieldMask);
+        ExampleGradientLayer->editMFColors()->push_back(Color4f(1.0, 0.0, 0.0, 1.0));
+        ExampleGradientLayer->editMFStops()->push_back(0.0);
+        ExampleGradientLayer->editMFColors()->push_back(Color4f(0.0, 1.0, 0.0, 0.75));
+        ExampleGradientLayer->editMFStops()->push_back(0.5);
+        ExampleGradientLayer->editMFColors()->push_back(Color4f(0.0, 0.0, 1.0, 0.5));
+        ExampleGradientLayer->editMFStops()->push_back(1.0);
+        ExampleGradientLayer->setStartPosition(Vec2f(0.2f,0.2f));
+        ExampleGradientLayer->setEndPosition(Vec2f(.6f,0.6f));
+        ExampleGradientLayer->setSpreadMethod(GradientLayer::SPREAD_REFLECT);
 		
     /******************************************************
 
@@ -260,22 +250,16 @@ int main(int argc, char **argv)
 
     ******************************************************/    
 	// Creates Material
-    ChunkMaterialPtr LayerMaterial = ChunkMaterial::create();
-    MaterialChunkPtr LayerMaterialChunk = MaterialChunk::create();
-    beginEditCP(LayerMaterialChunk);
+    ChunkMaterialRefPtr LayerMaterial = ChunkMaterial::create();
+    MaterialChunkRefPtr LayerMaterialChunk = MaterialChunk::create();
       LayerMaterialChunk->setAmbient(Color4f(1.0,0.0,0.0,1.0));
       LayerMaterialChunk->setDiffuse(Color4f(0.0,1.0,0.0,1.0));
       LayerMaterialChunk->setSpecular(Color4f(0.0,0.0,1.0,1.0));
-    endEditCP(LayerMaterialChunk);
 
-    beginEditCP(LayerMaterial, ChunkMaterial::ChunksFieldMask);
         LayerMaterial->addChunk(LayerMaterialChunk);
-    endEditCP(LayerMaterial, ChunkMaterial::ChunksFieldMask);
 
 	// Edit MaterialLayer
-    beginEditCP(ExampleMaterialLayer, MaterialLayer::MaterialFieldMask);
         ExampleMaterialLayer->setMaterial(LayerMaterial);
-    endEditCP(ExampleMaterialLayer, MaterialLayer::MaterialFieldMask);
 		
     /******************************************************
 
@@ -289,16 +273,12 @@ int main(int argc, char **argv)
 
     ******************************************************/   
 	// Creates Texture from Image
-    TextureChunkPtr LayerTextureChunk = TextureChunk::create();
-    ImagePtr LoadedImage = ImageFileHandler::the().read("Data/Checker.jpg");    
-    beginEditCP(LayerTextureChunk, TextureChunk::ImageFieldMask);
-        LayerTextureChunk->setImage(LoadedImage);
-    endEditCP(LayerTextureChunk, TextureChunk::ImageFieldMask);
+    TextureObjChunkRefPtr LayerTextureObjChunk = TextureObjChunk::create();
+    ImageRefPtr LoadedImage = ImageFileHandler::the()->read("Data/Checker.jpg");    
+        LayerTextureObjChunk->setImage(LoadedImage);
 
 	// Edit TextureLayer
-    beginEditCP(ExampleTextureLayer, TextureLayer::TextureFieldMask);
-        ExampleTextureLayer->setTexture(LayerTextureChunk);
-    endEditCP(ExampleTextureLayer, TextureLayer::TextureFieldMask);
+        ExampleTextureLayer->setTexture(LayerTextureObjChunk);
 
     /******************************************************
 
@@ -319,26 +299,20 @@ int main(int argc, char **argv)
 
     ******************************************************/  
     
-   TextureChunkPtr LayerPatternChunk = TextureChunk::create();
-   //ImagePtr LoadedImage = ImageFileHandler::the().read("Data/Checker.jpg");    
-   beginEditCP(LayerPatternChunk, TextureChunk::ImageFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask);
+   TextureObjChunkRefPtr LayerPatternChunk = TextureObjChunk::create();
+   //ImageRefPtr LoadedImage = ImageFileHandler::the()->read("Data/Checker.jpg");    
         LayerPatternChunk->setImage(LoadedImage);
         LayerPatternChunk->setWrapS(GL_REPEAT);
         LayerPatternChunk->setWrapT(GL_CLAMP_TO_EDGE);
-    endEditCP(LayerPatternChunk, TextureChunk::ImageFieldMask | TextureChunk::WrapSFieldMask | TextureChunk::WrapTFieldMask);
 
-   beginEditCP(ExamplePatternLayer, PatternLayer::TextureFieldMask | PatternLayer::PatternSizeFieldMask | PatternLayer::VerticalAlignmentFieldMask | PatternLayer::HorizontalAlignmentFieldMask | PatternLayer::HorizontalRepeatFieldId | 
-        PatternLayer::VerticalRepeatFieldMask | PatternLayer::HorizontalRepeatValueFieldMask | PatternLayer::VerticalRepeatValueFieldMask);
         ExamplePatternLayer->setTexture(LayerPatternChunk);
-        ExamplePatternLayer->setPatternSize(Vec2f(50,50));
+        ExamplePatternLayer->setPatternSize(Vec2f(50.0f,50.0f));
         ExamplePatternLayer->setVerticalAlignment(0.5);
         ExamplePatternLayer->setHorizontalAlignment(0.0);
         ExamplePatternLayer->setHorizontalRepeat(PatternLayer::PATTERN_REPEAT_BY_POINT);
         ExamplePatternLayer->setVerticalRepeat(PatternLayer::PATTERN_REPEAT_ABSOLUTE);
         ExamplePatternLayer->setHorizontalRepeatValue(1.0);
         ExamplePatternLayer->setVerticalRepeatValue(2.0);
-    endEditCP(ExamplePatternLayer, PatternLayer::TextureFieldMask | PatternLayer::PatternSizeFieldMask | PatternLayer::VerticalAlignmentFieldMask | PatternLayer::HorizontalAlignmentFieldMask | PatternLayer::HorizontalRepeatFieldId | 
-        PatternLayer::VerticalRepeatFieldMask | PatternLayer::HorizontalRepeatValueFieldMask | PatternLayer::VerticalRepeatValueFieldMask);
     
     /******************************************************
 
@@ -347,48 +321,39 @@ int main(int argc, char **argv)
 
     ******************************************************/
 
-    ButtonPtr ExampleColorLayerButton = osg::Button::create();
-    ButtonPtr ExampleCompoundLayerButton = osg::Button::create();
-    ButtonPtr ExampleEmptyLayerButton = osg::Button::create();
-    ButtonPtr ExampleGradientLayerButton = osg::Button::create();    
-    ButtonPtr ExampleMaterialLayerButton = osg::Button::create();
-    ButtonPtr ExampleTextureLayerButton = osg::Button::create();
-    ButtonPtr ExamplePatternLayerButton = osg::Button::create();
+    ButtonRefPtr ExampleColorLayerButton = OSG::Button::create();
+    ButtonRefPtr ExampleCompoundLayerButton = OSG::Button::create();
+    ButtonRefPtr ExampleEmptyLayerButton = OSG::Button::create();
+    ButtonRefPtr ExampleGradientLayerButton = OSG::Button::create();    
+    ButtonRefPtr ExampleMaterialLayerButton = OSG::Button::create();
+    ButtonRefPtr ExampleTextureLayerButton = OSG::Button::create();
+    ButtonRefPtr ExamplePatternLayerButton = OSG::Button::create();
     
 
-    beginEditCP(ExampleColorLayerButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask);
         ExampleColorLayerButton->setText("Color Layer");
         ExampleColorLayerButton->setBackground(ExampleColorLayer);
         ExampleColorLayerButton->setActiveBackground(ExampleColorLayer);
         ExampleColorLayerButton->setRolloverBackground(ExampleColorLayer);
         ExampleColorLayerButton->setPreferredSize(Vec2f(150,50));
-    endEditCP(ExampleColorLayerButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask);
 
-    beginEditCP(ExampleCompoundLayerButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask);
         ExampleCompoundLayerButton->setText("Compound Layer");
         ExampleCompoundLayerButton->setBackground(ExampleCompoundLayer);
         ExampleCompoundLayerButton->setActiveBackground(ExampleCompoundLayer);
         ExampleCompoundLayerButton->setRolloverBackground(ExampleCompoundLayer);
         ExampleCompoundLayerButton->setPreferredSize(Vec2f(150,50));
-    endEditCP(ExampleCompoundLayerButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask);
 
-    beginEditCP(ExampleEmptyLayerButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask);
         ExampleEmptyLayerButton->setText("Empty Layer");
         ExampleEmptyLayerButton->setBackground(ExampleEmptyLayer);
         ExampleEmptyLayerButton->setActiveBackground(ExampleEmptyLayer);
         ExampleEmptyLayerButton->setRolloverBackground(ExampleEmptyLayer);
         ExampleEmptyLayerButton->setPreferredSize(Vec2f(150,50));
-    endEditCP(ExampleEmptyLayerButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask);
 
-    beginEditCP(ExampleGradientLayerButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask);
         ExampleGradientLayerButton->setText("Gradient Layer");
         ExampleGradientLayerButton->setBackground(ExampleGradientLayer);
         ExampleGradientLayerButton->setActiveBackground(ExampleGradientLayer);
         ExampleGradientLayerButton->setRolloverBackground(ExampleGradientLayer);
         ExampleGradientLayerButton->setPreferredSize(Vec2f(150,50));
-    endEditCP(ExampleGradientLayerButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask);
     
-    beginEditCP(ExampleMaterialLayerButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask |  Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask);
         ExampleMaterialLayerButton->setText("Material Layer");
         ExampleMaterialLayerButton->setBackground(ExampleMaterialLayer);
         ExampleMaterialLayerButton->setActiveBackground(ExampleMaterialLayer);
@@ -397,9 +362,7 @@ int main(int argc, char **argv)
         ExampleMaterialLayerButton->setTextColor(Color4f(1.0,1.0,1.0,1.0));
         ExampleMaterialLayerButton->setRolloverTextColor(Color4f(1.0,1.0,1.0,1.0));
         ExampleMaterialLayerButton->setActiveTextColor(Color4f(1.0,1.0,1.0,1.0));
-    endEditCP(ExampleMaterialLayerButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask |  Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask);
 
-    beginEditCP(ExampleTextureLayerButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask | Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask);
         ExampleTextureLayerButton->setText("Texture Layer");
         ExampleTextureLayerButton->setBackground(ExampleTextureLayer);
         ExampleTextureLayerButton->setActiveBackground(ExampleTextureLayer);
@@ -408,9 +371,7 @@ int main(int argc, char **argv)
         ExampleTextureLayerButton->setTextColor(Color4f(0.0,1.0,0.0,1.0));
         ExampleTextureLayerButton->setRolloverTextColor(Color4f(0.0,1.0,0.0,1.0));
         ExampleTextureLayerButton->setActiveTextColor(Color4f(0.0,1.0,0.0,1.0));
-    endEditCP(ExampleTextureLayerButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask |  Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask);
     
-    beginEditCP(ExamplePatternLayerButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask |  Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask);
         ExamplePatternLayerButton->setText("Pattern Layer");
         ExamplePatternLayerButton->setBackground(ExamplePatternLayer);
         ExamplePatternLayerButton->setActiveBackground(ExamplePatternLayer);
@@ -419,7 +380,6 @@ int main(int argc, char **argv)
         ExamplePatternLayerButton->setTextColor(Color4f(0.0,1.0,0.0,1.0));
         ExamplePatternLayerButton->setRolloverTextColor(Color4f(0.0,1.0,0.0,1.0));
         ExamplePatternLayerButton->setActiveTextColor(Color4f(0.0,1.0,0.0,1.0));
-    endEditCP(ExamplePatternLayerButton, Button::TextFieldMask | Button::BackgroundFieldMask | Button::ActiveBorderFieldMask | Button::RolloverBackgroundFieldMask | Button::PreferredSizeFieldMask |  Button::TextColorFieldMask | Button::RolloverTextColorFieldMask | Button::ActiveTextColorFieldMask);
 
 
     
@@ -434,74 +394,64 @@ int main(int argc, char **argv)
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
-    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
-    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
+    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
 
 	//InternalWindow Layout
-    LayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
+    LayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
 
-    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
-	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
 
-       MainInternalWindow->getChildren().push_back(ExampleColorLayerButton);
-       MainInternalWindow->getChildren().push_back(ExampleCompoundLayerButton);
-       MainInternalWindow->getChildren().push_back(ExampleEmptyLayerButton);
-       MainInternalWindow->getChildren().push_back(ExampleGradientLayerButton);
-       MainInternalWindow->getChildren().push_back(ExampleMaterialLayerButton);
-       MainInternalWindow->getChildren().push_back(ExampleTextureLayerButton);
-       MainInternalWindow->getChildren().push_back(ExamplePatternLayerButton);
+       MainInternalWindow->pushToChildren(ExampleColorLayerButton);
+       MainInternalWindow->pushToChildren(ExampleCompoundLayerButton);
+       MainInternalWindow->pushToChildren(ExampleEmptyLayerButton);
+       MainInternalWindow->pushToChildren(ExampleGradientLayerButton);
+       MainInternalWindow->pushToChildren(ExampleMaterialLayerButton);
+       MainInternalWindow->pushToChildren(ExampleTextureLayerButton);
+       MainInternalWindow->pushToChildren(ExamplePatternLayerButton);
 	   MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
 	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
 	   MainInternalWindow->setDrawTitlebar(false);
 	   MainInternalWindow->setResizable(false);
-    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
     
     // Create the Drawing Surface
-    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
-        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setEventProducer(TutorialWindow);
     
 	TutorialDrawingSurface->openWindow(MainInternalWindow);
 
     // Create the UI Foreground Object
-    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
+    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
 
-    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
-    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
 
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
     // Tell the Manager what to manage
-    mgr->setWindow(MainWindow);
+    mgr->setWindow(TutorialWindow);
     mgr->setRoot(scene);
 
     // Add the UI Foreground Object to the Scene
-    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+        TutorialViewport->addForeground(TutorialUIForeground);
 
     // Show the whole Scene
     mgr->showAll();
 
     //Open Window
-    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
-    TutorialWindowEventProducer->openWindow(WinPos,
+    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+    TutorialWindow->openWindow(WinPos,
             WinSize,
-            "01RubberBandCamera");
+            "04Background");
 
     //Enter main Loop
-    TutorialWindowEventProducer->mainLoop();
+    TutorialWindow->mainLoop();
 
     osgExit();
 

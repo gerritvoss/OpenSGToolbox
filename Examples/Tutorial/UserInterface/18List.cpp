@@ -7,85 +7,84 @@
 
 
 // General OpenSG configuration, needed everywhere
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
-#include <OpenSG/OSGSimpleGeometry.h>
+#include "OSGSimpleGeometry.h"
 
 // A little helper to simplify scene management and interaction
-#include <OpenSG/OSGSimpleSceneManager.h>
-#include <OpenSG/OSGNode.h>
-#include <OpenSG/OSGGroup.h>
-#include <OpenSG/OSGViewport.h>
+#include "OSGSimpleSceneManager.h"
+#include "OSGNode.h"
+#include "OSGGroup.h"
+#include "OSGViewport.h"
 
 // The general scene file loading handler
-#include <OpenSG/OSGSceneFileHandler.h>
+#include "OSGSceneFileHandler.h"
 
 // Input
-#include <OpenSG/Input/OSGWindowUtils.h>
+#include "OSGWindowUtils.h"
 
 // UserInterface Headers
-#include <OpenSG/UserInterface/OSGUIForeground.h>
-#include <OpenSG/UserInterface/OSGInternalWindow.h>
-#include <OpenSG/UserInterface/OSGUIDrawingSurface.h>
-#include <OpenSG/UserInterface/OSGGraphics2D.h>
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
+#include "OSGUIForeground.h"
+#include "OSGInternalWindow.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGGraphics2D.h"
+#include "OSGLookAndFeelManager.h"
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-WindowEventProducerPtr TutorialWindowEventProducer;
+WindowEventProducerRefPtr TutorialWindow;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
 
 // 18List Headers
-#include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
-#include <OpenSG/UserInterface/OSGColorLayer.h>
-#include <OpenSG/UserInterface/OSGBevelBorder.h>
-#include <OpenSG/UserInterface/OSGFlowLayout.h>
-#include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGToggleButton.h>
-#include <OpenSG/UserInterface/OSGScrollPanel.h>
+#include "OSGLookAndFeelManager.h"
+#include "OSGColorLayer.h"
+#include "OSGBevelBorder.h"
+#include "OSGFlowLayout.h"
+#include "OSGButton.h"
+#include "OSGToggleButton.h"
+#include "OSGScrollPanel.h"
 
 // List header files
-#include <OpenSG/UserInterface/OSGList.h>
-#include <OpenSG/UserInterface/OSGDefaultListModel.h>
-#include <OpenSG/UserInterface/OSGDefaultListSelectionModel.h>
+#include "OSGList.h"
+#include "OSGDefaultListModel.h"
+#include "OSGDefaultListSelectionModel.h"
 
 
 
 // Declare the SelectionModel up front to allow for
 // the ActionListeners
 ListSelectionModelPtr ExampleListSelectionModel(new DefaultListSelectionModel());
-ToggleButtonPtr SingleSelectionButton;
-ToggleButtonPtr SingleIntervalSelectionButton;
-ToggleButtonPtr MultipleIntervalSelectionButton;
+ToggleButtonRefPtr SingleSelectionButton;
+ToggleButtonRefPtr SingleIntervalSelectionButton;
+ToggleButtonRefPtr MultipleIntervalSelectionButton;
 
 // Create ListModel   
-ListPtr ExampleList;
-DefaultListModelPtr ExampleListModel;
-DefaultListModelPtr ExampleListModel2;
+ListRefPtr ExampleList;
+DefaultListModelRefPtr ExampleListModel;
+DefaultListModelRefPtr ExampleListModel2;
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEventPtr e)
+   virtual void keyPressed(const KeyEventUnrecPtr e)
    {
        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-            TutorialWindowEventProducer->closeWindow();
+            TutorialWindow->closeWindow();
        }
 
        switch(e->getKey())
        {
        case KeyEvent::KEY_S:
-	        beginEditCP(ExampleList, List::ModelFieldMask);
                 if(ExampleList->getModel() == ExampleListModel)
                 {
 		            ExampleList->setModel(ExampleListModel2);
@@ -94,16 +93,15 @@ public:
                 {
 		            ExampleList->setModel(ExampleListModel);
                 }
-            endEditCP(ExampleList, List::ModelFieldMask);
            break;
        }
    }
 
-   virtual void keyReleased(const KeyEventPtr e)
+   virtual void keyReleased(const KeyEventUnrecPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEventPtr e)
+   virtual void keyTyped(const KeyEventUnrecPtr e)
    {
    }
 };
@@ -114,21 +112,17 @@ class SingleSelectionButtonSelectedListener : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEventPtr e)
+   virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
     {
 
-        beginEditCP(SingleIntervalSelectionButton, ToggleButton::SelectedFieldMask);
             SingleIntervalSelectionButton->setSelected(false);
-        endEditCP(SingleIntervalSelectionButton, ToggleButton::SelectedFieldMask);
 
-        beginEditCP(MultipleIntervalSelectionButton, ToggleButton::SelectedFieldMask);
             MultipleIntervalSelectionButton->setSelected(false);
-        endEditCP(MultipleIntervalSelectionButton, ToggleButton::SelectedFieldMask);
 
         ExampleListSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
         
     }
-      virtual void buttonDeselected(const ButtonSelectedEventPtr e)
+      virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
    {
    }
 
@@ -138,20 +132,16 @@ class SingleIntervalSelectionButtonSelectedListener : public ButtonSelectedListe
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEventPtr e)
+   virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
     {
-        beginEditCP(SingleSelectionButton, ToggleButton::SelectedFieldMask);
             SingleSelectionButton->setSelected(false);
-        endEditCP(SingleSelectionButton, ToggleButton::SelectedFieldMask);
 
-        beginEditCP(MultipleIntervalSelectionButton, ToggleButton::SelectedFieldMask);
             MultipleIntervalSelectionButton->setSelected(false);
-        endEditCP(MultipleIntervalSelectionButton, ToggleButton::SelectedFieldMask);
 
         ExampleListSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
     }
 
-   virtual void buttonDeselected(const ButtonSelectedEventPtr e)
+   virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
    {
 
    }
@@ -161,20 +151,16 @@ class MultipleIntervalSelectionButtonSelectedListener : public ButtonSelectedLis
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEventPtr e)
+   virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
     {    
-        beginEditCP(SingleSelectionButton, ToggleButton::SelectedFieldMask);
             SingleSelectionButton->setSelected(false);
-        endEditCP(SingleSelectionButton, ToggleButton::SelectedFieldMask);
 
-        beginEditCP(SingleIntervalSelectionButton, ToggleButton::SelectedFieldMask);
             SingleIntervalSelectionButton->setSelected(false);
-        endEditCP(SingleIntervalSelectionButton, ToggleButton::SelectedFieldMask);
 
         ExampleListSelectionModel->setSelectionMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
     }
 
-   virtual void buttonDeselected(const ButtonSelectedEventPtr e)
+   virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
    {
    }
 
@@ -184,7 +170,7 @@ class AddItemButtonSelectedListener : public ActionListener
 {
 public:
 
-   virtual void actionPerformed(const ActionEventPtr e)
+   virtual void actionPerformed(const ActionEventUnrecPtr e)
     {
         std::cout << "Add Item Action" << std::endl;
 		UInt32 SelectedItemIndex(ExampleList->getSelectionModel()->getMinSelectionIndex());
@@ -197,7 +183,7 @@ class RemoveItemButtonSelectedListener : public ActionListener
 {
 public:
 
-   virtual void actionPerformed(const ActionEventPtr e)
+   virtual void actionPerformed(const ActionEventUnrecPtr e)
     {
         std::cout << "Remove Item Action" << std::endl;
 		UInt32 SelectedItemIndex(ExampleList->getSelectionModel()->getMinSelectionIndex());
@@ -211,27 +197,25 @@ int main(int argc, char **argv)
     // OSG init
     osgInit(argc,argv);
 
-    TutorialWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
+    TutorialWindow = createNativeWindow();
+    TutorialWindow->initWindow();
 
-    TutorialWindowEventProducer->setDisplayCallback(display);
-    TutorialWindowEventProducer->setReshapeCallback(reshape);
+    TutorialWindow->setDisplayCallback(display);
+    TutorialWindow->setReshapeCallback(reshape);
 
     TutorialKeyListener TheKeyListener;
-    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+    TutorialWindow->addKeyListener(&TheKeyListener);
 
     // Make Torus Node (creates Torus in background of scene)
-    NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
     // Make Main Scene Node and add the Torus
-    NodePtr scene = osg::Node::create();
-    beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        scene->setCore(osg::Group::create());
+    NodeRefPtr scene = OSG::Node::create();
+        scene->setCore(OSG::Group::create());
         scene->addChild(TorusGeometryNode);
-    endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // Create the Graphics
-    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
+    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
 
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
@@ -243,42 +227,32 @@ int main(int argc, char **argv)
 			List selection options.           
 
     ******************************************************/
-    SingleSelectionButton = osg::ToggleButton::create();
-    SingleIntervalSelectionButton = osg::ToggleButton::create();
-    MultipleIntervalSelectionButton = osg::ToggleButton::create();
+    SingleSelectionButton = OSG::ToggleButton::create();
+    SingleIntervalSelectionButton = OSG::ToggleButton::create();
+    MultipleIntervalSelectionButton = OSG::ToggleButton::create();
 
-    beginEditCP(SingleSelectionButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
         SingleSelectionButton->setText("Single Selection");
         SingleSelectionButton->setPreferredSize(Vec2f(160, 50));
-    endEditCP(SingleSelectionButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
         SingleSelectionButtonSelectedListener TheSingleSelectionButtonSelectedListener;
         SingleSelectionButton->addButtonSelectedListener(&TheSingleSelectionButtonSelectedListener);
     
-    beginEditCP(SingleIntervalSelectionButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
         SingleIntervalSelectionButton->setText("Single Interval Selection");
         SingleIntervalSelectionButton->setPreferredSize(Vec2f(160, 50));
-    endEditCP(SingleIntervalSelectionButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
         SingleIntervalSelectionButtonSelectedListener TheSingleIntervalSelectionButtonSelectedListener;
         SingleIntervalSelectionButton->addButtonSelectedListener(&TheSingleIntervalSelectionButtonSelectedListener);
     
-    beginEditCP(MultipleIntervalSelectionButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
         MultipleIntervalSelectionButton->setText("Multiple Interval Selection");
         MultipleIntervalSelectionButton->setPreferredSize(Vec2f(160, 50));
-    endEditCP(MultipleIntervalSelectionButton, Button::TextFieldMask | Button::PreferredSizeFieldMask);
         MultipleIntervalSelectionButtonSelectedListener TheMultipleIntervalSelectionButtonSelectedListener;
         MultipleIntervalSelectionButton->addButtonSelectedListener(&TheMultipleIntervalSelectionButtonSelectedListener);
 
-    ButtonPtr AddItemButton = osg::Button::create();
-    beginEditCP(AddItemButton, Button::TextFieldMask);
+    ButtonRefPtr AddItemButton = OSG::Button::create();
 		AddItemButton->setText("Add Item");
-    endEditCP(AddItemButton, Button::TextFieldMask);
     AddItemButtonSelectedListener TheAddItemButtonSelectedListener;
     AddItemButton->addActionListener(&TheAddItemButtonSelectedListener);
 
-    ButtonPtr RemoveItemButton = osg::Button::create();
-    beginEditCP(RemoveItemButton, Button::TextFieldMask);
+    ButtonRefPtr RemoveItemButton = OSG::Button::create();
 		RemoveItemButton->setText("Remove Item");
-    endEditCP(RemoveItemButton, Button::TextFieldMask);
     RemoveItemButtonSelectedListener TheRemoveItemButtonSelectedListener;
     RemoveItemButton->addActionListener(&TheRemoveItemButtonSelectedListener);
 
@@ -373,12 +347,10 @@ int main(int argc, char **argv)
 
     ******************************************************/    
     ExampleList = List::create();
-	beginEditCP(ExampleList, List::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
         ExampleList->setPreferredSize(Vec2f(200, 300));
         ExampleList->setOrientation(List::VERTICAL_ORIENTATION);
         //ExampleList->setOrientation(List::HORIZONTAL_ORIENTATION);
 		ExampleList->setModel(ExampleListModel);
-    endEditCP(ExampleList, List::PreferredSizeFieldMask | List::OrientationFieldMask | List::ModelFieldMask);
 
     ExampleList->setSelectionModel(ExampleListSelectionModel);
 
@@ -405,87 +377,73 @@ int main(int argc, char **argv)
     //SelectionModel.setMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
 
     // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
-    ScrollPanelPtr ExampleScrollPanel = ScrollPanel::create();
-    beginEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+    ScrollPanelRefPtr ExampleScrollPanel = ScrollPanel::create();
         ExampleScrollPanel->setPreferredSize(Vec2f(200,300));
         ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
         //ExampleScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-    endEditCP(ExampleScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
     ExampleScrollPanel->setViewComponent(ExampleList);
 
     // Create MainFramelayout
-    FlowLayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
-    beginEditCP(MainInternalWindowLayout, FlowLayout::OrientationFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
+    FlowLayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
         MainInternalWindowLayout->setOrientation(FlowLayout::HORIZONTAL_ORIENTATION);
         MainInternalWindowLayout->setMajorAxisAlignment(0.5f);
         MainInternalWindowLayout->setMinorAxisAlignment(0.5f);
-    endEditCP(MainInternalWindowLayout, FlowLayout::OrientationFieldMask | FlowLayout::MajorAxisAlignmentFieldMask | FlowLayout::MinorAxisAlignmentFieldMask);
     
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
-    ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
-    beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
+    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
 
-    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
-	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
-       MainInternalWindow->getChildren().push_back(SingleSelectionButton);
-       MainInternalWindow->getChildren().push_back(SingleIntervalSelectionButton);
-       MainInternalWindow->getChildren().push_back(MultipleIntervalSelectionButton);
-       MainInternalWindow->getChildren().push_back(ExampleScrollPanel);
-       MainInternalWindow->getChildren().push_back(AddItemButton);
-       MainInternalWindow->getChildren().push_back(RemoveItemButton);
+    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
+       MainInternalWindow->pushToChildren(SingleSelectionButton);
+       MainInternalWindow->pushToChildren(SingleIntervalSelectionButton);
+       MainInternalWindow->pushToChildren(MultipleIntervalSelectionButton);
+       MainInternalWindow->pushToChildren(ExampleScrollPanel);
+       MainInternalWindow->pushToChildren(AddItemButton);
+       MainInternalWindow->pushToChildren(RemoveItemButton);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
 	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.7f,0.5f));
 	   MainInternalWindow->setDrawTitlebar(false);
 	   MainInternalWindow->setResizable(false);
-    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
 
     // Create the Drawing Surface
-    UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
-    beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
+    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
-        TutorialDrawingSurface->setEventProducer(TutorialWindowEventProducer);
-    endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
+        TutorialDrawingSurface->setEventProducer(TutorialWindow);
     
 	TutorialDrawingSurface->openWindow(MainInternalWindow);
 
     // Create the UI Foreground Object
-    UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
+    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
 
-    beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
-    endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
     // Tell the Manager what to manage
-    mgr->setWindow(MainWindow);
+    mgr->setWindow(TutorialWindow);
     mgr->setRoot(scene);
 
     // Add the UI Foreground Object to the Scene
-    ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
-        TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+        TutorialViewport->addForeground(TutorialUIForeground);
 
     // Show the whole Scene
     mgr->showAll();
 
 
     //Open Window
-    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
-    TutorialWindowEventProducer->openWindow(WinPos,
+    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+    TutorialWindow->openWindow(WinPos,
             WinSize,
-            "01RubberBandCamera");
+            "18List");
 
     //Enter main Loop
-    TutorialWindowEventProducer->mainLoop();
+    TutorialWindow->mainLoop();
 
     osgExit();
 
