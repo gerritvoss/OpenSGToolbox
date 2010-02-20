@@ -595,7 +595,7 @@ XMLFCFileType::IDLookupMap XMLFCFileType::createFieldContainers(rapidxml::node_i
                         {
                             SWARNING <<
                                 "ERROR in XMLFCFileType::read():" <<
-                                "could not load type: " << NewFCInfo._Ptr->getType().getCName() <<
+                                "could not load type: " << FCType->getCName() <<
                                 " from file " <<TheFilePath.string() <<
                                 std::endl;
                         }
