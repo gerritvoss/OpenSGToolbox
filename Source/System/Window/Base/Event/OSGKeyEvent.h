@@ -328,6 +328,12 @@ class OSG_SYSTEM_DLLMAPPING KeyEvent : public KeyEventBase
 
 typedef KeyEvent *KeyEventP;
 
+bool OSG_SYSTEM_DLLMAPPING isAlphabetKey(KeyEvent::Key k);
+bool OSG_SYSTEM_DLLMAPPING isNumericKey(KeyEvent::Key k);
+bool OSG_SYSTEM_DLLMAPPING isWordKey(KeyEvent::Key k);
+bool OSG_SYSTEM_DLLMAPPING isPunctuationKey(KeyEvent::Key k);
+bool OSG_SYSTEM_DLLMAPPING isWhitespaceKey(KeyEvent::Key k);
+
 OSG_END_NAMESPACE
 
 #include "OSGWindow.h"            // Window type
