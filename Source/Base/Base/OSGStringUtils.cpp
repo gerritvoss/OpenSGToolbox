@@ -174,5 +174,83 @@ std::string lexical_cast(const boost::any& Source)
     return std::string("");
 }
 
+bool isAlphabetChar(UChar8 c)
+{
+	if(c >= 65 && c <= 90 || c >= 97 && c <= 122)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool isNumericChar(UChar8 c)
+{
+	if(c >= 48 && c <= 57)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool isWordChar(UChar8 c)
+{
+	if(isAlphabetChar(c) || isNumericChar(c))
+	{
+		return true;
+	}
+	return false;
+}
+
+bool isPunctuationChar(UChar8 c)
+{
+	switch(c)
+	{
+	case '!': 
+	case '~':
+	case '`':
+	case '@':
+	case '#':
+	case '$':
+	case '%':
+	case '^':
+	case '&':
+	case '*':
+	case '(':
+	case ')':
+	case '-':
+	case '_':
+	case '+':
+	case '=':
+	case ':':
+	case ';':
+	case '\"':
+	case '\'':
+	case '[':
+	case '{':
+	case ']':
+	case '}':
+	case '|':
+	case '\\':
+	case '<':
+	case '>':
+	case '.':
+	case '/':
+	case ',':
+	case '?':
+			  return true;
+	
+	}
+	return false;
+}
+
+bool isWhitespaceChar(UChar8 c)
+{
+	if(c == 0)
+	{
+		return true;
+	}
+	return false;
+}
+
 OSG_END_NAMESPACE
 

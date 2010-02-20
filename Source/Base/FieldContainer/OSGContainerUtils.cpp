@@ -7,28 +7,30 @@
 
 OSG_BEGIN_NAMESPACE
 
-//const FieldContainerType* getClosestAncestor(const FieldContainerType *type, const std::vector<FieldContainerPtr>& Ancestors)
-//{
-    //if(type == NULL)
-    //{
-        //return NULL;
-    //}
+const FieldContainerType* getClosestAncestor(const FieldContainerType *type,
+                                             MFUnrecFieldContainerPtr::const_iterator begin,
+                                             MFUnrecFieldContainerPtr::const_iterator end)
+{
+    if(type == NULL)
+    {
+        return NULL;
+    }
 
-    //const FieldContainerType* AncestorType(NULL);
-    //const FieldContainerType* FCType(NULL);
+    const FieldContainerType* AncestorType(NULL);
+    const FieldContainerType* FCType(NULL);
+    MFUnrecFieldContainerPtr::const_iterator Itor(begin);
+    for(; Itor!=end ; ++Itor)
+    {
+        FCType = &((*Itor)->getType());
+        if(type->isDerivedFrom(*FCType)&&
+           (AncestorType == NULL || FCType->isDerivedFrom(*AncestorType)))
+        {
+            AncestorType = FCType;
+        }
+    }
 
-    //for(UInt32 i(0) ; i<Ancestors.size() ; ++i)
-    //{
-        //FCType = &(Ancestors[i]->getType());
-    //if(type->isDerivedFrom(*FCType)&&
-       //(AncestorType == NULL || FCType->isDerivedFrom(*AncestorType)))
-    //{
-        //AncestorType = FCType;
-    //}
-//}
-
-//return AncestorType;
-//}
+    return AncestorType;
+}
 
 //std::vector<FieldContainerPtr> getAllContainersByType(const FieldContainerType *szType)
 //{

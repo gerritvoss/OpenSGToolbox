@@ -113,7 +113,7 @@ void EventProducerFactoryBase::writeTypeDot(FILE     *pOut,
 /*------------- constructors & destructors --------------------------------*/
 
 EventProducerFactoryBase::EventProducerFactoryBase(void) :
-     Inherited    ("TypeFactory"),
+     Inherited    ("EventProducerFactory"),
     _vTypeNameMaps(             ),
     _vTypeStore   (             )
 {

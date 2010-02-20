@@ -41,7 +41,13 @@ std::string OSG_BASE_DLLMAPPING addStringBetweenUpperCaseChange(const std::strin
 
 std::string OSG_BASE_DLLMAPPING lexical_cast(const boost::any& Source);
 
-void getLine(const std::string& Text, UInt32 TextPos, Int32& LineNumber, Int32& LineStartPos);
+void OSG_BASE_DLLMAPPING getLine(const std::string& Text, UInt32 TextPos, Int32& LineNumber, Int32& LineStartPos);
+
+bool OSG_BASE_DLLMAPPING isAlphabetChar(UChar8 c);
+bool OSG_BASE_DLLMAPPING isNumericChar(UChar8 c);
+bool OSG_BASE_DLLMAPPING isWordChar(UChar8 c);
+bool OSG_BASE_DLLMAPPING isPunctuationChar(UChar8 c);
+bool OSG_BASE_DLLMAPPING isWhitespaceChar(UChar8 c);
 
 OSG_END_NAMESPACE
 
