@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,86 +58,101 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGBorder.h" // Parent
 
-#include <OpenSG/OSGReal32Fields.h> // TopOffset type
-#include <OpenSG/OSGReal32Fields.h> // BottomOffset type
-#include <OpenSG/OSGReal32Fields.h> // LeftOffset type
-#include <OpenSG/OSGReal32Fields.h> // RightOffset type
-#include <OpenSG/OSGColor4fFields.h> // InternalColor type
-#include <OpenSG/OSGColor4fFields.h> // EdgeColor type
-#include "OSGBorder.h" // InsideBorder type
-#include <OpenSG/OSGReal32Fields.h> // CornerRadius type
-#include <OpenSG/OSGReal32Fields.h> // InternalToEdgeColorLength type
+#include "OSGSysFields.h"               // TopOffset type
+#include "OSGBaseFields.h"              // InternalColor type
+#include "OSGBorderFields.h"            // InsideBorder type
 
 #include "OSGShadowBorderFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class ShadowBorder;
-class BinaryDataHandler;
 
 //! \brief ShadowBorder Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING ShadowBorderBase : public Border
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ShadowBorderBase : public Border
 {
-  private:
-
-    typedef Border    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ShadowBorderPtr  Ptr;
+    typedef Border Inherited;
+    typedef Border ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(ShadowBorder);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        TopOffsetFieldId                 = Inherited::NextFieldId,
-        BottomOffsetFieldId              = TopOffsetFieldId                 + 1,
-        LeftOffsetFieldId                = BottomOffsetFieldId              + 1,
-        RightOffsetFieldId               = LeftOffsetFieldId                + 1,
-        InternalColorFieldId             = RightOffsetFieldId               + 1,
-        EdgeColorFieldId                 = InternalColorFieldId             + 1,
-        InsideBorderFieldId              = EdgeColorFieldId                 + 1,
-        CornerRadiusFieldId              = InsideBorderFieldId              + 1,
-        InternalToEdgeColorLengthFieldId = CornerRadiusFieldId              + 1,
-        NextFieldId                      = InternalToEdgeColorLengthFieldId + 1
+        TopOffsetFieldId = Inherited::NextFieldId,
+        BottomOffsetFieldId = TopOffsetFieldId + 1,
+        LeftOffsetFieldId = BottomOffsetFieldId + 1,
+        RightOffsetFieldId = LeftOffsetFieldId + 1,
+        InternalColorFieldId = RightOffsetFieldId + 1,
+        EdgeColorFieldId = InternalColorFieldId + 1,
+        InsideBorderFieldId = EdgeColorFieldId + 1,
+        CornerRadiusFieldId = InsideBorderFieldId + 1,
+        InternalToEdgeColorLengthFieldId = CornerRadiusFieldId + 1,
+        NextFieldId = InternalToEdgeColorLengthFieldId + 1
     };
 
-    static const OSG::BitVector TopOffsetFieldMask;
-    static const OSG::BitVector BottomOffsetFieldMask;
-    static const OSG::BitVector LeftOffsetFieldMask;
-    static const OSG::BitVector RightOffsetFieldMask;
-    static const OSG::BitVector InternalColorFieldMask;
-    static const OSG::BitVector EdgeColorFieldMask;
-    static const OSG::BitVector InsideBorderFieldMask;
-    static const OSG::BitVector CornerRadiusFieldMask;
-    static const OSG::BitVector InternalToEdgeColorLengthFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector TopOffsetFieldMask =
+        (TypeTraits<BitVector>::One << TopOffsetFieldId);
+    static const OSG::BitVector BottomOffsetFieldMask =
+        (TypeTraits<BitVector>::One << BottomOffsetFieldId);
+    static const OSG::BitVector LeftOffsetFieldMask =
+        (TypeTraits<BitVector>::One << LeftOffsetFieldId);
+    static const OSG::BitVector RightOffsetFieldMask =
+        (TypeTraits<BitVector>::One << RightOffsetFieldId);
+    static const OSG::BitVector InternalColorFieldMask =
+        (TypeTraits<BitVector>::One << InternalColorFieldId);
+    static const OSG::BitVector EdgeColorFieldMask =
+        (TypeTraits<BitVector>::One << EdgeColorFieldId);
+    static const OSG::BitVector InsideBorderFieldMask =
+        (TypeTraits<BitVector>::One << InsideBorderFieldId);
+    static const OSG::BitVector CornerRadiusFieldMask =
+        (TypeTraits<BitVector>::One << CornerRadiusFieldId);
+    static const OSG::BitVector InternalToEdgeColorLengthFieldMask =
+        (TypeTraits<BitVector>::One << InternalToEdgeColorLengthFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFReal32          SFTopOffsetType;
+    typedef SFReal32          SFBottomOffsetType;
+    typedef SFReal32          SFLeftOffsetType;
+    typedef SFReal32          SFRightOffsetType;
+    typedef SFColor4f         SFInternalColorType;
+    typedef SFColor4f         SFEdgeColorType;
+    typedef SFUnrecBorderPtr  SFInsideBorderType;
+    typedef SFReal32          SFCornerRadiusType;
+    typedef SFReal32          SFInternalToEdgeColorLengthType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -146,53 +161,83 @@ class OSG_USERINTERFACELIB_DLLMAPPING ShadowBorderBase : public Border
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *getSFTopOffset      (void);
-           SFReal32            *getSFBottomOffset   (void);
-           SFReal32            *getSFLeftOffset     (void);
-           SFReal32            *getSFRightOffset    (void);
-           SFColor4f           *getSFInternalColor  (void);
-           SFColor4f           *getSFEdgeColor      (void);
-           SFBorderPtr         *getSFInsideBorder   (void);
-           SFReal32            *getSFCornerRadius   (void);
-           SFReal32            *getSFInternalToEdgeColorLength(void);
 
-           Real32              &getTopOffset      (void);
-     const Real32              &getTopOffset      (void) const;
-           Real32              &getBottomOffset   (void);
-     const Real32              &getBottomOffset   (void) const;
-           Real32              &getLeftOffset     (void);
-     const Real32              &getLeftOffset     (void) const;
-           Real32              &getRightOffset    (void);
-     const Real32              &getRightOffset    (void) const;
-           Color4f             &getInternalColor  (void);
-     const Color4f             &getInternalColor  (void) const;
-           Color4f             &getEdgeColor      (void);
-     const Color4f             &getEdgeColor      (void) const;
-           BorderPtr           &getInsideBorder   (void);
-     const BorderPtr           &getInsideBorder   (void) const;
-           Real32              &getCornerRadius   (void);
-     const Real32              &getCornerRadius   (void) const;
-           Real32              &getInternalToEdgeColorLength(void);
-     const Real32              &getInternalToEdgeColorLength(void) const;
+                  SFReal32            *editSFTopOffset      (void);
+            const SFReal32            *getSFTopOffset       (void) const;
+
+                  SFReal32            *editSFBottomOffset   (void);
+            const SFReal32            *getSFBottomOffset    (void) const;
+
+                  SFReal32            *editSFLeftOffset     (void);
+            const SFReal32            *getSFLeftOffset      (void) const;
+
+                  SFReal32            *editSFRightOffset    (void);
+            const SFReal32            *getSFRightOffset     (void) const;
+
+                  SFColor4f           *editSFInternalColor  (void);
+            const SFColor4f           *getSFInternalColor   (void) const;
+
+                  SFColor4f           *editSFEdgeColor      (void);
+            const SFColor4f           *getSFEdgeColor       (void) const;
+            const SFUnrecBorderPtr    *getSFInsideBorder   (void) const;
+                  SFUnrecBorderPtr    *editSFInsideBorder   (void);
+
+                  SFReal32            *editSFCornerRadius   (void);
+            const SFReal32            *getSFCornerRadius    (void) const;
+
+                  SFReal32            *editSFInternalToEdgeColorLength(void);
+            const SFReal32            *getSFInternalToEdgeColorLength (void) const;
+
+
+                  Real32              &editTopOffset      (void);
+                  Real32               getTopOffset       (void) const;
+
+                  Real32              &editBottomOffset   (void);
+                  Real32               getBottomOffset    (void) const;
+
+                  Real32              &editLeftOffset     (void);
+                  Real32               getLeftOffset      (void) const;
+
+                  Real32              &editRightOffset    (void);
+                  Real32               getRightOffset     (void) const;
+
+                  Color4f             &editInternalColor  (void);
+            const Color4f             &getInternalColor   (void) const;
+
+                  Color4f             &editEdgeColor      (void);
+            const Color4f             &getEdgeColor       (void) const;
+
+                  Border * getInsideBorder   (void) const;
+
+                  Real32              &editCornerRadius   (void);
+                  Real32               getCornerRadius    (void) const;
+
+                  Real32              &editInternalToEdgeColorLength(void);
+                  Real32               getInternalToEdgeColorLength (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setTopOffset      ( const Real32 &value );
-     void setBottomOffset   ( const Real32 &value );
-     void setLeftOffset     ( const Real32 &value );
-     void setRightOffset    ( const Real32 &value );
-     void setInternalColor  ( const Color4f &value );
-     void setEdgeColor      ( const Color4f &value );
-     void setInsideBorder   ( const BorderPtr &value );
-     void setCornerRadius   ( const Real32 &value );
-     void setInternalToEdgeColorLength( const Real32 &value );
+            void setTopOffset      (const Real32 value);
+            void setBottomOffset   (const Real32 value);
+            void setLeftOffset     (const Real32 value);
+            void setRightOffset    (const Real32 value);
+            void setInternalColor  (const Color4f &value);
+            void setEdgeColor      (const Color4f &value);
+            void setInsideBorder   (Border * const value);
+            void setCornerRadius   (const Real32 value);
+            void setInternalToEdgeColorLength(const Real32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -200,11 +245,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING ShadowBorderBase : public Border
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -212,34 +257,51 @@ class OSG_USERINTERFACELIB_DLLMAPPING ShadowBorderBase : public Border
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  ShadowBorderPtr      create          (void); 
-    static  ShadowBorderPtr      createEmpty     (void); 
+    static  ShadowBorderTransitPtr  create          (void);
+    static  ShadowBorder           *createEmpty     (void);
+
+    static  ShadowBorderTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  ShadowBorder            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  ShadowBorderTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFReal32            _sfTopOffset;
-    SFReal32            _sfBottomOffset;
-    SFReal32            _sfLeftOffset;
-    SFReal32            _sfRightOffset;
-    SFColor4f           _sfInternalColor;
-    SFColor4f           _sfEdgeColor;
-    SFBorderPtr         _sfInsideBorder;
-    SFReal32            _sfCornerRadius;
-    SFReal32            _sfInternalToEdgeColorLength;
+    SFReal32          _sfTopOffset;
+    SFReal32          _sfBottomOffset;
+    SFReal32          _sfLeftOffset;
+    SFReal32          _sfRightOffset;
+    SFColor4f         _sfInternalColor;
+    SFColor4f         _sfEdgeColor;
+    SFUnrecBorderPtr  _sfInsideBorder;
+    SFReal32          _sfCornerRadius;
+    SFReal32          _sfInternalToEdgeColorLength;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -254,69 +316,96 @@ class OSG_USERINTERFACELIB_DLLMAPPING ShadowBorderBase : public Border
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ShadowBorderBase(void); 
+    virtual ~ShadowBorderBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const ShadowBorder *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleTopOffset       (void) const;
+    EditFieldHandlePtr editHandleTopOffset      (void);
+    GetFieldHandlePtr  getHandleBottomOffset    (void) const;
+    EditFieldHandlePtr editHandleBottomOffset   (void);
+    GetFieldHandlePtr  getHandleLeftOffset      (void) const;
+    EditFieldHandlePtr editHandleLeftOffset     (void);
+    GetFieldHandlePtr  getHandleRightOffset     (void) const;
+    EditFieldHandlePtr editHandleRightOffset    (void);
+    GetFieldHandlePtr  getHandleInternalColor   (void) const;
+    EditFieldHandlePtr editHandleInternalColor  (void);
+    GetFieldHandlePtr  getHandleEdgeColor       (void) const;
+    EditFieldHandlePtr editHandleEdgeColor      (void);
+    GetFieldHandlePtr  getHandleInsideBorder    (void) const;
+    EditFieldHandlePtr editHandleInsideBorder   (void);
+    GetFieldHandlePtr  getHandleCornerRadius    (void) const;
+    EditFieldHandlePtr editHandleCornerRadius   (void);
+    GetFieldHandlePtr  getHandleInternalToEdgeColorLength (void) const;
+    EditFieldHandlePtr editHandleInternalToEdgeColorLength(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ShadowBorderBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      ShadowBorderBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      ShadowBorderBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const ShadowBorderBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef ShadowBorderBase *ShadowBorderBaseP;
 
-typedef osgIF<ShadowBorderBase::isNodeCore,
-              CoredNodePtr<ShadowBorder>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ShadowBorderNodePtr;
-
-typedef RefPtr<ShadowBorderPtr> ShadowBorderRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGSHADOWBORDERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGSHADOWBORDERBASE_H_ */

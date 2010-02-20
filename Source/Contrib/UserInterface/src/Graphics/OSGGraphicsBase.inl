@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,134 +55,157 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &GraphicsBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 GraphicsBase::getClassTypeId(void) 
+OSG::UInt32 GraphicsBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
+    return _type.getId();
+}
 
+inline
+OSG::UInt16 GraphicsBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
+}
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Graphics::_sfOpacity field.
-inline
-SFReal32 *GraphicsBase::getSFOpacity(void)
-{
-    return &_sfOpacity;
-}
-
-//! Get the Graphics::_sfEnablePointAntiAliasing field.
-inline
-SFBool *GraphicsBase::getSFEnablePointAntiAliasing(void)
-{
-    return &_sfEnablePointAntiAliasing;
-}
-
-//! Get the Graphics::_sfEnableLineAntiAliasing field.
-inline
-SFBool *GraphicsBase::getSFEnableLineAntiAliasing(void)
-{
-    return &_sfEnableLineAntiAliasing;
-}
-
-//! Get the Graphics::_sfEnablePolygonAntiAliasing field.
-inline
-SFBool *GraphicsBase::getSFEnablePolygonAntiAliasing(void)
-{
-    return &_sfEnablePolygonAntiAliasing;
-}
-
-
 //! Get the value of the Graphics::_sfOpacity field.
+
 inline
-Real32 &GraphicsBase::getOpacity(void)
+Real32 &GraphicsBase::editOpacity(void)
 {
+    editSField(OpacityFieldMask);
+
     return _sfOpacity.getValue();
 }
 
 //! Get the value of the Graphics::_sfOpacity field.
 inline
-const Real32 &GraphicsBase::getOpacity(void) const
+      Real32  GraphicsBase::getOpacity(void) const
 {
     return _sfOpacity.getValue();
 }
 
 //! Set the value of the Graphics::_sfOpacity field.
 inline
-void GraphicsBase::setOpacity(const Real32 &value)
+void GraphicsBase::setOpacity(const Real32 value)
 {
+    editSField(OpacityFieldMask);
+
     _sfOpacity.setValue(value);
 }
-
 //! Get the value of the Graphics::_sfEnablePointAntiAliasing field.
+
 inline
-bool &GraphicsBase::getEnablePointAntiAliasing(void)
+bool &GraphicsBase::editEnablePointAntiAliasing(void)
 {
+    editSField(EnablePointAntiAliasingFieldMask);
+
     return _sfEnablePointAntiAliasing.getValue();
 }
 
 //! Get the value of the Graphics::_sfEnablePointAntiAliasing field.
 inline
-const bool &GraphicsBase::getEnablePointAntiAliasing(void) const
+      bool  GraphicsBase::getEnablePointAntiAliasing(void) const
 {
     return _sfEnablePointAntiAliasing.getValue();
 }
 
 //! Set the value of the Graphics::_sfEnablePointAntiAliasing field.
 inline
-void GraphicsBase::setEnablePointAntiAliasing(const bool &value)
+void GraphicsBase::setEnablePointAntiAliasing(const bool value)
 {
+    editSField(EnablePointAntiAliasingFieldMask);
+
     _sfEnablePointAntiAliasing.setValue(value);
 }
-
 //! Get the value of the Graphics::_sfEnableLineAntiAliasing field.
+
 inline
-bool &GraphicsBase::getEnableLineAntiAliasing(void)
+bool &GraphicsBase::editEnableLineAntiAliasing(void)
 {
+    editSField(EnableLineAntiAliasingFieldMask);
+
     return _sfEnableLineAntiAliasing.getValue();
 }
 
 //! Get the value of the Graphics::_sfEnableLineAntiAliasing field.
 inline
-const bool &GraphicsBase::getEnableLineAntiAliasing(void) const
+      bool  GraphicsBase::getEnableLineAntiAliasing(void) const
 {
     return _sfEnableLineAntiAliasing.getValue();
 }
 
 //! Set the value of the Graphics::_sfEnableLineAntiAliasing field.
 inline
-void GraphicsBase::setEnableLineAntiAliasing(const bool &value)
+void GraphicsBase::setEnableLineAntiAliasing(const bool value)
 {
+    editSField(EnableLineAntiAliasingFieldMask);
+
     _sfEnableLineAntiAliasing.setValue(value);
 }
-
 //! Get the value of the Graphics::_sfEnablePolygonAntiAliasing field.
+
 inline
-bool &GraphicsBase::getEnablePolygonAntiAliasing(void)
+bool &GraphicsBase::editEnablePolygonAntiAliasing(void)
 {
+    editSField(EnablePolygonAntiAliasingFieldMask);
+
     return _sfEnablePolygonAntiAliasing.getValue();
 }
 
 //! Get the value of the Graphics::_sfEnablePolygonAntiAliasing field.
 inline
-const bool &GraphicsBase::getEnablePolygonAntiAliasing(void) const
+      bool  GraphicsBase::getEnablePolygonAntiAliasing(void) const
 {
     return _sfEnablePolygonAntiAliasing.getValue();
 }
 
 //! Set the value of the Graphics::_sfEnablePolygonAntiAliasing field.
 inline
-void GraphicsBase::setEnablePolygonAntiAliasing(const bool &value)
+void GraphicsBase::setEnablePolygonAntiAliasing(const bool value)
 {
+    editSField(EnablePolygonAntiAliasingFieldMask);
+
     _sfEnablePolygonAntiAliasing.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void GraphicsBase::execSync (      GraphicsBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGGRAPHICSBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (OpacityFieldMask & whichField))
+        _sfOpacity.syncWith(pFrom->_sfOpacity);
+
+    if(FieldBits::NoField != (EnablePointAntiAliasingFieldMask & whichField))
+        _sfEnablePointAntiAliasing.syncWith(pFrom->_sfEnablePointAntiAliasing);
+
+    if(FieldBits::NoField != (EnableLineAntiAliasingFieldMask & whichField))
+        _sfEnableLineAntiAliasing.syncWith(pFrom->_sfEnableLineAntiAliasing);
+
+    if(FieldBits::NoField != (EnablePolygonAntiAliasingFieldMask & whichField))
+        _sfEnablePolygonAntiAliasing.syncWith(pFrom->_sfEnablePolygonAntiAliasing);
+}
+#endif
+
+
+inline
+const Char8 *GraphicsBase::getClassname(void)
+{
+    return "Graphics";
+}
+OSG_GEN_CONTAINERPTR(Graphics);
+
+OSG_END_NAMESPACE
 

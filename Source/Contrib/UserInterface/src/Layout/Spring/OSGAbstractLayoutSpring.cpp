@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGAbstractLayoutSpring.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::AbstractLayoutSpring
-A UI AbstractLayoutSpring. 	
-*/
+// Documentation for this class is emitted in the
+// OSGAbstractLayoutSpringBase.cpp file.
+// To modify it, please change the .fcd file (OSGAbstractLayoutSpring.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,8 +62,13 @@ A UI AbstractLayoutSpring.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void AbstractLayoutSpring::initMethod (void)
+void AbstractLayoutSpring::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -106,16 +106,12 @@ void AbstractLayoutSpring::setValue(const Real32& value)
 
 void AbstractLayoutSpring::clear(void)
 {
-    beginEditCP(AbstractLayoutSpringPtr(this), SizeFieldMask);
-        setSize(LayoutSpring::VALUE_NOT_SET);
-    endEditCP(AbstractLayoutSpringPtr(this), SizeFieldMask);
+    setSize(LayoutSpring::VALUE_NOT_SET);
 }
 
 void AbstractLayoutSpring::setNonClearValue(const Real32& value)
 {
-    beginEditCP(AbstractLayoutSpringPtr(this), SizeFieldMask);
-        setSize(value);
-    endEditCP(AbstractLayoutSpringPtr(this), SizeFieldMask);
+    setSize(value);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -140,41 +136,17 @@ AbstractLayoutSpring::~AbstractLayoutSpring(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void AbstractLayoutSpring::changed(BitVector whichField, UInt32 origin)
+void AbstractLayoutSpring::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void AbstractLayoutSpring::dump(      UInt32    , 
+void AbstractLayoutSpring::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump AbstractLayoutSpring NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGABSTRACTLAYOUTSPRINGBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGABSTRACTLAYOUTSPRINGBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGABSTRACTLAYOUTSPRINGFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

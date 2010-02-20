@@ -2,21 +2,23 @@
 
 <FieldContainer
 	name="PopupMenu"
-	parent="Container"
-    parentHeader="Component/Container/OSGContainer"
-	library="UserInterface"
-	pointerfieldtypes="both"
+	parent="ComponentContainer"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
     parentProducer="Component"
 >
 A UI PopupMenu.
 	<Field
 		name="SubMenuDelay"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.5"
@@ -25,52 +27,52 @@ A UI PopupMenu.
 	</Field>
 	<Field
 		name="Invoker"
-		type="ComponentPtr"
+		type="Component"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Component/OSGComponentFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="DefaultSeparator"
-		type="SeparatorPtr"
+		type="Separator"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Component/Misc/OSGSeparatorFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="SelectionModel"
-		type="SingleSelectionModelPtr"
+		type="SingleSelectionModel"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Models/SelectionModels/OSGSingleSelectionModelFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<ProducedMethod
 		name="PopupMenuWillBecomeVisible"
-		producedEventType="PopupMenuEventPtr"
+		type="PopupMenuEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="PopupMenuWillBecomeInvisible"
-		producedEventType="PopupMenuEventPtr"
+		type="PopupMenuEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="PopupMenuCanceled"
-		producedEventType="PopupMenuEventPtr"
+		type="PopupMenuEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="PopupMenuContentsChanged"
-		producedEventType="PopupMenuEventPtr"
+		type="PopupMenuEventPtr"
 	>
 	</ProducedMethod>
 </FieldContainer>

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,78 +55,31 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &EtchedBorderBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 EtchedBorderBase::getClassTypeId(void) 
+OSG::UInt32 EtchedBorderBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-EtchedBorderPtr EtchedBorderBase::create(void) 
-{
-    EtchedBorderPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = EtchedBorderPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-EtchedBorderPtr EtchedBorderBase::createEmpty(void) 
-{ 
-    EtchedBorderPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 EtchedBorderBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the EtchedBorder::_sfHighlight field.
-inline
-SFColor4f *EtchedBorderBase::getSFHighlight(void)
-{
-    return &_sfHighlight;
-}
-
-//! Get the EtchedBorder::_sfShadow field.
-inline
-SFColor4f *EtchedBorderBase::getSFShadow(void)
-{
-    return &_sfShadow;
-}
-
-//! Get the EtchedBorder::_sfRaised field.
-inline
-SFBool *EtchedBorderBase::getSFRaised(void)
-{
-    return &_sfRaised;
-}
-
-//! Get the EtchedBorder::_sfWidth field.
-inline
-SFReal32 *EtchedBorderBase::getSFWidth(void)
-{
-    return &_sfWidth;
-}
-
-
 //! Get the value of the EtchedBorder::_sfHighlight field.
+
 inline
-Color4f &EtchedBorderBase::getHighlight(void)
+Color4f &EtchedBorderBase::editHighlight(void)
 {
+    editSField(HighlightFieldMask);
+
     return _sfHighlight.getValue();
 }
 
@@ -143,13 +94,17 @@ const Color4f &EtchedBorderBase::getHighlight(void) const
 inline
 void EtchedBorderBase::setHighlight(const Color4f &value)
 {
+    editSField(HighlightFieldMask);
+
     _sfHighlight.setValue(value);
 }
-
 //! Get the value of the EtchedBorder::_sfShadow field.
+
 inline
-Color4f &EtchedBorderBase::getShadow(void)
+Color4f &EtchedBorderBase::editShadow(void)
 {
+    editSField(ShadowFieldMask);
+
     return _sfShadow.getValue();
 }
 
@@ -164,53 +119,93 @@ const Color4f &EtchedBorderBase::getShadow(void) const
 inline
 void EtchedBorderBase::setShadow(const Color4f &value)
 {
+    editSField(ShadowFieldMask);
+
     _sfShadow.setValue(value);
 }
-
 //! Get the value of the EtchedBorder::_sfRaised field.
+
 inline
-bool &EtchedBorderBase::getRaised(void)
+bool &EtchedBorderBase::editRaised(void)
 {
+    editSField(RaisedFieldMask);
+
     return _sfRaised.getValue();
 }
 
 //! Get the value of the EtchedBorder::_sfRaised field.
 inline
-const bool &EtchedBorderBase::getRaised(void) const
+      bool  EtchedBorderBase::getRaised(void) const
 {
     return _sfRaised.getValue();
 }
 
 //! Set the value of the EtchedBorder::_sfRaised field.
 inline
-void EtchedBorderBase::setRaised(const bool &value)
+void EtchedBorderBase::setRaised(const bool value)
 {
+    editSField(RaisedFieldMask);
+
     _sfRaised.setValue(value);
 }
-
 //! Get the value of the EtchedBorder::_sfWidth field.
+
 inline
-Real32 &EtchedBorderBase::getWidth(void)
+Real32 &EtchedBorderBase::editWidth(void)
 {
+    editSField(WidthFieldMask);
+
     return _sfWidth.getValue();
 }
 
 //! Get the value of the EtchedBorder::_sfWidth field.
 inline
-const Real32 &EtchedBorderBase::getWidth(void) const
+      Real32  EtchedBorderBase::getWidth(void) const
 {
     return _sfWidth.getValue();
 }
 
 //! Set the value of the EtchedBorder::_sfWidth field.
 inline
-void EtchedBorderBase::setWidth(const Real32 &value)
+void EtchedBorderBase::setWidth(const Real32 value)
 {
+    editSField(WidthFieldMask);
+
     _sfWidth.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void EtchedBorderBase::execSync (      EtchedBorderBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGETCHEDBORDERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (HighlightFieldMask & whichField))
+        _sfHighlight.syncWith(pFrom->_sfHighlight);
+
+    if(FieldBits::NoField != (ShadowFieldMask & whichField))
+        _sfShadow.syncWith(pFrom->_sfShadow);
+
+    if(FieldBits::NoField != (RaisedFieldMask & whichField))
+        _sfRaised.syncWith(pFrom->_sfRaised);
+
+    if(FieldBits::NoField != (WidthFieldMask & whichField))
+        _sfWidth.syncWith(pFrom->_sfWidth);
+}
+#endif
+
+
+inline
+const Char8 *EtchedBorderBase::getClassname(void)
+{
+    return "EtchedBorder";
+}
+OSG_GEN_CONTAINERPTR(EtchedBorder);
+
+OSG_END_NAMESPACE
 

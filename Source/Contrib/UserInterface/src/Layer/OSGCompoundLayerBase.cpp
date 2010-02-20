@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,143 +50,220 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILECOMPOUNDLAYERINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGLayer.h"                   // Backgrounds Class
 
 #include "OSGCompoundLayerBase.h"
 #include "OSGCompoundLayer.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  CompoundLayerBase::BackgroundsFieldMask = 
-    (TypeTraits<BitVector>::One << CompoundLayerBase::BackgroundsFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector CompoundLayerBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::CompoundLayer
+    UI Compound Background.
+ */
 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-// Field descriptions
-
-/*! \var LayerPtr CompoundLayerBase::_mfBackgrounds
+/*! \var Layer *         CompoundLayerBase::_mfBackgrounds
     
 */
 
-//! CompoundLayer description
 
-FieldDescription *CompoundLayerBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<CompoundLayer *>::_type("CompoundLayerPtr", "LayerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(CompoundLayer *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           CompoundLayer *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           CompoundLayer *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void CompoundLayerBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(MFLayerPtr::getClassType(), 
-                     "Backgrounds", 
-                     BackgroundsFieldId, BackgroundsFieldMask,
-                     false,
-                     (FieldAccessMethod) &CompoundLayerBase::getMFBackgrounds)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType CompoundLayerBase::_type(
-    "CompoundLayer",
-    "Layer",
-    NULL,
-    (PrototypeCreateF) &CompoundLayerBase::createEmpty,
+    pDesc = new MFUnrecLayerPtr::Description(
+        MFUnrecLayerPtr::getClassType(),
+        "Backgrounds",
+        "",
+        BackgroundsFieldId, BackgroundsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&CompoundLayer::editHandleBackgrounds),
+        static_cast<FieldGetMethodSig >(&CompoundLayer::getHandleBackgrounds));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+CompoundLayerBase::TypeObject CompoundLayerBase::_type(
+    CompoundLayerBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&CompoundLayerBase::createEmptyLocal),
     CompoundLayer::initMethod,
-    _desc,
-    sizeof(_desc));
+    CompoundLayer::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&CompoundLayer::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"CompoundLayer\"\n"
+    "\tparent=\"Layer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "UI Compound Background.\n"
+    "\t<Field\n"
+    "\t\tname=\"Backgrounds\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "UI Compound Background.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(CompoundLayerBase, CompoundLayerPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &CompoundLayerBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &CompoundLayerBase::getType(void) const 
+FieldContainerType &CompoundLayerBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr CompoundLayerBase::shallowCopy(void) const 
-{ 
-    CompoundLayerPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const CompoundLayer *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 CompoundLayerBase::getContainerSize(void) const 
-{ 
-    return sizeof(CompoundLayer); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void CompoundLayerBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &CompoundLayerBase::getType(void) const
 {
-    this->executeSyncImpl((CompoundLayerBase *) &other, whichField);
+    return _type;
 }
-#else
-void CompoundLayerBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 CompoundLayerBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((CompoundLayerBase *) &other, whichField, sInfo);
+    return sizeof(CompoundLayer);
 }
-void CompoundLayerBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the CompoundLayer::_mfBackgrounds field.
+const MFUnrecLayerPtr *CompoundLayerBase::getMFBackgrounds(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_mfBackgrounds;
 }
 
-void CompoundLayerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+MFUnrecLayerPtr     *CompoundLayerBase::editMFBackgrounds    (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editMField(BackgroundsFieldMask, _mfBackgrounds);
 
-    _mfBackgrounds.terminateShare(uiAspect, this->getContainerSize());
+    return &_mfBackgrounds;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-CompoundLayerBase::CompoundLayerBase(void) :
-    _mfBackgrounds            (), 
-    Inherited() 
+void CompoundLayerBase::pushToBackgrounds(Layer * const value)
 {
+    editMField(BackgroundsFieldMask, _mfBackgrounds);
+
+    _mfBackgrounds.push_back(value);
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-CompoundLayerBase::CompoundLayerBase(const CompoundLayerBase &source) :
-    _mfBackgrounds            (source._mfBackgrounds            ), 
-    Inherited                 (source)
+void CompoundLayerBase::assignBackgrounds(const MFUnrecLayerPtr   &value)
 {
+    MFUnrecLayerPtr  ::const_iterator elemIt  =
+        value.begin();
+    MFUnrecLayerPtr  ::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<CompoundLayer *>(this)->clearBackgrounds();
+
+    while(elemIt != elemEnd)
+    {
+        this->pushToBackgrounds(*elemIt);
+
+        ++elemIt;
+    }
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-CompoundLayerBase::~CompoundLayerBase(void)
+void CompoundLayerBase::removeFromBackgrounds(UInt32 uiIndex)
 {
+    if(uiIndex < _mfBackgrounds.size())
+    {
+        editMField(BackgroundsFieldMask, _mfBackgrounds);
+
+        _mfBackgrounds.erase(uiIndex);
+    }
 }
+
+void CompoundLayerBase::removeObjFromBackgrounds(Layer * const value)
+{
+    Int32 iElemIdx = _mfBackgrounds.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(BackgroundsFieldMask, _mfBackgrounds);
+
+        _mfBackgrounds.erase(iElemIdx);
+    }
+}
+void CompoundLayerBase::clearBackgrounds(void)
+{
+    editMField(BackgroundsFieldMask, _mfBackgrounds);
+
+
+    _mfBackgrounds.clear();
+}
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 CompoundLayerBase::getBinSize(const BitVector &whichField)
+UInt32 CompoundLayerBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -195,12 +272,11 @@ UInt32 CompoundLayerBase::getBinSize(const BitVector &whichField)
         returnValue += _mfBackgrounds.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void CompoundLayerBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void CompoundLayerBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -208,12 +284,10 @@ void CompoundLayerBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _mfBackgrounds.copyToBin(pMem);
     }
-
-
 }
 
-void CompoundLayerBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void CompoundLayerBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -221,85 +295,248 @@ void CompoundLayerBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _mfBackgrounds.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void CompoundLayerBase::executeSyncImpl(      CompoundLayerBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+CompoundLayerTransitPtr CompoundLayerBase::createLocal(BitVector bFlags)
 {
+    CompoundLayerTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (BackgroundsFieldMask & whichField))
-        _mfBackgrounds.syncWith(pOther->_mfBackgrounds);
+        fc = dynamic_pointer_cast<CompoundLayer>(tmpPtr);
+    }
 
-
-}
-#else
-void CompoundLayerBase::executeSyncImpl(      CompoundLayerBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-    if(FieldBits::NoField != (BackgroundsFieldMask & whichField))
-        _mfBackgrounds.syncWith(pOther->_mfBackgrounds, sInfo);
-
-
+    return fc;
 }
 
-void CompoundLayerBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+CompoundLayerTransitPtr CompoundLayerBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    CompoundLayerTransitPtr fc;
 
-    if(FieldBits::NoField != (BackgroundsFieldMask & whichField))
-        _mfBackgrounds.beginEdit(uiAspect, uiContainerSize);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
+        fc = dynamic_pointer_cast<CompoundLayer>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+CompoundLayerTransitPtr CompoundLayerBase::create(void)
+{
+    CompoundLayerTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<CompoundLayer>(tmpPtr);
+    }
+
+    return fc;
+}
+
+CompoundLayer *CompoundLayerBase::createEmptyLocal(BitVector bFlags)
+{
+    CompoundLayer *returnValue;
+
+    newPtr<CompoundLayer>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+CompoundLayer *CompoundLayerBase::createEmpty(void)
+{
+    CompoundLayer *returnValue;
+
+    newPtr<CompoundLayer>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr CompoundLayerBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    CompoundLayer *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const CompoundLayer *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr CompoundLayerBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    CompoundLayer *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const CompoundLayer *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr CompoundLayerBase::shallowCopy(void) const
+{
+    CompoundLayer *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const CompoundLayer *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+CompoundLayerBase::CompoundLayerBase(void) :
+    Inherited(),
+    _mfBackgrounds            ()
+{
+}
+
+CompoundLayerBase::CompoundLayerBase(const CompoundLayerBase &source) :
+    Inherited(source),
+    _mfBackgrounds            ()
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+CompoundLayerBase::~CompoundLayerBase(void)
+{
+}
+
+void CompoundLayerBase::onCreate(const CompoundLayer *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        CompoundLayer *pThis = static_cast<CompoundLayer *>(this);
+
+        MFUnrecLayerPtr::const_iterator BackgroundsIt  =
+            source->_mfBackgrounds.begin();
+        MFUnrecLayerPtr::const_iterator BackgroundsEnd =
+            source->_mfBackgrounds.end  ();
+
+        while(BackgroundsIt != BackgroundsEnd)
+        {
+            pThis->pushToBackgrounds(*BackgroundsIt);
+
+            ++BackgroundsIt;
+        }
+    }
+}
+
+GetFieldHandlePtr CompoundLayerBase::getHandleBackgrounds     (void) const
+{
+    MFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  MFUnrecLayerPtr::GetHandle(
+             &_mfBackgrounds,
+             this->getType().getFieldDesc(BackgroundsFieldId),
+             const_cast<CompoundLayerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr CompoundLayerBase::editHandleBackgrounds    (void)
+{
+    MFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  MFUnrecLayerPtr::EditHandle(
+             &_mfBackgrounds,
+             this->getType().getFieldDesc(BackgroundsFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&CompoundLayer::pushToBackgrounds,
+                    static_cast<CompoundLayer *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&CompoundLayer::removeFromBackgrounds,
+                    static_cast<CompoundLayer *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&CompoundLayer::removeObjFromBackgrounds,
+                    static_cast<CompoundLayer *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&CompoundLayer::clearBackgrounds,
+                    static_cast<CompoundLayer *>(this)));
+
+    editMField(BackgroundsFieldMask, _mfBackgrounds);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void CompoundLayerBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    CompoundLayer *pThis = static_cast<CompoundLayer *>(this);
+
+    pThis->execSync(static_cast<CompoundLayer *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *CompoundLayerBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    CompoundLayer *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const CompoundLayer *>(pRefAspect),
+                  dynamic_cast<const CompoundLayer *>(this));
+
+    return returnValue;
+}
+#endif
+
+void CompoundLayerBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<CompoundLayer *>(this)->clearBackgrounds();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<CompoundLayerPtr>::_type("CompoundLayerPtr", "LayerPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(CompoundLayerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(CompoundLayerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGCOMPOUNDLAYERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCOMPOUNDLAYERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCOMPOUNDLAYERFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

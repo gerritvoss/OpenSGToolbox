@@ -2,49 +2,52 @@
 
 <FieldContainer
 	name="ScrollPanel"
-	parent="Container"
-	library="UserInterface"
-	pointerfieldtypes="both"
+	parent="ComponentContainer"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
+    systemcomponent="true"
+    parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="true"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI ScrollPanel
 	<Field
 		name="View"
-		type="UIViewportPtr"
+		type="UIViewport"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="protected"
-		header="Component/Container/OSGUIViewport.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="InternalVerticalScrollBar"
-		type="ScrollBarPtr"
+		type="ScrollBar"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="protected"
-		header="Component/Scroll/OSGScrollBar.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="InternalHorizontalScrollBar"
-		type="ScrollBarPtr"
+		type="ScrollBar"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="protected"
-		header="Component/Scroll/OSGScrollBar.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="VerticalScrollBarDisplayPolicy"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -55,6 +58,7 @@ A UI ScrollPanel
 	<Field
 		name="HorizontalScrollBarDisplayPolicy"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -65,6 +69,7 @@ A UI ScrollPanel
 	<Field
 		name="VerticalResizePolicy"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -75,6 +80,7 @@ A UI ScrollPanel
 	<Field
 		name="HorizontalResizePolicy"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -85,6 +91,7 @@ A UI ScrollPanel
 	<Field
 		name="VerticalScrollBarAlignment"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -95,6 +102,7 @@ A UI ScrollPanel
 	<Field
 		name="HorizontalScrollBarAlignment"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -104,22 +112,22 @@ A UI ScrollPanel
 	</Field>
 	<Field
 		name="VerticalRangeModel"
-		type="DefaultBoundedRangeModelPtr"
+		type="DefaultBoundedRangeModel"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Component/Scroll/OSGDefaultBoundedRangeModel.h"
-		defaultValue="DefaultBoundedRangeModel::create()"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="HorizontalRangeModel"
-		type="DefaultBoundedRangeModelPtr"
+		type="DefaultBoundedRangeModel"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Component/Scroll/OSGDefaultBoundedRangeModel.h"
-		defaultValue="DefaultBoundedRangeModel::create()"
+		defaultValue="NULL"
 	>
 	</Field>
 </FieldContainer>

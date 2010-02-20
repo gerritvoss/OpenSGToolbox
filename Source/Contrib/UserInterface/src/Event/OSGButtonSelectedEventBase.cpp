@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,121 +50,124 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEBUTTONSELECTEDEVENTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGButtonSelectedEventBase.h"
 #include "OSGButtonSelectedEvent.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector ButtonSelectedEventBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::ButtonSelectedEvent
+    
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
 
-FieldContainerType ButtonSelectedEventBase::_type(
-    "ButtonSelectedEvent",
-    "Event",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&ButtonSelectedEventBase::createEmpty),
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ButtonSelectedEvent *>::_type("ButtonSelectedEventPtr", "EventPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ButtonSelectedEvent *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ButtonSelectedEvent *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ButtonSelectedEvent *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ButtonSelectedEventBase::classDescInserter(TypeObject &oType)
+{
+}
+
+
+ButtonSelectedEventBase::TypeObject ButtonSelectedEventBase::_type(
+    ButtonSelectedEventBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ButtonSelectedEventBase::createEmptyLocal),
     ButtonSelectedEvent::initMethod,
-    NULL,
-    0);
+    ButtonSelectedEvent::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ButtonSelectedEvent::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ButtonSelectedEvent\"\n"
+    "\tparent=\"Event\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(ButtonSelectedEventBase, ButtonSelectedEventPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ButtonSelectedEventBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ButtonSelectedEventBase::getType(void) const 
+FieldContainerType &ButtonSelectedEventBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr ButtonSelectedEventBase::shallowCopy(void) const 
-{ 
-    ButtonSelectedEventPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const ButtonSelectedEvent *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 ButtonSelectedEventBase::getContainerSize(void) const 
-{ 
-    return sizeof(ButtonSelectedEvent); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ButtonSelectedEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &ButtonSelectedEventBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<ButtonSelectedEventBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void ButtonSelectedEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 ButtonSelectedEventBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((ButtonSelectedEventBase *) &other, whichField, sInfo);
-}
-void ButtonSelectedEventBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(ButtonSelectedEvent);
 }
 
-void ButtonSelectedEventBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-ButtonSelectedEventBase::ButtonSelectedEventBase(void) :
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-ButtonSelectedEventBase::ButtonSelectedEventBase(const ButtonSelectedEventBase &source) :
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-ButtonSelectedEventBase::~ButtonSelectedEventBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ButtonSelectedEventBase::getBinSize(const BitVector &whichField)
+UInt32 ButtonSelectedEventBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -172,66 +175,198 @@ UInt32 ButtonSelectedEventBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void ButtonSelectedEventBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ButtonSelectedEventBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-
 }
 
-void ButtonSelectedEventBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ButtonSelectedEventBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ButtonSelectedEventBase::executeSyncImpl(      ButtonSelectedEventBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ButtonSelectedEventTransitPtr ButtonSelectedEventBase::createLocal(BitVector bFlags)
 {
+    ButtonSelectedEventTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
+        fc = dynamic_pointer_cast<ButtonSelectedEvent>(tmpPtr);
+    }
 
-}
-#else
-void ButtonSelectedEventBase::executeSyncImpl(      ButtonSelectedEventBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
+    return fc;
 }
 
-void ButtonSelectedEventBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ButtonSelectedEventTransitPtr ButtonSelectedEventBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ButtonSelectedEventTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<ButtonSelectedEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ButtonSelectedEventTransitPtr ButtonSelectedEventBase::create(void)
+{
+    ButtonSelectedEventTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<ButtonSelectedEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+ButtonSelectedEvent *ButtonSelectedEventBase::createEmptyLocal(BitVector bFlags)
+{
+    ButtonSelectedEvent *returnValue;
+
+    newPtr<ButtonSelectedEvent>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+ButtonSelectedEvent *ButtonSelectedEventBase::createEmpty(void)
+{
+    ButtonSelectedEvent *returnValue;
+
+    newPtr<ButtonSelectedEvent>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ButtonSelectedEventBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    ButtonSelectedEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ButtonSelectedEvent *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ButtonSelectedEventBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    ButtonSelectedEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ButtonSelectedEvent *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ButtonSelectedEventBase::shallowCopy(void) const
+{
+    ButtonSelectedEvent *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const ButtonSelectedEvent *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ButtonSelectedEventBase::ButtonSelectedEventBase(void) :
+    Inherited()
+{
+}
+
+ButtonSelectedEventBase::ButtonSelectedEventBase(const ButtonSelectedEventBase &source) :
+    Inherited(source)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ButtonSelectedEventBase::~ButtonSelectedEventBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ButtonSelectedEventBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ButtonSelectedEvent *pThis = static_cast<ButtonSelectedEvent *>(this);
+
+    pThis->execSync(static_cast<ButtonSelectedEvent *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ButtonSelectedEventBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    ButtonSelectedEvent *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const ButtonSelectedEvent *>(pRefAspect),
+                  dynamic_cast<const ButtonSelectedEvent *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ButtonSelectedEventPtr>::_type("ButtonSelectedEventPtr", "EventPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(ButtonSelectedEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void ButtonSelectedEventBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

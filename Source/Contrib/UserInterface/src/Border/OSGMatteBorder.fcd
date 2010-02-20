@@ -3,18 +3,21 @@
 <FieldContainer
 	name="MatteBorder"
 	parent="Border"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 UI Matte Border. Creates a matte-look border using a solid color or Material. (The difference between this border and a line border is that you can specify the individual border dimensions.)
 	<Field
 		name="LeftWidth"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1"
@@ -24,6 +27,7 @@ UI Matte Border. Creates a matte-look border using a solid color or Material. (T
 	<Field
 		name="RightWidth"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1"
@@ -33,6 +37,7 @@ UI Matte Border. Creates a matte-look border using a solid color or Material. (T
 	<Field
 		name="TopWidth"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1"
@@ -42,6 +47,7 @@ UI Matte Border. Creates a matte-look border using a solid color or Material. (T
 	<Field
 		name="BottomWidth"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1"
@@ -51,6 +57,7 @@ UI Matte Border. Creates a matte-look border using a solid color or Material. (T
 	<Field
 		name="Color"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,0.0,0.0,1.0"
@@ -59,10 +66,12 @@ UI Matte Border. Creates a matte-look border using a solid color or Material. (T
 	</Field>
 	<Field
 		name="Material"
-		type="MaterialPtr"
+		type="Material"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="NULL"
 	>
 	</Field>
 </FieldContainer>

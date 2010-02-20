@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -43,120 +43,117 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Container!
+ **     class ComponentContainer!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
-
-#include <OpenSG/OSGConfig.h>
 
 OSG_BEGIN_NAMESPACE
 
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &ContainerBase::getClassType(void)
+OSG::FieldContainerType &ComponentContainerBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ContainerBase::getClassTypeId(void) 
+OSG::UInt32 ComponentContainerBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
+    return _type.getId();
+}
 
+inline
+OSG::UInt16 ComponentContainerBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
+}
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Container::_mfChildren field.
-inline
-MFComponentPtr *ContainerBase::getMFChildren(void)
-{
-    return &_mfChildren;
-}
 
-//! Get the Container::_sfLayout field.
+//! Get the value of the ComponentContainer::_sfLayout field.
 inline
-SFLayoutPtr *ContainerBase::getSFLayout(void)
-{
-    return &_sfLayout;
-}
-
-//! Get the Container::_sfInset field.
-inline
-SFVec4f *ContainerBase::getSFInset(void)
-{
-    return &_sfInset;
-}
-
-
-//! Get the value of the Container::_sfLayout field.
-inline
-LayoutPtr &ContainerBase::getLayout(void)
+Layout * ComponentContainerBase::getLayout(void) const
 {
     return _sfLayout.getValue();
 }
 
-//! Get the value of the Container::_sfLayout field.
+//! Set the value of the ComponentContainer::_sfLayout field.
 inline
-const LayoutPtr &ContainerBase::getLayout(void) const
+void ComponentContainerBase::setLayout(Layout * const value)
 {
-    return _sfLayout.getValue();
-}
+    editSField(LayoutFieldMask);
 
-//! Set the value of the Container::_sfLayout field.
-inline
-void ContainerBase::setLayout(const LayoutPtr &value)
-{
     _sfLayout.setValue(value);
 }
+//! Get the value of the ComponentContainer::_sfInset field.
 
-//! Get the value of the Container::_sfInset field.
 inline
-Vec4f &ContainerBase::getInset(void)
+Vec4f &ComponentContainerBase::editInset(void)
+{
+    editSField(InsetFieldMask);
+
+    return _sfInset.getValue();
+}
+
+//! Get the value of the ComponentContainer::_sfInset field.
+inline
+const Vec4f &ComponentContainerBase::getInset(void) const
 {
     return _sfInset.getValue();
 }
 
-//! Get the value of the Container::_sfInset field.
+//! Set the value of the ComponentContainer::_sfInset field.
 inline
-const Vec4f &ContainerBase::getInset(void) const
+void ComponentContainerBase::setInset(const Vec4f &value)
 {
-    return _sfInset.getValue();
-}
+    editSField(InsetFieldMask);
 
-//! Set the value of the Container::_sfInset field.
-inline
-void ContainerBase::setInset(const Vec4f &value)
-{
     _sfInset.setValue(value);
 }
 
-
-//! Get the value of the \a index element the Container::_mfChildren field.
+//! Get the value of the \a index element the ComponentContainer::_mfChildren field.
 inline
-ComponentPtr &ContainerBase::getChildren(const UInt32 index)
+Component * ComponentContainerBase::getChildren(const UInt32 index) const
 {
     return _mfChildren[index];
 }
 
-//! Get the Container::_mfChildren field.
-inline
-MFComponentPtr &ContainerBase::getChildren(void)
-{
-    return _mfChildren;
-}
 
-//! Get the Container::_mfChildren field.
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-const MFComponentPtr &ContainerBase::getChildren(void) const
+void ComponentContainerBase::execSync (      ComponentContainerBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfChildren;
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (ChildrenFieldMask & whichField))
+        _mfChildren.syncWith(pFrom->_mfChildren,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (LayoutFieldMask & whichField))
+        _sfLayout.syncWith(pFrom->_sfLayout);
+
+    if(FieldBits::NoField != (InsetFieldMask & whichField))
+        _sfInset.syncWith(pFrom->_sfInset);
 }
+#endif
+
+
+inline
+const Char8 *ComponentContainerBase::getClassname(void)
+{
+    return "ComponentContainer";
+}
+OSG_GEN_CONTAINERPTR(ComponentContainer);
 
 OSG_END_NAMESPACE
-
-#define OSGCONTAINERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

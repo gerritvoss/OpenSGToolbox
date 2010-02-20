@@ -3,27 +3,31 @@
 <FieldContainer
 	name="Graphics3DExtrude"
 	parent="Graphics"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A Concrete 3D Extrution UI Graphics.
 	<Field
 		name="UIDepth"
-		type="DepthChunkPtr"
+		type="DepthChunk"
+        category="pointer"
 		cardinality="single"
 		visibility="internal"
 		access="protected"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="ExtrudeLength"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -33,6 +37,7 @@ A Concrete 3D Extrution UI Graphics.
 	<Field
 		name="InternalClipPlaneOffset"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -42,6 +47,7 @@ A Concrete 3D Extrution UI Graphics.
 	<Field
 		name="TextOffset"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -51,6 +57,7 @@ A Concrete 3D Extrution UI Graphics.
 	<Field
 		name="Enable3DText"
 		type="bool"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -60,6 +67,7 @@ A Concrete 3D Extrution UI Graphics.
 	<Field
 		name="EnableLighting"
 		type="bool"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -68,11 +76,12 @@ A Concrete 3D Extrution UI Graphics.
 	</Field>
 	<Field
 		name="Material"
-		type="MaterialPtr"
+		type="Material"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 </FieldContainer>

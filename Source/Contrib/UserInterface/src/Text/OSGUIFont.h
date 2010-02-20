@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,57 +42,58 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGUIFontBase.h"
+#include "OSGTextureObjChunk.h"
 
-#include <OpenSG/OSGTextTXFFace.h>
-#include <OpenSG/OSGTextLayoutParam.h>
-#include <OpenSG/OSGTextLayoutResult.h>
-#include <OpenSG/OSGTextTXFGlyph.h>
-#include <OpenSG/Toolbox/OSGPathType.h>
+#include "OSGTextTXFFace.h"
+#include "OSGTextLayoutParam.h"
+#include "OSGTextLayoutResult.h"
+#include "OSGTextTXFGlyph.h"
+#include "OSGPathType.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief UIFont class. See \ref 
-           PageUserInterfaceUIFont for a description.
+/*! \brief UIFont class. See \ref
+           PageContribUserInterfaceUIFont for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING UIFont : public UIFontBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIFont : public UIFontBase
 {
-  private:
-
-    typedef UIFontBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef UIFontBase Inherited;
+    typedef UIFont     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
+    /*! \}                                                                 */
     void layout(const std::string &utf8Text, const TextLayoutParam &param, TextLayoutResult &result);
     const TextTXFGlyph* getTXFGlyph(TextGlyph::Index glyphIndex);
 
 	void getBounds(const std::string& Text, Pnt2f& TopLeft, Pnt2f& BottomRight);
 	Vec2f getBounds(const std::string& Text);
 
-    static FieldContainerPtr createFont( const Path& FilePath );
-   
-    /*! \}                                                                 */
+    static FieldContainerTransitPtr createFont( const BoostPath& FilePath );
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in UIFontBase.
@@ -109,23 +110,26 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIFont : public UIFontBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~UIFont(void); 
+    virtual ~UIFont(void);
 
     /*! \}                                                                 */
-    
-    /*==========================  PRIVATE  ================================*/
-  private:
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
 
-    TextTXFFace* _face;
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+    /*==========================  PRIVATE  ================================*/
+
+  private:
+    TextTXFFaceRefPtr _face;
     void initText(void);
-    
+
     friend class FieldContainer;
     friend class UIFontBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const UIFont &source);
 };
 

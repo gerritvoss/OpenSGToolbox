@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,77 +58,87 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGLayout.h" // Parent
 
-#include <OpenSG/OSGUInt32Fields.h> // Orientation type
-#include <OpenSG/OSGReal32Fields.h> // HorizontalGap type
-#include <OpenSG/OSGReal32Fields.h> // VerticalGap type
-#include <OpenSG/OSGReal32Fields.h> // MajorAxisAlignment type
-#include <OpenSG/OSGReal32Fields.h> // MinorAxisAlignment type
-#include <OpenSG/OSGReal32Fields.h> // ComponentAlignment type
+#include "OSGSysFields.h"               // Orientation type
 
 #include "OSGFlowLayoutFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class FlowLayout;
-class BinaryDataHandler;
 
 //! \brief FlowLayout Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING FlowLayoutBase : public Layout
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FlowLayoutBase : public Layout
 {
-  private:
-
-    typedef Layout    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef FlowLayoutPtr  Ptr;
+    typedef Layout Inherited;
+    typedef Layout ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(FlowLayout);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        OrientationFieldId        = Inherited::NextFieldId,
-        HorizontalGapFieldId      = OrientationFieldId        + 1,
-        VerticalGapFieldId        = HorizontalGapFieldId      + 1,
-        MajorAxisAlignmentFieldId = VerticalGapFieldId        + 1,
+        OrientationFieldId = Inherited::NextFieldId,
+        HorizontalGapFieldId = OrientationFieldId + 1,
+        VerticalGapFieldId = HorizontalGapFieldId + 1,
+        MajorAxisAlignmentFieldId = VerticalGapFieldId + 1,
         MinorAxisAlignmentFieldId = MajorAxisAlignmentFieldId + 1,
         ComponentAlignmentFieldId = MinorAxisAlignmentFieldId + 1,
-        NextFieldId               = ComponentAlignmentFieldId + 1
+        NextFieldId = ComponentAlignmentFieldId + 1
     };
 
-    static const OSG::BitVector OrientationFieldMask;
-    static const OSG::BitVector HorizontalGapFieldMask;
-    static const OSG::BitVector VerticalGapFieldMask;
-    static const OSG::BitVector MajorAxisAlignmentFieldMask;
-    static const OSG::BitVector MinorAxisAlignmentFieldMask;
-    static const OSG::BitVector ComponentAlignmentFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector OrientationFieldMask =
+        (TypeTraits<BitVector>::One << OrientationFieldId);
+    static const OSG::BitVector HorizontalGapFieldMask =
+        (TypeTraits<BitVector>::One << HorizontalGapFieldId);
+    static const OSG::BitVector VerticalGapFieldMask =
+        (TypeTraits<BitVector>::One << VerticalGapFieldId);
+    static const OSG::BitVector MajorAxisAlignmentFieldMask =
+        (TypeTraits<BitVector>::One << MajorAxisAlignmentFieldId);
+    static const OSG::BitVector MinorAxisAlignmentFieldMask =
+        (TypeTraits<BitVector>::One << MinorAxisAlignmentFieldId);
+    static const OSG::BitVector ComponentAlignmentFieldMask =
+        (TypeTraits<BitVector>::One << ComponentAlignmentFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUInt32          SFOrientationType;
+    typedef SFReal32          SFHorizontalGapType;
+    typedef SFReal32          SFVerticalGapType;
+    typedef SFReal32          SFMajorAxisAlignmentType;
+    typedef SFReal32          SFMinorAxisAlignmentType;
+    typedef SFReal32          SFComponentAlignmentType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -137,41 +147,59 @@ class OSG_USERINTERFACELIB_DLLMAPPING FlowLayoutBase : public Layout
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUInt32            *getSFOrientation    (void);
-           SFReal32            *getSFHorizontalGap  (void);
-           SFReal32            *getSFVerticalGap    (void);
-           SFReal32            *getSFMajorAxisAlignment(void);
-           SFReal32            *getSFMinorAxisAlignment(void);
-           SFReal32            *getSFComponentAlignment(void);
 
-           UInt32              &getOrientation    (void);
-     const UInt32              &getOrientation    (void) const;
-           Real32              &getHorizontalGap  (void);
-     const Real32              &getHorizontalGap  (void) const;
-           Real32              &getVerticalGap    (void);
-     const Real32              &getVerticalGap    (void) const;
-           Real32              &getMajorAxisAlignment(void);
-     const Real32              &getMajorAxisAlignment(void) const;
-           Real32              &getMinorAxisAlignment(void);
-     const Real32              &getMinorAxisAlignment(void) const;
-           Real32              &getComponentAlignment(void);
-     const Real32              &getComponentAlignment(void) const;
+                  SFUInt32            *editSFOrientation    (void);
+            const SFUInt32            *getSFOrientation     (void) const;
+
+                  SFReal32            *editSFHorizontalGap  (void);
+            const SFReal32            *getSFHorizontalGap   (void) const;
+
+                  SFReal32            *editSFVerticalGap    (void);
+            const SFReal32            *getSFVerticalGap     (void) const;
+
+                  SFReal32            *editSFMajorAxisAlignment(void);
+            const SFReal32            *getSFMajorAxisAlignment (void) const;
+
+                  SFReal32            *editSFMinorAxisAlignment(void);
+            const SFReal32            *getSFMinorAxisAlignment (void) const;
+
+                  SFReal32            *editSFComponentAlignment(void);
+            const SFReal32            *getSFComponentAlignment (void) const;
+
+
+                  UInt32              &editOrientation    (void);
+                  UInt32               getOrientation     (void) const;
+
+                  Real32              &editHorizontalGap  (void);
+                  Real32               getHorizontalGap   (void) const;
+
+                  Real32              &editVerticalGap    (void);
+                  Real32               getVerticalGap     (void) const;
+
+                  Real32              &editMajorAxisAlignment(void);
+                  Real32               getMajorAxisAlignment (void) const;
+
+                  Real32              &editMinorAxisAlignment(void);
+                  Real32               getMinorAxisAlignment (void) const;
+
+                  Real32              &editComponentAlignment(void);
+                  Real32               getComponentAlignment (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setOrientation    ( const UInt32 &value );
-     void setHorizontalGap  ( const Real32 &value );
-     void setVerticalGap    ( const Real32 &value );
-     void setMajorAxisAlignment( const Real32 &value );
-     void setMinorAxisAlignment( const Real32 &value );
-     void setComponentAlignment( const Real32 &value );
+            void setOrientation    (const UInt32 value);
+            void setHorizontalGap  (const Real32 value);
+            void setVerticalGap    (const Real32 value);
+            void setMajorAxisAlignment(const Real32 value);
+            void setMinorAxisAlignment(const Real32 value);
+            void setComponentAlignment(const Real32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -179,11 +207,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING FlowLayoutBase : public Layout
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -191,31 +219,48 @@ class OSG_USERINTERFACELIB_DLLMAPPING FlowLayoutBase : public Layout
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  FlowLayoutPtr      create          (void); 
-    static  FlowLayoutPtr      createEmpty     (void); 
+    static  FlowLayoutTransitPtr  create          (void);
+    static  FlowLayout           *createEmpty     (void);
+
+    static  FlowLayoutTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  FlowLayout            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  FlowLayoutTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUInt32            _sfOrientation;
-    SFReal32            _sfHorizontalGap;
-    SFReal32            _sfVerticalGap;
-    SFReal32            _sfMajorAxisAlignment;
-    SFReal32            _sfMinorAxisAlignment;
-    SFReal32            _sfComponentAlignment;
+    SFUInt32          _sfOrientation;
+    SFReal32          _sfHorizontalGap;
+    SFReal32          _sfVerticalGap;
+    SFReal32          _sfMajorAxisAlignment;
+    SFReal32          _sfMinorAxisAlignment;
+    SFReal32          _sfComponentAlignment;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -230,69 +275,89 @@ class OSG_USERINTERFACELIB_DLLMAPPING FlowLayoutBase : public Layout
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~FlowLayoutBase(void); 
+    virtual ~FlowLayoutBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleOrientation     (void) const;
+    EditFieldHandlePtr editHandleOrientation    (void);
+    GetFieldHandlePtr  getHandleHorizontalGap   (void) const;
+    EditFieldHandlePtr editHandleHorizontalGap  (void);
+    GetFieldHandlePtr  getHandleVerticalGap     (void) const;
+    EditFieldHandlePtr editHandleVerticalGap    (void);
+    GetFieldHandlePtr  getHandleMajorAxisAlignment (void) const;
+    EditFieldHandlePtr editHandleMajorAxisAlignment(void);
+    GetFieldHandlePtr  getHandleMinorAxisAlignment (void) const;
+    EditFieldHandlePtr editHandleMinorAxisAlignment(void);
+    GetFieldHandlePtr  getHandleComponentAlignment (void) const;
+    EditFieldHandlePtr editHandleComponentAlignment(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      FlowLayoutBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      FlowLayoutBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      FlowLayoutBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const FlowLayoutBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef FlowLayoutBase *FlowLayoutBaseP;
 
-typedef osgIF<FlowLayoutBase::isNodeCore,
-              CoredNodePtr<FlowLayout>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet FlowLayoutNodePtr;
-
-typedef RefPtr<FlowLayoutPtr> FlowLayoutRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGFLOWLAYOUTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGFLOWLAYOUTBASE_H_ */

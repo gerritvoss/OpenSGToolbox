@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGMultiColorMatteBorder.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::MultiColorMatteBorder
-UI MultiColor Matte Border. Creates a matte-look border using a different color for each side. (The difference between this border and a line border is that you can specify the individual border dimensions as well as colors.) 	
-*/
+// Documentation for this class is emitted in the
+// OSGMultiColorMatteBorderBase.cpp file.
+// To modify it, please change the .fcd file (OSGMultiColorMatteBorder.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,8 +62,13 @@ UI MultiColor Matte Border. Creates a matte-look border using a different color 
  *                           Class methods                                 *
 \***************************************************************************/
 
-void MultiColorMatteBorder::initMethod (void)
+void MultiColorMatteBorder::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -76,65 +76,66 @@ void MultiColorMatteBorder::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void MultiColorMatteBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity, bool Clipping) const
+void MultiColorMatteBorder::draw(const GraphicsWeakPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity, bool Clipping) const
 {
-	//x, y is upper left point
-	
-	//Top
-	g->drawQuad(
-		Pnt2f(x+getLeftWidth(),y),
-		Pnt2f(x+Width, y),
-		Pnt2f(x+Width, y+getTopWidth()),
-		Pnt2f(x+getLeftWidth(), y+getTopWidth()),
-		getTopLineLeftColor(),
-		getTopLineRightColor(),
-		getTopLineRightColor(),
-		getTopLineLeftColor(),
-		Opacity);
-	//Left
-	g->drawQuad(
-		Pnt2f(x,y),
-		Pnt2f(x+getRightWidth(), y),
-		Pnt2f(x+getRightWidth(), y+Height-getBottomWidth()),
-		Pnt2f(x, y+Height-getBottomWidth()),
-		getLeftLineTopColor(),
-		getLeftLineTopColor(),
-		getLeftLineBottomColor(),
-		getLeftLineBottomColor(),
-		Opacity);
-	//Right
-	g->drawQuad(
-		Pnt2f(x+Width-getRightWidth(),y+getTopWidth()),
-		Pnt2f(x+Width, y+getTopWidth()),
-		Pnt2f(x+Width, y+Height),
-		Pnt2f(x+Width-getRightWidth(), y+Height),
-		getRightLineTopColor(),
-		getRightLineTopColor(),
-		getRightLineBottomColor(),
-		getRightLineBottomColor(),
-		Opacity);
-	//Bottom
-	g->drawQuad(
-		Pnt2f(x,y+Height-getBottomWidth()),
-		Pnt2f(x+Width-getRightWidth(), y+Height-getBottomWidth()),
-		Pnt2f(x+Width-getRightWidth(), y+Height),
-		Pnt2f(x, y+Height),
-		getBottomLineLeftColor(),
-		getBottomLineRightColor(),
-		getBottomLineRightColor(),
-		getBottomLineLeftColor(),
-		Opacity);
-	//g->drawQuad(Pnt2f(x, y+Height-getBottomWidth()), Pnt2f(x+Width, y+Height), getBottomColor(), Opacity);
+    //x, y is upper left point
+
+    //Top
+    g->drawQuad(
+                Pnt2f(x+getLeftWidth(),y),
+                Pnt2f(x+Width, y),
+                Pnt2f(x+Width, y+getTopWidth()),
+                Pnt2f(x+getLeftWidth(), y+getTopWidth()),
+                getTopLineLeftColor(),
+                getTopLineRightColor(),
+                getTopLineRightColor(),
+                getTopLineLeftColor(),
+                Opacity);
+    //Left
+    g->drawQuad(
+                Pnt2f(x,y),
+                Pnt2f(x+getRightWidth(), y),
+                Pnt2f(x+getRightWidth(), y+Height-getBottomWidth()),
+                Pnt2f(x, y+Height-getBottomWidth()),
+                getLeftLineTopColor(),
+                getLeftLineTopColor(),
+                getLeftLineBottomColor(),
+                getLeftLineBottomColor(),
+                Opacity);
+    //Right
+    g->drawQuad(
+                Pnt2f(x+Width-getRightWidth(),y+getTopWidth()),
+                Pnt2f(x+Width, y+getTopWidth()),
+                Pnt2f(x+Width, y+Height),
+                Pnt2f(x+Width-getRightWidth(), y+Height),
+                getRightLineTopColor(),
+                getRightLineTopColor(),
+                getRightLineBottomColor(),
+                getRightLineBottomColor(),
+                Opacity);
+    //Bottom
+    g->drawQuad(
+                Pnt2f(x,y+Height-getBottomWidth()),
+                Pnt2f(x+Width-getRightWidth(), y+Height-getBottomWidth()),
+                Pnt2f(x+Width-getRightWidth(), y+Height),
+                Pnt2f(x, y+Height),
+                getBottomLineLeftColor(),
+                getBottomLineRightColor(),
+                getBottomLineRightColor(),
+                getBottomLineLeftColor(),
+                Opacity);
+    //g->drawQuad(Pnt2f(x, y+Height-getBottomWidth()), Pnt2f(x+Width, y+Height), getBottomColor(), Opacity);
 
 }
 
 void MultiColorMatteBorder::getInsets(Real32& Left, Real32& Right,Real32& Top,Real32& Bottom) const
 {
-	Left = getLeftWidth();
-	Right = getRightWidth();
-	Top = getTopWidth();
-	Bottom = getBottomWidth();
+    Left = getLeftWidth();
+    Right = getRightWidth();
+    Top = getTopWidth();
+    Bottom = getBottomWidth();
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -157,41 +158,17 @@ MultiColorMatteBorder::~MultiColorMatteBorder(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void MultiColorMatteBorder::changed(BitVector whichField, UInt32 origin)
+void MultiColorMatteBorder::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void MultiColorMatteBorder::dump(      UInt32    , 
+void MultiColorMatteBorder::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump MultiColorMatteBorder NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGMULTICOLORMATTEBORDERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGMULTICOLORMATTEBORDERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGMULTICOLORMATTEBORDERFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

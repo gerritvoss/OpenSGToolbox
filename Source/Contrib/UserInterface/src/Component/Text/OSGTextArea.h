@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,50 +42,49 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
-
 #include "OSGTextAreaBase.h"
 #include <vector>
 #include <string>
-#include <OpenSG/Input/OSGWindowEventProducer.h>
-#include <OpenSG/Input/OSGMouseAdapter.h>
-#include <OpenSG/Input/OSGMouseMotionAdapter.h>
-#include <OpenSG/Input/OSGKeyAdapter.h>
+#include "OSGWindowEventProducer.h"
+#include "OSGMouseAdapter.h"
+#include "OSGMouseMotionAdapter.h"
+#include "OSGKeyAdapter.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TextArea class. See \ref 
-           PageUserInterfaceTextArea for a description.
+/*! \brief TextArea class. See \ref
+           PageContribUserInterfaceTextArea for a description.
 */
 
-
-class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextArea : public TextAreaBase
 {
-  private:
-
-    typedef TextAreaBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef TextAreaBase Inherited;
+    typedef TextArea     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
 	struct TextLine{
 		UInt32 _StartPosition;
 		UInt32 _EndPosition;
@@ -94,12 +93,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
 		Real32 _RightHorizontalOffset;
 	};
 
-	virtual void keyTyped(const KeyEventPtr e);
-	virtual void mouseClicked(const MouseEventPtr e);
-	virtual void mousePressed(const MouseEventPtr e);
+	virtual void keyTyped(const KeyEventUnrecPtr e);
+	virtual void mouseClicked(const MouseEventUnrecPtr e);
+	virtual void mousePressed(const MouseEventUnrecPtr e);
 	
-	virtual void focusGained(const FocusEventPtr e);
-	virtual void focusLost(const FocusEventPtr e);
+	virtual void focusGained(const FocusEventUnrecPtr e);
+	virtual void focusLost(const FocusEventUnrecPtr e);
 
     //Components that display logical rows or columns should compute the scroll increment that will completely expose one block of rows or columns, depending on the value of orientation.
     virtual Int32 getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
@@ -137,7 +136,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
     void moveCaretLine(Int32 delta);
 
     virtual void detachFromEventProducer(void);
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in TextAreaBase.
@@ -154,22 +155,30 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TextArea(void); 
+    virtual ~TextArea(void);
 
-	virtual void drawInternal(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+
+	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
     
 	mutable Time _CurrentCaretBlinkElps;
 
 	class CaretUpdateListener : public UpdateListener
 	{
 	public:
-		CaretUpdateListener(TextAreaPtr TheTextArea);
-        virtual void update(const UpdateEventPtr e);
+		CaretUpdateListener(TextAreaRefPtr TheTextArea);
+        virtual void update(const UpdateEventUnrecPtr e);
 
         void disconnect(void);
 	private:
-		TextAreaPtr _TextArea;
+		TextAreaRefPtr _TextArea;
 	};
 
 	friend class CarentUpdateListener;
@@ -179,24 +188,25 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
 	class MouseDownListener : public MouseAdapter,public MouseMotionAdapter,public KeyAdapter
 	{
 	public :
-		MouseDownListener(TextAreaPtr TheTextArea);
+		MouseDownListener(TextAreaRefPtr TheTextArea);
 		
-        virtual void keyTyped(const KeyEventPtr e);
+        virtual void keyTyped(const KeyEventUnrecPtr e);
 
-        virtual void mouseReleased(const MouseEventPtr e);
-        virtual void mouseDragged(const MouseEventPtr e);
+        virtual void mouseReleased(const MouseEventUnrecPtr e);
+        virtual void mouseDragged(const MouseEventUnrecPtr e);
 
         void disconnect(void);
 	protected :
-		TextAreaPtr _TextArea;
+		TextAreaRefPtr _TextArea;
 	};
 
 	friend class MouseDownListener;
 
 	MouseDownListener _MouseDownListener;
 
-    void mouseDraggedAfterArming(const MouseEventPtr e);
+    void mouseDraggedAfterArming(const MouseEventUnrecPtr e);
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
@@ -208,7 +218,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
 	std::vector<TextLine> _LineContents;
 
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const TextArea &source);
 };
 
@@ -218,7 +227,5 @@ OSG_END_NAMESPACE
 
 #include "OSGTextAreaBase.inl"
 #include "OSGTextArea.inl"
-
-#define OSGTEXTAREA_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGTEXTAREA_H_ */

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGLayoutSpringFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class AbstractLayoutSpring;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! AbstractLayoutSpringPtr
+OSG_GEN_CONTAINERPTR(AbstractLayoutSpring);
 
-typedef FCPtr<LayoutSpringPtr, AbstractLayoutSpring> AbstractLayoutSpringPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<AbstractLayoutSpringPtr> : 
-    public FieldTraitsRecurseMapper<AbstractLayoutSpringPtr, true>
+struct FieldTraits<AbstractLayoutSpring *> :
+    public FieldTraitsFCPtrBase<AbstractLayoutSpring *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFAbstractLayoutSpringPtr"; }
-    static const char *getMName(void) { return "MFAbstractLayoutSpringPtr"; }
+    typedef FieldTraits<AbstractLayoutSpring *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFAbstractLayoutSpringPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFAbstractLayoutSpringPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<AbstractLayoutSpringPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<AbstractLayoutSpring *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecAbstractLayoutSpringPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<AbstractLayoutSpring *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecAbstractLayoutSpringPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractLayoutSpring *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakAbstractLayoutSpringPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractLayoutSpring *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdAbstractLayoutSpringPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractLayoutSpring *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecAbstractLayoutSpringPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractLayoutSpring *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecAbstractLayoutSpringPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractLayoutSpring *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakAbstractLayoutSpringPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractLayoutSpring *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdAbstractLayoutSpringPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<AbstractLayoutSpring *,
+                      RecordedRefCountPolicy  > SFRecAbstractLayoutSpringPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<AbstractLayoutSpring *,
+                      UnrecordedRefCountPolicy> SFUnrecAbstractLayoutSpringPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<AbstractLayoutSpring *,
+                      WeakRefCountPolicy      > SFWeakAbstractLayoutSpringPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<AbstractLayoutSpring *,
+                      NoRefCountPolicy        > SFUncountedAbstractLayoutSpringPtr;
 
-typedef SField<AbstractLayoutSpringPtr> SFAbstractLayoutSpringPtr;
-#endif
 
-#ifndef OSG_COMPILEABSTRACTLAYOUTSPRINGINST
-OSG_DLLEXPORT_DECL1(SField, AbstractLayoutSpringPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<AbstractLayoutSpring *,
+                      RecordedRefCountPolicy  > MFRecAbstractLayoutSpringPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<AbstractLayoutSpring *,
+                      UnrecordedRefCountPolicy> MFUnrecAbstractLayoutSpringPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<AbstractLayoutSpring *,
+                      WeakRefCountPolicy      > MFWeakAbstractLayoutSpringPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<AbstractLayoutSpring *,
+                      NoRefCountPolicy        > MFUncountedAbstractLayoutSpringPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<AbstractLayoutSpringPtr> MFAbstractLayoutSpringPtr;
-#endif
 
-#ifndef OSG_COMPILEABSTRACTLAYOUTSPRINGINST
-OSG_DLLEXPORT_DECL1(MField, AbstractLayoutSpringPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecAbstractLayoutSpringPtr : 
+    public PointerSField<AbstractLayoutSpring *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecAbstractLayoutSpringPtr : 
+    public PointerSField<AbstractLayoutSpring *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakAbstractLayoutSpringPtr :
+    public PointerSField<AbstractLayoutSpring *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedAbstractLayoutSpringPtr :
+    public PointerSField<AbstractLayoutSpring *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecAbstractLayoutSpringPtr :
+    public PointerMField<AbstractLayoutSpring *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecAbstractLayoutSpringPtr :
+    public PointerMField<AbstractLayoutSpring *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakAbstractLayoutSpringPtr :
+    public PointerMField<AbstractLayoutSpring *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedAbstractLayoutSpringPtr :
+    public PointerMField<AbstractLayoutSpring *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGABSTRACTLAYOUTSPRINGFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGABSTRACTLAYOUTSPRINGFIELDS_H_ */

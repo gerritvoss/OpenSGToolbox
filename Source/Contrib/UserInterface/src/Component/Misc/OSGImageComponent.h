@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,54 +42,67 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGImageComponentBase.h"
-#include <OpenSG/OSGImage.h>
-#include <OpenSG/OSGTextureChunk.h>
+#include "OSGTextureObjChunk.h"
+#include "OSGTextureTransformChunk.h"
+#include "OSGImageFileHandler.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING ImageComponent : public ImageComponentBase
-{
-  private:
+/*! \brief ImageComponent class. See \ref
+           PageContribUserInterfaceImageComponent for a description.
+*/
 
-    typedef ImageComponentBase Inherited;
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ImageComponent : public ImageComponentBase
+{
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
-	enum Scale{SCALE_NONE=0, SCALE_STRETCH, SCALE_MIN_AXIS, SCALE_MAX_AXIS, SCALE_ABSOLUTE};
+	enum Scale
+    {
+        SCALE_NONE     = 0,
+        SCALE_STRETCH  = 1,
+        SCALE_MIN_AXIS = 2,
+        SCALE_MAX_AXIS = 3,
+        SCALE_ABSOLUTE = 4
+    };
+
+    typedef ImageComponentBase Inherited;
+    typedef ImageComponent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
-	void setImage(ImagePtr Image);
+	void setImage(ImageRefPtr Image);
 	void setImage(const char *fileName, const char *mimeType = 0);
 	
-	void setRolloverImage(ImagePtr Image);
+	void setRolloverImage(ImageRefPtr Image);
 	void setRolloverImage(const char *fileName, const char *mimeType = 0);
 
-	void setDisabledImage(ImagePtr Image);
+	void setDisabledImage(ImageRefPtr Image);
 	void setDisabledImage(const char *fileName, const char *mimeType = 0);
 	
-	void setFocusedImage(ImagePtr Image);
+	void setFocusedImage(ImageRefPtr Image);
 	void setFocusedImage(const char *fileName, const char *mimeType = 0);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ImageComponentBase.
@@ -106,22 +119,29 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponent : public ImageComponentBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ImageComponent(void); 
+    virtual ~ImageComponent(void);
 
     /*! \}                                                                 */
-	virtual void drawInternal(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
-    virtual TextureChunkPtr getDrawnTexture(void) const;
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+
+	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
+    virtual TextureObjChunkRefPtr getDrawnTexture(void) const;
+    static TextureObjChunkTransitPtr createTexture(ImageWeakPtr Image);
     
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ImageComponentBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ImageComponent &source);
 };
 

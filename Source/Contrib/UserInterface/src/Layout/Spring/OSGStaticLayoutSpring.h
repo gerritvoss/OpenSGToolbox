@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,63 +42,57 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGStaticLayoutSpringBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief StaticLayoutSpring class. See \ref 
-           PageUserInterfaceStaticLayoutSpring for a description.
+/*! \brief StaticLayoutSpring class. See \ref
+           PageContribUserInterfaceStaticLayoutSpring for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING StaticLayoutSpring : public StaticLayoutSpringBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING StaticLayoutSpring : public StaticLayoutSpringBase
 {
-  private:
-
-    typedef StaticLayoutSpringBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef StaticLayoutSpringBase Inherited;
+    typedef StaticLayoutSpring     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent, 
-                      const BitVector  bvFlags ) const;
+    virtual void dump(      UInt32     uiIndent = 0,
+                      const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
+    static  StaticLayoutSpringTransitPtr      create          (const Real32& Preferred); 
+    static  StaticLayoutSpringTransitPtr      create          (const Real32& Minimum, const Real32& Preferred, const Real32& Maximum); 
     
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Construction                               */
-    /*! \{                                                                 */
-
-    static  StaticLayoutSpringPtr      create          (const Real32& Preferred); 
-    static  StaticLayoutSpringPtr      create          (const Real32& Minimum, const Real32& Preferred, const Real32& Maximum); 
-    
-    /*! \}                                                                 */
-
-    //Returns the maximum value of this LayoutSpringPtr.
+    //Returns the maximum value of this LayoutSpringRefPtr.
     virtual Real32 getMinimumValue(void) const;
 
-    //Returns the Preferred value of this LayoutSpringPtr.
+    //Returns the Preferred value of this LayoutSpringRefPtr.
     virtual Real32 getPreferredValue(void) const;
 
-    //Returns the minimum value of this LayoutSpringPtr.
+    //Returns the minimum value of this LayoutSpringRefPtr.
     virtual Real32 getMaximumValue(void) const;
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in StaticLayoutSpringBase.
@@ -115,20 +109,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING StaticLayoutSpring : public StaticLayoutSp
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~StaticLayoutSpring(void); 
+    virtual ~StaticLayoutSpring(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class StaticLayoutSpringBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const StaticLayoutSpring &source);
 };
 
@@ -138,7 +136,5 @@ OSG_END_NAMESPACE
 
 #include "OSGStaticLayoutSpringBase.inl"
 #include "OSGStaticLayoutSpring.inl"
-
-#define OSGSTATICLAYOUTSPRING_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGSTATICLAYOUTSPRING_H_ */

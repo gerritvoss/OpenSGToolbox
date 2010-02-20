@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,111 +50,125 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEUIDRAWOBJECTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+
+
 #include "OSGUIDrawObjectBase.h"
 #include "OSGUIDrawObject.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector UIDrawObjectBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::UIDrawObject
+    A UI DrawObject.
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
 
-FieldContainerType UIDrawObjectBase::_type(
-    "UIDrawObject",
-    "FieldContainer",
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<UIDrawObject *>::_type("UIDrawObjectPtr", "FieldContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(UIDrawObject *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           UIDrawObject *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           UIDrawObject *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void UIDrawObjectBase::classDescInserter(TypeObject &oType)
+{
+}
+
+
+UIDrawObjectBase::TypeObject UIDrawObjectBase::_type(
+    UIDrawObjectBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
     NULL,
-    NULL, 
     UIDrawObject::initMethod,
-    NULL,
-    0);
+    UIDrawObject::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&UIDrawObject::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"UIDrawObject\"\n"
+    "\tparent=\"FieldContainer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"abstract\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI DrawObject.\n"
+    "</FieldContainer>\n",
+    "A UI DrawObject.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(UIDrawObjectBase, UIDrawObjectPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &UIDrawObjectBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &UIDrawObjectBase::getType(void) const 
+FieldContainerType &UIDrawObjectBase::getType(void)
 {
     return _type;
-} 
-
-
-UInt32 UIDrawObjectBase::getContainerSize(void) const 
-{ 
-    return sizeof(UIDrawObject); 
 }
 
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void UIDrawObjectBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &UIDrawObjectBase::getType(void) const
 {
-    this->executeSyncImpl((UIDrawObjectBase *) &other, whichField);
+    return _type;
 }
-#else
-void UIDrawObjectBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 UIDrawObjectBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((UIDrawObjectBase *) &other, whichField, sInfo);
-}
-void UIDrawObjectBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(UIDrawObject);
 }
 
-void UIDrawObjectBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-UIDrawObjectBase::UIDrawObjectBase(void) :
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-UIDrawObjectBase::UIDrawObjectBase(const UIDrawObjectBase &source) :
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-UIDrawObjectBase::~UIDrawObjectBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 UIDrawObjectBase::getBinSize(const BitVector &whichField)
+UInt32 UIDrawObjectBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -162,88 +176,69 @@ UInt32 UIDrawObjectBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void UIDrawObjectBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void UIDrawObjectBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-
 }
 
-void UIDrawObjectBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void UIDrawObjectBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void UIDrawObjectBase::executeSyncImpl(      UIDrawObjectBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+UIDrawObjectBase::UIDrawObjectBase(void) :
+    Inherited()
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-
-}
-#else
-void UIDrawObjectBase::executeSyncImpl(      UIDrawObjectBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
 }
 
-void UIDrawObjectBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+UIDrawObjectBase::UIDrawObjectBase(const UIDrawObjectBase &source) :
+    Inherited(source)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
+
+/*-------------------------- destructors ----------------------------------*/
+
+UIDrawObjectBase::~UIDrawObjectBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void UIDrawObjectBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    UIDrawObject *pThis = static_cast<UIDrawObject *>(this);
+
+    pThis->execSync(static_cast<UIDrawObject *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+
+void UIDrawObjectBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<UIDrawObjectPtr>::_type("UIDrawObjectPtr", "FieldContainerPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(UIDrawObjectPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(UIDrawObjectPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGUIDRAWOBJECTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGUIDRAWOBJECTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGUIDRAWOBJECTFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

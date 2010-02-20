@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGLayeredLayout.h"
-#include "Component/Container/OSGContainer.h"
+#include "OSGComponentContainer.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::LayeredLayout
-A UI LayeredLayout. 
-*/
+// Documentation for this class is emitted in the
+// OSGLayeredLayoutBase.cpp file.
+// To modify it, please change the .fcd file (OSGLayeredLayout.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -68,8 +63,13 @@ A UI LayeredLayout.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void LayeredLayout::initMethod (void)
+void LayeredLayout::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -77,49 +77,42 @@ void LayeredLayout::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-
-void LayeredLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+void LayeredLayout::updateLayout(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
 {
-	Pnt2f windowTopLeft, windowBottomRight;
-	Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(windowTopLeft, windowBottomRight);
-	Vec2f windowSize(windowBottomRight-windowTopLeft);
+    Pnt2f windowTopLeft, windowBottomRight;
+    dynamic_cast<const ComponentContainer*>(ParentComponent)->getInsideInsetsBounds(windowTopLeft, windowBottomRight);
+    Vec2f windowSize(windowBottomRight-windowTopLeft);
 
-	int maxX = 0;
-	int maxY = 0;
-	for(UInt32 i = 0; i < Components.size(); i++){
-		beginEditCP(Components[i], Component::SizeFieldMask);
-		   Components[i]->setSize(windowSize);
-		endEditCP(Components[i], Component::SizeFieldMask);
-		if(Components[i]->getSize().x()>maxX)
-			maxX = Components[i]->getSize().x();
-		if(Components[i]->getSize().y()>maxY)
-			maxY = Components[i]->getSize().y();
-	}
-	//overlay layout simply draws all the components on top of each other, with the reference point for all the components being the same
-	/*for(UInt32 i = 0; i <Components.size(); i++){
-		//Components[i]->setSize(Components[i]->getPreferredSize());
-		beginEditCP(Components[i], Component::PositionFieldMask);
-		Components[i]->setPosition(borderTopLeft + 
-            Vec2f((maxX-Components[i]->getSize().x())/2.0,
-			(maxY-Components[i]->getSize().y())/2.0));
-		endEditCP(Components[i], Component::PositionFieldMask);
-	}*/
-	for(UInt32 i = 0; i <Components.size(); i++){
-		//Components[i]->setSize(Components[i]->getPreferredSize());
-		beginEditCP(Components[i], Component::PositionFieldMask);
-		Components[i]->setPosition(windowTopLeft);
-		endEditCP(Components[i], Component::PositionFieldMask);
-	}
+    int maxX = 0;
+    int maxY = 0;
+    for(UInt32 i = 0; i < Components->size(); i++){
+        (*Components)[i]->setSize(windowSize);
+        if((*Components)[i]->getSize().x()>maxX)
+            maxX = (*Components)[i]->getSize().x();
+        if((*Components)[i]->getSize().y()>maxY)
+            maxY = (*Components)[i]->getSize().y();
+    }
+    //overlay layout simply draws all the components on top of each other, with the reference point for all the components being the same
+    /*for(UInt32 i = 0; i <Components->size(); i++){
+    //(*Components)[i]->setSize((*Components)[i]->getPreferredSize());
+    (*Components)[i]->setPosition(borderTopLeft + 
+    Vec2f((maxX-(*Components)[i]->getSize().x())/2.0,
+    (maxY-(*Components)[i]->getSize().y())/2.0));
+    }*/
+    for(UInt32 i = 0; i <Components->size(); i++){
+        //(*Components)[i]->setSize((*Components)[i]->getPreferredSize());
+        (*Components)[i]->setPosition(windowTopLeft);
+    }
 }
 
-Vec2f LayeredLayout::layoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent, SizeType TheSizeType) const
+Vec2f LayeredLayout::layoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent, SizeType TheSizeType) const
 {
     Vec2f Result(0.0,0.0);
 
     Vec2f ComponentSize;
-    for(UInt32 i(0) ; i<Components.size() ; ++i)
+    for(UInt32 i(0) ; i<Components->size() ; ++i)
     {
-        ComponentSize = getComponentSize(Components[i],TheSizeType);
+        ComponentSize = getComponentSize((*Components)[i],TheSizeType);
         if(ComponentSize.x() > Result.x())
         {
             Result[0] = ComponentSize.x();
@@ -133,25 +126,26 @@ Vec2f LayeredLayout::layoutSize(const MFComponentPtr Components,const ComponentP
     return Result;
 }
 
-Vec2f LayeredLayout::minimumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+Vec2f LayeredLayout::minimumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, MIN_SIZE);
 }
 
-Vec2f LayeredLayout::requestedContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+Vec2f LayeredLayout::requestedContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, REQUESTED_SIZE);
 }
 
-Vec2f LayeredLayout::preferredContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+Vec2f LayeredLayout::preferredContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, PREFERRED_SIZE);
 }
 
-Vec2f LayeredLayout::maximumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+Vec2f LayeredLayout::maximumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, MAX_SIZE);
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -174,17 +168,17 @@ LayeredLayout::~LayeredLayout(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void LayeredLayout::changed(BitVector whichField, UInt32 origin)
+void LayeredLayout::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void LayeredLayout::dump(      UInt32    , 
+void LayeredLayout::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump LayeredLayout NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

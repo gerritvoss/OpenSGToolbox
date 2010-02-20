@@ -14,16 +14,11 @@ LookAndFeelManager* LookAndFeelManager::the(void)
    return _the;
 }
 
-void LookAndFeelManager::setLookAndFeel(LookAndFeelPtr TheLookAndFeel)
+void LookAndFeelManager::setLookAndFeel(LookAndFeelRefPtr TheLookAndFeel)
 {
-	if(TheLookAndFeel != NullFC)
+	if(TheLookAndFeel != NULL)
 	{
-		if(_LookAndFeel != NullFC)
-		{
-			subRefCP(_LookAndFeel);
-		}
 		_LookAndFeel = TheLookAndFeel;
-		addRefCP(_LookAndFeel);
 	}
 
 }

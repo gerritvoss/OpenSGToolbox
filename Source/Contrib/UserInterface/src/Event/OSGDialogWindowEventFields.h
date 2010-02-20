@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,64 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/Toolbox/OSGEventFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class DialogWindowEvent;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! DialogWindowEventPtr
+OSG_GEN_CONTAINERPTR(DialogWindowEvent);
 
-typedef FCPtr<EventPtr, DialogWindowEvent> DialogWindowEventPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<DialogWindowEventPtr> : 
-    public FieldTraitsRecurseMapper<DialogWindowEventPtr, true>
+struct FieldTraits<DialogWindowEvent *> :
+    public FieldTraitsFCPtrBase<DialogWindowEvent *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFDialogWindowEventPtr"; }
+    typedef FieldTraits<DialogWindowEvent *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFDialogWindowEventPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFDialogWindowEventPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<DialogWindowEventPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<DialogWindowEvent *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecDialogWindowEventPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<DialogWindowEvent *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecDialogWindowEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DialogWindowEvent *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakDialogWindowEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DialogWindowEvent *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdDialogWindowEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DialogWindowEvent *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecDialogWindowEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DialogWindowEvent *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecDialogWindowEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DialogWindowEvent *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakDialogWindowEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DialogWindowEvent *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdDialogWindowEventPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<DialogWindowEvent *,
+                      RecordedRefCountPolicy  > SFRecDialogWindowEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<DialogWindowEvent *,
+                      UnrecordedRefCountPolicy> SFUnrecDialogWindowEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<DialogWindowEvent *,
+                      WeakRefCountPolicy      > SFWeakDialogWindowEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<DialogWindowEvent *,
+                      NoRefCountPolicy        > SFUncountedDialogWindowEventPtr;
 
-typedef SField<DialogWindowEventPtr> SFDialogWindowEventPtr;
-#endif
 
-#ifndef OSG_COMPILEDIALOGWINDOWEVENTINST
-OSG_DLLEXPORT_DECL1(SField, DialogWindowEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<DialogWindowEvent *,
+                      RecordedRefCountPolicy  > MFRecDialogWindowEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<DialogWindowEvent *,
+                      UnrecordedRefCountPolicy> MFUnrecDialogWindowEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<DialogWindowEvent *,
+                      WeakRefCountPolicy      > MFWeakDialogWindowEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<DialogWindowEvent *,
+                      NoRefCountPolicy        > MFUncountedDialogWindowEventPtr;
+
+
+
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecDialogWindowEventPtr : 
+    public PointerSField<DialogWindowEvent *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecDialogWindowEventPtr : 
+    public PointerSField<DialogWindowEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakDialogWindowEventPtr :
+    public PointerSField<DialogWindowEvent *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedDialogWindowEventPtr :
+    public PointerSField<DialogWindowEvent *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecDialogWindowEventPtr :
+    public PointerMField<DialogWindowEvent *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecDialogWindowEventPtr :
+    public PointerMField<DialogWindowEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakDialogWindowEventPtr :
+    public PointerMField<DialogWindowEvent *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedDialogWindowEventPtr :
+    public PointerMField<DialogWindowEvent *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

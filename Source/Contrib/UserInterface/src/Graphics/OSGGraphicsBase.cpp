@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,172 +50,287 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEGRAPHICSINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGGraphicsBase.h"
 #include "OSGGraphics.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  GraphicsBase::OpacityFieldMask = 
-    (TypeTraits<BitVector>::One << GraphicsBase::OpacityFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  GraphicsBase::EnablePointAntiAliasingFieldMask = 
-    (TypeTraits<BitVector>::One << GraphicsBase::EnablePointAntiAliasingFieldId);
+/*! \class OSG::Graphics
+    A UI Graphics Interface.
+ */
 
-const OSG::BitVector  GraphicsBase::EnableLineAntiAliasingFieldMask = 
-    (TypeTraits<BitVector>::One << GraphicsBase::EnableLineAntiAliasingFieldId);
-
-const OSG::BitVector  GraphicsBase::EnablePolygonAntiAliasingFieldMask = 
-    (TypeTraits<BitVector>::One << GraphicsBase::EnablePolygonAntiAliasingFieldId);
-
-const OSG::BitVector GraphicsBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Real32          GraphicsBase::_sfOpacity
     
 */
+
 /*! \var bool            GraphicsBase::_sfEnablePointAntiAliasing
     
 */
+
 /*! \var bool            GraphicsBase::_sfEnableLineAntiAliasing
     
 */
+
 /*! \var bool            GraphicsBase::_sfEnablePolygonAntiAliasing
     
 */
 
-//! Graphics description
 
-FieldDescription *GraphicsBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<Graphics *>::_type("GraphicsPtr", "AttachmentContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(Graphics *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           Graphics *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           Graphics *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void GraphicsBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Opacity", 
-                     OpacityFieldId, OpacityFieldMask,
-                     false,
-                     (FieldAccessMethod) &GraphicsBase::getSFOpacity),
-    new FieldDescription(SFBool::getClassType(), 
-                     "EnablePointAntiAliasing", 
-                     EnablePointAntiAliasingFieldId, EnablePointAntiAliasingFieldMask,
-                     false,
-                     (FieldAccessMethod) &GraphicsBase::getSFEnablePointAntiAliasing),
-    new FieldDescription(SFBool::getClassType(), 
-                     "EnableLineAntiAliasing", 
-                     EnableLineAntiAliasingFieldId, EnableLineAntiAliasingFieldMask,
-                     false,
-                     (FieldAccessMethod) &GraphicsBase::getSFEnableLineAntiAliasing),
-    new FieldDescription(SFBool::getClassType(), 
-                     "EnablePolygonAntiAliasing", 
-                     EnablePolygonAntiAliasingFieldId, EnablePolygonAntiAliasingFieldMask,
-                     false,
-                     (FieldAccessMethod) &GraphicsBase::getSFEnablePolygonAntiAliasing)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType GraphicsBase::_type(
-    "Graphics",
-    "AttachmentContainer",
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Opacity",
+        "",
+        OpacityFieldId, OpacityFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Graphics::editHandleOpacity),
+        static_cast<FieldGetMethodSig >(&Graphics::getHandleOpacity));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "EnablePointAntiAliasing",
+        "",
+        EnablePointAntiAliasingFieldId, EnablePointAntiAliasingFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Graphics::editHandleEnablePointAntiAliasing),
+        static_cast<FieldGetMethodSig >(&Graphics::getHandleEnablePointAntiAliasing));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "EnableLineAntiAliasing",
+        "",
+        EnableLineAntiAliasingFieldId, EnableLineAntiAliasingFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Graphics::editHandleEnableLineAntiAliasing),
+        static_cast<FieldGetMethodSig >(&Graphics::getHandleEnableLineAntiAliasing));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "EnablePolygonAntiAliasing",
+        "",
+        EnablePolygonAntiAliasingFieldId, EnablePolygonAntiAliasingFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Graphics::editHandleEnablePolygonAntiAliasing),
+        static_cast<FieldGetMethodSig >(&Graphics::getHandleEnablePolygonAntiAliasing));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+GraphicsBase::TypeObject GraphicsBase::_type(
+    GraphicsBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
     NULL,
-    NULL, 
     Graphics::initMethod,
-    _desc,
-    sizeof(_desc));
+    Graphics::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&Graphics::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"Graphics\"\n"
+    "\tparent=\"AttachmentContainer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"abstract\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Graphics Interface.\n"
+    "\t<Field\n"
+    "\t\tname=\"Opacity\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"EnablePointAntiAliasing\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"true\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"EnableLineAntiAliasing\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"true\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"EnablePolygonAntiAliasing\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI Graphics Interface.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(GraphicsBase, GraphicsPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &GraphicsBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &GraphicsBase::getType(void) const 
+FieldContainerType &GraphicsBase::getType(void)
 {
     return _type;
-} 
-
-
-UInt32 GraphicsBase::getContainerSize(void) const 
-{ 
-    return sizeof(Graphics); 
 }
 
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void GraphicsBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &GraphicsBase::getType(void) const
 {
-    this->executeSyncImpl((GraphicsBase *) &other, whichField);
+    return _type;
 }
-#else
-void GraphicsBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 GraphicsBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((GraphicsBase *) &other, whichField, sInfo);
+    return sizeof(Graphics);
 }
-void GraphicsBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFReal32 *GraphicsBase::editSFOpacity(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(OpacityFieldMask);
+
+    return &_sfOpacity;
 }
 
-void GraphicsBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFReal32 *GraphicsBase::getSFOpacity(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfOpacity;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-GraphicsBase::GraphicsBase(void) :
-    _sfOpacity                (Real32(1.0)), 
-    _sfEnablePointAntiAliasing(bool(true)), 
-    _sfEnableLineAntiAliasing (bool(true)), 
-    _sfEnablePolygonAntiAliasing(bool(false)), 
-    Inherited() 
+SFBool *GraphicsBase::editSFEnablePointAntiAliasing(void)
 {
+    editSField(EnablePointAntiAliasingFieldMask);
+
+    return &_sfEnablePointAntiAliasing;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-GraphicsBase::GraphicsBase(const GraphicsBase &source) :
-    _sfOpacity                (source._sfOpacity                ), 
-    _sfEnablePointAntiAliasing(source._sfEnablePointAntiAliasing), 
-    _sfEnableLineAntiAliasing (source._sfEnableLineAntiAliasing ), 
-    _sfEnablePolygonAntiAliasing(source._sfEnablePolygonAntiAliasing), 
-    Inherited                 (source)
+const SFBool *GraphicsBase::getSFEnablePointAntiAliasing(void) const
 {
+    return &_sfEnablePointAntiAliasing;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-GraphicsBase::~GraphicsBase(void)
+SFBool *GraphicsBase::editSFEnableLineAntiAliasing(void)
 {
+    editSField(EnableLineAntiAliasingFieldMask);
+
+    return &_sfEnableLineAntiAliasing;
 }
+
+const SFBool *GraphicsBase::getSFEnableLineAntiAliasing(void) const
+{
+    return &_sfEnableLineAntiAliasing;
+}
+
+
+SFBool *GraphicsBase::editSFEnablePolygonAntiAliasing(void)
+{
+    editSField(EnablePolygonAntiAliasingFieldMask);
+
+    return &_sfEnablePolygonAntiAliasing;
+}
+
+const SFBool *GraphicsBase::getSFEnablePolygonAntiAliasing(void) const
+{
+    return &_sfEnablePolygonAntiAliasing;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 GraphicsBase::getBinSize(const BitVector &whichField)
+UInt32 GraphicsBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -223,28 +338,24 @@ UInt32 GraphicsBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfOpacity.getBinSize();
     }
-
     if(FieldBits::NoField != (EnablePointAntiAliasingFieldMask & whichField))
     {
         returnValue += _sfEnablePointAntiAliasing.getBinSize();
     }
-
     if(FieldBits::NoField != (EnableLineAntiAliasingFieldMask & whichField))
     {
         returnValue += _sfEnableLineAntiAliasing.getBinSize();
     }
-
     if(FieldBits::NoField != (EnablePolygonAntiAliasingFieldMask & whichField))
     {
         returnValue += _sfEnablePolygonAntiAliasing.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void GraphicsBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void GraphicsBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -252,27 +363,22 @@ void GraphicsBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfOpacity.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EnablePointAntiAliasingFieldMask & whichField))
     {
         _sfEnablePointAntiAliasing.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EnableLineAntiAliasingFieldMask & whichField))
     {
         _sfEnableLineAntiAliasing.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EnablePolygonAntiAliasingFieldMask & whichField))
     {
         _sfEnablePolygonAntiAliasing.copyToBin(pMem);
     }
-
-
 }
 
-void GraphicsBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void GraphicsBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -280,115 +386,177 @@ void GraphicsBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfOpacity.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EnablePointAntiAliasingFieldMask & whichField))
     {
         _sfEnablePointAntiAliasing.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EnableLineAntiAliasingFieldMask & whichField))
     {
         _sfEnableLineAntiAliasing.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EnablePolygonAntiAliasingFieldMask & whichField))
     {
         _sfEnablePolygonAntiAliasing.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void GraphicsBase::executeSyncImpl(      GraphicsBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+GraphicsBase::GraphicsBase(void) :
+    Inherited(),
+    _sfOpacity                (Real32(1.0)),
+    _sfEnablePointAntiAliasing(bool(true)),
+    _sfEnableLineAntiAliasing (bool(true)),
+    _sfEnablePolygonAntiAliasing(bool(false))
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-    if(FieldBits::NoField != (OpacityFieldMask & whichField))
-        _sfOpacity.syncWith(pOther->_sfOpacity);
-
-    if(FieldBits::NoField != (EnablePointAntiAliasingFieldMask & whichField))
-        _sfEnablePointAntiAliasing.syncWith(pOther->_sfEnablePointAntiAliasing);
-
-    if(FieldBits::NoField != (EnableLineAntiAliasingFieldMask & whichField))
-        _sfEnableLineAntiAliasing.syncWith(pOther->_sfEnableLineAntiAliasing);
-
-    if(FieldBits::NoField != (EnablePolygonAntiAliasingFieldMask & whichField))
-        _sfEnablePolygonAntiAliasing.syncWith(pOther->_sfEnablePolygonAntiAliasing);
-
-
-}
-#else
-void GraphicsBase::executeSyncImpl(      GraphicsBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (OpacityFieldMask & whichField))
-        _sfOpacity.syncWith(pOther->_sfOpacity);
-
-    if(FieldBits::NoField != (EnablePointAntiAliasingFieldMask & whichField))
-        _sfEnablePointAntiAliasing.syncWith(pOther->_sfEnablePointAntiAliasing);
-
-    if(FieldBits::NoField != (EnableLineAntiAliasingFieldMask & whichField))
-        _sfEnableLineAntiAliasing.syncWith(pOther->_sfEnableLineAntiAliasing);
-
-    if(FieldBits::NoField != (EnablePolygonAntiAliasingFieldMask & whichField))
-        _sfEnablePolygonAntiAliasing.syncWith(pOther->_sfEnablePolygonAntiAliasing);
-
-
-
 }
 
-void GraphicsBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+GraphicsBase::GraphicsBase(const GraphicsBase &source) :
+    Inherited(source),
+    _sfOpacity                (source._sfOpacity                ),
+    _sfEnablePointAntiAliasing(source._sfEnablePointAntiAliasing),
+    _sfEnableLineAntiAliasing (source._sfEnableLineAntiAliasing ),
+    _sfEnablePolygonAntiAliasing(source._sfEnablePolygonAntiAliasing)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
+
+/*-------------------------- destructors ----------------------------------*/
+
+GraphicsBase::~GraphicsBase(void)
+{
+}
+
+
+GetFieldHandlePtr GraphicsBase::getHandleOpacity         (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfOpacity,
+             this->getType().getFieldDesc(OpacityFieldId),
+             const_cast<GraphicsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GraphicsBase::editHandleOpacity        (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfOpacity,
+             this->getType().getFieldDesc(OpacityFieldId),
+             this));
+
+
+    editSField(OpacityFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr GraphicsBase::getHandleEnablePointAntiAliasing (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfEnablePointAntiAliasing,
+             this->getType().getFieldDesc(EnablePointAntiAliasingFieldId),
+             const_cast<GraphicsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GraphicsBase::editHandleEnablePointAntiAliasing(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfEnablePointAntiAliasing,
+             this->getType().getFieldDesc(EnablePointAntiAliasingFieldId),
+             this));
+
+
+    editSField(EnablePointAntiAliasingFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr GraphicsBase::getHandleEnableLineAntiAliasing (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfEnableLineAntiAliasing,
+             this->getType().getFieldDesc(EnableLineAntiAliasingFieldId),
+             const_cast<GraphicsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GraphicsBase::editHandleEnableLineAntiAliasing(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfEnableLineAntiAliasing,
+             this->getType().getFieldDesc(EnableLineAntiAliasingFieldId),
+             this));
+
+
+    editSField(EnableLineAntiAliasingFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr GraphicsBase::getHandleEnablePolygonAntiAliasing (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfEnablePolygonAntiAliasing,
+             this->getType().getFieldDesc(EnablePolygonAntiAliasingFieldId),
+             const_cast<GraphicsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GraphicsBase::editHandleEnablePolygonAntiAliasing(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfEnablePolygonAntiAliasing,
+             this->getType().getFieldDesc(EnablePolygonAntiAliasingFieldId),
+             this));
+
+
+    editSField(EnablePolygonAntiAliasingFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void GraphicsBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Graphics *pThis = static_cast<Graphics *>(this);
+
+    pThis->execSync(static_cast<Graphics *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+
+void GraphicsBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<GraphicsPtr>::_type("GraphicsPtr", "AttachmentContainerPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(GraphicsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(GraphicsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGGRAPHICSBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGGRAPHICSBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGGRAPHICSFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

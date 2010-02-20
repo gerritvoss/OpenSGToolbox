@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,30 +40,26 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGMenuButton.h"
-#include "Component/Menu/OSGListGeneratedPopupMenu.h"
-#include "Component/Container/Window/OSGInternalWindow.h"
-#include "Component/List/Models/OSGListModel.h"
-#include "Util/OSGUIDrawUtils.h"
+#include "OSGListGeneratedPopupMenu.h"
+#include "OSGInternalWindow.h"
+#include "OSGListModel.h"
+#include "OSGUIDrawUtils.h"
+#include "OSGMenuItem.h"
 
 #include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::MenuButton
-A UI MenuButton 	
-*/
+// Documentation for this class is emitted in the
+// OSGMenuButtonBase.cpp file.
+// To modify it, please change the .fcd file (OSGMenuButton.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -73,8 +69,13 @@ A UI MenuButton
  *                           Class methods                                 *
 \***************************************************************************/
 
-void MenuButton::initMethod (void)
+void MenuButton::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -84,17 +85,17 @@ void MenuButton::initMethod (void)
 
 EventConnection MenuButton::addMenuActionListener(ActionListenerPtr Listener)
 {
-   _MenuActionListeners.insert(Listener);
-   return EventConnection(
-       boost::bind(&MenuButton::isMenuActionListenerAttached, this, Listener),
-       boost::bind(&MenuButton::removeMenuActionListener, this, Listener));
+    _MenuActionListeners.insert(Listener);
+    return EventConnection(
+                           boost::bind(&MenuButton::isMenuActionListenerAttached, this, Listener),
+                           boost::bind(&MenuButton::removeMenuActionListener, this, Listener));
 }
 
 void MenuButton::hidePopup(void)
 {
     if(getMenuButtonPopupMenu()->getVisible())
     {
-	    getMenuButtonPopupMenu()->cancel();
+        getMenuButtonPopupMenu()->cancel();
     }
 }
 
@@ -102,35 +103,31 @@ void MenuButton::showPopup(void)
 {
     if(!getMenuButtonPopupMenu()->getVisible())
     {
-	    Pnt2f BorderTopLeft, BorderBottomRight;
-	    getBounds(BorderTopLeft, BorderBottomRight);
+        Pnt2f BorderTopLeft, BorderBottomRight;
+        getBounds(BorderTopLeft, BorderBottomRight);
 
-        beginEditCP(getMenuButtonPopupMenu(), PopupMenu::InvokerFieldMask | PopupMenu::VisibleFieldMask | Component::PositionFieldMask);
-           getMenuButtonPopupMenu()->setInvoker(ComponentPtr(this));
-           getMenuButtonPopupMenu()->setVisible(true);
-           getMenuButtonPopupMenu()->setPosition(ComponentToFrame(BorderTopLeft + Vec2f(0,BorderBottomRight.y()), ComponentPtr(this)));
-	       getMenuButtonPopupMenu()->setSelection(-1);
-        endEditCP(getMenuButtonPopupMenu(), PopupMenu::InvokerFieldMask | PopupMenu::VisibleFieldMask | Component::PositionFieldMask);
-        
-        beginEditCP(getParentWindow(), InternalWindow::ActivePopupMenusFieldMask);
-            getParentWindow()->getActivePopupMenus().push_back(getMenuButtonPopupMenu());
-        endEditCP(getParentWindow(), InternalWindow::ActivePopupMenusFieldMask);
+        getMenuButtonPopupMenu()->setInvoker(ComponentRefPtr(this));
+        getMenuButtonPopupMenu()->setVisible(true);
+        getMenuButtonPopupMenu()->setPosition(ComponentToFrame(BorderTopLeft + Vec2f(0,BorderBottomRight.y()), ComponentRefPtr(this)));
+        getMenuButtonPopupMenu()->setSelection(-1);
+
+        getParentWindow()->pushToActivePopupMenus(getMenuButtonPopupMenu());
     }
 }
 
 
 void MenuButton::removeMenuActionListener(ActionListenerPtr Listener)
 {
-   MenuActionListenerSetItor EraseIter(_MenuActionListeners.find(Listener));
-   if(EraseIter != _MenuActionListeners.end())
-   {
-      _MenuActionListeners.erase(EraseIter);
-   }
+    MenuActionListenerSetItor EraseIter(_MenuActionListeners.find(Listener));
+    if(EraseIter != _MenuActionListeners.end())
+    {
+        _MenuActionListeners.erase(EraseIter);
+    }
 }
 
 Int32 MenuButton::getSelectionIndex(void) const
 {
-    if(getMenuButtonPopupMenu() != NullFC)
+    if(getMenuButtonPopupMenu() != NULL)
     {
         return getMenuButtonPopupMenu()->getSelectionIndex();
     }
@@ -142,10 +139,10 @@ Int32 MenuButton::getSelectionIndex(void) const
 
 boost::any MenuButton::getSelectionValue(void) const
 {
-    if(getMenuButtonPopupMenu() != NullFC &&
-        getModel() != NullFC &&
-        getMenuButtonPopupMenu()->getSelectionIndex() >= 0 &&
-        getMenuButtonPopupMenu()->getSelectionIndex() < getModel()->getSize())
+    if(getMenuButtonPopupMenu() != NULL &&
+       getModel() != NULL &&
+       getMenuButtonPopupMenu()->getSelectionIndex() >= 0 &&
+       getMenuButtonPopupMenu()->getSelectionIndex() < getModel()->getSize())
     {
         return getModel()->getElementAt(getMenuButtonPopupMenu()->getSelectionIndex());
     }
@@ -161,7 +158,7 @@ boost::any MenuButton::getSelectionValue(void) const
 
 void MenuButton::updatePopupMenuConnections(void)
 {
-    if(getMenuButtonPopupMenu() != NullFC)
+    if(getMenuButtonPopupMenu() != NULL)
     {
         for(UInt32 i(0) ; i<getMenuButtonPopupMenu()->getNumItems() ; ++i)
         {
@@ -172,7 +169,7 @@ void MenuButton::updatePopupMenuConnections(void)
 
 void MenuButton::produceMenuActionPerformed(void)
 {
-    const ActionEventPtr e = ActionEvent::create(MenuButtonPtr(this), getTimeStamp());
+    const ActionEventUnrecPtr e = ActionEvent::create(MenuButtonRefPtr(this), getTimeStamp());
 	MenuActionListenerSet Listeners(_MenuActionListeners);
     for(MenuActionListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
@@ -181,24 +178,28 @@ void MenuButton::produceMenuActionPerformed(void)
    _Producer.produceEvent(MenuActionPerformedMethodId,e);
 }
 
+void MenuButton::onCreate(const MenuButton *Id)
+{
+    ListGeneratedPopupMenuUnrecPtr Menu(ListGeneratedPopupMenu::create());
+    setMenuButtonPopupMenu(Menu);
+}
+
+void MenuButton::onDestroy()
+{
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 MenuButton::MenuButton(void) :
     Inherited(),
-    _MenuButtonEventsListener(MenuButtonPtr(this))
+    _MenuButtonEventsListener(this)
 {
-	beginEditCP(MenuButtonPtr(this), MenuButtonPopupMenuFieldMask);
-		setMenuButtonPopupMenu(ListGeneratedPopupMenu::create());
-	endEditCP(MenuButtonPtr(this), MenuButtonPopupMenuFieldMask);
 }
 
 MenuButton::MenuButton(const MenuButton &source) :
     Inherited(source),
-    _MenuButtonEventsListener(MenuButtonPtr(this))
+    _MenuButtonEventsListener(this)
 {
-	beginEditCP(MenuButtonPtr(this), MenuButtonPopupMenuFieldMask);
-		setMenuButtonPopupMenu(ListGeneratedPopupMenu::create());
-	endEditCP(MenuButtonPtr(this), MenuButtonPopupMenuFieldMask);
 }
 
 MenuButton::~MenuButton(void)
@@ -207,35 +208,35 @@ MenuButton::~MenuButton(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void MenuButton::changed(BitVector whichField, UInt32 origin)
+void MenuButton::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 
 	if((whichField & MenuButtonPopupMenuFieldMask) &&
-		getMenuButtonPopupMenu() != NullFC)
+		getMenuButtonPopupMenu() != NULL)
 	{
 		getMenuButtonPopupMenu()->addPopupMenuListener(&_MenuButtonEventsListener);
         updatePopupMenuConnections();
 	}
 
-	if(whichField & ModelFieldMask)
-	{
-		if(getModel() != NullFC)
-		{
-			beginEditCP(getMenuButtonPopupMenu(), ListGeneratedPopupMenu::ModelFieldMask);
-				getMenuButtonPopupMenu()->setModel(getModel());
-			endEditCP(getMenuButtonPopupMenu(), ListGeneratedPopupMenu::ModelFieldMask);
-		}
-	}
+    if(whichField & ModelFieldMask)
+    {
+        if(getModel() != NULL &&
+           getMenuButtonPopupMenu()->getModel() != getModel())
+        {
+            getMenuButtonPopupMenu()->setModel(getModel());
+        }
+    }
 
 	if(((whichField & CellGeneratorFieldMask) ||
 		(whichField & MenuButtonPopupMenuFieldMask)) &&
-		getCellGenerator() != NullFC)
-	{
-		beginEditCP(getMenuButtonPopupMenu(), ListGeneratedPopupMenu::CellGeneratorFieldMask);
-			getMenuButtonPopupMenu()->setCellGenerator(getCellGenerator());
-		endEditCP(getMenuButtonPopupMenu(), ListGeneratedPopupMenu::CellGeneratorFieldMask);
-	}
+		getCellGenerator() != NULL &&
+        getMenuButtonPopupMenu()->getCellGenerator() != getCellGenerator())
+    {
+        getMenuButtonPopupMenu()->setCellGenerator(getCellGenerator());
+    }
 
 	if((whichField & SelectedFieldMask))
     {
@@ -250,40 +251,34 @@ void MenuButton::changed(BitVector whichField, UInt32 origin)
     }
 }
 
-void MenuButton::dump(      UInt32    , 
+void MenuButton::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump MenuButton NI" << std::endl;
 }
 
-
-void MenuButton::MenuButtonEventsListener::popupMenuCanceled(const PopupMenuEventPtr e)
+void MenuButton::MenuButtonEventsListener::popupMenuCanceled(const PopupMenuEventUnrecPtr e)
 {
-    beginEditCP(_MenuButton, ToggleButton::SelectedFieldMask);
         _MenuButton->setSelected(false);
-    endEditCP(_MenuButton, ToggleButton::SelectedFieldMask);
 }
 
-void MenuButton::MenuButtonEventsListener::popupMenuWillBecomeInvisible(const PopupMenuEventPtr e)
+void MenuButton::MenuButtonEventsListener::popupMenuWillBecomeInvisible(const PopupMenuEventUnrecPtr e)
 {
-    beginEditCP(_MenuButton, ToggleButton::SelectedFieldMask);
         _MenuButton->setSelected(false);
-    endEditCP(_MenuButton, ToggleButton::SelectedFieldMask);
 }
 
-void MenuButton::MenuButtonEventsListener::popupMenuWillBecomeVisible(const PopupMenuEventPtr e)
+void MenuButton::MenuButtonEventsListener::popupMenuWillBecomeVisible(const PopupMenuEventUnrecPtr e)
 {
 }
 
-void MenuButton::MenuButtonEventsListener::popupMenuContentsChanged(const PopupMenuEventPtr e)
+void MenuButton::MenuButtonEventsListener::popupMenuContentsChanged(const PopupMenuEventUnrecPtr e)
 {
     _MenuButton->updatePopupMenuConnections();
 }
 
-void MenuButton::MenuButtonEventsListener::actionPerformed(const ActionEventPtr e)
+void MenuButton::MenuButtonEventsListener::actionPerformed(const ActionEventUnrecPtr e)
 {
     _MenuButton->produceMenuActionPerformed();
 }
 
 OSG_END_NAMESPACE
-

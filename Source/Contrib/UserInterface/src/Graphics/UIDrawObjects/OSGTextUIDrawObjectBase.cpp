@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,194 +50,322 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILETEXTUIDRAWOBJECTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGUIFont.h"                  // Font Class
 
 #include "OSGTextUIDrawObjectBase.h"
 #include "OSGTextUIDrawObject.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  TextUIDrawObjectBase::PositionFieldMask = 
-    (TypeTraits<BitVector>::One << TextUIDrawObjectBase::PositionFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  TextUIDrawObjectBase::TextFieldMask = 
-    (TypeTraits<BitVector>::One << TextUIDrawObjectBase::TextFieldId);
+/*! \class OSG::TextUIDrawObject
+    A UI TextUIDrawObject.
+ */
 
-const OSG::BitVector  TextUIDrawObjectBase::FontFieldMask = 
-    (TypeTraits<BitVector>::One << TextUIDrawObjectBase::FontFieldId);
-
-const OSG::BitVector  TextUIDrawObjectBase::ColorFieldMask = 
-    (TypeTraits<BitVector>::One << TextUIDrawObjectBase::ColorFieldId);
-
-const OSG::BitVector  TextUIDrawObjectBase::OpacityFieldMask = 
-    (TypeTraits<BitVector>::One << TextUIDrawObjectBase::OpacityFieldId);
-
-const OSG::BitVector TextUIDrawObjectBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Pnt2f           TextUIDrawObjectBase::_sfPosition
     
 */
+
 /*! \var std::string     TextUIDrawObjectBase::_sfText
     
 */
-/*! \var UIFontPtr       TextUIDrawObjectBase::_sfFont
+
+/*! \var UIFont *        TextUIDrawObjectBase::_sfFont
     
 */
+
 /*! \var Color4f         TextUIDrawObjectBase::_sfColor
     
 */
+
 /*! \var Real32          TextUIDrawObjectBase::_sfOpacity
     
 */
 
-//! TextUIDrawObject description
 
-FieldDescription *TextUIDrawObjectBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<TextUIDrawObject *>::_type("TextUIDrawObjectPtr", "UIDrawObjectPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(TextUIDrawObject *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           TextUIDrawObject *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           TextUIDrawObject *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void TextUIDrawObjectBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFPnt2f::getClassType(), 
-                     "Position", 
-                     PositionFieldId, PositionFieldMask,
-                     false,
-                     (FieldAccessMethod) &TextUIDrawObjectBase::getSFPosition),
-    new FieldDescription(SFString::getClassType(), 
-                     "Text", 
-                     TextFieldId, TextFieldMask,
-                     false,
-                     (FieldAccessMethod) &TextUIDrawObjectBase::getSFText),
-    new FieldDescription(SFUIFontPtr::getClassType(), 
-                     "Font", 
-                     FontFieldId, FontFieldMask,
-                     false,
-                     (FieldAccessMethod) &TextUIDrawObjectBase::getSFFont),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "Color", 
-                     ColorFieldId, ColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &TextUIDrawObjectBase::getSFColor),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Opacity", 
-                     OpacityFieldId, OpacityFieldMask,
-                     false,
-                     (FieldAccessMethod) &TextUIDrawObjectBase::getSFOpacity)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType TextUIDrawObjectBase::_type(
-    "TextUIDrawObject",
-    "UIDrawObject",
-    NULL,
-    (PrototypeCreateF) &TextUIDrawObjectBase::createEmpty,
+    pDesc = new SFPnt2f::Description(
+        SFPnt2f::getClassType(),
+        "Position",
+        "",
+        PositionFieldId, PositionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TextUIDrawObject::editHandlePosition),
+        static_cast<FieldGetMethodSig >(&TextUIDrawObject::getHandlePosition));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFString::Description(
+        SFString::getClassType(),
+        "Text",
+        "",
+        TextFieldId, TextFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TextUIDrawObject::editHandleText),
+        static_cast<FieldGetMethodSig >(&TextUIDrawObject::getHandleText));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecUIFontPtr::Description(
+        SFUnrecUIFontPtr::getClassType(),
+        "Font",
+        "",
+        FontFieldId, FontFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TextUIDrawObject::editHandleFont),
+        static_cast<FieldGetMethodSig >(&TextUIDrawObject::getHandleFont));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "Color",
+        "",
+        ColorFieldId, ColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TextUIDrawObject::editHandleColor),
+        static_cast<FieldGetMethodSig >(&TextUIDrawObject::getHandleColor));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Opacity",
+        "",
+        OpacityFieldId, OpacityFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TextUIDrawObject::editHandleOpacity),
+        static_cast<FieldGetMethodSig >(&TextUIDrawObject::getHandleOpacity));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+TextUIDrawObjectBase::TypeObject TextUIDrawObjectBase::_type(
+    TextUIDrawObjectBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&TextUIDrawObjectBase::createEmptyLocal),
     TextUIDrawObject::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(TextUIDrawObjectBase, TextUIDrawObjectPtr)
+    TextUIDrawObject::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&TextUIDrawObject::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"TextUIDrawObject\"\n"
+    "\tparent=\"UIDrawObject\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI TextUIDrawObject.\n"
+    "\t<Field\n"
+    "\t\tname=\"Position\"\n"
+    "\t\ttype=\"Pnt2f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0,0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Text\"\n"
+    "\t\ttype=\"std::string\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Font\"\n"
+    "\t\ttype=\"UIFont\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Color\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0,1.0,1.0,1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Opacity\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI TextUIDrawObject.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &TextUIDrawObjectBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &TextUIDrawObjectBase::getType(void) const 
+FieldContainerType &TextUIDrawObjectBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr TextUIDrawObjectBase::shallowCopy(void) const 
-{ 
-    TextUIDrawObjectPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const TextUIDrawObject *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 TextUIDrawObjectBase::getContainerSize(void) const 
-{ 
-    return sizeof(TextUIDrawObject); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TextUIDrawObjectBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &TextUIDrawObjectBase::getType(void) const
 {
-    this->executeSyncImpl((TextUIDrawObjectBase *) &other, whichField);
+    return _type;
 }
-#else
-void TextUIDrawObjectBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 TextUIDrawObjectBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((TextUIDrawObjectBase *) &other, whichField, sInfo);
+    return sizeof(TextUIDrawObject);
 }
-void TextUIDrawObjectBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFPnt2f *TextUIDrawObjectBase::editSFPosition(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(PositionFieldMask);
+
+    return &_sfPosition;
 }
 
-void TextUIDrawObjectBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFPnt2f *TextUIDrawObjectBase::getSFPosition(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfPosition;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-TextUIDrawObjectBase::TextUIDrawObjectBase(void) :
-    _sfPosition               (Pnt2f(0,0)), 
-    _sfText                   (), 
-    _sfFont                   (), 
-    _sfColor                  (Color4f(1.0,1.0,1.0,1.0)), 
-    _sfOpacity                (Real32(1.0)), 
-    Inherited() 
+SFString *TextUIDrawObjectBase::editSFText(void)
 {
+    editSField(TextFieldMask);
+
+    return &_sfText;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-TextUIDrawObjectBase::TextUIDrawObjectBase(const TextUIDrawObjectBase &source) :
-    _sfPosition               (source._sfPosition               ), 
-    _sfText                   (source._sfText                   ), 
-    _sfFont                   (source._sfFont                   ), 
-    _sfColor                  (source._sfColor                  ), 
-    _sfOpacity                (source._sfOpacity                ), 
-    Inherited                 (source)
+const SFString *TextUIDrawObjectBase::getSFText(void) const
 {
+    return &_sfText;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-TextUIDrawObjectBase::~TextUIDrawObjectBase(void)
+//! Get the TextUIDrawObject::_sfFont field.
+const SFUnrecUIFontPtr *TextUIDrawObjectBase::getSFFont(void) const
 {
+    return &_sfFont;
 }
+
+SFUnrecUIFontPtr    *TextUIDrawObjectBase::editSFFont           (void)
+{
+    editSField(FontFieldMask);
+
+    return &_sfFont;
+}
+
+SFColor4f *TextUIDrawObjectBase::editSFColor(void)
+{
+    editSField(ColorFieldMask);
+
+    return &_sfColor;
+}
+
+const SFColor4f *TextUIDrawObjectBase::getSFColor(void) const
+{
+    return &_sfColor;
+}
+
+
+SFReal32 *TextUIDrawObjectBase::editSFOpacity(void)
+{
+    editSField(OpacityFieldMask);
+
+    return &_sfOpacity;
+}
+
+const SFReal32 *TextUIDrawObjectBase::getSFOpacity(void) const
+{
+    return &_sfOpacity;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 TextUIDrawObjectBase::getBinSize(const BitVector &whichField)
+UInt32 TextUIDrawObjectBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -245,33 +373,28 @@ UInt32 TextUIDrawObjectBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfPosition.getBinSize();
     }
-
     if(FieldBits::NoField != (TextFieldMask & whichField))
     {
         returnValue += _sfText.getBinSize();
     }
-
     if(FieldBits::NoField != (FontFieldMask & whichField))
     {
         returnValue += _sfFont.getBinSize();
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         returnValue += _sfColor.getBinSize();
     }
-
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
     {
         returnValue += _sfOpacity.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void TextUIDrawObjectBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void TextUIDrawObjectBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -279,32 +402,26 @@ void TextUIDrawObjectBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfPosition.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TextFieldMask & whichField))
     {
         _sfText.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FontFieldMask & whichField))
     {
         _sfFont.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         _sfColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
     {
         _sfOpacity.copyToBin(pMem);
     }
-
-
 }
 
-void TextUIDrawObjectBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void TextUIDrawObjectBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -312,126 +429,353 @@ void TextUIDrawObjectBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfPosition.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TextFieldMask & whichField))
     {
         _sfText.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FontFieldMask & whichField))
     {
         _sfFont.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         _sfColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
     {
         _sfOpacity.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TextUIDrawObjectBase::executeSyncImpl(      TextUIDrawObjectBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+TextUIDrawObjectTransitPtr TextUIDrawObjectBase::createLocal(BitVector bFlags)
 {
+    TextUIDrawObjectTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (PositionFieldMask & whichField))
-        _sfPosition.syncWith(pOther->_sfPosition);
+        fc = dynamic_pointer_cast<TextUIDrawObject>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (TextFieldMask & whichField))
-        _sfText.syncWith(pOther->_sfText);
-
-    if(FieldBits::NoField != (FontFieldMask & whichField))
-        _sfFont.syncWith(pOther->_sfFont);
-
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
-
-    if(FieldBits::NoField != (OpacityFieldMask & whichField))
-        _sfOpacity.syncWith(pOther->_sfOpacity);
-
-
-}
-#else
-void TextUIDrawObjectBase::executeSyncImpl(      TextUIDrawObjectBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (PositionFieldMask & whichField))
-        _sfPosition.syncWith(pOther->_sfPosition);
-
-    if(FieldBits::NoField != (TextFieldMask & whichField))
-        _sfText.syncWith(pOther->_sfText);
-
-    if(FieldBits::NoField != (FontFieldMask & whichField))
-        _sfFont.syncWith(pOther->_sfFont);
-
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
-
-    if(FieldBits::NoField != (OpacityFieldMask & whichField))
-        _sfOpacity.syncWith(pOther->_sfOpacity);
-
-
-
+    return fc;
 }
 
-void TextUIDrawObjectBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+TextUIDrawObjectTransitPtr TextUIDrawObjectBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    TextUIDrawObjectTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<TextUIDrawObject>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+TextUIDrawObjectTransitPtr TextUIDrawObjectBase::create(void)
+{
+    TextUIDrawObjectTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<TextUIDrawObject>(tmpPtr);
+    }
+
+    return fc;
+}
+
+TextUIDrawObject *TextUIDrawObjectBase::createEmptyLocal(BitVector bFlags)
+{
+    TextUIDrawObject *returnValue;
+
+    newPtr<TextUIDrawObject>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+TextUIDrawObject *TextUIDrawObjectBase::createEmpty(void)
+{
+    TextUIDrawObject *returnValue;
+
+    newPtr<TextUIDrawObject>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr TextUIDrawObjectBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    TextUIDrawObject *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const TextUIDrawObject *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TextUIDrawObjectBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    TextUIDrawObject *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const TextUIDrawObject *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TextUIDrawObjectBase::shallowCopy(void) const
+{
+    TextUIDrawObject *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const TextUIDrawObject *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+TextUIDrawObjectBase::TextUIDrawObjectBase(void) :
+    Inherited(),
+    _sfPosition               (Pnt2f(0,0)),
+    _sfText                   (),
+    _sfFont                   (NULL),
+    _sfColor                  (Color4f(1.0,1.0,1.0,1.0)),
+    _sfOpacity                (Real32(1.0))
+{
+}
+
+TextUIDrawObjectBase::TextUIDrawObjectBase(const TextUIDrawObjectBase &source) :
+    Inherited(source),
+    _sfPosition               (source._sfPosition               ),
+    _sfText                   (source._sfText                   ),
+    _sfFont                   (NULL),
+    _sfColor                  (source._sfColor                  ),
+    _sfOpacity                (source._sfOpacity                )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+TextUIDrawObjectBase::~TextUIDrawObjectBase(void)
+{
+}
+
+void TextUIDrawObjectBase::onCreate(const TextUIDrawObject *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        TextUIDrawObject *pThis = static_cast<TextUIDrawObject *>(this);
+
+        pThis->setFont(source->getFont());
+    }
+}
+
+GetFieldHandlePtr TextUIDrawObjectBase::getHandlePosition        (void) const
+{
+    SFPnt2f::GetHandlePtr returnValue(
+        new  SFPnt2f::GetHandle(
+             &_sfPosition,
+             this->getType().getFieldDesc(PositionFieldId),
+             const_cast<TextUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TextUIDrawObjectBase::editHandlePosition       (void)
+{
+    SFPnt2f::EditHandlePtr returnValue(
+        new  SFPnt2f::EditHandle(
+             &_sfPosition,
+             this->getType().getFieldDesc(PositionFieldId),
+             this));
+
+
+    editSField(PositionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TextUIDrawObjectBase::getHandleText            (void) const
+{
+    SFString::GetHandlePtr returnValue(
+        new  SFString::GetHandle(
+             &_sfText,
+             this->getType().getFieldDesc(TextFieldId),
+             const_cast<TextUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TextUIDrawObjectBase::editHandleText           (void)
+{
+    SFString::EditHandlePtr returnValue(
+        new  SFString::EditHandle(
+             &_sfText,
+             this->getType().getFieldDesc(TextFieldId),
+             this));
+
+
+    editSField(TextFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TextUIDrawObjectBase::getHandleFont            (void) const
+{
+    SFUnrecUIFontPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIFontPtr::GetHandle(
+             &_sfFont,
+             this->getType().getFieldDesc(FontFieldId),
+             const_cast<TextUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TextUIDrawObjectBase::editHandleFont           (void)
+{
+    SFUnrecUIFontPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIFontPtr::EditHandle(
+             &_sfFont,
+             this->getType().getFieldDesc(FontFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TextUIDrawObject::setFont,
+                    static_cast<TextUIDrawObject *>(this), _1));
+
+    editSField(FontFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TextUIDrawObjectBase::getHandleColor           (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfColor,
+             this->getType().getFieldDesc(ColorFieldId),
+             const_cast<TextUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TextUIDrawObjectBase::editHandleColor          (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfColor,
+             this->getType().getFieldDesc(ColorFieldId),
+             this));
+
+
+    editSField(ColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TextUIDrawObjectBase::getHandleOpacity         (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfOpacity,
+             this->getType().getFieldDesc(OpacityFieldId),
+             const_cast<TextUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TextUIDrawObjectBase::editHandleOpacity        (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfOpacity,
+             this->getType().getFieldDesc(OpacityFieldId),
+             this));
+
+
+    editSField(OpacityFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void TextUIDrawObjectBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    TextUIDrawObject *pThis = static_cast<TextUIDrawObject *>(this);
+
+    pThis->execSync(static_cast<TextUIDrawObject *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *TextUIDrawObjectBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    TextUIDrawObject *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const TextUIDrawObject *>(pRefAspect),
+                  dynamic_cast<const TextUIDrawObject *>(this));
+
+    return returnValue;
+}
+#endif
+
+void TextUIDrawObjectBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<TextUIDrawObject *>(this)->setFont(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TextUIDrawObjectPtr>::_type("TextUIDrawObjectPtr", "UIDrawObjectPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(TextUIDrawObjectPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(TextUIDrawObjectPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGTEXTUIDRAWOBJECTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTEXTUIDRAWOBJECTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTEXTUIDRAWOBJECTFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

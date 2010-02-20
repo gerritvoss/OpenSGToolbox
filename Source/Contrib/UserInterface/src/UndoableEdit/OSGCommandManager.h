@@ -31,22 +31,21 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGIntrusivePtrImplBase.h>
 #include "OSGCommand.h"
 #include "OSGCommandListener.h"
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 #include <set>
 #include "OSGCommandManagerFields.h"
 #include "OSGUndoManager.h"
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING CommandManager : public IntrusivePtrImplBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING CommandManager
 {
     /*==========================  PUBLIC  =================================*/
 
@@ -60,11 +59,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING CommandManager : public IntrusivePtrImplBa
 	
 	static CommandManagerPtr create(UndoManagerPtr UndoManager);
     /*=========================  PROTECTED  ===============================*/
+    virtual ~CommandManager(void);
+    
 
   protected:
 	friend class Command;
-    
-	typedef IntrusivePtrImplBase Inherited;
   
     CommandManager(UndoManagerPtr UndoManager);
 
@@ -73,8 +72,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING CommandManager : public IntrusivePtrImplBa
     void operator =(const CommandManager& source);
     
     /*---------------------------------------------------------------------*/
-    virtual ~CommandManager(void);
-    
 	typedef std::set<CommandListenerPtr> CommandListenerSet;
 	
     CommandListenerSet       _CommandListeners;

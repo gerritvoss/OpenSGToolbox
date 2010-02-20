@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,23 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGBaseFunctions.h>
+#include <OSGConfig.h>
 
 #include "OSGLineBorder.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::LineBorder
-UI Line Border. 	
-*/
+// Documentation for this class is emitted in the
+// OSGLineBorderBase.cpp file.
+// To modify it, please change the .fcd file (OSGLineBorder.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -66,8 +62,13 @@ UI Line Border.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void LineBorder::initMethod (void)
+void LineBorder::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -75,24 +76,24 @@ void LineBorder::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void LineBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity, bool Clipping) const
+void LineBorder::draw(const GraphicsWeakPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity, bool Clipping) const
 {
-	
-	//Top
-	g->drawRect(Pnt2f(x,y), Pnt2f(x+Width, y+getWidth()), getColor(), Opacity);
-	//Left
-	g->drawRect(Pnt2f(x,y+getWidth()), Pnt2f(x+getWidth(), y+Height-getWidth()), getColor(), Opacity);
-	//Right
-	g->drawRect(Pnt2f(x+Width-getWidth(), y+getWidth()), Pnt2f(x+Width, y+Height-getWidth()), getColor(), Opacity);
-	//Bottom
-	g->drawRect(Pnt2f(x, y+Height-getWidth()), Pnt2f(x+Width, y+Height), getColor(), Opacity);
-	
+    //Top
+    g->drawRect(Pnt2f(x,y), Pnt2f(x+Width, y+getWidth()), getColor(), Opacity);
+    //Left
+    g->drawRect(Pnt2f(x,y+getWidth()), Pnt2f(x+getWidth(), y+Height-getWidth()), getColor(), Opacity);
+    //Right
+    g->drawRect(Pnt2f(x+Width-getWidth(), y+getWidth()), Pnt2f(x+Width, y+Height-getWidth()), getColor(), Opacity);
+    //Bottom
+    g->drawRect(Pnt2f(x, y+Height-getWidth()), Pnt2f(x+Width, y+Height), getColor(), Opacity);
+
 }
 
 void LineBorder::getInsets(Real32& Left, Real32& Right,Real32& Top,Real32& Bottom) const
 {
-   Left = Right = Top = Bottom = getWidth();
+    Left = Right = Top = Bottom = getWidth();
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -115,41 +116,17 @@ LineBorder::~LineBorder(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void LineBorder::changed(BitVector whichField, UInt32 origin)
+void LineBorder::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void LineBorder::dump(      UInt32    , 
+void LineBorder::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump LineBorder NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGLINEBORDERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGLINEBORDERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGLINEBORDERFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

@@ -3,18 +3,21 @@
 <FieldContainer
 	name="ArcUIDrawObject"
 	parent="UIDrawObject"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI ArcUIDrawObject.
 	<Field
 		name="Center"
 		type="Pnt2f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -24,6 +27,7 @@ A UI ArcUIDrawObject.
 	<Field
 		name="Width"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -33,6 +37,7 @@ A UI ArcUIDrawObject.
 	<Field
 		name="Height"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -42,6 +47,7 @@ A UI ArcUIDrawObject.
 	<Field
 		name="StartAngleRad"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -51,6 +57,7 @@ A UI ArcUIDrawObject.
 	<Field
 		name="EndAngleRad"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -60,6 +67,7 @@ A UI ArcUIDrawObject.
 	<Field
 		name="SubDivisions"
 		type="UInt16"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -69,6 +77,7 @@ A UI ArcUIDrawObject.
 	<Field
 		name="Color"
 		type="Color4f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -78,6 +87,7 @@ A UI ArcUIDrawObject.
 	<Field
 		name="LineWidth"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -87,6 +97,7 @@ A UI ArcUIDrawObject.
 	<Field
 		name="Opacity"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"

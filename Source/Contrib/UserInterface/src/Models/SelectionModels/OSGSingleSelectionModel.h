@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,41 +42,41 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGSingleSelectionModelBase.h"
 #include "OSGSelectionListener.h"
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief SingleSelectionModel class. See \ref 
-           PageUserInterfaceSingleSelectionModel for a description.
+/*! \brief SingleSelectionModel class. See \ref
+           PageContribUserInterfaceSingleSelectionModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING SingleSelectionModel : public SingleSelectionModelBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SingleSelectionModel : public SingleSelectionModelBase
 {
-  private:
-
-    typedef SingleSelectionModelBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef SingleSelectionModelBase Inherited;
+    typedef SingleSelectionModel     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -99,7 +99,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING SingleSelectionModel : public SingleSelect
     
     //Sets the model's selected index to index.
     virtual void setSelectedIndex(Int32 index) = 0;
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in SingleSelectionModelBase.
@@ -116,20 +118,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING SingleSelectionModel : public SingleSelect
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SingleSelectionModel(void); 
+    virtual ~SingleSelectionModel(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class SingleSelectionModelBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const SingleSelectionModel &source);
 };
 

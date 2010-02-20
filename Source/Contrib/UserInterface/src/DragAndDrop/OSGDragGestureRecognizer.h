@@ -31,17 +31,17 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include "Component/OSGComponentFields.h"
-#include <OpenSG/Toolbox/OSGEventConnection.h>
-#include "Event/OSGDragGestureListener.h"
+#include "OSGComponentFields.h"
+#include "OSGEventConnection.h"
+#include "OSGDragGestureListener.h"
 #include <set>
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING DragGestureRecognizer
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DragGestureRecognizer
 {
    /*=========================  PUBLIC  ===============================*/
 public:
@@ -63,11 +63,11 @@ protected:
 	
     DragGestureListenerSet       _DragGestureListeners;
 
-    void produceDragGestureRecognized(ComponentPtr TheComponent, const Pnt2f &DragLocation) const;
+    void produceDragGestureRecognized(ComponentRefPtr TheComponent, const Pnt2f &DragLocation) const;
 
 };
 
-typedef DragGestureRecognizer* DragGestureRecognizerPtr;
+typedef DragGestureRecognizer* DragGestureRecognizerRefPtr;
 
 OSG_END_NAMESPACE
 

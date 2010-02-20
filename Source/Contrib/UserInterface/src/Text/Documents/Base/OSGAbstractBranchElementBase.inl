@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,81 +55,58 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &AbstractBranchElementBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 AbstractBranchElementBase::getClassTypeId(void) 
+OSG::UInt32 AbstractBranchElementBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
+    return _type.getId();
+}
 
+inline
+OSG::UInt16 AbstractBranchElementBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
+}
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the AbstractBranchElement::_mfChildElements field.
+
+//! Get the value of the \a index element the AbstractBranchElement::_mfChildElements field.
 inline
-const MFElementPtr *AbstractBranchElementBase::getMFChildElements(void) const
+Element * AbstractBranchElementBase::getChildElements(const UInt32 index) const
 {
-    return &_mfChildElements;
+    return _mfChildElements[index];
 }
 
-//! Get the AbstractBranchElement::_mfChildElements field.
-inline
-MFElementPtr *AbstractBranchElementBase::editMFChildElements(void)
-{
-    return &_mfChildElements;
-}
 
-#ifndef OSG_2_PREP
-//! Get the AbstractBranchElement::_mfChildElements field.
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-MFElementPtr *AbstractBranchElementBase::getMFChildElements(void)
+void AbstractBranchElementBase::execSync (      AbstractBranchElementBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return &_mfChildElements;
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (ChildElementsFieldMask & whichField))
+        _mfChildElements.syncWith(pFrom->_mfChildElements,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
 }
 #endif
 
 
-
-//! Get the value of the \a index element the AbstractBranchElement::_mfChildElements field.
 inline
-ElementPtr &AbstractBranchElementBase::editChildElements(const UInt32 index)
+const Char8 *AbstractBranchElementBase::getClassname(void)
 {
-    return _mfChildElements[index];
+    return "AbstractBranchElement";
 }
-
-//! Get the value of the \a index element the AbstractBranchElement::_mfChildElements field.
-inline
-const ElementPtr &AbstractBranchElementBase::getChildElements(const UInt32 index) const
-{
-    return _mfChildElements[index];
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the \a index element the AbstractBranchElement::_mfChildElements field.
-inline
-ElementPtr &AbstractBranchElementBase::getChildElements(const UInt32 index)
-{
-    return _mfChildElements[index];
-}
-
-//! Get the AbstractBranchElement::_mfChildElements field.
-inline
-MFElementPtr &AbstractBranchElementBase::getChildElements(void)
-{
-    return _mfChildElements;
-}
-
-//! Get the AbstractBranchElement::_mfChildElements field.
-inline
-const MFElementPtr &AbstractBranchElementBase::getChildElements(void) const
-{
-    return _mfChildElements;
-}
-
-#endif
+OSG_GEN_CONTAINERPTR(AbstractBranchElement);
 
 OSG_END_NAMESPACE
 

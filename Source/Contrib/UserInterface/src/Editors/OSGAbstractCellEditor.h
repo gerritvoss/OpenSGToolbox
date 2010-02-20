@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,44 +42,45 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGAbstractCellEditorBase.h"
 #include <set>
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief AbstractCellEditor class. See \ref 
-           PageUserInterfaceAbstractCellEditor for a description.
+/*! \brief AbstractCellEditor class. See \ref
+           PageContribUserInterfaceAbstractCellEditor for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractCellEditor : public AbstractCellEditorBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractCellEditor : public AbstractCellEditorBase
 {
-  private:
-
-    typedef AbstractCellEditorBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef AbstractCellEditorBase Inherited;
+    typedef AbstractCellEditor     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
     //Adds a listener to the list that's notified when the editor stops, or cancels editing.
     virtual EventConnection addCellEditorListener(CellEditorListenerPtr l);
 	virtual bool isCellEditorListenerAttached(CellEditorListenerPtr l) const;
@@ -91,15 +92,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractCellEditor : public AbstractCellEd
     virtual void cancelCellEditing(void);
 
     //Asks the editor if it can start editing using anEvent.
-    virtual bool isCellEditable(const EventPtr anEvent) const;
+    virtual bool isCellEditable(const EventUnrecPtr anEvent) const;
 
     //Returns true if the editing cell should be selected, false otherwise.
-    virtual bool shouldSelectCell(const EventPtr anEvent) const;
+    virtual bool shouldSelectCell(const EventUnrecPtr anEvent) const;
 
     //Tells the editor to stop editing and accept any partially edited value as the value of the editor.
     virtual bool stopCellEditing(void);
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in AbstractCellEditorBase.
@@ -116,7 +118,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractCellEditor : public AbstractCellEd
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~AbstractCellEditor(void); 
+    virtual ~AbstractCellEditor(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
     
@@ -129,15 +138,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractCellEditor : public AbstractCellEd
 	void produceEditingCanceled(void);
 	void produceEditingStopped(void);
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class AbstractCellEditorBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const AbstractCellEditor &source);
 };
 

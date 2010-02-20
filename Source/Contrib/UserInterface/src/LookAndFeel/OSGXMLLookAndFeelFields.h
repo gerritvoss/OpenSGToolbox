@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGLookAndFeelFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class XMLLookAndFeel;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! XMLLookAndFeelPtr
+OSG_GEN_CONTAINERPTR(XMLLookAndFeel);
 
-typedef FCPtr<LookAndFeelPtr, XMLLookAndFeel> XMLLookAndFeelPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<XMLLookAndFeelPtr> : 
-    public FieldTraitsRecurseMapper<XMLLookAndFeelPtr, true>
+struct FieldTraits<XMLLookAndFeel *> :
+    public FieldTraitsFCPtrBase<XMLLookAndFeel *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFXMLLookAndFeelPtr"; }
-    static const char *getMName(void) { return "MFXMLLookAndFeelPtr"; }
+    typedef FieldTraits<XMLLookAndFeel *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFXMLLookAndFeelPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFXMLLookAndFeelPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<XMLLookAndFeelPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<XMLLookAndFeel *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecXMLLookAndFeelPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<XMLLookAndFeel *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecXMLLookAndFeelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<XMLLookAndFeel *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakXMLLookAndFeelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<XMLLookAndFeel *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdXMLLookAndFeelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<XMLLookAndFeel *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecXMLLookAndFeelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<XMLLookAndFeel *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecXMLLookAndFeelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<XMLLookAndFeel *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakXMLLookAndFeelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<XMLLookAndFeel *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdXMLLookAndFeelPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<XMLLookAndFeel *,
+                      RecordedRefCountPolicy  > SFRecXMLLookAndFeelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<XMLLookAndFeel *,
+                      UnrecordedRefCountPolicy> SFUnrecXMLLookAndFeelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<XMLLookAndFeel *,
+                      WeakRefCountPolicy      > SFWeakXMLLookAndFeelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<XMLLookAndFeel *,
+                      NoRefCountPolicy        > SFUncountedXMLLookAndFeelPtr;
 
-typedef SField<XMLLookAndFeelPtr> SFXMLLookAndFeelPtr;
-#endif
 
-#ifndef OSG_COMPILEXMLLOOKANDFEELINST
-OSG_DLLEXPORT_DECL1(SField, XMLLookAndFeelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<XMLLookAndFeel *,
+                      RecordedRefCountPolicy  > MFRecXMLLookAndFeelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<XMLLookAndFeel *,
+                      UnrecordedRefCountPolicy> MFUnrecXMLLookAndFeelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<XMLLookAndFeel *,
+                      WeakRefCountPolicy      > MFWeakXMLLookAndFeelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<XMLLookAndFeel *,
+                      NoRefCountPolicy        > MFUncountedXMLLookAndFeelPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<XMLLookAndFeelPtr> MFXMLLookAndFeelPtr;
-#endif
 
-#ifndef OSG_COMPILEXMLLOOKANDFEELINST
-OSG_DLLEXPORT_DECL1(MField, XMLLookAndFeelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecXMLLookAndFeelPtr : 
+    public PointerSField<XMLLookAndFeel *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecXMLLookAndFeelPtr : 
+    public PointerSField<XMLLookAndFeel *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakXMLLookAndFeelPtr :
+    public PointerSField<XMLLookAndFeel *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedXMLLookAndFeelPtr :
+    public PointerSField<XMLLookAndFeel *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecXMLLookAndFeelPtr :
+    public PointerMField<XMLLookAndFeel *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecXMLLookAndFeelPtr :
+    public PointerMField<XMLLookAndFeel *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakXMLLookAndFeelPtr :
+    public PointerMField<XMLLookAndFeel *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedXMLLookAndFeelPtr :
+    public PointerMField<XMLLookAndFeel *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGXMLLOOKANDFEELFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGXMLLOOKANDFEELFIELDS_H_ */

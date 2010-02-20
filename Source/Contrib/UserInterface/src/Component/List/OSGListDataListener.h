@@ -31,27 +31,27 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
 #include "OSGListDataEvent.h"
 
-#include <OpenSG/Toolbox/OSGEventListener.h>
+#include "OSGEventListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING ListDataListener : public EventListener
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListDataListener : public EventListener
 {
     /*=========================  PUBLIC  ===============================*/
   public:
 	//Sent when the contents of the list has changed in a way that's too complex to characterize with the previous methods.
-	virtual void 	contentsChanged(const ListDataEventPtr e) = 0;
+	virtual void 	contentsChanged(const ListDataEventUnrecPtr e) = 0;
 
 	//Sent after the indices in the index0,index1 interval have been inserted in the data model.
-	virtual void 	intervalAdded(const ListDataEventPtr e) = 0;
+	virtual void 	intervalAdded(const ListDataEventUnrecPtr e) = 0;
 
 	//Sent after the indices in the index0,index1 interval have been removed from the data model.
-	virtual void 	intervalRemoved(const ListDataEventPtr e) = 0;
+	virtual void 	intervalRemoved(const ListDataEventUnrecPtr e) = 0;
 };
 
 typedef ListDataListener* ListDataListenerPtr;

@@ -3,37 +3,41 @@
 <FieldContainer
 	name="ToolTip"
 	parent="Component"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI Tooltip.
 	<Field
 		name="Font"
-		type="UIFontPtr"
+		type="UIFont"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Text/OSGUIFont.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="TippedComponent"
-		type="ComponentPtr"
+		type="Component"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/OSGComponentFields.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="Text"
 		type="std::string"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -42,6 +46,7 @@ A UI Tooltip.
 	<Field
 		name="Alignment"
 		type="Vec2f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0f,0.5f"
@@ -51,6 +56,7 @@ A UI Tooltip.
 	<Field
 		name="TextColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"

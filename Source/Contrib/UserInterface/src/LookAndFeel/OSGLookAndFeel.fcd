@@ -3,27 +3,30 @@
 <FieldContainer
 	name="LookAndFeel"
 	parent="FieldContainer"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="abstract"
-	systemcomponent="false"
-	parentsystemcomponent="true"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 UI LookAndFeel Interface.
 	<Field
 		name="Prototypes"
-		type="FieldContainerPtr"
+		type="FieldContainer"
+		category="pointer"
 		cardinality="multi"
 		visibility="external"
-		header="Component/OSGComponent.h"
 		access="protected"
 	>
 	</Field>
 	<Field
 		name="TextCaretRate"
 		type="Time"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1.0"
@@ -33,6 +36,7 @@ UI LookAndFeel Interface.
 	<Field
 		name="ToolTipPopupTime"
 		type="Time"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1.5"
@@ -42,6 +46,7 @@ UI LookAndFeel Interface.
 	<Field
 		name="SubMenuPopupTime"
 		type="Time"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.25"
@@ -51,6 +56,7 @@ UI LookAndFeel Interface.
 	<Field
 		name="KeyAcceleratorMenuFlashTime"
 		type="Time"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.15"

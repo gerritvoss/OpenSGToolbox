@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,55 +42,60 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-#include <OpenSG/OSGRenderAction.h>
-#include <OpenSG/OSGNavigator.h>
-#include <OpenSG/OSGVector.h>
+#include "OSGGLViewportBase.h"
+#include "OSGViewport.h"
+#include "OSGRenderAction.h"
+#include "OSGNavigator.h"
+#include "OSGVector.h"
 
 #include "OSGGLViewportBase.h"
-#include <OpenSG/Input/OSGMouseAdapter.h>
-#include <OpenSG/Input/OSGMouseMotionAdapter.h>
-#include <OpenSG/Input/OSGKeyAdapter.h>
+#include "OSGMouseAdapter.h"
+#include "OSGMouseMotionAdapter.h"
+#include "OSGKeyAdapter.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief GLViewport class. See \ref 
-           PageUserInterfaceGLViewport for a description.
+/*! \brief GLViewport class. See \ref
+           PageContribUserInterfaceGLViewport for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING GLViewport : public GLViewportBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING GLViewport : public GLViewportBase
 {
-  private:
-
-    typedef GLViewportBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef GLViewportBase Inherited;
+    typedef GLViewport     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
 
 	void showAll(void);
     void lookAt(const Pnt3f& From, const Pnt3f& At, const Vec3f& Up);
 	void set(const Matrix& m);
     void setMode(Navigator::Mode TheMode);
 
-    virtual void mousePressed(const MouseEventPtr e);
-	virtual void keyTyped(const KeyEventPtr e);
-    virtual void mouseWheelMoved(const MouseWheelEventPtr e);
+    virtual void mousePressed(const MouseEventUnrecPtr e);
+	virtual void keyTyped(const KeyEventUnrecPtr e);
+    virtual void mouseWheelMoved(const MouseWheelEventUnrecPtr e);
     
     void setMultipliers(Real32 YawMultiplier,Real32 PitchMultiplier,Real32 RollMultiplier);
     void setClamps(Vec2f YawClamp,Vec2f PitchClamp,Vec2f RollClamp);
@@ -106,8 +111,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING GLViewport : public GLViewportBase
 	void updateNavigatorConnections(void);
 
     virtual void detachFromEventProducer(void);
-    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in GLViewportBase.
@@ -124,10 +129,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING GLViewport : public GLViewportBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~GLViewport(void); 
+    virtual ~GLViewport(void);
 
     /*! \}                                                                 */
-	virtual void drawInternal(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
 
     RenderAction* _Action;
 	mutable Navigator _Navigator;
@@ -149,16 +161,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING GLViewport : public GLViewportBase
 	class MouseControlListener : public MouseAdapter,public MouseMotionAdapter,public KeyAdapter
 	{
 	public :
-		MouseControlListener(GLViewportPtr TheGLViewport);
+		MouseControlListener(GLViewportRefPtr TheGLViewport);
 		
-		virtual void mouseReleased(const MouseEventPtr e);
-		virtual void mouseDragged(const MouseEventPtr e);
-		virtual void keyPressed(const KeyEventPtr e);
+		virtual void mouseReleased(const MouseEventUnrecPtr e);
+		virtual void mouseDragged(const MouseEventUnrecPtr e);
+		virtual void keyPressed(const KeyEventUnrecPtr e);
 
 		void setInitialMat(const Matrix& Mat);
         void disconnect(void);
 	protected :
-		GLViewportPtr _GLViewport;
+		GLViewportRefPtr _GLViewport;
 		Matrix _InitialMat;
 	};
 
@@ -166,15 +178,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING GLViewport : public GLViewportBase
 
 	MouseControlListener _MouseControlListener;
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class GLViewportBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const GLViewport &source);
 };
 
@@ -184,7 +194,5 @@ OSG_END_NAMESPACE
 
 #include "OSGGLViewportBase.inl"
 #include "OSGGLViewport.inl"
-
-#define OSGGLVIEWPORT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGGLVIEWPORT_H_ */

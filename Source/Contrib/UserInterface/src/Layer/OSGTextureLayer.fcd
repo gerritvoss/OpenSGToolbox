@@ -3,36 +3,41 @@
 <FieldContainer
 	name="TextureLayer"
 	parent="Layer"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 UI Texture Background.
 	<Field
 		name="Texture"
-		type="TextureChunkPtr"
+		type="TextureObjChunk"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="Transformation"
-		type="TextureTransformChunkPtr"
+		type="TextureTransformChunk"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="Color"
 		type="Color4f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -42,6 +47,7 @@ UI Texture Background.
 	<Field
 		name="Scale"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="TextureLayer::SCALE_STRETCH"
@@ -51,6 +57,7 @@ UI Texture Background.
 	<Field
 		name="ScaleAbsoluteSize"
 		type="Vec2s"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1,1"
@@ -60,6 +67,7 @@ UI Texture Background.
 	<Field
 		name="VerticalAlignment"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.5"
@@ -69,6 +77,7 @@ UI Texture Background.
 	<Field
 		name="HorizontalAlignment"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.5"

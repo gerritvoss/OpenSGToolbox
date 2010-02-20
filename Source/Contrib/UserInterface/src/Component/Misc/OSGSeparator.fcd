@@ -3,28 +3,31 @@
 <FieldContainer
 	name="Separator"
 	parent="Component"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI Separator.
 	<Field
 		name="Orientation"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultHeader="Component/Misc/OSGSeparator.h"
 		defaultValue="Separator::VERTICAL_ORIENTATION"
 	>
 	</Field>
 	<Field
 		name="SeparatorSize"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -34,6 +37,7 @@ A UI Separator.
 	<Field
 		name="Color"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"

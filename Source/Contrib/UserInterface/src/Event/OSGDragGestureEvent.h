@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,47 +42,49 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGDragGestureEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DragGestureEvent class. See \ref 
-           PageUserInterfaceDragGestureEvent for a description.
+/*! \brief DragGestureEvent class. See \ref
+           PageContribUserInterfaceDragGestureEvent for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DragGestureEvent : public DragGestureEventBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DragGestureEvent : public DragGestureEventBase
 {
-  private:
-
-    typedef DragGestureEventBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef DragGestureEventBase Inherited;
+    typedef DragGestureEvent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
-    static  DragGestureEventPtr      create(FieldContainerPtr Source,
-                                            Time TimeStamp,
-                                            const Pnt2f &DragLocation); 
+    static  DragGestureEventTransitPtr      create(FieldContainerRefPtr Source,
+                                                   Time TimeStamp,
+                                                   const Pnt2f &DragLocation); 
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in DragGestureEventBase.
@@ -99,20 +101,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING DragGestureEvent : public DragGestureEvent
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DragGestureEvent(void); 
+    virtual ~DragGestureEvent(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class DragGestureEventBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const DragGestureEvent &source);
 };
 

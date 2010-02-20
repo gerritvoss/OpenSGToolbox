@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,71 +58,79 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include <OpenSG/OSGAttachmentContainer.h> // Parent
+#include "OSGAttachmentContainer.h" // Parent
 
-#include <OpenSG/OSGReal32Fields.h> // Opacity type
-#include <OpenSG/OSGBoolFields.h> // EnablePointAntiAliasing type
-#include <OpenSG/OSGBoolFields.h> // EnableLineAntiAliasing type
-#include <OpenSG/OSGBoolFields.h> // EnablePolygonAntiAliasing type
+#include "OSGSysFields.h"               // Opacity type
 
 #include "OSGGraphicsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class Graphics;
-class BinaryDataHandler;
 
 //! \brief Graphics Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING GraphicsBase : public AttachmentContainer
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING GraphicsBase : public AttachmentContainer
 {
-  private:
-
-    typedef AttachmentContainer    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef GraphicsPtr  Ptr;
+    typedef AttachmentContainer Inherited;
+    typedef AttachmentContainer ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(Graphics);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        OpacityFieldId                   = Inherited::NextFieldId,
-        EnablePointAntiAliasingFieldId   = OpacityFieldId                   + 1,
-        EnableLineAntiAliasingFieldId    = EnablePointAntiAliasingFieldId   + 1,
-        EnablePolygonAntiAliasingFieldId = EnableLineAntiAliasingFieldId    + 1,
-        NextFieldId                      = EnablePolygonAntiAliasingFieldId + 1
+        OpacityFieldId = Inherited::NextFieldId,
+        EnablePointAntiAliasingFieldId = OpacityFieldId + 1,
+        EnableLineAntiAliasingFieldId = EnablePointAntiAliasingFieldId + 1,
+        EnablePolygonAntiAliasingFieldId = EnableLineAntiAliasingFieldId + 1,
+        NextFieldId = EnablePolygonAntiAliasingFieldId + 1
     };
 
-    static const OSG::BitVector OpacityFieldMask;
-    static const OSG::BitVector EnablePointAntiAliasingFieldMask;
-    static const OSG::BitVector EnableLineAntiAliasingFieldMask;
-    static const OSG::BitVector EnablePolygonAntiAliasingFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector OpacityFieldMask =
+        (TypeTraits<BitVector>::One << OpacityFieldId);
+    static const OSG::BitVector EnablePointAntiAliasingFieldMask =
+        (TypeTraits<BitVector>::One << EnablePointAntiAliasingFieldId);
+    static const OSG::BitVector EnableLineAntiAliasingFieldMask =
+        (TypeTraits<BitVector>::One << EnableLineAntiAliasingFieldId);
+    static const OSG::BitVector EnablePolygonAntiAliasingFieldMask =
+        (TypeTraits<BitVector>::One << EnablePolygonAntiAliasingFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFReal32          SFOpacityType;
+    typedef SFBool            SFEnablePointAntiAliasingType;
+    typedef SFBool            SFEnableLineAntiAliasingType;
+    typedef SFBool            SFEnablePolygonAntiAliasingType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -131,33 +139,45 @@ class OSG_USERINTERFACELIB_DLLMAPPING GraphicsBase : public AttachmentContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *getSFOpacity        (void);
-           SFBool              *getSFEnablePointAntiAliasing(void);
-           SFBool              *getSFEnableLineAntiAliasing(void);
-           SFBool              *getSFEnablePolygonAntiAliasing(void);
 
-           Real32              &getOpacity        (void);
-     const Real32              &getOpacity        (void) const;
-           bool                &getEnablePointAntiAliasing(void);
-     const bool                &getEnablePointAntiAliasing(void) const;
-           bool                &getEnableLineAntiAliasing(void);
-     const bool                &getEnableLineAntiAliasing(void) const;
-           bool                &getEnablePolygonAntiAliasing(void);
-     const bool                &getEnablePolygonAntiAliasing(void) const;
+                  SFReal32            *editSFOpacity        (void);
+            const SFReal32            *getSFOpacity         (void) const;
+
+                  SFBool              *editSFEnablePointAntiAliasing(void);
+            const SFBool              *getSFEnablePointAntiAliasing (void) const;
+
+                  SFBool              *editSFEnableLineAntiAliasing(void);
+            const SFBool              *getSFEnableLineAntiAliasing (void) const;
+
+                  SFBool              *editSFEnablePolygonAntiAliasing(void);
+            const SFBool              *getSFEnablePolygonAntiAliasing (void) const;
+
+
+                  Real32              &editOpacity        (void);
+                  Real32               getOpacity         (void) const;
+
+                  bool                &editEnablePointAntiAliasing(void);
+                  bool                 getEnablePointAntiAliasing (void) const;
+
+                  bool                &editEnableLineAntiAliasing(void);
+                  bool                 getEnableLineAntiAliasing (void) const;
+
+                  bool                &editEnablePolygonAntiAliasing(void);
+                  bool                 getEnablePolygonAntiAliasing (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setOpacity        ( const Real32 &value );
-     void setEnablePointAntiAliasing( const bool &value );
-     void setEnableLineAntiAliasing( const bool &value );
-     void setEnablePolygonAntiAliasing( const bool &value );
+            void setOpacity        (const Real32 value);
+            void setEnablePointAntiAliasing(const bool value);
+            void setEnableLineAntiAliasing(const bool value);
+            void setEnablePolygonAntiAliasing(const bool value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -165,25 +185,31 @@ class OSG_USERINTERFACELIB_DLLMAPPING GraphicsBase : public AttachmentContainer
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFReal32            _sfOpacity;
-    SFBool              _sfEnablePointAntiAliasing;
-    SFBool              _sfEnableLineAntiAliasing;
-    SFBool              _sfEnablePolygonAntiAliasing;
+    SFReal32          _sfOpacity;
+    SFBool            _sfEnablePointAntiAliasing;
+    SFBool            _sfEnableLineAntiAliasing;
+    SFBool            _sfEnablePolygonAntiAliasing;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -198,69 +224,80 @@ class OSG_USERINTERFACELIB_DLLMAPPING GraphicsBase : public AttachmentContainer
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~GraphicsBase(void); 
+    virtual ~GraphicsBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleOpacity         (void) const;
+    EditFieldHandlePtr editHandleOpacity        (void);
+    GetFieldHandlePtr  getHandleEnablePointAntiAliasing (void) const;
+    EditFieldHandlePtr editHandleEnablePointAntiAliasing(void);
+    GetFieldHandlePtr  getHandleEnableLineAntiAliasing (void) const;
+    EditFieldHandlePtr editHandleEnableLineAntiAliasing(void);
+    GetFieldHandlePtr  getHandleEnablePolygonAntiAliasing (void) const;
+    EditFieldHandlePtr editHandleEnablePolygonAntiAliasing(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      GraphicsBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      GraphicsBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      GraphicsBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const GraphicsBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef GraphicsBase *GraphicsBaseP;
 
-typedef osgIF<GraphicsBase::isNodeCore,
-              CoredNodePtr<Graphics>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet GraphicsNodePtr;
-
-typedef RefPtr<GraphicsPtr> GraphicsRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGGRAPHICSBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGGRAPHICSBASE_H_ */

@@ -3,18 +3,21 @@
 <FieldContainer
 	name="EmptyBorder"
 	parent="Border"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 UI Empty Border. A Empty border that takes up space on each side.
 	<Field
 		name="LeftWidth"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0"
@@ -24,6 +27,7 @@ UI Empty Border. A Empty border that takes up space on each side.
 	<Field
 		name="RightWidth"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0"
@@ -33,6 +37,7 @@ UI Empty Border. A Empty border that takes up space on each side.
 	<Field
 		name="TopWidth"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0"
@@ -42,6 +47,7 @@ UI Empty Border. A Empty border that takes up space on each side.
 	<Field
 		name="BottomWidth"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0"

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,52 +42,66 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGTextureChunk.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGButtonBase.h"
-#include "Event/OSGActionListener.h"
-#include <OpenSG/Input/OSGMouseAdapter.h>
-#include <OpenSG/Input/OSGUpdateListener.h>
+#include "OSGBorder.h"
+#include "OSGLayer.h"
+#include "OSGUIFont.h"
+#include "OSGUIDrawObjectCanvas.h"
+#include "OSGTextureObjChunk.h"
+#include "OSGActionListener.h"
+#include "OSGMouseAdapter.h"
+#include "OSGUpdateListener.h"
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
-{
-  private:
+/*! \brief Button class. See \ref
+           PageContribUserInterfaceButton for a description.
+*/
 
-    typedef ButtonBase Inherited;
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Button : public ButtonBase
+{
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
-	enum DrawObjectToTextAlignment{ALIGN_DRAW_OBJECT_LEFT_OF_TEXT=0, ALIGN_DRAW_OBJECT_RIGHT_OF_TEXT, ALIGN_DRAW_OBJECT_ABOVE_TEXT, ALIGN_DRAW_OBJECT_BELOW_TEXT};
+	enum DrawObjectToTextAlignment
+    {
+        ALIGN_DRAW_OBJECT_LEFT_OF_TEXT  = 0,
+        ALIGN_DRAW_OBJECT_RIGHT_OF_TEXT = 1,
+        ALIGN_DRAW_OBJECT_ABOVE_TEXT    = 2,
+        ALIGN_DRAW_OBJECT_BELOW_TEXT    = 3
+    };
+
+    typedef ButtonBase Inherited;
+    typedef Button     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
     virtual Vec2f getContentRequestedSize(void) const;
 
-	virtual void mouseClicked(const MouseEventPtr e);
-    virtual void mouseEntered(const MouseEventPtr e);
-    virtual void mouseExited(const MouseEventPtr e);
-    virtual void mousePressed(const MouseEventPtr e);
-    virtual void mouseReleased(const MouseEventPtr e);
+	virtual void mouseClicked(const MouseEventUnrecPtr e);
+    virtual void mouseEntered(const MouseEventUnrecPtr e);
+    virtual void mouseExited(const MouseEventUnrecPtr e);
+    virtual void mousePressed(const MouseEventUnrecPtr e);
+    virtual void mouseReleased(const MouseEventUnrecPtr e);
 
     EventConnection addActionListener(ActionListenerPtr Listener);
 	bool isActionListenerAttached(ActionListenerPtr Listener) const;
@@ -97,17 +111,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
 	bool isMousePressedActionListenerAttached(ActionListenerPtr Listener) const;
     void removeMousePressedActionListener(ActionListenerPtr Listener);
 
-    void setTexture(TextureChunkPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
-    void setActiveTexture(TextureChunkPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
-    void setFocusedTexture(TextureChunkPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
-    void setRolloverTexture(TextureChunkPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
-    void setDisabledTexture(TextureChunkPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setTexture(TextureObjChunkRefPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setActiveTexture(TextureObjChunkRefPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setFocusedTexture(TextureObjChunkRefPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setRolloverTexture(TextureObjChunkRefPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setDisabledTexture(TextureObjChunkRefPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
 
-    void setImage(ImagePtr TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
-    void setActiveImage(ImagePtr TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
-    void setFocusedImage(ImagePtr TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
-    void setRolloverImage(ImagePtr TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
-    void setDisabledImage(ImagePtr TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setImage(ImageRefPtr TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setActiveImage(ImageRefPtr TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setFocusedImage(ImageRefPtr TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setRolloverImage(ImageRefPtr TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setDisabledImage(ImageRefPtr TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
     
     void setImage(const std::string& Path, Vec2f Size = Vec2f(-1.0f,-1.0f));
     void setActiveImage(const std::string& Path, Vec2f Size = Vec2f(-1.0f,-1.0f));
@@ -120,16 +134,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
     bool getActive(void) const;
     void setActive(bool Value);
 
-	virtual void setBorders(BorderPtr TheBorder);
+	virtual void setBorders(BorderRefPtr TheBorder);
 
-	virtual void setBackgrounds(LayerPtr TheBackground);
+	virtual void setBackgrounds(LayerRefPtr TheBackground);
     
-	virtual void setForegrounds(LayerPtr TheForeground);
+	virtual void setForegrounds(LayerRefPtr TheForeground);
     
     virtual void setTextColors( const Color4f &value );
 
     virtual void detachFromEventProducer(void);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ButtonBase.
@@ -146,32 +161,41 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Button(void); 
+    virtual ~Button(void);
 
-    virtual void actionPreformed(const ActionEventPtr e);
-    virtual void mousePressedActionPreformed(const ActionEventPtr e);
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
 
-	virtual void drawInternal(const GraphicsPtr TheGraphics, Real32 Opacity = 1.0f) const;
-	virtual void drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, Real32 Opacity = 1.0f) const;
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+
+    virtual void actionPreformed(const ActionEventUnrecPtr e);
+    virtual void mousePressedActionPreformed(const ActionEventUnrecPtr e);
+
+	virtual void drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opacity = 1.0f) const;
+	virtual void drawText(const GraphicsWeakPtr TheGraphics, const Pnt2f& TopLeft, Real32 Opacity = 1.0f) const;
 
     virtual Color4f getDrawnTextColor(void) const;
-    virtual BorderPtr getDrawnBorder(void) const;
-    virtual LayerPtr getDrawnBackground(void) const;
-    virtual LayerPtr getDrawnForeground(void) const;
-    virtual UIDrawObjectCanvasPtr getDrawnDrawObject(void) const;
-	virtual UIDrawObjectCanvasPtr getBaseDrawObject(void) const;
+    virtual BorderRefPtr getDrawnBorder(void) const;
+    virtual LayerRefPtr getDrawnBackground(void) const;
+    virtual LayerRefPtr getDrawnForeground(void) const;
+    virtual UIDrawObjectCanvasRefPtr getDrawnDrawObject(void) const;
+	virtual UIDrawObjectCanvasRefPtr getBaseDrawObject(void) const;
     virtual Vec2f getDrawnOffset(void) const;
     
 	class ButtonArmedListener : public MouseAdapter,public UpdateListener
 	{
 	public :
-		ButtonArmedListener(ButtonPtr TheButton);
+		ButtonArmedListener(ButtonRefPtr TheButton);
 		
-		virtual void mouseReleased(const MouseEventPtr e);
-        virtual void update(const UpdateEventPtr e);
+		virtual void mouseReleased(const MouseEventUnrecPtr e);
+        virtual void update(const UpdateEventUnrecPtr e);
         void reset(void);
 	protected :
-		ButtonPtr _Button;
+		ButtonRefPtr _Button;
 	    Time _ActionFireElps;
 	};
 
@@ -180,25 +204,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
 	ButtonArmedListener _ButtonArmedListener;
     bool _Armed;
     
-    static UIDrawObjectCanvasPtr createTexturedDrawObjectCanvas(TextureChunkPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    static UIDrawObjectCanvasRefPtr createTexturedDrawObjectCanvas(TextureObjChunkRefPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
 
     bool _Active;
     EventConnection   _ArmedUpdateEventConnection;
     EventConnection   _ArmedMouseEventConnection;
-    /*! \}                                                                 */
-    
-    /*==========================  PRIVATE  ================================*/
-  private:
-
-    friend class FieldContainer;
-    friend class ButtonBase;
-
-    static void initMethod(void);
-
-    // prohibit default functions (move to 'public' if you need one)
-
-    void operator =(const Button &source);
-	
 	
 	typedef std::set<ActionListenerPtr> ActionListenerSet;
     typedef ActionListenerSet::iterator ActionListenerSetItor;
@@ -207,8 +217,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
     ActionListenerSet       _ActionListeners;
     ActionListenerSet       _MousePressedActionListeners;
 	
-    virtual void produceActionPerformed(const ActionEventPtr e);
-    virtual void produceMousePressedActionPerformed(const ActionEventPtr e);
+    virtual void produceActionPerformed(const ActionEventUnrecPtr e);
+    virtual void produceMousePressedActionPerformed(const ActionEventUnrecPtr e);
+    /*==========================  PRIVATE  ================================*/
+
+  private:
+
+    friend class FieldContainer;
+    friend class ButtonBase;
+
+    // prohibit default functions (move to 'public' if you need one)
+    void operator =(const Button &source);
 };
 
 typedef Button *ButtonP;

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,120 +50,124 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEDEFAULTLOOKANDFEELINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGDefaultLookAndFeelBase.h"
 #include "OSGDefaultLookAndFeel.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector DefaultLookAndFeelBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::DefaultLookAndFeel
+    UI Default LookAndFeel.
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
 
-FieldContainerType DefaultLookAndFeelBase::_type(
-    "DefaultLookAndFeel",
-    "LookAndFeel",
-    NULL,
-    (PrototypeCreateF) &DefaultLookAndFeelBase::createEmpty,
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<DefaultLookAndFeel *>::_type("DefaultLookAndFeelPtr", "LookAndFeelPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(DefaultLookAndFeel *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           DefaultLookAndFeel *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           DefaultLookAndFeel *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void DefaultLookAndFeelBase::classDescInserter(TypeObject &oType)
+{
+}
+
+
+DefaultLookAndFeelBase::TypeObject DefaultLookAndFeelBase::_type(
+    DefaultLookAndFeelBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&DefaultLookAndFeelBase::createEmptyLocal),
     DefaultLookAndFeel::initMethod,
-    NULL,
-    0);
-
-//OSG_FIELD_CONTAINER_DEF(DefaultLookAndFeelBase, DefaultLookAndFeelPtr)
+    DefaultLookAndFeel::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&DefaultLookAndFeel::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"DefaultLookAndFeel\"\n"
+    "\tparent=\"LookAndFeel\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "UI Default LookAndFeel.\n"
+    "</FieldContainer>\n",
+    "UI Default LookAndFeel.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &DefaultLookAndFeelBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &DefaultLookAndFeelBase::getType(void) const 
+FieldContainerType &DefaultLookAndFeelBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr DefaultLookAndFeelBase::shallowCopy(void) const 
-{ 
-    DefaultLookAndFeelPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const DefaultLookAndFeel *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 DefaultLookAndFeelBase::getContainerSize(void) const 
-{ 
-    return sizeof(DefaultLookAndFeel); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DefaultLookAndFeelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &DefaultLookAndFeelBase::getType(void) const
 {
-    this->executeSyncImpl((DefaultLookAndFeelBase *) &other, whichField);
+    return _type;
 }
-#else
-void DefaultLookAndFeelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 DefaultLookAndFeelBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((DefaultLookAndFeelBase *) &other, whichField, sInfo);
-}
-void DefaultLookAndFeelBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(DefaultLookAndFeel);
 }
 
-void DefaultLookAndFeelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-DefaultLookAndFeelBase::DefaultLookAndFeelBase(void) :
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-DefaultLookAndFeelBase::DefaultLookAndFeelBase(const DefaultLookAndFeelBase &source) :
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-DefaultLookAndFeelBase::~DefaultLookAndFeelBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 DefaultLookAndFeelBase::getBinSize(const BitVector &whichField)
+UInt32 DefaultLookAndFeelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -171,88 +175,198 @@ UInt32 DefaultLookAndFeelBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void DefaultLookAndFeelBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void DefaultLookAndFeelBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-
 }
 
-void DefaultLookAndFeelBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void DefaultLookAndFeelBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DefaultLookAndFeelBase::executeSyncImpl(      DefaultLookAndFeelBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+DefaultLookAndFeelTransitPtr DefaultLookAndFeelBase::createLocal(BitVector bFlags)
 {
+    DefaultLookAndFeelTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
+        fc = dynamic_pointer_cast<DefaultLookAndFeel>(tmpPtr);
+    }
 
-}
-#else
-void DefaultLookAndFeelBase::executeSyncImpl(      DefaultLookAndFeelBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
+    return fc;
 }
 
-void DefaultLookAndFeelBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+DefaultLookAndFeelTransitPtr DefaultLookAndFeelBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    DefaultLookAndFeelTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<DefaultLookAndFeel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+DefaultLookAndFeelTransitPtr DefaultLookAndFeelBase::create(void)
+{
+    DefaultLookAndFeelTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<DefaultLookAndFeel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+DefaultLookAndFeel *DefaultLookAndFeelBase::createEmptyLocal(BitVector bFlags)
+{
+    DefaultLookAndFeel *returnValue;
+
+    newPtr<DefaultLookAndFeel>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+DefaultLookAndFeel *DefaultLookAndFeelBase::createEmpty(void)
+{
+    DefaultLookAndFeel *returnValue;
+
+    newPtr<DefaultLookAndFeel>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr DefaultLookAndFeelBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    DefaultLookAndFeel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DefaultLookAndFeel *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DefaultLookAndFeelBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    DefaultLookAndFeel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DefaultLookAndFeel *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DefaultLookAndFeelBase::shallowCopy(void) const
+{
+    DefaultLookAndFeel *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const DefaultLookAndFeel *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+DefaultLookAndFeelBase::DefaultLookAndFeelBase(void) :
+    Inherited()
+{
+}
+
+DefaultLookAndFeelBase::DefaultLookAndFeelBase(const DefaultLookAndFeelBase &source) :
+    Inherited(source)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+DefaultLookAndFeelBase::~DefaultLookAndFeelBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void DefaultLookAndFeelBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    DefaultLookAndFeel *pThis = static_cast<DefaultLookAndFeel *>(this);
+
+    pThis->execSync(static_cast<DefaultLookAndFeel *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *DefaultLookAndFeelBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    DefaultLookAndFeel *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const DefaultLookAndFeel *>(pRefAspect),
+                  dynamic_cast<const DefaultLookAndFeel *>(this));
+
+    return returnValue;
+}
+#endif
+
+void DefaultLookAndFeelBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<DefaultLookAndFeelPtr>::_type("DefaultLookAndFeelPtr", "LookAndFeelPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(DefaultLookAndFeelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(DefaultLookAndFeelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGDEFAULTLOOKANDFEELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDEFAULTLOOKANDFEELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDEFAULTLOOKANDFEELFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

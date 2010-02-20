@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,64 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/Toolbox/OSGEventFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class ComponentEvent;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! ComponentEventPtr
+OSG_GEN_CONTAINERPTR(ComponentEvent);
 
-typedef FCPtr<EventPtr, ComponentEvent> ComponentEventPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<ComponentEventPtr> : 
-    public FieldTraitsRecurseMapper<ComponentEventPtr, true>
+struct FieldTraits<ComponentEvent *> :
+    public FieldTraitsFCPtrBase<ComponentEvent *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFComponentEventPtr"; }
+    typedef FieldTraits<ComponentEvent *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFComponentEventPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFComponentEventPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<ComponentEventPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<ComponentEvent *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecComponentEventPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<ComponentEvent *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecComponentEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ComponentEvent *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakComponentEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ComponentEvent *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdComponentEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ComponentEvent *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecComponentEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ComponentEvent *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecComponentEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ComponentEvent *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakComponentEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ComponentEvent *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdComponentEventPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ComponentEvent *,
+                      RecordedRefCountPolicy  > SFRecComponentEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ComponentEvent *,
+                      UnrecordedRefCountPolicy> SFUnrecComponentEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ComponentEvent *,
+                      WeakRefCountPolicy      > SFWeakComponentEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ComponentEvent *,
+                      NoRefCountPolicy        > SFUncountedComponentEventPtr;
 
-typedef SField<ComponentEventPtr> SFComponentEventPtr;
-#endif
 
-#ifndef OSG_COMPILECOMPONENTEVENTINST
-OSG_DLLEXPORT_DECL1(SField, ComponentEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ComponentEvent *,
+                      RecordedRefCountPolicy  > MFRecComponentEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ComponentEvent *,
+                      UnrecordedRefCountPolicy> MFUnrecComponentEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ComponentEvent *,
+                      WeakRefCountPolicy      > MFWeakComponentEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ComponentEvent *,
+                      NoRefCountPolicy        > MFUncountedComponentEventPtr;
+
+
+
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecComponentEventPtr : 
+    public PointerSField<ComponentEvent *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecComponentEventPtr : 
+    public PointerSField<ComponentEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakComponentEventPtr :
+    public PointerSField<ComponentEvent *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedComponentEventPtr :
+    public PointerSField<ComponentEvent *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecComponentEventPtr :
+    public PointerMField<ComponentEvent *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecComponentEventPtr :
+    public PointerMField<ComponentEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakComponentEventPtr :
+    public PointerMField<ComponentEvent *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedComponentEventPtr :
+    public PointerMField<ComponentEvent *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

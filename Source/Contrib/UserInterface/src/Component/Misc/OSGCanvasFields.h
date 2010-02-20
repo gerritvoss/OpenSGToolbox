@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "Component/OSGComponentFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class Canvas;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! CanvasPtr
+OSG_GEN_CONTAINERPTR(Canvas);
 
-typedef FCPtr<ComponentPtr, Canvas> CanvasPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<CanvasPtr> : 
-    public FieldTraitsRecurseMapper<CanvasPtr, true>
+struct FieldTraits<Canvas *> :
+    public FieldTraitsFCPtrBase<Canvas *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFCanvasPtr"; }
-    static const char *getMName(void) { return "MFCanvasPtr"; }
+    typedef FieldTraits<Canvas *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFCanvasPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFCanvasPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<CanvasPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<Canvas *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecCanvasPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<Canvas *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecCanvasPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Canvas *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakCanvasPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Canvas *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdCanvasPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Canvas *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecCanvasPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Canvas *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecCanvasPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Canvas *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakCanvasPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Canvas *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdCanvasPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Canvas *,
+                      RecordedRefCountPolicy  > SFRecCanvasPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Canvas *,
+                      UnrecordedRefCountPolicy> SFUnrecCanvasPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Canvas *,
+                      WeakRefCountPolicy      > SFWeakCanvasPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Canvas *,
+                      NoRefCountPolicy        > SFUncountedCanvasPtr;
 
-typedef SField<CanvasPtr> SFCanvasPtr;
-#endif
 
-#ifndef OSG_COMPILECANVASINST
-OSG_DLLEXPORT_DECL1(SField, CanvasPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Canvas *,
+                      RecordedRefCountPolicy  > MFRecCanvasPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Canvas *,
+                      UnrecordedRefCountPolicy> MFUnrecCanvasPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Canvas *,
+                      WeakRefCountPolicy      > MFWeakCanvasPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Canvas *,
+                      NoRefCountPolicy        > MFUncountedCanvasPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<CanvasPtr> MFCanvasPtr;
-#endif
 
-#ifndef OSG_COMPILECANVASINST
-OSG_DLLEXPORT_DECL1(MField, CanvasPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecCanvasPtr : 
+    public PointerSField<Canvas *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecCanvasPtr : 
+    public PointerSField<Canvas *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakCanvasPtr :
+    public PointerSField<Canvas *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedCanvasPtr :
+    public PointerSField<Canvas *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecCanvasPtr :
+    public PointerMField<Canvas *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecCanvasPtr :
+    public PointerMField<Canvas *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakCanvasPtr :
+    public PointerMField<Canvas *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedCanvasPtr :
+    public PointerMField<Canvas *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGCANVASFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGCANVASFIELDS_H_ */

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,386 +55,63 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &PatternLayerBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 PatternLayerBase::getClassTypeId(void) 
+OSG::UInt32 PatternLayerBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-PatternLayerPtr PatternLayerBase::create(void) 
-{
-    PatternLayerPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = PatternLayerPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-PatternLayerPtr PatternLayerBase::createEmpty(void) 
-{ 
-    PatternLayerPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 PatternLayerBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the PatternLayer::_sfTexture field.
-inline
-const SFTextureChunkPtr *PatternLayerBase::getSFTexture(void) const
-{
-    return &_sfTexture;
-}
-
-//! Get the PatternLayer::_sfTexture field.
-inline
-SFTextureChunkPtr *PatternLayerBase::editSFTexture(void)
-{
-    return &_sfTexture;
-}
-
-#ifndef OSG_2_PREP
-//! Get the PatternLayer::_sfTexture field.
-inline
-SFTextureChunkPtr *PatternLayerBase::getSFTexture(void)
-{
-    return &_sfTexture;
-}
-#endif
-
-//! Get the PatternLayer::_sfTransformation field.
-inline
-const SFTextureTransformChunkPtr *PatternLayerBase::getSFTransformation(void) const
-{
-    return &_sfTransformation;
-}
-
-//! Get the PatternLayer::_sfTransformation field.
-inline
-SFTextureTransformChunkPtr *PatternLayerBase::editSFTransformation(void)
-{
-    return &_sfTransformation;
-}
-
-#ifndef OSG_2_PREP
-//! Get the PatternLayer::_sfTransformation field.
-inline
-SFTextureTransformChunkPtr *PatternLayerBase::getSFTransformation(void)
-{
-    return &_sfTransformation;
-}
-#endif
-
-//! Get the PatternLayer::_sfColor field.
-inline
-const SFColor4f *PatternLayerBase::getSFColor(void) const
-{
-    return &_sfColor;
-}
-
-//! Get the PatternLayer::_sfColor field.
-inline
-SFColor4f *PatternLayerBase::editSFColor(void)
-{
-    return &_sfColor;
-}
-
-#ifndef OSG_2_PREP
-//! Get the PatternLayer::_sfColor field.
-inline
-SFColor4f *PatternLayerBase::getSFColor(void)
-{
-    return &_sfColor;
-}
-#endif
-
-//! Get the PatternLayer::_sfPatternSize field.
-inline
-const SFVec2s *PatternLayerBase::getSFPatternSize(void) const
-{
-    return &_sfPatternSize;
-}
-
-//! Get the PatternLayer::_sfPatternSize field.
-inline
-SFVec2s *PatternLayerBase::editSFPatternSize(void)
-{
-    return &_sfPatternSize;
-}
-
-#ifndef OSG_2_PREP
-//! Get the PatternLayer::_sfPatternSize field.
-inline
-SFVec2s *PatternLayerBase::getSFPatternSize(void)
-{
-    return &_sfPatternSize;
-}
-#endif
-
-//! Get the PatternLayer::_sfVerticalAlignment field.
-inline
-const SFReal32 *PatternLayerBase::getSFVerticalAlignment(void) const
-{
-    return &_sfVerticalAlignment;
-}
-
-//! Get the PatternLayer::_sfVerticalAlignment field.
-inline
-SFReal32 *PatternLayerBase::editSFVerticalAlignment(void)
-{
-    return &_sfVerticalAlignment;
-}
-
-#ifndef OSG_2_PREP
-//! Get the PatternLayer::_sfVerticalAlignment field.
-inline
-SFReal32 *PatternLayerBase::getSFVerticalAlignment(void)
-{
-    return &_sfVerticalAlignment;
-}
-#endif
-
-//! Get the PatternLayer::_sfHorizontalAlignment field.
-inline
-const SFReal32 *PatternLayerBase::getSFHorizontalAlignment(void) const
-{
-    return &_sfHorizontalAlignment;
-}
-
-//! Get the PatternLayer::_sfHorizontalAlignment field.
-inline
-SFReal32 *PatternLayerBase::editSFHorizontalAlignment(void)
-{
-    return &_sfHorizontalAlignment;
-}
-
-#ifndef OSG_2_PREP
-//! Get the PatternLayer::_sfHorizontalAlignment field.
-inline
-SFReal32 *PatternLayerBase::getSFHorizontalAlignment(void)
-{
-    return &_sfHorizontalAlignment;
-}
-#endif
-
-//! Get the PatternLayer::_sfHorizontalRepeat field.
-inline
-const SFUInt32 *PatternLayerBase::getSFHorizontalRepeat(void) const
-{
-    return &_sfHorizontalRepeat;
-}
-
-//! Get the PatternLayer::_sfHorizontalRepeat field.
-inline
-SFUInt32 *PatternLayerBase::editSFHorizontalRepeat(void)
-{
-    return &_sfHorizontalRepeat;
-}
-
-#ifndef OSG_2_PREP
-//! Get the PatternLayer::_sfHorizontalRepeat field.
-inline
-SFUInt32 *PatternLayerBase::getSFHorizontalRepeat(void)
-{
-    return &_sfHorizontalRepeat;
-}
-#endif
-
-//! Get the PatternLayer::_sfVerticalRepeat field.
-inline
-const SFUInt32 *PatternLayerBase::getSFVerticalRepeat(void) const
-{
-    return &_sfVerticalRepeat;
-}
-
-//! Get the PatternLayer::_sfVerticalRepeat field.
-inline
-SFUInt32 *PatternLayerBase::editSFVerticalRepeat(void)
-{
-    return &_sfVerticalRepeat;
-}
-
-#ifndef OSG_2_PREP
-//! Get the PatternLayer::_sfVerticalRepeat field.
-inline
-SFUInt32 *PatternLayerBase::getSFVerticalRepeat(void)
-{
-    return &_sfVerticalRepeat;
-}
-#endif
-
-//! Get the PatternLayer::_sfHorizontalRepeatValue field.
-inline
-const SFReal32 *PatternLayerBase::getSFHorizontalRepeatValue(void) const
-{
-    return &_sfHorizontalRepeatValue;
-}
-
-//! Get the PatternLayer::_sfHorizontalRepeatValue field.
-inline
-SFReal32 *PatternLayerBase::editSFHorizontalRepeatValue(void)
-{
-    return &_sfHorizontalRepeatValue;
-}
-
-#ifndef OSG_2_PREP
-//! Get the PatternLayer::_sfHorizontalRepeatValue field.
-inline
-SFReal32 *PatternLayerBase::getSFHorizontalRepeatValue(void)
-{
-    return &_sfHorizontalRepeatValue;
-}
-#endif
-
-//! Get the PatternLayer::_sfVerticalRepeatValue field.
-inline
-const SFReal32 *PatternLayerBase::getSFVerticalRepeatValue(void) const
-{
-    return &_sfVerticalRepeatValue;
-}
-
-//! Get the PatternLayer::_sfVerticalRepeatValue field.
-inline
-SFReal32 *PatternLayerBase::editSFVerticalRepeatValue(void)
-{
-    return &_sfVerticalRepeatValue;
-}
-
-#ifndef OSG_2_PREP
-//! Get the PatternLayer::_sfVerticalRepeatValue field.
-inline
-SFReal32 *PatternLayerBase::getSFVerticalRepeatValue(void)
-{
-    return &_sfVerticalRepeatValue;
-}
-#endif
-
-//! Get the PatternLayer::_sfTopLeftTextureCoord field.
-inline
-const SFVec2f *PatternLayerBase::getSFTopLeftTextureCoord(void) const
-{
-    return &_sfTopLeftTextureCoord;
-}
-
-//! Get the PatternLayer::_sfTopLeftTextureCoord field.
-inline
-SFVec2f *PatternLayerBase::editSFTopLeftTextureCoord(void)
-{
-    return &_sfTopLeftTextureCoord;
-}
-
-#ifndef OSG_2_PREP
-//! Get the PatternLayer::_sfTopLeftTextureCoord field.
-inline
-SFVec2f *PatternLayerBase::getSFTopLeftTextureCoord(void)
-{
-    return &_sfTopLeftTextureCoord;
-}
-#endif
-
-//! Get the PatternLayer::_sfBottomRightTextureCoord field.
-inline
-const SFVec2f *PatternLayerBase::getSFBottomRightTextureCoord(void) const
-{
-    return &_sfBottomRightTextureCoord;
-}
-
-//! Get the PatternLayer::_sfBottomRightTextureCoord field.
-inline
-SFVec2f *PatternLayerBase::editSFBottomRightTextureCoord(void)
-{
-    return &_sfBottomRightTextureCoord;
-}
-
-#ifndef OSG_2_PREP
-//! Get the PatternLayer::_sfBottomRightTextureCoord field.
-inline
-SFVec2f *PatternLayerBase::getSFBottomRightTextureCoord(void)
-{
-    return &_sfBottomRightTextureCoord;
-}
-#endif
-
 
 //! Get the value of the PatternLayer::_sfTexture field.
 inline
-TextureChunkPtr &PatternLayerBase::editTexture(void)
+TextureObjChunk * PatternLayerBase::getTexture(void) const
 {
     return _sfTexture.getValue();
 }
-
-//! Get the value of the PatternLayer::_sfTexture field.
-inline
-const TextureChunkPtr &PatternLayerBase::getTexture(void) const
-{
-    return _sfTexture.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the PatternLayer::_sfTexture field.
-inline
-TextureChunkPtr &PatternLayerBase::getTexture(void)
-{
-    return _sfTexture.getValue();
-}
-#endif
 
 //! Set the value of the PatternLayer::_sfTexture field.
 inline
-void PatternLayerBase::setTexture(const TextureChunkPtr &value)
+void PatternLayerBase::setTexture(TextureObjChunk * const value)
 {
+    editSField(TextureFieldMask);
+
     _sfTexture.setValue(value);
 }
 
 //! Get the value of the PatternLayer::_sfTransformation field.
 inline
-TextureTransformChunkPtr &PatternLayerBase::editTransformation(void)
+TextureTransformChunk * PatternLayerBase::getTransformation(void) const
 {
     return _sfTransformation.getValue();
 }
-
-//! Get the value of the PatternLayer::_sfTransformation field.
-inline
-const TextureTransformChunkPtr &PatternLayerBase::getTransformation(void) const
-{
-    return _sfTransformation.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the PatternLayer::_sfTransformation field.
-inline
-TextureTransformChunkPtr &PatternLayerBase::getTransformation(void)
-{
-    return _sfTransformation.getValue();
-}
-#endif
 
 //! Set the value of the PatternLayer::_sfTransformation field.
 inline
-void PatternLayerBase::setTransformation(const TextureTransformChunkPtr &value)
+void PatternLayerBase::setTransformation(TextureTransformChunk * const value)
 {
+    editSField(TransformationFieldMask);
+
     _sfTransformation.setValue(value);
 }
-
 //! Get the value of the PatternLayer::_sfColor field.
+
 inline
 Color4f &PatternLayerBase::editColor(void)
 {
+    editSField(ColorFieldMask);
+
     return _sfColor.getValue();
 }
 
@@ -447,236 +122,196 @@ const Color4f &PatternLayerBase::getColor(void) const
     return _sfColor.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the PatternLayer::_sfColor field.
-inline
-Color4f &PatternLayerBase::getColor(void)
-{
-    return _sfColor.getValue();
-}
-#endif
-
 //! Set the value of the PatternLayer::_sfColor field.
 inline
 void PatternLayerBase::setColor(const Color4f &value)
 {
+    editSField(ColorFieldMask);
+
     _sfColor.setValue(value);
 }
-
 //! Get the value of the PatternLayer::_sfPatternSize field.
+
 inline
-Vec2s &PatternLayerBase::editPatternSize(void)
+Vec2f &PatternLayerBase::editPatternSize(void)
 {
+    editSField(PatternSizeFieldMask);
+
     return _sfPatternSize.getValue();
 }
 
 //! Get the value of the PatternLayer::_sfPatternSize field.
 inline
-const Vec2s &PatternLayerBase::getPatternSize(void) const
+const Vec2f &PatternLayerBase::getPatternSize(void) const
 {
     return _sfPatternSize.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the PatternLayer::_sfPatternSize field.
-inline
-Vec2s &PatternLayerBase::getPatternSize(void)
-{
-    return _sfPatternSize.getValue();
-}
-#endif
 
 //! Set the value of the PatternLayer::_sfPatternSize field.
 inline
-void PatternLayerBase::setPatternSize(const Vec2s &value)
+void PatternLayerBase::setPatternSize(const Vec2f &value)
 {
+    editSField(PatternSizeFieldMask);
+
     _sfPatternSize.setValue(value);
 }
-
 //! Get the value of the PatternLayer::_sfVerticalAlignment field.
+
 inline
 Real32 &PatternLayerBase::editVerticalAlignment(void)
 {
+    editSField(VerticalAlignmentFieldMask);
+
     return _sfVerticalAlignment.getValue();
 }
 
 //! Get the value of the PatternLayer::_sfVerticalAlignment field.
 inline
-const Real32 &PatternLayerBase::getVerticalAlignment(void) const
+      Real32  PatternLayerBase::getVerticalAlignment(void) const
 {
     return _sfVerticalAlignment.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the PatternLayer::_sfVerticalAlignment field.
-inline
-Real32 &PatternLayerBase::getVerticalAlignment(void)
-{
-    return _sfVerticalAlignment.getValue();
-}
-#endif
 
 //! Set the value of the PatternLayer::_sfVerticalAlignment field.
 inline
-void PatternLayerBase::setVerticalAlignment(const Real32 &value)
+void PatternLayerBase::setVerticalAlignment(const Real32 value)
 {
+    editSField(VerticalAlignmentFieldMask);
+
     _sfVerticalAlignment.setValue(value);
 }
-
 //! Get the value of the PatternLayer::_sfHorizontalAlignment field.
+
 inline
 Real32 &PatternLayerBase::editHorizontalAlignment(void)
 {
+    editSField(HorizontalAlignmentFieldMask);
+
     return _sfHorizontalAlignment.getValue();
 }
 
 //! Get the value of the PatternLayer::_sfHorizontalAlignment field.
 inline
-const Real32 &PatternLayerBase::getHorizontalAlignment(void) const
+      Real32  PatternLayerBase::getHorizontalAlignment(void) const
 {
     return _sfHorizontalAlignment.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the PatternLayer::_sfHorizontalAlignment field.
-inline
-Real32 &PatternLayerBase::getHorizontalAlignment(void)
-{
-    return _sfHorizontalAlignment.getValue();
-}
-#endif
 
 //! Set the value of the PatternLayer::_sfHorizontalAlignment field.
 inline
-void PatternLayerBase::setHorizontalAlignment(const Real32 &value)
+void PatternLayerBase::setHorizontalAlignment(const Real32 value)
 {
+    editSField(HorizontalAlignmentFieldMask);
+
     _sfHorizontalAlignment.setValue(value);
 }
-
 //! Get the value of the PatternLayer::_sfHorizontalRepeat field.
+
 inline
 UInt32 &PatternLayerBase::editHorizontalRepeat(void)
 {
+    editSField(HorizontalRepeatFieldMask);
+
     return _sfHorizontalRepeat.getValue();
 }
 
 //! Get the value of the PatternLayer::_sfHorizontalRepeat field.
 inline
-const UInt32 &PatternLayerBase::getHorizontalRepeat(void) const
+      UInt32  PatternLayerBase::getHorizontalRepeat(void) const
 {
     return _sfHorizontalRepeat.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the PatternLayer::_sfHorizontalRepeat field.
-inline
-UInt32 &PatternLayerBase::getHorizontalRepeat(void)
-{
-    return _sfHorizontalRepeat.getValue();
-}
-#endif
 
 //! Set the value of the PatternLayer::_sfHorizontalRepeat field.
 inline
-void PatternLayerBase::setHorizontalRepeat(const UInt32 &value)
+void PatternLayerBase::setHorizontalRepeat(const UInt32 value)
 {
+    editSField(HorizontalRepeatFieldMask);
+
     _sfHorizontalRepeat.setValue(value);
 }
-
 //! Get the value of the PatternLayer::_sfVerticalRepeat field.
+
 inline
 UInt32 &PatternLayerBase::editVerticalRepeat(void)
 {
+    editSField(VerticalRepeatFieldMask);
+
     return _sfVerticalRepeat.getValue();
 }
 
 //! Get the value of the PatternLayer::_sfVerticalRepeat field.
 inline
-const UInt32 &PatternLayerBase::getVerticalRepeat(void) const
+      UInt32  PatternLayerBase::getVerticalRepeat(void) const
 {
     return _sfVerticalRepeat.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the PatternLayer::_sfVerticalRepeat field.
-inline
-UInt32 &PatternLayerBase::getVerticalRepeat(void)
-{
-    return _sfVerticalRepeat.getValue();
-}
-#endif
 
 //! Set the value of the PatternLayer::_sfVerticalRepeat field.
 inline
-void PatternLayerBase::setVerticalRepeat(const UInt32 &value)
+void PatternLayerBase::setVerticalRepeat(const UInt32 value)
 {
+    editSField(VerticalRepeatFieldMask);
+
     _sfVerticalRepeat.setValue(value);
 }
-
 //! Get the value of the PatternLayer::_sfHorizontalRepeatValue field.
+
 inline
 Real32 &PatternLayerBase::editHorizontalRepeatValue(void)
 {
+    editSField(HorizontalRepeatValueFieldMask);
+
     return _sfHorizontalRepeatValue.getValue();
 }
 
 //! Get the value of the PatternLayer::_sfHorizontalRepeatValue field.
 inline
-const Real32 &PatternLayerBase::getHorizontalRepeatValue(void) const
+      Real32  PatternLayerBase::getHorizontalRepeatValue(void) const
 {
     return _sfHorizontalRepeatValue.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the PatternLayer::_sfHorizontalRepeatValue field.
-inline
-Real32 &PatternLayerBase::getHorizontalRepeatValue(void)
-{
-    return _sfHorizontalRepeatValue.getValue();
-}
-#endif
 
 //! Set the value of the PatternLayer::_sfHorizontalRepeatValue field.
 inline
-void PatternLayerBase::setHorizontalRepeatValue(const Real32 &value)
+void PatternLayerBase::setHorizontalRepeatValue(const Real32 value)
 {
+    editSField(HorizontalRepeatValueFieldMask);
+
     _sfHorizontalRepeatValue.setValue(value);
 }
-
 //! Get the value of the PatternLayer::_sfVerticalRepeatValue field.
+
 inline
 Real32 &PatternLayerBase::editVerticalRepeatValue(void)
 {
+    editSField(VerticalRepeatValueFieldMask);
+
     return _sfVerticalRepeatValue.getValue();
 }
 
 //! Get the value of the PatternLayer::_sfVerticalRepeatValue field.
 inline
-const Real32 &PatternLayerBase::getVerticalRepeatValue(void) const
+      Real32  PatternLayerBase::getVerticalRepeatValue(void) const
 {
     return _sfVerticalRepeatValue.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the PatternLayer::_sfVerticalRepeatValue field.
-inline
-Real32 &PatternLayerBase::getVerticalRepeatValue(void)
-{
-    return _sfVerticalRepeatValue.getValue();
-}
-#endif
 
 //! Set the value of the PatternLayer::_sfVerticalRepeatValue field.
 inline
-void PatternLayerBase::setVerticalRepeatValue(const Real32 &value)
+void PatternLayerBase::setVerticalRepeatValue(const Real32 value)
 {
+    editSField(VerticalRepeatValueFieldMask);
+
     _sfVerticalRepeatValue.setValue(value);
 }
-
 //! Get the value of the PatternLayer::_sfTopLeftTextureCoord field.
+
 inline
 Vec2f &PatternLayerBase::editTopLeftTextureCoord(void)
 {
+    editSField(TopLeftTextureCoordFieldMask);
+
     return _sfTopLeftTextureCoord.getValue();
 }
 
@@ -687,26 +322,21 @@ const Vec2f &PatternLayerBase::getTopLeftTextureCoord(void) const
     return _sfTopLeftTextureCoord.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the PatternLayer::_sfTopLeftTextureCoord field.
-inline
-Vec2f &PatternLayerBase::getTopLeftTextureCoord(void)
-{
-    return _sfTopLeftTextureCoord.getValue();
-}
-#endif
-
 //! Set the value of the PatternLayer::_sfTopLeftTextureCoord field.
 inline
 void PatternLayerBase::setTopLeftTextureCoord(const Vec2f &value)
 {
+    editSField(TopLeftTextureCoordFieldMask);
+
     _sfTopLeftTextureCoord.setValue(value);
 }
-
 //! Get the value of the PatternLayer::_sfBottomRightTextureCoord field.
+
 inline
 Vec2f &PatternLayerBase::editBottomRightTextureCoord(void)
 {
+    editSField(BottomRightTextureCoordFieldMask);
+
     return _sfBottomRightTextureCoord.getValue();
 }
 
@@ -717,22 +347,71 @@ const Vec2f &PatternLayerBase::getBottomRightTextureCoord(void) const
     return _sfBottomRightTextureCoord.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the PatternLayer::_sfBottomRightTextureCoord field.
-inline
-Vec2f &PatternLayerBase::getBottomRightTextureCoord(void)
-{
-    return _sfBottomRightTextureCoord.getValue();
-}
-#endif
-
 //! Set the value of the PatternLayer::_sfBottomRightTextureCoord field.
 inline
 void PatternLayerBase::setBottomRightTextureCoord(const Vec2f &value)
 {
+    editSField(BottomRightTextureCoordFieldMask);
+
     _sfBottomRightTextureCoord.setValue(value);
 }
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void PatternLayerBase::execSync (      PatternLayerBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (TextureFieldMask & whichField))
+        _sfTexture.syncWith(pFrom->_sfTexture);
+
+    if(FieldBits::NoField != (TransformationFieldMask & whichField))
+        _sfTransformation.syncWith(pFrom->_sfTransformation);
+
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+        _sfColor.syncWith(pFrom->_sfColor);
+
+    if(FieldBits::NoField != (PatternSizeFieldMask & whichField))
+        _sfPatternSize.syncWith(pFrom->_sfPatternSize);
+
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+        _sfVerticalAlignment.syncWith(pFrom->_sfVerticalAlignment);
+
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+        _sfHorizontalAlignment.syncWith(pFrom->_sfHorizontalAlignment);
+
+    if(FieldBits::NoField != (HorizontalRepeatFieldMask & whichField))
+        _sfHorizontalRepeat.syncWith(pFrom->_sfHorizontalRepeat);
+
+    if(FieldBits::NoField != (VerticalRepeatFieldMask & whichField))
+        _sfVerticalRepeat.syncWith(pFrom->_sfVerticalRepeat);
+
+    if(FieldBits::NoField != (HorizontalRepeatValueFieldMask & whichField))
+        _sfHorizontalRepeatValue.syncWith(pFrom->_sfHorizontalRepeatValue);
+
+    if(FieldBits::NoField != (VerticalRepeatValueFieldMask & whichField))
+        _sfVerticalRepeatValue.syncWith(pFrom->_sfVerticalRepeatValue);
+
+    if(FieldBits::NoField != (TopLeftTextureCoordFieldMask & whichField))
+        _sfTopLeftTextureCoord.syncWith(pFrom->_sfTopLeftTextureCoord);
+
+    if(FieldBits::NoField != (BottomRightTextureCoordFieldMask & whichField))
+        _sfBottomRightTextureCoord.syncWith(pFrom->_sfBottomRightTextureCoord);
+}
+#endif
+
+
+inline
+const Char8 *PatternLayerBase::getClassname(void)
+{
+    return "PatternLayer";
+}
+OSG_GEN_CONTAINERPTR(PatternLayer);
 
 OSG_END_NAMESPACE
 

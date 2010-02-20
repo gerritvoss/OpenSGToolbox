@@ -31,16 +31,16 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGIntrusivePtrImplBase.h>
+#include <boost/shared_ptr.hpp>
 #include <exception>
 #include <string>
 
 OSG_BEGIN_NAMESPACE
   
-class OSG_USERINTERFACELIB_DLLMAPPING CannotUndoException : public std::exception
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING CannotUndoException : public std::exception
 {
     virtual const char* what() const throw()
     {
@@ -48,7 +48,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING CannotUndoException : public std::exceptio
     }
 };
 
-class OSG_USERINTERFACELIB_DLLMAPPING CannotRedoException : public std::exception
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING CannotRedoException : public std::exception
 {
     virtual const char* what() const throw()
     {
@@ -57,13 +57,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING CannotRedoException : public std::exceptio
 };
 
 class UndoableEdit;
-typedef boost::intrusive_ptr<UndoableEdit> UndoableEditPtr;
+typedef boost::shared_ptr<UndoableEdit> UndoableEditPtr;
 
-class OSG_USERINTERFACELIB_DLLMAPPING UndoableEdit : public virtual IntrusivePtrImplBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UndoableEdit
 {
    /*=========================  PUBLIC  ===============================*/
 protected:
-	typedef IntrusivePtrImplBase Inherited;
     typedef UndoableEditPtr  Ptr;
     typedef UndoableEdit  Self;
 

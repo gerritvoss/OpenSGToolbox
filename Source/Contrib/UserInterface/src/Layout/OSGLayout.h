@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,55 +42,75 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGLayoutBase.h"
-#include "Graphics/OSGGraphics.h"
-#include "Component/OSGComponent.h"
+#include "OSGGraphics.h"
+#include "OSGComponent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING Layout : public LayoutBase
-{
-  private:
+/*! \brief Layout class. See \ref
+           PageContribUserInterfaceLayout for a description.
+*/
 
-    typedef LayoutBase Inherited;
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Layout : public LayoutBase
+{
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef LayoutBase Inherited;
+    typedef Layout     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const = 0;
-	
-    virtual Vec2f minimumLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
-	virtual Vec2f requestedLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
-	virtual Vec2f preferredLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
-	virtual Vec2f maximumLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
+    virtual void updateLayout(const MFUnrecComponentPtr* Components,
+                              const Component* ParentComponent) const = 0;
 
-    virtual Vec2f minimumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const = 0;
-	virtual Vec2f requestedContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const = 0;
-	virtual Vec2f preferredContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const = 0;
-	virtual Vec2f maximumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const = 0;
+    virtual Vec2f minimumLayoutSize(const MFUnrecComponentPtr* Components,
+                                    const Component* ParentComponent) const;
+    virtual Vec2f requestedLayoutSize(const MFUnrecComponentPtr* Components,
+                                      const Component* ParentComponent) const;
+    virtual Vec2f preferredLayoutSize(const MFUnrecComponentPtr* Components,
+                                      const Component* ParentComponent) const;
+    virtual Vec2f maximumLayoutSize(const MFUnrecComponentPtr* Components,
+                                    const Component* ParentComponent) const;
+
+    virtual Vec2f minimumContentsLayoutSize(const MFUnrecComponentPtr* Components,
+                                            const Component* ParentComponent) const = 0;
+    virtual Vec2f requestedContentsLayoutSize(const MFUnrecComponentPtr* Components,
+                                              const Component* ParentComponent) const = 0;
+    virtual Vec2f preferredContentsLayoutSize(const MFUnrecComponentPtr* Components,
+                                              const Component* ParentComponent) const = 0;
+    virtual Vec2f maximumContentsLayoutSize(const MFUnrecComponentPtr* Components,
+                                            const Component* ParentComponent) const = 0;
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
-      enum SizeType {MIN_SIZE, MAX_SIZE, REQUESTED_SIZE, PREFERRED_SIZE};
+    enum SizeType
+    {
+        MIN_SIZE       = 0,
+        MAX_SIZE       = 1,
+        REQUESTED_SIZE = 2,
+        PREFERRED_SIZE = 3
+    };
 
     // Variables should all be in LayoutBase.
 
@@ -106,21 +126,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING Layout : public LayoutBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Layout(void); 
+    virtual ~Layout(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
 
-    static Vec2f getComponentSize(ComponentPtr TheComponent, SizeType TheSizeType);
+    static Vec2f getComponentSize(const Component* TheComponent, SizeType TheSizeType);
+
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class LayoutBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const Layout &source);
 };
 
@@ -128,9 +154,9 @@ typedef Layout *LayoutP;
 
 OSG_END_NAMESPACE
 
+#include "OSGComponentContainer.h"
+
 #include "OSGLayoutBase.inl"
 #include "OSGLayout.inl"
-
-#define OSGLAYOUT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGLAYOUT_H_ */

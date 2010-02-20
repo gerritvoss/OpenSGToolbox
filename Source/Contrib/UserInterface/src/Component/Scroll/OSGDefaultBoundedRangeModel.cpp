@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,26 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGDefaultBoundedRangeModel.h"
-
 #include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::DefaultBoundedRangeModel
-A UI DefaultBoundedRangeModel. 	
-*/
+// Documentation for this class is emitted in the
+// OSGDefaultBoundedRangeModelBase.cpp file.
+// To modify it, please change the .fcd file (OSGDefaultBoundedRangeModel.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -69,14 +63,20 @@ A UI DefaultBoundedRangeModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DefaultBoundedRangeModel::initMethod (void)
+void DefaultBoundedRangeModel::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
 UInt32 DefaultBoundedRangeModel::getExtent(void) const
 {
     return getInternalExtent();
@@ -106,15 +106,11 @@ void DefaultBoundedRangeModel::setExtent(UInt32 newExtent)
 {
     if(getInternalExtent() != newExtent)
     {
-        beginEditCP(DefaultBoundedRangeModelPtr(this), InternalExtentFieldMask);
-            setInternalExtent(newExtent);
-        endEditCP(DefaultBoundedRangeModelPtr(this), InternalExtentFieldMask);
+        setInternalExtent(newExtent);
     }
     if(getInternalValue() + static_cast<Int32>(getInternalExtent()) > getInternalMaximum())
     {
-        beginEditCP(DefaultBoundedRangeModelPtr(this), InternalValueFieldMask);
-            setInternalValue(getInternalMaximum() - getInternalExtent());
-        endEditCP(DefaultBoundedRangeModelPtr(this), InternalValueFieldMask);
+        setInternalValue(getInternalMaximum() - getInternalExtent());
     }
 }
 
@@ -122,15 +118,11 @@ void DefaultBoundedRangeModel::setMaximum(Int32 newMaximum)
 {
     if(getInternalMaximum() != newMaximum);
     {
-        beginEditCP(DefaultBoundedRangeModelPtr(this), InternalMaximumFieldMask);
-            setInternalMaximum(newMaximum);
-        endEditCP(DefaultBoundedRangeModelPtr(this), InternalMaximumFieldMask);
+        setInternalMaximum(newMaximum);
     }
     if(getInternalValue() + static_cast<Int32>(getInternalExtent()) > getInternalMaximum())
     {
-        beginEditCP(DefaultBoundedRangeModelPtr(this), InternalValueFieldMask);
-            setInternalValue(getInternalMaximum() - getInternalExtent());
-        endEditCP(DefaultBoundedRangeModelPtr(this), InternalValueFieldMask);
+        setInternalValue(getInternalMaximum() - getInternalExtent());
     }
 }
 
@@ -138,45 +130,39 @@ void DefaultBoundedRangeModel::setMinimum(Int32 newMinimum)
 {
     if(getInternalMinimum() != newMinimum)
     {
-        beginEditCP(DefaultBoundedRangeModelPtr(this), InternalMinimumFieldMask);
-            setInternalMinimum(newMinimum);
-        endEditCP(DefaultBoundedRangeModelPtr(this), InternalMinimumFieldMask);
+        setInternalMinimum(newMinimum);
     }
     if(getInternalValue() < getInternalMinimum())
     {
-        beginEditCP(DefaultBoundedRangeModelPtr(this), InternalValueFieldMask);
-            setInternalValue(getInternalMinimum());
-        endEditCP(DefaultBoundedRangeModelPtr(this), InternalValueFieldMask);
+        setInternalValue(getInternalMinimum());
     }
 }
 
 void DefaultBoundedRangeModel::setRangeProperties(Int32 value, UInt32 extent, Int32 min, Int32 max, bool adjusting)
 {
     if(getInternalExtent() != extent ||
-                       getInternalMaximum() != max ||
-                       getInternalMinimum() != min ||
-                       getInternalValue() != value ||
-                       getInternalValueIsAdjusting() != adjusting)
+       getInternalMaximum() != max ||
+       getInternalMinimum() != min ||
+       getInternalValue() != value ||
+       getInternalValueIsAdjusting() != adjusting)
     {
-        beginEditCP(DefaultBoundedRangeModelPtr(this), InternalValueFieldMask | InternalExtentFieldMask | InternalMinimumFieldMask | InternalMaximumFieldMask | InternalValueIsAdjustingFieldMask);
 
-            setInternalExtent(extent);
-            setInternalMaximum(max);
-            setInternalMinimum(min);
-            setInternalValueIsAdjusting(adjusting);
-            if(value + static_cast<Int32>(getInternalExtent()) > getInternalMaximum() && getInternalExtent() < getInternalMaximum() - getInternalMinimum())
-            {
-                setInternalValue( getInternalMaximum() - getInternalExtent());
-            }
-            else if(value < getInternalMinimum())
-            {
-                setInternalValue(getInternalMinimum());
-            }
-            else
-            {
-                setInternalValue(value);
-            }
-        endEditCP(DefaultBoundedRangeModelPtr(this), InternalValueFieldMask | InternalExtentFieldMask | InternalMinimumFieldMask | InternalMaximumFieldMask | InternalValueIsAdjustingFieldMask);
+        setInternalExtent(extent);
+        setInternalMaximum(max);
+        setInternalMinimum(min);
+        setInternalValueIsAdjusting(adjusting);
+        if(value + static_cast<Int32>(getInternalExtent()) > getInternalMaximum() && getInternalExtent() < getInternalMaximum() - getInternalMinimum())
+        {
+            setInternalValue( getInternalMaximum() - getInternalExtent());
+        }
+        else if(value < getInternalMinimum())
+        {
+            setInternalValue(getInternalMinimum());
+        }
+        else
+        {
+            setInternalValue(value);
+        }
     }
 }
 
@@ -184,20 +170,18 @@ void DefaultBoundedRangeModel::setValue(Int32 newValue)
 {
     if(getInternalValue() != newValue)
     {
-        beginEditCP(DefaultBoundedRangeModelPtr(this), InternalValueFieldMask);
-            if(newValue + static_cast<Int32>(getInternalExtent()) > getInternalMaximum())
-            {
-                setInternalValue(getInternalMaximum() - getInternalExtent());
-            }
-            else if(newValue < getInternalMinimum())
-            {
-                setInternalValue(getInternalMinimum());
-            }
-            else
-            {
-                setInternalValue(newValue);
-            }
-        endEditCP(DefaultBoundedRangeModelPtr(this), InternalValueFieldMask);
+        if(newValue + static_cast<Int32>(getInternalExtent()) > getInternalMaximum())
+        {
+            setInternalValue(getInternalMaximum() - getInternalExtent());
+        }
+        else if(newValue < getInternalMinimum())
+        {
+            setInternalValue(getInternalMinimum());
+        }
+        else
+        {
+            setInternalValue(newValue);
+        }
     }
 }
 
@@ -205,18 +189,16 @@ void DefaultBoundedRangeModel::setValueIsAdjusting(bool b)
 {
     if(getInternalValueIsAdjusting() != b)
     {
-        beginEditCP(DefaultBoundedRangeModelPtr(this), InternalValueIsAdjustingFieldMask);
-            setInternalValueIsAdjusting(b);
-        endEditCP(DefaultBoundedRangeModelPtr(this), InternalValueIsAdjustingFieldMask);
+        setInternalValueIsAdjusting(b);
     }
 }
 
 EventConnection DefaultBoundedRangeModel::addChangeListener(ChangeListenerPtr Listener)
 {
-   _ChangeListeners.insert(Listener);
-   return EventConnection(
-       boost::bind(&DefaultBoundedRangeModel::isChangeListenerAttached, this, Listener),
-       boost::bind(&DefaultBoundedRangeModel::removeChangeListener, this, Listener));
+    _ChangeListeners.insert(Listener);
+    return EventConnection(
+                           boost::bind(&DefaultBoundedRangeModel::isChangeListenerAttached, this, Listener),
+                           boost::bind(&DefaultBoundedRangeModel::removeChangeListener, this, Listener));
 }
 
 bool DefaultBoundedRangeModel::isChangeListenerAttached(ChangeListenerPtr Listener) const
@@ -226,18 +208,17 @@ bool DefaultBoundedRangeModel::isChangeListenerAttached(ChangeListenerPtr Listen
 
 void DefaultBoundedRangeModel::removeChangeListener(ChangeListenerPtr Listener)
 {
-   ChangeListenerSetItor EraseIter(_ChangeListeners.find(Listener));
-   if(EraseIter != _ChangeListeners.end())
-   {
-      _ChangeListeners.erase(EraseIter);
-   }
+    ChangeListenerSetItor EraseIter(_ChangeListeners.find(Listener));
+    if(EraseIter != _ChangeListeners.end())
+    {
+        _ChangeListeners.erase(EraseIter);
+    }
 }
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
-void DefaultBoundedRangeModel::produceStateChanged(const ChangeEventPtr e)
+void DefaultBoundedRangeModel::produceStateChanged(const ChangeEventUnrecPtr e)
 {
    ChangeListenerSet ModelListenerSet(_ChangeListeners);
    for(ChangeListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
@@ -246,6 +227,7 @@ void DefaultBoundedRangeModel::produceStateChanged(const ChangeEventPtr e)
    }
    _Producer.produceEvent(StateChangedMethodId,e);
 }
+
 /*----------------------- constructors & destructors ----------------------*/
 
 DefaultBoundedRangeModel::DefaultBoundedRangeModel(void) :
@@ -260,13 +242,16 @@ DefaultBoundedRangeModel::DefaultBoundedRangeModel(const DefaultBoundedRangeMode
 
 DefaultBoundedRangeModel::~DefaultBoundedRangeModel(void)
 {
+    std::cout << "DefaultBoundedRangeModel::~DefaultBoundedRangeModel " << this << std::endl;
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void DefaultBoundedRangeModel::changed(BitVector whichField, UInt32 origin)
+void DefaultBoundedRangeModel::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 
     if((whichField & InternalValueFieldMask) ||
        (whichField & InternalValueIsAdjustingFieldMask) ||
@@ -274,15 +259,14 @@ void DefaultBoundedRangeModel::changed(BitVector whichField, UInt32 origin)
        (whichField & InternalMinimumFieldMask) ||
        (whichField & InternalExtentFieldMask))
     {
-        produceStateChanged(ChangeEvent::create(NullFC, getSystemTime()));
+        produceStateChanged(ChangeEvent::create(NULL, getSystemTime()));
     }
 }
 
-void DefaultBoundedRangeModel::dump(      UInt32    , 
+void DefaultBoundedRangeModel::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump DefaultBoundedRangeModel NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

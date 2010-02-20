@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,632 +50,1564 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILECOMPONENTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGWindowEventProducer.h"       // Cursor default header
+
+#include "OSGLayoutConstraints.h"       // Constraints Class
+#include "OSGBorder.h"                  // Border Class
+#include "OSGLayer.h"                   // Background Class
+#include "OSGTransferHandler.h"         // TransferHandler Class
+#include "OSGComponentContainer.h"      // ParentContainer Class
+#include "OSGInternalWindow.h"          // ParentWindow Class
+#include "OSGPopupMenu.h"               // PopupMenu Class
 
 #include "OSGComponentBase.h"
 #include "OSGComponent.h"
 
-#include <OpenSG/Input/OSGWindowEventProducer.h>   // Cursor default header
+#include <boost/bind.hpp>
+
+#include "OSGEvent.h"
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ComponentBase::PositionFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::PositionFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  ComponentBase::ClipBoundsFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::ClipBoundsFieldId);
+/*! \class OSG::Component
+    A UI Component Interface.
+ */
 
-const OSG::BitVector  ComponentBase::MinSizeFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::MinSizeFieldId);
-
-const OSG::BitVector  ComponentBase::MaxSizeFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::MaxSizeFieldId);
-
-const OSG::BitVector  ComponentBase::PreferredSizeFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::PreferredSizeFieldId);
-
-const OSG::BitVector  ComponentBase::SizeFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::SizeFieldId);
-
-const OSG::BitVector  ComponentBase::VisibleFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::VisibleFieldId);
-
-const OSG::BitVector  ComponentBase::EnabledFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::EnabledFieldId);
-
-const OSG::BitVector  ComponentBase::FocusedFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::FocusedFieldId);
-
-const OSG::BitVector  ComponentBase::ConstraintsFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::ConstraintsFieldId);
-
-const OSG::BitVector  ComponentBase::BorderFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::BorderFieldId);
-
-const OSG::BitVector  ComponentBase::BackgroundFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::BackgroundFieldId);
-
-const OSG::BitVector  ComponentBase::DisabledBorderFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::DisabledBorderFieldId);
-
-const OSG::BitVector  ComponentBase::DisabledBackgroundFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::DisabledBackgroundFieldId);
-
-const OSG::BitVector  ComponentBase::DragEnabledFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::DragEnabledFieldId);
-
-const OSG::BitVector  ComponentBase::TransferHandlerFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::TransferHandlerFieldId);
-
-const OSG::BitVector  ComponentBase::FocusedBorderFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::FocusedBorderFieldId);
-
-const OSG::BitVector  ComponentBase::FocusedBackgroundFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::FocusedBackgroundFieldId);
-
-const OSG::BitVector  ComponentBase::RolloverBorderFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::RolloverBorderFieldId);
-
-const OSG::BitVector  ComponentBase::RolloverBackgroundFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::RolloverBackgroundFieldId);
-
-const OSG::BitVector  ComponentBase::ToolTipTextFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::ToolTipTextFieldId);
-
-const OSG::BitVector  ComponentBase::OpacityFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::OpacityFieldId);
-
-const OSG::BitVector  ComponentBase::ParentContainerFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::ParentContainerFieldId);
-
-const OSG::BitVector  ComponentBase::ParentWindowFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::ParentWindowFieldId);
-
-const OSG::BitVector  ComponentBase::ClippingFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::ClippingFieldId);
-
-const OSG::BitVector  ComponentBase::PopupMenuFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::PopupMenuFieldId);
-
-const OSG::BitVector  ComponentBase::FocusedForegroundFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::FocusedForegroundFieldId);
-
-const OSG::BitVector  ComponentBase::RolloverForegroundFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::RolloverForegroundFieldId);
-
-const OSG::BitVector  ComponentBase::DisabledForegroundFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::DisabledForegroundFieldId);
-
-const OSG::BitVector  ComponentBase::ForegroundFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::ForegroundFieldId);
-
-const OSG::BitVector  ComponentBase::CursorFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentBase::CursorFieldId);
-
-const OSG::BitVector  ComponentBase::EventProducerFieldMask =
-    (TypeTraits<BitVector>::One << ComponentBase::EventProducerFieldId);
-
-const OSG::BitVector ComponentBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Pnt2f           ComponentBase::_sfPosition
     
 */
+
 /*! \var Pnt4f           ComponentBase::_sfClipBounds
     
 */
+
 /*! \var Vec2f           ComponentBase::_sfMinSize
     
 */
+
 /*! \var Vec2f           ComponentBase::_sfMaxSize
     
 */
+
 /*! \var Vec2f           ComponentBase::_sfPreferredSize
     
 */
+
 /*! \var Vec2f           ComponentBase::_sfSize
     
 */
+
 /*! \var bool            ComponentBase::_sfVisible
     
 */
+
 /*! \var bool            ComponentBase::_sfEnabled
     
 */
+
 /*! \var bool            ComponentBase::_sfFocused
     
 */
-/*! \var LayoutConstraintsPtr ComponentBase::_sfConstraints
+
+/*! \var LayoutConstraints * ComponentBase::_sfConstraints
     
 */
-/*! \var BorderPtr       ComponentBase::_sfBorder
+
+/*! \var Border *        ComponentBase::_sfBorder
     
 */
-/*! \var LayerPtr        ComponentBase::_sfBackground
+
+/*! \var Layer *         ComponentBase::_sfBackground
     
 */
-/*! \var BorderPtr       ComponentBase::_sfDisabledBorder
+
+/*! \var Border *        ComponentBase::_sfDisabledBorder
     
 */
-/*! \var LayerPtr        ComponentBase::_sfDisabledBackground
+
+/*! \var Layer *         ComponentBase::_sfDisabledBackground
     
 */
+
 /*! \var bool            ComponentBase::_sfDragEnabled
     
 */
-/*! \var TransferHandlerPtr ComponentBase::_sfTransferHandler
+
+/*! \var TransferHandler * ComponentBase::_sfTransferHandler
     
 */
-/*! \var BorderPtr       ComponentBase::_sfFocusedBorder
+
+/*! \var Border *        ComponentBase::_sfFocusedBorder
     
 */
-/*! \var LayerPtr        ComponentBase::_sfFocusedBackground
+
+/*! \var Layer *         ComponentBase::_sfFocusedBackground
     
 */
-/*! \var BorderPtr       ComponentBase::_sfRolloverBorder
+
+/*! \var Border *        ComponentBase::_sfRolloverBorder
     
 */
-/*! \var LayerPtr        ComponentBase::_sfRolloverBackground
+
+/*! \var Layer *         ComponentBase::_sfRolloverBackground
     
 */
+
 /*! \var std::string     ComponentBase::_sfToolTipText
     
 */
+
 /*! \var Real32          ComponentBase::_sfOpacity
     
 */
-/*! \var ContainerPtr    ComponentBase::_sfParentContainer
+
+/*! \var ComponentContainer * ComponentBase::_sfParentContainer
     
 */
-/*! \var InternalWindowPtr ComponentBase::_sfParentWindow
+
+/*! \var InternalWindow * ComponentBase::_sfParentWindow
     
 */
+
 /*! \var bool            ComponentBase::_sfClipping
     
 */
-/*! \var PopupMenuPtr    ComponentBase::_sfPopupMenu
+
+/*! \var PopupMenu *     ComponentBase::_sfPopupMenu
     
 */
-/*! \var LayerPtr        ComponentBase::_sfFocusedForeground
+
+/*! \var Layer *         ComponentBase::_sfFocusedForeground
     
 */
-/*! \var LayerPtr        ComponentBase::_sfRolloverForeground
+
+/*! \var Layer *         ComponentBase::_sfRolloverForeground
     
 */
-/*! \var LayerPtr        ComponentBase::_sfDisabledForeground
+
+/*! \var Layer *         ComponentBase::_sfDisabledForeground
     
 */
-/*! \var LayerPtr        ComponentBase::_sfForeground
+
+/*! \var Layer *         ComponentBase::_sfForeground
     
 */
+
 /*! \var UInt32          ComponentBase::_sfCursor
     
 */
 
-//! Component description
 
-FieldDescription *ComponentBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<Component *>::_type("ComponentPtr", "AttachmentContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(Component *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           Component *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           Component *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ComponentBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFPnt2f::getClassType(), 
-                     "Position", 
-                     PositionFieldId, PositionFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFPosition)),
-    new FieldDescription(SFPnt4f::getClassType(), 
-                     "ClipBounds", 
-                     ClipBoundsFieldId, ClipBoundsFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFClipBounds)),
-    new FieldDescription(SFVec2f::getClassType(), 
-                     "MinSize", 
-                     MinSizeFieldId, MinSizeFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFMinSize)),
-    new FieldDescription(SFVec2f::getClassType(), 
-                     "MaxSize", 
-                     MaxSizeFieldId, MaxSizeFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFMaxSize)),
-    new FieldDescription(SFVec2f::getClassType(), 
-                     "PreferredSize", 
-                     PreferredSizeFieldId, PreferredSizeFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFPreferredSize)),
-    new FieldDescription(SFVec2f::getClassType(), 
-                     "Size", 
-                     SizeFieldId, SizeFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFSize)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "Visible", 
-                     VisibleFieldId, VisibleFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFVisible)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "Enabled", 
-                     EnabledFieldId, EnabledFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFEnabled)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "Focused", 
-                     FocusedFieldId, FocusedFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFFocused)),
-    new FieldDescription(SFLayoutConstraintsPtr::getClassType(), 
-                     "Constraints", 
-                     ConstraintsFieldId, ConstraintsFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFConstraints)),
-    new FieldDescription(SFBorderPtr::getClassType(), 
-                     "Border", 
-                     BorderFieldId, BorderFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFBorder)),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "Background", 
-                     BackgroundFieldId, BackgroundFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFBackground)),
-    new FieldDescription(SFBorderPtr::getClassType(), 
-                     "DisabledBorder", 
-                     DisabledBorderFieldId, DisabledBorderFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFDisabledBorder)),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "DisabledBackground", 
-                     DisabledBackgroundFieldId, DisabledBackgroundFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFDisabledBackground)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "DragEnabled", 
-                     DragEnabledFieldId, DragEnabledFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFDragEnabled)),
-    new FieldDescription(SFTransferHandlerPtr::getClassType(), 
-                     "TransferHandler", 
-                     TransferHandlerFieldId, TransferHandlerFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFTransferHandler)),
-    new FieldDescription(SFBorderPtr::getClassType(), 
-                     "FocusedBorder", 
-                     FocusedBorderFieldId, FocusedBorderFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFFocusedBorder)),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "FocusedBackground", 
-                     FocusedBackgroundFieldId, FocusedBackgroundFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFFocusedBackground)),
-    new FieldDescription(SFBorderPtr::getClassType(), 
-                     "RolloverBorder", 
-                     RolloverBorderFieldId, RolloverBorderFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFRolloverBorder)),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "RolloverBackground", 
-                     RolloverBackgroundFieldId, RolloverBackgroundFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFRolloverBackground)),
-    new FieldDescription(SFString::getClassType(), 
-                     "ToolTipText", 
-                     ToolTipTextFieldId, ToolTipTextFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFToolTipText)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Opacity", 
-                     OpacityFieldId, OpacityFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFOpacity)),
-    new FieldDescription(SFContainerPtr::getClassType(), 
-                     "ParentContainer", 
-                     ParentContainerFieldId, ParentContainerFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFParentContainer)),
-    new FieldDescription(SFInternalWindowPtr::getClassType(), 
-                     "ParentWindow", 
-                     ParentWindowFieldId, ParentWindowFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFParentWindow)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "Clipping", 
-                     ClippingFieldId, ClippingFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFClipping)),
-    new FieldDescription(SFPopupMenuPtr::getClassType(), 
-                     "PopupMenu", 
-                     PopupMenuFieldId, PopupMenuFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFPopupMenu)),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "FocusedForeground", 
-                     FocusedForegroundFieldId, FocusedForegroundFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFFocusedForeground)),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "RolloverForeground", 
-                     RolloverForegroundFieldId, RolloverForegroundFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFRolloverForeground)),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "DisabledForeground", 
-                     DisabledForegroundFieldId, DisabledForegroundFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFDisabledForeground)),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "Foreground", 
-                     ForegroundFieldId, ForegroundFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFForeground)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "Cursor", 
-                     CursorFieldId, CursorFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFCursor))
-    , 
-    new FieldDescription(SFEventProducerPtr::getClassType(), 
-                     "EventProducer", 
-                     EventProducerFieldId,EventProducerFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFEventProducer))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType ComponentBase::_type(
-    "Component",
-    "AttachmentContainer",
+    pDesc = new SFPnt2f::Description(
+        SFPnt2f::getClassType(),
+        "Position",
+        "",
+        PositionFieldId, PositionFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandlePosition),
+        static_cast<FieldGetMethodSig >(&Component::getHandlePosition));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFPnt4f::Description(
+        SFPnt4f::getClassType(),
+        "ClipBounds",
+        "",
+        ClipBoundsFieldId, ClipBoundsFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleClipBounds),
+        static_cast<FieldGetMethodSig >(&Component::getHandleClipBounds));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFVec2f::Description(
+        SFVec2f::getClassType(),
+        "MinSize",
+        "",
+        MinSizeFieldId, MinSizeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleMinSize),
+        static_cast<FieldGetMethodSig >(&Component::getHandleMinSize));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFVec2f::Description(
+        SFVec2f::getClassType(),
+        "MaxSize",
+        "",
+        MaxSizeFieldId, MaxSizeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleMaxSize),
+        static_cast<FieldGetMethodSig >(&Component::getHandleMaxSize));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFVec2f::Description(
+        SFVec2f::getClassType(),
+        "PreferredSize",
+        "",
+        PreferredSizeFieldId, PreferredSizeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandlePreferredSize),
+        static_cast<FieldGetMethodSig >(&Component::getHandlePreferredSize));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFVec2f::Description(
+        SFVec2f::getClassType(),
+        "Size",
+        "",
+        SizeFieldId, SizeFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleSize),
+        static_cast<FieldGetMethodSig >(&Component::getHandleSize));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Visible",
+        "",
+        VisibleFieldId, VisibleFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleVisible),
+        static_cast<FieldGetMethodSig >(&Component::getHandleVisible));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Enabled",
+        "",
+        EnabledFieldId, EnabledFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleEnabled),
+        static_cast<FieldGetMethodSig >(&Component::getHandleEnabled));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Focused",
+        "",
+        FocusedFieldId, FocusedFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleFocused),
+        static_cast<FieldGetMethodSig >(&Component::getHandleFocused));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayoutConstraintsPtr::Description(
+        SFUnrecLayoutConstraintsPtr::getClassType(),
+        "Constraints",
+        "",
+        ConstraintsFieldId, ConstraintsFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleConstraints),
+        static_cast<FieldGetMethodSig >(&Component::getHandleConstraints));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecBorderPtr::Description(
+        SFUnrecBorderPtr::getClassType(),
+        "Border",
+        "",
+        BorderFieldId, BorderFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleBorder),
+        static_cast<FieldGetMethodSig >(&Component::getHandleBorder));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "Background",
+        "",
+        BackgroundFieldId, BackgroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleBackground),
+        static_cast<FieldGetMethodSig >(&Component::getHandleBackground));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecBorderPtr::Description(
+        SFUnrecBorderPtr::getClassType(),
+        "DisabledBorder",
+        "",
+        DisabledBorderFieldId, DisabledBorderFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleDisabledBorder),
+        static_cast<FieldGetMethodSig >(&Component::getHandleDisabledBorder));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "DisabledBackground",
+        "",
+        DisabledBackgroundFieldId, DisabledBackgroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleDisabledBackground),
+        static_cast<FieldGetMethodSig >(&Component::getHandleDisabledBackground));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "DragEnabled",
+        "",
+        DragEnabledFieldId, DragEnabledFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleDragEnabled),
+        static_cast<FieldGetMethodSig >(&Component::getHandleDragEnabled));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecTransferHandlerPtr::Description(
+        SFUnrecTransferHandlerPtr::getClassType(),
+        "TransferHandler",
+        "",
+        TransferHandlerFieldId, TransferHandlerFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleTransferHandler),
+        static_cast<FieldGetMethodSig >(&Component::getHandleTransferHandler));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecBorderPtr::Description(
+        SFUnrecBorderPtr::getClassType(),
+        "FocusedBorder",
+        "",
+        FocusedBorderFieldId, FocusedBorderFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleFocusedBorder),
+        static_cast<FieldGetMethodSig >(&Component::getHandleFocusedBorder));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "FocusedBackground",
+        "",
+        FocusedBackgroundFieldId, FocusedBackgroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleFocusedBackground),
+        static_cast<FieldGetMethodSig >(&Component::getHandleFocusedBackground));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecBorderPtr::Description(
+        SFUnrecBorderPtr::getClassType(),
+        "RolloverBorder",
+        "",
+        RolloverBorderFieldId, RolloverBorderFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleRolloverBorder),
+        static_cast<FieldGetMethodSig >(&Component::getHandleRolloverBorder));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "RolloverBackground",
+        "",
+        RolloverBackgroundFieldId, RolloverBackgroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleRolloverBackground),
+        static_cast<FieldGetMethodSig >(&Component::getHandleRolloverBackground));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFString::Description(
+        SFString::getClassType(),
+        "ToolTipText",
+        "",
+        ToolTipTextFieldId, ToolTipTextFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleToolTipText),
+        static_cast<FieldGetMethodSig >(&Component::getHandleToolTipText));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Opacity",
+        "",
+        OpacityFieldId, OpacityFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleOpacity),
+        static_cast<FieldGetMethodSig >(&Component::getHandleOpacity));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecComponentContainerPtr::Description(
+        SFUnrecComponentContainerPtr::getClassType(),
+        "ParentContainer",
+        "",
+        ParentContainerFieldId, ParentContainerFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleParentContainer),
+        static_cast<FieldGetMethodSig >(&Component::getHandleParentContainer));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecInternalWindowPtr::Description(
+        SFUnrecInternalWindowPtr::getClassType(),
+        "ParentWindow",
+        "",
+        ParentWindowFieldId, ParentWindowFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleParentWindow),
+        static_cast<FieldGetMethodSig >(&Component::getHandleParentWindow));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Clipping",
+        "",
+        ClippingFieldId, ClippingFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleClipping),
+        static_cast<FieldGetMethodSig >(&Component::getHandleClipping));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecPopupMenuPtr::Description(
+        SFUnrecPopupMenuPtr::getClassType(),
+        "PopupMenu",
+        "",
+        PopupMenuFieldId, PopupMenuFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandlePopupMenu),
+        static_cast<FieldGetMethodSig >(&Component::getHandlePopupMenu));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "FocusedForeground",
+        "",
+        FocusedForegroundFieldId, FocusedForegroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleFocusedForeground),
+        static_cast<FieldGetMethodSig >(&Component::getHandleFocusedForeground));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "RolloverForeground",
+        "",
+        RolloverForegroundFieldId, RolloverForegroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleRolloverForeground),
+        static_cast<FieldGetMethodSig >(&Component::getHandleRolloverForeground));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "DisabledForeground",
+        "",
+        DisabledForegroundFieldId, DisabledForegroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleDisabledForeground),
+        static_cast<FieldGetMethodSig >(&Component::getHandleDisabledForeground));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "Foreground",
+        "",
+        ForegroundFieldId, ForegroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleForeground),
+        static_cast<FieldGetMethodSig >(&Component::getHandleForeground));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "Cursor",
+        "",
+        CursorFieldId, CursorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleCursor),
+        static_cast<FieldGetMethodSig >(&Component::getHandleCursor));
+
+    oType.addInitialDesc(pDesc);
+    pDesc = new SFEventProducerPtr::Description(
+        SFEventProducerPtr::getClassType(),
+        "EventProducer",
+        "Event Producer",
+        EventProducerFieldId,EventProducerFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast     <FieldEditMethodSig>(&Component::invalidEditField),
+        static_cast     <FieldGetMethodSig >(&Component::invalidGetField));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+ComponentBase::TypeObject ComponentBase::_type(
+    ComponentBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
     NULL,
-    NULL, 
     Component::initMethod,
-    _desc,
-    sizeof(_desc));
+    Component::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&Component::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"Component\"\n"
+    "\tparent=\"AttachmentContainer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"abstract\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"true\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Component Interface.\n"
+    "\t<Field\n"
+    "\t\tname=\"Position\"\n"
+    "\t\ttype=\"Pnt2f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\tdefaultValue=\"0,0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ClipBounds\"\n"
+    "\t\ttype=\"Pnt4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\tdefaultValue=\"0.0f,0.0f,0.0f,0.0f\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MinSize\"\n"
+    "\t\ttype=\"Vec2f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0,0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MaxSize\"\n"
+    "\t\ttype=\"Vec2f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"32767,32767\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"PreferredSize\"\n"
+    "\t\ttype=\"Vec2f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1,1\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Size\"\n"
+    "\t\ttype=\"Vec2f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Visible\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"true\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Enabled\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"true\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Focused\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Constraints\"\n"
+    "\t\ttype=\"LayoutConstraints\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Border\"\n"
+    "\t\ttype=\"Border\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Background\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"DisabledBorder\"\n"
+    "\t\ttype=\"Border\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"DisabledBackground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"DragEnabled\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TransferHandler\"\n"
+    "\t\ttype=\"TransferHandler\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FocusedBorder\"\n"
+    "\t\ttype=\"Border\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FocusedBackground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"RolloverBorder\"\n"
+    "\t\ttype=\"Border\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"RolloverBackground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ToolTipText\"\n"
+    "\t\ttype=\"std::string\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Opacity\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ParentContainer\"\n"
+    "\t\ttype=\"ComponentContainer\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ParentWindow\"\n"
+    "\t\ttype=\"InternalWindow\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Clipping\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"true\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"PopupMenu\"\n"
+    "\t\ttype=\"PopupMenu\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "   <Field\n"
+    "\t\tname=\"FocusedForeground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"RolloverForeground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"DisabledForeground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Foreground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Cursor\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"WindowEventProducer::CURSOR_POINTER\"\n"
+    "\t\tdefaultHeader=\"OSGWindowEventProducer.h\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"MouseMoved\"\n"
+    "\t\ttype=\"MouseEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"MouseDragged\"\n"
+    "\t\ttype=\"MouseEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"MouseClicked\"\n"
+    "\t\ttype=\"MouseEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"MouseEntered\"\n"
+    "\t\ttype=\"MouseEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"MouseExited\"\n"
+    "\t\ttype=\"MouseEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"MousePressed\"\n"
+    "\t\ttype=\"MouseEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"MouseReleased\"\n"
+    "\t\ttype=\"MouseEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"MouseWheelMoved\"\n"
+    "\t\ttype=\"MouseWheelEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"KeyPressed\"\n"
+    "\t\ttype=\"KeyEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"KeyReleased\"\n"
+    "\t\ttype=\"KeyEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"KeyTyped\"\n"
+    "\t\ttype=\"KeyEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"FocusGained\"\n"
+    "\t\ttype=\"FocusEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"FocusLost\"\n"
+    "\t\ttype=\"FocusEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"ComponentHidden\"\n"
+    "\t\ttype=\"ComponentEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"ComponentVisible\"\n"
+    "\t\ttype=\"ComponentEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"ComponentMoved\"\n"
+    "\t\ttype=\"ComponentEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"ComponentResized\"\n"
+    "\t\ttype=\"ComponentEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"ComponentEnabled\"\n"
+    "\t\ttype=\"ComponentEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"ComponentDisabled\"\n"
+    "\t\ttype=\"ComponentEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "</FieldContainer>\n",
+    "A UI Component Interface.\n"
+    );
 
 //! Component Produced Methods
 
 MethodDescription *ComponentBase::_methodDesc[] =
 {
     new MethodDescription("MouseMoved", 
+                    "",
                      MouseMovedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("MouseDragged", 
+                    "",
                      MouseDraggedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("MouseClicked", 
+                    "",
                      MouseClickedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("MouseEntered", 
+                    "",
                      MouseEnteredMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("MouseExited", 
+                    "",
                      MouseExitedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("MousePressed", 
+                    "",
                      MousePressedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("MouseReleased", 
+                    "",
                      MouseReleasedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("MouseWheelMoved", 
+                    "",
                      MouseWheelMovedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("KeyPressed", 
+                    "",
                      KeyPressedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("KeyReleased", 
+                    "",
                      KeyReleasedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("KeyTyped", 
+                    "",
                      KeyTypedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("FocusGained", 
+                    "",
                      FocusGainedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("FocusLost", 
+                    "",
                      FocusLostMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("ComponentHidden", 
+                    "",
                      ComponentHiddenMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("ComponentVisible", 
+                    "",
                      ComponentVisibleMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("ComponentMoved", 
+                    "",
                      ComponentMovedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("ComponentResized", 
+                    "",
                      ComponentResizedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("ComponentEnabled", 
+                    "",
                      ComponentEnabledMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("ComponentDisabled", 
+                    "",
                      ComponentDisabledMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod())
 };
 
 EventProducerType ComponentBase::_producerType(
     "ComponentProducerType",
     "EventProducerType",
-    NULL,
+    "",
     InitEventProducerFunctor(),
     _methodDesc,
     sizeof(_methodDesc));
-//OSG_FIELD_CONTAINER_DEF(ComponentBase, ComponentPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ComponentBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ComponentBase::getType(void) const 
+FieldContainerType &ComponentBase::getType(void)
 {
     return _type;
-} 
+}
+
+const FieldContainerType &ComponentBase::getType(void) const
+{
+    return _type;
+}
 
 const EventProducerType &ComponentBase::getProducerType(void) const
 {
     return _producerType;
 }
 
-
-UInt32 ComponentBase::getContainerSize(void) const 
-{ 
-    return sizeof(Component); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ComponentBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+UInt32 ComponentBase::getContainerSize(void) const
 {
-    this->executeSyncImpl(static_cast<ComponentBase *>(&other),
-                          whichField);
+    return sizeof(Component);
 }
-#else
-void ComponentBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFPnt2f *ComponentBase::editSFPosition(void)
 {
-    this->executeSyncImpl((ComponentBase *) &other, whichField, sInfo);
+    editSField(PositionFieldMask);
+
+    return &_sfPosition;
 }
-void ComponentBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+const SFPnt2f *ComponentBase::getSFPosition(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfPosition;
 }
 
-void ComponentBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+
+SFPnt4f *ComponentBase::editSFClipBounds(void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(ClipBoundsFieldMask);
 
+    return &_sfClipBounds;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-ComponentBase::ComponentBase(void) :
-    _Producer(&getProducerType()),
-    _sfPosition               (Pnt2f(0,0)), 
-    _sfClipBounds             (Pnt4f(0.0f,0.0f,0.0f,0.0f)), 
-    _sfMinSize                (Vec2f(0,0)), 
-    _sfMaxSize                (Vec2f(32767,32767)), 
-    _sfPreferredSize          (Vec2f(1,1)), 
-    _sfSize                   (), 
-    _sfVisible                (bool(true)), 
-    _sfEnabled                (bool(true)), 
-    _sfFocused                (bool(false)), 
-    _sfConstraints            (), 
-    _sfBorder                 (BorderPtr(NullFC)), 
-    _sfBackground             (LayerPtr(NullFC)), 
-    _sfDisabledBorder         (BorderPtr(NullFC)), 
-    _sfDisabledBackground     (LayerPtr(NullFC)), 
-    _sfDragEnabled            (bool(false)), 
-    _sfTransferHandler        (TransferHandlerPtr(NullFC)), 
-    _sfFocusedBorder          (BorderPtr(NullFC)), 
-    _sfFocusedBackground      (LayerPtr(NullFC)), 
-    _sfRolloverBorder         (BorderPtr(NullFC)), 
-    _sfRolloverBackground     (LayerPtr(NullFC)), 
-    _sfToolTipText            (), 
-    _sfOpacity                (Real32(1.0)), 
-    _sfParentContainer        (ContainerPtr(NullFC)), 
-    _sfParentWindow           (InternalWindowPtr(NullFC)), 
-    _sfClipping               (bool(true)), 
-    _sfPopupMenu              (PopupMenuPtr(NullFC)), 
-    _sfFocusedForeground      (LayerPtr(NullFC)), 
-    _sfRolloverForeground     (LayerPtr(NullFC)), 
-    _sfDisabledForeground     (LayerPtr(NullFC)), 
-    _sfForeground             (LayerPtr(NullFC)), 
-    _sfCursor                 (UInt32(WindowEventProducer::CURSOR_POINTER)), 
-    _sfEventProducer(&_Producer),
-    Inherited() 
+const SFPnt4f *ComponentBase::getSFClipBounds(void) const
 {
+    return &_sfClipBounds;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-ComponentBase::ComponentBase(const ComponentBase &source) :
-    _Producer(&source.getProducerType()),
-    _sfPosition               (source._sfPosition               ), 
-    _sfClipBounds             (source._sfClipBounds             ), 
-    _sfMinSize                (source._sfMinSize                ), 
-    _sfMaxSize                (source._sfMaxSize                ), 
-    _sfPreferredSize          (source._sfPreferredSize          ), 
-    _sfSize                   (source._sfSize                   ), 
-    _sfVisible                (source._sfVisible                ), 
-    _sfEnabled                (source._sfEnabled                ), 
-    _sfFocused                (source._sfFocused                ), 
-    _sfConstraints            (source._sfConstraints            ), 
-    _sfBorder                 (source._sfBorder                 ), 
-    _sfBackground             (source._sfBackground             ), 
-    _sfDisabledBorder         (source._sfDisabledBorder         ), 
-    _sfDisabledBackground     (source._sfDisabledBackground     ), 
-    _sfDragEnabled            (source._sfDragEnabled            ), 
-    _sfTransferHandler        (source._sfTransferHandler        ), 
-    _sfFocusedBorder          (source._sfFocusedBorder          ), 
-    _sfFocusedBackground      (source._sfFocusedBackground      ), 
-    _sfRolloverBorder         (source._sfRolloverBorder         ), 
-    _sfRolloverBackground     (source._sfRolloverBackground     ), 
-    _sfToolTipText            (source._sfToolTipText            ), 
-    _sfOpacity                (source._sfOpacity                ), 
-    _sfParentContainer        (source._sfParentContainer        ), 
-    _sfParentWindow           (source._sfParentWindow           ), 
-    _sfClipping               (source._sfClipping               ), 
-    _sfPopupMenu              (source._sfPopupMenu              ), 
-    _sfFocusedForeground      (source._sfFocusedForeground      ), 
-    _sfRolloverForeground     (source._sfRolloverForeground     ), 
-    _sfDisabledForeground     (source._sfDisabledForeground     ), 
-    _sfForeground             (source._sfForeground             ), 
-    _sfCursor                 (source._sfCursor                 ), 
-    _sfEventProducer(&_Producer),
-    Inherited                 (source)
+SFVec2f *ComponentBase::editSFMinSize(void)
 {
+    editSField(MinSizeFieldMask);
+
+    return &_sfMinSize;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-ComponentBase::~ComponentBase(void)
+const SFVec2f *ComponentBase::getSFMinSize(void) const
 {
+    return &_sfMinSize;
 }
+
+
+SFVec2f *ComponentBase::editSFMaxSize(void)
+{
+    editSField(MaxSizeFieldMask);
+
+    return &_sfMaxSize;
+}
+
+const SFVec2f *ComponentBase::getSFMaxSize(void) const
+{
+    return &_sfMaxSize;
+}
+
+
+SFVec2f *ComponentBase::editSFPreferredSize(void)
+{
+    editSField(PreferredSizeFieldMask);
+
+    return &_sfPreferredSize;
+}
+
+const SFVec2f *ComponentBase::getSFPreferredSize(void) const
+{
+    return &_sfPreferredSize;
+}
+
+
+SFVec2f *ComponentBase::editSFSize(void)
+{
+    editSField(SizeFieldMask);
+
+    return &_sfSize;
+}
+
+const SFVec2f *ComponentBase::getSFSize(void) const
+{
+    return &_sfSize;
+}
+
+
+SFBool *ComponentBase::editSFVisible(void)
+{
+    editSField(VisibleFieldMask);
+
+    return &_sfVisible;
+}
+
+const SFBool *ComponentBase::getSFVisible(void) const
+{
+    return &_sfVisible;
+}
+
+
+SFBool *ComponentBase::editSFEnabled(void)
+{
+    editSField(EnabledFieldMask);
+
+    return &_sfEnabled;
+}
+
+const SFBool *ComponentBase::getSFEnabled(void) const
+{
+    return &_sfEnabled;
+}
+
+
+SFBool *ComponentBase::editSFFocused(void)
+{
+    editSField(FocusedFieldMask);
+
+    return &_sfFocused;
+}
+
+const SFBool *ComponentBase::getSFFocused(void) const
+{
+    return &_sfFocused;
+}
+
+
+//! Get the Component::_sfConstraints field.
+const SFUnrecLayoutConstraintsPtr *ComponentBase::getSFConstraints(void) const
+{
+    return &_sfConstraints;
+}
+
+SFUnrecLayoutConstraintsPtr *ComponentBase::editSFConstraints    (void)
+{
+    editSField(ConstraintsFieldMask);
+
+    return &_sfConstraints;
+}
+
+//! Get the Component::_sfBorder field.
+const SFUnrecBorderPtr *ComponentBase::getSFBorder(void) const
+{
+    return &_sfBorder;
+}
+
+SFUnrecBorderPtr    *ComponentBase::editSFBorder         (void)
+{
+    editSField(BorderFieldMask);
+
+    return &_sfBorder;
+}
+
+//! Get the Component::_sfBackground field.
+const SFUnrecLayerPtr *ComponentBase::getSFBackground(void) const
+{
+    return &_sfBackground;
+}
+
+SFUnrecLayerPtr     *ComponentBase::editSFBackground     (void)
+{
+    editSField(BackgroundFieldMask);
+
+    return &_sfBackground;
+}
+
+//! Get the Component::_sfDisabledBorder field.
+const SFUnrecBorderPtr *ComponentBase::getSFDisabledBorder(void) const
+{
+    return &_sfDisabledBorder;
+}
+
+SFUnrecBorderPtr    *ComponentBase::editSFDisabledBorder (void)
+{
+    editSField(DisabledBorderFieldMask);
+
+    return &_sfDisabledBorder;
+}
+
+//! Get the Component::_sfDisabledBackground field.
+const SFUnrecLayerPtr *ComponentBase::getSFDisabledBackground(void) const
+{
+    return &_sfDisabledBackground;
+}
+
+SFUnrecLayerPtr     *ComponentBase::editSFDisabledBackground(void)
+{
+    editSField(DisabledBackgroundFieldMask);
+
+    return &_sfDisabledBackground;
+}
+
+SFBool *ComponentBase::editSFDragEnabled(void)
+{
+    editSField(DragEnabledFieldMask);
+
+    return &_sfDragEnabled;
+}
+
+const SFBool *ComponentBase::getSFDragEnabled(void) const
+{
+    return &_sfDragEnabled;
+}
+
+
+//! Get the Component::_sfTransferHandler field.
+const SFUnrecTransferHandlerPtr *ComponentBase::getSFTransferHandler(void) const
+{
+    return &_sfTransferHandler;
+}
+
+SFUnrecTransferHandlerPtr *ComponentBase::editSFTransferHandler(void)
+{
+    editSField(TransferHandlerFieldMask);
+
+    return &_sfTransferHandler;
+}
+
+//! Get the Component::_sfFocusedBorder field.
+const SFUnrecBorderPtr *ComponentBase::getSFFocusedBorder(void) const
+{
+    return &_sfFocusedBorder;
+}
+
+SFUnrecBorderPtr    *ComponentBase::editSFFocusedBorder  (void)
+{
+    editSField(FocusedBorderFieldMask);
+
+    return &_sfFocusedBorder;
+}
+
+//! Get the Component::_sfFocusedBackground field.
+const SFUnrecLayerPtr *ComponentBase::getSFFocusedBackground(void) const
+{
+    return &_sfFocusedBackground;
+}
+
+SFUnrecLayerPtr     *ComponentBase::editSFFocusedBackground(void)
+{
+    editSField(FocusedBackgroundFieldMask);
+
+    return &_sfFocusedBackground;
+}
+
+//! Get the Component::_sfRolloverBorder field.
+const SFUnrecBorderPtr *ComponentBase::getSFRolloverBorder(void) const
+{
+    return &_sfRolloverBorder;
+}
+
+SFUnrecBorderPtr    *ComponentBase::editSFRolloverBorder (void)
+{
+    editSField(RolloverBorderFieldMask);
+
+    return &_sfRolloverBorder;
+}
+
+//! Get the Component::_sfRolloverBackground field.
+const SFUnrecLayerPtr *ComponentBase::getSFRolloverBackground(void) const
+{
+    return &_sfRolloverBackground;
+}
+
+SFUnrecLayerPtr     *ComponentBase::editSFRolloverBackground(void)
+{
+    editSField(RolloverBackgroundFieldMask);
+
+    return &_sfRolloverBackground;
+}
+
+SFString *ComponentBase::editSFToolTipText(void)
+{
+    editSField(ToolTipTextFieldMask);
+
+    return &_sfToolTipText;
+}
+
+const SFString *ComponentBase::getSFToolTipText(void) const
+{
+    return &_sfToolTipText;
+}
+
+
+SFReal32 *ComponentBase::editSFOpacity(void)
+{
+    editSField(OpacityFieldMask);
+
+    return &_sfOpacity;
+}
+
+const SFReal32 *ComponentBase::getSFOpacity(void) const
+{
+    return &_sfOpacity;
+}
+
+
+//! Get the Component::_sfParentContainer field.
+const SFUnrecComponentContainerPtr *ComponentBase::getSFParentContainer(void) const
+{
+    return &_sfParentContainer;
+}
+
+SFUnrecComponentContainerPtr *ComponentBase::editSFParentContainer(void)
+{
+    editSField(ParentContainerFieldMask);
+
+    return &_sfParentContainer;
+}
+
+//! Get the Component::_sfParentWindow field.
+const SFUnrecInternalWindowPtr *ComponentBase::getSFParentWindow(void) const
+{
+    return &_sfParentWindow;
+}
+
+SFUnrecInternalWindowPtr *ComponentBase::editSFParentWindow   (void)
+{
+    editSField(ParentWindowFieldMask);
+
+    return &_sfParentWindow;
+}
+
+SFBool *ComponentBase::editSFClipping(void)
+{
+    editSField(ClippingFieldMask);
+
+    return &_sfClipping;
+}
+
+const SFBool *ComponentBase::getSFClipping(void) const
+{
+    return &_sfClipping;
+}
+
+
+//! Get the Component::_sfPopupMenu field.
+const SFUnrecPopupMenuPtr *ComponentBase::getSFPopupMenu(void) const
+{
+    return &_sfPopupMenu;
+}
+
+SFUnrecPopupMenuPtr *ComponentBase::editSFPopupMenu      (void)
+{
+    editSField(PopupMenuFieldMask);
+
+    return &_sfPopupMenu;
+}
+
+//! Get the Component::_sfFocusedForeground field.
+const SFUnrecLayerPtr *ComponentBase::getSFFocusedForeground(void) const
+{
+    return &_sfFocusedForeground;
+}
+
+SFUnrecLayerPtr     *ComponentBase::editSFFocusedForeground(void)
+{
+    editSField(FocusedForegroundFieldMask);
+
+    return &_sfFocusedForeground;
+}
+
+//! Get the Component::_sfRolloverForeground field.
+const SFUnrecLayerPtr *ComponentBase::getSFRolloverForeground(void) const
+{
+    return &_sfRolloverForeground;
+}
+
+SFUnrecLayerPtr     *ComponentBase::editSFRolloverForeground(void)
+{
+    editSField(RolloverForegroundFieldMask);
+
+    return &_sfRolloverForeground;
+}
+
+//! Get the Component::_sfDisabledForeground field.
+const SFUnrecLayerPtr *ComponentBase::getSFDisabledForeground(void) const
+{
+    return &_sfDisabledForeground;
+}
+
+SFUnrecLayerPtr     *ComponentBase::editSFDisabledForeground(void)
+{
+    editSField(DisabledForegroundFieldMask);
+
+    return &_sfDisabledForeground;
+}
+
+//! Get the Component::_sfForeground field.
+const SFUnrecLayerPtr *ComponentBase::getSFForeground(void) const
+{
+    return &_sfForeground;
+}
+
+SFUnrecLayerPtr     *ComponentBase::editSFForeground     (void)
+{
+    editSField(ForegroundFieldMask);
+
+    return &_sfForeground;
+}
+
+SFUInt32 *ComponentBase::editSFCursor(void)
+{
+    editSField(CursorFieldMask);
+
+    return &_sfCursor;
+}
+
+const SFUInt32 *ComponentBase::getSFCursor(void) const
+{
+    return &_sfCursor;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ComponentBase::getBinSize(const BitVector &whichField)
+UInt32 ComponentBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -683,168 +1615,136 @@ UInt32 ComponentBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfPosition.getBinSize();
     }
-
     if(FieldBits::NoField != (ClipBoundsFieldMask & whichField))
     {
         returnValue += _sfClipBounds.getBinSize();
     }
-
     if(FieldBits::NoField != (MinSizeFieldMask & whichField))
     {
         returnValue += _sfMinSize.getBinSize();
     }
-
     if(FieldBits::NoField != (MaxSizeFieldMask & whichField))
     {
         returnValue += _sfMaxSize.getBinSize();
     }
-
     if(FieldBits::NoField != (PreferredSizeFieldMask & whichField))
     {
         returnValue += _sfPreferredSize.getBinSize();
     }
-
     if(FieldBits::NoField != (SizeFieldMask & whichField))
     {
         returnValue += _sfSize.getBinSize();
     }
-
     if(FieldBits::NoField != (VisibleFieldMask & whichField))
     {
         returnValue += _sfVisible.getBinSize();
     }
-
     if(FieldBits::NoField != (EnabledFieldMask & whichField))
     {
         returnValue += _sfEnabled.getBinSize();
     }
-
     if(FieldBits::NoField != (FocusedFieldMask & whichField))
     {
         returnValue += _sfFocused.getBinSize();
     }
-
     if(FieldBits::NoField != (ConstraintsFieldMask & whichField))
     {
         returnValue += _sfConstraints.getBinSize();
     }
-
     if(FieldBits::NoField != (BorderFieldMask & whichField))
     {
         returnValue += _sfBorder.getBinSize();
     }
-
     if(FieldBits::NoField != (BackgroundFieldMask & whichField))
     {
         returnValue += _sfBackground.getBinSize();
     }
-
     if(FieldBits::NoField != (DisabledBorderFieldMask & whichField))
     {
         returnValue += _sfDisabledBorder.getBinSize();
     }
-
     if(FieldBits::NoField != (DisabledBackgroundFieldMask & whichField))
     {
         returnValue += _sfDisabledBackground.getBinSize();
     }
-
     if(FieldBits::NoField != (DragEnabledFieldMask & whichField))
     {
         returnValue += _sfDragEnabled.getBinSize();
     }
-
     if(FieldBits::NoField != (TransferHandlerFieldMask & whichField))
     {
         returnValue += _sfTransferHandler.getBinSize();
     }
-
     if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
     {
         returnValue += _sfFocusedBorder.getBinSize();
     }
-
     if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
     {
         returnValue += _sfFocusedBackground.getBinSize();
     }
-
     if(FieldBits::NoField != (RolloverBorderFieldMask & whichField))
     {
         returnValue += _sfRolloverBorder.getBinSize();
     }
-
     if(FieldBits::NoField != (RolloverBackgroundFieldMask & whichField))
     {
         returnValue += _sfRolloverBackground.getBinSize();
     }
-
     if(FieldBits::NoField != (ToolTipTextFieldMask & whichField))
     {
         returnValue += _sfToolTipText.getBinSize();
     }
-
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
     {
         returnValue += _sfOpacity.getBinSize();
     }
-
     if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
     {
         returnValue += _sfParentContainer.getBinSize();
     }
-
     if(FieldBits::NoField != (ParentWindowFieldMask & whichField))
     {
         returnValue += _sfParentWindow.getBinSize();
     }
-
     if(FieldBits::NoField != (ClippingFieldMask & whichField))
     {
         returnValue += _sfClipping.getBinSize();
     }
-
     if(FieldBits::NoField != (PopupMenuFieldMask & whichField))
     {
         returnValue += _sfPopupMenu.getBinSize();
     }
-
     if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
     {
         returnValue += _sfFocusedForeground.getBinSize();
     }
-
     if(FieldBits::NoField != (RolloverForegroundFieldMask & whichField))
     {
         returnValue += _sfRolloverForeground.getBinSize();
     }
-
     if(FieldBits::NoField != (DisabledForegroundFieldMask & whichField))
     {
         returnValue += _sfDisabledForeground.getBinSize();
     }
-
     if(FieldBits::NoField != (ForegroundFieldMask & whichField))
     {
         returnValue += _sfForeground.getBinSize();
     }
-
     if(FieldBits::NoField != (CursorFieldMask & whichField))
     {
         returnValue += _sfCursor.getBinSize();
     }
-
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
     {
         returnValue += _sfEventProducer.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ComponentBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ComponentBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -852,167 +1752,134 @@ void ComponentBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfPosition.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ClipBoundsFieldMask & whichField))
     {
         _sfClipBounds.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MinSizeFieldMask & whichField))
     {
         _sfMinSize.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxSizeFieldMask & whichField))
     {
         _sfMaxSize.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (PreferredSizeFieldMask & whichField))
     {
         _sfPreferredSize.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SizeFieldMask & whichField))
     {
         _sfSize.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (VisibleFieldMask & whichField))
     {
         _sfVisible.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EnabledFieldMask & whichField))
     {
         _sfEnabled.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedFieldMask & whichField))
     {
         _sfFocused.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ConstraintsFieldMask & whichField))
     {
         _sfConstraints.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (BorderFieldMask & whichField))
     {
         _sfBorder.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (BackgroundFieldMask & whichField))
     {
         _sfBackground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DisabledBorderFieldMask & whichField))
     {
         _sfDisabledBorder.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DisabledBackgroundFieldMask & whichField))
     {
         _sfDisabledBackground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DragEnabledFieldMask & whichField))
     {
         _sfDragEnabled.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TransferHandlerFieldMask & whichField))
     {
         _sfTransferHandler.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
     {
         _sfFocusedBorder.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
     {
         _sfFocusedBackground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (RolloverBorderFieldMask & whichField))
     {
         _sfRolloverBorder.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (RolloverBackgroundFieldMask & whichField))
     {
         _sfRolloverBackground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ToolTipTextFieldMask & whichField))
     {
         _sfToolTipText.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
     {
         _sfOpacity.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
     {
         _sfParentContainer.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ParentWindowFieldMask & whichField))
     {
         _sfParentWindow.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ClippingFieldMask & whichField))
     {
         _sfClipping.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (PopupMenuFieldMask & whichField))
     {
         _sfPopupMenu.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
     {
         _sfFocusedForeground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (RolloverForegroundFieldMask & whichField))
     {
         _sfRolloverForeground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DisabledForegroundFieldMask & whichField))
     {
         _sfDisabledForeground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ForegroundFieldMask & whichField))
     {
         _sfForeground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (CursorFieldMask & whichField))
     {
         _sfCursor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
     {
         _sfEventProducer.copyToBin(pMem);
     }
-
-
 }
 
-void ComponentBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ComponentBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -1020,1365 +1887,1713 @@ void ComponentBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfPosition.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ClipBoundsFieldMask & whichField))
     {
         _sfClipBounds.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MinSizeFieldMask & whichField))
     {
         _sfMinSize.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MaxSizeFieldMask & whichField))
     {
         _sfMaxSize.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (PreferredSizeFieldMask & whichField))
     {
         _sfPreferredSize.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SizeFieldMask & whichField))
     {
         _sfSize.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (VisibleFieldMask & whichField))
     {
         _sfVisible.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EnabledFieldMask & whichField))
     {
         _sfEnabled.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedFieldMask & whichField))
     {
         _sfFocused.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ConstraintsFieldMask & whichField))
     {
         _sfConstraints.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (BorderFieldMask & whichField))
     {
         _sfBorder.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (BackgroundFieldMask & whichField))
     {
         _sfBackground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DisabledBorderFieldMask & whichField))
     {
         _sfDisabledBorder.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DisabledBackgroundFieldMask & whichField))
     {
         _sfDisabledBackground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DragEnabledFieldMask & whichField))
     {
         _sfDragEnabled.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TransferHandlerFieldMask & whichField))
     {
         _sfTransferHandler.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
     {
         _sfFocusedBorder.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
     {
         _sfFocusedBackground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (RolloverBorderFieldMask & whichField))
     {
         _sfRolloverBorder.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (RolloverBackgroundFieldMask & whichField))
     {
         _sfRolloverBackground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ToolTipTextFieldMask & whichField))
     {
         _sfToolTipText.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
     {
         _sfOpacity.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
     {
         _sfParentContainer.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ParentWindowFieldMask & whichField))
     {
         _sfParentWindow.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ClippingFieldMask & whichField))
     {
         _sfClipping.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (PopupMenuFieldMask & whichField))
     {
         _sfPopupMenu.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
     {
         _sfFocusedForeground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (RolloverForegroundFieldMask & whichField))
     {
         _sfRolloverForeground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DisabledForegroundFieldMask & whichField))
     {
         _sfDisabledForeground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ForegroundFieldMask & whichField))
     {
         _sfForeground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (CursorFieldMask & whichField))
     {
         _sfCursor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
     {
         _sfEventProducer.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ComponentBase::ComponentBase(void) :
+    _Producer(&getProducerType()),
+    Inherited(),
+    _sfPosition               (Pnt2f(0,0)),
+    _sfClipBounds             (Pnt4f(0.0f,0.0f,0.0f,0.0f)),
+    _sfMinSize                (Vec2f(0,0)),
+    _sfMaxSize                (Vec2f(32767,32767)),
+    _sfPreferredSize          (Vec2f(1,1)),
+    _sfSize                   (),
+    _sfVisible                (bool(true)),
+    _sfEnabled                (bool(true)),
+    _sfFocused                (bool(false)),
+    _sfConstraints            (NULL),
+    _sfBorder                 (NULL),
+    _sfBackground             (NULL),
+    _sfDisabledBorder         (NULL),
+    _sfDisabledBackground     (NULL),
+    _sfDragEnabled            (bool(false)),
+    _sfTransferHandler        (NULL),
+    _sfFocusedBorder          (NULL),
+    _sfFocusedBackground      (NULL),
+    _sfRolloverBorder         (NULL),
+    _sfRolloverBackground     (NULL),
+    _sfToolTipText            (),
+    _sfOpacity                (Real32(1.0)),
+    _sfParentContainer        (NULL),
+    _sfParentWindow           (NULL),
+    _sfClipping               (bool(true)),
+    _sfPopupMenu              (NULL),
+    _sfFocusedForeground      (NULL),
+    _sfRolloverForeground     (NULL),
+    _sfDisabledForeground     (NULL),
+    _sfForeground             (NULL),
+    _sfCursor                 (UInt32(WindowEventProducer::CURSOR_POINTER))
+    ,_sfEventProducer(&_Producer)
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-    if(FieldBits::NoField != (PositionFieldMask & whichField))
-        _sfPosition.syncWith(pOther->_sfPosition);
-
-    if(FieldBits::NoField != (ClipBoundsFieldMask & whichField))
-        _sfClipBounds.syncWith(pOther->_sfClipBounds);
-
-    if(FieldBits::NoField != (MinSizeFieldMask & whichField))
-        _sfMinSize.syncWith(pOther->_sfMinSize);
-
-    if(FieldBits::NoField != (MaxSizeFieldMask & whichField))
-        _sfMaxSize.syncWith(pOther->_sfMaxSize);
-
-    if(FieldBits::NoField != (PreferredSizeFieldMask & whichField))
-        _sfPreferredSize.syncWith(pOther->_sfPreferredSize);
-
-    if(FieldBits::NoField != (SizeFieldMask & whichField))
-        _sfSize.syncWith(pOther->_sfSize);
-
-    if(FieldBits::NoField != (VisibleFieldMask & whichField))
-        _sfVisible.syncWith(pOther->_sfVisible);
-
-    if(FieldBits::NoField != (EnabledFieldMask & whichField))
-        _sfEnabled.syncWith(pOther->_sfEnabled);
-
-    if(FieldBits::NoField != (FocusedFieldMask & whichField))
-        _sfFocused.syncWith(pOther->_sfFocused);
-
-    if(FieldBits::NoField != (ConstraintsFieldMask & whichField))
-        _sfConstraints.syncWith(pOther->_sfConstraints);
-
-    if(FieldBits::NoField != (BorderFieldMask & whichField))
-        _sfBorder.syncWith(pOther->_sfBorder);
-
-    if(FieldBits::NoField != (BackgroundFieldMask & whichField))
-        _sfBackground.syncWith(pOther->_sfBackground);
-
-    if(FieldBits::NoField != (DisabledBorderFieldMask & whichField))
-        _sfDisabledBorder.syncWith(pOther->_sfDisabledBorder);
-
-    if(FieldBits::NoField != (DisabledBackgroundFieldMask & whichField))
-        _sfDisabledBackground.syncWith(pOther->_sfDisabledBackground);
-
-    if(FieldBits::NoField != (DragEnabledFieldMask & whichField))
-        _sfDragEnabled.syncWith(pOther->_sfDragEnabled);
-
-    if(FieldBits::NoField != (TransferHandlerFieldMask & whichField))
-        _sfTransferHandler.syncWith(pOther->_sfTransferHandler);
-
-    if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
-        _sfFocusedBorder.syncWith(pOther->_sfFocusedBorder);
-
-    if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
-        _sfFocusedBackground.syncWith(pOther->_sfFocusedBackground);
-
-    if(FieldBits::NoField != (RolloverBorderFieldMask & whichField))
-        _sfRolloverBorder.syncWith(pOther->_sfRolloverBorder);
-
-    if(FieldBits::NoField != (RolloverBackgroundFieldMask & whichField))
-        _sfRolloverBackground.syncWith(pOther->_sfRolloverBackground);
-
-    if(FieldBits::NoField != (ToolTipTextFieldMask & whichField))
-        _sfToolTipText.syncWith(pOther->_sfToolTipText);
-
-    if(FieldBits::NoField != (OpacityFieldMask & whichField))
-        _sfOpacity.syncWith(pOther->_sfOpacity);
-
-    if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
-        _sfParentContainer.syncWith(pOther->_sfParentContainer);
-
-    if(FieldBits::NoField != (ParentWindowFieldMask & whichField))
-        _sfParentWindow.syncWith(pOther->_sfParentWindow);
-
-    if(FieldBits::NoField != (ClippingFieldMask & whichField))
-        _sfClipping.syncWith(pOther->_sfClipping);
-
-    if(FieldBits::NoField != (PopupMenuFieldMask & whichField))
-        _sfPopupMenu.syncWith(pOther->_sfPopupMenu);
-
-    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
-        _sfFocusedForeground.syncWith(pOther->_sfFocusedForeground);
-
-    if(FieldBits::NoField != (RolloverForegroundFieldMask & whichField))
-        _sfRolloverForeground.syncWith(pOther->_sfRolloverForeground);
-
-    if(FieldBits::NoField != (DisabledForegroundFieldMask & whichField))
-        _sfDisabledForeground.syncWith(pOther->_sfDisabledForeground);
-
-    if(FieldBits::NoField != (ForegroundFieldMask & whichField))
-        _sfForeground.syncWith(pOther->_sfForeground);
-
-    if(FieldBits::NoField != (CursorFieldMask & whichField))
-        _sfCursor.syncWith(pOther->_sfCursor);
-
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-        _sfEventProducer.syncWith(pOther->_sfEventProducer);
-
-
-}
-#else
-void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (PositionFieldMask & whichField))
-        _sfPosition.syncWith(pOther->_sfPosition);
-
-    if(FieldBits::NoField != (ClipBoundsFieldMask & whichField))
-        _sfClipBounds.syncWith(pOther->_sfClipBounds);
-
-    if(FieldBits::NoField != (MinSizeFieldMask & whichField))
-        _sfMinSize.syncWith(pOther->_sfMinSize);
-
-    if(FieldBits::NoField != (MaxSizeFieldMask & whichField))
-        _sfMaxSize.syncWith(pOther->_sfMaxSize);
-
-    if(FieldBits::NoField != (PreferredSizeFieldMask & whichField))
-        _sfPreferredSize.syncWith(pOther->_sfPreferredSize);
-
-    if(FieldBits::NoField != (SizeFieldMask & whichField))
-        _sfSize.syncWith(pOther->_sfSize);
-
-    if(FieldBits::NoField != (VisibleFieldMask & whichField))
-        _sfVisible.syncWith(pOther->_sfVisible);
-
-    if(FieldBits::NoField != (EnabledFieldMask & whichField))
-        _sfEnabled.syncWith(pOther->_sfEnabled);
-
-    if(FieldBits::NoField != (FocusedFieldMask & whichField))
-        _sfFocused.syncWith(pOther->_sfFocused);
-
-    if(FieldBits::NoField != (ConstraintsFieldMask & whichField))
-        _sfConstraints.syncWith(pOther->_sfConstraints);
-
-    if(FieldBits::NoField != (BorderFieldMask & whichField))
-        _sfBorder.syncWith(pOther->_sfBorder);
-
-    if(FieldBits::NoField != (BackgroundFieldMask & whichField))
-        _sfBackground.syncWith(pOther->_sfBackground);
-
-    if(FieldBits::NoField != (DisabledBorderFieldMask & whichField))
-        _sfDisabledBorder.syncWith(pOther->_sfDisabledBorder);
-
-    if(FieldBits::NoField != (DisabledBackgroundFieldMask & whichField))
-        _sfDisabledBackground.syncWith(pOther->_sfDisabledBackground);
-
-    if(FieldBits::NoField != (DragEnabledFieldMask & whichField))
-        _sfDragEnabled.syncWith(pOther->_sfDragEnabled);
-
-    if(FieldBits::NoField != (TransferHandlerFieldMask & whichField))
-        _sfTransferHandler.syncWith(pOther->_sfTransferHandler);
-
-    if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
-        _sfFocusedBorder.syncWith(pOther->_sfFocusedBorder);
-
-    if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
-        _sfFocusedBackground.syncWith(pOther->_sfFocusedBackground);
-
-    if(FieldBits::NoField != (RolloverBorderFieldMask & whichField))
-        _sfRolloverBorder.syncWith(pOther->_sfRolloverBorder);
-
-    if(FieldBits::NoField != (RolloverBackgroundFieldMask & whichField))
-        _sfRolloverBackground.syncWith(pOther->_sfRolloverBackground);
-
-    if(FieldBits::NoField != (ToolTipTextFieldMask & whichField))
-        _sfToolTipText.syncWith(pOther->_sfToolTipText);
-
-    if(FieldBits::NoField != (OpacityFieldMask & whichField))
-        _sfOpacity.syncWith(pOther->_sfOpacity);
-
-    if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
-        _sfParentContainer.syncWith(pOther->_sfParentContainer);
-
-    if(FieldBits::NoField != (ParentWindowFieldMask & whichField))
-        _sfParentWindow.syncWith(pOther->_sfParentWindow);
-
-    if(FieldBits::NoField != (ClippingFieldMask & whichField))
-        _sfClipping.syncWith(pOther->_sfClipping);
-
-    if(FieldBits::NoField != (PopupMenuFieldMask & whichField))
-        _sfPopupMenu.syncWith(pOther->_sfPopupMenu);
-
-    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
-        _sfFocusedForeground.syncWith(pOther->_sfFocusedForeground);
-
-    if(FieldBits::NoField != (RolloverForegroundFieldMask & whichField))
-        _sfRolloverForeground.syncWith(pOther->_sfRolloverForeground);
-
-    if(FieldBits::NoField != (DisabledForegroundFieldMask & whichField))
-        _sfDisabledForeground.syncWith(pOther->_sfDisabledForeground);
-
-    if(FieldBits::NoField != (ForegroundFieldMask & whichField))
-        _sfForeground.syncWith(pOther->_sfForeground);
-
-    if(FieldBits::NoField != (CursorFieldMask & whichField))
-        _sfCursor.syncWith(pOther->_sfCursor);
-
-
-
 }
 
-void ComponentBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+ComponentBase::ComponentBase(const ComponentBase &source) :
+    _Producer(&source.getProducerType()),
+    Inherited(source),
+    _sfPosition               (source._sfPosition               ),
+    _sfClipBounds             (source._sfClipBounds             ),
+    _sfMinSize                (source._sfMinSize                ),
+    _sfMaxSize                (source._sfMaxSize                ),
+    _sfPreferredSize          (source._sfPreferredSize          ),
+    _sfSize                   (source._sfSize                   ),
+    _sfVisible                (source._sfVisible                ),
+    _sfEnabled                (source._sfEnabled                ),
+    _sfFocused                (source._sfFocused                ),
+    _sfConstraints            (NULL),
+    _sfBorder                 (NULL),
+    _sfBackground             (NULL),
+    _sfDisabledBorder         (NULL),
+    _sfDisabledBackground     (NULL),
+    _sfDragEnabled            (source._sfDragEnabled            ),
+    _sfTransferHandler        (NULL),
+    _sfFocusedBorder          (NULL),
+    _sfFocusedBackground      (NULL),
+    _sfRolloverBorder         (NULL),
+    _sfRolloverBackground     (NULL),
+    _sfToolTipText            (source._sfToolTipText            ),
+    _sfOpacity                (source._sfOpacity                ),
+    _sfParentContainer        (NULL),
+    _sfParentWindow           (NULL),
+    _sfClipping               (source._sfClipping               ),
+    _sfPopupMenu              (NULL),
+    _sfFocusedForeground      (NULL),
+    _sfRolloverForeground     (NULL),
+    _sfDisabledForeground     (NULL),
+    _sfForeground             (NULL),
+    _sfCursor                 (source._sfCursor                 )
+    ,_sfEventProducer(&_Producer)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
+
+/*-------------------------- destructors ----------------------------------*/
+
+ComponentBase::~ComponentBase(void)
+{
+}
+
+void ComponentBase::onCreate(const Component *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        Component *pThis = static_cast<Component *>(this);
+
+        pThis->setConstraints(source->getConstraints());
+
+        pThis->setBorder(source->getBorder());
+
+        pThis->setBackground(source->getBackground());
+
+        pThis->setDisabledBorder(source->getDisabledBorder());
+
+        pThis->setDisabledBackground(source->getDisabledBackground());
+
+        pThis->setTransferHandler(source->getTransferHandler());
+
+        pThis->setFocusedBorder(source->getFocusedBorder());
+
+        pThis->setFocusedBackground(source->getFocusedBackground());
+
+        pThis->setRolloverBorder(source->getRolloverBorder());
+
+        pThis->setRolloverBackground(source->getRolloverBackground());
+
+        pThis->setParentContainer(source->getParentContainer());
+
+        pThis->setParentWindow(source->getParentWindow());
+
+        pThis->setPopupMenu(source->getPopupMenu());
+
+        pThis->setFocusedForeground(source->getFocusedForeground());
+
+        pThis->setRolloverForeground(source->getRolloverForeground());
+
+        pThis->setDisabledForeground(source->getDisabledForeground());
+
+        pThis->setForeground(source->getForeground());
+    }
+}
+
+GetFieldHandlePtr ComponentBase::getHandlePosition        (void) const
+{
+    SFPnt2f::GetHandlePtr returnValue(
+        new  SFPnt2f::GetHandle(
+             &_sfPosition,
+             this->getType().getFieldDesc(PositionFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandlePosition       (void)
+{
+    SFPnt2f::EditHandlePtr returnValue(
+        new  SFPnt2f::EditHandle(
+             &_sfPosition,
+             this->getType().getFieldDesc(PositionFieldId),
+             this));
+
+
+    editSField(PositionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleClipBounds      (void) const
+{
+    SFPnt4f::GetHandlePtr returnValue(
+        new  SFPnt4f::GetHandle(
+             &_sfClipBounds,
+             this->getType().getFieldDesc(ClipBoundsFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleClipBounds     (void)
+{
+    SFPnt4f::EditHandlePtr returnValue(
+        new  SFPnt4f::EditHandle(
+             &_sfClipBounds,
+             this->getType().getFieldDesc(ClipBoundsFieldId),
+             this));
+
+
+    editSField(ClipBoundsFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleMinSize         (void) const
+{
+    SFVec2f::GetHandlePtr returnValue(
+        new  SFVec2f::GetHandle(
+             &_sfMinSize,
+             this->getType().getFieldDesc(MinSizeFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleMinSize        (void)
+{
+    SFVec2f::EditHandlePtr returnValue(
+        new  SFVec2f::EditHandle(
+             &_sfMinSize,
+             this->getType().getFieldDesc(MinSizeFieldId),
+             this));
+
+
+    editSField(MinSizeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleMaxSize         (void) const
+{
+    SFVec2f::GetHandlePtr returnValue(
+        new  SFVec2f::GetHandle(
+             &_sfMaxSize,
+             this->getType().getFieldDesc(MaxSizeFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleMaxSize        (void)
+{
+    SFVec2f::EditHandlePtr returnValue(
+        new  SFVec2f::EditHandle(
+             &_sfMaxSize,
+             this->getType().getFieldDesc(MaxSizeFieldId),
+             this));
+
+
+    editSField(MaxSizeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandlePreferredSize   (void) const
+{
+    SFVec2f::GetHandlePtr returnValue(
+        new  SFVec2f::GetHandle(
+             &_sfPreferredSize,
+             this->getType().getFieldDesc(PreferredSizeFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandlePreferredSize  (void)
+{
+    SFVec2f::EditHandlePtr returnValue(
+        new  SFVec2f::EditHandle(
+             &_sfPreferredSize,
+             this->getType().getFieldDesc(PreferredSizeFieldId),
+             this));
+
+
+    editSField(PreferredSizeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleSize            (void) const
+{
+    SFVec2f::GetHandlePtr returnValue(
+        new  SFVec2f::GetHandle(
+             &_sfSize,
+             this->getType().getFieldDesc(SizeFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleSize           (void)
+{
+    SFVec2f::EditHandlePtr returnValue(
+        new  SFVec2f::EditHandle(
+             &_sfSize,
+             this->getType().getFieldDesc(SizeFieldId),
+             this));
+
+
+    editSField(SizeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleVisible         (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfVisible,
+             this->getType().getFieldDesc(VisibleFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleVisible        (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfVisible,
+             this->getType().getFieldDesc(VisibleFieldId),
+             this));
+
+
+    editSField(VisibleFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleEnabled         (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfEnabled,
+             this->getType().getFieldDesc(EnabledFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleEnabled        (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfEnabled,
+             this->getType().getFieldDesc(EnabledFieldId),
+             this));
+
+
+    editSField(EnabledFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleFocused         (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfFocused,
+             this->getType().getFieldDesc(FocusedFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleFocused        (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfFocused,
+             this->getType().getFieldDesc(FocusedFieldId),
+             this));
+
+
+    editSField(FocusedFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleConstraints     (void) const
+{
+    SFUnrecLayoutConstraintsPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayoutConstraintsPtr::GetHandle(
+             &_sfConstraints,
+             this->getType().getFieldDesc(ConstraintsFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleConstraints    (void)
+{
+    SFUnrecLayoutConstraintsPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayoutConstraintsPtr::EditHandle(
+             &_sfConstraints,
+             this->getType().getFieldDesc(ConstraintsFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Component::setConstraints,
+                    static_cast<Component *>(this), _1));
+
+    editSField(ConstraintsFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleBorder          (void) const
+{
+    SFUnrecBorderPtr::GetHandlePtr returnValue(
+        new  SFUnrecBorderPtr::GetHandle(
+             &_sfBorder,
+             this->getType().getFieldDesc(BorderFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleBorder         (void)
+{
+    SFUnrecBorderPtr::EditHandlePtr returnValue(
+        new  SFUnrecBorderPtr::EditHandle(
+             &_sfBorder,
+             this->getType().getFieldDesc(BorderFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Component::setBorder,
+                    static_cast<Component *>(this), _1));
+
+    editSField(BorderFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleBackground      (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfBackground,
+             this->getType().getFieldDesc(BackgroundFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleBackground     (void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfBackground,
+             this->getType().getFieldDesc(BackgroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Component::setBackground,
+                    static_cast<Component *>(this), _1));
+
+    editSField(BackgroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleDisabledBorder  (void) const
+{
+    SFUnrecBorderPtr::GetHandlePtr returnValue(
+        new  SFUnrecBorderPtr::GetHandle(
+             &_sfDisabledBorder,
+             this->getType().getFieldDesc(DisabledBorderFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleDisabledBorder (void)
+{
+    SFUnrecBorderPtr::EditHandlePtr returnValue(
+        new  SFUnrecBorderPtr::EditHandle(
+             &_sfDisabledBorder,
+             this->getType().getFieldDesc(DisabledBorderFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Component::setDisabledBorder,
+                    static_cast<Component *>(this), _1));
+
+    editSField(DisabledBorderFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleDisabledBackground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfDisabledBackground,
+             this->getType().getFieldDesc(DisabledBackgroundFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleDisabledBackground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfDisabledBackground,
+             this->getType().getFieldDesc(DisabledBackgroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Component::setDisabledBackground,
+                    static_cast<Component *>(this), _1));
+
+    editSField(DisabledBackgroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleDragEnabled     (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfDragEnabled,
+             this->getType().getFieldDesc(DragEnabledFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleDragEnabled    (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfDragEnabled,
+             this->getType().getFieldDesc(DragEnabledFieldId),
+             this));
+
+
+    editSField(DragEnabledFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleTransferHandler (void) const
+{
+    SFUnrecTransferHandlerPtr::GetHandlePtr returnValue(
+        new  SFUnrecTransferHandlerPtr::GetHandle(
+             &_sfTransferHandler,
+             this->getType().getFieldDesc(TransferHandlerFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleTransferHandler(void)
+{
+    SFUnrecTransferHandlerPtr::EditHandlePtr returnValue(
+        new  SFUnrecTransferHandlerPtr::EditHandle(
+             &_sfTransferHandler,
+             this->getType().getFieldDesc(TransferHandlerFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Component::setTransferHandler,
+                    static_cast<Component *>(this), _1));
+
+    editSField(TransferHandlerFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleFocusedBorder   (void) const
+{
+    SFUnrecBorderPtr::GetHandlePtr returnValue(
+        new  SFUnrecBorderPtr::GetHandle(
+             &_sfFocusedBorder,
+             this->getType().getFieldDesc(FocusedBorderFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleFocusedBorder  (void)
+{
+    SFUnrecBorderPtr::EditHandlePtr returnValue(
+        new  SFUnrecBorderPtr::EditHandle(
+             &_sfFocusedBorder,
+             this->getType().getFieldDesc(FocusedBorderFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Component::setFocusedBorder,
+                    static_cast<Component *>(this), _1));
+
+    editSField(FocusedBorderFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleFocusedBackground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfFocusedBackground,
+             this->getType().getFieldDesc(FocusedBackgroundFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleFocusedBackground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfFocusedBackground,
+             this->getType().getFieldDesc(FocusedBackgroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Component::setFocusedBackground,
+                    static_cast<Component *>(this), _1));
+
+    editSField(FocusedBackgroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleRolloverBorder  (void) const
+{
+    SFUnrecBorderPtr::GetHandlePtr returnValue(
+        new  SFUnrecBorderPtr::GetHandle(
+             &_sfRolloverBorder,
+             this->getType().getFieldDesc(RolloverBorderFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleRolloverBorder (void)
+{
+    SFUnrecBorderPtr::EditHandlePtr returnValue(
+        new  SFUnrecBorderPtr::EditHandle(
+             &_sfRolloverBorder,
+             this->getType().getFieldDesc(RolloverBorderFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Component::setRolloverBorder,
+                    static_cast<Component *>(this), _1));
+
+    editSField(RolloverBorderFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleRolloverBackground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfRolloverBackground,
+             this->getType().getFieldDesc(RolloverBackgroundFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleRolloverBackground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfRolloverBackground,
+             this->getType().getFieldDesc(RolloverBackgroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Component::setRolloverBackground,
+                    static_cast<Component *>(this), _1));
+
+    editSField(RolloverBackgroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleToolTipText     (void) const
+{
+    SFString::GetHandlePtr returnValue(
+        new  SFString::GetHandle(
+             &_sfToolTipText,
+             this->getType().getFieldDesc(ToolTipTextFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleToolTipText    (void)
+{
+    SFString::EditHandlePtr returnValue(
+        new  SFString::EditHandle(
+             &_sfToolTipText,
+             this->getType().getFieldDesc(ToolTipTextFieldId),
+             this));
+
+
+    editSField(ToolTipTextFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleOpacity         (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfOpacity,
+             this->getType().getFieldDesc(OpacityFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleOpacity        (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfOpacity,
+             this->getType().getFieldDesc(OpacityFieldId),
+             this));
+
+
+    editSField(OpacityFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleParentContainer (void) const
+{
+    SFUnrecComponentContainerPtr::GetHandlePtr returnValue(
+        new  SFUnrecComponentContainerPtr::GetHandle(
+             &_sfParentContainer,
+             this->getType().getFieldDesc(ParentContainerFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleParentContainer(void)
+{
+    SFUnrecComponentContainerPtr::EditHandlePtr returnValue(
+        new  SFUnrecComponentContainerPtr::EditHandle(
+             &_sfParentContainer,
+             this->getType().getFieldDesc(ParentContainerFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Component::setParentContainer,
+                    static_cast<Component *>(this), _1));
+
+    editSField(ParentContainerFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleParentWindow    (void) const
+{
+    SFUnrecInternalWindowPtr::GetHandlePtr returnValue(
+        new  SFUnrecInternalWindowPtr::GetHandle(
+             &_sfParentWindow,
+             this->getType().getFieldDesc(ParentWindowFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleParentWindow   (void)
+{
+    SFUnrecInternalWindowPtr::EditHandlePtr returnValue(
+        new  SFUnrecInternalWindowPtr::EditHandle(
+             &_sfParentWindow,
+             this->getType().getFieldDesc(ParentWindowFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Component::setParentWindow,
+                    static_cast<Component *>(this), _1));
+
+    editSField(ParentWindowFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleClipping        (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfClipping,
+             this->getType().getFieldDesc(ClippingFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleClipping       (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfClipping,
+             this->getType().getFieldDesc(ClippingFieldId),
+             this));
+
+
+    editSField(ClippingFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandlePopupMenu       (void) const
+{
+    SFUnrecPopupMenuPtr::GetHandlePtr returnValue(
+        new  SFUnrecPopupMenuPtr::GetHandle(
+             &_sfPopupMenu,
+             this->getType().getFieldDesc(PopupMenuFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandlePopupMenu      (void)
+{
+    SFUnrecPopupMenuPtr::EditHandlePtr returnValue(
+        new  SFUnrecPopupMenuPtr::EditHandle(
+             &_sfPopupMenu,
+             this->getType().getFieldDesc(PopupMenuFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Component::setPopupMenu,
+                    static_cast<Component *>(this), _1));
+
+    editSField(PopupMenuFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleFocusedForeground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfFocusedForeground,
+             this->getType().getFieldDesc(FocusedForegroundFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleFocusedForeground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfFocusedForeground,
+             this->getType().getFieldDesc(FocusedForegroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Component::setFocusedForeground,
+                    static_cast<Component *>(this), _1));
+
+    editSField(FocusedForegroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleRolloverForeground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfRolloverForeground,
+             this->getType().getFieldDesc(RolloverForegroundFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleRolloverForeground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfRolloverForeground,
+             this->getType().getFieldDesc(RolloverForegroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Component::setRolloverForeground,
+                    static_cast<Component *>(this), _1));
+
+    editSField(RolloverForegroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleDisabledForeground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfDisabledForeground,
+             this->getType().getFieldDesc(DisabledForegroundFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleDisabledForeground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfDisabledForeground,
+             this->getType().getFieldDesc(DisabledForegroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Component::setDisabledForeground,
+                    static_cast<Component *>(this), _1));
+
+    editSField(DisabledForegroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleForeground      (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfForeground,
+             this->getType().getFieldDesc(ForegroundFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleForeground     (void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfForeground,
+             this->getType().getFieldDesc(ForegroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Component::setForeground,
+                    static_cast<Component *>(this), _1));
+
+    editSField(ForegroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleCursor          (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfCursor,
+             this->getType().getFieldDesc(CursorFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleCursor         (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfCursor,
+             this->getType().getFieldDesc(CursorFieldId),
+             this));
+
+
+    editSField(CursorFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ComponentBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Component *pThis = static_cast<Component *>(this);
+
+    pThis->execSync(static_cast<Component *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+
+void ComponentBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<Component *>(this)->setConstraints(NULL);
+
+    static_cast<Component *>(this)->setBorder(NULL);
+
+    static_cast<Component *>(this)->setBackground(NULL);
+
+    static_cast<Component *>(this)->setDisabledBorder(NULL);
+
+    static_cast<Component *>(this)->setDisabledBackground(NULL);
+
+    static_cast<Component *>(this)->setTransferHandler(NULL);
+
+    static_cast<Component *>(this)->setFocusedBorder(NULL);
+
+    static_cast<Component *>(this)->setFocusedBackground(NULL);
+
+    static_cast<Component *>(this)->setRolloverBorder(NULL);
+
+    static_cast<Component *>(this)->setRolloverBackground(NULL);
+
+    static_cast<Component *>(this)->setParentContainer(NULL);
+
+    static_cast<Component *>(this)->setParentWindow(NULL);
+
+    static_cast<Component *>(this)->setPopupMenu(NULL);
+
+    static_cast<Component *>(this)->setFocusedForeground(NULL);
+
+    static_cast<Component *>(this)->setRolloverForeground(NULL);
+
+    static_cast<Component *>(this)->setDisabledForeground(NULL);
+
+    static_cast<Component *>(this)->setForeground(NULL);
+
+
+}
+
 /*------------------------------ get -----------------------------------*/
 
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFPnt2f *ComponentBase::getSFPosition(void) const
-{
-    return &_sfPosition;
-}
+//! Get the value of the Component::_sfPosition field.
 
-OSG_USERINTERFACELIB_DLLMAPPING
-SFPnt2f *ComponentBase::editSFPosition(void)
-{
-    return &_sfPosition;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFPnt4f *ComponentBase::getSFClipBounds(void) const
-{
-    return &_sfClipBounds;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFPnt4f *ComponentBase::editSFClipBounds(void)
-{
-    return &_sfClipBounds;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFVec2f *ComponentBase::getSFMinSize(void) const
-{
-    return &_sfMinSize;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFVec2f *ComponentBase::editSFMinSize(void)
-{
-    return &_sfMinSize;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFVec2f *ComponentBase::getSFMaxSize(void) const
-{
-    return &_sfMaxSize;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFVec2f *ComponentBase::editSFMaxSize(void)
-{
-    return &_sfMaxSize;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFVec2f *ComponentBase::getSFPreferredSize(void) const
-{
-    return &_sfPreferredSize;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFVec2f *ComponentBase::editSFPreferredSize(void)
-{
-    return &_sfPreferredSize;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFVec2f *ComponentBase::getSFSize(void) const
-{
-    return &_sfSize;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFVec2f *ComponentBase::editSFSize(void)
-{
-    return &_sfSize;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFBool *ComponentBase::getSFVisible(void) const
-{
-    return &_sfVisible;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFBool *ComponentBase::editSFVisible(void)
-{
-    return &_sfVisible;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFBool *ComponentBase::getSFEnabled(void) const
-{
-    return &_sfEnabled;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFBool *ComponentBase::editSFEnabled(void)
-{
-    return &_sfEnabled;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFBool *ComponentBase::getSFFocused(void) const
-{
-    return &_sfFocused;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFBool *ComponentBase::editSFFocused(void)
-{
-    return &_sfFocused;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFLayoutConstraintsPtr *ComponentBase::getSFConstraints(void) const
-{
-    return &_sfConstraints;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFLayoutConstraintsPtr *ComponentBase::editSFConstraints(void)
-{
-    return &_sfConstraints;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFBorderPtr *ComponentBase::getSFBorder(void) const
-{
-    return &_sfBorder;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFBorderPtr *ComponentBase::editSFBorder(void)
-{
-    return &_sfBorder;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFLayerPtr *ComponentBase::getSFBackground(void) const
-{
-    return &_sfBackground;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFLayerPtr *ComponentBase::editSFBackground(void)
-{
-    return &_sfBackground;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFBorderPtr *ComponentBase::getSFDisabledBorder(void) const
-{
-    return &_sfDisabledBorder;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFBorderPtr *ComponentBase::editSFDisabledBorder(void)
-{
-    return &_sfDisabledBorder;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFLayerPtr *ComponentBase::getSFDisabledBackground(void) const
-{
-    return &_sfDisabledBackground;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFLayerPtr *ComponentBase::editSFDisabledBackground(void)
-{
-    return &_sfDisabledBackground;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFBool *ComponentBase::getSFDragEnabled(void) const
-{
-    return &_sfDragEnabled;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFBool *ComponentBase::editSFDragEnabled(void)
-{
-    return &_sfDragEnabled;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFTransferHandlerPtr *ComponentBase::getSFTransferHandler(void) const
-{
-    return &_sfTransferHandler;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFTransferHandlerPtr *ComponentBase::editSFTransferHandler(void)
-{
-    return &_sfTransferHandler;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFBorderPtr *ComponentBase::getSFFocusedBorder(void) const
-{
-    return &_sfFocusedBorder;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFBorderPtr *ComponentBase::editSFFocusedBorder(void)
-{
-    return &_sfFocusedBorder;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFLayerPtr *ComponentBase::getSFFocusedBackground(void) const
-{
-    return &_sfFocusedBackground;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFLayerPtr *ComponentBase::editSFFocusedBackground(void)
-{
-    return &_sfFocusedBackground;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFBorderPtr *ComponentBase::getSFRolloverBorder(void) const
-{
-    return &_sfRolloverBorder;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFBorderPtr *ComponentBase::editSFRolloverBorder(void)
-{
-    return &_sfRolloverBorder;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFLayerPtr *ComponentBase::getSFRolloverBackground(void) const
-{
-    return &_sfRolloverBackground;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFLayerPtr *ComponentBase::editSFRolloverBackground(void)
-{
-    return &_sfRolloverBackground;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFString *ComponentBase::getSFToolTipText(void) const
-{
-    return &_sfToolTipText;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFString *ComponentBase::editSFToolTipText(void)
-{
-    return &_sfToolTipText;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFReal32 *ComponentBase::getSFOpacity(void) const
-{
-    return &_sfOpacity;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFReal32 *ComponentBase::editSFOpacity(void)
-{
-    return &_sfOpacity;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFContainerPtr *ComponentBase::getSFParentContainer(void) const
-{
-    return &_sfParentContainer;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFContainerPtr *ComponentBase::editSFParentContainer(void)
-{
-    return &_sfParentContainer;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFInternalWindowPtr *ComponentBase::getSFParentWindow(void) const
-{
-    return &_sfParentWindow;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFInternalWindowPtr *ComponentBase::editSFParentWindow(void)
-{
-    return &_sfParentWindow;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFBool *ComponentBase::getSFClipping(void) const
-{
-    return &_sfClipping;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFBool *ComponentBase::editSFClipping(void)
-{
-    return &_sfClipping;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFPopupMenuPtr *ComponentBase::getSFPopupMenu(void) const
-{
-    return &_sfPopupMenu;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFPopupMenuPtr *ComponentBase::editSFPopupMenu(void)
-{
-    return &_sfPopupMenu;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFLayerPtr *ComponentBase::getSFFocusedForeground(void) const
-{
-    return &_sfFocusedForeground;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFLayerPtr *ComponentBase::editSFFocusedForeground(void)
-{
-    return &_sfFocusedForeground;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFLayerPtr *ComponentBase::getSFRolloverForeground(void) const
-{
-    return &_sfRolloverForeground;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFLayerPtr *ComponentBase::editSFRolloverForeground(void)
-{
-    return &_sfRolloverForeground;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFLayerPtr *ComponentBase::getSFDisabledForeground(void) const
-{
-    return &_sfDisabledForeground;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFLayerPtr *ComponentBase::editSFDisabledForeground(void)
-{
-    return &_sfDisabledForeground;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFLayerPtr *ComponentBase::getSFForeground(void) const
-{
-    return &_sfForeground;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFLayerPtr *ComponentBase::editSFForeground(void)
-{
-    return &_sfForeground;
-}
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
-const SFUInt32 *ComponentBase::getSFCursor(void) const
-{
-    return &_sfCursor;
-}
-
-OSG_USERINTERFACELIB_DLLMAPPING
-SFUInt32 *ComponentBase::editSFCursor(void)
-{
-    return &_sfCursor;
-}
-
-
-
-OSG_USERINTERFACELIB_DLLMAPPING
 Pnt2f &ComponentBase::editPosition(void)
 {
+    editSField(PositionFieldMask);
+
     return _sfPosition.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
+//! Get the value of the Component::_sfPosition field.
 const Pnt2f &ComponentBase::getPosition(void) const
 {
     return _sfPosition.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
+
+//! Set the value of the Component::_sfPosition field.
 void ComponentBase::setPosition(const Pnt2f &value)
 {
+    editSField(PositionFieldMask);
+
     _sfPosition.setValue(value);
 }
+//! Get the value of the Component::_sfClipBounds field.
 
-OSG_USERINTERFACELIB_DLLMAPPING
 Pnt4f &ComponentBase::editClipBounds(void)
 {
+    editSField(ClipBoundsFieldMask);
+
     return _sfClipBounds.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
+//! Get the value of the Component::_sfClipBounds field.
 const Pnt4f &ComponentBase::getClipBounds(void) const
 {
     return _sfClipBounds.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
+
+//! Set the value of the Component::_sfClipBounds field.
 void ComponentBase::setClipBounds(const Pnt4f &value)
 {
+    editSField(ClipBoundsFieldMask);
+
     _sfClipBounds.setValue(value);
 }
+//! Get the value of the Component::_sfMinSize field.
 
-OSG_USERINTERFACELIB_DLLMAPPING
 Vec2f &ComponentBase::editMinSize(void)
 {
+    editSField(MinSizeFieldMask);
+
     return _sfMinSize.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
+//! Get the value of the Component::_sfMinSize field.
 const Vec2f &ComponentBase::getMinSize(void) const
 {
     return _sfMinSize.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
+
+//! Set the value of the Component::_sfMinSize field.
 void ComponentBase::setMinSize(const Vec2f &value)
 {
+    editSField(MinSizeFieldMask);
+
     _sfMinSize.setValue(value);
 }
+//! Get the value of the Component::_sfMaxSize field.
 
-OSG_USERINTERFACELIB_DLLMAPPING
 Vec2f &ComponentBase::editMaxSize(void)
 {
+    editSField(MaxSizeFieldMask);
+
     return _sfMaxSize.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
+//! Get the value of the Component::_sfMaxSize field.
 const Vec2f &ComponentBase::getMaxSize(void) const
 {
     return _sfMaxSize.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
+
+//! Set the value of the Component::_sfMaxSize field.
 void ComponentBase::setMaxSize(const Vec2f &value)
 {
+    editSField(MaxSizeFieldMask);
+
     _sfMaxSize.setValue(value);
 }
+//! Get the value of the Component::_sfPreferredSize field.
 
-OSG_USERINTERFACELIB_DLLMAPPING
 Vec2f &ComponentBase::editPreferredSize(void)
 {
+    editSField(PreferredSizeFieldMask);
+
     return _sfPreferredSize.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
+//! Get the value of the Component::_sfPreferredSize field.
 const Vec2f &ComponentBase::getPreferredSize(void) const
 {
     return _sfPreferredSize.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
+
+//! Set the value of the Component::_sfPreferredSize field.
 void ComponentBase::setPreferredSize(const Vec2f &value)
 {
+    editSField(PreferredSizeFieldMask);
+
     _sfPreferredSize.setValue(value);
 }
+//! Get the value of the Component::_sfSize field.
 
-OSG_USERINTERFACELIB_DLLMAPPING
 Vec2f &ComponentBase::editSize(void)
 {
+    editSField(SizeFieldMask);
+
     return _sfSize.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
+//! Get the value of the Component::_sfSize field.
 const Vec2f &ComponentBase::getSize(void) const
 {
     return _sfSize.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
+
+//! Set the value of the Component::_sfSize field.
 void ComponentBase::setSize(const Vec2f &value)
 {
+    editSField(SizeFieldMask);
+
     _sfSize.setValue(value);
 }
+//! Get the value of the Component::_sfVisible field.
 
-OSG_USERINTERFACELIB_DLLMAPPING
 bool &ComponentBase::editVisible(void)
 {
+    editSField(VisibleFieldMask);
+
     return _sfVisible.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-const bool &ComponentBase::getVisible(void) const
+//! Get the value of the Component::_sfVisible field.
+      bool  ComponentBase::getVisible(void) const
 {
     return _sfVisible.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setVisible(const bool &value)
+
+//! Set the value of the Component::_sfVisible field.
+void ComponentBase::setVisible(const bool value)
 {
+    editSField(VisibleFieldMask);
+
     _sfVisible.setValue(value);
 }
+//! Get the value of the Component::_sfEnabled field.
 
-OSG_USERINTERFACELIB_DLLMAPPING
 bool &ComponentBase::editEnabled(void)
 {
+    editSField(EnabledFieldMask);
+
     return _sfEnabled.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-const bool &ComponentBase::getEnabled(void) const
+//! Get the value of the Component::_sfEnabled field.
+      bool  ComponentBase::getEnabled(void) const
 {
     return _sfEnabled.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setEnabled(const bool &value)
+
+//! Set the value of the Component::_sfEnabled field.
+void ComponentBase::setEnabled(const bool value)
 {
+    editSField(EnabledFieldMask);
+
     _sfEnabled.setValue(value);
 }
+//! Get the value of the Component::_sfFocused field.
 
-OSG_USERINTERFACELIB_DLLMAPPING
 bool &ComponentBase::editFocused(void)
 {
+    editSField(FocusedFieldMask);
+
     return _sfFocused.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-const bool &ComponentBase::getFocused(void) const
+//! Get the value of the Component::_sfFocused field.
+      bool  ComponentBase::getFocused(void) const
 {
     return _sfFocused.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setFocused(const bool &value)
+
+//! Set the value of the Component::_sfFocused field.
+void ComponentBase::setFocused(const bool value)
 {
+    editSField(FocusedFieldMask);
+
     _sfFocused.setValue(value);
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-LayoutConstraintsPtr &ComponentBase::editConstraints(void)
+//! Get the value of the Component::_sfConstraints field.
+LayoutConstraints * ComponentBase::getConstraints(void) const
 {
     return _sfConstraints.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-const LayoutConstraintsPtr &ComponentBase::getConstraints(void) const
+//! Set the value of the Component::_sfConstraints field.
+void ComponentBase::setConstraints(LayoutConstraints * const value)
 {
-    return _sfConstraints.getValue();
-}
+    editSField(ConstraintsFieldMask);
 
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setConstraints(const LayoutConstraintsPtr &value)
-{
     _sfConstraints.setValue(value);
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-BorderPtr &ComponentBase::editBorder(void)
+//! Get the value of the Component::_sfBorder field.
+Border * ComponentBase::getBorder(void) const
 {
     return _sfBorder.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-const BorderPtr &ComponentBase::getBorder(void) const
+//! Set the value of the Component::_sfBorder field.
+void ComponentBase::setBorder(Border * const value)
 {
-    return _sfBorder.getValue();
-}
+    editSField(BorderFieldMask);
 
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setBorder(const BorderPtr &value)
-{
     _sfBorder.setValue(value);
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-LayerPtr &ComponentBase::editBackground(void)
+//! Get the value of the Component::_sfBackground field.
+Layer * ComponentBase::getBackground(void) const
 {
     return _sfBackground.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-const LayerPtr &ComponentBase::getBackground(void) const
+//! Set the value of the Component::_sfBackground field.
+void ComponentBase::setBackground(Layer * const value)
 {
-    return _sfBackground.getValue();
-}
+    editSField(BackgroundFieldMask);
 
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setBackground(const LayerPtr &value)
-{
     _sfBackground.setValue(value);
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-BorderPtr &ComponentBase::editDisabledBorder(void)
+//! Get the value of the Component::_sfDisabledBorder field.
+Border * ComponentBase::getDisabledBorder(void) const
 {
     return _sfDisabledBorder.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-const BorderPtr &ComponentBase::getDisabledBorder(void) const
+//! Set the value of the Component::_sfDisabledBorder field.
+void ComponentBase::setDisabledBorder(Border * const value)
 {
-    return _sfDisabledBorder.getValue();
-}
+    editSField(DisabledBorderFieldMask);
 
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setDisabledBorder(const BorderPtr &value)
-{
     _sfDisabledBorder.setValue(value);
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-LayerPtr &ComponentBase::editDisabledBackground(void)
+//! Get the value of the Component::_sfDisabledBackground field.
+Layer * ComponentBase::getDisabledBackground(void) const
 {
     return _sfDisabledBackground.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-const LayerPtr &ComponentBase::getDisabledBackground(void) const
+//! Set the value of the Component::_sfDisabledBackground field.
+void ComponentBase::setDisabledBackground(Layer * const value)
 {
-    return _sfDisabledBackground.getValue();
-}
+    editSField(DisabledBackgroundFieldMask);
 
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setDisabledBackground(const LayerPtr &value)
-{
     _sfDisabledBackground.setValue(value);
 }
+//! Get the value of the Component::_sfDragEnabled field.
 
-OSG_USERINTERFACELIB_DLLMAPPING
 bool &ComponentBase::editDragEnabled(void)
 {
+    editSField(DragEnabledFieldMask);
+
     return _sfDragEnabled.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-const bool &ComponentBase::getDragEnabled(void) const
+//! Get the value of the Component::_sfDragEnabled field.
+      bool  ComponentBase::getDragEnabled(void) const
 {
     return _sfDragEnabled.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setDragEnabled(const bool &value)
+
+//! Set the value of the Component::_sfDragEnabled field.
+void ComponentBase::setDragEnabled(const bool value)
 {
+    editSField(DragEnabledFieldMask);
+
     _sfDragEnabled.setValue(value);
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-TransferHandlerPtr &ComponentBase::editTransferHandler(void)
+//! Get the value of the Component::_sfTransferHandler field.
+TransferHandler * ComponentBase::getTransferHandler(void) const
 {
     return _sfTransferHandler.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-const TransferHandlerPtr &ComponentBase::getTransferHandler(void) const
+//! Set the value of the Component::_sfTransferHandler field.
+void ComponentBase::setTransferHandler(TransferHandler * const value)
 {
-    return _sfTransferHandler.getValue();
-}
+    editSField(TransferHandlerFieldMask);
 
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setTransferHandler(const TransferHandlerPtr &value)
-{
     _sfTransferHandler.setValue(value);
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-BorderPtr &ComponentBase::editFocusedBorder(void)
+//! Get the value of the Component::_sfFocusedBorder field.
+Border * ComponentBase::getFocusedBorder(void) const
 {
     return _sfFocusedBorder.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-const BorderPtr &ComponentBase::getFocusedBorder(void) const
+//! Set the value of the Component::_sfFocusedBorder field.
+void ComponentBase::setFocusedBorder(Border * const value)
 {
-    return _sfFocusedBorder.getValue();
-}
+    editSField(FocusedBorderFieldMask);
 
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setFocusedBorder(const BorderPtr &value)
-{
     _sfFocusedBorder.setValue(value);
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-LayerPtr &ComponentBase::editFocusedBackground(void)
+//! Get the value of the Component::_sfFocusedBackground field.
+Layer * ComponentBase::getFocusedBackground(void) const
 {
     return _sfFocusedBackground.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-const LayerPtr &ComponentBase::getFocusedBackground(void) const
+//! Set the value of the Component::_sfFocusedBackground field.
+void ComponentBase::setFocusedBackground(Layer * const value)
 {
-    return _sfFocusedBackground.getValue();
-}
+    editSField(FocusedBackgroundFieldMask);
 
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setFocusedBackground(const LayerPtr &value)
-{
     _sfFocusedBackground.setValue(value);
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-BorderPtr &ComponentBase::editRolloverBorder(void)
+//! Get the value of the Component::_sfRolloverBorder field.
+Border * ComponentBase::getRolloverBorder(void) const
 {
     return _sfRolloverBorder.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-const BorderPtr &ComponentBase::getRolloverBorder(void) const
+//! Set the value of the Component::_sfRolloverBorder field.
+void ComponentBase::setRolloverBorder(Border * const value)
 {
-    return _sfRolloverBorder.getValue();
-}
+    editSField(RolloverBorderFieldMask);
 
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setRolloverBorder(const BorderPtr &value)
-{
     _sfRolloverBorder.setValue(value);
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-LayerPtr &ComponentBase::editRolloverBackground(void)
+//! Get the value of the Component::_sfRolloverBackground field.
+Layer * ComponentBase::getRolloverBackground(void) const
 {
     return _sfRolloverBackground.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-const LayerPtr &ComponentBase::getRolloverBackground(void) const
+//! Set the value of the Component::_sfRolloverBackground field.
+void ComponentBase::setRolloverBackground(Layer * const value)
 {
-    return _sfRolloverBackground.getValue();
-}
+    editSField(RolloverBackgroundFieldMask);
 
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setRolloverBackground(const LayerPtr &value)
-{
     _sfRolloverBackground.setValue(value);
 }
+//! Get the value of the Component::_sfToolTipText field.
 
-OSG_USERINTERFACELIB_DLLMAPPING
 std::string &ComponentBase::editToolTipText(void)
 {
+    editSField(ToolTipTextFieldMask);
+
     return _sfToolTipText.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
+//! Get the value of the Component::_sfToolTipText field.
 const std::string &ComponentBase::getToolTipText(void) const
 {
     return _sfToolTipText.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
+
+//! Set the value of the Component::_sfToolTipText field.
 void ComponentBase::setToolTipText(const std::string &value)
 {
+    editSField(ToolTipTextFieldMask);
+
     _sfToolTipText.setValue(value);
 }
+//! Get the value of the Component::_sfOpacity field.
 
-OSG_USERINTERFACELIB_DLLMAPPING
 Real32 &ComponentBase::editOpacity(void)
 {
+    editSField(OpacityFieldMask);
+
     return _sfOpacity.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-const Real32 &ComponentBase::getOpacity(void) const
+//! Get the value of the Component::_sfOpacity field.
+      Real32  ComponentBase::getOpacity(void) const
 {
     return _sfOpacity.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setOpacity(const Real32 &value)
+
+//! Set the value of the Component::_sfOpacity field.
+void ComponentBase::setOpacity(const Real32 value)
 {
+    editSField(OpacityFieldMask);
+
     _sfOpacity.setValue(value);
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-ContainerPtr &ComponentBase::editParentContainer(void)
+//! Get the value of the Component::_sfParentContainer field.
+ComponentContainer * ComponentBase::getParentContainer(void) const
 {
     return _sfParentContainer.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-const ContainerPtr &ComponentBase::getParentContainer(void) const
+//! Set the value of the Component::_sfParentContainer field.
+void ComponentBase::setParentContainer(ComponentContainer * const value)
 {
-    return _sfParentContainer.getValue();
-}
+    editSField(ParentContainerFieldMask);
 
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setParentContainer(const ContainerPtr &value)
-{
     _sfParentContainer.setValue(value);
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-InternalWindowPtr &ComponentBase::editParentWindow(void)
+//! Get the value of the Component::_sfParentWindow field.
+InternalWindow * ComponentBase::getParentWindow(void) const
 {
     return _sfParentWindow.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-const InternalWindowPtr &ComponentBase::getParentWindow(void) const
+//! Set the value of the Component::_sfParentWindow field.
+void ComponentBase::setParentWindow(InternalWindow * const value)
 {
-    return _sfParentWindow.getValue();
-}
+    editSField(ParentWindowFieldMask);
 
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setParentWindow(const InternalWindowPtr &value)
-{
     _sfParentWindow.setValue(value);
 }
+//! Get the value of the Component::_sfClipping field.
 
-OSG_USERINTERFACELIB_DLLMAPPING
 bool &ComponentBase::editClipping(void)
 {
+    editSField(ClippingFieldMask);
+
     return _sfClipping.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-const bool &ComponentBase::getClipping(void) const
+//! Get the value of the Component::_sfClipping field.
+      bool  ComponentBase::getClipping(void) const
 {
     return _sfClipping.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setClipping(const bool &value)
+
+//! Set the value of the Component::_sfClipping field.
+void ComponentBase::setClipping(const bool value)
 {
+    editSField(ClippingFieldMask);
+
     _sfClipping.setValue(value);
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-PopupMenuPtr &ComponentBase::editPopupMenu(void)
+//! Get the value of the Component::_sfPopupMenu field.
+PopupMenu * ComponentBase::getPopupMenu(void) const
 {
     return _sfPopupMenu.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-const PopupMenuPtr &ComponentBase::getPopupMenu(void) const
+//! Set the value of the Component::_sfPopupMenu field.
+void ComponentBase::setPopupMenu(PopupMenu * const value)
 {
-    return _sfPopupMenu.getValue();
-}
+    editSField(PopupMenuFieldMask);
 
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setPopupMenu(const PopupMenuPtr &value)
-{
     _sfPopupMenu.setValue(value);
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-LayerPtr &ComponentBase::editFocusedForeground(void)
+//! Get the value of the Component::_sfFocusedForeground field.
+Layer * ComponentBase::getFocusedForeground(void) const
 {
     return _sfFocusedForeground.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-const LayerPtr &ComponentBase::getFocusedForeground(void) const
+//! Set the value of the Component::_sfFocusedForeground field.
+void ComponentBase::setFocusedForeground(Layer * const value)
 {
-    return _sfFocusedForeground.getValue();
-}
+    editSField(FocusedForegroundFieldMask);
 
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setFocusedForeground(const LayerPtr &value)
-{
     _sfFocusedForeground.setValue(value);
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-LayerPtr &ComponentBase::editRolloverForeground(void)
+//! Get the value of the Component::_sfRolloverForeground field.
+Layer * ComponentBase::getRolloverForeground(void) const
 {
     return _sfRolloverForeground.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-const LayerPtr &ComponentBase::getRolloverForeground(void) const
+//! Set the value of the Component::_sfRolloverForeground field.
+void ComponentBase::setRolloverForeground(Layer * const value)
 {
-    return _sfRolloverForeground.getValue();
-}
+    editSField(RolloverForegroundFieldMask);
 
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setRolloverForeground(const LayerPtr &value)
-{
     _sfRolloverForeground.setValue(value);
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-LayerPtr &ComponentBase::editDisabledForeground(void)
+//! Get the value of the Component::_sfDisabledForeground field.
+Layer * ComponentBase::getDisabledForeground(void) const
 {
     return _sfDisabledForeground.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-const LayerPtr &ComponentBase::getDisabledForeground(void) const
+//! Set the value of the Component::_sfDisabledForeground field.
+void ComponentBase::setDisabledForeground(Layer * const value)
 {
-    return _sfDisabledForeground.getValue();
-}
+    editSField(DisabledForegroundFieldMask);
 
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setDisabledForeground(const LayerPtr &value)
-{
     _sfDisabledForeground.setValue(value);
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-LayerPtr &ComponentBase::editForeground(void)
+//! Get the value of the Component::_sfForeground field.
+Layer * ComponentBase::getForeground(void) const
 {
     return _sfForeground.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-const LayerPtr &ComponentBase::getForeground(void) const
+//! Set the value of the Component::_sfForeground field.
+void ComponentBase::setForeground(Layer * const value)
 {
-    return _sfForeground.getValue();
-}
+    editSField(ForegroundFieldMask);
 
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setForeground(const LayerPtr &value)
-{
     _sfForeground.setValue(value);
 }
+//! Get the value of the Component::_sfCursor field.
 
-OSG_USERINTERFACELIB_DLLMAPPING
 UInt32 &ComponentBase::editCursor(void)
 {
+    editSField(CursorFieldMask);
+
     return _sfCursor.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-const UInt32 &ComponentBase::getCursor(void) const
+//! Get the value of the Component::_sfCursor field.
+      UInt32  ComponentBase::getCursor(void) const
 {
     return _sfCursor.getValue();
 }
 
-OSG_USERINTERFACELIB_DLLMAPPING
-void ComponentBase::setCursor(const UInt32 &value)
+
+//! Set the value of the Component::_sfCursor field.
+void ComponentBase::setCursor(const UInt32 value)
 {
+    editSField(CursorFieldMask);
+
     _sfCursor.setValue(value);
 }
 
 
-
-
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ComponentPtr>::_type("ComponentPtr", "AttachmentContainerPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(ComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-OSG_END_NAMESPACE
-

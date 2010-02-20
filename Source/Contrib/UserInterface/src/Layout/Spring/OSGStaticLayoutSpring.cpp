@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGStaticLayoutSpring.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::StaticLayoutSpring
-A UI Static LayoutSpring. 	
-*/
+// Documentation for this class is emitted in the
+// OSGStaticLayoutSpringBase.cpp file.
+// To modify it, please change the .fcd file (OSGStaticLayoutSpring.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,32 +62,33 @@ A UI Static LayoutSpring.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void StaticLayoutSpring::initMethod (void)
+void StaticLayoutSpring::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-StaticLayoutSpringPtr StaticLayoutSpring::create (const Real32& Preferred)
+StaticLayoutSpringTransitPtr StaticLayoutSpring::create (const Real32& Preferred)
 {
-    StaticLayoutSpringPtr NewSpring = createEmpty();
+    StaticLayoutSpring* NewSpring = createEmpty();
 
-    beginEditCP(NewSpring, PreferredFieldMask);
         NewSpring->setPreferred(Preferred);
-    endEditCP(NewSpring, PreferredFieldMask);
 
-    return NewSpring;
+    return StaticLayoutSpringTransitPtr(NewSpring);
 }
 
-StaticLayoutSpringPtr StaticLayoutSpring::create (const Real32& Minimum, const Real32& Preferred, const Real32& Maximum)
+StaticLayoutSpringTransitPtr StaticLayoutSpring::create (const Real32& Minimum, const Real32& Preferred, const Real32& Maximum)
 {
-    StaticLayoutSpringPtr NewSpring = createEmpty();
+    StaticLayoutSpring* NewSpring = createEmpty();
 
-    beginEditCP(NewSpring, PreferredFieldMask | MinimumFieldMask | MaximumFieldMask);
         NewSpring->setMinimum(Minimum);
         NewSpring->setPreferred(Preferred);
         NewSpring->setMaximum(Maximum);
-    endEditCP(NewSpring, PreferredFieldMask | MinimumFieldMask | MaximumFieldMask);
 
-    return NewSpring;
+    return StaticLayoutSpringTransitPtr(NewSpring);
 }
 
 /***************************************************************************\
@@ -136,41 +132,17 @@ StaticLayoutSpring::~StaticLayoutSpring(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void StaticLayoutSpring::changed(BitVector whichField, UInt32 origin)
+void StaticLayoutSpring::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void StaticLayoutSpring::dump(      UInt32    , 
+void StaticLayoutSpring::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump StaticLayoutSpring NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGSTATICLAYOUTSPRINGBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSTATICLAYOUTSPRINGBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSTATICLAYOUTSPRINGFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

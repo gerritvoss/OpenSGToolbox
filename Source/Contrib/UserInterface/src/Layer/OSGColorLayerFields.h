@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGLayerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class ColorLayer;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! ColorLayerPtr
+OSG_GEN_CONTAINERPTR(ColorLayer);
 
-typedef FCPtr<LayerPtr, ColorLayer> ColorLayerPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<ColorLayerPtr> : 
-    public FieldTraitsRecurseMapper<ColorLayerPtr, true>
+struct FieldTraits<ColorLayer *> :
+    public FieldTraitsFCPtrBase<ColorLayer *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFColorLayerPtr"; }
-    static const char *getMName(void) { return "MFColorLayerPtr"; }
+    typedef FieldTraits<ColorLayer *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFColorLayerPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFColorLayerPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<ColorLayerPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<ColorLayer *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecColorLayerPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<ColorLayer *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecColorLayerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ColorLayer *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakColorLayerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ColorLayer *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdColorLayerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ColorLayer *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecColorLayerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ColorLayer *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecColorLayerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ColorLayer *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakColorLayerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ColorLayer *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdColorLayerPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ColorLayer *,
+                      RecordedRefCountPolicy  > SFRecColorLayerPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ColorLayer *,
+                      UnrecordedRefCountPolicy> SFUnrecColorLayerPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ColorLayer *,
+                      WeakRefCountPolicy      > SFWeakColorLayerPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ColorLayer *,
+                      NoRefCountPolicy        > SFUncountedColorLayerPtr;
 
-typedef SField<ColorLayerPtr> SFColorLayerPtr;
-#endif
 
-#ifndef OSG_COMPILECOLORLAYERINST
-OSG_DLLEXPORT_DECL1(SField, ColorLayerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ColorLayer *,
+                      RecordedRefCountPolicy  > MFRecColorLayerPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ColorLayer *,
+                      UnrecordedRefCountPolicy> MFUnrecColorLayerPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ColorLayer *,
+                      WeakRefCountPolicy      > MFWeakColorLayerPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ColorLayer *,
+                      NoRefCountPolicy        > MFUncountedColorLayerPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<ColorLayerPtr> MFColorLayerPtr;
-#endif
 
-#ifndef OSG_COMPILECOLORLAYERINST
-OSG_DLLEXPORT_DECL1(MField, ColorLayerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecColorLayerPtr : 
+    public PointerSField<ColorLayer *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecColorLayerPtr : 
+    public PointerSField<ColorLayer *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakColorLayerPtr :
+    public PointerSField<ColorLayer *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedColorLayerPtr :
+    public PointerSField<ColorLayer *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecColorLayerPtr :
+    public PointerMField<ColorLayer *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecColorLayerPtr :
+    public PointerMField<ColorLayer *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakColorLayerPtr :
+    public PointerMField<ColorLayer *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedColorLayerPtr :
+    public PointerMField<ColorLayer *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGCOLORLAYERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGCOLORLAYERFIELDS_H_ */

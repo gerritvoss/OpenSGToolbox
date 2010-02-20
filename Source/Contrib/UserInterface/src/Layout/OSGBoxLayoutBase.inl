@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,216 +55,213 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &BoxLayoutBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 BoxLayoutBase::getClassTypeId(void) 
+OSG::UInt32 BoxLayoutBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-BoxLayoutPtr BoxLayoutBase::create(void) 
-{
-    BoxLayoutPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = BoxLayoutPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-BoxLayoutPtr BoxLayoutBase::createEmpty(void) 
-{ 
-    BoxLayoutPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 BoxLayoutBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the BoxLayout::_sfOrientation field.
-inline
-SFUInt32 *BoxLayoutBase::getSFOrientation(void)
-{
-    return &_sfOrientation;
-}
-
-//! Get the BoxLayout::_sfMajorAxisAlignment field.
-inline
-SFReal32 *BoxLayoutBase::getSFMajorAxisAlignment(void)
-{
-    return &_sfMajorAxisAlignment;
-}
-
-//! Get the BoxLayout::_sfMinorAxisAlignment field.
-inline
-SFReal32 *BoxLayoutBase::getSFMinorAxisAlignment(void)
-{
-    return &_sfMinorAxisAlignment;
-}
-
-//! Get the BoxLayout::_sfComponentAlignment field.
-inline
-SFReal32 *BoxLayoutBase::getSFComponentAlignment(void)
-{
-    return &_sfComponentAlignment;
-}
-
-//! Get the BoxLayout::_sfMajorAxisMinimumGap field.
-inline
-SFReal32 *BoxLayoutBase::getSFMajorAxisMinimumGap(void)
-{
-    return &_sfMajorAxisMinimumGap;
-}
-
-//! Get the BoxLayout::_sfMajorAxisMaximumGap field.
-inline
-SFReal32 *BoxLayoutBase::getSFMajorAxisMaximumGap(void)
-{
-    return &_sfMajorAxisMaximumGap;
-}
-
-
 //! Get the value of the BoxLayout::_sfOrientation field.
+
 inline
-UInt32 &BoxLayoutBase::getOrientation(void)
+UInt32 &BoxLayoutBase::editOrientation(void)
 {
+    editSField(OrientationFieldMask);
+
     return _sfOrientation.getValue();
 }
 
 //! Get the value of the BoxLayout::_sfOrientation field.
 inline
-const UInt32 &BoxLayoutBase::getOrientation(void) const
+      UInt32  BoxLayoutBase::getOrientation(void) const
 {
     return _sfOrientation.getValue();
 }
 
 //! Set the value of the BoxLayout::_sfOrientation field.
 inline
-void BoxLayoutBase::setOrientation(const UInt32 &value)
+void BoxLayoutBase::setOrientation(const UInt32 value)
 {
+    editSField(OrientationFieldMask);
+
     _sfOrientation.setValue(value);
 }
-
 //! Get the value of the BoxLayout::_sfMajorAxisAlignment field.
+
 inline
-Real32 &BoxLayoutBase::getMajorAxisAlignment(void)
+Real32 &BoxLayoutBase::editMajorAxisAlignment(void)
 {
+    editSField(MajorAxisAlignmentFieldMask);
+
     return _sfMajorAxisAlignment.getValue();
 }
 
 //! Get the value of the BoxLayout::_sfMajorAxisAlignment field.
 inline
-const Real32 &BoxLayoutBase::getMajorAxisAlignment(void) const
+      Real32  BoxLayoutBase::getMajorAxisAlignment(void) const
 {
     return _sfMajorAxisAlignment.getValue();
 }
 
 //! Set the value of the BoxLayout::_sfMajorAxisAlignment field.
 inline
-void BoxLayoutBase::setMajorAxisAlignment(const Real32 &value)
+void BoxLayoutBase::setMajorAxisAlignment(const Real32 value)
 {
+    editSField(MajorAxisAlignmentFieldMask);
+
     _sfMajorAxisAlignment.setValue(value);
 }
-
 //! Get the value of the BoxLayout::_sfMinorAxisAlignment field.
+
 inline
-Real32 &BoxLayoutBase::getMinorAxisAlignment(void)
+Real32 &BoxLayoutBase::editMinorAxisAlignment(void)
 {
+    editSField(MinorAxisAlignmentFieldMask);
+
     return _sfMinorAxisAlignment.getValue();
 }
 
 //! Get the value of the BoxLayout::_sfMinorAxisAlignment field.
 inline
-const Real32 &BoxLayoutBase::getMinorAxisAlignment(void) const
+      Real32  BoxLayoutBase::getMinorAxisAlignment(void) const
 {
     return _sfMinorAxisAlignment.getValue();
 }
 
 //! Set the value of the BoxLayout::_sfMinorAxisAlignment field.
 inline
-void BoxLayoutBase::setMinorAxisAlignment(const Real32 &value)
+void BoxLayoutBase::setMinorAxisAlignment(const Real32 value)
 {
+    editSField(MinorAxisAlignmentFieldMask);
+
     _sfMinorAxisAlignment.setValue(value);
 }
-
 //! Get the value of the BoxLayout::_sfComponentAlignment field.
+
 inline
-Real32 &BoxLayoutBase::getComponentAlignment(void)
+Real32 &BoxLayoutBase::editComponentAlignment(void)
 {
+    editSField(ComponentAlignmentFieldMask);
+
     return _sfComponentAlignment.getValue();
 }
 
 //! Get the value of the BoxLayout::_sfComponentAlignment field.
 inline
-const Real32 &BoxLayoutBase::getComponentAlignment(void) const
+      Real32  BoxLayoutBase::getComponentAlignment(void) const
 {
     return _sfComponentAlignment.getValue();
 }
 
 //! Set the value of the BoxLayout::_sfComponentAlignment field.
 inline
-void BoxLayoutBase::setComponentAlignment(const Real32 &value)
+void BoxLayoutBase::setComponentAlignment(const Real32 value)
 {
+    editSField(ComponentAlignmentFieldMask);
+
     _sfComponentAlignment.setValue(value);
 }
-
 //! Get the value of the BoxLayout::_sfMajorAxisMinimumGap field.
+
 inline
-Real32 &BoxLayoutBase::getMajorAxisMinimumGap(void)
+Real32 &BoxLayoutBase::editMajorAxisMinimumGap(void)
 {
+    editSField(MajorAxisMinimumGapFieldMask);
+
     return _sfMajorAxisMinimumGap.getValue();
 }
 
 //! Get the value of the BoxLayout::_sfMajorAxisMinimumGap field.
 inline
-const Real32 &BoxLayoutBase::getMajorAxisMinimumGap(void) const
+      Real32  BoxLayoutBase::getMajorAxisMinimumGap(void) const
 {
     return _sfMajorAxisMinimumGap.getValue();
 }
 
 //! Set the value of the BoxLayout::_sfMajorAxisMinimumGap field.
 inline
-void BoxLayoutBase::setMajorAxisMinimumGap(const Real32 &value)
+void BoxLayoutBase::setMajorAxisMinimumGap(const Real32 value)
 {
+    editSField(MajorAxisMinimumGapFieldMask);
+
     _sfMajorAxisMinimumGap.setValue(value);
 }
-
 //! Get the value of the BoxLayout::_sfMajorAxisMaximumGap field.
+
 inline
-Real32 &BoxLayoutBase::getMajorAxisMaximumGap(void)
+Real32 &BoxLayoutBase::editMajorAxisMaximumGap(void)
 {
+    editSField(MajorAxisMaximumGapFieldMask);
+
     return _sfMajorAxisMaximumGap.getValue();
 }
 
 //! Get the value of the BoxLayout::_sfMajorAxisMaximumGap field.
 inline
-const Real32 &BoxLayoutBase::getMajorAxisMaximumGap(void) const
+      Real32  BoxLayoutBase::getMajorAxisMaximumGap(void) const
 {
     return _sfMajorAxisMaximumGap.getValue();
 }
 
 //! Set the value of the BoxLayout::_sfMajorAxisMaximumGap field.
 inline
-void BoxLayoutBase::setMajorAxisMaximumGap(const Real32 &value)
+void BoxLayoutBase::setMajorAxisMaximumGap(const Real32 value)
 {
+    editSField(MajorAxisMaximumGapFieldMask);
+
     _sfMajorAxisMaximumGap.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void BoxLayoutBase::execSync (      BoxLayoutBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGBOXLAYOUTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
+        _sfOrientation.syncWith(pFrom->_sfOrientation);
+
+    if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
+        _sfMajorAxisAlignment.syncWith(pFrom->_sfMajorAxisAlignment);
+
+    if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
+        _sfMinorAxisAlignment.syncWith(pFrom->_sfMinorAxisAlignment);
+
+    if(FieldBits::NoField != (ComponentAlignmentFieldMask & whichField))
+        _sfComponentAlignment.syncWith(pFrom->_sfComponentAlignment);
+
+    if(FieldBits::NoField != (MajorAxisMinimumGapFieldMask & whichField))
+        _sfMajorAxisMinimumGap.syncWith(pFrom->_sfMajorAxisMinimumGap);
+
+    if(FieldBits::NoField != (MajorAxisMaximumGapFieldMask & whichField))
+        _sfMajorAxisMaximumGap.syncWith(pFrom->_sfMajorAxisMaximumGap);
+}
+#endif
+
+
+inline
+const Char8 *BoxLayoutBase::getClassname(void)
+{
+    return "BoxLayout";
+}
+OSG_GEN_CONTAINERPTR(BoxLayout);
+
+OSG_END_NAMESPACE
 

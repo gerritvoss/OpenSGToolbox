@@ -3,18 +3,21 @@
 <FieldContainer
 	name="TexturedQuadUIDrawObject"
 	parent="UIDrawObject"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI TexturedQuadUIDrawObject.
 	<Field
 		name="Point1"
 		type="Pnt2f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -24,6 +27,7 @@ A UI TexturedQuadUIDrawObject.
 	<Field
 		name="Point2"
 		type="Pnt2f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -33,6 +37,7 @@ A UI TexturedQuadUIDrawObject.
 	<Field
 		name="Point3"
 		type="Pnt2f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -42,6 +47,7 @@ A UI TexturedQuadUIDrawObject.
 	<Field
 		name="Point4"
 		type="Pnt2f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -51,6 +57,7 @@ A UI TexturedQuadUIDrawObject.
 	<Field
 		name="TexCoord1"
 		type="Vec2f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -60,6 +67,7 @@ A UI TexturedQuadUIDrawObject.
 	<Field
 		name="TexCoord2"
 		type="Vec2f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -69,6 +77,7 @@ A UI TexturedQuadUIDrawObject.
 	<Field
 		name="TexCoord3"
 		type="Vec2f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -78,6 +87,7 @@ A UI TexturedQuadUIDrawObject.
 	<Field
 		name="TexCoord4"
 		type="Vec2f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -86,16 +96,18 @@ A UI TexturedQuadUIDrawObject.
 	</Field>
 	<Field
 		name="Texture"
-		type="TextureChunkPtr"
+		type="TextureObjChunk"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="Opacity"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,120 +50,124 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEPANELINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGPanelBase.h"
 #include "OSGPanel.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector PanelBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::Panel
+    A UI Panel.
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
 
-FieldContainerType PanelBase::_type(
-    "Panel",
-    "Container",
-    NULL,
-    (PrototypeCreateF) &PanelBase::createEmpty,
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<Panel *>::_type("PanelPtr", "ComponentContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(Panel *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           Panel *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           Panel *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void PanelBase::classDescInserter(TypeObject &oType)
+{
+}
+
+
+PanelBase::TypeObject PanelBase::_type(
+    PanelBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&PanelBase::createEmptyLocal),
     Panel::initMethod,
-    NULL,
-    0);
-
-//OSG_FIELD_CONTAINER_DEF(PanelBase, PanelPtr)
+    Panel::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&Panel::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"Panel\"\n"
+    "\tparent=\"ComponentContainer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "\tdecoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Panel.\n"
+    "</FieldContainer>\n",
+    "A UI Panel.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &PanelBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &PanelBase::getType(void) const 
+FieldContainerType &PanelBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr PanelBase::shallowCopy(void) const 
-{ 
-    PanelPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const Panel *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 PanelBase::getContainerSize(void) const 
-{ 
-    return sizeof(Panel); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void PanelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &PanelBase::getType(void) const
 {
-    this->executeSyncImpl((PanelBase *) &other, whichField);
+    return _type;
 }
-#else
-void PanelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 PanelBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((PanelBase *) &other, whichField, sInfo);
-}
-void PanelBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(Panel);
 }
 
-void PanelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-PanelBase::PanelBase(void) :
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-PanelBase::PanelBase(const PanelBase &source) :
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-PanelBase::~PanelBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 PanelBase::getBinSize(const BitVector &whichField)
+UInt32 PanelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -171,88 +175,198 @@ UInt32 PanelBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void PanelBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void PanelBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-
 }
 
-void PanelBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void PanelBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void PanelBase::executeSyncImpl(      PanelBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+PanelTransitPtr PanelBase::createLocal(BitVector bFlags)
 {
+    PanelTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
+        fc = dynamic_pointer_cast<Panel>(tmpPtr);
+    }
 
-}
-#else
-void PanelBase::executeSyncImpl(      PanelBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
+    return fc;
 }
 
-void PanelBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+PanelTransitPtr PanelBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    PanelTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<Panel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+PanelTransitPtr PanelBase::create(void)
+{
+    PanelTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<Panel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+Panel *PanelBase::createEmptyLocal(BitVector bFlags)
+{
+    Panel *returnValue;
+
+    newPtr<Panel>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+Panel *PanelBase::createEmpty(void)
+{
+    Panel *returnValue;
+
+    newPtr<Panel>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr PanelBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    Panel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Panel *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr PanelBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    Panel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Panel *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr PanelBase::shallowCopy(void) const
+{
+    Panel *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const Panel *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+PanelBase::PanelBase(void) :
+    Inherited()
+{
+}
+
+PanelBase::PanelBase(const PanelBase &source) :
+    Inherited(source)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+PanelBase::~PanelBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void PanelBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Panel *pThis = static_cast<Panel *>(this);
+
+    pThis->execSync(static_cast<Panel *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *PanelBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    Panel *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const Panel *>(pRefAspect),
+                  dynamic_cast<const Panel *>(this));
+
+    return returnValue;
+}
+#endif
+
+void PanelBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<PanelPtr>::_type("PanelPtr", "ContainerPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(PanelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(PanelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGPANELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPANELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGPANELFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

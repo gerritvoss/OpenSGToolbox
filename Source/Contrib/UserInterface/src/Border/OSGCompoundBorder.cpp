@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,22 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGCompoundBorder.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::CompoundBorder
-UI Compound Border. A Compound Border made up of an inner border and outer border of any type. 	
-*/
+// Documentation for this class is emitted in the
+// OSGCompoundBorderBase.cpp file.
+// To modify it, please change the .fcd file (OSGCompoundBorder.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -65,8 +62,13 @@ UI Compound Border. A Compound Border made up of an inner border and outer borde
  *                           Class methods                                 *
 \***************************************************************************/
 
-void CompoundBorder::initMethod (void)
+void CompoundBorder::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -74,7 +76,7 @@ void CompoundBorder::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void CompoundBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity, bool Clipping) const
+void CompoundBorder::draw(const GraphicsWeakPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity, bool Clipping) const
 {
 
 	Real32 LeftIn, RightIn, BottomIn, UpperIn;
@@ -96,7 +98,7 @@ void CompoundBorder::getInsets(Real32& Left, Real32& Right,Real32& Top,Real32& B
 	Top = UpperIn+UpperIn2;
 }
 
-void CompoundBorder::activateInternalDrawConstraints(const GraphicsPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
+void CompoundBorder::activateInternalDrawConstraints(const GraphicsWeakPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
 {
 	Real32 LeftIn, RightIn, BottomIn, UpperIn;
 	getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);
@@ -134,41 +136,17 @@ CompoundBorder::~CompoundBorder(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void CompoundBorder::changed(BitVector whichField, UInt32 origin)
+void CompoundBorder::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void CompoundBorder::dump(      UInt32    , 
+void CompoundBorder::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump CompoundBorder NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGCOMPOUNDBORDERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCOMPOUNDBORDERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCOMPOUNDBORDERFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

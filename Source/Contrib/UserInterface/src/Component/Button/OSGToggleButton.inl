@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -38,8 +38,6 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 inline
@@ -48,64 +46,70 @@ bool ToggleButton::isButtonSelectedListenerAttached(ButtonSelectedListenerPtr Li
     return _ButtonSelectedListeners.find(Listener) != _ButtonSelectedListeners.end();
 }
 
-inline
-void ToggleButton::setSelectedBorder   ( const BorderPtr &value )
+    inline
+void ToggleButton::setSelectedBorder   ( const BorderRefPtr &value )
 {
     setActiveBorder(value);
 }
 
-inline
-void ToggleButton::setSelectedBackground( const LayerPtr &value )
+    inline
+void ToggleButton::setSelectedBackground( const LayerRefPtr &value )
 {
     setActiveBackground(value);
 }
 
-inline
+    inline
 void ToggleButton::setSelectedTextColor( const Color4f &value )
 {
     setActiveTextColor(value);
 }
 
-inline
-void ToggleButton::setSelectedDrawObject( const UIDrawObjectCanvasPtr &value )
+    inline
+void ToggleButton::setSelectedDrawObject( const UIDrawObjectCanvasRefPtr &value )
 {
     setActiveDrawObject(value);
 }
 
-inline
-void ToggleButton::setSelectedImage(ImagePtr TheImage, Vec2f Size)
+    inline
+void ToggleButton::setSelectedImage(ImageRefPtr TheImage, Vec2f Size)
 {
     setActiveImage(TheImage, Size);
 }
 
-inline
-void ToggleButton::setSelectedTexture(TextureChunkPtr TheTexture, Vec2f Size)
+    inline
+void ToggleButton::setSelectedTexture(TextureObjChunkRefPtr TheTexture, Vec2f Size)
 {
     setActiveTexture(TheTexture, Size);
 }
 
-inline
+    inline
 void ToggleButton::setSelectedImage(const std::string& Path, Vec2f Size)
 {
     setActiveImage(Path, Size);
 }
 
 inline
-const BorderPtr &ToggleButton::getSelectedBorder(void) const
+Border * ToggleButton::getSelectedBorder   (void) const
 {
     return getActiveBorder();
 }
 
 inline
-LayerPtr &ToggleButton::editSelectedBackground(void)
+Layer * ToggleButton::getSelectedBackground(void) const
 {
-    return editActiveBackground();
+    return getActiveBackground();
 }
 
 inline
-const LayerPtr &ToggleButton::getSelectedBackground(void) const
+Layer * ToggleButton::getSelectedForeground(void) const
 {
-    return getActiveBackground();
+    return getActiveForeground();
+}
+
+inline
+UIDrawObjectCanvas * ToggleButton::getSelectedDrawObject(void) const
+{
+    return getActiveDrawObject();
 }
 
 inline
@@ -120,26 +124,14 @@ const Color4f &ToggleButton::getSelectedTextColor(void) const
     return getActiveTextColor();
 }
 
-inline
-UIDrawObjectCanvasPtr &ToggleButton::editSelectedDrawObject(void)
-{
-    return editActiveDrawObject();
-}
-
-inline
-const UIDrawObjectCanvasPtr &ToggleButton::getSelectedDrawObject(void) const
-{
-    return getActiveDrawObject();
-}
-
-inline
+    inline
 void ToggleButton::removeButtonSelectedListener(ButtonSelectedListenerPtr Listener)
 {
-   ButtonSelectedListenerSetItor EraseIter(_ButtonSelectedListeners.find(Listener));
-   if(EraseIter != _ButtonSelectedListeners.end())
-   {
-      _ButtonSelectedListeners.erase(EraseIter);
-   }
+    ButtonSelectedListenerSetItor EraseIter(_ButtonSelectedListeners.find(Listener));
+    if(EraseIter != _ButtonSelectedListeners.end())
+    {
+        _ButtonSelectedListeners.erase(EraseIter);
+    }
 }
-OSG_END_NAMESPACE
 
+OSG_END_NAMESPACE

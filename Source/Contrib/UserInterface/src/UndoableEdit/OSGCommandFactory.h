@@ -31,39 +31,47 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGTypeFactory.h>
+#include "OSGFactoryBase.h"
+#include "OSGSingletonHolder.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING CommandFactory : public TypeFactory
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING CommandFactoryBase : public FactoryBase
 {
     /*==========================  PUBLIC  =================================*/
 
   public :
-    static CommandFactory *the(void);
 
     /*=========================  PROTECTED  ===============================*/
 
   protected:
-    typedef TypeFactory Inherited;
+    typedef FactoryBase Inherited;
   
-    CommandFactory(void);
+    CommandFactoryBase(void);
     
     /*---------------------------------------------------------------------*/
-    virtual ~CommandFactory(void);
+    virtual ~CommandFactoryBase(void);
     
-    static CommandFactory   *_the;
-    
+
+    virtual bool initialize           (void);
+    virtual bool terminate            (void);
+
+    virtual bool onLoadInitialize     (void);
+
+    virtual bool initializeFactoryPost(void);
     /*==========================  PRIVATE  ================================*/
   private:
-    CommandFactory(const CommandFactory &source);
-    void operator =(const CommandFactory &source);
+    template <class SingletonT>
+    friend class SingletonHolder;
+
+    CommandFactoryBase(const CommandFactoryBase &source);
+    void operator =(const CommandFactoryBase &source);
 };
 
-typedef CommandFactory *CommandFactoryP;
+typedef OSG::SingletonHolder<OSG::CommandFactoryBase> CommandFactory;
 
 OSG_END_NAMESPACE
 

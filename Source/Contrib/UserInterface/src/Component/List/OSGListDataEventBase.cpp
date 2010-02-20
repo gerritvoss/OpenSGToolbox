@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,156 +50,205 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILELISTDATAEVENTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGListDataEventBase.h"
 #include "OSGListDataEvent.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ListDataEventBase::Index0FieldMask = 
-    (TypeTraits<BitVector>::One << ListDataEventBase::Index0FieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  ListDataEventBase::Index1FieldMask = 
-    (TypeTraits<BitVector>::One << ListDataEventBase::Index1FieldId);
+/*! \class OSG::ListDataEvent
+    
+ */
 
-const OSG::BitVector ListDataEventBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Int32           ListDataEventBase::_sfIndex0
     
 */
+
 /*! \var Int32           ListDataEventBase::_sfIndex1
     
 */
 
-//! ListDataEvent description
 
-FieldDescription *ListDataEventBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ListDataEvent *>::_type("ListDataEventPtr", "EventPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ListDataEvent *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ListDataEvent *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ListDataEvent *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ListDataEventBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFInt32::getClassType(), 
-                     "Index0", 
-                     Index0FieldId, Index0FieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ListDataEventBase::editSFIndex0)),
-    new FieldDescription(SFInt32::getClassType(), 
-                     "Index1", 
-                     Index1FieldId, Index1FieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ListDataEventBase::editSFIndex1))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType ListDataEventBase::_type(
-    "ListDataEvent",
-    "Event",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&ListDataEventBase::createEmpty),
+    pDesc = new SFInt32::Description(
+        SFInt32::getClassType(),
+        "Index0",
+        "",
+        Index0FieldId, Index0FieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ListDataEvent::editHandleIndex0),
+        static_cast<FieldGetMethodSig >(&ListDataEvent::getHandleIndex0));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFInt32::Description(
+        SFInt32::getClassType(),
+        "Index1",
+        "",
+        Index1FieldId, Index1FieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ListDataEvent::editHandleIndex1),
+        static_cast<FieldGetMethodSig >(&ListDataEvent::getHandleIndex1));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+ListDataEventBase::TypeObject ListDataEventBase::_type(
+    ListDataEventBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ListDataEventBase::createEmptyLocal),
     ListDataEvent::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(ListDataEventBase, ListDataEventPtr)
+    ListDataEvent::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ListDataEvent::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ListDataEvent\"\n"
+    "\tparent=\"Event\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"Index0\"\n"
+    "\t\ttype=\"Int32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"-1\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Index1\"\n"
+    "\t\ttype=\"Int32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"-1\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ListDataEventBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ListDataEventBase::getType(void) const 
+FieldContainerType &ListDataEventBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr ListDataEventBase::shallowCopy(void) const 
-{ 
-    ListDataEventPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const ListDataEvent *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 ListDataEventBase::getContainerSize(void) const 
-{ 
-    return sizeof(ListDataEvent); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ListDataEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &ListDataEventBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<ListDataEventBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void ListDataEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 ListDataEventBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((ListDataEventBase *) &other, whichField, sInfo);
+    return sizeof(ListDataEvent);
 }
-void ListDataEventBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFInt32 *ListDataEventBase::editSFIndex0(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(Index0FieldMask);
+
+    return &_sfIndex0;
 }
 
-void ListDataEventBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFInt32 *ListDataEventBase::getSFIndex0(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfIndex0;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-ListDataEventBase::ListDataEventBase(void) :
-    _sfIndex0                 (Int32(-1)), 
-    _sfIndex1                 (Int32(-1)), 
-    Inherited() 
+SFInt32 *ListDataEventBase::editSFIndex1(void)
 {
+    editSField(Index1FieldMask);
+
+    return &_sfIndex1;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-ListDataEventBase::ListDataEventBase(const ListDataEventBase &source) :
-    _sfIndex0                 (source._sfIndex0                 ), 
-    _sfIndex1                 (source._sfIndex1                 ), 
-    Inherited                 (source)
+const SFInt32 *ListDataEventBase::getSFIndex1(void) const
 {
+    return &_sfIndex1;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-ListDataEventBase::~ListDataEventBase(void)
-{
-}
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ListDataEventBase::getBinSize(const BitVector &whichField)
+UInt32 ListDataEventBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -207,18 +256,16 @@ UInt32 ListDataEventBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfIndex0.getBinSize();
     }
-
     if(FieldBits::NoField != (Index1FieldMask & whichField))
     {
         returnValue += _sfIndex1.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ListDataEventBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ListDataEventBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -226,17 +273,14 @@ void ListDataEventBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfIndex0.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (Index1FieldMask & whichField))
     {
         _sfIndex1.copyToBin(pMem);
     }
-
-
 }
 
-void ListDataEventBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ListDataEventBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -244,71 +288,244 @@ void ListDataEventBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfIndex0.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (Index1FieldMask & whichField))
     {
         _sfIndex1.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ListDataEventBase::executeSyncImpl(      ListDataEventBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ListDataEventTransitPtr ListDataEventBase::createLocal(BitVector bFlags)
 {
+    ListDataEventTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (Index0FieldMask & whichField))
-        _sfIndex0.syncWith(pOther->_sfIndex0);
+        fc = dynamic_pointer_cast<ListDataEvent>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (Index1FieldMask & whichField))
-        _sfIndex1.syncWith(pOther->_sfIndex1);
-
-
-}
-#else
-void ListDataEventBase::executeSyncImpl(      ListDataEventBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (Index0FieldMask & whichField))
-        _sfIndex0.syncWith(pOther->_sfIndex0);
-
-    if(FieldBits::NoField != (Index1FieldMask & whichField))
-        _sfIndex1.syncWith(pOther->_sfIndex1);
-
-
-
+    return fc;
 }
 
-void ListDataEventBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ListDataEventTransitPtr ListDataEventBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ListDataEventTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<ListDataEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ListDataEventTransitPtr ListDataEventBase::create(void)
+{
+    ListDataEventTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<ListDataEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+ListDataEvent *ListDataEventBase::createEmptyLocal(BitVector bFlags)
+{
+    ListDataEvent *returnValue;
+
+    newPtr<ListDataEvent>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+ListDataEvent *ListDataEventBase::createEmpty(void)
+{
+    ListDataEvent *returnValue;
+
+    newPtr<ListDataEvent>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ListDataEventBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    ListDataEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ListDataEvent *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ListDataEventBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    ListDataEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ListDataEvent *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ListDataEventBase::shallowCopy(void) const
+{
+    ListDataEvent *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const ListDataEvent *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ListDataEventBase::ListDataEventBase(void) :
+    Inherited(),
+    _sfIndex0                 (Int32(-1)),
+    _sfIndex1                 (Int32(-1))
+{
+}
+
+ListDataEventBase::ListDataEventBase(const ListDataEventBase &source) :
+    Inherited(source),
+    _sfIndex0                 (source._sfIndex0                 ),
+    _sfIndex1                 (source._sfIndex1                 )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ListDataEventBase::~ListDataEventBase(void)
+{
+}
+
+
+GetFieldHandlePtr ListDataEventBase::getHandleIndex0          (void) const
+{
+    SFInt32::GetHandlePtr returnValue(
+        new  SFInt32::GetHandle(
+             &_sfIndex0,
+             this->getType().getFieldDesc(Index0FieldId),
+             const_cast<ListDataEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ListDataEventBase::editHandleIndex0         (void)
+{
+    SFInt32::EditHandlePtr returnValue(
+        new  SFInt32::EditHandle(
+             &_sfIndex0,
+             this->getType().getFieldDesc(Index0FieldId),
+             this));
+
+
+    editSField(Index0FieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ListDataEventBase::getHandleIndex1          (void) const
+{
+    SFInt32::GetHandlePtr returnValue(
+        new  SFInt32::GetHandle(
+             &_sfIndex1,
+             this->getType().getFieldDesc(Index1FieldId),
+             const_cast<ListDataEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ListDataEventBase::editHandleIndex1         (void)
+{
+    SFInt32::EditHandlePtr returnValue(
+        new  SFInt32::EditHandle(
+             &_sfIndex1,
+             this->getType().getFieldDesc(Index1FieldId),
+             this));
+
+
+    editSField(Index1FieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ListDataEventBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ListDataEvent *pThis = static_cast<ListDataEvent *>(this);
+
+    pThis->execSync(static_cast<ListDataEvent *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ListDataEventBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    ListDataEvent *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const ListDataEvent *>(pRefAspect),
+                  dynamic_cast<const ListDataEvent *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ListDataEventPtr>::_type("ListDataEventPtr", "EventPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(ListDataEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void ListDataEventBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

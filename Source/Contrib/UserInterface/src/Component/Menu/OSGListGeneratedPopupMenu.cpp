@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,29 +40,24 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGListGeneratedPopupMenu.h"
 #include "OSGMenuItem.h"
 #include "OSGComponentMenuItem.h"
-#include "Component/List/Models/OSGListModel.h" // Model type
-#include "ComponentGenerators/OSGComponentGenerator.h" // CellGenerator type
-#include <OpenSG/Toolbox/OSGStringUtils.h> // CellGenerator type
+#include "OSGListModel.h" // Model type
+#include "OSGComponentGenerator.h" // CellGenerator type
+#include "OSGStringUtils.h" // CellGenerator type
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::ListGeneratedPopupMenu
-A UI List Generated PopupMenu. 	
-*/
+// Documentation for this class is emitted in the
+// OSGListGeneratedPopupMenuBase.cpp file.
+// To modify it, please change the .fcd file (OSGListGeneratedPopupMenu.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -72,8 +67,13 @@ A UI List Generated PopupMenu.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ListGeneratedPopupMenu::initMethod (void)
+void ListGeneratedPopupMenu::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -81,18 +81,17 @@ void ListGeneratedPopupMenu::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-
-void ListGeneratedPopupMenu::addItem(MenuItemPtr Item)
+void ListGeneratedPopupMenu::addItem(MenuItemRefPtr Item)
 {
 	//Do Nothing
 }
 
-void ListGeneratedPopupMenu::addItem(MenuItemPtr Item, const UInt32& Index)
+void ListGeneratedPopupMenu::addItem(MenuItemRefPtr Item, const UInt32& Index)
 {
 	//Do Nothing
 }
 
-void ListGeneratedPopupMenu::removeItem(MenuItemPtr Item)
+void ListGeneratedPopupMenu::removeItem(MenuItemRefPtr Item)
 {
 	//Do Nothing
 }
@@ -107,21 +106,21 @@ void ListGeneratedPopupMenu::removeAllItems(void)
 	//Do Nothing
 }
 
-MenuItemPtr ListGeneratedPopupMenu::getItem(const UInt32& Index)
+MenuItem* ListGeneratedPopupMenu::getItem(const UInt32& Index)
 {
-	if(getModel() != NullFC && Index < getChildren().size())
+	if(getModel() != NULL && Index < getMFChildren()->size())
 	{
-		return MenuItem::Ptr::dcast(getChildren()[Index]);
+		return dynamic_cast<MenuItem*>(getChildren(Index));
 	}
 	else
 	{
-		return NullFC;
+		return NULL;
 	}
 }
 
 UInt32 ListGeneratedPopupMenu::getNumItems(void) const
 {
-	if(getModel() != NullFC)
+	if(getModel() != NULL)
 	{
 		return getModel()->getSize();
 	}
@@ -133,52 +132,43 @@ UInt32 ListGeneratedPopupMenu::getNumItems(void) const
 
 void ListGeneratedPopupMenu::updateMenuItems(void)
 {
-    beginEditCP(ListGeneratedPopupMenuPtr(this), ChildrenFieldMask);
-        getChildren().clear();
+    clearChildren();
 
-		if(getModel() != NullFC)// && )
-		{
-			MenuItemPtr Item;
-			for(Int32 i(0) ; i<getModel()->getSize() ; ++i)
-			{
-				if(getCellGenerator() != NullFC)
-				{
-					Item = ComponentMenuItem::create();
-					ComponentPtr TheComponent = getCellGenerator()->getComponent(ListGeneratedPopupMenuPtr(this), getModel()->getElementAt(i), i, 0, false, false);
+    if(getModel() != NULL)// && )
+    {
+        MenuItemRefPtr Item;
+        for(Int32 i(0) ; i<getModel()->getSize() ; ++i)
+        {
+            if(getCellGenerator() != NULL)
+            {
+                Item = ComponentMenuItem::create();
+                ComponentRefPtr TheComponent = getCellGenerator()->getComponent(ListGeneratedPopupMenuRefPtr(this), getModel()->getElementAt(i), i, 0, false, false);
 
-					beginEditCP(TheComponent, Component::BackgroundsFieldMask);
-						TheComponent->setBackgrounds(NullFC);
-					endEditCP(TheComponent, Component::BackgroundsFieldMask);
+                TheComponent->setBackgrounds(NULL);
 
-					
-					beginEditCP(Item, ComponentMenuItem::ComponentFieldMask);
-						ComponentMenuItem::Ptr::dcast(Item)->setComponent(TheComponent);
-					endEditCP(Item, ComponentMenuItem::ComponentFieldMask);
-				}
-				else
-				{
-					//Generate the Menu Item
-					Item = MenuItem::create();
-					std::string TheText;
-                    try
-                    {
-                        TheText = lexical_cast(getModel()->getElementAt(i));
-                    }
-                    catch (boost::bad_lexical_cast &)
-                    {
-                        //Could not convert to a string
-                    }
-					beginEditCP(Item, MenuItem::TextFieldMask);
-						MenuItem::Ptr::dcast(Item)->setText(TheText);
-					endEditCP(Item, MenuItem::TextFieldMask);
-				}
-				getChildren().push_back(Item);
-			}
-		}
-    endEditCP(ListGeneratedPopupMenuPtr(this), ChildrenFieldMask);
-	producePopupMenuContentsChanged(PopupMenuEvent::create(PopupMenuPtr(this), getSystemTime()));
+
+                dynamic_pointer_cast<ComponentMenuItem>(Item)->setComponent(TheComponent);
+            }
+            else
+            {
+                //Generate the Menu Item
+                Item = MenuItem::create();
+                std::string TheText;
+                try
+                {
+                    TheText = lexical_cast(getModel()->getElementAt(i));
+                }
+                catch (boost::bad_lexical_cast &)
+                {
+                    //Could not convert to a string
+                }
+                dynamic_pointer_cast<MenuItem>(Item)->setText(TheText);
+            }
+            pushToChildren(Item);
+        }
+    }
+    producePopupMenuContentsChanged(PopupMenuEvent::create(PopupMenuRefPtr(this), getSystemTime()));
 }
-
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -188,13 +178,13 @@ void ListGeneratedPopupMenu::updateMenuItems(void)
 
 ListGeneratedPopupMenu::ListGeneratedPopupMenu(void) :
     Inherited(),
-		_ModelListener(ListGeneratedPopupMenuPtr(this))
+		_ModelListener(this)
 {
 }
 
 ListGeneratedPopupMenu::ListGeneratedPopupMenu(const ListGeneratedPopupMenu &source) :
     Inherited(source),
-		_ModelListener(ListGeneratedPopupMenuPtr(this))
+		_ModelListener(this)
 {
 }
 
@@ -204,13 +194,15 @@ ListGeneratedPopupMenu::~ListGeneratedPopupMenu(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void ListGeneratedPopupMenu::changed(BitVector whichField, UInt32 origin)
+void ListGeneratedPopupMenu::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 	
 	if(whichField & ModelFieldMask)
 	{
-		if(getModel() != NullFC)
+		if(getModel() != NULL)
 		{
 			getModel()->addListDataListener(&_ModelListener);
 		}
@@ -223,50 +215,25 @@ void ListGeneratedPopupMenu::changed(BitVector whichField, UInt32 origin)
 	}
 }
 
-void ListGeneratedPopupMenu::dump(      UInt32    , 
+void ListGeneratedPopupMenu::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump ListGeneratedPopupMenu NI" << std::endl;
 }
 
-
-void ListGeneratedPopupMenu::ModelListener::contentsChanged(const ListDataEventPtr e)
+void ListGeneratedPopupMenu::ModelListener::contentsChanged(const ListDataEventUnrecPtr e)
 {
 	_ListGeneratedPopupMenu->updateMenuItems();
 }
 
-void ListGeneratedPopupMenu::ModelListener::intervalAdded(const ListDataEventPtr e)
+void ListGeneratedPopupMenu::ModelListener::intervalAdded(const ListDataEventUnrecPtr e)
 {
 	_ListGeneratedPopupMenu->updateMenuItems();
 }
 
-void ListGeneratedPopupMenu::ModelListener::intervalRemoved(const ListDataEventPtr e)
+void ListGeneratedPopupMenu::ModelListener::intervalRemoved(const ListDataEventUnrecPtr e)
 {
 	_ListGeneratedPopupMenu->updateMenuItems();
 }
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGLISTGENERATEDPOPUPMENUBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGLISTGENERATEDPOPUPMENUBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGLISTGENERATEDPOPUPMENUFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
-

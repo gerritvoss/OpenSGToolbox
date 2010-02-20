@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,142 +50,166 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEXMLLOOKANDFEELINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGLookAndFeel.h"             // BaseLookAndFeel Class
 
 #include "OSGXMLLookAndFeelBase.h"
 #include "OSGXMLLookAndFeel.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  XMLLookAndFeelBase::BaseLookAndFeelFieldMask = 
-    (TypeTraits<BitVector>::One << XMLLookAndFeelBase::BaseLookAndFeelFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector XMLLookAndFeelBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::XMLLookAndFeel
+    UI XML LookAndFeel.
+ */
 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-// Field descriptions
-
-/*! \var LookAndFeelPtr  XMLLookAndFeelBase::_sfBaseLookAndFeel
+/*! \var LookAndFeel *   XMLLookAndFeelBase::_sfBaseLookAndFeel
     
 */
 
-//! XMLLookAndFeel description
 
-FieldDescription *XMLLookAndFeelBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<XMLLookAndFeel *>::_type("XMLLookAndFeelPtr", "LookAndFeelPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(XMLLookAndFeel *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           XMLLookAndFeel *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           XMLLookAndFeel *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void XMLLookAndFeelBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFLookAndFeelPtr::getClassType(), 
-                     "BaseLookAndFeel", 
-                     BaseLookAndFeelFieldId, BaseLookAndFeelFieldMask,
-                     false,
-                     (FieldAccessMethod) &XMLLookAndFeelBase::getSFBaseLookAndFeel)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType XMLLookAndFeelBase::_type(
-    "XMLLookAndFeel",
-    "LookAndFeel",
-    NULL,
-    (PrototypeCreateF) &XMLLookAndFeelBase::createEmpty,
+    pDesc = new SFUnrecLookAndFeelPtr::Description(
+        SFUnrecLookAndFeelPtr::getClassType(),
+        "BaseLookAndFeel",
+        "",
+        BaseLookAndFeelFieldId, BaseLookAndFeelFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&XMLLookAndFeel::editHandleBaseLookAndFeel),
+        static_cast<FieldGetMethodSig >(&XMLLookAndFeel::getHandleBaseLookAndFeel));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+XMLLookAndFeelBase::TypeObject XMLLookAndFeelBase::_type(
+    XMLLookAndFeelBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&XMLLookAndFeelBase::createEmptyLocal),
     XMLLookAndFeel::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(XMLLookAndFeelBase, XMLLookAndFeelPtr)
+    XMLLookAndFeel::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&XMLLookAndFeel::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"XMLLookAndFeel\"\n"
+    "\tparent=\"LookAndFeel\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "UI XML LookAndFeel.\n"
+    "\t<Field\n"
+    "\t\tname=\"BaseLookAndFeel\"\n"
+    "\t\ttype=\"LookAndFeel\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "UI XML LookAndFeel.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &XMLLookAndFeelBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &XMLLookAndFeelBase::getType(void) const 
+FieldContainerType &XMLLookAndFeelBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr XMLLookAndFeelBase::shallowCopy(void) const 
-{ 
-    XMLLookAndFeelPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const XMLLookAndFeel *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 XMLLookAndFeelBase::getContainerSize(void) const 
-{ 
-    return sizeof(XMLLookAndFeel); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void XMLLookAndFeelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &XMLLookAndFeelBase::getType(void) const
 {
-    this->executeSyncImpl((XMLLookAndFeelBase *) &other, whichField);
+    return _type;
 }
-#else
-void XMLLookAndFeelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 XMLLookAndFeelBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((XMLLookAndFeelBase *) &other, whichField, sInfo);
+    return sizeof(XMLLookAndFeel);
 }
-void XMLLookAndFeelBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the XMLLookAndFeel::_sfBaseLookAndFeel field.
+const SFUnrecLookAndFeelPtr *XMLLookAndFeelBase::getSFBaseLookAndFeel(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfBaseLookAndFeel;
 }
 
-void XMLLookAndFeelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecLookAndFeelPtr *XMLLookAndFeelBase::editSFBaseLookAndFeel(void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(BaseLookAndFeelFieldMask);
 
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-XMLLookAndFeelBase::XMLLookAndFeelBase(void) :
-    _sfBaseLookAndFeel        (LookAndFeelPtr(NullFC)), 
-    Inherited() 
-{
+    return &_sfBaseLookAndFeel;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-XMLLookAndFeelBase::XMLLookAndFeelBase(const XMLLookAndFeelBase &source) :
-    _sfBaseLookAndFeel        (source._sfBaseLookAndFeel        ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-XMLLookAndFeelBase::~XMLLookAndFeelBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 XMLLookAndFeelBase::getBinSize(const BitVector &whichField)
+UInt32 XMLLookAndFeelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -194,12 +218,11 @@ UInt32 XMLLookAndFeelBase::getBinSize(const BitVector &whichField)
         returnValue += _sfBaseLookAndFeel.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void XMLLookAndFeelBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void XMLLookAndFeelBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -207,12 +230,10 @@ void XMLLookAndFeelBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfBaseLookAndFeel.copyToBin(pMem);
     }
-
-
 }
 
-void XMLLookAndFeelBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void XMLLookAndFeelBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -220,82 +241,229 @@ void XMLLookAndFeelBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfBaseLookAndFeel.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void XMLLookAndFeelBase::executeSyncImpl(      XMLLookAndFeelBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+XMLLookAndFeelTransitPtr XMLLookAndFeelBase::createLocal(BitVector bFlags)
 {
+    XMLLookAndFeelTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (BaseLookAndFeelFieldMask & whichField))
-        _sfBaseLookAndFeel.syncWith(pOther->_sfBaseLookAndFeel);
+        fc = dynamic_pointer_cast<XMLLookAndFeel>(tmpPtr);
+    }
 
-
-}
-#else
-void XMLLookAndFeelBase::executeSyncImpl(      XMLLookAndFeelBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (BaseLookAndFeelFieldMask & whichField))
-        _sfBaseLookAndFeel.syncWith(pOther->_sfBaseLookAndFeel);
-
-
-
+    return fc;
 }
 
-void XMLLookAndFeelBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+XMLLookAndFeelTransitPtr XMLLookAndFeelBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    XMLLookAndFeelTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<XMLLookAndFeel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+XMLLookAndFeelTransitPtr XMLLookAndFeelBase::create(void)
+{
+    XMLLookAndFeelTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<XMLLookAndFeel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+XMLLookAndFeel *XMLLookAndFeelBase::createEmptyLocal(BitVector bFlags)
+{
+    XMLLookAndFeel *returnValue;
+
+    newPtr<XMLLookAndFeel>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+XMLLookAndFeel *XMLLookAndFeelBase::createEmpty(void)
+{
+    XMLLookAndFeel *returnValue;
+
+    newPtr<XMLLookAndFeel>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr XMLLookAndFeelBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    XMLLookAndFeel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const XMLLookAndFeel *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr XMLLookAndFeelBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    XMLLookAndFeel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const XMLLookAndFeel *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr XMLLookAndFeelBase::shallowCopy(void) const
+{
+    XMLLookAndFeel *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const XMLLookAndFeel *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+XMLLookAndFeelBase::XMLLookAndFeelBase(void) :
+    Inherited(),
+    _sfBaseLookAndFeel        (NULL)
+{
+}
+
+XMLLookAndFeelBase::XMLLookAndFeelBase(const XMLLookAndFeelBase &source) :
+    Inherited(source),
+    _sfBaseLookAndFeel        (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+XMLLookAndFeelBase::~XMLLookAndFeelBase(void)
+{
+}
+
+void XMLLookAndFeelBase::onCreate(const XMLLookAndFeel *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        XMLLookAndFeel *pThis = static_cast<XMLLookAndFeel *>(this);
+
+        pThis->setBaseLookAndFeel(source->getBaseLookAndFeel());
+    }
+}
+
+GetFieldHandlePtr XMLLookAndFeelBase::getHandleBaseLookAndFeel (void) const
+{
+    SFUnrecLookAndFeelPtr::GetHandlePtr returnValue(
+        new  SFUnrecLookAndFeelPtr::GetHandle(
+             &_sfBaseLookAndFeel,
+             this->getType().getFieldDesc(BaseLookAndFeelFieldId),
+             const_cast<XMLLookAndFeelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr XMLLookAndFeelBase::editHandleBaseLookAndFeel(void)
+{
+    SFUnrecLookAndFeelPtr::EditHandlePtr returnValue(
+        new  SFUnrecLookAndFeelPtr::EditHandle(
+             &_sfBaseLookAndFeel,
+             this->getType().getFieldDesc(BaseLookAndFeelFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&XMLLookAndFeel::setBaseLookAndFeel,
+                    static_cast<XMLLookAndFeel *>(this), _1));
+
+    editSField(BaseLookAndFeelFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void XMLLookAndFeelBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    XMLLookAndFeel *pThis = static_cast<XMLLookAndFeel *>(this);
+
+    pThis->execSync(static_cast<XMLLookAndFeel *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *XMLLookAndFeelBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    XMLLookAndFeel *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const XMLLookAndFeel *>(pRefAspect),
+                  dynamic_cast<const XMLLookAndFeel *>(this));
+
+    return returnValue;
+}
+#endif
+
+void XMLLookAndFeelBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<XMLLookAndFeel *>(this)->setBaseLookAndFeel(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<XMLLookAndFeelPtr>::_type("XMLLookAndFeelPtr", "LookAndFeelPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(XMLLookAndFeelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(XMLLookAndFeelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGXMLLOOKANDFEELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGXMLLOOKANDFEELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGXMLLOOKANDFEELFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,75 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/OSGAttachmentContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class UIFont;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! UIFontPtr
+OSG_GEN_CONTAINERPTR(UIFont);
 
-typedef FCPtr<AttachmentContainerPtr, UIFont> UIFontPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<UIFontPtr> : 
-    public FieldTraitsRecurseMapper<UIFontPtr, true>
+struct FieldTraits<UIFont *> :
+    public FieldTraitsFCPtrBase<UIFont *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFUIFontPtr"; }
-    static const char *getMName(void) { return "MFUIFontPtr"; }
+    typedef FieldTraits<UIFont *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFUIFontPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFUIFontPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<UIFontPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<UIFont *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecUIFontPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<UIFont *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecUIFontPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<UIFont *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakUIFontPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<UIFont *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdUIFontPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<UIFont *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecUIFontPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<UIFont *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecUIFontPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<UIFont *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakUIFontPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<UIFont *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdUIFontPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<UIFont *,
+                      RecordedRefCountPolicy  > SFRecUIFontPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<UIFont *,
+                      UnrecordedRefCountPolicy> SFUnrecUIFontPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<UIFont *,
+                      WeakRefCountPolicy      > SFWeakUIFontPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<UIFont *,
+                      NoRefCountPolicy        > SFUncountedUIFontPtr;
 
-typedef SField<UIFontPtr> SFUIFontPtr;
-#endif
 
-#ifndef OSG_COMPILEUIFONTINST
-OSG_DLLEXPORT_DECL1(SField, UIFontPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<UIFont *,
+                      RecordedRefCountPolicy  > MFRecUIFontPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<UIFont *,
+                      UnrecordedRefCountPolicy> MFUnrecUIFontPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<UIFont *,
+                      WeakRefCountPolicy      > MFWeakUIFontPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<UIFont *,
+                      NoRefCountPolicy        > MFUncountedUIFontPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<UIFontPtr> MFUIFontPtr;
-#endif
 
-#ifndef OSG_COMPILEUIFONTINST
-OSG_DLLEXPORT_DECL1(MField, UIFontPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecUIFontPtr : 
+    public PointerSField<UIFont *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecUIFontPtr : 
+    public PointerSField<UIFont *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakUIFontPtr :
+    public PointerSField<UIFont *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedUIFontPtr :
+    public PointerSField<UIFont *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecUIFontPtr :
+    public PointerMField<UIFont *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecUIFontPtr :
+    public PointerMField<UIFont *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakUIFontPtr :
+    public PointerMField<UIFont *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedUIFontPtr :
+    public PointerMField<UIFont *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

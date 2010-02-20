@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,95 +42,96 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGLayoutSpringBase.h"
-#include "Layout/OSGSpringLayoutFields.h"
-#include "Component/OSGComponentFields.h"
+#include "OSGSpringLayoutFields.h"
+#include "OSGComponentFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief LayoutSpring class. See \ref 
-           PageUserInterfaceLayoutSpring for a description.
+/*! \brief LayoutSpring class. See \ref
+           PageContribUserInterfaceLayoutSpring for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING LayoutSpring : public LayoutSpringBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING LayoutSpring : public LayoutSpringBase
 {
-  private:
-
-    typedef LayoutSpringBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
     static Real32 VALUE_NOT_SET;
+
+    typedef LayoutSpringBase Inherited;
+    typedef LayoutSpring     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
-    //Returns the maximum value of this LayoutSpringPtr.
+    //Returns the maximum value of this LayoutSpringRefPtr.
     virtual Real32 getMinimumValue(void) const = 0;
 
-    //Returns the Preferred value of this LayoutSpringPtr.
+    //Returns the Preferred value of this LayoutSpringRefPtr.
     virtual Real32 getPreferredValue(void) const = 0;
 
-    //Returns the minimum value of this LayoutSpringPtr.
+    //Returns the minimum value of this LayoutSpringRefPtr.
     virtual Real32 getMaximumValue(void) const = 0;
 
-    //Returns the current value of this LayoutSpringPtr.
+    //Returns the current value of this LayoutSpringRefPtr.
     virtual Real32 getValue(void) const = 0;
 
-    //Sets the current value of this LayoutSpringPtr.
+    //Sets the current value of this LayoutSpringRefPtr.
     virtual void setValue(const Real32& value) = 0;
 
     Real32 getStrain(void) const;
 
     void setStrain(Real32 strain);
 
-    virtual bool isCyclic(SpringLayoutPtr l) const;
+    virtual bool isCyclic(const SpringLayout* l) const;
 
     //Returns a strut -- a spring whose minimum, preferred, and maximum values each have the value pref.
-    static LayoutSpringPtr constant(const Real32& pref);
+    static LayoutSpringRefPtr constant(const Real32& pref);
 
     //Returns a spring whose minimum, preferred, and maximum values have the values: min, pref, and max respectively.
-    static LayoutSpringPtr constant(const Real32& min, const Real32& pref, const Real32& max);
+    static LayoutSpringRefPtr constant(const Real32& min, const Real32& pref, const Real32& max);
 
     //Returns -s: a spring running in the opposite direction to s.
-    static LayoutSpringPtr minus(LayoutSpringPtr s);
+    static LayoutSpringRefPtr minus(LayoutSpringRefPtr s);
 
     //Returns s1+s2: a spring representing s1 and s2  in series.
-    static LayoutSpringPtr sum(LayoutSpringPtr s1, LayoutSpringPtr s2);
+    static LayoutSpringRefPtr sum(LayoutSpringRefPtr s1, LayoutSpringRefPtr s2);
 
     //Returns max(s1, s2): a spring whose value is always greater than (or equal to) the values of both s1 and s2.
-    static LayoutSpringPtr max(LayoutSpringPtr s1, LayoutSpringPtr s2);
+    static LayoutSpringRefPtr max(LayoutSpringRefPtr s1, LayoutSpringRefPtr s2);
 
     
-    static LayoutSpringPtr difference(LayoutSpringPtr s1, LayoutSpringPtr s2);
+    static LayoutSpringRefPtr difference(LayoutSpringRefPtr s1, LayoutSpringRefPtr s2);
 
-    static LayoutSpringPtr scale(LayoutSpringPtr s, const Real32& factor);
+    static LayoutSpringRefPtr scale(LayoutSpringRefPtr s, const Real32& factor);
 
-    static LayoutSpringPtr width(ComponentPtr c);
+    static LayoutSpringRefPtr width(ComponentRefPtr c);
 
-    static LayoutSpringPtr height(ComponentPtr c);
-    static LayoutSpringPtr requestedWidth(ComponentPtr c);
+    static LayoutSpringRefPtr height(ComponentRefPtr c);
+    static LayoutSpringRefPtr requestedWidth(ComponentRefPtr c);
 
-    static LayoutSpringPtr requestedHeight(ComponentPtr c);
+    static LayoutSpringRefPtr requestedHeight(ComponentRefPtr c);
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in LayoutSpringBase.
@@ -147,20 +148,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING LayoutSpring : public LayoutSpringBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~LayoutSpring(void); 
+    virtual ~LayoutSpring(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class LayoutSpringBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const LayoutSpring &source);
     
     Real32 range(bool contract) const;
@@ -172,7 +177,5 @@ OSG_END_NAMESPACE
 
 #include "OSGLayoutSpringBase.inl"
 #include "OSGLayoutSpring.inl"
-
-#define OSGLAYOUTSPRING_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGLAYOUTSPRING_H_ */

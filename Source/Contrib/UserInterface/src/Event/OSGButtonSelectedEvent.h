@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,46 +42,48 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGButtonSelectedEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ButtonSelectedEvent class. See \ref 
-           PageUserInterfaceButtonSelectedEvent for a description.
+/*! \brief ButtonSelectedEvent class. See \ref
+           PageContribUserInterfaceButtonSelectedEvent for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING ButtonSelectedEvent : public ButtonSelectedEventBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ButtonSelectedEvent : public ButtonSelectedEventBase
 {
-  private:
-
-    typedef ButtonSelectedEventBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef ButtonSelectedEventBase Inherited;
+    typedef ButtonSelectedEvent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
-    static  ButtonSelectedEventPtr      create( FieldContainerPtr Source,
-                                                Time TimeStamp); 
+    static  ButtonSelectedEventTransitPtr      create( FieldContainerRefPtr Source,
+                                                       Time TimeStamp); 
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ButtonSelectedEventBase.
@@ -98,20 +100,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonSelectedEvent : public ButtonSelecte
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ButtonSelectedEvent(void); 
+    virtual ~ButtonSelectedEvent(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ButtonSelectedEventBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ButtonSelectedEvent &source);
 };
 

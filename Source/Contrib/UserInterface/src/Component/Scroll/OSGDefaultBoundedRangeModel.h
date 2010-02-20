@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,39 +42,40 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGDefaultBoundedRangeModelBase.h"
 #include <set>
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DefaultBoundedRangeModel class. See \ref 
-           PageUserInterfaceDefaultBoundedRangeModel for a description.
+/*! \brief DefaultBoundedRangeModel class. See \ref
+           PageContribUserInterfaceDefaultBoundedRangeModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultBoundedRangeModel : public DefaultBoundedRangeModelBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultBoundedRangeModel : public DefaultBoundedRangeModelBase
 {
-  private:
-
-    typedef DefaultBoundedRangeModelBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef DefaultBoundedRangeModelBase Inherited;
+    typedef DefaultBoundedRangeModel     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -115,6 +116,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultBoundedRangeModel : public DefaultB
 	virtual bool isChangeListenerAttached(ChangeListenerPtr Listener) const;
 	virtual void removeChangeListener(ChangeListenerPtr Listener);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in DefaultBoundedRangeModelBase.
@@ -131,7 +133,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultBoundedRangeModel : public DefaultB
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DefaultBoundedRangeModel(void); 
+    virtual ~DefaultBoundedRangeModel(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
     
@@ -140,17 +149,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultBoundedRangeModel : public DefaultB
     typedef ChangeListenerSet::const_iterator ChangeListenerSetConstItor;
 	
     ChangeListenerSet       _ChangeListeners;
-    void produceStateChanged(const ChangeEventPtr e);
+    void produceStateChanged(const ChangeEventUnrecPtr e);
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class DefaultBoundedRangeModelBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const DefaultBoundedRangeModel &source);
 };
 

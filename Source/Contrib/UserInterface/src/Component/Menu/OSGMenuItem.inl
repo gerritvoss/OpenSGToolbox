@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -38,8 +38,6 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 inline
@@ -49,13 +47,13 @@ bool MenuItem::isActionListenerAttached(ActionListenerPtr Listener) const
 }
 
 inline
-MenuItem::MenuItemKeyAcceleratorListener::MenuItemKeyAcceleratorListener(MenuItemPtr TheMenuItem) :
+MenuItem::MenuItemKeyAcceleratorListener::MenuItemKeyAcceleratorListener(MenuItemRefPtr TheMenuItem) :
 									_MenuItem(TheMenuItem)
 {
 }
 
 inline
-MenuItem::KeyAcceleratorMenuFlashUpdateListener::KeyAcceleratorMenuFlashUpdateListener(MenuItemPtr TheMenuItem) :
+MenuItem::KeyAcceleratorMenuFlashUpdateListener::KeyAcceleratorMenuFlashUpdateListener(MenuItemRefPtr TheMenuItem) :
 									_MenuItem(TheMenuItem),
 									_FlashElps(0.0)
 {
@@ -81,4 +79,3 @@ bool MenuItem::getDrawAsThoughSelected(void) const
 }
 
 OSG_END_NAMESPACE
-

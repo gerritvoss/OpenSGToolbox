@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,16 +55,15 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &TextFieldBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 TextFieldBase::getClassTypeId(void) 
+OSG::UInt32 TextFieldBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
+    return _type.getId();
+}
 //! access the producer type of the class
 inline
 const EventProducerType &TextFieldBase::getProducerClassType(void)
@@ -81,96 +78,21 @@ UInt32 TextFieldBase::getProducerClassTypeId(void)
     return _producerType.getId();
 }
 
-//! create a new instance of the class
 inline
-TextFieldPtr TextFieldBase::create(void) 
+OSG::UInt16 TextFieldBase::getClassGroupId(void)
 {
-    TextFieldPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = TextFieldPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getGroupId();
 }
-
-//! create an empty new instance of the class, do not copy the prototype
-inline
-TextFieldPtr TextFieldBase::createEmpty(void) 
-{ 
-    TextFieldPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
-}
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the TextField::_sfAlignment field.
-inline
-const SFVec2f *TextFieldBase::getSFAlignment(void) const
-{
-    return &_sfAlignment;
-}
-
-//! Get the TextField::_sfAlignment field.
-inline
-SFVec2f *TextFieldBase::editSFAlignment(void)
-{
-    return &_sfAlignment;
-}
-
-//! Get the TextField::_sfEmptyDescTextFont field.
-inline
-const SFUIFontPtr *TextFieldBase::getSFEmptyDescTextFont(void) const
-{
-    return &_sfEmptyDescTextFont;
-}
-
-//! Get the TextField::_sfEmptyDescTextFont field.
-inline
-SFUIFontPtr *TextFieldBase::editSFEmptyDescTextFont(void)
-{
-    return &_sfEmptyDescTextFont;
-}
-
-//! Get the TextField::_sfEmptyDescText field.
-inline
-const SFString *TextFieldBase::getSFEmptyDescText(void) const
-{
-    return &_sfEmptyDescText;
-}
-
-//! Get the TextField::_sfEmptyDescText field.
-inline
-SFString *TextFieldBase::editSFEmptyDescText(void)
-{
-    return &_sfEmptyDescText;
-}
-
-//! Get the TextField::_sfEmptyDescTextColor field.
-inline
-const SFColor4f *TextFieldBase::getSFEmptyDescTextColor(void) const
-{
-    return &_sfEmptyDescTextColor;
-}
-
-//! Get the TextField::_sfEmptyDescTextColor field.
-inline
-SFColor4f *TextFieldBase::editSFEmptyDescTextColor(void)
-{
-    return &_sfEmptyDescTextColor;
-}
-
-
 //! Get the value of the TextField::_sfAlignment field.
+
 inline
 Vec2f &TextFieldBase::editAlignment(void)
 {
+    editSField(AlignmentFieldMask);
+
     return _sfAlignment.getValue();
 }
 
@@ -185,34 +107,33 @@ const Vec2f &TextFieldBase::getAlignment(void) const
 inline
 void TextFieldBase::setAlignment(const Vec2f &value)
 {
+    editSField(AlignmentFieldMask);
+
     _sfAlignment.setValue(value);
 }
 
 //! Get the value of the TextField::_sfEmptyDescTextFont field.
 inline
-UIFontPtr &TextFieldBase::editEmptyDescTextFont(void)
-{
-    return _sfEmptyDescTextFont.getValue();
-}
-
-//! Get the value of the TextField::_sfEmptyDescTextFont field.
-inline
-const UIFontPtr &TextFieldBase::getEmptyDescTextFont(void) const
+UIFont * TextFieldBase::getEmptyDescTextFont(void) const
 {
     return _sfEmptyDescTextFont.getValue();
 }
 
 //! Set the value of the TextField::_sfEmptyDescTextFont field.
 inline
-void TextFieldBase::setEmptyDescTextFont(const UIFontPtr &value)
+void TextFieldBase::setEmptyDescTextFont(UIFont * const value)
 {
+    editSField(EmptyDescTextFontFieldMask);
+
     _sfEmptyDescTextFont.setValue(value);
 }
-
 //! Get the value of the TextField::_sfEmptyDescText field.
+
 inline
 std::string &TextFieldBase::editEmptyDescText(void)
 {
+    editSField(EmptyDescTextFieldMask);
+
     return _sfEmptyDescText.getValue();
 }
 
@@ -227,13 +148,17 @@ const std::string &TextFieldBase::getEmptyDescText(void) const
 inline
 void TextFieldBase::setEmptyDescText(const std::string &value)
 {
+    editSField(EmptyDescTextFieldMask);
+
     _sfEmptyDescText.setValue(value);
 }
-
 //! Get the value of the TextField::_sfEmptyDescTextColor field.
+
 inline
 Color4f &TextFieldBase::editEmptyDescTextColor(void)
 {
+    editSField(EmptyDescTextColorFieldMask);
+
     return _sfEmptyDescTextColor.getValue();
 }
 
@@ -248,8 +173,43 @@ const Color4f &TextFieldBase::getEmptyDescTextColor(void) const
 inline
 void TextFieldBase::setEmptyDescTextColor(const Color4f &value)
 {
+    editSField(EmptyDescTextColorFieldMask);
+
     _sfEmptyDescTextColor.setValue(value);
 }
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void TextFieldBase::execSync (      TextFieldBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+        _sfAlignment.syncWith(pFrom->_sfAlignment);
+
+    if(FieldBits::NoField != (EmptyDescTextFontFieldMask & whichField))
+        _sfEmptyDescTextFont.syncWith(pFrom->_sfEmptyDescTextFont);
+
+    if(FieldBits::NoField != (EmptyDescTextFieldMask & whichField))
+        _sfEmptyDescText.syncWith(pFrom->_sfEmptyDescText);
+
+    if(FieldBits::NoField != (EmptyDescTextColorFieldMask & whichField))
+        _sfEmptyDescTextColor.syncWith(pFrom->_sfEmptyDescTextColor);
+}
+#endif
+
+
+inline
+const Char8 *TextFieldBase::getClassname(void)
+{
+    return "TextField";
+}
+OSG_GEN_CONTAINERPTR(TextField);
+
 OSG_END_NAMESPACE
+

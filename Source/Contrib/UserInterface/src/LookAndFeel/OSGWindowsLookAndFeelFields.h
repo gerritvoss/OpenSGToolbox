@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGLookAndFeelFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class WindowsLookAndFeel;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! WindowsLookAndFeelPtr
+OSG_GEN_CONTAINERPTR(WindowsLookAndFeel);
 
-typedef FCPtr<LookAndFeelPtr, WindowsLookAndFeel> WindowsLookAndFeelPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<WindowsLookAndFeelPtr> : 
-    public FieldTraitsRecurseMapper<WindowsLookAndFeelPtr, true>
+struct FieldTraits<WindowsLookAndFeel *> :
+    public FieldTraitsFCPtrBase<WindowsLookAndFeel *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFWindowsLookAndFeelPtr"; }
-    static const char *getMName(void) { return "MFWindowsLookAndFeelPtr"; }
+    typedef FieldTraits<WindowsLookAndFeel *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFWindowsLookAndFeelPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFWindowsLookAndFeelPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<WindowsLookAndFeelPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<WindowsLookAndFeel *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecWindowsLookAndFeelPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<WindowsLookAndFeel *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecWindowsLookAndFeelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<WindowsLookAndFeel *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakWindowsLookAndFeelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<WindowsLookAndFeel *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdWindowsLookAndFeelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<WindowsLookAndFeel *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecWindowsLookAndFeelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<WindowsLookAndFeel *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecWindowsLookAndFeelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<WindowsLookAndFeel *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakWindowsLookAndFeelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<WindowsLookAndFeel *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdWindowsLookAndFeelPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<WindowsLookAndFeel *,
+                      RecordedRefCountPolicy  > SFRecWindowsLookAndFeelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<WindowsLookAndFeel *,
+                      UnrecordedRefCountPolicy> SFUnrecWindowsLookAndFeelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<WindowsLookAndFeel *,
+                      WeakRefCountPolicy      > SFWeakWindowsLookAndFeelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<WindowsLookAndFeel *,
+                      NoRefCountPolicy        > SFUncountedWindowsLookAndFeelPtr;
 
-typedef SField<WindowsLookAndFeelPtr> SFWindowsLookAndFeelPtr;
-#endif
 
-#ifndef OSG_COMPILEWINDOWSLOOKANDFEELINST
-OSG_DLLEXPORT_DECL1(SField, WindowsLookAndFeelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<WindowsLookAndFeel *,
+                      RecordedRefCountPolicy  > MFRecWindowsLookAndFeelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<WindowsLookAndFeel *,
+                      UnrecordedRefCountPolicy> MFUnrecWindowsLookAndFeelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<WindowsLookAndFeel *,
+                      WeakRefCountPolicy      > MFWeakWindowsLookAndFeelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<WindowsLookAndFeel *,
+                      NoRefCountPolicy        > MFUncountedWindowsLookAndFeelPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<WindowsLookAndFeelPtr> MFWindowsLookAndFeelPtr;
-#endif
 
-#ifndef OSG_COMPILEWINDOWSLOOKANDFEELINST
-OSG_DLLEXPORT_DECL1(MField, WindowsLookAndFeelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecWindowsLookAndFeelPtr : 
+    public PointerSField<WindowsLookAndFeel *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecWindowsLookAndFeelPtr : 
+    public PointerSField<WindowsLookAndFeel *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakWindowsLookAndFeelPtr :
+    public PointerSField<WindowsLookAndFeel *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedWindowsLookAndFeelPtr :
+    public PointerSField<WindowsLookAndFeel *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecWindowsLookAndFeelPtr :
+    public PointerMField<WindowsLookAndFeel *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecWindowsLookAndFeelPtr :
+    public PointerMField<WindowsLookAndFeel *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakWindowsLookAndFeelPtr :
+    public PointerMField<WindowsLookAndFeel *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedWindowsLookAndFeelPtr :
+    public PointerMField<WindowsLookAndFeel *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGWINDOWSLOOKANDFEELFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGWINDOWSLOOKANDFEELFIELDS_H_ */

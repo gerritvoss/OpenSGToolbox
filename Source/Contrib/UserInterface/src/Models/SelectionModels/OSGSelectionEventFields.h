@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,64 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/Toolbox/OSGEventFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class SelectionEvent;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! SelectionEventPtr
+OSG_GEN_CONTAINERPTR(SelectionEvent);
 
-typedef FCPtr<EventPtr, SelectionEvent> SelectionEventPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<SelectionEventPtr> : 
-    public FieldTraitsRecurseMapper<SelectionEventPtr, true>
+struct FieldTraits<SelectionEvent *> :
+    public FieldTraitsFCPtrBase<SelectionEvent *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFSelectionEventPtr"; }
+    typedef FieldTraits<SelectionEvent *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFSelectionEventPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFSelectionEventPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<SelectionEventPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<SelectionEvent *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecSelectionEventPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<SelectionEvent *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecSelectionEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SelectionEvent *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakSelectionEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SelectionEvent *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdSelectionEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SelectionEvent *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecSelectionEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SelectionEvent *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecSelectionEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SelectionEvent *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakSelectionEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SelectionEvent *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdSelectionEventPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<SelectionEvent *,
+                      RecordedRefCountPolicy  > SFRecSelectionEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<SelectionEvent *,
+                      UnrecordedRefCountPolicy> SFUnrecSelectionEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<SelectionEvent *,
+                      WeakRefCountPolicy      > SFWeakSelectionEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<SelectionEvent *,
+                      NoRefCountPolicy        > SFUncountedSelectionEventPtr;
 
-typedef SField<SelectionEventPtr> SFSelectionEventPtr;
-#endif
 
-#ifndef OSG_COMPILESELECTIONEVENTINST
-OSG_DLLEXPORT_DECL1(SField, SelectionEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<SelectionEvent *,
+                      RecordedRefCountPolicy  > MFRecSelectionEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<SelectionEvent *,
+                      UnrecordedRefCountPolicy> MFUnrecSelectionEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<SelectionEvent *,
+                      WeakRefCountPolicy      > MFWeakSelectionEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<SelectionEvent *,
+                      NoRefCountPolicy        > MFUncountedSelectionEventPtr;
+
+
+
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecSelectionEventPtr : 
+    public PointerSField<SelectionEvent *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecSelectionEventPtr : 
+    public PointerSField<SelectionEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakSelectionEventPtr :
+    public PointerSField<SelectionEvent *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedSelectionEventPtr :
+    public PointerSField<SelectionEvent *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecSelectionEventPtr :
+    public PointerMField<SelectionEvent *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecSelectionEventPtr :
+    public PointerMField<SelectionEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakSelectionEventPtr :
+    public PointerMField<SelectionEvent *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedSelectionEventPtr :
+    public PointerMField<SelectionEvent *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

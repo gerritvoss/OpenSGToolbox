@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,103 +58,119 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include "Component/Container/OSGContainer.h" // Parent
+#include "OSGComponent.h" // Parent
 
-#include <OpenSG/OSGStringFields.h> // Text type
-#include <OpenSG/OSGUInt32Fields.h> // CaretPosition type
-#include "Text/OSGUIFont.h" // Font type
-#include <OpenSG/OSGColor4fFields.h> // SelectionBoxColor type
-#include <OpenSG/OSGColor4fFields.h> // SelectionTextColor type
-#include <OpenSG/OSGColor4fFields.h> // ActiveTextColor type
-#include <OpenSG/OSGColor4fFields.h> // FocusedTextColor type
-#include <OpenSG/OSGColor4fFields.h> // RolloverTextColor type
-#include <OpenSG/OSGColor4fFields.h> // DisabledTextColor type
-#include <OpenSG/OSGColor4fFields.h> // TextColor type
+#include "OSGBaseFields.h"              // Text type
+#include "OSGSysFields.h"               // CaretPosition type
+#include "OSGUIFontFields.h"            // Font type
 
 #include "OSGTextComponentFields.h"
-#include <OpenSG/Toolbox/OSGEventProducer.h>
-#include <OpenSG/Toolbox/OSGEventProducerType.h>
-#include <OpenSG/Toolbox/OSGMethodDescription.h>
+
+//Event Producer Headers
+#include "OSGEventProducer.h"
+#include "OSGEventProducerType.h"
+#include "OSGMethodDescription.h"
 
 OSG_BEGIN_NAMESPACE
 
 class TextComponent;
-class BinaryDataHandler;
 
 //! \brief TextComponent Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextComponentBase : public Component
 {
-  private:
-
-    typedef Component    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef TextComponentPtr  Ptr;
+    typedef Component Inherited;
+    typedef Component ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(TextComponent);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        TextFieldId               = Inherited::NextFieldId,
-        CaretPositionFieldId      = TextFieldId               + 1,
-        FontFieldId               = CaretPositionFieldId      + 1,
-        SelectionBoxColorFieldId  = FontFieldId               + 1,
-        SelectionTextColorFieldId = SelectionBoxColorFieldId  + 1,
-        ActiveTextColorFieldId    = SelectionTextColorFieldId + 1,
-        FocusedTextColorFieldId   = ActiveTextColorFieldId    + 1,
-        RolloverTextColorFieldId  = FocusedTextColorFieldId   + 1,
-        DisabledTextColorFieldId  = RolloverTextColorFieldId  + 1,
-        TextColorFieldId          = DisabledTextColorFieldId  + 1,
-        NextFieldId               = TextColorFieldId          + 1
+        TextFieldId = Inherited::NextFieldId,
+        CaretPositionFieldId = TextFieldId + 1,
+        FontFieldId = CaretPositionFieldId + 1,
+        SelectionBoxColorFieldId = FontFieldId + 1,
+        SelectionTextColorFieldId = SelectionBoxColorFieldId + 1,
+        ActiveTextColorFieldId = SelectionTextColorFieldId + 1,
+        FocusedTextColorFieldId = ActiveTextColorFieldId + 1,
+        RolloverTextColorFieldId = FocusedTextColorFieldId + 1,
+        DisabledTextColorFieldId = RolloverTextColorFieldId + 1,
+        TextColorFieldId = DisabledTextColorFieldId + 1,
+        NextFieldId = TextColorFieldId + 1
     };
 
-    static const OSG::BitVector TextFieldMask;
-    static const OSG::BitVector CaretPositionFieldMask;
-    static const OSG::BitVector FontFieldMask;
-    static const OSG::BitVector SelectionBoxColorFieldMask;
-    static const OSG::BitVector SelectionTextColorFieldMask;
-    static const OSG::BitVector ActiveTextColorFieldMask;
-    static const OSG::BitVector FocusedTextColorFieldMask;
-    static const OSG::BitVector RolloverTextColorFieldMask;
-    static const OSG::BitVector DisabledTextColorFieldMask;
-    static const OSG::BitVector TextColorFieldMask;
-
+    static const OSG::BitVector TextFieldMask =
+        (TypeTraits<BitVector>::One << TextFieldId);
+    static const OSG::BitVector CaretPositionFieldMask =
+        (TypeTraits<BitVector>::One << CaretPositionFieldId);
+    static const OSG::BitVector FontFieldMask =
+        (TypeTraits<BitVector>::One << FontFieldId);
+    static const OSG::BitVector SelectionBoxColorFieldMask =
+        (TypeTraits<BitVector>::One << SelectionBoxColorFieldId);
+    static const OSG::BitVector SelectionTextColorFieldMask =
+        (TypeTraits<BitVector>::One << SelectionTextColorFieldId);
+    static const OSG::BitVector ActiveTextColorFieldMask =
+        (TypeTraits<BitVector>::One << ActiveTextColorFieldId);
+    static const OSG::BitVector FocusedTextColorFieldMask =
+        (TypeTraits<BitVector>::One << FocusedTextColorFieldId);
+    static const OSG::BitVector RolloverTextColorFieldMask =
+        (TypeTraits<BitVector>::One << RolloverTextColorFieldId);
+    static const OSG::BitVector DisabledTextColorFieldMask =
+        (TypeTraits<BitVector>::One << DisabledTextColorFieldId);
+    static const OSG::BitVector TextColorFieldMask =
+        (TypeTraits<BitVector>::One << TextColorFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFString          SFTextType;
+    typedef SFUInt32          SFCaretPositionType;
+    typedef SFUnrecUIFontPtr  SFFontType;
+    typedef SFColor4f         SFSelectionBoxColorType;
+    typedef SFColor4f         SFSelectionTextColorType;
+    typedef SFColor4f         SFActiveTextColorType;
+    typedef SFColor4f         SFFocusedTextColorType;
+    typedef SFColor4f         SFRolloverTextColorType;
+    typedef SFColor4f         SFDisabledTextColorType;
+    typedef SFColor4f         SFTextColorType;
 
     enum
     {
-        TextValueChangedMethodId = Inherited::NextMethodId,
-        CaretChangedMethodId     = TextValueChangedMethodId + 1,
-        NextMethodId             = CaretChangedMethodId     + 1
+        TextValueChangedMethodId = Inherited::NextProducedMethodId,
+        CaretChangedMethodId = TextValueChangedMethodId + 1,
+        NextProducedMethodId = CaretChangedMethodId + 1
     };
-
-
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
-    static const  EventProducerType  &getProducerClassType  (void); 
-    static        UInt32              getProducerClassTypeId(void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
+    static const  EventProducerType  &getProducerClassType  (void);
+    static        UInt32              getProducerClassTypeId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -164,82 +180,102 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
     /*! \{                                                                 */
 
 
-           SFString            *editSFText           (void);
-     const SFString            *getSFText           (void) const;
+                  SFString            *editSFText           (void);
+            const SFString            *getSFText            (void) const;
 
-           SFUInt32            *editSFCaretPosition  (void);
-     const SFUInt32            *getSFCaretPosition  (void) const;
+                  SFUInt32            *editSFCaretPosition  (void);
+            const SFUInt32            *getSFCaretPosition   (void) const;
+            const SFUnrecUIFontPtr    *getSFFont           (void) const;
+                  SFUnrecUIFontPtr    *editSFFont           (void);
 
-           SFUIFontPtr         *editSFFont           (void);
-     const SFUIFontPtr         *getSFFont           (void) const;
+                  SFColor4f           *editSFSelectionBoxColor(void);
+            const SFColor4f           *getSFSelectionBoxColor (void) const;
 
-           SFColor4f           *editSFSelectionBoxColor(void);
-     const SFColor4f           *getSFSelectionBoxColor(void) const;
+                  SFColor4f           *editSFSelectionTextColor(void);
+            const SFColor4f           *getSFSelectionTextColor (void) const;
 
-           SFColor4f           *editSFSelectionTextColor(void);
-     const SFColor4f           *getSFSelectionTextColor(void) const;
+                  SFColor4f           *editSFActiveTextColor(void);
+            const SFColor4f           *getSFActiveTextColor (void) const;
 
-           SFColor4f           *editSFActiveTextColor(void);
-     const SFColor4f           *getSFActiveTextColor(void) const;
+                  SFColor4f           *editSFFocusedTextColor(void);
+            const SFColor4f           *getSFFocusedTextColor (void) const;
 
-           SFColor4f           *editSFFocusedTextColor(void);
-     const SFColor4f           *getSFFocusedTextColor(void) const;
+                  SFColor4f           *editSFRolloverTextColor(void);
+            const SFColor4f           *getSFRolloverTextColor (void) const;
 
-           SFColor4f           *editSFRolloverTextColor(void);
-     const SFColor4f           *getSFRolloverTextColor(void) const;
+                  SFColor4f           *editSFDisabledTextColor(void);
+            const SFColor4f           *getSFDisabledTextColor (void) const;
 
-           SFColor4f           *editSFDisabledTextColor(void);
-     const SFColor4f           *getSFDisabledTextColor(void) const;
-
-           SFColor4f           *editSFTextColor      (void);
-     const SFColor4f           *getSFTextColor      (void) const;
+                  SFColor4f           *editSFTextColor      (void);
+            const SFColor4f           *getSFTextColor       (void) const;
 
 
-           std::string         &editText           (void);
-     const std::string         &getText           (void) const;
+                  std::string         &editText           (void);
+            const std::string         &getText            (void) const;
 
-           UInt32              &editCaretPosition  (void);
-     const UInt32              &getCaretPosition  (void) const;
+                  UInt32              &editCaretPosition  (void);
+                  UInt32               getCaretPosition   (void) const;
 
-           UIFontPtr           &editFont           (void);
-     const UIFontPtr           &getFont           (void) const;
+                  UIFont * getFont           (void) const;
 
-           Color4f             &editSelectionBoxColor(void);
-     const Color4f             &getSelectionBoxColor(void) const;
+                  Color4f             &editSelectionBoxColor(void);
+            const Color4f             &getSelectionBoxColor (void) const;
 
-           Color4f             &editSelectionTextColor(void);
-     const Color4f             &getSelectionTextColor(void) const;
+                  Color4f             &editSelectionTextColor(void);
+            const Color4f             &getSelectionTextColor (void) const;
 
-           Color4f             &editActiveTextColor(void);
-     const Color4f             &getActiveTextColor(void) const;
+                  Color4f             &editActiveTextColor(void);
+            const Color4f             &getActiveTextColor (void) const;
 
-           Color4f             &editFocusedTextColor(void);
-     const Color4f             &getFocusedTextColor(void) const;
+                  Color4f             &editFocusedTextColor(void);
+            const Color4f             &getFocusedTextColor (void) const;
 
-           Color4f             &editRolloverTextColor(void);
-     const Color4f             &getRolloverTextColor(void) const;
+                  Color4f             &editRolloverTextColor(void);
+            const Color4f             &getRolloverTextColor (void) const;
 
-           Color4f             &editDisabledTextColor(void);
-     const Color4f             &getDisabledTextColor(void) const;
+                  Color4f             &editDisabledTextColor(void);
+            const Color4f             &getDisabledTextColor (void) const;
 
-           Color4f             &editTextColor      (void);
-     const Color4f             &getTextColor      (void) const;
+                  Color4f             &editTextColor      (void);
+            const Color4f             &getTextColor       (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setText           ( const std::string &value );
-     void setCaretPosition  ( const UInt32 &value );
-     void setFont           ( const UIFontPtr &value );
-     void setSelectionBoxColor( const Color4f &value );
-     void setSelectionTextColor( const Color4f &value );
-     void setActiveTextColor( const Color4f &value );
-     void setFocusedTextColor( const Color4f &value );
-     void setRolloverTextColor( const Color4f &value );
-     void setDisabledTextColor( const Color4f &value );
-     void setTextColor      ( const Color4f &value );
+            void setText           (const std::string &value);
+            void setCaretPosition  (const UInt32 value);
+            void setFont           (UIFont * const value);
+            void setSelectionBoxColor(const Color4f &value);
+            void setSelectionTextColor(const Color4f &value);
+            void setActiveTextColor(const Color4f &value);
+            void setFocusedTextColor(const Color4f &value);
+            void setRolloverTextColor(const Color4f &value);
+            void setDisabledTextColor(const Color4f &value);
+            void setTextColor      (const Color4f &value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Binary Access                              */
+    /*! \{                                                                 */
+
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -248,41 +284,31 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
 
     virtual const EventProducerType &getProducerType(void) const; 
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
-    /*! \{                                                                 */
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Binary Access                              */
-    /*! \{                                                                 */
-
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFString            _sfText;
-    SFUInt32            _sfCaretPosition;
-    SFUIFontPtr         _sfFont;
-    SFColor4f           _sfSelectionBoxColor;
-    SFColor4f           _sfSelectionTextColor;
-    SFColor4f           _sfActiveTextColor;
-    SFColor4f           _sfFocusedTextColor;
-    SFColor4f           _sfRolloverTextColor;
-    SFColor4f           _sfDisabledTextColor;
-    SFColor4f           _sfTextColor;
+    SFString          _sfText;
+    SFUInt32          _sfCaretPosition;
+    SFUnrecUIFontPtr  _sfFont;
+    SFColor4f         _sfSelectionBoxColor;
+    SFColor4f         _sfSelectionTextColor;
+    SFColor4f         _sfActiveTextColor;
+    SFColor4f         _sfFocusedTextColor;
+    SFColor4f         _sfRolloverTextColor;
+    SFColor4f         _sfDisabledTextColor;
+    SFColor4f         _sfTextColor;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -297,69 +323,95 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TextComponentBase(void); 
+    virtual ~TextComponentBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const TextComponent *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleText            (void) const;
+    EditFieldHandlePtr editHandleText           (void);
+    GetFieldHandlePtr  getHandleCaretPosition   (void) const;
+    EditFieldHandlePtr editHandleCaretPosition  (void);
+    GetFieldHandlePtr  getHandleFont            (void) const;
+    EditFieldHandlePtr editHandleFont           (void);
+    GetFieldHandlePtr  getHandleSelectionBoxColor (void) const;
+    EditFieldHandlePtr editHandleSelectionBoxColor(void);
+    GetFieldHandlePtr  getHandleSelectionTextColor (void) const;
+    EditFieldHandlePtr editHandleSelectionTextColor(void);
+    GetFieldHandlePtr  getHandleActiveTextColor (void) const;
+    EditFieldHandlePtr editHandleActiveTextColor(void);
+    GetFieldHandlePtr  getHandleFocusedTextColor (void) const;
+    EditFieldHandlePtr editHandleFocusedTextColor(void);
+    GetFieldHandlePtr  getHandleRolloverTextColor (void) const;
+    EditFieldHandlePtr editHandleRolloverTextColor(void);
+    GetFieldHandlePtr  getHandleDisabledTextColor (void) const;
+    EditFieldHandlePtr editHandleDisabledTextColor(void);
+    GetFieldHandlePtr  getHandleTextColor       (void) const;
+    EditFieldHandlePtr editHandleTextColor      (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      TextComponentBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      TextComponentBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      TextComponentBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
+    /*---------------------------------------------------------------------*/
     static MethodDescription   *_methodDesc[];
     static EventProducerType _producerType;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const TextComponentBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef TextComponentBase *TextComponentBaseP;
-
-typedef osgIF<TextComponentBase::isNodeCore,
-              CoredNodePtr<TextComponent>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet TextComponentNodePtr;
-
-typedef RefPtr<TextComponentPtr> TextComponentRefPtr;
 
 OSG_END_NAMESPACE
 

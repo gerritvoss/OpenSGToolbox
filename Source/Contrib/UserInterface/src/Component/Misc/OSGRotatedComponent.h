@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,64 +42,71 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGRotatedComponentBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief RotatedComponent class. See \ref 
-           PageUserInterfaceRotatedComponent for a description.
+/*! \brief RotatedComponent class. See \ref
+           PageContribUserInterfaceRotatedComponent for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponent : public RotatedComponentBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING RotatedComponent : public RotatedComponentBase
 {
-  private:
-
-    typedef RotatedComponentBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
-    enum ResizePolicy {NO_RESIZING = 0 , RESIZE_TO_MIN=1, RESIZE_TO_MAX=2};
+    enum ResizePolicy
+    {
+        NO_RESIZING   = 0 ,
+        RESIZE_TO_MIN = 1,
+        RESIZE_TO_MAX = 2
+    };
+
+    typedef RotatedComponentBase Inherited;
+    typedef RotatedComponent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
-                      
+
+    /*! \}                                                                 */
+
     virtual void updateLayout(void);
     
 	//Mouse Events
-    virtual void mouseClicked(const MouseEventPtr e);
-    virtual void mouseEntered(const MouseEventPtr e);
-    virtual void mouseExited(const MouseEventPtr e);
-    virtual void mousePressed(const MouseEventPtr e);
-    virtual void mouseReleased(const MouseEventPtr e);
+    virtual void mouseClicked(const MouseEventUnrecPtr e);
+    virtual void mouseEntered(const MouseEventUnrecPtr e);
+    virtual void mouseExited(const MouseEventUnrecPtr e);
+    virtual void mousePressed(const MouseEventUnrecPtr e);
+    virtual void mouseReleased(const MouseEventUnrecPtr e);
 
 	//Mouse Motion Events
-    virtual void mouseMoved(const MouseEventPtr e);
-    virtual void mouseDragged(const MouseEventPtr e);
+    virtual void mouseMoved(const MouseEventUnrecPtr e);
+    virtual void mouseDragged(const MouseEventUnrecPtr e);
 
 	//Mouse Wheel Events
-    virtual void mouseWheelMoved(const MouseWheelEventPtr e);
+    virtual void mouseWheelMoved(const MouseWheelEventUnrecPtr e);
 
-    virtual Pnt2f getParentToLocal(const Pnt2f& Location);
+    virtual Pnt2f getParentToLocal(const Pnt2f& Location) const;
 
-    virtual Pnt2f getLocalToParent(const Pnt2f& Location);
+    virtual Pnt2f getLocalToParent(const Pnt2f& Location) const;
 
-    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in RotatedComponentBase.
@@ -116,21 +123,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponent : public RotatedComponent
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~RotatedComponent(void); 
+    virtual ~RotatedComponent(void);
 
     /*! \}                                                                 */
-	virtual void drawInternal(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+
+	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
     
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class RotatedComponentBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const RotatedComponent &source);
 };
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,67 +42,64 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGScaleLayoutSpringBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ScaleLayoutSpring class. See \ref 
-           PageUserInterfaceScaleLayoutSpring for a description.
+/*! \brief ScaleLayoutSpring class. See \ref
+           PageContribUserInterfaceScaleLayoutSpring for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING ScaleLayoutSpring : public ScaleLayoutSpringBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ScaleLayoutSpring : public ScaleLayoutSpringBase
 {
-  private:
-
-    typedef ScaleLayoutSpringBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef ScaleLayoutSpringBase Inherited;
+    typedef ScaleLayoutSpring     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Construction                               */
-    /*! \{                                                                 */
 
-    static  ScaleLayoutSpringPtr      create          (LayoutSpringPtr TheSpring, Real32 Factor); 
+    static  ScaleLayoutSpringTransitPtr      create          (LayoutSpringRefPtr TheSpring, Real32 Factor); 
     
-    /*! \}                                                                 */
-    //Returns the maximum value of this LayoutSpringPtr.
+    //Returns the maximum value of this LayoutSpringRefPtr.
     virtual Real32 getMinimumValue(void) const;
 
-    //Returns the Preferred value of this LayoutSpringPtr.
+    //Returns the Preferred value of this LayoutSpringRefPtr.
     virtual Real32 getPreferredValue(void) const;
 
-    //Returns the minimum value of this LayoutSpringPtr.
+    //Returns the minimum value of this LayoutSpringRefPtr.
     virtual Real32 getMaximumValue(void) const;
 
-    //Returns the current value of this LayoutSpringPtr.
+    //Returns the current value of this LayoutSpringRefPtr.
     virtual Real32 getValue(void) const;
 
-    //Sets the current value of this LayoutSpringPtr.
+    //Sets the current value of this LayoutSpringRefPtr.
     virtual void setValue(const Real32& value);
     
-    virtual bool isCyclic(SpringLayoutPtr l) const;
+    virtual bool isCyclic(const SpringLayout* l) const;
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ScaleLayoutSpringBase.
@@ -119,20 +116,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScaleLayoutSpring : public ScaleLayoutSpri
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ScaleLayoutSpring(void); 
+    virtual ~ScaleLayoutSpring(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ScaleLayoutSpringBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ScaleLayoutSpring &source);
 };
 
@@ -142,7 +143,5 @@ OSG_END_NAMESPACE
 
 #include "OSGScaleLayoutSpringBase.inl"
 #include "OSGScaleLayoutSpring.inl"
-
-#define OSGSCALELAYOUTSPRING_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGSCALELAYOUTSPRING_H_ */

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGBorderFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class BevelBorder;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! BevelBorderPtr
+OSG_GEN_CONTAINERPTR(BevelBorder);
 
-typedef FCPtr<BorderPtr, BevelBorder> BevelBorderPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<BevelBorderPtr> : 
-    public FieldTraitsRecurseMapper<BevelBorderPtr, true>
+struct FieldTraits<BevelBorder *> :
+    public FieldTraitsFCPtrBase<BevelBorder *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFBevelBorderPtr"; }
-    static const char *getMName(void) { return "MFBevelBorderPtr"; }
+    typedef FieldTraits<BevelBorder *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFBevelBorderPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFBevelBorderPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<BevelBorderPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<BevelBorder *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecBevelBorderPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<BevelBorder *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecBevelBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<BevelBorder *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakBevelBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<BevelBorder *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdBevelBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<BevelBorder *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecBevelBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<BevelBorder *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecBevelBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<BevelBorder *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakBevelBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<BevelBorder *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdBevelBorderPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<BevelBorder *,
+                      RecordedRefCountPolicy  > SFRecBevelBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<BevelBorder *,
+                      UnrecordedRefCountPolicy> SFUnrecBevelBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<BevelBorder *,
+                      WeakRefCountPolicy      > SFWeakBevelBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<BevelBorder *,
+                      NoRefCountPolicy        > SFUncountedBevelBorderPtr;
 
-typedef SField<BevelBorderPtr> SFBevelBorderPtr;
-#endif
 
-#ifndef OSG_COMPILEBEVELBORDERINST
-OSG_DLLEXPORT_DECL1(SField, BevelBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<BevelBorder *,
+                      RecordedRefCountPolicy  > MFRecBevelBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<BevelBorder *,
+                      UnrecordedRefCountPolicy> MFUnrecBevelBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<BevelBorder *,
+                      WeakRefCountPolicy      > MFWeakBevelBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<BevelBorder *,
+                      NoRefCountPolicy        > MFUncountedBevelBorderPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<BevelBorderPtr> MFBevelBorderPtr;
-#endif
 
-#ifndef OSG_COMPILEBEVELBORDERINST
-OSG_DLLEXPORT_DECL1(MField, BevelBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecBevelBorderPtr : 
+    public PointerSField<BevelBorder *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecBevelBorderPtr : 
+    public PointerSField<BevelBorder *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakBevelBorderPtr :
+    public PointerSField<BevelBorder *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedBevelBorderPtr :
+    public PointerSField<BevelBorder *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecBevelBorderPtr :
+    public PointerMField<BevelBorder *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecBevelBorderPtr :
+    public PointerMField<BevelBorder *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakBevelBorderPtr :
+    public PointerMField<BevelBorder *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedBevelBorderPtr :
+    public PointerMField<BevelBorder *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGBEVELBORDERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGBEVELBORDERFIELDS_H_ */

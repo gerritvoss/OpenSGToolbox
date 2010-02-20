@@ -3,22 +3,24 @@
 <FieldContainer
 	name="ComponentMenuItem"
 	parent="MenuItem"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI ComponentMenuItem.
 	<Field
 		name="Component"
-		type="ComponentPtr"
+		type="Component"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/OSGComponentFields.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>

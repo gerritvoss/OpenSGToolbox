@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,104 +55,92 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &ComponentHeightLayoutSpringBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ComponentHeightLayoutSpringBase::getClassTypeId(void) 
+OSG::UInt32 ComponentHeightLayoutSpringBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-ComponentHeightLayoutSpringPtr ComponentHeightLayoutSpringBase::create(void) 
-{
-    ComponentHeightLayoutSpringPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = ComponentHeightLayoutSpringPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-ComponentHeightLayoutSpringPtr ComponentHeightLayoutSpringBase::createEmpty(void) 
-{ 
-    ComponentHeightLayoutSpringPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 ComponentHeightLayoutSpringBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ComponentHeightLayoutSpring::_sfComponent field.
-inline
-SFComponentPtr *ComponentHeightLayoutSpringBase::getSFComponent(void)
-{
-    return &_sfComponent;
-}
-
-//! Get the ComponentHeightLayoutSpring::_sfSizeField field.
-inline
-SFUInt32 *ComponentHeightLayoutSpringBase::getSFSizeField(void)
-{
-    return &_sfSizeField;
-}
-
 
 //! Get the value of the ComponentHeightLayoutSpring::_sfComponent field.
 inline
-ComponentPtr &ComponentHeightLayoutSpringBase::getComponent(void)
-{
-    return _sfComponent.getValue();
-}
-
-//! Get the value of the ComponentHeightLayoutSpring::_sfComponent field.
-inline
-const ComponentPtr &ComponentHeightLayoutSpringBase::getComponent(void) const
+Component * ComponentHeightLayoutSpringBase::getComponent(void) const
 {
     return _sfComponent.getValue();
 }
 
 //! Set the value of the ComponentHeightLayoutSpring::_sfComponent field.
 inline
-void ComponentHeightLayoutSpringBase::setComponent(const ComponentPtr &value)
+void ComponentHeightLayoutSpringBase::setComponent(Component * const value)
 {
+    editSField(ComponentFieldMask);
+
     _sfComponent.setValue(value);
 }
-
 //! Get the value of the ComponentHeightLayoutSpring::_sfSizeField field.
+
 inline
-UInt32 &ComponentHeightLayoutSpringBase::getSizeField(void)
+UInt32 &ComponentHeightLayoutSpringBase::editSizeField(void)
 {
+    editSField(SizeFieldFieldMask);
+
     return _sfSizeField.getValue();
 }
 
 //! Get the value of the ComponentHeightLayoutSpring::_sfSizeField field.
 inline
-const UInt32 &ComponentHeightLayoutSpringBase::getSizeField(void) const
+      UInt32  ComponentHeightLayoutSpringBase::getSizeField(void) const
 {
     return _sfSizeField.getValue();
 }
 
 //! Set the value of the ComponentHeightLayoutSpring::_sfSizeField field.
 inline
-void ComponentHeightLayoutSpringBase::setSizeField(const UInt32 &value)
+void ComponentHeightLayoutSpringBase::setSizeField(const UInt32 value)
 {
+    editSField(SizeFieldFieldMask);
+
     _sfSizeField.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void ComponentHeightLayoutSpringBase::execSync (      ComponentHeightLayoutSpringBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGCOMPONENTHEIGHTLAYOUTSPRINGBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (ComponentFieldMask & whichField))
+        _sfComponent.syncWith(pFrom->_sfComponent);
+
+    if(FieldBits::NoField != (SizeFieldFieldMask & whichField))
+        _sfSizeField.syncWith(pFrom->_sfSizeField);
+}
+#endif
+
+
+inline
+const Char8 *ComponentHeightLayoutSpringBase::getClassname(void)
+{
+    return "ComponentHeightLayoutSpring";
+}
+OSG_GEN_CONTAINERPTR(ComponentHeightLayoutSpring);
+
+OSG_END_NAMESPACE
 

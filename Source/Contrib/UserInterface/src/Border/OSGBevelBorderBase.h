@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,77 +58,88 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGBorder.h" // Parent
 
-#include <OpenSG/OSGColor4fFields.h> // HighlightInner type
-#include <OpenSG/OSGReal32Fields.h> // Width type
-#include <OpenSG/OSGColor4fFields.h> // HighlightOuter type
-#include <OpenSG/OSGColor4fFields.h> // ShadowInner type
-#include <OpenSG/OSGColor4fFields.h> // ShadowOuter type
-#include <OpenSG/OSGBoolFields.h> // Raised type
+#include "OSGBaseFields.h"              // HighlightInner type
+#include "OSGSysFields.h"               // Width type
 
 #include "OSGBevelBorderFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class BevelBorder;
-class BinaryDataHandler;
 
 //! \brief BevelBorder Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING BevelBorderBase : public Border
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING BevelBorderBase : public Border
 {
-  private:
-
-    typedef Border    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef BevelBorderPtr  Ptr;
+    typedef Border Inherited;
+    typedef Border ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(BevelBorder);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
         HighlightInnerFieldId = Inherited::NextFieldId,
-        WidthFieldId          = HighlightInnerFieldId + 1,
-        HighlightOuterFieldId = WidthFieldId          + 1,
-        ShadowInnerFieldId    = HighlightOuterFieldId + 1,
-        ShadowOuterFieldId    = ShadowInnerFieldId    + 1,
-        RaisedFieldId         = ShadowOuterFieldId    + 1,
-        NextFieldId           = RaisedFieldId         + 1
+        WidthFieldId = HighlightInnerFieldId + 1,
+        HighlightOuterFieldId = WidthFieldId + 1,
+        ShadowInnerFieldId = HighlightOuterFieldId + 1,
+        ShadowOuterFieldId = ShadowInnerFieldId + 1,
+        RaisedFieldId = ShadowOuterFieldId + 1,
+        NextFieldId = RaisedFieldId + 1
     };
 
-    static const OSG::BitVector HighlightInnerFieldMask;
-    static const OSG::BitVector WidthFieldMask;
-    static const OSG::BitVector HighlightOuterFieldMask;
-    static const OSG::BitVector ShadowInnerFieldMask;
-    static const OSG::BitVector ShadowOuterFieldMask;
-    static const OSG::BitVector RaisedFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector HighlightInnerFieldMask =
+        (TypeTraits<BitVector>::One << HighlightInnerFieldId);
+    static const OSG::BitVector WidthFieldMask =
+        (TypeTraits<BitVector>::One << WidthFieldId);
+    static const OSG::BitVector HighlightOuterFieldMask =
+        (TypeTraits<BitVector>::One << HighlightOuterFieldId);
+    static const OSG::BitVector ShadowInnerFieldMask =
+        (TypeTraits<BitVector>::One << ShadowInnerFieldId);
+    static const OSG::BitVector ShadowOuterFieldMask =
+        (TypeTraits<BitVector>::One << ShadowOuterFieldId);
+    static const OSG::BitVector RaisedFieldMask =
+        (TypeTraits<BitVector>::One << RaisedFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFColor4f         SFHighlightInnerType;
+    typedef SFReal32          SFWidthType;
+    typedef SFColor4f         SFHighlightOuterType;
+    typedef SFColor4f         SFShadowInnerType;
+    typedef SFColor4f         SFShadowOuterType;
+    typedef SFBool            SFRaisedType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -137,41 +148,59 @@ class OSG_USERINTERFACELIB_DLLMAPPING BevelBorderBase : public Border
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFColor4f           *getSFHighlightInner (void);
-           SFReal32            *getSFWidth          (void);
-           SFColor4f           *getSFHighlightOuter (void);
-           SFColor4f           *getSFShadowInner    (void);
-           SFColor4f           *getSFShadowOuter    (void);
-           SFBool              *getSFRaised         (void);
 
-           Color4f             &getHighlightInner (void);
-     const Color4f             &getHighlightInner (void) const;
-           Real32              &getWidth          (void);
-     const Real32              &getWidth          (void) const;
-           Color4f             &getHighlightOuter (void);
-     const Color4f             &getHighlightOuter (void) const;
-           Color4f             &getShadowInner    (void);
-     const Color4f             &getShadowInner    (void) const;
-           Color4f             &getShadowOuter    (void);
-     const Color4f             &getShadowOuter    (void) const;
-           bool                &getRaised         (void);
-     const bool                &getRaised         (void) const;
+                  SFColor4f           *editSFHighlightInner (void);
+            const SFColor4f           *getSFHighlightInner  (void) const;
+
+                  SFReal32            *editSFWidth          (void);
+            const SFReal32            *getSFWidth           (void) const;
+
+                  SFColor4f           *editSFHighlightOuter (void);
+            const SFColor4f           *getSFHighlightOuter  (void) const;
+
+                  SFColor4f           *editSFShadowInner    (void);
+            const SFColor4f           *getSFShadowInner     (void) const;
+
+                  SFColor4f           *editSFShadowOuter    (void);
+            const SFColor4f           *getSFShadowOuter     (void) const;
+
+                  SFBool              *editSFRaised         (void);
+            const SFBool              *getSFRaised          (void) const;
+
+
+                  Color4f             &editHighlightInner (void);
+            const Color4f             &getHighlightInner  (void) const;
+
+                  Real32              &editWidth          (void);
+                  Real32               getWidth           (void) const;
+
+                  Color4f             &editHighlightOuter (void);
+            const Color4f             &getHighlightOuter  (void) const;
+
+                  Color4f             &editShadowInner    (void);
+            const Color4f             &getShadowInner     (void) const;
+
+                  Color4f             &editShadowOuter    (void);
+            const Color4f             &getShadowOuter     (void) const;
+
+                  bool                &editRaised         (void);
+                  bool                 getRaised          (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setHighlightInner ( const Color4f &value );
-     void setWidth          ( const Real32 &value );
-     void setHighlightOuter ( const Color4f &value );
-     void setShadowInner    ( const Color4f &value );
-     void setShadowOuter    ( const Color4f &value );
-     void setRaised         ( const bool &value );
+            void setHighlightInner (const Color4f &value);
+            void setWidth          (const Real32 value);
+            void setHighlightOuter (const Color4f &value);
+            void setShadowInner    (const Color4f &value);
+            void setShadowOuter    (const Color4f &value);
+            void setRaised         (const bool value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -179,11 +208,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING BevelBorderBase : public Border
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -191,31 +220,48 @@ class OSG_USERINTERFACELIB_DLLMAPPING BevelBorderBase : public Border
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  BevelBorderPtr      create          (void); 
-    static  BevelBorderPtr      createEmpty     (void); 
+    static  BevelBorderTransitPtr  create          (void);
+    static  BevelBorder           *createEmpty     (void);
+
+    static  BevelBorderTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  BevelBorder            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  BevelBorderTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFColor4f           _sfHighlightInner;
-    SFReal32            _sfWidth;
-    SFColor4f           _sfHighlightOuter;
-    SFColor4f           _sfShadowInner;
-    SFColor4f           _sfShadowOuter;
-    SFBool              _sfRaised;
+    SFColor4f         _sfHighlightInner;
+    SFReal32          _sfWidth;
+    SFColor4f         _sfHighlightOuter;
+    SFColor4f         _sfShadowInner;
+    SFColor4f         _sfShadowOuter;
+    SFBool            _sfRaised;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -230,69 +276,89 @@ class OSG_USERINTERFACELIB_DLLMAPPING BevelBorderBase : public Border
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~BevelBorderBase(void); 
+    virtual ~BevelBorderBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleHighlightInner  (void) const;
+    EditFieldHandlePtr editHandleHighlightInner (void);
+    GetFieldHandlePtr  getHandleWidth           (void) const;
+    EditFieldHandlePtr editHandleWidth          (void);
+    GetFieldHandlePtr  getHandleHighlightOuter  (void) const;
+    EditFieldHandlePtr editHandleHighlightOuter (void);
+    GetFieldHandlePtr  getHandleShadowInner     (void) const;
+    EditFieldHandlePtr editHandleShadowInner    (void);
+    GetFieldHandlePtr  getHandleShadowOuter     (void) const;
+    EditFieldHandlePtr editHandleShadowOuter    (void);
+    GetFieldHandlePtr  getHandleRaised          (void) const;
+    EditFieldHandlePtr editHandleRaised         (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      BevelBorderBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      BevelBorderBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      BevelBorderBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const BevelBorderBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef BevelBorderBase *BevelBorderBaseP;
 
-typedef osgIF<BevelBorderBase::isNodeCore,
-              CoredNodePtr<BevelBorder>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet BevelBorderNodePtr;
-
-typedef RefPtr<BevelBorderPtr> BevelBorderRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGBEVELBORDERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGBEVELBORDERBASE_H_ */

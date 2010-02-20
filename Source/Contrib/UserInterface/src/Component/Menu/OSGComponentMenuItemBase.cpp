@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,142 +50,166 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILECOMPONENTMENUITEMINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGComponent.h"               // Component Class
 
 #include "OSGComponentMenuItemBase.h"
 #include "OSGComponentMenuItem.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ComponentMenuItemBase::ComponentFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentMenuItemBase::ComponentFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector ComponentMenuItemBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::ComponentMenuItem
+    A UI ComponentMenuItem.
+ */
 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-// Field descriptions
-
-/*! \var ComponentPtr    ComponentMenuItemBase::_sfComponent
+/*! \var Component *     ComponentMenuItemBase::_sfComponent
     
 */
 
-//! ComponentMenuItem description
 
-FieldDescription *ComponentMenuItemBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ComponentMenuItem *>::_type("ComponentMenuItemPtr", "MenuItemPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ComponentMenuItem *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ComponentMenuItem *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ComponentMenuItem *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ComponentMenuItemBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFComponentPtr::getClassType(), 
-                     "Component", 
-                     ComponentFieldId, ComponentFieldMask,
-                     false,
-                     (FieldAccessMethod) &ComponentMenuItemBase::getSFComponent)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType ComponentMenuItemBase::_type(
-    "ComponentMenuItem",
-    "MenuItem",
-    NULL,
-    (PrototypeCreateF) &ComponentMenuItemBase::createEmpty,
+    pDesc = new SFUnrecComponentPtr::Description(
+        SFUnrecComponentPtr::getClassType(),
+        "Component",
+        "",
+        ComponentFieldId, ComponentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ComponentMenuItem::editHandleComponent),
+        static_cast<FieldGetMethodSig >(&ComponentMenuItem::getHandleComponent));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+ComponentMenuItemBase::TypeObject ComponentMenuItemBase::_type(
+    ComponentMenuItemBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ComponentMenuItemBase::createEmptyLocal),
     ComponentMenuItem::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(ComponentMenuItemBase, ComponentMenuItemPtr)
+    ComponentMenuItem::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ComponentMenuItem::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ComponentMenuItem\"\n"
+    "\tparent=\"MenuItem\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI ComponentMenuItem.\n"
+    "\t<Field\n"
+    "\t\tname=\"Component\"\n"
+    "\t\ttype=\"Component\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI ComponentMenuItem.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ComponentMenuItemBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ComponentMenuItemBase::getType(void) const 
+FieldContainerType &ComponentMenuItemBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr ComponentMenuItemBase::shallowCopy(void) const 
-{ 
-    ComponentMenuItemPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const ComponentMenuItem *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 ComponentMenuItemBase::getContainerSize(void) const 
-{ 
-    return sizeof(ComponentMenuItem); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ComponentMenuItemBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &ComponentMenuItemBase::getType(void) const
 {
-    this->executeSyncImpl((ComponentMenuItemBase *) &other, whichField);
+    return _type;
 }
-#else
-void ComponentMenuItemBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 ComponentMenuItemBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((ComponentMenuItemBase *) &other, whichField, sInfo);
+    return sizeof(ComponentMenuItem);
 }
-void ComponentMenuItemBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the ComponentMenuItem::_sfComponent field.
+const SFUnrecComponentPtr *ComponentMenuItemBase::getSFComponent(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfComponent;
 }
 
-void ComponentMenuItemBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecComponentPtr *ComponentMenuItemBase::editSFComponent      (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(ComponentFieldMask);
 
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-ComponentMenuItemBase::ComponentMenuItemBase(void) :
-    _sfComponent              (ComponentPtr(NullFC)), 
-    Inherited() 
-{
+    return &_sfComponent;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-ComponentMenuItemBase::ComponentMenuItemBase(const ComponentMenuItemBase &source) :
-    _sfComponent              (source._sfComponent              ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-ComponentMenuItemBase::~ComponentMenuItemBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ComponentMenuItemBase::getBinSize(const BitVector &whichField)
+UInt32 ComponentMenuItemBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -194,12 +218,11 @@ UInt32 ComponentMenuItemBase::getBinSize(const BitVector &whichField)
         returnValue += _sfComponent.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ComponentMenuItemBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ComponentMenuItemBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -207,12 +230,10 @@ void ComponentMenuItemBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfComponent.copyToBin(pMem);
     }
-
-
 }
 
-void ComponentMenuItemBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ComponentMenuItemBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -220,82 +241,229 @@ void ComponentMenuItemBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfComponent.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ComponentMenuItemBase::executeSyncImpl(      ComponentMenuItemBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ComponentMenuItemTransitPtr ComponentMenuItemBase::createLocal(BitVector bFlags)
 {
+    ComponentMenuItemTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (ComponentFieldMask & whichField))
-        _sfComponent.syncWith(pOther->_sfComponent);
+        fc = dynamic_pointer_cast<ComponentMenuItem>(tmpPtr);
+    }
 
-
-}
-#else
-void ComponentMenuItemBase::executeSyncImpl(      ComponentMenuItemBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ComponentFieldMask & whichField))
-        _sfComponent.syncWith(pOther->_sfComponent);
-
-
-
+    return fc;
 }
 
-void ComponentMenuItemBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ComponentMenuItemTransitPtr ComponentMenuItemBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ComponentMenuItemTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<ComponentMenuItem>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ComponentMenuItemTransitPtr ComponentMenuItemBase::create(void)
+{
+    ComponentMenuItemTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<ComponentMenuItem>(tmpPtr);
+    }
+
+    return fc;
+}
+
+ComponentMenuItem *ComponentMenuItemBase::createEmptyLocal(BitVector bFlags)
+{
+    ComponentMenuItem *returnValue;
+
+    newPtr<ComponentMenuItem>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+ComponentMenuItem *ComponentMenuItemBase::createEmpty(void)
+{
+    ComponentMenuItem *returnValue;
+
+    newPtr<ComponentMenuItem>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ComponentMenuItemBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    ComponentMenuItem *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ComponentMenuItem *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ComponentMenuItemBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    ComponentMenuItem *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ComponentMenuItem *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ComponentMenuItemBase::shallowCopy(void) const
+{
+    ComponentMenuItem *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const ComponentMenuItem *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ComponentMenuItemBase::ComponentMenuItemBase(void) :
+    Inherited(),
+    _sfComponent              (NULL)
+{
+}
+
+ComponentMenuItemBase::ComponentMenuItemBase(const ComponentMenuItemBase &source) :
+    Inherited(source),
+    _sfComponent              (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ComponentMenuItemBase::~ComponentMenuItemBase(void)
+{
+}
+
+void ComponentMenuItemBase::onCreate(const ComponentMenuItem *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        ComponentMenuItem *pThis = static_cast<ComponentMenuItem *>(this);
+
+        pThis->setComponent(source->getComponent());
+    }
+}
+
+GetFieldHandlePtr ComponentMenuItemBase::getHandleComponent       (void) const
+{
+    SFUnrecComponentPtr::GetHandlePtr returnValue(
+        new  SFUnrecComponentPtr::GetHandle(
+             &_sfComponent,
+             this->getType().getFieldDesc(ComponentFieldId),
+             const_cast<ComponentMenuItemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentMenuItemBase::editHandleComponent      (void)
+{
+    SFUnrecComponentPtr::EditHandlePtr returnValue(
+        new  SFUnrecComponentPtr::EditHandle(
+             &_sfComponent,
+             this->getType().getFieldDesc(ComponentFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ComponentMenuItem::setComponent,
+                    static_cast<ComponentMenuItem *>(this), _1));
+
+    editSField(ComponentFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ComponentMenuItemBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ComponentMenuItem *pThis = static_cast<ComponentMenuItem *>(this);
+
+    pThis->execSync(static_cast<ComponentMenuItem *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ComponentMenuItemBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    ComponentMenuItem *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const ComponentMenuItem *>(pRefAspect),
+                  dynamic_cast<const ComponentMenuItem *>(this));
+
+    return returnValue;
+}
+#endif
+
+void ComponentMenuItemBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<ComponentMenuItem *>(this)->setComponent(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ComponentMenuItemPtr>::_type("ComponentMenuItemPtr", "MenuItemPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(ComponentMenuItemPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ComponentMenuItemPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGCOMPONENTMENUITEMBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCOMPONENTMENUITEMBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCOMPONENTMENUITEMFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

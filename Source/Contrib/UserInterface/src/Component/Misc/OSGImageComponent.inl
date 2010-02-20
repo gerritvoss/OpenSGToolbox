@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -38,34 +38,30 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGImageFileHandler.h>
-
 OSG_BEGIN_NAMESPACE
 
 inline
 void ImageComponent::setImage(const char *fileName, const char *mimeType)
 {
-	setImage(ImageFileHandler::the().read(fileName, mimeType));
+	setImage(ImageFileHandler::the()->read(fileName, mimeType));
 }
 
 inline
 void ImageComponent::setRolloverImage(const char *fileName, const char *mimeType)
 {
-	setRolloverImage(ImageFileHandler::the().read(fileName, mimeType));
+	setRolloverImage(ImageFileHandler::the()->read(fileName, mimeType));
 }
 
 inline
 void ImageComponent::setDisabledImage(const char *fileName, const char *mimeType)
 {
-	setDisabledImage(ImageFileHandler::the().read(fileName, mimeType));
+	setDisabledImage(ImageFileHandler::the()->read(fileName, mimeType));
 }
 
 inline
 void ImageComponent::setFocusedImage(const char *fileName, const char *mimeType)
 {
-	setFocusedImage(ImageFileHandler::the().read(fileName, mimeType));
+	setFocusedImage(ImageFileHandler::the()->read(fileName, mimeType));
 }
 
 OSG_END_NAMESPACE
-

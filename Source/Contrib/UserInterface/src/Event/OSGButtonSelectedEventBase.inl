@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,46 +55,45 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &ButtonSelectedEventBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ButtonSelectedEventBase::getClassTypeId(void) 
+OSG::UInt32 ButtonSelectedEventBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-ButtonSelectedEventPtr ButtonSelectedEventBase::create(void) 
-{
-    ButtonSelectedEventPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = ButtonSelectedEventPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-ButtonSelectedEventPtr ButtonSelectedEventBase::createEmpty(void) 
-{ 
-    ButtonSelectedEventPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 ButtonSelectedEventBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void ButtonSelectedEventBase::execSync (      ButtonSelectedEventBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+}
+#endif
+
+
+inline
+const Char8 *ButtonSelectedEventBase::getClassname(void)
+{
+    return "ButtonSelectedEvent";
+}
+OSG_GEN_CONTAINERPTR(ButtonSelectedEvent);
 
 OSG_END_NAMESPACE
 

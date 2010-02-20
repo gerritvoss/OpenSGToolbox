@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,50 +42,52 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGUndoableEditEventBase.h"
 #include "OSGUndoableEdit.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief UndoableEditEvent class. See \ref 
-           PageUserInterfaceUndoableEditEvent for a description.
+/*! \brief UndoableEditEvent class. See \ref
+           PageContribUserInterfaceUndoableEditEvent for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING UndoableEditEvent : public UndoableEditEventBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UndoableEditEvent : public UndoableEditEventBase
 {
-  private:
-
-    typedef UndoableEditEventBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef UndoableEditEventBase Inherited;
+    typedef UndoableEditEvent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
-    static  UndoableEditEventPtr      create(  FieldContainerPtr Source,
-                                               Time TimeStamp,
-                                               UndoableEditPtr TheUndoableEdit); 
+    static  UndoableEditEventTransitPtr      create(  FieldContainerRefPtr Source,
+                                                      Time TimeStamp,
+                                                      UndoableEditPtr TheUndoableEdit); 
 
     const UndoableEditPtr getUndoableEdit(void) const;
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in UndoableEditEventBase.
@@ -102,22 +104,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING UndoableEditEvent : public UndoableEditEve
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~UndoableEditEvent(void); 
+    virtual ~UndoableEditEvent(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+
+    UndoableEditPtr _UndoableEdit;
+
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class UndoableEditEventBase;
 
-    UndoableEditPtr _UndoableEdit;
-
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const UndoableEditEvent &source);
 };
 

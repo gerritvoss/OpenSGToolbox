@@ -4,27 +4,26 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
 #include "OSGLookAndFeel.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeelManager
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING LookAndFeelManager
 {
 public:
    static LookAndFeelManager* the(void);
 
-   LookAndFeelPtr getLookAndFeel(void);
-   void setLookAndFeel(LookAndFeelPtr TheLookAndFeel);
+   LookAndFeelRefPtr getLookAndFeel(void);
+   void setLookAndFeel(LookAndFeelRefPtr TheLookAndFeel);
    
    ~LookAndFeelManager(void);
 private:
    static LookAndFeelManager* _the;
 
-   LookAndFeelPtr _LookAndFeel;
+   LookAndFeelRefPtr _LookAndFeel;
 
    LookAndFeelManager(void);
 	

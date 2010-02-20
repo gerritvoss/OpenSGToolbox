@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,75 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "Component/OSGComponentFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class Button;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! ButtonPtr
+OSG_GEN_CONTAINERPTR(Button);
 
-typedef FCPtr<ComponentPtr, Button> ButtonPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<ButtonPtr> : 
-    public FieldTraitsRecurseMapper<ButtonPtr, true>
+struct FieldTraits<Button *> :
+    public FieldTraitsFCPtrBase<Button *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFButtonPtr"; }
-    static const char *getMName(void) { return "MFButtonPtr"; }
+    typedef FieldTraits<Button *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFButtonPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFButtonPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<ButtonPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<Button *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecButtonPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<Button *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecButtonPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Button *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakButtonPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Button *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdButtonPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Button *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecButtonPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Button *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecButtonPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Button *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakButtonPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Button *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdButtonPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Button *,
+                      RecordedRefCountPolicy  > SFRecButtonPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Button *,
+                      UnrecordedRefCountPolicy> SFUnrecButtonPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Button *,
+                      WeakRefCountPolicy      > SFWeakButtonPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Button *,
+                      NoRefCountPolicy        > SFUncountedButtonPtr;
 
-typedef SField<ButtonPtr> SFButtonPtr;
-#endif
 
-#ifndef OSG_COMPILEBUTTONINST
-OSG_DLLEXPORT_DECL1(SField, ButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Button *,
+                      RecordedRefCountPolicy  > MFRecButtonPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Button *,
+                      UnrecordedRefCountPolicy> MFUnrecButtonPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Button *,
+                      WeakRefCountPolicy      > MFWeakButtonPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Button *,
+                      NoRefCountPolicy        > MFUncountedButtonPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<ButtonPtr> MFButtonPtr;
-#endif
 
-#ifndef OSG_COMPILEBUTTONINST
-OSG_DLLEXPORT_DECL1(MField, ButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecButtonPtr : 
+    public PointerSField<Button *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecButtonPtr : 
+    public PointerSField<Button *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakButtonPtr :
+    public PointerSField<Button *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedButtonPtr :
+    public PointerSField<Button *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecButtonPtr :
+    public PointerMField<Button *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecButtonPtr :
+    public PointerMField<Button *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakButtonPtr :
+    public PointerMField<Button *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedButtonPtr :
+    public PointerMField<Button *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

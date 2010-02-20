@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,132 +55,129 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &TextAreaBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 TextAreaBase::getClassTypeId(void) 
+OSG::UInt32 TextAreaBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-TextAreaPtr TextAreaBase::create(void) 
-{
-    TextAreaPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = TextAreaPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-TextAreaPtr TextAreaBase::createEmpty(void) 
-{ 
-    TextAreaPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 TextAreaBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the TextArea::_sfLineWrap field.
-inline
-SFBool *TextAreaBase::getSFLineWrap(void)
-{
-    return &_sfLineWrap;
-}
-
-//! Get the TextArea::_sfWrapStyleWord field.
-inline
-SFBool *TextAreaBase::getSFWrapStyleWord(void)
-{
-    return &_sfWrapStyleWord;
-}
-
-//! Get the TextArea::_sfTabSize field.
-inline
-SFUInt32 *TextAreaBase::getSFTabSize(void)
-{
-    return &_sfTabSize;
-}
-
-
 //! Get the value of the TextArea::_sfLineWrap field.
+
 inline
-bool &TextAreaBase::getLineWrap(void)
+bool &TextAreaBase::editLineWrap(void)
 {
+    editSField(LineWrapFieldMask);
+
     return _sfLineWrap.getValue();
 }
 
 //! Get the value of the TextArea::_sfLineWrap field.
 inline
-const bool &TextAreaBase::getLineWrap(void) const
+      bool  TextAreaBase::getLineWrap(void) const
 {
     return _sfLineWrap.getValue();
 }
 
 //! Set the value of the TextArea::_sfLineWrap field.
 inline
-void TextAreaBase::setLineWrap(const bool &value)
+void TextAreaBase::setLineWrap(const bool value)
 {
+    editSField(LineWrapFieldMask);
+
     _sfLineWrap.setValue(value);
 }
-
 //! Get the value of the TextArea::_sfWrapStyleWord field.
+
 inline
-bool &TextAreaBase::getWrapStyleWord(void)
+bool &TextAreaBase::editWrapStyleWord(void)
 {
+    editSField(WrapStyleWordFieldMask);
+
     return _sfWrapStyleWord.getValue();
 }
 
 //! Get the value of the TextArea::_sfWrapStyleWord field.
 inline
-const bool &TextAreaBase::getWrapStyleWord(void) const
+      bool  TextAreaBase::getWrapStyleWord(void) const
 {
     return _sfWrapStyleWord.getValue();
 }
 
 //! Set the value of the TextArea::_sfWrapStyleWord field.
 inline
-void TextAreaBase::setWrapStyleWord(const bool &value)
+void TextAreaBase::setWrapStyleWord(const bool value)
 {
+    editSField(WrapStyleWordFieldMask);
+
     _sfWrapStyleWord.setValue(value);
 }
-
 //! Get the value of the TextArea::_sfTabSize field.
+
 inline
-UInt32 &TextAreaBase::getTabSize(void)
+UInt32 &TextAreaBase::editTabSize(void)
 {
+    editSField(TabSizeFieldMask);
+
     return _sfTabSize.getValue();
 }
 
 //! Get the value of the TextArea::_sfTabSize field.
 inline
-const UInt32 &TextAreaBase::getTabSize(void) const
+      UInt32  TextAreaBase::getTabSize(void) const
 {
     return _sfTabSize.getValue();
 }
 
 //! Set the value of the TextArea::_sfTabSize field.
 inline
-void TextAreaBase::setTabSize(const UInt32 &value)
+void TextAreaBase::setTabSize(const UInt32 value)
 {
+    editSField(TabSizeFieldMask);
+
     _sfTabSize.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void TextAreaBase::execSync (      TextAreaBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGTEXTAREABASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (LineWrapFieldMask & whichField))
+        _sfLineWrap.syncWith(pFrom->_sfLineWrap);
+
+    if(FieldBits::NoField != (WrapStyleWordFieldMask & whichField))
+        _sfWrapStyleWord.syncWith(pFrom->_sfWrapStyleWord);
+
+    if(FieldBits::NoField != (TabSizeFieldMask & whichField))
+        _sfTabSize.syncWith(pFrom->_sfTabSize);
+}
+#endif
+
+
+inline
+const Char8 *TextAreaBase::getClassname(void)
+{
+    return "TextArea";
+}
+OSG_GEN_CONTAINERPTR(TextArea);
+
+OSG_END_NAMESPACE
 

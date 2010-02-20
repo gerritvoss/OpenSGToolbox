@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGPopupMenuEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::PopupMenuEvent
-
-*/
+// Documentation for this class is emitted in the
+// OSGPopupMenuEventBase.cpp file.
+// To modify it, please change the .fcd file (OSGPopupMenuEvent.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,19 +62,24 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void PopupMenuEvent::initMethod (void)
+void PopupMenuEvent::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-PopupMenuEventPtr PopupMenuEvent::create(  FieldContainerPtr Source,
-                                           Time TimeStamp)
+PopupMenuEventTransitPtr PopupMenuEvent::create(  FieldContainerRefPtr Source,
+                                                  Time TimeStamp)
 {
-    PopupMenuEventPtr TheEvent = PopupMenuEvent::createEmpty();
+    PopupMenuEvent* TheEvent = PopupMenuEvent::createEmpty();
 
     TheEvent->setSource(Source);
     TheEvent->setTimeStamp(TimeStamp);
 
-    return TheEvent;
+    return PopupMenuEventTransitPtr(TheEvent);
 }
 
 /***************************************************************************\
@@ -108,17 +108,17 @@ PopupMenuEvent::~PopupMenuEvent(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void PopupMenuEvent::changed(BitVector whichField, UInt32 origin)
+void PopupMenuEvent::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void PopupMenuEvent::dump(      UInt32    , 
+void PopupMenuEvent::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump PopupMenuEvent NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,80 +58,96 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include <OpenSG/OSGDrawable.h> // Parent
+#include "OSGDrawable.h" // Parent
 
-#include <OpenSG/OSGPnt3fFields.h> // Point type
-#include <OpenSG/OSGReal32Fields.h> // Width type
-#include <OpenSG/OSGReal32Fields.h> // Height type
-#include "UIDrawingSurface/OSGUIDrawingSurfaceFields.h" // DrawingSurface type
-#include <OpenSG/OSGColorMaskChunkFields.h> // RectColorMask type
-#include <OpenSG/OSGPolygonChunkFields.h> // RectPolygon type
-#include "UIDrawingSurface/NodeCore/OSGUIRectangleMouseTransformFunctorFields.h" // MouseTransformFunctor type
+#include "OSGVecFields.h"               // Point type
+#include "OSGSysFields.h"               // Width type
+#include "OSGUIDrawingSurfaceFields.h"  // DrawingSurface type
+#include "OSGColorMaskChunkFields.h"    // RectColorMask type
+#include "OSGPolygonChunkFields.h"      // RectPolygon type
+#include "OSGUIRectangleMouseTransformFunctorFields.h" // MouseTransformFunctor type
 
 #include "OSGUIRectangleFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class UIRectangle;
-class BinaryDataHandler;
 
 //! \brief UIRectangle Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING UIRectangleBase : public Drawable
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIRectangleBase : public Drawable
 {
-  private:
-
-    typedef Drawable    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef UIRectanglePtr  Ptr;
+    typedef Drawable Inherited;
+    typedef Drawable ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(UIRectangle);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        PointFieldId                 = Inherited::NextFieldId,
-        WidthFieldId                 = PointFieldId                 + 1,
-        HeightFieldId                = WidthFieldId                 + 1,
-        DrawingSurfaceFieldId        = HeightFieldId                + 1,
-        RectColorMaskFieldId         = DrawingSurfaceFieldId        + 1,
-        RectPolygonFieldId           = RectColorMaskFieldId         + 1,
-        MouseTransformFunctorFieldId = RectPolygonFieldId           + 1,
-        NextFieldId                  = MouseTransformFunctorFieldId + 1
+        PointFieldId = Inherited::NextFieldId,
+        WidthFieldId = PointFieldId + 1,
+        HeightFieldId = WidthFieldId + 1,
+        DrawingSurfaceFieldId = HeightFieldId + 1,
+        RectColorMaskFieldId = DrawingSurfaceFieldId + 1,
+        RectPolygonFieldId = RectColorMaskFieldId + 1,
+        MouseTransformFunctorFieldId = RectPolygonFieldId + 1,
+        NextFieldId = MouseTransformFunctorFieldId + 1
     };
 
-    static const OSG::BitVector PointFieldMask;
-    static const OSG::BitVector WidthFieldMask;
-    static const OSG::BitVector HeightFieldMask;
-    static const OSG::BitVector DrawingSurfaceFieldMask;
-    static const OSG::BitVector RectColorMaskFieldMask;
-    static const OSG::BitVector RectPolygonFieldMask;
-    static const OSG::BitVector MouseTransformFunctorFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector PointFieldMask =
+        (TypeTraits<BitVector>::One << PointFieldId);
+    static const OSG::BitVector WidthFieldMask =
+        (TypeTraits<BitVector>::One << WidthFieldId);
+    static const OSG::BitVector HeightFieldMask =
+        (TypeTraits<BitVector>::One << HeightFieldId);
+    static const OSG::BitVector DrawingSurfaceFieldMask =
+        (TypeTraits<BitVector>::One << DrawingSurfaceFieldId);
+    static const OSG::BitVector RectColorMaskFieldMask =
+        (TypeTraits<BitVector>::One << RectColorMaskFieldId);
+    static const OSG::BitVector RectPolygonFieldMask =
+        (TypeTraits<BitVector>::One << RectPolygonFieldId);
+    static const OSG::BitVector MouseTransformFunctorFieldMask =
+        (TypeTraits<BitVector>::One << MouseTransformFunctorFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFPnt3f           SFPointType;
+    typedef SFReal32          SFWidthType;
+    typedef SFReal32          SFHeightType;
+    typedef SFUnrecUIDrawingSurfacePtr SFDrawingSurfaceType;
+    typedef SFUnrecColorMaskChunkPtr SFRectColorMaskType;
+    typedef SFUnrecPolygonChunkPtr SFRectPolygonType;
+    typedef SFUnrecUIRectangleMouseTransformFunctorPtr SFMouseTransformFunctorType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -140,33 +156,48 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIRectangleBase : public Drawable
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFPnt3f             *getSFPoint          (void);
-           SFReal32            *getSFWidth          (void);
-           SFReal32            *getSFHeight         (void);
-           SFUIDrawingSurfacePtr *getSFDrawingSurface (void);
 
-           Pnt3f               &getPoint          (void);
-     const Pnt3f               &getPoint          (void) const;
-           Real32              &getWidth          (void);
-     const Real32              &getWidth          (void) const;
-           Real32              &getHeight         (void);
-     const Real32              &getHeight         (void) const;
-           UIDrawingSurfacePtr &getDrawingSurface (void);
-     const UIDrawingSurfacePtr &getDrawingSurface (void) const;
+                  SFPnt3f             *editSFPoint          (void);
+            const SFPnt3f             *getSFPoint           (void) const;
+
+                  SFReal32            *editSFWidth          (void);
+            const SFReal32            *getSFWidth           (void) const;
+
+                  SFReal32            *editSFHeight         (void);
+            const SFReal32            *getSFHeight          (void) const;
+            const SFUnrecUIDrawingSurfacePtr *getSFDrawingSurface (void) const;
+                  SFUnrecUIDrawingSurfacePtr *editSFDrawingSurface (void);
+
+
+                  Pnt3f               &editPoint          (void);
+            const Pnt3f               &getPoint           (void) const;
+
+                  Real32              &editWidth          (void);
+                  Real32               getWidth           (void) const;
+
+                  Real32              &editHeight         (void);
+                  Real32               getHeight          (void) const;
+
+                  UIDrawingSurface * getDrawingSurface (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setPoint          ( const Pnt3f &value );
-     void setWidth          ( const Real32 &value );
-     void setHeight         ( const Real32 &value );
-     void setDrawingSurface ( const UIDrawingSurfacePtr &value );
+            void setPoint          (const Pnt3f &value);
+            void setWidth          (const Real32 value);
+            void setHeight         (const Real32 value);
+            void setDrawingSurface (UIDrawingSurface * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -174,11 +205,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIRectangleBase : public Drawable
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -186,32 +217,49 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIRectangleBase : public Drawable
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  UIRectanglePtr      create          (void); 
-    static  UIRectanglePtr      createEmpty     (void); 
+    static  UIRectangleTransitPtr  create          (void);
+    static  UIRectangle           *createEmpty     (void);
+
+    static  UIRectangleTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  UIRectangle            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  UIRectangleTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFPnt3f             _sfPoint;
-    SFReal32            _sfWidth;
-    SFReal32            _sfHeight;
-    SFUIDrawingSurfacePtr   _sfDrawingSurface;
-    SFColorMaskChunkPtr   _sfRectColorMask;
-    SFPolygonChunkPtr   _sfRectPolygon;
-    SFUIRectangleMouseTransformFunctorPtr   _sfMouseTransformFunctor;
+    SFPnt3f           _sfPoint;
+    SFReal32          _sfWidth;
+    SFReal32          _sfHeight;
+    SFUnrecUIDrawingSurfacePtr _sfDrawingSurface;
+    SFUnrecColorMaskChunkPtr _sfRectColorMask;
+    SFUnrecPolygonChunkPtr _sfRectPolygon;
+    SFUnrecUIRectangleMouseTransformFunctorPtr _sfMouseTransformFunctor;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -226,94 +274,125 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIRectangleBase : public Drawable
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~UIRectangleBase(void); 
+    virtual ~UIRectangleBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const UIRectangle *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandlePoint           (void) const;
+    EditFieldHandlePtr editHandlePoint          (void);
+    GetFieldHandlePtr  getHandleWidth           (void) const;
+    EditFieldHandlePtr editHandleWidth          (void);
+    GetFieldHandlePtr  getHandleHeight          (void) const;
+    EditFieldHandlePtr editHandleHeight         (void);
+    GetFieldHandlePtr  getHandleDrawingSurface  (void) const;
+    EditFieldHandlePtr editHandleDrawingSurface (void);
+    GetFieldHandlePtr  getHandleRectColorMask   (void) const;
+    EditFieldHandlePtr editHandleRectColorMask  (void);
+    GetFieldHandlePtr  getHandleRectPolygon     (void) const;
+    EditFieldHandlePtr editHandleRectPolygon    (void);
+    GetFieldHandlePtr  getHandleMouseTransformFunctor (void) const;
+    EditFieldHandlePtr editHandleMouseTransformFunctor(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFColorMaskChunkPtr *getSFRectColorMask  (void);
-           SFPolygonChunkPtr   *getSFRectPolygon    (void);
-           SFUIRectangleMouseTransformFunctorPtr *getSFMouseTransformFunctor(void);
+            const SFUnrecColorMaskChunkPtr *getSFRectColorMask   (void) const;
+                  SFUnrecColorMaskChunkPtr *editSFRectColorMask  (void);
+            const SFUnrecPolygonChunkPtr *getSFRectPolygon     (void) const;
+                  SFUnrecPolygonChunkPtr *editSFRectPolygon    (void);
+            const SFUnrecUIRectangleMouseTransformFunctorPtr *getSFMouseTransformFunctor (void) const;
+                  SFUnrecUIRectangleMouseTransformFunctorPtr *editSFMouseTransformFunctor(void);
 
-           ColorMaskChunkPtr   &getRectColorMask  (void);
-     const ColorMaskChunkPtr   &getRectColorMask  (void) const;
-           PolygonChunkPtr     &getRectPolygon    (void);
-     const PolygonChunkPtr     &getRectPolygon    (void) const;
-           UIRectangleMouseTransformFunctorPtr &getMouseTransformFunctor(void);
-     const UIRectangleMouseTransformFunctorPtr &getMouseTransformFunctor(void) const;
+
+                  ColorMaskChunk * getRectColorMask  (void) const;
+
+                  PolygonChunk * getRectPolygon    (void) const;
+
+                  UIRectangleMouseTransformFunctor * getMouseTransformFunctor(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setRectColorMask  (const ColorMaskChunkPtr &value);
-     void setRectPolygon    (const PolygonChunkPtr &value);
-     void setMouseTransformFunctor(const UIRectangleMouseTransformFunctorPtr &value);
+            void setRectColorMask  (ColorMaskChunk * const value);
+            void setRectPolygon    (PolygonChunk * const value);
+            void setMouseTransformFunctor(UIRectangleMouseTransformFunctor * const value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      UIRectangleBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      UIRectangleBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      UIRectangleBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const UIRectangleBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef UIRectangleBase *UIRectangleBaseP;
 
-typedef osgIF<UIRectangleBase::isNodeCore,
-              CoredNodePtr<UIRectangle>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet UIRectangleNodePtr;
-
-typedef RefPtr<UIRectanglePtr> UIRectangleRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGUIRECTANGLEBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGUIRECTANGLEBASE_H_ */

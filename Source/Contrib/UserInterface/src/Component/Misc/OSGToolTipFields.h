@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "Component/OSGComponentFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class ToolTip;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! ToolTipPtr
+OSG_GEN_CONTAINERPTR(ToolTip);
 
-typedef FCPtr<ComponentPtr, ToolTip> ToolTipPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<ToolTipPtr> : 
-    public FieldTraitsRecurseMapper<ToolTipPtr, true>
+struct FieldTraits<ToolTip *> :
+    public FieldTraitsFCPtrBase<ToolTip *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFToolTipPtr"; }
-    static const char *getMName(void) { return "MFToolTipPtr"; }
+    typedef FieldTraits<ToolTip *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFToolTipPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFToolTipPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<ToolTipPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<ToolTip *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecToolTipPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<ToolTip *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecToolTipPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ToolTip *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakToolTipPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ToolTip *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdToolTipPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ToolTip *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecToolTipPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ToolTip *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecToolTipPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ToolTip *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakToolTipPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ToolTip *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdToolTipPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ToolTip *,
+                      RecordedRefCountPolicy  > SFRecToolTipPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ToolTip *,
+                      UnrecordedRefCountPolicy> SFUnrecToolTipPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ToolTip *,
+                      WeakRefCountPolicy      > SFWeakToolTipPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ToolTip *,
+                      NoRefCountPolicy        > SFUncountedToolTipPtr;
 
-typedef SField<ToolTipPtr> SFToolTipPtr;
-#endif
 
-#ifndef OSG_COMPILETOOLTIPINST
-OSG_DLLEXPORT_DECL1(SField, ToolTipPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ToolTip *,
+                      RecordedRefCountPolicy  > MFRecToolTipPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ToolTip *,
+                      UnrecordedRefCountPolicy> MFUnrecToolTipPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ToolTip *,
+                      WeakRefCountPolicy      > MFWeakToolTipPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ToolTip *,
+                      NoRefCountPolicy        > MFUncountedToolTipPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<ToolTipPtr> MFToolTipPtr;
-#endif
 
-#ifndef OSG_COMPILETOOLTIPINST
-OSG_DLLEXPORT_DECL1(MField, ToolTipPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecToolTipPtr : 
+    public PointerSField<ToolTip *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecToolTipPtr : 
+    public PointerSField<ToolTip *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakToolTipPtr :
+    public PointerSField<ToolTip *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedToolTipPtr :
+    public PointerSField<ToolTip *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecToolTipPtr :
+    public PointerMField<ToolTip *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecToolTipPtr :
+    public PointerMField<ToolTip *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakToolTipPtr :
+    public PointerMField<ToolTip *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedToolTipPtr :
+    public PointerMField<ToolTip *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGTOOLTIPFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGTOOLTIPFIELDS_H_ */

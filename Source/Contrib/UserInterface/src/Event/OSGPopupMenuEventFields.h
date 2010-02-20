@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,64 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/Toolbox/OSGEventFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class PopupMenuEvent;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! PopupMenuEventPtr
+OSG_GEN_CONTAINERPTR(PopupMenuEvent);
 
-typedef FCPtr<EventPtr, PopupMenuEvent> PopupMenuEventPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<PopupMenuEventPtr> : 
-    public FieldTraitsRecurseMapper<PopupMenuEventPtr, true>
+struct FieldTraits<PopupMenuEvent *> :
+    public FieldTraitsFCPtrBase<PopupMenuEvent *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFPopupMenuEventPtr"; }
+    typedef FieldTraits<PopupMenuEvent *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFPopupMenuEventPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFPopupMenuEventPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<PopupMenuEventPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<PopupMenuEvent *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecPopupMenuEventPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<PopupMenuEvent *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecPopupMenuEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PopupMenuEvent *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakPopupMenuEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PopupMenuEvent *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdPopupMenuEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PopupMenuEvent *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecPopupMenuEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PopupMenuEvent *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecPopupMenuEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PopupMenuEvent *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakPopupMenuEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PopupMenuEvent *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdPopupMenuEventPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<PopupMenuEvent *,
+                      RecordedRefCountPolicy  > SFRecPopupMenuEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<PopupMenuEvent *,
+                      UnrecordedRefCountPolicy> SFUnrecPopupMenuEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<PopupMenuEvent *,
+                      WeakRefCountPolicy      > SFWeakPopupMenuEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<PopupMenuEvent *,
+                      NoRefCountPolicy        > SFUncountedPopupMenuEventPtr;
 
-typedef SField<PopupMenuEventPtr> SFPopupMenuEventPtr;
-#endif
 
-#ifndef OSG_COMPILEPOPUPMENUEVENTINST
-OSG_DLLEXPORT_DECL1(SField, PopupMenuEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<PopupMenuEvent *,
+                      RecordedRefCountPolicy  > MFRecPopupMenuEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<PopupMenuEvent *,
+                      UnrecordedRefCountPolicy> MFUnrecPopupMenuEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<PopupMenuEvent *,
+                      WeakRefCountPolicy      > MFWeakPopupMenuEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<PopupMenuEvent *,
+                      NoRefCountPolicy        > MFUncountedPopupMenuEventPtr;
+
+
+
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecPopupMenuEventPtr : 
+    public PointerSField<PopupMenuEvent *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecPopupMenuEventPtr : 
+    public PointerSField<PopupMenuEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakPopupMenuEventPtr :
+    public PointerSField<PopupMenuEvent *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedPopupMenuEventPtr :
+    public PointerSField<PopupMenuEvent *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecPopupMenuEventPtr :
+    public PointerMField<PopupMenuEvent *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecPopupMenuEventPtr :
+    public PointerMField<PopupMenuEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakPopupMenuEventPtr :
+    public PointerMField<PopupMenuEvent *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedPopupMenuEventPtr :
+    public PointerMField<PopupMenuEvent *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

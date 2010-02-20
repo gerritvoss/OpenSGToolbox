@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,64 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/Toolbox/OSGEventFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class TextEvent;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! TextEventPtr
+OSG_GEN_CONTAINERPTR(TextEvent);
 
-typedef FCPtr<EventPtr, TextEvent> TextEventPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<TextEventPtr> : 
-    public FieldTraitsRecurseMapper<TextEventPtr, true>
+struct FieldTraits<TextEvent *> :
+    public FieldTraitsFCPtrBase<TextEvent *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFTextEventPtr"; }
+    typedef FieldTraits<TextEvent *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFTextEventPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFTextEventPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<TextEventPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<TextEvent *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecTextEventPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<TextEvent *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecTextEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TextEvent *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakTextEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TextEvent *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdTextEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TextEvent *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecTextEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TextEvent *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecTextEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TextEvent *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakTextEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TextEvent *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdTextEventPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TextEvent *,
+                      RecordedRefCountPolicy  > SFRecTextEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TextEvent *,
+                      UnrecordedRefCountPolicy> SFUnrecTextEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TextEvent *,
+                      WeakRefCountPolicy      > SFWeakTextEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TextEvent *,
+                      NoRefCountPolicy        > SFUncountedTextEventPtr;
 
-typedef SField<TextEventPtr> SFTextEventPtr;
-#endif
 
-#ifndef OSG_COMPILETEXTEVENTINST
-OSG_DLLEXPORT_DECL1(SField, TextEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TextEvent *,
+                      RecordedRefCountPolicy  > MFRecTextEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TextEvent *,
+                      UnrecordedRefCountPolicy> MFUnrecTextEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TextEvent *,
+                      WeakRefCountPolicy      > MFWeakTextEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TextEvent *,
+                      NoRefCountPolicy        > MFUncountedTextEventPtr;
+
+
+
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecTextEventPtr : 
+    public PointerSField<TextEvent *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecTextEventPtr : 
+    public PointerSField<TextEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakTextEventPtr :
+    public PointerSField<TextEvent *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedTextEventPtr :
+    public PointerSField<TextEvent *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecTextEventPtr :
+    public PointerMField<TextEvent *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecTextEventPtr :
+    public PointerMField<TextEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakTextEventPtr :
+    public PointerMField<TextEvent *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedTextEventPtr :
+    public PointerMField<TextEvent *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

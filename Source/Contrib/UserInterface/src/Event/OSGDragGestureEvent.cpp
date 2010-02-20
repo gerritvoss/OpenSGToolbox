@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGDragGestureEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::DragGestureEvent
-
-*/
+// Documentation for this class is emitted in the
+// OSGDragGestureEventBase.cpp file.
+// To modify it, please change the .fcd file (OSGDragGestureEvent.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,21 +62,26 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DragGestureEvent::initMethod (void)
+void DragGestureEvent::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-DragGestureEventPtr DragGestureEvent::create(  FieldContainerPtr Source,
-                                     Time TimeStamp,
-                                     const Pnt2f &DragLocation)
+DragGestureEventTransitPtr DragGestureEvent::create(  FieldContainerRefPtr Source,
+                                                      Time TimeStamp,
+                                                      const Pnt2f &DragLocation)
 {
-    DragGestureEventPtr TheEvent = DragGestureEvent::createEmpty();
+    DragGestureEvent* TheEvent = DragGestureEvent::createEmpty();
 
     TheEvent->setSource(Source);
     TheEvent->setTimeStamp(TimeStamp);
     TheEvent->setDragLocation(DragLocation);
 
-    return TheEvent;
+    return DragGestureEventTransitPtr(TheEvent);
 }
 
 /***************************************************************************\
@@ -110,17 +110,17 @@ DragGestureEvent::~DragGestureEvent(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void DragGestureEvent::changed(BitVector whichField, UInt32 origin)
+void DragGestureEvent::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void DragGestureEvent::dump(      UInt32    , 
+void DragGestureEvent::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump DragGestureEvent NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

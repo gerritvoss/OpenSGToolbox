@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,73 +55,64 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &AbstractElementBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 AbstractElementBase::getClassTypeId(void) 
+OSG::UInt32 AbstractElementBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
+    return _type.getId();
+}
 
+inline
+OSG::UInt16 AbstractElementBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
+}
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the AbstractElement::_sfParentDocument field.
-inline
-const SFDocumentPtr *AbstractElementBase::getSFParentDocument(void) const
-{
-    return &_sfParentDocument;
-}
-
-//! Get the AbstractElement::_sfParentDocument field.
-inline
-SFDocumentPtr *AbstractElementBase::editSFParentDocument(void)
-{
-    return &_sfParentDocument;
-}
-
-#ifndef OSG_2_PREP
-//! Get the AbstractElement::_sfParentDocument field.
-inline
-SFDocumentPtr *AbstractElementBase::getSFParentDocument(void)
-{
-    return &_sfParentDocument;
-}
-#endif
-
 
 //! Get the value of the AbstractElement::_sfParentDocument field.
 inline
-DocumentPtr &AbstractElementBase::editParentDocument(void)
+Document * AbstractElementBase::getParentDocument(void) const
 {
     return _sfParentDocument.getValue();
 }
-
-//! Get the value of the AbstractElement::_sfParentDocument field.
-inline
-const DocumentPtr &AbstractElementBase::getParentDocument(void) const
-{
-    return _sfParentDocument.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the AbstractElement::_sfParentDocument field.
-inline
-DocumentPtr &AbstractElementBase::getParentDocument(void)
-{
-    return _sfParentDocument.getValue();
-}
-#endif
 
 //! Set the value of the AbstractElement::_sfParentDocument field.
 inline
-void AbstractElementBase::setParentDocument(const DocumentPtr &value)
+void AbstractElementBase::setParentDocument(Document * const value)
 {
+    editSField(ParentDocumentFieldMask);
+
     _sfParentDocument.setValue(value);
 }
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void AbstractElementBase::execSync (      AbstractElementBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (ParentDocumentFieldMask & whichField))
+        _sfParentDocument.syncWith(pFrom->_sfParentDocument);
+}
+#endif
+
+
+inline
+const Char8 *AbstractElementBase::getClassname(void)
+{
+    return "AbstractElement";
+}
+OSG_GEN_CONTAINERPTR(AbstractElement);
 
 OSG_END_NAMESPACE
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,83 +58,97 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include <OpenSG/OSGAttachmentContainer.h> // Parent
+#include "OSGAttachmentContainer.h" // Parent
 
-#include <OpenSG/OSGStringFields.h> // Family type
-#include <OpenSG/OSGUInt32Fields.h> // GlyphPixelSize type
-#include <OpenSG/OSGUInt32Fields.h> // Size type
-#include <OpenSG/OSGUInt32Fields.h> // Gap type
-#include <OpenSG/OSGUInt32Fields.h> // TextureWidth type
-#include <OpenSG/OSGUInt32Fields.h> // Style type
-#include <OpenSG/OSGBoolFields.h> // AntiAliasing type
-#include <OpenSG/OSGTextureChunkFields.h> // Texture type
+#include "OSGBaseFields.h"              // Family type
+#include "OSGSysFields.h"               // GlyphPixelSize type
+#include "OSGTextureObjChunkFields.h"   // Texture type
 
 #include "OSGUIFontFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class UIFont;
-class BinaryDataHandler;
 
 //! \brief UIFont Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING UIFontBase : public AttachmentContainer
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIFontBase : public AttachmentContainer
 {
-  private:
-
-    typedef AttachmentContainer    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef UIFontPtr  Ptr;
+    typedef AttachmentContainer Inherited;
+    typedef AttachmentContainer ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(UIFont);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        FamilyFieldId         = Inherited::NextFieldId,
-        GlyphPixelSizeFieldId = FamilyFieldId         + 1,
-        SizeFieldId           = GlyphPixelSizeFieldId + 1,
-        GapFieldId            = SizeFieldId           + 1,
-        TextureWidthFieldId   = GapFieldId            + 1,
-        StyleFieldId          = TextureWidthFieldId   + 1,
-        AntiAliasingFieldId   = StyleFieldId          + 1,
-        TextureFieldId        = AntiAliasingFieldId   + 1,
-        NextFieldId           = TextureFieldId        + 1
+        FamilyFieldId = Inherited::NextFieldId,
+        GlyphPixelSizeFieldId = FamilyFieldId + 1,
+        SizeFieldId = GlyphPixelSizeFieldId + 1,
+        GapFieldId = SizeFieldId + 1,
+        TextureWidthFieldId = GapFieldId + 1,
+        StyleFieldId = TextureWidthFieldId + 1,
+        AntiAliasingFieldId = StyleFieldId + 1,
+        TextureFieldId = AntiAliasingFieldId + 1,
+        NextFieldId = TextureFieldId + 1
     };
 
-    static const OSG::BitVector FamilyFieldMask;
-    static const OSG::BitVector GlyphPixelSizeFieldMask;
-    static const OSG::BitVector SizeFieldMask;
-    static const OSG::BitVector GapFieldMask;
-    static const OSG::BitVector TextureWidthFieldMask;
-    static const OSG::BitVector StyleFieldMask;
-    static const OSG::BitVector AntiAliasingFieldMask;
-    static const OSG::BitVector TextureFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector FamilyFieldMask =
+        (TypeTraits<BitVector>::One << FamilyFieldId);
+    static const OSG::BitVector GlyphPixelSizeFieldMask =
+        (TypeTraits<BitVector>::One << GlyphPixelSizeFieldId);
+    static const OSG::BitVector SizeFieldMask =
+        (TypeTraits<BitVector>::One << SizeFieldId);
+    static const OSG::BitVector GapFieldMask =
+        (TypeTraits<BitVector>::One << GapFieldId);
+    static const OSG::BitVector TextureWidthFieldMask =
+        (TypeTraits<BitVector>::One << TextureWidthFieldId);
+    static const OSG::BitVector StyleFieldMask =
+        (TypeTraits<BitVector>::One << StyleFieldId);
+    static const OSG::BitVector AntiAliasingFieldMask =
+        (TypeTraits<BitVector>::One << AntiAliasingFieldId);
+    static const OSG::BitVector TextureFieldMask =
+        (TypeTraits<BitVector>::One << TextureFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFString          SFFamilyType;
+    typedef SFUInt32          SFGlyphPixelSizeType;
+    typedef SFUInt32          SFSizeType;
+    typedef SFUInt32          SFGapType;
+    typedef SFUInt32          SFTextureWidthType;
+    typedef SFUInt32          SFStyleType;
+    typedef SFBool            SFAntiAliasingType;
+    typedef SFUnrecTextureObjChunkPtr SFTextureType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -144,120 +158,75 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIFontBase : public AttachmentContainer
     /*! \{                                                                 */
 
 
-           SFString            *editSFFamily         (void);
-     const SFString            *getSFFamily         (void) const;
-#ifndef OSG_2_PREP
-           SFString            *getSFFamily         (void);
-#endif
+                  SFString            *editSFFamily         (void);
+            const SFString            *getSFFamily          (void) const;
 
-           SFUInt32            *editSFGlyphPixelSize (void);
-     const SFUInt32            *getSFGlyphPixelSize (void) const;
-#ifndef OSG_2_PREP
-           SFUInt32            *getSFGlyphPixelSize (void);
-#endif
+                  SFUInt32            *editSFGlyphPixelSize (void);
+            const SFUInt32            *getSFGlyphPixelSize  (void) const;
 
-           SFUInt32            *editSFSize           (void);
-     const SFUInt32            *getSFSize           (void) const;
-#ifndef OSG_2_PREP
-           SFUInt32            *getSFSize           (void);
-#endif
+                  SFUInt32            *editSFSize           (void);
+            const SFUInt32            *getSFSize            (void) const;
 
-           SFUInt32            *editSFGap            (void);
-     const SFUInt32            *getSFGap            (void) const;
-#ifndef OSG_2_PREP
-           SFUInt32            *getSFGap            (void);
-#endif
+                  SFUInt32            *editSFGap            (void);
+            const SFUInt32            *getSFGap             (void) const;
 
-           SFUInt32            *editSFTextureWidth   (void);
-     const SFUInt32            *getSFTextureWidth   (void) const;
-#ifndef OSG_2_PREP
-           SFUInt32            *getSFTextureWidth   (void);
-#endif
+                  SFUInt32            *editSFTextureWidth   (void);
+            const SFUInt32            *getSFTextureWidth    (void) const;
 
-           SFUInt32            *editSFStyle          (void);
-     const SFUInt32            *getSFStyle          (void) const;
-#ifndef OSG_2_PREP
-           SFUInt32            *getSFStyle          (void);
-#endif
+                  SFUInt32            *editSFStyle          (void);
+            const SFUInt32            *getSFStyle           (void) const;
 
-           SFBool              *editSFAntiAliasing   (void);
-     const SFBool              *getSFAntiAliasing   (void) const;
-#ifndef OSG_2_PREP
-           SFBool              *getSFAntiAliasing   (void);
-#endif
-
-           SFTextureChunkPtr   *editSFTexture        (void);
-     const SFTextureChunkPtr   *getSFTexture        (void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFTexture        (void);
-#endif
+                  SFBool              *editSFAntiAliasing   (void);
+            const SFBool              *getSFAntiAliasing    (void) const;
+            const SFUnrecTextureObjChunkPtr *getSFTexture        (void) const;
+                  SFUnrecTextureObjChunkPtr *editSFTexture        (void);
 
 
-           std::string         &editFamily         (void);
-     const std::string         &getFamily         (void) const;
-#ifndef OSG_2_PREP
-           std::string         &getFamily         (void);
-#endif
+                  std::string         &editFamily         (void);
+            const std::string         &getFamily          (void) const;
 
-           UInt32              &editGlyphPixelSize (void);
-     const UInt32              &getGlyphPixelSize (void) const;
-#ifndef OSG_2_PREP
-           UInt32              &getGlyphPixelSize (void);
-#endif
+                  UInt32              &editGlyphPixelSize (void);
+                  UInt32               getGlyphPixelSize  (void) const;
 
-           UInt32              &editSize           (void);
-     const UInt32              &getSize           (void) const;
-#ifndef OSG_2_PREP
-           UInt32              &getSize           (void);
-#endif
+                  UInt32              &editSize           (void);
+                  UInt32               getSize            (void) const;
 
-           UInt32              &editGap            (void);
-     const UInt32              &getGap            (void) const;
-#ifndef OSG_2_PREP
-           UInt32              &getGap            (void);
-#endif
+                  UInt32              &editGap            (void);
+                  UInt32               getGap             (void) const;
 
-           UInt32              &editTextureWidth   (void);
-     const UInt32              &getTextureWidth   (void) const;
-#ifndef OSG_2_PREP
-           UInt32              &getTextureWidth   (void);
-#endif
+                  UInt32              &editTextureWidth   (void);
+                  UInt32               getTextureWidth    (void) const;
 
-           UInt32              &editStyle          (void);
-     const UInt32              &getStyle          (void) const;
-#ifndef OSG_2_PREP
-           UInt32              &getStyle          (void);
-#endif
+                  UInt32              &editStyle          (void);
+                  UInt32               getStyle           (void) const;
 
-           bool                &editAntiAliasing   (void);
-     const bool                &getAntiAliasing   (void) const;
-#ifndef OSG_2_PREP
-           bool                &getAntiAliasing   (void);
-#endif
+                  bool                &editAntiAliasing   (void);
+                  bool                 getAntiAliasing    (void) const;
 
-           TextureChunkPtr     &editTexture        (void);
-     const TextureChunkPtr     &getTexture        (void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getTexture        (void);
-#endif
+                  TextureObjChunk * getTexture        (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setFamily         ( const std::string &value );
-     void setGlyphPixelSize ( const UInt32 &value );
-     void setSize           ( const UInt32 &value );
-     void setGap            ( const UInt32 &value );
-     void setTextureWidth   ( const UInt32 &value );
-     void setStyle          ( const UInt32 &value );
-     void setAntiAliasing   ( const bool &value );
-     void setTexture        ( const TextureChunkPtr &value );
+            void setFamily         (const std::string &value);
+            void setGlyphPixelSize (const UInt32 value);
+            void setSize           (const UInt32 value);
+            void setGap            (const UInt32 value);
+            void setTextureWidth   (const UInt32 value);
+            void setStyle          (const UInt32 value);
+            void setAntiAliasing   (const bool value);
+            void setTexture        (TextureObjChunk * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -265,11 +234,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIFontBase : public AttachmentContainer
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -277,33 +246,50 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIFontBase : public AttachmentContainer
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  UIFontPtr      create          (void); 
-    static  UIFontPtr      createEmpty     (void); 
+    static  UIFontTransitPtr  create          (void);
+    static  UIFont           *createEmpty     (void);
+
+    static  UIFontTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  UIFont            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  UIFontTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFString            _sfFamily;
-    SFUInt32            _sfGlyphPixelSize;
-    SFUInt32            _sfSize;
-    SFUInt32            _sfGap;
-    SFUInt32            _sfTextureWidth;
-    SFUInt32            _sfStyle;
-    SFBool              _sfAntiAliasing;
-    SFTextureChunkPtr   _sfTexture;
+    SFString          _sfFamily;
+    SFUInt32          _sfGlyphPixelSize;
+    SFUInt32          _sfSize;
+    SFUInt32          _sfGap;
+    SFUInt32          _sfTextureWidth;
+    SFUInt32          _sfStyle;
+    SFBool            _sfAntiAliasing;
+    SFUnrecTextureObjChunkPtr _sfTexture;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -318,66 +304,93 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIFontBase : public AttachmentContainer
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~UIFontBase(void); 
+    virtual ~UIFontBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const UIFont *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleFamily          (void) const;
+    EditFieldHandlePtr editHandleFamily         (void);
+    GetFieldHandlePtr  getHandleGlyphPixelSize  (void) const;
+    EditFieldHandlePtr editHandleGlyphPixelSize (void);
+    GetFieldHandlePtr  getHandleSize            (void) const;
+    EditFieldHandlePtr editHandleSize           (void);
+    GetFieldHandlePtr  getHandleGap             (void) const;
+    EditFieldHandlePtr editHandleGap            (void);
+    GetFieldHandlePtr  getHandleTextureWidth    (void) const;
+    EditFieldHandlePtr editHandleTextureWidth   (void);
+    GetFieldHandlePtr  getHandleStyle           (void) const;
+    EditFieldHandlePtr editHandleStyle          (void);
+    GetFieldHandlePtr  getHandleAntiAliasing    (void) const;
+    EditFieldHandlePtr editHandleAntiAliasing   (void);
+    GetFieldHandlePtr  getHandleTexture         (void) const;
+    EditFieldHandlePtr editHandleTexture        (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      UIFontBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      UIFontBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      UIFontBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const UIFontBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef UIFontBase *UIFontBaseP;
-
-typedef osgIF<UIFontBase::isNodeCore,
-              CoredNodePtr<UIFont>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet UIFontNodePtr;
-
-typedef RefPtr<UIFontPtr> UIFontRefPtr;
 
 OSG_END_NAMESPACE
 

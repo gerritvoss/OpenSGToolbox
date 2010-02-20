@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,116 +55,101 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &KeyAcceleratorEventBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 KeyAcceleratorEventBase::getClassTypeId(void) 
+OSG::UInt32 KeyAcceleratorEventBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-KeyAcceleratorEventPtr KeyAcceleratorEventBase::create(void) 
-{
-    KeyAcceleratorEventPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = KeyAcceleratorEventPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-KeyAcceleratorEventPtr KeyAcceleratorEventBase::createEmpty(void) 
-{ 
-    KeyAcceleratorEventPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 KeyAcceleratorEventBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the KeyAcceleratorEvent::_sfKey field.
-inline
-const SFUInt32 *KeyAcceleratorEventBase::getSFKey(void) const
-{
-    return &_sfKey;
-}
-
-//! Get the KeyAcceleratorEvent::_sfKey field.
-inline
-SFUInt32 *KeyAcceleratorEventBase::editSFKey(void)
-{
-    return &_sfKey;
-}
-
-//! Get the KeyAcceleratorEvent::_sfModifiers field.
-inline
-const SFUInt32 *KeyAcceleratorEventBase::getSFModifiers(void) const
-{
-    return &_sfModifiers;
-}
-
-//! Get the KeyAcceleratorEvent::_sfModifiers field.
-inline
-SFUInt32 *KeyAcceleratorEventBase::editSFModifiers(void)
-{
-    return &_sfModifiers;
-}
-
-
 //! Get the value of the KeyAcceleratorEvent::_sfKey field.
+
 inline
 UInt32 &KeyAcceleratorEventBase::editKey(void)
 {
+    editSField(KeyFieldMask);
+
     return _sfKey.getValue();
 }
 
 //! Get the value of the KeyAcceleratorEvent::_sfKey field.
 inline
-const UInt32 &KeyAcceleratorEventBase::getKey(void) const
+      UInt32  KeyAcceleratorEventBase::getKey(void) const
 {
     return _sfKey.getValue();
 }
 
 //! Set the value of the KeyAcceleratorEvent::_sfKey field.
 inline
-void KeyAcceleratorEventBase::setKey(const UInt32 &value)
+void KeyAcceleratorEventBase::setKey(const UInt32 value)
 {
+    editSField(KeyFieldMask);
+
     _sfKey.setValue(value);
 }
-
 //! Get the value of the KeyAcceleratorEvent::_sfModifiers field.
+
 inline
 UInt32 &KeyAcceleratorEventBase::editModifiers(void)
 {
+    editSField(ModifiersFieldMask);
+
     return _sfModifiers.getValue();
 }
 
 //! Get the value of the KeyAcceleratorEvent::_sfModifiers field.
 inline
-const UInt32 &KeyAcceleratorEventBase::getModifiers(void) const
+      UInt32  KeyAcceleratorEventBase::getModifiers(void) const
 {
     return _sfModifiers.getValue();
 }
 
 //! Set the value of the KeyAcceleratorEvent::_sfModifiers field.
 inline
-void KeyAcceleratorEventBase::setModifiers(const UInt32 &value)
+void KeyAcceleratorEventBase::setModifiers(const UInt32 value)
 {
+    editSField(ModifiersFieldMask);
+
     _sfModifiers.setValue(value);
 }
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void KeyAcceleratorEventBase::execSync (      KeyAcceleratorEventBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (KeyFieldMask & whichField))
+        _sfKey.syncWith(pFrom->_sfKey);
+
+    if(FieldBits::NoField != (ModifiersFieldMask & whichField))
+        _sfModifiers.syncWith(pFrom->_sfModifiers);
+}
+#endif
+
+
+inline
+const Char8 *KeyAcceleratorEventBase::getClassname(void)
+{
+    return "KeyAcceleratorEvent";
+}
+OSG_GEN_CONTAINERPTR(KeyAcceleratorEvent);
 
 OSG_END_NAMESPACE
 

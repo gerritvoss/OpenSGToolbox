@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGMaxLayoutSpring.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::MaxLayoutSpring
-A UI Max LayoutSpring. 
-*/
+// Documentation for this class is emitted in the
+// OSGMaxLayoutSpringBase.cpp file.
+// To modify it, please change the .fcd file (OSGMaxLayoutSpring.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,21 +62,23 @@ A UI Max LayoutSpring.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void MaxLayoutSpring::initMethod (void)
+void MaxLayoutSpring::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-
-MaxLayoutSpringPtr MaxLayoutSpring::create(LayoutSpringPtr TheSpring1, LayoutSpringPtr TheSpring2)
+MaxLayoutSpringTransitPtr MaxLayoutSpring::create(LayoutSpringRefPtr TheSpring1, LayoutSpringRefPtr TheSpring2)
 {
-    MaxLayoutSpringPtr NewSpring = createEmpty();
+    MaxLayoutSpring* NewSpring = createEmpty();
 
-    beginEditCP(NewSpring, Spring1FieldMask | Spring2FieldMask);
-        NewSpring->setSpring1(TheSpring1);
-        NewSpring->setSpring2(TheSpring2);
-    endEditCP(NewSpring, Spring1FieldMask | Spring2FieldMask);
+    NewSpring->setSpring1(TheSpring1);
+    NewSpring->setSpring2(TheSpring2);
 
-    return NewSpring;
+    return MaxLayoutSpringTransitPtr(NewSpring);
 }
 
 /***************************************************************************\
@@ -124,41 +121,17 @@ MaxLayoutSpring::~MaxLayoutSpring(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void MaxLayoutSpring::changed(BitVector whichField, UInt32 origin)
+void MaxLayoutSpring::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void MaxLayoutSpring::dump(      UInt32    , 
+void MaxLayoutSpring::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump MaxLayoutSpring NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGMAXLAYOUTSPRINGBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGMAXLAYOUTSPRINGBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGMAXLAYOUTSPRINGFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,468 +55,465 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &GridBagLayoutConstraintsBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 GridBagLayoutConstraintsBase::getClassTypeId(void) 
+OSG::UInt32 GridBagLayoutConstraintsBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-GridBagLayoutConstraintsPtr GridBagLayoutConstraintsBase::create(void) 
-{
-    GridBagLayoutConstraintsPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = GridBagLayoutConstraintsPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-GridBagLayoutConstraintsPtr GridBagLayoutConstraintsBase::createEmpty(void) 
-{ 
-    GridBagLayoutConstraintsPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 GridBagLayoutConstraintsBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the GridBagLayoutConstraints::_sfGridX field.
-inline
-SFUInt16 *GridBagLayoutConstraintsBase::getSFGridX(void)
-{
-    return &_sfGridX;
-}
-
-//! Get the GridBagLayoutConstraints::_sfGridY field.
-inline
-SFUInt16 *GridBagLayoutConstraintsBase::getSFGridY(void)
-{
-    return &_sfGridY;
-}
-
-//! Get the GridBagLayoutConstraints::_sfGridWidth field.
-inline
-SFUInt16 *GridBagLayoutConstraintsBase::getSFGridWidth(void)
-{
-    return &_sfGridWidth;
-}
-
-//! Get the GridBagLayoutConstraints::_sfGridHeight field.
-inline
-SFUInt16 *GridBagLayoutConstraintsBase::getSFGridHeight(void)
-{
-    return &_sfGridHeight;
-}
-
-//! Get the GridBagLayoutConstraints::_sfFill field.
-inline
-SFUInt32 *GridBagLayoutConstraintsBase::getSFFill(void)
-{
-    return &_sfFill;
-}
-
-//! Get the GridBagLayoutConstraints::_sfHorizontalAlignment field.
-inline
-SFReal32 *GridBagLayoutConstraintsBase::getSFHorizontalAlignment(void)
-{
-    return &_sfHorizontalAlignment;
-}
-
-//! Get the GridBagLayoutConstraints::_sfVerticalAlignment field.
-inline
-SFReal32 *GridBagLayoutConstraintsBase::getSFVerticalAlignment(void)
-{
-    return &_sfVerticalAlignment;
-}
-
-//! Get the GridBagLayoutConstraints::_sfWeightX field.
-inline
-SFReal32 *GridBagLayoutConstraintsBase::getSFWeightX(void)
-{
-    return &_sfWeightX;
-}
-
-//! Get the GridBagLayoutConstraints::_sfWeightY field.
-inline
-SFReal32 *GridBagLayoutConstraintsBase::getSFWeightY(void)
-{
-    return &_sfWeightY;
-}
-
-//! Get the GridBagLayoutConstraints::_sfInternalPadX field.
-inline
-SFUInt32 *GridBagLayoutConstraintsBase::getSFInternalPadX(void)
-{
-    return &_sfInternalPadX;
-}
-
-//! Get the GridBagLayoutConstraints::_sfInternalPadY field.
-inline
-SFUInt32 *GridBagLayoutConstraintsBase::getSFInternalPadY(void)
-{
-    return &_sfInternalPadY;
-}
-
-//! Get the GridBagLayoutConstraints::_sfPadLeft field.
-inline
-SFUInt32 *GridBagLayoutConstraintsBase::getSFPadLeft(void)
-{
-    return &_sfPadLeft;
-}
-
-//! Get the GridBagLayoutConstraints::_sfPadRight field.
-inline
-SFUInt32 *GridBagLayoutConstraintsBase::getSFPadRight(void)
-{
-    return &_sfPadRight;
-}
-
-//! Get the GridBagLayoutConstraints::_sfPadTop field.
-inline
-SFUInt32 *GridBagLayoutConstraintsBase::getSFPadTop(void)
-{
-    return &_sfPadTop;
-}
-
-//! Get the GridBagLayoutConstraints::_sfPadBottom field.
-inline
-SFUInt32 *GridBagLayoutConstraintsBase::getSFPadBottom(void)
-{
-    return &_sfPadBottom;
-}
-
-
 //! Get the value of the GridBagLayoutConstraints::_sfGridX field.
+
 inline
-UInt16 &GridBagLayoutConstraintsBase::getGridX(void)
+UInt16 &GridBagLayoutConstraintsBase::editGridX(void)
 {
+    editSField(GridXFieldMask);
+
     return _sfGridX.getValue();
 }
 
 //! Get the value of the GridBagLayoutConstraints::_sfGridX field.
 inline
-const UInt16 &GridBagLayoutConstraintsBase::getGridX(void) const
+      UInt16  GridBagLayoutConstraintsBase::getGridX(void) const
 {
     return _sfGridX.getValue();
 }
 
 //! Set the value of the GridBagLayoutConstraints::_sfGridX field.
 inline
-void GridBagLayoutConstraintsBase::setGridX(const UInt16 &value)
+void GridBagLayoutConstraintsBase::setGridX(const UInt16 value)
 {
+    editSField(GridXFieldMask);
+
     _sfGridX.setValue(value);
 }
-
 //! Get the value of the GridBagLayoutConstraints::_sfGridY field.
+
 inline
-UInt16 &GridBagLayoutConstraintsBase::getGridY(void)
+UInt16 &GridBagLayoutConstraintsBase::editGridY(void)
 {
+    editSField(GridYFieldMask);
+
     return _sfGridY.getValue();
 }
 
 //! Get the value of the GridBagLayoutConstraints::_sfGridY field.
 inline
-const UInt16 &GridBagLayoutConstraintsBase::getGridY(void) const
+      UInt16  GridBagLayoutConstraintsBase::getGridY(void) const
 {
     return _sfGridY.getValue();
 }
 
 //! Set the value of the GridBagLayoutConstraints::_sfGridY field.
 inline
-void GridBagLayoutConstraintsBase::setGridY(const UInt16 &value)
+void GridBagLayoutConstraintsBase::setGridY(const UInt16 value)
 {
+    editSField(GridYFieldMask);
+
     _sfGridY.setValue(value);
 }
-
 //! Get the value of the GridBagLayoutConstraints::_sfGridWidth field.
+
 inline
-UInt16 &GridBagLayoutConstraintsBase::getGridWidth(void)
+UInt16 &GridBagLayoutConstraintsBase::editGridWidth(void)
 {
+    editSField(GridWidthFieldMask);
+
     return _sfGridWidth.getValue();
 }
 
 //! Get the value of the GridBagLayoutConstraints::_sfGridWidth field.
 inline
-const UInt16 &GridBagLayoutConstraintsBase::getGridWidth(void) const
+      UInt16  GridBagLayoutConstraintsBase::getGridWidth(void) const
 {
     return _sfGridWidth.getValue();
 }
 
 //! Set the value of the GridBagLayoutConstraints::_sfGridWidth field.
 inline
-void GridBagLayoutConstraintsBase::setGridWidth(const UInt16 &value)
+void GridBagLayoutConstraintsBase::setGridWidth(const UInt16 value)
 {
+    editSField(GridWidthFieldMask);
+
     _sfGridWidth.setValue(value);
 }
-
 //! Get the value of the GridBagLayoutConstraints::_sfGridHeight field.
+
 inline
-UInt16 &GridBagLayoutConstraintsBase::getGridHeight(void)
+UInt16 &GridBagLayoutConstraintsBase::editGridHeight(void)
 {
+    editSField(GridHeightFieldMask);
+
     return _sfGridHeight.getValue();
 }
 
 //! Get the value of the GridBagLayoutConstraints::_sfGridHeight field.
 inline
-const UInt16 &GridBagLayoutConstraintsBase::getGridHeight(void) const
+      UInt16  GridBagLayoutConstraintsBase::getGridHeight(void) const
 {
     return _sfGridHeight.getValue();
 }
 
 //! Set the value of the GridBagLayoutConstraints::_sfGridHeight field.
 inline
-void GridBagLayoutConstraintsBase::setGridHeight(const UInt16 &value)
+void GridBagLayoutConstraintsBase::setGridHeight(const UInt16 value)
 {
+    editSField(GridHeightFieldMask);
+
     _sfGridHeight.setValue(value);
 }
-
 //! Get the value of the GridBagLayoutConstraints::_sfFill field.
+
 inline
-UInt32 &GridBagLayoutConstraintsBase::getFill(void)
+UInt32 &GridBagLayoutConstraintsBase::editFill(void)
 {
+    editSField(FillFieldMask);
+
     return _sfFill.getValue();
 }
 
 //! Get the value of the GridBagLayoutConstraints::_sfFill field.
 inline
-const UInt32 &GridBagLayoutConstraintsBase::getFill(void) const
+      UInt32  GridBagLayoutConstraintsBase::getFill(void) const
 {
     return _sfFill.getValue();
 }
 
 //! Set the value of the GridBagLayoutConstraints::_sfFill field.
 inline
-void GridBagLayoutConstraintsBase::setFill(const UInt32 &value)
+void GridBagLayoutConstraintsBase::setFill(const UInt32 value)
 {
+    editSField(FillFieldMask);
+
     _sfFill.setValue(value);
 }
-
 //! Get the value of the GridBagLayoutConstraints::_sfHorizontalAlignment field.
+
 inline
-Real32 &GridBagLayoutConstraintsBase::getHorizontalAlignment(void)
+Real32 &GridBagLayoutConstraintsBase::editHorizontalAlignment(void)
 {
+    editSField(HorizontalAlignmentFieldMask);
+
     return _sfHorizontalAlignment.getValue();
 }
 
 //! Get the value of the GridBagLayoutConstraints::_sfHorizontalAlignment field.
 inline
-const Real32 &GridBagLayoutConstraintsBase::getHorizontalAlignment(void) const
+      Real32  GridBagLayoutConstraintsBase::getHorizontalAlignment(void) const
 {
     return _sfHorizontalAlignment.getValue();
 }
 
 //! Set the value of the GridBagLayoutConstraints::_sfHorizontalAlignment field.
 inline
-void GridBagLayoutConstraintsBase::setHorizontalAlignment(const Real32 &value)
+void GridBagLayoutConstraintsBase::setHorizontalAlignment(const Real32 value)
 {
+    editSField(HorizontalAlignmentFieldMask);
+
     _sfHorizontalAlignment.setValue(value);
 }
-
 //! Get the value of the GridBagLayoutConstraints::_sfVerticalAlignment field.
+
 inline
-Real32 &GridBagLayoutConstraintsBase::getVerticalAlignment(void)
+Real32 &GridBagLayoutConstraintsBase::editVerticalAlignment(void)
 {
+    editSField(VerticalAlignmentFieldMask);
+
     return _sfVerticalAlignment.getValue();
 }
 
 //! Get the value of the GridBagLayoutConstraints::_sfVerticalAlignment field.
 inline
-const Real32 &GridBagLayoutConstraintsBase::getVerticalAlignment(void) const
+      Real32  GridBagLayoutConstraintsBase::getVerticalAlignment(void) const
 {
     return _sfVerticalAlignment.getValue();
 }
 
 //! Set the value of the GridBagLayoutConstraints::_sfVerticalAlignment field.
 inline
-void GridBagLayoutConstraintsBase::setVerticalAlignment(const Real32 &value)
+void GridBagLayoutConstraintsBase::setVerticalAlignment(const Real32 value)
 {
+    editSField(VerticalAlignmentFieldMask);
+
     _sfVerticalAlignment.setValue(value);
 }
-
 //! Get the value of the GridBagLayoutConstraints::_sfWeightX field.
+
 inline
-Real32 &GridBagLayoutConstraintsBase::getWeightX(void)
+Real32 &GridBagLayoutConstraintsBase::editWeightX(void)
 {
+    editSField(WeightXFieldMask);
+
     return _sfWeightX.getValue();
 }
 
 //! Get the value of the GridBagLayoutConstraints::_sfWeightX field.
 inline
-const Real32 &GridBagLayoutConstraintsBase::getWeightX(void) const
+      Real32  GridBagLayoutConstraintsBase::getWeightX(void) const
 {
     return _sfWeightX.getValue();
 }
 
 //! Set the value of the GridBagLayoutConstraints::_sfWeightX field.
 inline
-void GridBagLayoutConstraintsBase::setWeightX(const Real32 &value)
+void GridBagLayoutConstraintsBase::setWeightX(const Real32 value)
 {
+    editSField(WeightXFieldMask);
+
     _sfWeightX.setValue(value);
 }
-
 //! Get the value of the GridBagLayoutConstraints::_sfWeightY field.
+
 inline
-Real32 &GridBagLayoutConstraintsBase::getWeightY(void)
+Real32 &GridBagLayoutConstraintsBase::editWeightY(void)
 {
+    editSField(WeightYFieldMask);
+
     return _sfWeightY.getValue();
 }
 
 //! Get the value of the GridBagLayoutConstraints::_sfWeightY field.
 inline
-const Real32 &GridBagLayoutConstraintsBase::getWeightY(void) const
+      Real32  GridBagLayoutConstraintsBase::getWeightY(void) const
 {
     return _sfWeightY.getValue();
 }
 
 //! Set the value of the GridBagLayoutConstraints::_sfWeightY field.
 inline
-void GridBagLayoutConstraintsBase::setWeightY(const Real32 &value)
+void GridBagLayoutConstraintsBase::setWeightY(const Real32 value)
 {
+    editSField(WeightYFieldMask);
+
     _sfWeightY.setValue(value);
 }
-
 //! Get the value of the GridBagLayoutConstraints::_sfInternalPadX field.
+
 inline
-UInt32 &GridBagLayoutConstraintsBase::getInternalPadX(void)
+UInt32 &GridBagLayoutConstraintsBase::editInternalPadX(void)
 {
+    editSField(InternalPadXFieldMask);
+
     return _sfInternalPadX.getValue();
 }
 
 //! Get the value of the GridBagLayoutConstraints::_sfInternalPadX field.
 inline
-const UInt32 &GridBagLayoutConstraintsBase::getInternalPadX(void) const
+      UInt32  GridBagLayoutConstraintsBase::getInternalPadX(void) const
 {
     return _sfInternalPadX.getValue();
 }
 
 //! Set the value of the GridBagLayoutConstraints::_sfInternalPadX field.
 inline
-void GridBagLayoutConstraintsBase::setInternalPadX(const UInt32 &value)
+void GridBagLayoutConstraintsBase::setInternalPadX(const UInt32 value)
 {
+    editSField(InternalPadXFieldMask);
+
     _sfInternalPadX.setValue(value);
 }
-
 //! Get the value of the GridBagLayoutConstraints::_sfInternalPadY field.
+
 inline
-UInt32 &GridBagLayoutConstraintsBase::getInternalPadY(void)
+UInt32 &GridBagLayoutConstraintsBase::editInternalPadY(void)
 {
+    editSField(InternalPadYFieldMask);
+
     return _sfInternalPadY.getValue();
 }
 
 //! Get the value of the GridBagLayoutConstraints::_sfInternalPadY field.
 inline
-const UInt32 &GridBagLayoutConstraintsBase::getInternalPadY(void) const
+      UInt32  GridBagLayoutConstraintsBase::getInternalPadY(void) const
 {
     return _sfInternalPadY.getValue();
 }
 
 //! Set the value of the GridBagLayoutConstraints::_sfInternalPadY field.
 inline
-void GridBagLayoutConstraintsBase::setInternalPadY(const UInt32 &value)
+void GridBagLayoutConstraintsBase::setInternalPadY(const UInt32 value)
 {
+    editSField(InternalPadYFieldMask);
+
     _sfInternalPadY.setValue(value);
 }
-
 //! Get the value of the GridBagLayoutConstraints::_sfPadLeft field.
+
 inline
-UInt32 &GridBagLayoutConstraintsBase::getPadLeft(void)
+UInt32 &GridBagLayoutConstraintsBase::editPadLeft(void)
 {
+    editSField(PadLeftFieldMask);
+
     return _sfPadLeft.getValue();
 }
 
 //! Get the value of the GridBagLayoutConstraints::_sfPadLeft field.
 inline
-const UInt32 &GridBagLayoutConstraintsBase::getPadLeft(void) const
+      UInt32  GridBagLayoutConstraintsBase::getPadLeft(void) const
 {
     return _sfPadLeft.getValue();
 }
 
 //! Set the value of the GridBagLayoutConstraints::_sfPadLeft field.
 inline
-void GridBagLayoutConstraintsBase::setPadLeft(const UInt32 &value)
+void GridBagLayoutConstraintsBase::setPadLeft(const UInt32 value)
 {
+    editSField(PadLeftFieldMask);
+
     _sfPadLeft.setValue(value);
 }
-
 //! Get the value of the GridBagLayoutConstraints::_sfPadRight field.
+
 inline
-UInt32 &GridBagLayoutConstraintsBase::getPadRight(void)
+UInt32 &GridBagLayoutConstraintsBase::editPadRight(void)
 {
+    editSField(PadRightFieldMask);
+
     return _sfPadRight.getValue();
 }
 
 //! Get the value of the GridBagLayoutConstraints::_sfPadRight field.
 inline
-const UInt32 &GridBagLayoutConstraintsBase::getPadRight(void) const
+      UInt32  GridBagLayoutConstraintsBase::getPadRight(void) const
 {
     return _sfPadRight.getValue();
 }
 
 //! Set the value of the GridBagLayoutConstraints::_sfPadRight field.
 inline
-void GridBagLayoutConstraintsBase::setPadRight(const UInt32 &value)
+void GridBagLayoutConstraintsBase::setPadRight(const UInt32 value)
 {
+    editSField(PadRightFieldMask);
+
     _sfPadRight.setValue(value);
 }
-
 //! Get the value of the GridBagLayoutConstraints::_sfPadTop field.
+
 inline
-UInt32 &GridBagLayoutConstraintsBase::getPadTop(void)
+UInt32 &GridBagLayoutConstraintsBase::editPadTop(void)
 {
+    editSField(PadTopFieldMask);
+
     return _sfPadTop.getValue();
 }
 
 //! Get the value of the GridBagLayoutConstraints::_sfPadTop field.
 inline
-const UInt32 &GridBagLayoutConstraintsBase::getPadTop(void) const
+      UInt32  GridBagLayoutConstraintsBase::getPadTop(void) const
 {
     return _sfPadTop.getValue();
 }
 
 //! Set the value of the GridBagLayoutConstraints::_sfPadTop field.
 inline
-void GridBagLayoutConstraintsBase::setPadTop(const UInt32 &value)
+void GridBagLayoutConstraintsBase::setPadTop(const UInt32 value)
 {
+    editSField(PadTopFieldMask);
+
     _sfPadTop.setValue(value);
 }
-
 //! Get the value of the GridBagLayoutConstraints::_sfPadBottom field.
+
 inline
-UInt32 &GridBagLayoutConstraintsBase::getPadBottom(void)
+UInt32 &GridBagLayoutConstraintsBase::editPadBottom(void)
 {
+    editSField(PadBottomFieldMask);
+
     return _sfPadBottom.getValue();
 }
 
 //! Get the value of the GridBagLayoutConstraints::_sfPadBottom field.
 inline
-const UInt32 &GridBagLayoutConstraintsBase::getPadBottom(void) const
+      UInt32  GridBagLayoutConstraintsBase::getPadBottom(void) const
 {
     return _sfPadBottom.getValue();
 }
 
 //! Set the value of the GridBagLayoutConstraints::_sfPadBottom field.
 inline
-void GridBagLayoutConstraintsBase::setPadBottom(const UInt32 &value)
+void GridBagLayoutConstraintsBase::setPadBottom(const UInt32 value)
 {
+    editSField(PadBottomFieldMask);
+
     _sfPadBottom.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void GridBagLayoutConstraintsBase::execSync (      GridBagLayoutConstraintsBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGGRIDBAGLAYOUTCONSTRAINTSBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (GridXFieldMask & whichField))
+        _sfGridX.syncWith(pFrom->_sfGridX);
+
+    if(FieldBits::NoField != (GridYFieldMask & whichField))
+        _sfGridY.syncWith(pFrom->_sfGridY);
+
+    if(FieldBits::NoField != (GridWidthFieldMask & whichField))
+        _sfGridWidth.syncWith(pFrom->_sfGridWidth);
+
+    if(FieldBits::NoField != (GridHeightFieldMask & whichField))
+        _sfGridHeight.syncWith(pFrom->_sfGridHeight);
+
+    if(FieldBits::NoField != (FillFieldMask & whichField))
+        _sfFill.syncWith(pFrom->_sfFill);
+
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+        _sfHorizontalAlignment.syncWith(pFrom->_sfHorizontalAlignment);
+
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+        _sfVerticalAlignment.syncWith(pFrom->_sfVerticalAlignment);
+
+    if(FieldBits::NoField != (WeightXFieldMask & whichField))
+        _sfWeightX.syncWith(pFrom->_sfWeightX);
+
+    if(FieldBits::NoField != (WeightYFieldMask & whichField))
+        _sfWeightY.syncWith(pFrom->_sfWeightY);
+
+    if(FieldBits::NoField != (InternalPadXFieldMask & whichField))
+        _sfInternalPadX.syncWith(pFrom->_sfInternalPadX);
+
+    if(FieldBits::NoField != (InternalPadYFieldMask & whichField))
+        _sfInternalPadY.syncWith(pFrom->_sfInternalPadY);
+
+    if(FieldBits::NoField != (PadLeftFieldMask & whichField))
+        _sfPadLeft.syncWith(pFrom->_sfPadLeft);
+
+    if(FieldBits::NoField != (PadRightFieldMask & whichField))
+        _sfPadRight.syncWith(pFrom->_sfPadRight);
+
+    if(FieldBits::NoField != (PadTopFieldMask & whichField))
+        _sfPadTop.syncWith(pFrom->_sfPadTop);
+
+    if(FieldBits::NoField != (PadBottomFieldMask & whichField))
+        _sfPadBottom.syncWith(pFrom->_sfPadBottom);
+}
+#endif
+
+
+inline
+const Char8 *GridBagLayoutConstraintsBase::getClassname(void)
+{
+    return "GridBagLayoutConstraints";
+}
+OSG_GEN_CONTAINERPTR(GridBagLayoutConstraints);
+
+OSG_END_NAMESPACE
 

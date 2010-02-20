@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,132 +55,102 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &WindowBorderBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 WindowBorderBase::getClassTypeId(void) 
+OSG::UInt32 WindowBorderBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-WindowBorderPtr WindowBorderBase::create(void) 
-{
-    WindowBorderPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = WindowBorderPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-WindowBorderPtr WindowBorderBase::createEmpty(void) 
-{ 
-    WindowBorderPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 WindowBorderBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the WindowBorder::_sfInnerBorder field.
-inline
-SFBorderPtr *WindowBorderBase::getSFInnerBorder(void)
-{
-    return &_sfInnerBorder;
-}
-
-//! Get the WindowBorder::_sfOuterBorder field.
-inline
-SFBorderPtr *WindowBorderBase::getSFOuterBorder(void)
-{
-    return &_sfOuterBorder;
-}
-
-//! Get the WindowBorder::_sfTitlebar field.
-inline
-SFComponentPtr *WindowBorderBase::getSFTitlebar(void)
-{
-    return &_sfTitlebar;
-}
-
 
 //! Get the value of the WindowBorder::_sfInnerBorder field.
 inline
-BorderPtr &WindowBorderBase::getInnerBorder(void)
-{
-    return _sfInnerBorder.getValue();
-}
-
-//! Get the value of the WindowBorder::_sfInnerBorder field.
-inline
-const BorderPtr &WindowBorderBase::getInnerBorder(void) const
+Border * WindowBorderBase::getInnerBorder(void) const
 {
     return _sfInnerBorder.getValue();
 }
 
 //! Set the value of the WindowBorder::_sfInnerBorder field.
 inline
-void WindowBorderBase::setInnerBorder(const BorderPtr &value)
+void WindowBorderBase::setInnerBorder(Border * const value)
 {
+    editSField(InnerBorderFieldMask);
+
     _sfInnerBorder.setValue(value);
 }
 
 //! Get the value of the WindowBorder::_sfOuterBorder field.
 inline
-BorderPtr &WindowBorderBase::getOuterBorder(void)
-{
-    return _sfOuterBorder.getValue();
-}
-
-//! Get the value of the WindowBorder::_sfOuterBorder field.
-inline
-const BorderPtr &WindowBorderBase::getOuterBorder(void) const
+Border * WindowBorderBase::getOuterBorder(void) const
 {
     return _sfOuterBorder.getValue();
 }
 
 //! Set the value of the WindowBorder::_sfOuterBorder field.
 inline
-void WindowBorderBase::setOuterBorder(const BorderPtr &value)
+void WindowBorderBase::setOuterBorder(Border * const value)
 {
+    editSField(OuterBorderFieldMask);
+
     _sfOuterBorder.setValue(value);
 }
 
 //! Get the value of the WindowBorder::_sfTitlebar field.
 inline
-ComponentPtr &WindowBorderBase::getTitlebar(void)
-{
-    return _sfTitlebar.getValue();
-}
-
-//! Get the value of the WindowBorder::_sfTitlebar field.
-inline
-const ComponentPtr &WindowBorderBase::getTitlebar(void) const
+Component * WindowBorderBase::getTitlebar(void) const
 {
     return _sfTitlebar.getValue();
 }
 
 //! Set the value of the WindowBorder::_sfTitlebar field.
 inline
-void WindowBorderBase::setTitlebar(const ComponentPtr &value)
+void WindowBorderBase::setTitlebar(Component * const value)
 {
+    editSField(TitlebarFieldMask);
+
     _sfTitlebar.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void WindowBorderBase::execSync (      WindowBorderBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGWINDOWBORDERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (InnerBorderFieldMask & whichField))
+        _sfInnerBorder.syncWith(pFrom->_sfInnerBorder);
+
+    if(FieldBits::NoField != (OuterBorderFieldMask & whichField))
+        _sfOuterBorder.syncWith(pFrom->_sfOuterBorder);
+
+    if(FieldBits::NoField != (TitlebarFieldMask & whichField))
+        _sfTitlebar.syncWith(pFrom->_sfTitlebar);
+}
+#endif
+
+
+inline
+const Char8 *WindowBorderBase::getClassname(void)
+{
+    return "WindowBorder";
+}
+OSG_GEN_CONTAINERPTR(WindowBorder);
+
+OSG_END_NAMESPACE
 

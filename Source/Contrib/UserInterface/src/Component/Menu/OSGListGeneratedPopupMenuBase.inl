@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,104 +55,83 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &ListGeneratedPopupMenuBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ListGeneratedPopupMenuBase::getClassTypeId(void) 
+OSG::UInt32 ListGeneratedPopupMenuBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-ListGeneratedPopupMenuPtr ListGeneratedPopupMenuBase::create(void) 
-{
-    ListGeneratedPopupMenuPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = ListGeneratedPopupMenuPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-ListGeneratedPopupMenuPtr ListGeneratedPopupMenuBase::createEmpty(void) 
-{ 
-    ListGeneratedPopupMenuPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 ListGeneratedPopupMenuBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ListGeneratedPopupMenu::_sfModel field.
-inline
-SFListModelPtr *ListGeneratedPopupMenuBase::getSFModel(void)
-{
-    return &_sfModel;
-}
-
-//! Get the ListGeneratedPopupMenu::_sfCellGenerator field.
-inline
-SFComponentGeneratorPtr *ListGeneratedPopupMenuBase::getSFCellGenerator(void)
-{
-    return &_sfCellGenerator;
-}
-
 
 //! Get the value of the ListGeneratedPopupMenu::_sfModel field.
 inline
-ListModelPtr &ListGeneratedPopupMenuBase::getModel(void)
-{
-    return _sfModel.getValue();
-}
-
-//! Get the value of the ListGeneratedPopupMenu::_sfModel field.
-inline
-const ListModelPtr &ListGeneratedPopupMenuBase::getModel(void) const
+ListModel * ListGeneratedPopupMenuBase::getModel(void) const
 {
     return _sfModel.getValue();
 }
 
 //! Set the value of the ListGeneratedPopupMenu::_sfModel field.
 inline
-void ListGeneratedPopupMenuBase::setModel(const ListModelPtr &value)
+void ListGeneratedPopupMenuBase::setModel(ListModel * const value)
 {
+    editSField(ModelFieldMask);
+
     _sfModel.setValue(value);
 }
 
 //! Get the value of the ListGeneratedPopupMenu::_sfCellGenerator field.
 inline
-ComponentGeneratorPtr &ListGeneratedPopupMenuBase::getCellGenerator(void)
-{
-    return _sfCellGenerator.getValue();
-}
-
-//! Get the value of the ListGeneratedPopupMenu::_sfCellGenerator field.
-inline
-const ComponentGeneratorPtr &ListGeneratedPopupMenuBase::getCellGenerator(void) const
+ComponentGenerator * ListGeneratedPopupMenuBase::getCellGenerator(void) const
 {
     return _sfCellGenerator.getValue();
 }
 
 //! Set the value of the ListGeneratedPopupMenu::_sfCellGenerator field.
 inline
-void ListGeneratedPopupMenuBase::setCellGenerator(const ComponentGeneratorPtr &value)
+void ListGeneratedPopupMenuBase::setCellGenerator(ComponentGenerator * const value)
 {
+    editSField(CellGeneratorFieldMask);
+
     _sfCellGenerator.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void ListGeneratedPopupMenuBase::execSync (      ListGeneratedPopupMenuBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGLISTGENERATEDPOPUPMENUBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
+        _sfModel.syncWith(pFrom->_sfModel);
+
+    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
+        _sfCellGenerator.syncWith(pFrom->_sfCellGenerator);
+}
+#endif
+
+
+inline
+const Char8 *ListGeneratedPopupMenuBase::getClassname(void)
+{
+    return "ListGeneratedPopupMenu";
+}
+OSG_GEN_CONTAINERPTR(ListGeneratedPopupMenu);
+
+OSG_END_NAMESPACE
 

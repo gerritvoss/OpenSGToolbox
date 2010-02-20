@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,29 +40,21 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGViewport.h>
-#include <OpenSG/OSGMFVecTypes.h>
-
-#include "UIDrawingSurface/OSGUIDrawingSurface.h" // DrawingSurface type
-
-#include "UIDrawingSurface/Foreground/OSGUIForegroundMouseTransformFunctor.h"
-#include "Component/Container/Window/OSGInternalWindow.h"
+#include <OSGConfig.h>
 
 #include "OSGUIForeground.h"
+#include "OSGUIForegroundMouseTransformFunctor.h"
+#include "OSGInternalWindow.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::UIForeground
-A Foreground for rendering a UI on.
-*/
+// Documentation for this class is emitted in the
+// OSGUIForegroundBase.cpp file.
+// To modify it, please change the .fcd file (OSGUIForeground.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -72,23 +64,26 @@ A Foreground for rendering a UI on.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void UIForeground::initMethod (void)
+void UIForeground::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-void UIForeground::draw( DrawActionBase * action, Viewport * port )
+void UIForeground::draw(DrawEnv * env, Viewport * port)
 {
-	if(getDrawingSurface()->getSize().x() != port->getPixelWidth() ||
-	   getDrawingSurface()->getSize().y() != port->getPixelHeight())
-	{
-		beginEditCP(getDrawingSurface(), UIDrawingSurface::SizeFieldMask);
-			getDrawingSurface()->setSize(Vec2f(port->getPixelWidth(), port->getPixelHeight()));
-		endEditCP(getDrawingSurface(), UIDrawingSurface::SizeFieldMask);
-	}
+    if(getDrawingSurface()->getSize().x() != port->getPixelWidth() ||
+       getDrawingSurface()->getSize().y() != port->getPixelHeight())
+    {
+        getDrawingSurface()->setSize(Vec2f(port->getPixelWidth(), port->getPixelHeight()));
+    }
 
 	glPushMatrix();
     glLoadIdentity();
@@ -101,14 +96,15 @@ void UIForeground::draw( DrawActionBase * action, Viewport * port )
 	glMatrixMode(GL_MODELVIEW);
 
 	//Render the UI to the Foreground
-    getDrawingSurface()->getGraphics()->setDrawAction(action);
+    getDrawingSurface()->getGraphics()->setDrawEnv(env);
+
 	//Call The PreDraw on the Graphics
 	getDrawingSurface()->getGraphics()->preDraw();
 
 	//Draw all of the InternalWindows
-	for(UInt32 i(0) ; i<getDrawingSurface()->getInternalWindows().size() ; ++i)
+	for(UInt32 i(0) ; i<getDrawingSurface()->getMFInternalWindows()->size() ; ++i)
 	{
-		getDrawingSurface()->getInternalWindows()[i]->draw(getDrawingSurface()->getGraphics());
+		getDrawingSurface()->getInternalWindows(i)->draw(getDrawingSurface()->getGraphics());
 	}
 
 	//Call the PostDraw on the Graphics
@@ -124,28 +120,30 @@ void UIForeground::draw( DrawActionBase * action, Viewport * port )
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+void UIForeground::onCreate(const UIForeground * Id)
+{
+    UIForegroundMouseTransformFunctorUnrecPtr TheTransFunc(UIForegroundMouseTransformFunctor::create());
+	setMouseTransformFunctor(TheTransFunc);
+    if(getMouseTransformFunctor() != NULL)
+    {
+        getMouseTransformFunctor()->setParent(this);
+    }
+}
+
+void UIForeground::onDestroy()
+{
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 UIForeground::UIForeground(void) :
     Inherited()
 {
-	if(getMouseTransformFunctor() != NullFC)
-	{
-		beginEditCP(getMouseTransformFunctor(), UIForegroundMouseTransformFunctor::ParentFieldMask);
-			getMouseTransformFunctor()->setParent(UIForegroundPtr(this));
-		endEditCP(getMouseTransformFunctor(), UIForegroundMouseTransformFunctor::ParentFieldMask);
-	}
 }
 
 UIForeground::UIForeground(const UIForeground &source) :
     Inherited(source)
 {
-	if(getMouseTransformFunctor() != NullFC)
-	{
-		beginEditCP(getMouseTransformFunctor(), UIForegroundMouseTransformFunctor::ParentFieldMask);
-			getMouseTransformFunctor()->setParent(UIForegroundPtr(this));
-		endEditCP(getMouseTransformFunctor(), UIForegroundMouseTransformFunctor::ParentFieldMask);
-	}
 }
 
 UIForeground::~UIForeground(void)
@@ -154,47 +152,23 @@ UIForeground::~UIForeground(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void UIForeground::changed(BitVector whichField, UInt32 origin)
+void UIForeground::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 	
 	if( (whichField & DrawingSurfaceFieldMask) &&
-		getDrawingSurface() != NullFC)
+		getDrawingSurface() != NULL)
     {
         getDrawingSurface()->setMouseTransformFunctor(getMouseTransformFunctor());
 	}
 }
 
-void UIForeground::dump(      UInt32    , 
+void UIForeground::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump UIForeground NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGUIFOREGROUNDBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGUIFOREGROUNDBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGUIFOREGROUNDFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

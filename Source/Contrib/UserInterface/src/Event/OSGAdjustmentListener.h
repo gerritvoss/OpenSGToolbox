@@ -31,20 +31,20 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGEventListener.h>
+#include "OSGEventListener.h"
 #include "OSGAdjustmentEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING AdjustmentListener : public EventListener
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AdjustmentListener : public EventListener
 {
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void adjustmentValueChanged(const AdjustmentEventPtr e) = 0;
+   virtual void adjustmentValueChanged(const AdjustmentEventUnrecPtr e) = 0;
 };
 
 typedef AdjustmentListener* AdjustmentListenerPtr;

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGLayoutSpringFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class NegativeLayoutSpring;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! NegativeLayoutSpringPtr
+OSG_GEN_CONTAINERPTR(NegativeLayoutSpring);
 
-typedef FCPtr<LayoutSpringPtr, NegativeLayoutSpring> NegativeLayoutSpringPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<NegativeLayoutSpringPtr> : 
-    public FieldTraitsRecurseMapper<NegativeLayoutSpringPtr, true>
+struct FieldTraits<NegativeLayoutSpring *> :
+    public FieldTraitsFCPtrBase<NegativeLayoutSpring *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFNegativeLayoutSpringPtr"; }
-    static const char *getMName(void) { return "MFNegativeLayoutSpringPtr"; }
+    typedef FieldTraits<NegativeLayoutSpring *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFNegativeLayoutSpringPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFNegativeLayoutSpringPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<NegativeLayoutSpringPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<NegativeLayoutSpring *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecNegativeLayoutSpringPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<NegativeLayoutSpring *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecNegativeLayoutSpringPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<NegativeLayoutSpring *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakNegativeLayoutSpringPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<NegativeLayoutSpring *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdNegativeLayoutSpringPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<NegativeLayoutSpring *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecNegativeLayoutSpringPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<NegativeLayoutSpring *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecNegativeLayoutSpringPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<NegativeLayoutSpring *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakNegativeLayoutSpringPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<NegativeLayoutSpring *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdNegativeLayoutSpringPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<NegativeLayoutSpring *,
+                      RecordedRefCountPolicy  > SFRecNegativeLayoutSpringPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<NegativeLayoutSpring *,
+                      UnrecordedRefCountPolicy> SFUnrecNegativeLayoutSpringPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<NegativeLayoutSpring *,
+                      WeakRefCountPolicy      > SFWeakNegativeLayoutSpringPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<NegativeLayoutSpring *,
+                      NoRefCountPolicy        > SFUncountedNegativeLayoutSpringPtr;
 
-typedef SField<NegativeLayoutSpringPtr> SFNegativeLayoutSpringPtr;
-#endif
 
-#ifndef OSG_COMPILENEGATIVELAYOUTSPRINGINST
-OSG_DLLEXPORT_DECL1(SField, NegativeLayoutSpringPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<NegativeLayoutSpring *,
+                      RecordedRefCountPolicy  > MFRecNegativeLayoutSpringPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<NegativeLayoutSpring *,
+                      UnrecordedRefCountPolicy> MFUnrecNegativeLayoutSpringPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<NegativeLayoutSpring *,
+                      WeakRefCountPolicy      > MFWeakNegativeLayoutSpringPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<NegativeLayoutSpring *,
+                      NoRefCountPolicy        > MFUncountedNegativeLayoutSpringPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<NegativeLayoutSpringPtr> MFNegativeLayoutSpringPtr;
-#endif
 
-#ifndef OSG_COMPILENEGATIVELAYOUTSPRINGINST
-OSG_DLLEXPORT_DECL1(MField, NegativeLayoutSpringPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecNegativeLayoutSpringPtr : 
+    public PointerSField<NegativeLayoutSpring *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecNegativeLayoutSpringPtr : 
+    public PointerSField<NegativeLayoutSpring *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakNegativeLayoutSpringPtr :
+    public PointerSField<NegativeLayoutSpring *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedNegativeLayoutSpringPtr :
+    public PointerSField<NegativeLayoutSpring *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecNegativeLayoutSpringPtr :
+    public PointerMField<NegativeLayoutSpring *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecNegativeLayoutSpringPtr :
+    public PointerMField<NegativeLayoutSpring *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakNegativeLayoutSpringPtr :
+    public PointerMField<NegativeLayoutSpring *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedNegativeLayoutSpringPtr :
+    public PointerMField<NegativeLayoutSpring *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGNEGATIVELAYOUTSPRINGFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGNEGATIVELAYOUTSPRINGFIELDS_H_ */

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,46 +42,48 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGComponentEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ComponentEvent class. See \ref 
-           PageUserInterfaceComponentEvent for a description.
+/*! \brief ComponentEvent class. See \ref
+           PageContribUserInterfaceComponentEvent for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING ComponentEvent : public ComponentEventBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentEvent : public ComponentEventBase
 {
-  private:
-
-    typedef ComponentEventBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef ComponentEventBase Inherited;
+    typedef ComponentEvent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
-    static  ComponentEventPtr      create(  FieldContainerPtr Source,
-                                        Time TimeStamp); 
+    static  ComponentEventTransitPtr      create(  FieldContainerRefPtr Source,
+                                                   Time TimeStamp); 
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ComponentEventBase.
@@ -98,20 +100,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentEvent : public ComponentEventBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ComponentEvent(void); 
+    virtual ~ComponentEvent(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ComponentEventBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ComponentEvent &source);
 };
 

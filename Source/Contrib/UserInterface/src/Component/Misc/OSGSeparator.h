@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,45 +42,52 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGSeparatorBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Separator class. See \ref 
-           PageUserInterfaceSeparator for a description.
+/*! \brief Separator class. See \ref
+           PageContribUserInterfaceSeparator for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING Separator : public SeparatorBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Separator : public SeparatorBase
 {
-  private:
-
-    typedef SeparatorBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
-     enum Orientation{VERTICAL_ORIENTATION = 0, HORIZONTAL_ORIENTATION};
+     enum Orientation
+     {
+         VERTICAL_ORIENTATION   = 0,
+         HORIZONTAL_ORIENTATION = 1
+     };
+
+    typedef SeparatorBase Inherited;
+    typedef Separator     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
-	virtual Vec2f getContentRequestedSize(void) const;
 
     /*! \}                                                                 */
+
+	virtual Vec2f getContentRequestedSize(void) const;
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in SeparatorBase.
@@ -97,21 +104,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING Separator : public SeparatorBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Separator(void); 
+    virtual ~Separator(void);
 
     /*! \}                                                                 */
-	virtual void drawInternal(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+
+	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
     
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class SeparatorBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const Separator &source);
 };
 
@@ -121,7 +134,5 @@ OSG_END_NAMESPACE
 
 #include "OSGSeparatorBase.inl"
 #include "OSGSeparator.inl"
-
-#define OSGSEPARATOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGSEPARATOR_H_ */

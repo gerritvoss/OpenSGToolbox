@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,65 +58,72 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include <OpenSG/OSGForeground.h> // Parent
+#include "OSGForeground.h" // Parent
 
-#include "UIDrawingSurface/OSGUIDrawingSurfaceFields.h" // DrawingSurface type
-#include "UIDrawingSurface/Foreground/OSGUIForegroundMouseTransformFunctorFields.h" // MouseTransformFunctor type
+#include "OSGUIDrawingSurfaceFields.h"  // DrawingSurface type
+#include "OSGUIForegroundMouseTransformFunctorFields.h" // MouseTransformFunctor type
 
 #include "OSGUIForegroundFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class UIForeground;
-class BinaryDataHandler;
 
 //! \brief UIForeground Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING UIForegroundBase : public Foreground
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIForegroundBase : public Foreground
 {
-  private:
-
-    typedef Foreground    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef UIForegroundPtr  Ptr;
+    typedef Foreground Inherited;
+    typedef Foreground ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(UIForeground);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        DrawingSurfaceFieldId        = Inherited::NextFieldId,
-        MouseTransformFunctorFieldId = DrawingSurfaceFieldId        + 1,
-        NextFieldId                  = MouseTransformFunctorFieldId + 1
+        DrawingSurfaceFieldId = Inherited::NextFieldId,
+        MouseTransformFunctorFieldId = DrawingSurfaceFieldId + 1,
+        NextFieldId = MouseTransformFunctorFieldId + 1
     };
 
-    static const OSG::BitVector DrawingSurfaceFieldMask;
-    static const OSG::BitVector MouseTransformFunctorFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector DrawingSurfaceFieldMask =
+        (TypeTraits<BitVector>::One << DrawingSurfaceFieldId);
+    static const OSG::BitVector MouseTransformFunctorFieldMask =
+        (TypeTraits<BitVector>::One << MouseTransformFunctorFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecUIDrawingSurfacePtr SFDrawingSurfaceType;
+    typedef SFUnrecUIForegroundMouseTransformFunctorPtr SFMouseTransformFunctorType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -125,21 +132,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIForegroundBase : public Foreground
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUIDrawingSurfacePtr *getSFDrawingSurface (void);
+            const SFUnrecUIDrawingSurfacePtr *getSFDrawingSurface (void) const;
+                  SFUnrecUIDrawingSurfacePtr *editSFDrawingSurface (void);
 
-           UIDrawingSurfacePtr &getDrawingSurface (void);
-     const UIDrawingSurfacePtr &getDrawingSurface (void) const;
+
+                  UIDrawingSurface * getDrawingSurface (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setDrawingSurface ( const UIDrawingSurfacePtr &value );
+            void setDrawingSurface (UIDrawingSurface * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -147,11 +160,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIForegroundBase : public Foreground
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -159,27 +172,44 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIForegroundBase : public Foreground
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  UIForegroundPtr      create          (void); 
-    static  UIForegroundPtr      createEmpty     (void); 
+    static  UIForegroundTransitPtr  create          (void);
+    static  UIForeground           *createEmpty     (void);
+
+    static  UIForegroundTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  UIForeground            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  UIForegroundTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUIDrawingSurfacePtr   _sfDrawingSurface;
-    SFUIForegroundMouseTransformFunctorPtr   _sfMouseTransformFunctor;
+    SFUnrecUIDrawingSurfacePtr _sfDrawingSurface;
+    SFUnrecUIForegroundMouseTransformFunctorPtr _sfMouseTransformFunctor;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -194,86 +224,105 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIForegroundBase : public Foreground
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~UIForegroundBase(void); 
+    virtual ~UIForegroundBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const UIForeground *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleDrawingSurface  (void) const;
+    EditFieldHandlePtr editHandleDrawingSurface (void);
+    GetFieldHandlePtr  getHandleMouseTransformFunctor (void) const;
+    EditFieldHandlePtr editHandleMouseTransformFunctor(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUIForegroundMouseTransformFunctorPtr *getSFMouseTransformFunctor(void);
+            const SFUnrecUIForegroundMouseTransformFunctorPtr *getSFMouseTransformFunctor (void) const;
+                  SFUnrecUIForegroundMouseTransformFunctorPtr *editSFMouseTransformFunctor(void);
 
-           UIForegroundMouseTransformFunctorPtr &getMouseTransformFunctor(void);
-     const UIForegroundMouseTransformFunctorPtr &getMouseTransformFunctor(void) const;
+
+                  UIForegroundMouseTransformFunctor * getMouseTransformFunctor(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setMouseTransformFunctor(const UIForegroundMouseTransformFunctorPtr &value);
+            void setMouseTransformFunctor(UIForegroundMouseTransformFunctor * const value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      UIForegroundBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      UIForegroundBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      UIForegroundBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const UIForegroundBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef UIForegroundBase *UIForegroundBaseP;
 
-typedef osgIF<UIForegroundBase::isNodeCore,
-              CoredNodePtr<UIForeground>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet UIForegroundNodePtr;
-
-typedef RefPtr<UIForegroundPtr> UIForegroundRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGUIFOREGROUNDBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGUIFOREGROUNDBASE_H_ */

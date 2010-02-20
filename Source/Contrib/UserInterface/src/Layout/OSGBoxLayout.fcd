@@ -3,18 +3,21 @@
 <FieldContainer
 	name="BoxLayout"
 	parent="Layout"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI BoxLayout.
 	<Field
 		name="Orientation"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="BoxLayout::HORIZONTAL_ORIENTATION"
@@ -24,6 +27,7 @@ A UI BoxLayout.
 	<Field
 		name="MajorAxisAlignment"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.5f"
@@ -33,6 +37,7 @@ A UI BoxLayout.
 	<Field
 		name="MinorAxisAlignment"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.5f"
@@ -42,6 +47,7 @@ A UI BoxLayout.
 	<Field
 		name="ComponentAlignment"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.5f"
@@ -51,6 +57,7 @@ A UI BoxLayout.
 	<Field
 		name="MajorAxisMinimumGap"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="2.0f"
@@ -60,6 +67,7 @@ A UI BoxLayout.
 	<Field
 		name="MajorAxisMaximumGap"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="100000000.0f"

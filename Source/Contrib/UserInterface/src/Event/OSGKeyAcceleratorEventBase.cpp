@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,158 +50,212 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEKEYACCELERATOREVENTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGKeyEvent.h"                  // Key default header
+#include "OSGKeyEvent.h"                  // Modifiers default header
+
 
 #include "OSGKeyAcceleratorEventBase.h"
 #include "OSGKeyAcceleratorEvent.h"
 
-#include <OpenSG/Input/OSGKeyEvent.h>     // Key default header
-#include <OpenSG/Input/OSGKeyEvent.h>     // Modifiers default header
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  KeyAcceleratorEventBase::KeyFieldMask = 
-    (TypeTraits<BitVector>::One << KeyAcceleratorEventBase::KeyFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  KeyAcceleratorEventBase::ModifiersFieldMask = 
-    (TypeTraits<BitVector>::One << KeyAcceleratorEventBase::ModifiersFieldId);
+/*! \class OSG::KeyAcceleratorEvent
+    
+ */
 
-const OSG::BitVector KeyAcceleratorEventBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var UInt32          KeyAcceleratorEventBase::_sfKey
     
 */
+
 /*! \var UInt32          KeyAcceleratorEventBase::_sfModifiers
     
 */
 
-//! KeyAcceleratorEvent description
 
-FieldDescription *KeyAcceleratorEventBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<KeyAcceleratorEvent *>::_type("KeyAcceleratorEventPtr", "EventPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(KeyAcceleratorEvent *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           KeyAcceleratorEvent *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           KeyAcceleratorEvent *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void KeyAcceleratorEventBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "Key", 
-                     KeyFieldId, KeyFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&KeyAcceleratorEventBase::editSFKey)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "Modifiers", 
-                     ModifiersFieldId, ModifiersFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&KeyAcceleratorEventBase::editSFModifiers))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType KeyAcceleratorEventBase::_type(
-    "KeyAcceleratorEvent",
-    "Event",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&KeyAcceleratorEventBase::createEmpty),
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "Key",
+        "",
+        KeyFieldId, KeyFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&KeyAcceleratorEvent::editHandleKey),
+        static_cast<FieldGetMethodSig >(&KeyAcceleratorEvent::getHandleKey));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "Modifiers",
+        "",
+        ModifiersFieldId, ModifiersFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&KeyAcceleratorEvent::editHandleModifiers),
+        static_cast<FieldGetMethodSig >(&KeyAcceleratorEvent::getHandleModifiers));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+KeyAcceleratorEventBase::TypeObject KeyAcceleratorEventBase::_type(
+    KeyAcceleratorEventBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&KeyAcceleratorEventBase::createEmptyLocal),
     KeyAcceleratorEvent::initMethod,
-    _desc,
-    sizeof(_desc));
+    KeyAcceleratorEvent::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&KeyAcceleratorEvent::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"KeyAcceleratorEvent\"\n"
+    "\tparent=\"Event\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"Key\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"KeyEvent::KEY_UNKNOWN\"\n"
+    "        defaultHeader=\"OSGKeyEvent.h\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Modifiers\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"KeyEvent::KEY_MODIFIER_UNKNOWN\"\n"
+    "        defaultHeader=\"OSGKeyEvent.h\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(KeyAcceleratorEventBase, KeyAcceleratorEventPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &KeyAcceleratorEventBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &KeyAcceleratorEventBase::getType(void) const 
+FieldContainerType &KeyAcceleratorEventBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr KeyAcceleratorEventBase::shallowCopy(void) const 
-{ 
-    KeyAcceleratorEventPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const KeyAcceleratorEvent *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 KeyAcceleratorEventBase::getContainerSize(void) const 
-{ 
-    return sizeof(KeyAcceleratorEvent); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void KeyAcceleratorEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &KeyAcceleratorEventBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<KeyAcceleratorEventBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void KeyAcceleratorEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 KeyAcceleratorEventBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((KeyAcceleratorEventBase *) &other, whichField, sInfo);
+    return sizeof(KeyAcceleratorEvent);
 }
-void KeyAcceleratorEventBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFUInt32 *KeyAcceleratorEventBase::editSFKey(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(KeyFieldMask);
+
+    return &_sfKey;
 }
 
-void KeyAcceleratorEventBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFUInt32 *KeyAcceleratorEventBase::getSFKey(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfKey;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-KeyAcceleratorEventBase::KeyAcceleratorEventBase(void) :
-    _sfKey                    (UInt32(KeyEvent::KEY_UNKNOWN)), 
-    _sfModifiers              (UInt32(KeyEvent::KEY_MODIFIER_UNKNOWN)), 
-    Inherited() 
+SFUInt32 *KeyAcceleratorEventBase::editSFModifiers(void)
 {
+    editSField(ModifiersFieldMask);
+
+    return &_sfModifiers;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-KeyAcceleratorEventBase::KeyAcceleratorEventBase(const KeyAcceleratorEventBase &source) :
-    _sfKey                    (source._sfKey                    ), 
-    _sfModifiers              (source._sfModifiers              ), 
-    Inherited                 (source)
+const SFUInt32 *KeyAcceleratorEventBase::getSFModifiers(void) const
 {
+    return &_sfModifiers;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-KeyAcceleratorEventBase::~KeyAcceleratorEventBase(void)
-{
-}
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 KeyAcceleratorEventBase::getBinSize(const BitVector &whichField)
+UInt32 KeyAcceleratorEventBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -209,18 +263,16 @@ UInt32 KeyAcceleratorEventBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfKey.getBinSize();
     }
-
     if(FieldBits::NoField != (ModifiersFieldMask & whichField))
     {
         returnValue += _sfModifiers.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void KeyAcceleratorEventBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void KeyAcceleratorEventBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -228,17 +280,14 @@ void KeyAcceleratorEventBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfKey.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ModifiersFieldMask & whichField))
     {
         _sfModifiers.copyToBin(pMem);
     }
-
-
 }
 
-void KeyAcceleratorEventBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void KeyAcceleratorEventBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -246,71 +295,244 @@ void KeyAcceleratorEventBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfKey.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ModifiersFieldMask & whichField))
     {
         _sfModifiers.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void KeyAcceleratorEventBase::executeSyncImpl(      KeyAcceleratorEventBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+KeyAcceleratorEventTransitPtr KeyAcceleratorEventBase::createLocal(BitVector bFlags)
 {
+    KeyAcceleratorEventTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (KeyFieldMask & whichField))
-        _sfKey.syncWith(pOther->_sfKey);
+        fc = dynamic_pointer_cast<KeyAcceleratorEvent>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (ModifiersFieldMask & whichField))
-        _sfModifiers.syncWith(pOther->_sfModifiers);
-
-
-}
-#else
-void KeyAcceleratorEventBase::executeSyncImpl(      KeyAcceleratorEventBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (KeyFieldMask & whichField))
-        _sfKey.syncWith(pOther->_sfKey);
-
-    if(FieldBits::NoField != (ModifiersFieldMask & whichField))
-        _sfModifiers.syncWith(pOther->_sfModifiers);
-
-
-
+    return fc;
 }
 
-void KeyAcceleratorEventBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+KeyAcceleratorEventTransitPtr KeyAcceleratorEventBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    KeyAcceleratorEventTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<KeyAcceleratorEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+KeyAcceleratorEventTransitPtr KeyAcceleratorEventBase::create(void)
+{
+    KeyAcceleratorEventTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<KeyAcceleratorEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+KeyAcceleratorEvent *KeyAcceleratorEventBase::createEmptyLocal(BitVector bFlags)
+{
+    KeyAcceleratorEvent *returnValue;
+
+    newPtr<KeyAcceleratorEvent>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+KeyAcceleratorEvent *KeyAcceleratorEventBase::createEmpty(void)
+{
+    KeyAcceleratorEvent *returnValue;
+
+    newPtr<KeyAcceleratorEvent>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr KeyAcceleratorEventBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    KeyAcceleratorEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const KeyAcceleratorEvent *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr KeyAcceleratorEventBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    KeyAcceleratorEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const KeyAcceleratorEvent *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr KeyAcceleratorEventBase::shallowCopy(void) const
+{
+    KeyAcceleratorEvent *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const KeyAcceleratorEvent *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+KeyAcceleratorEventBase::KeyAcceleratorEventBase(void) :
+    Inherited(),
+    _sfKey                    (UInt32(KeyEvent::KEY_UNKNOWN)),
+    _sfModifiers              (UInt32(KeyEvent::KEY_MODIFIER_UNKNOWN))
+{
+}
+
+KeyAcceleratorEventBase::KeyAcceleratorEventBase(const KeyAcceleratorEventBase &source) :
+    Inherited(source),
+    _sfKey                    (source._sfKey                    ),
+    _sfModifiers              (source._sfModifiers              )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+KeyAcceleratorEventBase::~KeyAcceleratorEventBase(void)
+{
+}
+
+
+GetFieldHandlePtr KeyAcceleratorEventBase::getHandleKey             (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfKey,
+             this->getType().getFieldDesc(KeyFieldId),
+             const_cast<KeyAcceleratorEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr KeyAcceleratorEventBase::editHandleKey            (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfKey,
+             this->getType().getFieldDesc(KeyFieldId),
+             this));
+
+
+    editSField(KeyFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr KeyAcceleratorEventBase::getHandleModifiers       (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfModifiers,
+             this->getType().getFieldDesc(ModifiersFieldId),
+             const_cast<KeyAcceleratorEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr KeyAcceleratorEventBase::editHandleModifiers      (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfModifiers,
+             this->getType().getFieldDesc(ModifiersFieldId),
+             this));
+
+
+    editSField(ModifiersFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void KeyAcceleratorEventBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    KeyAcceleratorEvent *pThis = static_cast<KeyAcceleratorEvent *>(this);
+
+    pThis->execSync(static_cast<KeyAcceleratorEvent *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *KeyAcceleratorEventBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    KeyAcceleratorEvent *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const KeyAcceleratorEvent *>(pRefAspect),
+                  dynamic_cast<const KeyAcceleratorEvent *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<KeyAcceleratorEventPtr>::_type("KeyAcceleratorEventPtr", "EventPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(KeyAcceleratorEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void KeyAcceleratorEventBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

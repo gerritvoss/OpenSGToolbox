@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,57 +55,31 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &SpringLayoutBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 SpringLayoutBase::getClassTypeId(void) 
+OSG::UInt32 SpringLayoutBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-SpringLayoutPtr SpringLayoutBase::create(void) 
-{
-    SpringLayoutPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = SpringLayoutPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-SpringLayoutPtr SpringLayoutBase::createEmpty(void) 
-{ 
-    SpringLayoutPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 SpringLayoutBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the SpringLayout::_sfConstraints field.
-inline
-SFFieldContainerMap *SpringLayoutBase::getSFConstraints(void)
-{
-    return &_sfConstraints;
-}
-
-
 //! Get the value of the SpringLayout::_sfConstraints field.
+
 inline
-FieldContainerMap &SpringLayoutBase::getConstraints(void)
+FieldContainerMap &SpringLayoutBase::editConstraints(void)
 {
+    editSField(ConstraintsFieldMask);
+
     return _sfConstraints.getValue();
 }
 
@@ -122,11 +94,34 @@ const FieldContainerMap &SpringLayoutBase::getConstraints(void) const
 inline
 void SpringLayoutBase::setConstraints(const FieldContainerMap &value)
 {
+    editSField(ConstraintsFieldMask);
+
     _sfConstraints.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void SpringLayoutBase::execSync (      SpringLayoutBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGSPRINGLAYOUTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (ConstraintsFieldMask & whichField))
+        _sfConstraints.syncWith(pFrom->_sfConstraints);
+}
+#endif
+
+
+inline
+const Char8 *SpringLayoutBase::getClassname(void)
+{
+    return "SpringLayout";
+}
+OSG_GEN_CONTAINERPTR(SpringLayout);
+
+OSG_END_NAMESPACE
 

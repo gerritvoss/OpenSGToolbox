@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,64 +55,31 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &DragGestureEventBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 DragGestureEventBase::getClassTypeId(void) 
+OSG::UInt32 DragGestureEventBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-DragGestureEventPtr DragGestureEventBase::create(void) 
-{
-    DragGestureEventPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = DragGestureEventPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-DragGestureEventPtr DragGestureEventBase::createEmpty(void) 
-{ 
-    DragGestureEventPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 DragGestureEventBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the DragGestureEvent::_sfDragLocation field.
-inline
-const SFPnt2f *DragGestureEventBase::getSFDragLocation(void) const
-{
-    return &_sfDragLocation;
-}
-
-//! Get the DragGestureEvent::_sfDragLocation field.
-inline
-SFPnt2f *DragGestureEventBase::editSFDragLocation(void)
-{
-    return &_sfDragLocation;
-}
-
-
 //! Get the value of the DragGestureEvent::_sfDragLocation field.
+
 inline
 Pnt2f &DragGestureEventBase::editDragLocation(void)
 {
+    editSField(DragLocationFieldMask);
+
     return _sfDragLocation.getValue();
 }
 
@@ -129,9 +94,34 @@ const Pnt2f &DragGestureEventBase::getDragLocation(void) const
 inline
 void DragGestureEventBase::setDragLocation(const Pnt2f &value)
 {
+    editSField(DragLocationFieldMask);
+
     _sfDragLocation.setValue(value);
 }
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void DragGestureEventBase::execSync (      DragGestureEventBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (DragLocationFieldMask & whichField))
+        _sfDragLocation.syncWith(pFrom->_sfDragLocation);
+}
+#endif
+
+
+inline
+const Char8 *DragGestureEventBase::getClassname(void)
+{
+    return "DragGestureEvent";
+}
+OSG_GEN_CONTAINERPTR(DragGestureEvent);
 
 OSG_END_NAMESPACE
 

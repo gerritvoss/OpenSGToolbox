@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,44 +42,44 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGMenuItemBase.h"
-#include "Event/OSGActionListener.h"
-#include "Event/OSGKeyAcceleratorListener.h"
-#include "Component/Menu/OSGMenuFields.h"
+#include "OSGActionListener.h"
+#include "OSGKeyAcceleratorListener.h"
+#include "OSGMenuFields.h"
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief MenuItem class. See \ref 
-           PageUserInterfaceMenuItem for a description.
+/*! \brief MenuItem class. See \ref
+           PageContribUserInterfaceMenuItem for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING MenuItem : public MenuItemBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuItem : public MenuItemBase
 {
-  private:
-
-    typedef MenuItemBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef MenuItemBase Inherited;
+    typedef MenuItem     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -91,13 +91,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItem : public MenuItemBase
 
 	Vec2f getContentRequestedSize(void) const;
 
-    virtual void mouseReleased(const MouseEventPtr e);
+    virtual void mouseReleased(const MouseEventUnrecPtr e);
     
     void setDrawAsThoughSelected(bool Selected);
     bool getDrawAsThoughSelected(void) const;
 
     virtual void detachFromEventProducer(void);
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in MenuItemBase.
@@ -114,21 +116,30 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItem : public MenuItemBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~MenuItem(void); 
+    virtual ~MenuItem(void);
 
-	virtual void drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, Real32 Opacity = 1.0f) const;
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+
+	virtual void drawText(const GraphicsWeakPtr TheGraphics, const Pnt2f& TopLeft, Real32 Opacity = 1.0f) const;
     
-    virtual void actionPreformed(const ActionEventPtr e);
+    virtual void actionPreformed(const ActionEventUnrecPtr e);
 	
-    virtual void produceActionPerformed(const ActionEventPtr e);
+    virtual void produceActionPerformed(const ActionEventUnrecPtr e);
     
 	class MenuItemKeyAcceleratorListener : public KeyAcceleratorListener
 	{
 	public:
-		MenuItemKeyAcceleratorListener(MenuItemPtr TheMenuItem);
-        virtual void acceleratorTyped(const KeyAcceleratorEventPtr e);
+		MenuItemKeyAcceleratorListener(MenuItemRefPtr TheMenuItem);
+        virtual void acceleratorTyped(const KeyAcceleratorEventUnrecPtr e);
 	private:
-		MenuItemPtr _MenuItem;
+		MenuItemRefPtr _MenuItem;
 	};
 
 	friend class MenuItemKeyAcceleratorListener;
@@ -138,12 +149,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItem : public MenuItemBase
 	class KeyAcceleratorMenuFlashUpdateListener : public UpdateListener
 	{
 	public:
-		KeyAcceleratorMenuFlashUpdateListener(MenuItemPtr TheMenuItem);
-        virtual void update(const UpdateEventPtr e);
+		KeyAcceleratorMenuFlashUpdateListener(MenuItemRefPtr TheMenuItem);
+        virtual void update(const UpdateEventUnrecPtr e);
         void reset(void);
         void disconnect(void);
 	private:
-		MenuItemPtr _MenuItem;
+		MenuItemRefPtr _MenuItem;
 	    Time _FlashElps;
 	};
 
@@ -151,36 +162,29 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItem : public MenuItemBase
 
 	KeyAcceleratorMenuFlashUpdateListener _KeyAcceleratorMenuFlashUpdateListener;
 
-    MenuPtr getTopLevelMenu(void) const;
+    MenuRefPtr getTopLevelMenu(void) const;
     bool _DrawAsThoughSelected;
     std::string _AcceleratorText;
     Int32 _MnemonicTextPosition;
 
     void updateAcceleratorText(void);
-    /*! \}                                                                 */
-    
+
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class MenuItemBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const MenuItem &source);
-
-	typedef std::set<ActionListenerPtr> ActionListenerSet;
-    typedef ActionListenerSet::iterator ActionListenerSetItor;
-    typedef ActionListenerSet::const_iterator ActionListenerSetConstItor;
-	
-    ActionListenerSet       _ActionListeners;
 };
 
 typedef MenuItem *MenuItemP;
 
 OSG_END_NAMESPACE
+
+#include "OSGMenu.h"
 
 #include "OSGMenuItemBase.inl"
 #include "OSGMenuItem.inl"

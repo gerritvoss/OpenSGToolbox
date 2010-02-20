@@ -3,22 +3,25 @@
 <FieldContainer
 	name="SpringLayout"
 	parent="Layout"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI SpringLayout.
 	<Field
 		name="Constraints"
 		type="FieldContainerMap"
+		fieldHeader="OSGFieldContainerMapType.h"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="OpenSG/Toolbox/OSGFieldContainerMapType.h"
 	>
 	</Field>
 </FieldContainer>

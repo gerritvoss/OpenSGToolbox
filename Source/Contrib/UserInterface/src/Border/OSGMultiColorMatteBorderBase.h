@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,95 +58,112 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGBorder.h" // Parent
 
-#include <OpenSG/OSGReal32Fields.h> // LeftWidth type
-#include <OpenSG/OSGReal32Fields.h> // RightWidth type
-#include <OpenSG/OSGReal32Fields.h> // TopWidth type
-#include <OpenSG/OSGReal32Fields.h> // BottomWidth type
-#include <OpenSG/OSGColor4fFields.h> // LeftLineTopColor type
-#include <OpenSG/OSGColor4fFields.h> // LeftLineBottomColor type
-#include <OpenSG/OSGColor4fFields.h> // TopLineLeftColor type
-#include <OpenSG/OSGColor4fFields.h> // TopLineRightColor type
-#include <OpenSG/OSGColor4fFields.h> // RightLineTopColor type
-#include <OpenSG/OSGColor4fFields.h> // RightLineBottomColor type
-#include <OpenSG/OSGColor4fFields.h> // BottomLineLeftColor type
-#include <OpenSG/OSGColor4fFields.h> // BottomLineRightColor type
+#include "OSGSysFields.h"               // LeftWidth type
+#include "OSGBaseFields.h"              // LeftLineTopColor type
 
 #include "OSGMultiColorMatteBorderFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class MultiColorMatteBorder;
-class BinaryDataHandler;
 
 //! \brief MultiColorMatteBorder Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING MultiColorMatteBorderBase : public Border
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MultiColorMatteBorderBase : public Border
 {
-  private:
-
-    typedef Border    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef MultiColorMatteBorderPtr  Ptr;
+    typedef Border Inherited;
+    typedef Border ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(MultiColorMatteBorder);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        LeftWidthFieldId            = Inherited::NextFieldId,
-        RightWidthFieldId           = LeftWidthFieldId            + 1,
-        TopWidthFieldId             = RightWidthFieldId           + 1,
-        BottomWidthFieldId          = TopWidthFieldId             + 1,
-        LeftLineTopColorFieldId     = BottomWidthFieldId          + 1,
-        LeftLineBottomColorFieldId  = LeftLineTopColorFieldId     + 1,
-        TopLineLeftColorFieldId     = LeftLineBottomColorFieldId  + 1,
-        TopLineRightColorFieldId    = TopLineLeftColorFieldId     + 1,
-        RightLineTopColorFieldId    = TopLineRightColorFieldId    + 1,
-        RightLineBottomColorFieldId = RightLineTopColorFieldId    + 1,
-        BottomLineLeftColorFieldId  = RightLineBottomColorFieldId + 1,
-        BottomLineRightColorFieldId = BottomLineLeftColorFieldId  + 1,
-        NextFieldId                 = BottomLineRightColorFieldId + 1
+        LeftWidthFieldId = Inherited::NextFieldId,
+        RightWidthFieldId = LeftWidthFieldId + 1,
+        TopWidthFieldId = RightWidthFieldId + 1,
+        BottomWidthFieldId = TopWidthFieldId + 1,
+        LeftLineTopColorFieldId = BottomWidthFieldId + 1,
+        LeftLineBottomColorFieldId = LeftLineTopColorFieldId + 1,
+        TopLineLeftColorFieldId = LeftLineBottomColorFieldId + 1,
+        TopLineRightColorFieldId = TopLineLeftColorFieldId + 1,
+        RightLineTopColorFieldId = TopLineRightColorFieldId + 1,
+        RightLineBottomColorFieldId = RightLineTopColorFieldId + 1,
+        BottomLineLeftColorFieldId = RightLineBottomColorFieldId + 1,
+        BottomLineRightColorFieldId = BottomLineLeftColorFieldId + 1,
+        NextFieldId = BottomLineRightColorFieldId + 1
     };
 
-    static const OSG::BitVector LeftWidthFieldMask;
-    static const OSG::BitVector RightWidthFieldMask;
-    static const OSG::BitVector TopWidthFieldMask;
-    static const OSG::BitVector BottomWidthFieldMask;
-    static const OSG::BitVector LeftLineTopColorFieldMask;
-    static const OSG::BitVector LeftLineBottomColorFieldMask;
-    static const OSG::BitVector TopLineLeftColorFieldMask;
-    static const OSG::BitVector TopLineRightColorFieldMask;
-    static const OSG::BitVector RightLineTopColorFieldMask;
-    static const OSG::BitVector RightLineBottomColorFieldMask;
-    static const OSG::BitVector BottomLineLeftColorFieldMask;
-    static const OSG::BitVector BottomLineRightColorFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector LeftWidthFieldMask =
+        (TypeTraits<BitVector>::One << LeftWidthFieldId);
+    static const OSG::BitVector RightWidthFieldMask =
+        (TypeTraits<BitVector>::One << RightWidthFieldId);
+    static const OSG::BitVector TopWidthFieldMask =
+        (TypeTraits<BitVector>::One << TopWidthFieldId);
+    static const OSG::BitVector BottomWidthFieldMask =
+        (TypeTraits<BitVector>::One << BottomWidthFieldId);
+    static const OSG::BitVector LeftLineTopColorFieldMask =
+        (TypeTraits<BitVector>::One << LeftLineTopColorFieldId);
+    static const OSG::BitVector LeftLineBottomColorFieldMask =
+        (TypeTraits<BitVector>::One << LeftLineBottomColorFieldId);
+    static const OSG::BitVector TopLineLeftColorFieldMask =
+        (TypeTraits<BitVector>::One << TopLineLeftColorFieldId);
+    static const OSG::BitVector TopLineRightColorFieldMask =
+        (TypeTraits<BitVector>::One << TopLineRightColorFieldId);
+    static const OSG::BitVector RightLineTopColorFieldMask =
+        (TypeTraits<BitVector>::One << RightLineTopColorFieldId);
+    static const OSG::BitVector RightLineBottomColorFieldMask =
+        (TypeTraits<BitVector>::One << RightLineBottomColorFieldId);
+    static const OSG::BitVector BottomLineLeftColorFieldMask =
+        (TypeTraits<BitVector>::One << BottomLineLeftColorFieldId);
+    static const OSG::BitVector BottomLineRightColorFieldMask =
+        (TypeTraits<BitVector>::One << BottomLineRightColorFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFReal32          SFLeftWidthType;
+    typedef SFReal32          SFRightWidthType;
+    typedef SFReal32          SFTopWidthType;
+    typedef SFReal32          SFBottomWidthType;
+    typedef SFColor4f         SFLeftLineTopColorType;
+    typedef SFColor4f         SFLeftLineBottomColorType;
+    typedef SFColor4f         SFTopLineLeftColorType;
+    typedef SFColor4f         SFTopLineRightColorType;
+    typedef SFColor4f         SFRightLineTopColorType;
+    typedef SFColor4f         SFRightLineBottomColorType;
+    typedef SFColor4f         SFBottomLineLeftColorType;
+    typedef SFColor4f         SFBottomLineRightColorType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -155,65 +172,101 @@ class OSG_USERINTERFACELIB_DLLMAPPING MultiColorMatteBorderBase : public Border
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *getSFLeftWidth      (void);
-           SFReal32            *getSFRightWidth     (void);
-           SFReal32            *getSFTopWidth       (void);
-           SFReal32            *getSFBottomWidth    (void);
-           SFColor4f           *getSFLeftLineTopColor(void);
-           SFColor4f           *getSFLeftLineBottomColor(void);
-           SFColor4f           *getSFTopLineLeftColor(void);
-           SFColor4f           *getSFTopLineRightColor(void);
-           SFColor4f           *getSFRightLineTopColor(void);
-           SFColor4f           *getSFRightLineBottomColor(void);
-           SFColor4f           *getSFBottomLineLeftColor(void);
-           SFColor4f           *getSFBottomLineRightColor(void);
 
-           Real32              &getLeftWidth      (void);
-     const Real32              &getLeftWidth      (void) const;
-           Real32              &getRightWidth     (void);
-     const Real32              &getRightWidth     (void) const;
-           Real32              &getTopWidth       (void);
-     const Real32              &getTopWidth       (void) const;
-           Real32              &getBottomWidth    (void);
-     const Real32              &getBottomWidth    (void) const;
-           Color4f             &getLeftLineTopColor(void);
-     const Color4f             &getLeftLineTopColor(void) const;
-           Color4f             &getLeftLineBottomColor(void);
-     const Color4f             &getLeftLineBottomColor(void) const;
-           Color4f             &getTopLineLeftColor(void);
-     const Color4f             &getTopLineLeftColor(void) const;
-           Color4f             &getTopLineRightColor(void);
-     const Color4f             &getTopLineRightColor(void) const;
-           Color4f             &getRightLineTopColor(void);
-     const Color4f             &getRightLineTopColor(void) const;
-           Color4f             &getRightLineBottomColor(void);
-     const Color4f             &getRightLineBottomColor(void) const;
-           Color4f             &getBottomLineLeftColor(void);
-     const Color4f             &getBottomLineLeftColor(void) const;
-           Color4f             &getBottomLineRightColor(void);
-     const Color4f             &getBottomLineRightColor(void) const;
+                  SFReal32            *editSFLeftWidth      (void);
+            const SFReal32            *getSFLeftWidth       (void) const;
+
+                  SFReal32            *editSFRightWidth     (void);
+            const SFReal32            *getSFRightWidth      (void) const;
+
+                  SFReal32            *editSFTopWidth       (void);
+            const SFReal32            *getSFTopWidth        (void) const;
+
+                  SFReal32            *editSFBottomWidth    (void);
+            const SFReal32            *getSFBottomWidth     (void) const;
+
+                  SFColor4f           *editSFLeftLineTopColor(void);
+            const SFColor4f           *getSFLeftLineTopColor (void) const;
+
+                  SFColor4f           *editSFLeftLineBottomColor(void);
+            const SFColor4f           *getSFLeftLineBottomColor (void) const;
+
+                  SFColor4f           *editSFTopLineLeftColor(void);
+            const SFColor4f           *getSFTopLineLeftColor (void) const;
+
+                  SFColor4f           *editSFTopLineRightColor(void);
+            const SFColor4f           *getSFTopLineRightColor (void) const;
+
+                  SFColor4f           *editSFRightLineTopColor(void);
+            const SFColor4f           *getSFRightLineTopColor (void) const;
+
+                  SFColor4f           *editSFRightLineBottomColor(void);
+            const SFColor4f           *getSFRightLineBottomColor (void) const;
+
+                  SFColor4f           *editSFBottomLineLeftColor(void);
+            const SFColor4f           *getSFBottomLineLeftColor (void) const;
+
+                  SFColor4f           *editSFBottomLineRightColor(void);
+            const SFColor4f           *getSFBottomLineRightColor (void) const;
+
+
+                  Real32              &editLeftWidth      (void);
+                  Real32               getLeftWidth       (void) const;
+
+                  Real32              &editRightWidth     (void);
+                  Real32               getRightWidth      (void) const;
+
+                  Real32              &editTopWidth       (void);
+                  Real32               getTopWidth        (void) const;
+
+                  Real32              &editBottomWidth    (void);
+                  Real32               getBottomWidth     (void) const;
+
+                  Color4f             &editLeftLineTopColor(void);
+            const Color4f             &getLeftLineTopColor (void) const;
+
+                  Color4f             &editLeftLineBottomColor(void);
+            const Color4f             &getLeftLineBottomColor (void) const;
+
+                  Color4f             &editTopLineLeftColor(void);
+            const Color4f             &getTopLineLeftColor (void) const;
+
+                  Color4f             &editTopLineRightColor(void);
+            const Color4f             &getTopLineRightColor (void) const;
+
+                  Color4f             &editRightLineTopColor(void);
+            const Color4f             &getRightLineTopColor (void) const;
+
+                  Color4f             &editRightLineBottomColor(void);
+            const Color4f             &getRightLineBottomColor (void) const;
+
+                  Color4f             &editBottomLineLeftColor(void);
+            const Color4f             &getBottomLineLeftColor (void) const;
+
+                  Color4f             &editBottomLineRightColor(void);
+            const Color4f             &getBottomLineRightColor (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setLeftWidth      ( const Real32 &value );
-     void setRightWidth     ( const Real32 &value );
-     void setTopWidth       ( const Real32 &value );
-     void setBottomWidth    ( const Real32 &value );
-     void setLeftLineTopColor( const Color4f &value );
-     void setLeftLineBottomColor( const Color4f &value );
-     void setTopLineLeftColor( const Color4f &value );
-     void setTopLineRightColor( const Color4f &value );
-     void setRightLineTopColor( const Color4f &value );
-     void setRightLineBottomColor( const Color4f &value );
-     void setBottomLineLeftColor( const Color4f &value );
-     void setBottomLineRightColor( const Color4f &value );
+            void setLeftWidth      (const Real32 value);
+            void setRightWidth     (const Real32 value);
+            void setTopWidth       (const Real32 value);
+            void setBottomWidth    (const Real32 value);
+            void setLeftLineTopColor(const Color4f &value);
+            void setLeftLineBottomColor(const Color4f &value);
+            void setTopLineLeftColor(const Color4f &value);
+            void setTopLineRightColor(const Color4f &value);
+            void setRightLineTopColor(const Color4f &value);
+            void setRightLineBottomColor(const Color4f &value);
+            void setBottomLineLeftColor(const Color4f &value);
+            void setBottomLineRightColor(const Color4f &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -221,11 +274,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING MultiColorMatteBorderBase : public Border
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -233,37 +286,54 @@ class OSG_USERINTERFACELIB_DLLMAPPING MultiColorMatteBorderBase : public Border
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  MultiColorMatteBorderPtr      create          (void); 
-    static  MultiColorMatteBorderPtr      createEmpty     (void); 
+    static  MultiColorMatteBorderTransitPtr  create          (void);
+    static  MultiColorMatteBorder           *createEmpty     (void);
+
+    static  MultiColorMatteBorderTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  MultiColorMatteBorder            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  MultiColorMatteBorderTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFReal32            _sfLeftWidth;
-    SFReal32            _sfRightWidth;
-    SFReal32            _sfTopWidth;
-    SFReal32            _sfBottomWidth;
-    SFColor4f           _sfLeftLineTopColor;
-    SFColor4f           _sfLeftLineBottomColor;
-    SFColor4f           _sfTopLineLeftColor;
-    SFColor4f           _sfTopLineRightColor;
-    SFColor4f           _sfRightLineTopColor;
-    SFColor4f           _sfRightLineBottomColor;
-    SFColor4f           _sfBottomLineLeftColor;
-    SFColor4f           _sfBottomLineRightColor;
+    SFReal32          _sfLeftWidth;
+    SFReal32          _sfRightWidth;
+    SFReal32          _sfTopWidth;
+    SFReal32          _sfBottomWidth;
+    SFColor4f         _sfLeftLineTopColor;
+    SFColor4f         _sfLeftLineBottomColor;
+    SFColor4f         _sfTopLineLeftColor;
+    SFColor4f         _sfTopLineRightColor;
+    SFColor4f         _sfRightLineTopColor;
+    SFColor4f         _sfRightLineBottomColor;
+    SFColor4f         _sfBottomLineLeftColor;
+    SFColor4f         _sfBottomLineRightColor;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -278,69 +348,101 @@ class OSG_USERINTERFACELIB_DLLMAPPING MultiColorMatteBorderBase : public Border
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~MultiColorMatteBorderBase(void); 
+    virtual ~MultiColorMatteBorderBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleLeftWidth       (void) const;
+    EditFieldHandlePtr editHandleLeftWidth      (void);
+    GetFieldHandlePtr  getHandleRightWidth      (void) const;
+    EditFieldHandlePtr editHandleRightWidth     (void);
+    GetFieldHandlePtr  getHandleTopWidth        (void) const;
+    EditFieldHandlePtr editHandleTopWidth       (void);
+    GetFieldHandlePtr  getHandleBottomWidth     (void) const;
+    EditFieldHandlePtr editHandleBottomWidth    (void);
+    GetFieldHandlePtr  getHandleLeftLineTopColor (void) const;
+    EditFieldHandlePtr editHandleLeftLineTopColor(void);
+    GetFieldHandlePtr  getHandleLeftLineBottomColor (void) const;
+    EditFieldHandlePtr editHandleLeftLineBottomColor(void);
+    GetFieldHandlePtr  getHandleTopLineLeftColor (void) const;
+    EditFieldHandlePtr editHandleTopLineLeftColor(void);
+    GetFieldHandlePtr  getHandleTopLineRightColor (void) const;
+    EditFieldHandlePtr editHandleTopLineRightColor(void);
+    GetFieldHandlePtr  getHandleRightLineTopColor (void) const;
+    EditFieldHandlePtr editHandleRightLineTopColor(void);
+    GetFieldHandlePtr  getHandleRightLineBottomColor (void) const;
+    EditFieldHandlePtr editHandleRightLineBottomColor(void);
+    GetFieldHandlePtr  getHandleBottomLineLeftColor (void) const;
+    EditFieldHandlePtr editHandleBottomLineLeftColor(void);
+    GetFieldHandlePtr  getHandleBottomLineRightColor (void) const;
+    EditFieldHandlePtr editHandleBottomLineRightColor(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      MultiColorMatteBorderBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      MultiColorMatteBorderBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      MultiColorMatteBorderBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const MultiColorMatteBorderBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef MultiColorMatteBorderBase *MultiColorMatteBorderBaseP;
 
-typedef osgIF<MultiColorMatteBorderBase::isNodeCore,
-              CoredNodePtr<MultiColorMatteBorder>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet MultiColorMatteBorderNodePtr;
-
-typedef RefPtr<MultiColorMatteBorderPtr> MultiColorMatteBorderRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGMULTICOLORMATTEBORDERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGMULTICOLORMATTEBORDERBASE_H_ */

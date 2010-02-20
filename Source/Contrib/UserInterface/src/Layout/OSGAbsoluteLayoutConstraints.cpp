@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,22 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGAbsoluteLayoutConstraints.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::AbsoluteLayoutConstraints
-A UI AbsoluteLayoutConstraints.
-*/
+// Documentation for this class is emitted in the
+// OSGAbsoluteLayoutConstraintsBase.cpp file.
+// To modify it, please change the .fcd file (OSGAbsoluteLayoutConstraints.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -65,8 +62,13 @@ A UI AbsoluteLayoutConstraints.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void AbsoluteLayoutConstraints::initMethod (void)
+void AbsoluteLayoutConstraints::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -96,41 +98,17 @@ AbsoluteLayoutConstraints::~AbsoluteLayoutConstraints(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void AbsoluteLayoutConstraints::changed(BitVector whichField, UInt32 origin)
+void AbsoluteLayoutConstraints::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void AbsoluteLayoutConstraints::dump(      UInt32    , 
+void AbsoluteLayoutConstraints::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump AbsoluteLayoutConstraints NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGABSOLUTELAYOUTCONSTRAINTSBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGABSOLUTELAYOUTCONSTRAINTSBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGABSOLUTELAYOUTCONSTRAINTSFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

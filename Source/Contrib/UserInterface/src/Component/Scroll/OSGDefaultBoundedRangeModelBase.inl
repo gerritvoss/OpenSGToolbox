@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,221 +55,185 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &DefaultBoundedRangeModelBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 DefaultBoundedRangeModelBase::getClassTypeId(void) 
+OSG::UInt32 DefaultBoundedRangeModelBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-DefaultBoundedRangeModelPtr DefaultBoundedRangeModelBase::create(void) 
-{
-    DefaultBoundedRangeModelPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = DefaultBoundedRangeModelPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-DefaultBoundedRangeModelPtr DefaultBoundedRangeModelBase::createEmpty(void) 
-{ 
-    DefaultBoundedRangeModelPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 DefaultBoundedRangeModelBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the DefaultBoundedRangeModel::_sfInternalMinimum field.
-inline
-const SFInt32 *DefaultBoundedRangeModelBase::getSFInternalMinimum(void) const
-{
-    return &_sfInternalMinimum;
-}
-
-//! Get the DefaultBoundedRangeModel::_sfInternalMinimum field.
-inline
-SFInt32 *DefaultBoundedRangeModelBase::editSFInternalMinimum(void)
-{
-    return &_sfInternalMinimum;
-}
-
-//! Get the DefaultBoundedRangeModel::_sfInternalMaximum field.
-inline
-const SFInt32 *DefaultBoundedRangeModelBase::getSFInternalMaximum(void) const
-{
-    return &_sfInternalMaximum;
-}
-
-//! Get the DefaultBoundedRangeModel::_sfInternalMaximum field.
-inline
-SFInt32 *DefaultBoundedRangeModelBase::editSFInternalMaximum(void)
-{
-    return &_sfInternalMaximum;
-}
-
-//! Get the DefaultBoundedRangeModel::_sfInternalValue field.
-inline
-const SFInt32 *DefaultBoundedRangeModelBase::getSFInternalValue(void) const
-{
-    return &_sfInternalValue;
-}
-
-//! Get the DefaultBoundedRangeModel::_sfInternalValue field.
-inline
-SFInt32 *DefaultBoundedRangeModelBase::editSFInternalValue(void)
-{
-    return &_sfInternalValue;
-}
-
-//! Get the DefaultBoundedRangeModel::_sfInternalExtent field.
-inline
-const SFUInt32 *DefaultBoundedRangeModelBase::getSFInternalExtent(void) const
-{
-    return &_sfInternalExtent;
-}
-
-//! Get the DefaultBoundedRangeModel::_sfInternalExtent field.
-inline
-SFUInt32 *DefaultBoundedRangeModelBase::editSFInternalExtent(void)
-{
-    return &_sfInternalExtent;
-}
-
-//! Get the DefaultBoundedRangeModel::_sfInternalValueIsAdjusting field.
-inline
-const SFBool *DefaultBoundedRangeModelBase::getSFInternalValueIsAdjusting(void) const
-{
-    return &_sfInternalValueIsAdjusting;
-}
-
-//! Get the DefaultBoundedRangeModel::_sfInternalValueIsAdjusting field.
-inline
-SFBool *DefaultBoundedRangeModelBase::editSFInternalValueIsAdjusting(void)
-{
-    return &_sfInternalValueIsAdjusting;
-}
-
-
 //! Get the value of the DefaultBoundedRangeModel::_sfInternalMinimum field.
+
 inline
 Int32 &DefaultBoundedRangeModelBase::editInternalMinimum(void)
 {
+    editSField(InternalMinimumFieldMask);
+
     return _sfInternalMinimum.getValue();
 }
 
 //! Get the value of the DefaultBoundedRangeModel::_sfInternalMinimum field.
 inline
-const Int32 &DefaultBoundedRangeModelBase::getInternalMinimum(void) const
+      Int32  DefaultBoundedRangeModelBase::getInternalMinimum(void) const
 {
     return _sfInternalMinimum.getValue();
 }
 
 //! Set the value of the DefaultBoundedRangeModel::_sfInternalMinimum field.
 inline
-void DefaultBoundedRangeModelBase::setInternalMinimum(const Int32 &value)
+void DefaultBoundedRangeModelBase::setInternalMinimum(const Int32 value)
 {
+    editSField(InternalMinimumFieldMask);
+
     _sfInternalMinimum.setValue(value);
 }
-
 //! Get the value of the DefaultBoundedRangeModel::_sfInternalMaximum field.
+
 inline
 Int32 &DefaultBoundedRangeModelBase::editInternalMaximum(void)
 {
+    editSField(InternalMaximumFieldMask);
+
     return _sfInternalMaximum.getValue();
 }
 
 //! Get the value of the DefaultBoundedRangeModel::_sfInternalMaximum field.
 inline
-const Int32 &DefaultBoundedRangeModelBase::getInternalMaximum(void) const
+      Int32  DefaultBoundedRangeModelBase::getInternalMaximum(void) const
 {
     return _sfInternalMaximum.getValue();
 }
 
 //! Set the value of the DefaultBoundedRangeModel::_sfInternalMaximum field.
 inline
-void DefaultBoundedRangeModelBase::setInternalMaximum(const Int32 &value)
+void DefaultBoundedRangeModelBase::setInternalMaximum(const Int32 value)
 {
+    editSField(InternalMaximumFieldMask);
+
     _sfInternalMaximum.setValue(value);
 }
-
 //! Get the value of the DefaultBoundedRangeModel::_sfInternalValue field.
+
 inline
 Int32 &DefaultBoundedRangeModelBase::editInternalValue(void)
 {
+    editSField(InternalValueFieldMask);
+
     return _sfInternalValue.getValue();
 }
 
 //! Get the value of the DefaultBoundedRangeModel::_sfInternalValue field.
 inline
-const Int32 &DefaultBoundedRangeModelBase::getInternalValue(void) const
+      Int32  DefaultBoundedRangeModelBase::getInternalValue(void) const
 {
     return _sfInternalValue.getValue();
 }
 
 //! Set the value of the DefaultBoundedRangeModel::_sfInternalValue field.
 inline
-void DefaultBoundedRangeModelBase::setInternalValue(const Int32 &value)
+void DefaultBoundedRangeModelBase::setInternalValue(const Int32 value)
 {
+    editSField(InternalValueFieldMask);
+
     _sfInternalValue.setValue(value);
 }
-
 //! Get the value of the DefaultBoundedRangeModel::_sfInternalExtent field.
+
 inline
 UInt32 &DefaultBoundedRangeModelBase::editInternalExtent(void)
 {
+    editSField(InternalExtentFieldMask);
+
     return _sfInternalExtent.getValue();
 }
 
 //! Get the value of the DefaultBoundedRangeModel::_sfInternalExtent field.
 inline
-const UInt32 &DefaultBoundedRangeModelBase::getInternalExtent(void) const
+      UInt32  DefaultBoundedRangeModelBase::getInternalExtent(void) const
 {
     return _sfInternalExtent.getValue();
 }
 
 //! Set the value of the DefaultBoundedRangeModel::_sfInternalExtent field.
 inline
-void DefaultBoundedRangeModelBase::setInternalExtent(const UInt32 &value)
+void DefaultBoundedRangeModelBase::setInternalExtent(const UInt32 value)
 {
+    editSField(InternalExtentFieldMask);
+
     _sfInternalExtent.setValue(value);
 }
-
 //! Get the value of the DefaultBoundedRangeModel::_sfInternalValueIsAdjusting field.
+
 inline
 bool &DefaultBoundedRangeModelBase::editInternalValueIsAdjusting(void)
 {
+    editSField(InternalValueIsAdjustingFieldMask);
+
     return _sfInternalValueIsAdjusting.getValue();
 }
 
 //! Get the value of the DefaultBoundedRangeModel::_sfInternalValueIsAdjusting field.
 inline
-const bool &DefaultBoundedRangeModelBase::getInternalValueIsAdjusting(void) const
+      bool  DefaultBoundedRangeModelBase::getInternalValueIsAdjusting(void) const
 {
     return _sfInternalValueIsAdjusting.getValue();
 }
 
 //! Set the value of the DefaultBoundedRangeModel::_sfInternalValueIsAdjusting field.
 inline
-void DefaultBoundedRangeModelBase::setInternalValueIsAdjusting(const bool &value)
+void DefaultBoundedRangeModelBase::setInternalValueIsAdjusting(const bool value)
 {
+    editSField(InternalValueIsAdjustingFieldMask);
+
     _sfInternalValueIsAdjusting.setValue(value);
 }
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void DefaultBoundedRangeModelBase::execSync (      DefaultBoundedRangeModelBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (InternalMinimumFieldMask & whichField))
+        _sfInternalMinimum.syncWith(pFrom->_sfInternalMinimum);
+
+    if(FieldBits::NoField != (InternalMaximumFieldMask & whichField))
+        _sfInternalMaximum.syncWith(pFrom->_sfInternalMaximum);
+
+    if(FieldBits::NoField != (InternalValueFieldMask & whichField))
+        _sfInternalValue.syncWith(pFrom->_sfInternalValue);
+
+    if(FieldBits::NoField != (InternalExtentFieldMask & whichField))
+        _sfInternalExtent.syncWith(pFrom->_sfInternalExtent);
+
+    if(FieldBits::NoField != (InternalValueIsAdjustingFieldMask & whichField))
+        _sfInternalValueIsAdjusting.syncWith(pFrom->_sfInternalValueIsAdjusting);
+}
+#endif
+
+
+inline
+const Char8 *DefaultBoundedRangeModelBase::getClassname(void)
+{
+    return "DefaultBoundedRangeModel";
+}
+OSG_GEN_CONTAINERPTR(DefaultBoundedRangeModel);
 
 OSG_END_NAMESPACE
 

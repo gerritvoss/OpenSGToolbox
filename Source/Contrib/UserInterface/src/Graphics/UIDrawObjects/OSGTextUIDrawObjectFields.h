@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGUIDrawObjectFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class TextUIDrawObject;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! TextUIDrawObjectPtr
+OSG_GEN_CONTAINERPTR(TextUIDrawObject);
 
-typedef FCPtr<UIDrawObjectPtr, TextUIDrawObject> TextUIDrawObjectPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<TextUIDrawObjectPtr> : 
-    public FieldTraitsRecurseMapper<TextUIDrawObjectPtr, true>
+struct FieldTraits<TextUIDrawObject *> :
+    public FieldTraitsFCPtrBase<TextUIDrawObject *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFTextUIDrawObjectPtr"; }
-    static const char *getMName(void) { return "MFTextUIDrawObjectPtr"; }
+    typedef FieldTraits<TextUIDrawObject *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFTextUIDrawObjectPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFTextUIDrawObjectPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<TextUIDrawObjectPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<TextUIDrawObject *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecTextUIDrawObjectPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<TextUIDrawObject *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecTextUIDrawObjectPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TextUIDrawObject *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakTextUIDrawObjectPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TextUIDrawObject *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdTextUIDrawObjectPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TextUIDrawObject *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecTextUIDrawObjectPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TextUIDrawObject *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecTextUIDrawObjectPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TextUIDrawObject *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakTextUIDrawObjectPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TextUIDrawObject *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdTextUIDrawObjectPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TextUIDrawObject *,
+                      RecordedRefCountPolicy  > SFRecTextUIDrawObjectPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TextUIDrawObject *,
+                      UnrecordedRefCountPolicy> SFUnrecTextUIDrawObjectPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TextUIDrawObject *,
+                      WeakRefCountPolicy      > SFWeakTextUIDrawObjectPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TextUIDrawObject *,
+                      NoRefCountPolicy        > SFUncountedTextUIDrawObjectPtr;
 
-typedef SField<TextUIDrawObjectPtr> SFTextUIDrawObjectPtr;
-#endif
 
-#ifndef OSG_COMPILETEXTUIDRAWOBJECTINST
-OSG_DLLEXPORT_DECL1(SField, TextUIDrawObjectPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TextUIDrawObject *,
+                      RecordedRefCountPolicy  > MFRecTextUIDrawObjectPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TextUIDrawObject *,
+                      UnrecordedRefCountPolicy> MFUnrecTextUIDrawObjectPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TextUIDrawObject *,
+                      WeakRefCountPolicy      > MFWeakTextUIDrawObjectPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TextUIDrawObject *,
+                      NoRefCountPolicy        > MFUncountedTextUIDrawObjectPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<TextUIDrawObjectPtr> MFTextUIDrawObjectPtr;
-#endif
 
-#ifndef OSG_COMPILETEXTUIDRAWOBJECTINST
-OSG_DLLEXPORT_DECL1(MField, TextUIDrawObjectPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecTextUIDrawObjectPtr : 
+    public PointerSField<TextUIDrawObject *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecTextUIDrawObjectPtr : 
+    public PointerSField<TextUIDrawObject *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakTextUIDrawObjectPtr :
+    public PointerSField<TextUIDrawObject *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedTextUIDrawObjectPtr :
+    public PointerSField<TextUIDrawObject *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecTextUIDrawObjectPtr :
+    public PointerMField<TextUIDrawObject *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecTextUIDrawObjectPtr :
+    public PointerMField<TextUIDrawObject *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakTextUIDrawObjectPtr :
+    public PointerMField<TextUIDrawObject *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedTextUIDrawObjectPtr :
+    public PointerMField<TextUIDrawObject *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGTEXTUIDRAWOBJECTFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGTEXTUIDRAWOBJECTFIELDS_H_ */

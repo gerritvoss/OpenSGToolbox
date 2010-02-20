@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "Component/Container/OSGContainerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class List;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! ListPtr
+OSG_GEN_CONTAINERPTR(List);
 
-typedef FCPtr<ContainerPtr, List> ListPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<ListPtr> : 
-    public FieldTraitsRecurseMapper<ListPtr, true>
+struct FieldTraits<List *> :
+    public FieldTraitsFCPtrBase<List *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFListPtr"; }
-    static const char *getMName(void) { return "MFListPtr"; }
+    typedef FieldTraits<List *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFListPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFListPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<ListPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<List *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecListPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<List *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecListPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<List *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakListPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<List *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdListPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<List *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecListPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<List *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecListPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<List *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakListPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<List *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdListPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<List *,
+                      RecordedRefCountPolicy  > SFRecListPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<List *,
+                      UnrecordedRefCountPolicy> SFUnrecListPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<List *,
+                      WeakRefCountPolicy      > SFWeakListPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<List *,
+                      NoRefCountPolicy        > SFUncountedListPtr;
 
-typedef SField<ListPtr> SFListPtr;
-#endif
 
-#ifndef OSG_COMPILELISTINST
-OSG_DLLEXPORT_DECL1(SField, ListPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<List *,
+                      RecordedRefCountPolicy  > MFRecListPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<List *,
+                      UnrecordedRefCountPolicy> MFUnrecListPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<List *,
+                      WeakRefCountPolicy      > MFWeakListPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<List *,
+                      NoRefCountPolicy        > MFUncountedListPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<ListPtr> MFListPtr;
-#endif
 
-#ifndef OSG_COMPILELISTINST
-OSG_DLLEXPORT_DECL1(MField, ListPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecListPtr : 
+    public PointerSField<List *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecListPtr : 
+    public PointerSField<List *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakListPtr :
+    public PointerSField<List *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedListPtr :
+    public PointerSField<List *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecListPtr :
+    public PointerMField<List *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecListPtr :
+    public PointerMField<List *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakListPtr :
+    public PointerMField<List *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedListPtr :
+    public PointerMField<List *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGLISTFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGLISTFIELDS_H_ */

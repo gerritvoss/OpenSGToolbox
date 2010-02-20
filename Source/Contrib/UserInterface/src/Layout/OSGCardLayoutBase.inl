@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,76 +55,73 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &CardLayoutBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 CardLayoutBase::getClassTypeId(void) 
+OSG::UInt32 CardLayoutBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-CardLayoutPtr CardLayoutBase::create(void) 
-{
-    CardLayoutPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = CardLayoutPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-CardLayoutPtr CardLayoutBase::createEmpty(void) 
-{ 
-    CardLayoutPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 CardLayoutBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the CardLayout::_sfCard field.
-inline
-SFUInt32 *CardLayoutBase::getSFCard(void)
-{
-    return &_sfCard;
-}
-
-
 //! Get the value of the CardLayout::_sfCard field.
+
 inline
-UInt32 &CardLayoutBase::getCard(void)
+UInt32 &CardLayoutBase::editCard(void)
 {
+    editSField(CardFieldMask);
+
     return _sfCard.getValue();
 }
 
 //! Get the value of the CardLayout::_sfCard field.
 inline
-const UInt32 &CardLayoutBase::getCard(void) const
+      UInt32  CardLayoutBase::getCard(void) const
 {
     return _sfCard.getValue();
 }
 
 //! Set the value of the CardLayout::_sfCard field.
 inline
-void CardLayoutBase::setCard(const UInt32 &value)
+void CardLayoutBase::setCard(const UInt32 value)
 {
+    editSField(CardFieldMask);
+
     _sfCard.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void CardLayoutBase::execSync (      CardLayoutBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGCARDLAYOUTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (CardFieldMask & whichField))
+        _sfCard.syncWith(pFrom->_sfCard);
+}
+#endif
+
+
+inline
+const Char8 *CardLayoutBase::getClassname(void)
+{
+    return "CardLayout";
+}
+OSG_GEN_CONTAINERPTR(CardLayout);
+
+OSG_END_NAMESPACE
 

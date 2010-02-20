@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,184 +50,287 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEMENUITEMINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGKeyEvent.h"                  // AcceleratorKey default header
+#include "OSGKeyEvent.h"                  // MnemonicKey default header
+
+#include "OSGMenu.h"                    // ParentMenu Class
 
 #include "OSGMenuItemBase.h"
 #include "OSGMenuItem.h"
 
-#include <OpenSG/Input/OSGKeyEvent.h>     // AcceleratorKey default header
-#include <OpenSG/Input/OSGKeyEvent.h>     // MnemonicKey default header
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  MenuItemBase::ParentMenuFieldMask = 
-    (TypeTraits<BitVector>::One << MenuItemBase::ParentMenuFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  MenuItemBase::AcceleratorModifiersFieldMask = 
-    (TypeTraits<BitVector>::One << MenuItemBase::AcceleratorModifiersFieldId);
+/*! \class OSG::MenuItem
+    A UI MenuItem.
+ */
 
-const OSG::BitVector  MenuItemBase::AcceleratorKeyFieldMask = 
-    (TypeTraits<BitVector>::One << MenuItemBase::AcceleratorKeyFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  MenuItemBase::MnemonicKeyFieldMask = 
-    (TypeTraits<BitVector>::One << MenuItemBase::MnemonicKeyFieldId);
-
-const OSG::BitVector MenuItemBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var MenuPtr         MenuItemBase::_sfParentMenu
+/*! \var Menu *          MenuItemBase::_sfParentMenu
     
 */
+
 /*! \var UInt32          MenuItemBase::_sfAcceleratorModifiers
     
 */
+
 /*! \var UInt32          MenuItemBase::_sfAcceleratorKey
     
 */
+
 /*! \var UInt32          MenuItemBase::_sfMnemonicKey
     
 */
 
-//! MenuItem description
 
-FieldDescription *MenuItemBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<MenuItem *>::_type("MenuItemPtr", "ToggleButtonPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(MenuItem *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           MenuItem *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           MenuItem *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void MenuItemBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFMenuPtr::getClassType(), 
-                     "ParentMenu", 
-                     ParentMenuFieldId, ParentMenuFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&MenuItemBase::editSFParentMenu)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "AcceleratorModifiers", 
-                     AcceleratorModifiersFieldId, AcceleratorModifiersFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&MenuItemBase::editSFAcceleratorModifiers)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "AcceleratorKey", 
-                     AcceleratorKeyFieldId, AcceleratorKeyFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&MenuItemBase::editSFAcceleratorKey)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "MnemonicKey", 
-                     MnemonicKeyFieldId, MnemonicKeyFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&MenuItemBase::editSFMnemonicKey))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType MenuItemBase::_type(
-    "MenuItem",
-    "ToggleButton",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&MenuItemBase::createEmpty),
+    pDesc = new SFUnrecMenuPtr::Description(
+        SFUnrecMenuPtr::getClassType(),
+        "ParentMenu",
+        "",
+        ParentMenuFieldId, ParentMenuFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MenuItem::editHandleParentMenu),
+        static_cast<FieldGetMethodSig >(&MenuItem::getHandleParentMenu));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "AcceleratorModifiers",
+        "",
+        AcceleratorModifiersFieldId, AcceleratorModifiersFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MenuItem::editHandleAcceleratorModifiers),
+        static_cast<FieldGetMethodSig >(&MenuItem::getHandleAcceleratorModifiers));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "AcceleratorKey",
+        "",
+        AcceleratorKeyFieldId, AcceleratorKeyFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MenuItem::editHandleAcceleratorKey),
+        static_cast<FieldGetMethodSig >(&MenuItem::getHandleAcceleratorKey));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "MnemonicKey",
+        "",
+        MnemonicKeyFieldId, MnemonicKeyFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MenuItem::editHandleMnemonicKey),
+        static_cast<FieldGetMethodSig >(&MenuItem::getHandleMnemonicKey));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+MenuItemBase::TypeObject MenuItemBase::_type(
+    MenuItemBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&MenuItemBase::createEmptyLocal),
     MenuItem::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(MenuItemBase, MenuItemPtr)
+    MenuItem::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&MenuItem::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"MenuItem\"\n"
+    "\tparent=\"ToggleButton\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "\t>\n"
+    "\tA UI MenuItem.\n"
+    "\t<Field\n"
+    "\t\tname=\"ParentMenu\"\n"
+    "\t\ttype=\"Menu\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"AcceleratorModifiers\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"AcceleratorKey\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"KeyEvent::KEY_NONE\"\n"
+    "\t\tdefaultHeader=\"OSGKeyEvent.h\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MnemonicKey\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"KeyEvent::KEY_NONE\"\n"
+    "\t\tdefaultHeader=\"OSGKeyEvent.h\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI MenuItem.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &MenuItemBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &MenuItemBase::getType(void) const 
+FieldContainerType &MenuItemBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr MenuItemBase::shallowCopy(void) const 
-{ 
-    MenuItemPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const MenuItem *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 MenuItemBase::getContainerSize(void) const 
-{ 
-    return sizeof(MenuItem); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void MenuItemBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &MenuItemBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<MenuItemBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void MenuItemBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 MenuItemBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((MenuItemBase *) &other, whichField, sInfo);
+    return sizeof(MenuItem);
 }
-void MenuItemBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the MenuItem::_sfParentMenu field.
+const SFUnrecMenuPtr *MenuItemBase::getSFParentMenu(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfParentMenu;
 }
 
-void MenuItemBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecMenuPtr      *MenuItemBase::editSFParentMenu     (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(ParentMenuFieldMask);
 
+    return &_sfParentMenu;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-MenuItemBase::MenuItemBase(void) :
-    _sfParentMenu             (MenuPtr(NullFC)), 
-    _sfAcceleratorModifiers   (UInt32(0)), 
-    _sfAcceleratorKey         (UInt32(KeyEvent::KEY_NONE)), 
-    _sfMnemonicKey            (UInt32(KeyEvent::KEY_NONE)), 
-    Inherited() 
+SFUInt32 *MenuItemBase::editSFAcceleratorModifiers(void)
 {
+    editSField(AcceleratorModifiersFieldMask);
+
+    return &_sfAcceleratorModifiers;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-MenuItemBase::MenuItemBase(const MenuItemBase &source) :
-    _sfParentMenu             (source._sfParentMenu             ), 
-    _sfAcceleratorModifiers   (source._sfAcceleratorModifiers   ), 
-    _sfAcceleratorKey         (source._sfAcceleratorKey         ), 
-    _sfMnemonicKey            (source._sfMnemonicKey            ), 
-    Inherited                 (source)
+const SFUInt32 *MenuItemBase::getSFAcceleratorModifiers(void) const
 {
+    return &_sfAcceleratorModifiers;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-MenuItemBase::~MenuItemBase(void)
+SFUInt32 *MenuItemBase::editSFAcceleratorKey(void)
 {
+    editSField(AcceleratorKeyFieldMask);
+
+    return &_sfAcceleratorKey;
 }
+
+const SFUInt32 *MenuItemBase::getSFAcceleratorKey(void) const
+{
+    return &_sfAcceleratorKey;
+}
+
+
+SFUInt32 *MenuItemBase::editSFMnemonicKey(void)
+{
+    editSField(MnemonicKeyFieldMask);
+
+    return &_sfMnemonicKey;
+}
+
+const SFUInt32 *MenuItemBase::getSFMnemonicKey(void) const
+{
+    return &_sfMnemonicKey;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 MenuItemBase::getBinSize(const BitVector &whichField)
+UInt32 MenuItemBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -235,28 +338,24 @@ UInt32 MenuItemBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfParentMenu.getBinSize();
     }
-
     if(FieldBits::NoField != (AcceleratorModifiersFieldMask & whichField))
     {
         returnValue += _sfAcceleratorModifiers.getBinSize();
     }
-
     if(FieldBits::NoField != (AcceleratorKeyFieldMask & whichField))
     {
         returnValue += _sfAcceleratorKey.getBinSize();
     }
-
     if(FieldBits::NoField != (MnemonicKeyFieldMask & whichField))
     {
         returnValue += _sfMnemonicKey.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void MenuItemBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void MenuItemBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -264,27 +363,22 @@ void MenuItemBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfParentMenu.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (AcceleratorModifiersFieldMask & whichField))
     {
         _sfAcceleratorModifiers.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (AcceleratorKeyFieldMask & whichField))
     {
         _sfAcceleratorKey.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MnemonicKeyFieldMask & whichField))
     {
         _sfMnemonicKey.copyToBin(pMem);
     }
-
-
 }
 
-void MenuItemBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void MenuItemBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -292,95 +386,322 @@ void MenuItemBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfParentMenu.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (AcceleratorModifiersFieldMask & whichField))
     {
         _sfAcceleratorModifiers.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (AcceleratorKeyFieldMask & whichField))
     {
         _sfAcceleratorKey.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MnemonicKeyFieldMask & whichField))
     {
         _sfMnemonicKey.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void MenuItemBase::executeSyncImpl(      MenuItemBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+MenuItemTransitPtr MenuItemBase::createLocal(BitVector bFlags)
 {
+    MenuItemTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (ParentMenuFieldMask & whichField))
-        _sfParentMenu.syncWith(pOther->_sfParentMenu);
+        fc = dynamic_pointer_cast<MenuItem>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (AcceleratorModifiersFieldMask & whichField))
-        _sfAcceleratorModifiers.syncWith(pOther->_sfAcceleratorModifiers);
-
-    if(FieldBits::NoField != (AcceleratorKeyFieldMask & whichField))
-        _sfAcceleratorKey.syncWith(pOther->_sfAcceleratorKey);
-
-    if(FieldBits::NoField != (MnemonicKeyFieldMask & whichField))
-        _sfMnemonicKey.syncWith(pOther->_sfMnemonicKey);
-
-
-}
-#else
-void MenuItemBase::executeSyncImpl(      MenuItemBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ParentMenuFieldMask & whichField))
-        _sfParentMenu.syncWith(pOther->_sfParentMenu);
-
-    if(FieldBits::NoField != (AcceleratorModifiersFieldMask & whichField))
-        _sfAcceleratorModifiers.syncWith(pOther->_sfAcceleratorModifiers);
-
-    if(FieldBits::NoField != (AcceleratorKeyFieldMask & whichField))
-        _sfAcceleratorKey.syncWith(pOther->_sfAcceleratorKey);
-
-    if(FieldBits::NoField != (MnemonicKeyFieldMask & whichField))
-        _sfMnemonicKey.syncWith(pOther->_sfMnemonicKey);
-
-
-
+    return fc;
 }
 
-void MenuItemBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+MenuItemTransitPtr MenuItemBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    MenuItemTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<MenuItem>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+MenuItemTransitPtr MenuItemBase::create(void)
+{
+    MenuItemTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<MenuItem>(tmpPtr);
+    }
+
+    return fc;
+}
+
+MenuItem *MenuItemBase::createEmptyLocal(BitVector bFlags)
+{
+    MenuItem *returnValue;
+
+    newPtr<MenuItem>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+MenuItem *MenuItemBase::createEmpty(void)
+{
+    MenuItem *returnValue;
+
+    newPtr<MenuItem>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr MenuItemBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    MenuItem *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const MenuItem *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr MenuItemBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    MenuItem *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const MenuItem *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr MenuItemBase::shallowCopy(void) const
+{
+    MenuItem *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const MenuItem *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+MenuItemBase::MenuItemBase(void) :
+    Inherited(),
+    _sfParentMenu             (NULL),
+    _sfAcceleratorModifiers   (UInt32(0)),
+    _sfAcceleratorKey         (UInt32(KeyEvent::KEY_NONE)),
+    _sfMnemonicKey            (UInt32(KeyEvent::KEY_NONE))
+{
+}
+
+MenuItemBase::MenuItemBase(const MenuItemBase &source) :
+    Inherited(source),
+    _sfParentMenu             (NULL),
+    _sfAcceleratorModifiers   (source._sfAcceleratorModifiers   ),
+    _sfAcceleratorKey         (source._sfAcceleratorKey         ),
+    _sfMnemonicKey            (source._sfMnemonicKey            )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+MenuItemBase::~MenuItemBase(void)
+{
+}
+
+void MenuItemBase::onCreate(const MenuItem *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        MenuItem *pThis = static_cast<MenuItem *>(this);
+
+        pThis->setParentMenu(source->getParentMenu());
+    }
+}
+
+GetFieldHandlePtr MenuItemBase::getHandleParentMenu      (void) const
+{
+    SFUnrecMenuPtr::GetHandlePtr returnValue(
+        new  SFUnrecMenuPtr::GetHandle(
+             &_sfParentMenu,
+             this->getType().getFieldDesc(ParentMenuFieldId),
+             const_cast<MenuItemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MenuItemBase::editHandleParentMenu     (void)
+{
+    SFUnrecMenuPtr::EditHandlePtr returnValue(
+        new  SFUnrecMenuPtr::EditHandle(
+             &_sfParentMenu,
+             this->getType().getFieldDesc(ParentMenuFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&MenuItem::setParentMenu,
+                    static_cast<MenuItem *>(this), _1));
+
+    editSField(ParentMenuFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MenuItemBase::getHandleAcceleratorModifiers (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfAcceleratorModifiers,
+             this->getType().getFieldDesc(AcceleratorModifiersFieldId),
+             const_cast<MenuItemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MenuItemBase::editHandleAcceleratorModifiers(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfAcceleratorModifiers,
+             this->getType().getFieldDesc(AcceleratorModifiersFieldId),
+             this));
+
+
+    editSField(AcceleratorModifiersFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MenuItemBase::getHandleAcceleratorKey  (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfAcceleratorKey,
+             this->getType().getFieldDesc(AcceleratorKeyFieldId),
+             const_cast<MenuItemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MenuItemBase::editHandleAcceleratorKey (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfAcceleratorKey,
+             this->getType().getFieldDesc(AcceleratorKeyFieldId),
+             this));
+
+
+    editSField(AcceleratorKeyFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MenuItemBase::getHandleMnemonicKey     (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfMnemonicKey,
+             this->getType().getFieldDesc(MnemonicKeyFieldId),
+             const_cast<MenuItemBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MenuItemBase::editHandleMnemonicKey    (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfMnemonicKey,
+             this->getType().getFieldDesc(MnemonicKeyFieldId),
+             this));
+
+
+    editSField(MnemonicKeyFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void MenuItemBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    MenuItem *pThis = static_cast<MenuItem *>(this);
+
+    pThis->execSync(static_cast<MenuItem *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *MenuItemBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    MenuItem *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const MenuItem *>(pRefAspect),
+                  dynamic_cast<const MenuItem *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<MenuItemPtr>::_type("MenuItemPtr", "ToggleButtonPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(MenuItemPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(MenuItemPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void MenuItemBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<MenuItem *>(this)->setParentMenu(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-

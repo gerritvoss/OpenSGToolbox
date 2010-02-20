@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,21 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGToolTip.h"
-#include "Util/OSGUIDrawUtils.h"
+#include "OSGUIDrawUtils.h"
+#include "OSGBorder.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::ToolTip
-A UI Tooltip. 	
-*/
+// Documentation for this class is emitted in the
+// OSGToolTipBase.cpp file.
+// To modify it, please change the .fcd file (OSGToolTip.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -68,8 +64,13 @@ A UI Tooltip.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ToolTip::initMethod (void)
+void ToolTip::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -77,30 +78,36 @@ void ToolTip::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ToolTip::drawInternal(const GraphicsPtr TheGraphics, Real32 Opacity) const
+void ToolTip::drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opacity) const
 {
-    if(getText() != "" && getFont() != NullFC)
+    if(getText() != "" && getFont() != NULL)
     {
         Pnt2f TopLeft, BottomRight;
         getInsideBorderBounds(TopLeft, BottomRight);
 
         Pnt2f TextTopLeft, TextBottomRight;
         getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
-        TheGraphics->drawText(
-           calculateAlignment(TopLeft, BottomRight-TopLeft, (TextBottomRight-TextTopLeft),getAlignment().y(), getAlignment().x())
-   , getText(), getFont(), getTextColor(), getOpacity()*Opacity);
+        TheGraphics->drawText(calculateAlignment(TopLeft, 
+                                                 BottomRight-TopLeft,
+                                                 (TextBottomRight-TextTopLeft),
+                                                 getAlignment().y(),
+                                                 getAlignment().x()),
+                              getText(),
+                              getFont(),
+                              getTextColor(),
+                              getOpacity()*Opacity);
     }
 }
 
 Vec2f ToolTip::calculatePreferredSize(void) const
 {
-    if(getFont() == NullFC)
+    if(getFont() == NULL)
     {
         return getPreferredSize();
     }
 
     Real32 Top(0),Bottom(0),Left(0),Right(0);
-    if(getDrawnBorder() != NullFC)
+    if(getDrawnBorder() != NULL)
     {
         getDrawnBorder()->getInsets(Left, Right, Top, Bottom);
     }
@@ -132,49 +139,23 @@ ToolTip::~ToolTip(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void ToolTip::changed(BitVector whichField, UInt32 origin)
+void ToolTip::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 
     if(whichField & TextFieldMask)
     {
-        beginEditCP(ToolTipPtr(this), PreferredSizeFieldMask | SizeFieldMask);
-            setPreferredSize(calculatePreferredSize());
-            setSize(getPreferredSize());
-        endEditCP(ToolTipPtr(this), PreferredSizeFieldMask | SizeFieldMask);
+        setPreferredSize(calculatePreferredSize());
+        setSize(getPreferredSize());
     }
 }
 
-void ToolTip::dump(      UInt32    , 
+void ToolTip::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump ToolTip NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGTOOLTIPBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTOOLTIPBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTOOLTIPFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

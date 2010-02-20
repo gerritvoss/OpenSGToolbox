@@ -3,18 +3,21 @@
 <FieldContainer
 	name="Graphics"
 	parent="AttachmentContainer"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="abstract"
-	systemcomponent="false"
-	parentsystemcomponent="true"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI Graphics Interface.
 	<Field
 		name="Opacity"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1.0"
@@ -24,6 +27,7 @@ A UI Graphics Interface.
 	<Field
 		name="EnablePointAntiAliasing"
 		type="bool"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="true"
@@ -33,6 +37,7 @@ A UI Graphics Interface.
 	<Field
 		name="EnableLineAntiAliasing"
 		type="bool"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="true"
@@ -42,6 +47,7 @@ A UI Graphics Interface.
 	<Field
 		name="EnablePolygonAntiAliasing"
 		type="bool"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="false"

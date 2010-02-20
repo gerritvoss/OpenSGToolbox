@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,64 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/Toolbox/OSGEventFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class AdjustmentEvent;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! AdjustmentEventPtr
+OSG_GEN_CONTAINERPTR(AdjustmentEvent);
 
-typedef FCPtr<EventPtr, AdjustmentEvent> AdjustmentEventPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<AdjustmentEventPtr> : 
-    public FieldTraitsRecurseMapper<AdjustmentEventPtr, true>
+struct FieldTraits<AdjustmentEvent *> :
+    public FieldTraitsFCPtrBase<AdjustmentEvent *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFAdjustmentEventPtr"; }
+    typedef FieldTraits<AdjustmentEvent *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFAdjustmentEventPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFAdjustmentEventPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<AdjustmentEventPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<AdjustmentEvent *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecAdjustmentEventPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<AdjustmentEvent *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecAdjustmentEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AdjustmentEvent *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakAdjustmentEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AdjustmentEvent *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdAdjustmentEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AdjustmentEvent *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecAdjustmentEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AdjustmentEvent *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecAdjustmentEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AdjustmentEvent *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakAdjustmentEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AdjustmentEvent *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdAdjustmentEventPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<AdjustmentEvent *,
+                      RecordedRefCountPolicy  > SFRecAdjustmentEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<AdjustmentEvent *,
+                      UnrecordedRefCountPolicy> SFUnrecAdjustmentEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<AdjustmentEvent *,
+                      WeakRefCountPolicy      > SFWeakAdjustmentEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<AdjustmentEvent *,
+                      NoRefCountPolicy        > SFUncountedAdjustmentEventPtr;
 
-typedef SField<AdjustmentEventPtr> SFAdjustmentEventPtr;
-#endif
 
-#ifndef OSG_COMPILEADJUSTMENTEVENTINST
-OSG_DLLEXPORT_DECL1(SField, AdjustmentEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<AdjustmentEvent *,
+                      RecordedRefCountPolicy  > MFRecAdjustmentEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<AdjustmentEvent *,
+                      UnrecordedRefCountPolicy> MFUnrecAdjustmentEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<AdjustmentEvent *,
+                      WeakRefCountPolicy      > MFWeakAdjustmentEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<AdjustmentEvent *,
+                      NoRefCountPolicy        > MFUncountedAdjustmentEventPtr;
+
+
+
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecAdjustmentEventPtr : 
+    public PointerSField<AdjustmentEvent *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecAdjustmentEventPtr : 
+    public PointerSField<AdjustmentEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakAdjustmentEventPtr :
+    public PointerSField<AdjustmentEvent *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedAdjustmentEventPtr :
+    public PointerSField<AdjustmentEvent *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecAdjustmentEventPtr :
+    public PointerMField<AdjustmentEvent *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecAdjustmentEventPtr :
+    public PointerMField<AdjustmentEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakAdjustmentEventPtr :
+    public PointerMField<AdjustmentEvent *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedAdjustmentEventPtr :
+    public PointerMField<AdjustmentEvent *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

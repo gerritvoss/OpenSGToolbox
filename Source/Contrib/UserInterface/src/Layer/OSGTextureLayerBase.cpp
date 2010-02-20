@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,221 +50,401 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILETEXTURELAYERINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGTextureObjChunk.h"         // Texture Class
+#include "OSGTextureTransformChunk.h"   // Transformation Class
 
 #include "OSGTextureLayerBase.h"
 #include "OSGTextureLayer.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  TextureLayerBase::TextureFieldMask = 
-    (TypeTraits<BitVector>::One << TextureLayerBase::TextureFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  TextureLayerBase::TransformationFieldMask = 
-    (TypeTraits<BitVector>::One << TextureLayerBase::TransformationFieldId);
+/*! \class OSG::TextureLayer
+    UI Texture Background.
+ */
 
-const OSG::BitVector  TextureLayerBase::ColorFieldMask = 
-    (TypeTraits<BitVector>::One << TextureLayerBase::ColorFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  TextureLayerBase::ScaleFieldMask = 
-    (TypeTraits<BitVector>::One << TextureLayerBase::ScaleFieldId);
-
-const OSG::BitVector  TextureLayerBase::ScaleAbsoluteSizeFieldMask = 
-    (TypeTraits<BitVector>::One << TextureLayerBase::ScaleAbsoluteSizeFieldId);
-
-const OSG::BitVector  TextureLayerBase::VerticalAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << TextureLayerBase::VerticalAlignmentFieldId);
-
-const OSG::BitVector  TextureLayerBase::HorizontalAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << TextureLayerBase::HorizontalAlignmentFieldId);
-
-const OSG::BitVector TextureLayerBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var TextureChunkPtr TextureLayerBase::_sfTexture
+/*! \var TextureObjChunk * TextureLayerBase::_sfTexture
     
 */
-/*! \var TextureTransformChunkPtr TextureLayerBase::_sfTransformation
+
+/*! \var TextureTransformChunk * TextureLayerBase::_sfTransformation
     
 */
+
 /*! \var Color4f         TextureLayerBase::_sfColor
     
 */
+
 /*! \var UInt32          TextureLayerBase::_sfScale
     
 */
+
 /*! \var Vec2s           TextureLayerBase::_sfScaleAbsoluteSize
     
 */
+
 /*! \var Real32          TextureLayerBase::_sfVerticalAlignment
     
 */
+
 /*! \var Real32          TextureLayerBase::_sfHorizontalAlignment
     
 */
 
-//! TextureLayer description
 
-FieldDescription *TextureLayerBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<TextureLayer *>::_type("TextureLayerPtr", "LayerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(TextureLayer *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           TextureLayer *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           TextureLayer *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void TextureLayerBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFTextureChunkPtr::getClassType(), 
-                     "Texture", 
-                     TextureFieldId, TextureFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TextureLayerBase::editSFTexture)),
-    new FieldDescription(SFTextureTransformChunkPtr::getClassType(), 
-                     "Transformation", 
-                     TransformationFieldId, TransformationFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TextureLayerBase::editSFTransformation)),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "Color", 
-                     ColorFieldId, ColorFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TextureLayerBase::editSFColor)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "Scale", 
-                     ScaleFieldId, ScaleFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TextureLayerBase::editSFScale)),
-    new FieldDescription(SFVec2s::getClassType(), 
-                     "ScaleAbsoluteSize", 
-                     ScaleAbsoluteSizeFieldId, ScaleAbsoluteSizeFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TextureLayerBase::editSFScaleAbsoluteSize)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "VerticalAlignment", 
-                     VerticalAlignmentFieldId, VerticalAlignmentFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TextureLayerBase::editSFVerticalAlignment)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "HorizontalAlignment", 
-                     HorizontalAlignmentFieldId, HorizontalAlignmentFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TextureLayerBase::editSFHorizontalAlignment))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType TextureLayerBase::_type(
-    "TextureLayer",
-    "Layer",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&TextureLayerBase::createEmpty),
+    pDesc = new SFUnrecTextureObjChunkPtr::Description(
+        SFUnrecTextureObjChunkPtr::getClassType(),
+        "Texture",
+        "",
+        TextureFieldId, TextureFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TextureLayer::editHandleTexture),
+        static_cast<FieldGetMethodSig >(&TextureLayer::getHandleTexture));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecTextureTransformChunkPtr::Description(
+        SFUnrecTextureTransformChunkPtr::getClassType(),
+        "Transformation",
+        "",
+        TransformationFieldId, TransformationFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TextureLayer::editHandleTransformation),
+        static_cast<FieldGetMethodSig >(&TextureLayer::getHandleTransformation));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "Color",
+        "",
+        ColorFieldId, ColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TextureLayer::editHandleColor),
+        static_cast<FieldGetMethodSig >(&TextureLayer::getHandleColor));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "Scale",
+        "",
+        ScaleFieldId, ScaleFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TextureLayer::editHandleScale),
+        static_cast<FieldGetMethodSig >(&TextureLayer::getHandleScale));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFVec2s::Description(
+        SFVec2s::getClassType(),
+        "ScaleAbsoluteSize",
+        "",
+        ScaleAbsoluteSizeFieldId, ScaleAbsoluteSizeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TextureLayer::editHandleScaleAbsoluteSize),
+        static_cast<FieldGetMethodSig >(&TextureLayer::getHandleScaleAbsoluteSize));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "VerticalAlignment",
+        "",
+        VerticalAlignmentFieldId, VerticalAlignmentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TextureLayer::editHandleVerticalAlignment),
+        static_cast<FieldGetMethodSig >(&TextureLayer::getHandleVerticalAlignment));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "HorizontalAlignment",
+        "",
+        HorizontalAlignmentFieldId, HorizontalAlignmentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TextureLayer::editHandleHorizontalAlignment),
+        static_cast<FieldGetMethodSig >(&TextureLayer::getHandleHorizontalAlignment));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+TextureLayerBase::TypeObject TextureLayerBase::_type(
+    TextureLayerBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&TextureLayerBase::createEmptyLocal),
     TextureLayer::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(TextureLayerBase, TextureLayerPtr)
+    TextureLayer::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&TextureLayer::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"TextureLayer\"\n"
+    "\tparent=\"Layer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "UI Texture Background.\n"
+    "\t<Field\n"
+    "\t\tname=\"Texture\"\n"
+    "\t\ttype=\"TextureObjChunk\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Transformation\"\n"
+    "\t\ttype=\"TextureTransformChunk\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Color\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0f,1.0f,1.0f,1.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Scale\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"TextureLayer::SCALE_STRETCH\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ScaleAbsoluteSize\"\n"
+    "\t\ttype=\"Vec2s\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1,1\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"VerticalAlignment\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.5\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"HorizontalAlignment\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.5\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "UI Texture Background.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &TextureLayerBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &TextureLayerBase::getType(void) const 
+FieldContainerType &TextureLayerBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr TextureLayerBase::shallowCopy(void) const 
-{ 
-    TextureLayerPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const TextureLayer *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 TextureLayerBase::getContainerSize(void) const 
-{ 
-    return sizeof(TextureLayer); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TextureLayerBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &TextureLayerBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<TextureLayerBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void TextureLayerBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 TextureLayerBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((TextureLayerBase *) &other, whichField, sInfo);
+    return sizeof(TextureLayer);
 }
-void TextureLayerBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the TextureLayer::_sfTexture field.
+const SFUnrecTextureObjChunkPtr *TextureLayerBase::getSFTexture(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfTexture;
 }
 
-void TextureLayerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecTextureObjChunkPtr *TextureLayerBase::editSFTexture        (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(TextureFieldMask);
 
+    return &_sfTexture;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-TextureLayerBase::TextureLayerBase(void) :
-    _sfTexture                (TextureChunkPtr(NullFC)), 
-    _sfTransformation         (TextureTransformChunkPtr(NullFC)), 
-    _sfColor                  (Color4f(1.0f,1.0f,1.0f,1.0f)), 
-    _sfScale                  (UInt32(TextureLayer::SCALE_STRETCH)), 
-    _sfScaleAbsoluteSize      (Vec2s(1,1)), 
-    _sfVerticalAlignment      (Real32(0.5)), 
-    _sfHorizontalAlignment    (Real32(0.5)), 
-    Inherited() 
+//! Get the TextureLayer::_sfTransformation field.
+const SFUnrecTextureTransformChunkPtr *TextureLayerBase::getSFTransformation(void) const
 {
+    return &_sfTransformation;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-TextureLayerBase::TextureLayerBase(const TextureLayerBase &source) :
-    _sfTexture                (source._sfTexture                ), 
-    _sfTransformation         (source._sfTransformation         ), 
-    _sfColor                  (source._sfColor                  ), 
-    _sfScale                  (source._sfScale                  ), 
-    _sfScaleAbsoluteSize      (source._sfScaleAbsoluteSize      ), 
-    _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
-    _sfHorizontalAlignment    (source._sfHorizontalAlignment    ), 
-    Inherited                 (source)
+SFUnrecTextureTransformChunkPtr *TextureLayerBase::editSFTransformation (void)
 {
+    editSField(TransformationFieldMask);
+
+    return &_sfTransformation;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-TextureLayerBase::~TextureLayerBase(void)
+SFColor4f *TextureLayerBase::editSFColor(void)
 {
+    editSField(ColorFieldMask);
+
+    return &_sfColor;
 }
+
+const SFColor4f *TextureLayerBase::getSFColor(void) const
+{
+    return &_sfColor;
+}
+
+
+SFUInt32 *TextureLayerBase::editSFScale(void)
+{
+    editSField(ScaleFieldMask);
+
+    return &_sfScale;
+}
+
+const SFUInt32 *TextureLayerBase::getSFScale(void) const
+{
+    return &_sfScale;
+}
+
+
+SFVec2s *TextureLayerBase::editSFScaleAbsoluteSize(void)
+{
+    editSField(ScaleAbsoluteSizeFieldMask);
+
+    return &_sfScaleAbsoluteSize;
+}
+
+const SFVec2s *TextureLayerBase::getSFScaleAbsoluteSize(void) const
+{
+    return &_sfScaleAbsoluteSize;
+}
+
+
+SFReal32 *TextureLayerBase::editSFVerticalAlignment(void)
+{
+    editSField(VerticalAlignmentFieldMask);
+
+    return &_sfVerticalAlignment;
+}
+
+const SFReal32 *TextureLayerBase::getSFVerticalAlignment(void) const
+{
+    return &_sfVerticalAlignment;
+}
+
+
+SFReal32 *TextureLayerBase::editSFHorizontalAlignment(void)
+{
+    editSField(HorizontalAlignmentFieldMask);
+
+    return &_sfHorizontalAlignment;
+}
+
+const SFReal32 *TextureLayerBase::getSFHorizontalAlignment(void) const
+{
+    return &_sfHorizontalAlignment;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 TextureLayerBase::getBinSize(const BitVector &whichField)
+UInt32 TextureLayerBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -272,43 +452,36 @@ UInt32 TextureLayerBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfTexture.getBinSize();
     }
-
     if(FieldBits::NoField != (TransformationFieldMask & whichField))
     {
         returnValue += _sfTransformation.getBinSize();
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         returnValue += _sfColor.getBinSize();
     }
-
     if(FieldBits::NoField != (ScaleFieldMask & whichField))
     {
         returnValue += _sfScale.getBinSize();
     }
-
     if(FieldBits::NoField != (ScaleAbsoluteSizeFieldMask & whichField))
     {
         returnValue += _sfScaleAbsoluteSize.getBinSize();
     }
-
     if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
     {
         returnValue += _sfVerticalAlignment.getBinSize();
     }
-
     if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
     {
         returnValue += _sfHorizontalAlignment.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void TextureLayerBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void TextureLayerBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -316,42 +489,34 @@ void TextureLayerBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfTexture.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TransformationFieldMask & whichField))
     {
         _sfTransformation.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         _sfColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ScaleFieldMask & whichField))
     {
         _sfScale.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ScaleAbsoluteSizeFieldMask & whichField))
     {
         _sfScaleAbsoluteSize.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
     {
         _sfVerticalAlignment.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
     {
         _sfHorizontalAlignment.copyToBin(pMem);
     }
-
-
 }
 
-void TextureLayerBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void TextureLayerBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -359,128 +524,422 @@ void TextureLayerBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfTexture.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TransformationFieldMask & whichField))
     {
         _sfTransformation.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         _sfColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ScaleFieldMask & whichField))
     {
         _sfScale.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ScaleAbsoluteSizeFieldMask & whichField))
     {
         _sfScaleAbsoluteSize.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
     {
         _sfVerticalAlignment.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
     {
         _sfHorizontalAlignment.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TextureLayerBase::executeSyncImpl(      TextureLayerBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+TextureLayerTransitPtr TextureLayerBase::createLocal(BitVector bFlags)
 {
+    TextureLayerTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (TextureFieldMask & whichField))
-        _sfTexture.syncWith(pOther->_sfTexture);
+        fc = dynamic_pointer_cast<TextureLayer>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (TransformationFieldMask & whichField))
-        _sfTransformation.syncWith(pOther->_sfTransformation);
-
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
-
-    if(FieldBits::NoField != (ScaleFieldMask & whichField))
-        _sfScale.syncWith(pOther->_sfScale);
-
-    if(FieldBits::NoField != (ScaleAbsoluteSizeFieldMask & whichField))
-        _sfScaleAbsoluteSize.syncWith(pOther->_sfScaleAbsoluteSize);
-
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-        _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-        _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
-
-
-}
-#else
-void TextureLayerBase::executeSyncImpl(      TextureLayerBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (TextureFieldMask & whichField))
-        _sfTexture.syncWith(pOther->_sfTexture);
-
-    if(FieldBits::NoField != (TransformationFieldMask & whichField))
-        _sfTransformation.syncWith(pOther->_sfTransformation);
-
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
-
-    if(FieldBits::NoField != (ScaleFieldMask & whichField))
-        _sfScale.syncWith(pOther->_sfScale);
-
-    if(FieldBits::NoField != (ScaleAbsoluteSizeFieldMask & whichField))
-        _sfScaleAbsoluteSize.syncWith(pOther->_sfScaleAbsoluteSize);
-
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-        _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-        _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
-
-
-
+    return fc;
 }
 
-void TextureLayerBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+TextureLayerTransitPtr TextureLayerBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    TextureLayerTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<TextureLayer>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+TextureLayerTransitPtr TextureLayerBase::create(void)
+{
+    TextureLayerTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<TextureLayer>(tmpPtr);
+    }
+
+    return fc;
+}
+
+TextureLayer *TextureLayerBase::createEmptyLocal(BitVector bFlags)
+{
+    TextureLayer *returnValue;
+
+    newPtr<TextureLayer>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+TextureLayer *TextureLayerBase::createEmpty(void)
+{
+    TextureLayer *returnValue;
+
+    newPtr<TextureLayer>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr TextureLayerBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    TextureLayer *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const TextureLayer *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TextureLayerBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    TextureLayer *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const TextureLayer *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TextureLayerBase::shallowCopy(void) const
+{
+    TextureLayer *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const TextureLayer *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+TextureLayerBase::TextureLayerBase(void) :
+    Inherited(),
+    _sfTexture                (NULL),
+    _sfTransformation         (NULL),
+    _sfColor                  (Color4f(1.0f,1.0f,1.0f,1.0f)),
+    _sfScale                  (UInt32(TextureLayer::SCALE_STRETCH)),
+    _sfScaleAbsoluteSize      (Vec2s(1,1)),
+    _sfVerticalAlignment      (Real32(0.5)),
+    _sfHorizontalAlignment    (Real32(0.5))
+{
+}
+
+TextureLayerBase::TextureLayerBase(const TextureLayerBase &source) :
+    Inherited(source),
+    _sfTexture                (NULL),
+    _sfTransformation         (NULL),
+    _sfColor                  (source._sfColor                  ),
+    _sfScale                  (source._sfScale                  ),
+    _sfScaleAbsoluteSize      (source._sfScaleAbsoluteSize      ),
+    _sfVerticalAlignment      (source._sfVerticalAlignment      ),
+    _sfHorizontalAlignment    (source._sfHorizontalAlignment    )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+TextureLayerBase::~TextureLayerBase(void)
+{
+}
+
+void TextureLayerBase::onCreate(const TextureLayer *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        TextureLayer *pThis = static_cast<TextureLayer *>(this);
+
+        pThis->setTexture(source->getTexture());
+
+        pThis->setTransformation(source->getTransformation());
+    }
+}
+
+GetFieldHandlePtr TextureLayerBase::getHandleTexture         (void) const
+{
+    SFUnrecTextureObjChunkPtr::GetHandlePtr returnValue(
+        new  SFUnrecTextureObjChunkPtr::GetHandle(
+             &_sfTexture,
+             this->getType().getFieldDesc(TextureFieldId),
+             const_cast<TextureLayerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TextureLayerBase::editHandleTexture        (void)
+{
+    SFUnrecTextureObjChunkPtr::EditHandlePtr returnValue(
+        new  SFUnrecTextureObjChunkPtr::EditHandle(
+             &_sfTexture,
+             this->getType().getFieldDesc(TextureFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TextureLayer::setTexture,
+                    static_cast<TextureLayer *>(this), _1));
+
+    editSField(TextureFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TextureLayerBase::getHandleTransformation  (void) const
+{
+    SFUnrecTextureTransformChunkPtr::GetHandlePtr returnValue(
+        new  SFUnrecTextureTransformChunkPtr::GetHandle(
+             &_sfTransformation,
+             this->getType().getFieldDesc(TransformationFieldId),
+             const_cast<TextureLayerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TextureLayerBase::editHandleTransformation (void)
+{
+    SFUnrecTextureTransformChunkPtr::EditHandlePtr returnValue(
+        new  SFUnrecTextureTransformChunkPtr::EditHandle(
+             &_sfTransformation,
+             this->getType().getFieldDesc(TransformationFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TextureLayer::setTransformation,
+                    static_cast<TextureLayer *>(this), _1));
+
+    editSField(TransformationFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TextureLayerBase::getHandleColor           (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfColor,
+             this->getType().getFieldDesc(ColorFieldId),
+             const_cast<TextureLayerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TextureLayerBase::editHandleColor          (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfColor,
+             this->getType().getFieldDesc(ColorFieldId),
+             this));
+
+
+    editSField(ColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TextureLayerBase::getHandleScale           (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfScale,
+             this->getType().getFieldDesc(ScaleFieldId),
+             const_cast<TextureLayerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TextureLayerBase::editHandleScale          (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfScale,
+             this->getType().getFieldDesc(ScaleFieldId),
+             this));
+
+
+    editSField(ScaleFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TextureLayerBase::getHandleScaleAbsoluteSize (void) const
+{
+    SFVec2s::GetHandlePtr returnValue(
+        new  SFVec2s::GetHandle(
+             &_sfScaleAbsoluteSize,
+             this->getType().getFieldDesc(ScaleAbsoluteSizeFieldId),
+             const_cast<TextureLayerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TextureLayerBase::editHandleScaleAbsoluteSize(void)
+{
+    SFVec2s::EditHandlePtr returnValue(
+        new  SFVec2s::EditHandle(
+             &_sfScaleAbsoluteSize,
+             this->getType().getFieldDesc(ScaleAbsoluteSizeFieldId),
+             this));
+
+
+    editSField(ScaleAbsoluteSizeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TextureLayerBase::getHandleVerticalAlignment (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfVerticalAlignment,
+             this->getType().getFieldDesc(VerticalAlignmentFieldId),
+             const_cast<TextureLayerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TextureLayerBase::editHandleVerticalAlignment(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfVerticalAlignment,
+             this->getType().getFieldDesc(VerticalAlignmentFieldId),
+             this));
+
+
+    editSField(VerticalAlignmentFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TextureLayerBase::getHandleHorizontalAlignment (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfHorizontalAlignment,
+             this->getType().getFieldDesc(HorizontalAlignmentFieldId),
+             const_cast<TextureLayerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TextureLayerBase::editHandleHorizontalAlignment(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfHorizontalAlignment,
+             this->getType().getFieldDesc(HorizontalAlignmentFieldId),
+             this));
+
+
+    editSField(HorizontalAlignmentFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void TextureLayerBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    TextureLayer *pThis = static_cast<TextureLayer *>(this);
+
+    pThis->execSync(static_cast<TextureLayer *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *TextureLayerBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    TextureLayer *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const TextureLayer *>(pRefAspect),
+                  dynamic_cast<const TextureLayer *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TextureLayerPtr>::_type("TextureLayerPtr", "LayerPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(TextureLayerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(TextureLayerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void TextureLayerBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<TextureLayer *>(this)->setTexture(NULL);
+
+    static_cast<TextureLayer *>(this)->setTransformation(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-

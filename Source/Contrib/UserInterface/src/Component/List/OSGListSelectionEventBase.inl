@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,151 +55,129 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &ListSelectionEventBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ListSelectionEventBase::getClassTypeId(void) 
+OSG::UInt32 ListSelectionEventBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-ListSelectionEventPtr ListSelectionEventBase::create(void) 
-{
-    ListSelectionEventPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = ListSelectionEventPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-ListSelectionEventPtr ListSelectionEventBase::createEmpty(void) 
-{ 
-    ListSelectionEventPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 ListSelectionEventBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ListSelectionEvent::_sfFirstIndex field.
-inline
-const SFInt32 *ListSelectionEventBase::getSFFirstIndex(void) const
-{
-    return &_sfFirstIndex;
-}
-
-//! Get the ListSelectionEvent::_sfFirstIndex field.
-inline
-SFInt32 *ListSelectionEventBase::editSFFirstIndex(void)
-{
-    return &_sfFirstIndex;
-}
-
-//! Get the ListSelectionEvent::_sfLastIndex field.
-inline
-const SFInt32 *ListSelectionEventBase::getSFLastIndex(void) const
-{
-    return &_sfLastIndex;
-}
-
-//! Get the ListSelectionEvent::_sfLastIndex field.
-inline
-SFInt32 *ListSelectionEventBase::editSFLastIndex(void)
-{
-    return &_sfLastIndex;
-}
-
-//! Get the ListSelectionEvent::_sfValueIsAdjusting field.
-inline
-const SFBool *ListSelectionEventBase::getSFValueIsAdjusting(void) const
-{
-    return &_sfValueIsAdjusting;
-}
-
-//! Get the ListSelectionEvent::_sfValueIsAdjusting field.
-inline
-SFBool *ListSelectionEventBase::editSFValueIsAdjusting(void)
-{
-    return &_sfValueIsAdjusting;
-}
-
-
 //! Get the value of the ListSelectionEvent::_sfFirstIndex field.
+
 inline
 Int32 &ListSelectionEventBase::editFirstIndex(void)
 {
+    editSField(FirstIndexFieldMask);
+
     return _sfFirstIndex.getValue();
 }
 
 //! Get the value of the ListSelectionEvent::_sfFirstIndex field.
 inline
-const Int32 &ListSelectionEventBase::getFirstIndex(void) const
+      Int32  ListSelectionEventBase::getFirstIndex(void) const
 {
     return _sfFirstIndex.getValue();
 }
 
 //! Set the value of the ListSelectionEvent::_sfFirstIndex field.
 inline
-void ListSelectionEventBase::setFirstIndex(const Int32 &value)
+void ListSelectionEventBase::setFirstIndex(const Int32 value)
 {
+    editSField(FirstIndexFieldMask);
+
     _sfFirstIndex.setValue(value);
 }
-
 //! Get the value of the ListSelectionEvent::_sfLastIndex field.
+
 inline
 Int32 &ListSelectionEventBase::editLastIndex(void)
 {
+    editSField(LastIndexFieldMask);
+
     return _sfLastIndex.getValue();
 }
 
 //! Get the value of the ListSelectionEvent::_sfLastIndex field.
 inline
-const Int32 &ListSelectionEventBase::getLastIndex(void) const
+      Int32  ListSelectionEventBase::getLastIndex(void) const
 {
     return _sfLastIndex.getValue();
 }
 
 //! Set the value of the ListSelectionEvent::_sfLastIndex field.
 inline
-void ListSelectionEventBase::setLastIndex(const Int32 &value)
+void ListSelectionEventBase::setLastIndex(const Int32 value)
 {
+    editSField(LastIndexFieldMask);
+
     _sfLastIndex.setValue(value);
 }
-
 //! Get the value of the ListSelectionEvent::_sfValueIsAdjusting field.
+
 inline
 bool &ListSelectionEventBase::editValueIsAdjusting(void)
 {
+    editSField(ValueIsAdjustingFieldMask);
+
     return _sfValueIsAdjusting.getValue();
 }
 
 //! Get the value of the ListSelectionEvent::_sfValueIsAdjusting field.
 inline
-const bool &ListSelectionEventBase::getValueIsAdjusting(void) const
+      bool  ListSelectionEventBase::getValueIsAdjusting(void) const
 {
     return _sfValueIsAdjusting.getValue();
 }
 
 //! Set the value of the ListSelectionEvent::_sfValueIsAdjusting field.
 inline
-void ListSelectionEventBase::setValueIsAdjusting(const bool &value)
+void ListSelectionEventBase::setValueIsAdjusting(const bool value)
 {
+    editSField(ValueIsAdjustingFieldMask);
+
     _sfValueIsAdjusting.setValue(value);
 }
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void ListSelectionEventBase::execSync (      ListSelectionEventBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (FirstIndexFieldMask & whichField))
+        _sfFirstIndex.syncWith(pFrom->_sfFirstIndex);
+
+    if(FieldBits::NoField != (LastIndexFieldMask & whichField))
+        _sfLastIndex.syncWith(pFrom->_sfLastIndex);
+
+    if(FieldBits::NoField != (ValueIsAdjustingFieldMask & whichField))
+        _sfValueIsAdjusting.syncWith(pFrom->_sfValueIsAdjusting);
+}
+#endif
+
+
+inline
+const Char8 *ListSelectionEventBase::getClassname(void)
+{
+    return "ListSelectionEvent";
+}
+OSG_GEN_CONTAINERPTR(ListSelectionEvent);
 
 OSG_END_NAMESPACE
 

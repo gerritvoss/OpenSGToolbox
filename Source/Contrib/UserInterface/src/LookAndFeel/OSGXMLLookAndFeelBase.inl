@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,76 +55,64 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &XMLLookAndFeelBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 XMLLookAndFeelBase::getClassTypeId(void) 
+OSG::UInt32 XMLLookAndFeelBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-XMLLookAndFeelPtr XMLLookAndFeelBase::create(void) 
-{
-    XMLLookAndFeelPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = XMLLookAndFeelPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-XMLLookAndFeelPtr XMLLookAndFeelBase::createEmpty(void) 
-{ 
-    XMLLookAndFeelPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 XMLLookAndFeelBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the XMLLookAndFeel::_sfBaseLookAndFeel field.
-inline
-SFLookAndFeelPtr *XMLLookAndFeelBase::getSFBaseLookAndFeel(void)
-{
-    return &_sfBaseLookAndFeel;
-}
-
 
 //! Get the value of the XMLLookAndFeel::_sfBaseLookAndFeel field.
 inline
-LookAndFeelPtr &XMLLookAndFeelBase::getBaseLookAndFeel(void)
-{
-    return _sfBaseLookAndFeel.getValue();
-}
-
-//! Get the value of the XMLLookAndFeel::_sfBaseLookAndFeel field.
-inline
-const LookAndFeelPtr &XMLLookAndFeelBase::getBaseLookAndFeel(void) const
+LookAndFeel * XMLLookAndFeelBase::getBaseLookAndFeel(void) const
 {
     return _sfBaseLookAndFeel.getValue();
 }
 
 //! Set the value of the XMLLookAndFeel::_sfBaseLookAndFeel field.
 inline
-void XMLLookAndFeelBase::setBaseLookAndFeel(const LookAndFeelPtr &value)
+void XMLLookAndFeelBase::setBaseLookAndFeel(LookAndFeel * const value)
 {
+    editSField(BaseLookAndFeelFieldMask);
+
     _sfBaseLookAndFeel.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void XMLLookAndFeelBase::execSync (      XMLLookAndFeelBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGXMLLOOKANDFEELBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (BaseLookAndFeelFieldMask & whichField))
+        _sfBaseLookAndFeel.syncWith(pFrom->_sfBaseLookAndFeel);
+}
+#endif
+
+
+inline
+const Char8 *XMLLookAndFeelBase::getClassname(void)
+{
+    return "XMLLookAndFeel";
+}
+OSG_GEN_CONTAINERPTR(XMLLookAndFeel);
+
+OSG_END_NAMESPACE
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,23 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/Toolbox/OSGTextureUtils.h>
-#include <OpenSG/OSGTextureTransformChunk.h>
+#include <OSGConfig.h>
 
 #include "OSGImageComponent.h"
-#include "Util/OSGUIDrawUtils.h"
+#include "OSGTextureTransformChunk.h"
+
+#include "OSGImageComponent.h"
+#include "OSGUIDrawUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::ImageComponent
-A UI Button. 	
-*/
+// Documentation for this class is emitted in the
+// OSGImageComponentBase.cpp file.
+// To modify it, please change the .fcd file (OSGImageComponent.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -68,135 +66,154 @@ A UI Button.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ImageComponent::initMethod (void)
+void ImageComponent::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
+
+TextureObjChunkTransitPtr ImageComponent::createTexture(ImageWeakPtr Image)
+{
+    TextureObjChunk* TexChunk = TextureObjChunk::createEmpty();
+
+    TexChunk->setMinFilter(GL_LINEAR_MIPMAP_LINEAR);
+    TexChunk->setMagFilter(GL_LINEAR);
+    TexChunk->setWrapS(GL_CLAMP);
+    TexChunk->setWrapT(GL_CLAMP);
+    //TexChunk->setEnvMode(GL_MODULATE);
+    TexChunk->setImage(Image);
+
+    return TextureObjChunkTransitPtr(TexChunk);
+}
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ImageComponent::drawInternal(const GraphicsPtr TheGraphics, Real32 Opacity) const
+void ImageComponent::drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opacity) const
 {
-   
-   //Get Border Insets
-   Pnt2f TopLeft, BottomRight;
-   getInsideBorderBounds(TopLeft, BottomRight);
-   Vec2f ComponentSize(BottomRight-TopLeft);
 
-   TextureChunkPtr DrawnTexture = getDrawnTexture();
-   if(DrawnTexture == NullFC || DrawnTexture->getImage() == NullFC)
-   {
-	   return;
-   }
+    //Get Border Insets
+    Pnt2f TopLeft, BottomRight;
+    getInsideBorderBounds(TopLeft, BottomRight);
+    Vec2f ComponentSize(BottomRight-TopLeft);
 
-   //Render the Image
-   //Draw a quad on top of the background according to the alignment and scaling
-   //Figure out Scaling
-   Vec2f Size(0.0,0.0);
-   switch(getScale())
-   {
-   case SCALE_NONE:
-	   //Size in pixels Should be the Image size in pixels
-	   Size.setValues(DrawnTexture->getImage()->getWidth(), DrawnTexture->getImage()->getHeight());
-	   break;
-   case SCALE_STRETCH:
-	   Size.setValue(ComponentSize);
-	   break;
-   case SCALE_MIN_AXIS:
-	   {
-	   //Figure out the aspect ratio of this Component
-	   Real32 AspectComponent = ComponentSize.x()/ComponentSize.y();
-	   Real32 AspectImage = static_cast<Real32>(DrawnTexture->getImage()->getWidth())/static_cast<Real32>(DrawnTexture->getImage()->getHeight());
+    TextureObjChunkRefPtr DrawnTexture = getDrawnTexture();
+    if(DrawnTexture == NULL || DrawnTexture->getImage() == NULL)
+    {
+        return;
+    }
 
-	   Vec2f vector(0,0);
-	   if (AspectComponent < AspectImage)
-	   {
-		   vector[0] = ComponentSize.x();
-		   vector[1] = (Real32)((Real32)ComponentSize.x()/AspectImage);
-	   }
-	   else
-	   {
-		   vector[0] = (Real32)((Real32)ComponentSize.y()*AspectImage);
-		   vector[1] = ComponentSize.y();
-	   }
-	   Size.setValue(vector);
-	   }
-	   break;
-   case SCALE_MAX_AXIS:
-	   {
-	   //Figure out the aspect ratio of this Component
-	   Real32 AspectComponent = ComponentSize.x()/ComponentSize.y();
-	   Real32 AspectImage = static_cast<Real32>(DrawnTexture->getImage()->getWidth())/static_cast<Real32>(DrawnTexture->getImage()->getHeight());
+    //Render the Image
+    //Draw a quad on top of the background according to the alignment and scaling
+    //Figure out Scaling
+    Vec2f Size(0.0,0.0);
+    switch(getScale())
+    {
+        case SCALE_NONE:
+            //Size in pixels Should be the Image size in pixels
+            Size.setValues(DrawnTexture->getImage()->getWidth(), DrawnTexture->getImage()->getHeight());
+            break;
+        case SCALE_STRETCH:
+            Size.setValue(ComponentSize);
+            break;
+        case SCALE_MIN_AXIS:
+            {
+                //Figure out the aspect ratio of this Component
+                Real32 AspectComponent = ComponentSize.x()/ComponentSize.y();
+                Real32 AspectImage = static_cast<Real32>(DrawnTexture->getImage()->getWidth())/static_cast<Real32>(DrawnTexture->getImage()->getHeight());
 
-	   Vec2f vector(0,0);
-	   if (AspectComponent > AspectImage)
-	   {
-		   vector[0] = ComponentSize.x();
-		   vector[1] = (Real32)((Real32)ComponentSize.x()/AspectImage);
-	   }
-	   else
-	   {
-		   vector[0] = (Real32)((Real32)ComponentSize.y()*AspectImage);
-		   vector[1] = ComponentSize.y();
-	   }
-	   Size.setValue(vector);
-	   }
-	   break;
-   case SCALE_ABSOLUTE:
-	   Size.setValue(getScaleAbsoluteSize());
-	   break;
-   default:
-	   break;
-   }
+                Vec2f vector(0,0);
+                if (AspectComponent < AspectImage)
+                {
+                    vector[0] = ComponentSize.x();
+                    vector[1] = (Real32)((Real32)ComponentSize.x()/AspectImage);
+                }
+                else
+                {
+                    vector[0] = (Real32)((Real32)ComponentSize.y()*AspectImage);
+                    vector[1] = ComponentSize.y();
+                }
+                Size.setValue(vector);
+            }
+            break;
+        case SCALE_MAX_AXIS:
+            {
+                //Figure out the aspect ratio of this Component
+                Real32 AspectComponent = ComponentSize.x()/ComponentSize.y();
+                Real32 AspectImage = static_cast<Real32>(DrawnTexture->getImage()->getWidth())/static_cast<Real32>(DrawnTexture->getImage()->getHeight());
 
-   //Figure out Position
-   Pnt2f Pos( calculateAlignment(TopLeft,ComponentSize, Size,getAlignment().y(), getAlignment().x()) );
+                Vec2f vector(0,0);
+                if (AspectComponent > AspectImage)
+                {
+                    vector[0] = ComponentSize.x();
+                    vector[1] = (Real32)((Real32)ComponentSize.x()/AspectImage);
+                }
+                else
+                {
+                    vector[0] = (Real32)((Real32)ComponentSize.y()*AspectImage);
+                    vector[1] = ComponentSize.y();
+                }
+                Size.setValue(vector);
+            }
+            break;
+        case SCALE_ABSOLUTE:
+            Size.setValue(getScaleAbsoluteSize());
+            break;
+        default:
+            break;
+    }
 
-   Real32 Left(getImageClippingOffsets()[2]/Size.x()),
-          Right(1.0+(getImageClippingOffsets()[3]/Size.x())),
-          Top(-getImageClippingOffsets()[1]/Size.y()),
-          Bottom(1.0-(getImageClippingOffsets()[0]/Size.y()));
+    //Figure out Position
+    Pnt2f Pos( calculateAlignment(TopLeft,ComponentSize, Size,getAlignment().y(), getAlignment().x()) );
 
-   Pos  = Pos + Vec2f(getImageClippingOffsets()[2],getImageClippingOffsets()[0]);
-   Size = Size + Vec2f(-getImageClippingOffsets()[2]+getImageClippingOffsets()[3],
-                       -getImageClippingOffsets()[0]+getImageClippingOffsets()[1]
+    Real32 Left(getImageClippingOffsets()[2]/Size.x()),
+           Right(1.0+(getImageClippingOffsets()[3]/Size.x())),
+           Top(-getImageClippingOffsets()[1]/Size.y()),
+           Bottom(1.0-(getImageClippingOffsets()[0]/Size.y()));
+
+    Pos  = Pos + Vec2f(getImageClippingOffsets()[2],getImageClippingOffsets()[0]);
+    Size = Size + Vec2f(-getImageClippingOffsets()[2]+getImageClippingOffsets()[3],
+                        -getImageClippingOffsets()[0]+getImageClippingOffsets()[1]
                        );
 
 
-   Vec2f TexTopLeft(Left,Top),
-	     TexTopRight(Right,Top),
-		 TexBottomLeft(Left,Bottom),
-		 TexBottomRight(Right,Bottom);
+    Vec2f TexTopLeft(Left,Top),
+          TexTopRight(Right,Top),
+          TexBottomLeft(Left,Bottom),
+          TexBottomRight(Right,Bottom);
 
     //Activate the Texture Transformation
-    if(getTransformation() != NullFC)
+    if(getTransformation() != NULL)
     {
-        getTransformation()->activate(TheGraphics->getDrawAction());
+        getTransformation()->activate(TheGraphics->getDrawEnv());
     }
 
-   //Draw the Image as a quad
-   TheGraphics->drawQuad(Pos,
-	                     Pnt2f(Pos[0]+Size[0],Pos[1]),
-						 Pos+Size,Pnt2f(Pos[0],
-						 Pos[1]+Size[1]),
-						 TexTopLeft,TexTopRight, 
-						 TexBottomRight, TexBottomLeft, getColor(), DrawnTexture, getOpacity()*Opacity );
+    //Draw the Image as a quad
+    TheGraphics->drawQuad(Pos,
+                          Pnt2f(Pos[0]+Size[0],Pos[1]),
+                          Pos+Size,Pnt2f(Pos[0],
+                                         Pos[1]+Size[1]),
+                          TexTopLeft,TexTopRight, 
+                          TexBottomRight, TexBottomLeft, getColor(), DrawnTexture, getOpacity()*Opacity );
 
     //Deactivate the Texture Transformation
-    if(getTransformation() != NullFC)
+    if(getTransformation() != NULL)
     {
-        getTransformation()->deactivate(TheGraphics->getDrawAction());
+        getTransformation()->deactivate(TheGraphics->getDrawEnv());
     }
 }
 
 
-TextureChunkPtr ImageComponent::getDrawnTexture(void) const
+TextureObjChunkRefPtr ImageComponent::getDrawnTexture(void) const
 {
-	TextureChunkPtr ReturnedTexture;
-	if(getEnabled())
-	{
+    TextureObjChunkRefPtr ReturnedTexture;
+    if(getEnabled())
+    {
         if(getFocused())
         {
             ReturnedTexture = getFocusedTexture();
@@ -215,79 +232,68 @@ TextureChunkPtr ImageComponent::getDrawnTexture(void) const
         ReturnedTexture = getDisabledTexture();
     }
 
-	if(ReturnedTexture == NullFC)
-	{
-		return getTexture();
-	}
-	else
-	{
-		return ReturnedTexture;
-	}
+    if(ReturnedTexture == NULL)
+    {
+        return getTexture();
+    }
+    else
+    {
+        return ReturnedTexture;
+    }
 }
 
-void ImageComponent::setImage(ImagePtr Image)
+void ImageComponent::setImage(ImageRefPtr Image)
 {
-	if(getTexture() == NullFC)
-	{
-		beginEditCP(ImageComponentPtr(this), TextureFieldMask);
-			setTexture(createTexture(Image));
-		endEditCP(ImageComponentPtr(this), TextureFieldMask);
-	}
-	else
-	{
-		beginEditCP(getTexture(), TextureChunk::ImageFieldMask);
-			getTexture()->setImage(Image);
-		endEditCP(getTexture(), TextureChunk::ImageFieldMask);
-	}
+    if(getTexture() == NULL)
+    {
+        TextureObjChunkUnrecPtr NewTexture(createTexture(Image));
+        setTexture(NewTexture);
+    }
+    else
+    {
+        getTexture()->setImage(Image);
+    }
 }
 
-void ImageComponent::setRolloverImage(ImagePtr Image)
+void ImageComponent::setRolloverImage(ImageRefPtr Image)
 {
-	if(getRolloverTexture() == NullFC)
-	{
-		beginEditCP(ImageComponentPtr(this), RolloverTextureFieldMask);
-			setRolloverTexture(createTexture(Image));
-		endEditCP(ImageComponentPtr(this), RolloverTextureFieldMask);
-	}
-	else
-	{
-		beginEditCP(getRolloverTexture(), TextureChunk::ImageFieldMask);
-			getRolloverTexture()->setImage(Image);
-		endEditCP(getRolloverTexture(), TextureChunk::ImageFieldMask);
-	}
+    if(getRolloverTexture() == NULL)
+    {
+        TextureObjChunkUnrecPtr NewTexture(createTexture(Image));
+        setRolloverTexture(NewTexture);
+    }
+    else
+    {
+        getRolloverTexture()->setImage(Image);
+    }
 }
 
-void ImageComponent::setDisabledImage(ImagePtr Image)
+void ImageComponent::setDisabledImage(ImageRefPtr Image)
 {
-	if(getDisabledTexture() == NullFC)
-	{
-		beginEditCP(ImageComponentPtr(this), DisabledTextureFieldMask);
-			setDisabledTexture(createTexture(Image));
-		endEditCP(ImageComponentPtr(this), DisabledTextureFieldMask);
-	}
-	else
-	{
-		beginEditCP(getDisabledTexture(), TextureChunk::ImageFieldMask);
-			getDisabledTexture()->setImage(Image);
-		endEditCP(getDisabledTexture(), TextureChunk::ImageFieldMask);
-	}
+    if(getDisabledTexture() == NULL)
+    {
+        TextureObjChunkUnrecPtr NewTexture(createTexture(Image));
+        setDisabledTexture(NewTexture);
+    }
+    else
+    {
+        getDisabledTexture()->setImage(Image);
+    }
 }
 
-void ImageComponent::setFocusedImage(ImagePtr Image)
+void ImageComponent::setFocusedImage(ImageRefPtr Image)
 {
-	if(getFocusedTexture() == NullFC)
-	{
-		beginEditCP(ImageComponentPtr(this), FocusedTextureFieldMask);
-			setFocusedTexture(createTexture(Image));
-		endEditCP(ImageComponentPtr(this), FocusedTextureFieldMask);
-	}
-	else
-	{
-		beginEditCP(getFocusedTexture(), TextureChunk::ImageFieldMask);
-			getFocusedTexture()->setImage(Image);
-		endEditCP(getFocusedTexture(), TextureChunk::ImageFieldMask);
-	}
+    if(getFocusedTexture() == NULL)
+    {
+        TextureObjChunkUnrecPtr NewTexture(createTexture(Image));
+        setFocusedTexture(NewTexture);
+    }
+    else
+    {
+        getFocusedTexture()->setImage(Image);
+    }
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -310,16 +316,17 @@ ImageComponent::~ImageComponent(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void ImageComponent::changed(BitVector whichField, UInt32 origin)
+void ImageComponent::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void ImageComponent::dump(      UInt32    , 
+void ImageComponent::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump ImageComponent NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

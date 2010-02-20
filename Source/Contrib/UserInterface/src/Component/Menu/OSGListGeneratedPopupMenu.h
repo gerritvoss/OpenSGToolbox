@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,52 +42,57 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGListGeneratedPopupMenuBase.h"
-#include "Component/List/OSGListDataListener.h"
+#include "OSGListModel.h"
+#include "OSGComponentGenerator.h"
+#include "OSGListDataListener.h"
+#include "OSGPopupMenu.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ListGeneratedPopupMenu class. See \ref 
-           PageUserInterfaceListGeneratedPopupMenu for a description.
+/*! \brief ListGeneratedPopupMenu class. See \ref
+           PageContribUserInterfaceListGeneratedPopupMenu for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING ListGeneratedPopupMenu : public ListGeneratedPopupMenuBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListGeneratedPopupMenu : public ListGeneratedPopupMenuBase
 {
-  private:
-
-    typedef ListGeneratedPopupMenuBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef ListGeneratedPopupMenuBase Inherited;
+    typedef ListGeneratedPopupMenu     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
-    virtual void addItem(MenuItemPtr Item);
-    virtual void addItem(MenuItemPtr Item, const UInt32& Index);
-    virtual void removeItem(MenuItemPtr Item);
+    virtual void addItem(MenuItemRefPtr Item);
+    virtual void addItem(MenuItemRefPtr Item, const UInt32& Index);
+    virtual void removeItem(MenuItemRefPtr Item);
     virtual void removeItem(const UInt32& Index);
     virtual void removeAllItems(void);
-    virtual MenuItemPtr getItem(const UInt32& Index);
+    virtual MenuItem* getItem(const UInt32& Index);
     virtual UInt32 getNumItems(void) const;
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ListGeneratedPopupMenuBase.
@@ -104,24 +109,32 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListGeneratedPopupMenu : public ListGenera
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ListGeneratedPopupMenu(void); 
+    virtual ~ListGeneratedPopupMenu(void);
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+
 	void updateMenuItems(void);
     
 	class ModelListener : public ListDataListener
 	{
 	public :
-		ModelListener(ListGeneratedPopupMenuPtr TheListGeneratedPopupMenu);
+		ModelListener(ListGeneratedPopupMenuRefPtr TheListGeneratedPopupMenu);
 		
 		//Sent when the contents of the list has changed in a way that's too complex to characterize with the previous methods.
-		virtual void contentsChanged(const ListDataEventPtr e);
+		virtual void contentsChanged(const ListDataEventUnrecPtr e);
 		//Sent after the indices in the index0,index1 interval have been inserted in the data model.
-		virtual void intervalAdded(const ListDataEventPtr e);
+		virtual void intervalAdded(const ListDataEventUnrecPtr e);
 		//Sent after the indices in the index0,index1 interval have been removed from the data model.
-		virtual void intervalRemoved(const ListDataEventPtr e);
+		virtual void intervalRemoved(const ListDataEventUnrecPtr e);
 	protected :
-		ListGeneratedPopupMenuPtr _ListGeneratedPopupMenu;
+		ListGeneratedPopupMenuRefPtr _ListGeneratedPopupMenu;
 	};
 
 	friend class ModelListener;
@@ -129,15 +142,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListGeneratedPopupMenu : public ListGenera
 	ModelListener _ModelListener;
     
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ListGeneratedPopupMenuBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ListGeneratedPopupMenu &source);
 };
 
@@ -147,7 +158,5 @@ OSG_END_NAMESPACE
 
 #include "OSGListGeneratedPopupMenuBase.inl"
 #include "OSGListGeneratedPopupMenu.inl"
-
-#define OSGLISTGENERATEDPOPUPMENU_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGLISTGENERATEDPOPUPMENU_H_ */

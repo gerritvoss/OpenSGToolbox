@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,77 +58,87 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGLayout.h" // Parent
 
-#include <OpenSG/OSGUInt32Fields.h> // Rows type
-#include <OpenSG/OSGUInt32Fields.h> // Columns type
-#include <OpenSG/OSGReal32Fields.h> // ColumnWeights type
-#include <OpenSG/OSGReal32Fields.h> // ColumnWidths type
-#include <OpenSG/OSGReal32Fields.h> // RowWeights type
-#include <OpenSG/OSGReal32Fields.h> // RowHeights type
+#include "OSGSysFields.h"               // Rows type
 
 #include "OSGGridBagLayoutFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class GridBagLayout;
-class BinaryDataHandler;
 
 //! \brief GridBagLayout Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayoutBase : public Layout
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING GridBagLayoutBase : public Layout
 {
-  private:
-
-    typedef Layout    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef GridBagLayoutPtr  Ptr;
+    typedef Layout Inherited;
+    typedef Layout ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(GridBagLayout);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        RowsFieldId          = Inherited::NextFieldId,
-        ColumnsFieldId       = RowsFieldId          + 1,
-        ColumnWeightsFieldId = ColumnsFieldId       + 1,
-        ColumnWidthsFieldId  = ColumnWeightsFieldId + 1,
-        RowWeightsFieldId    = ColumnWidthsFieldId  + 1,
-        RowHeightsFieldId    = RowWeightsFieldId    + 1,
-        NextFieldId          = RowHeightsFieldId    + 1
+        RowsFieldId = Inherited::NextFieldId,
+        ColumnsFieldId = RowsFieldId + 1,
+        ColumnWeightsFieldId = ColumnsFieldId + 1,
+        ColumnWidthsFieldId = ColumnWeightsFieldId + 1,
+        RowWeightsFieldId = ColumnWidthsFieldId + 1,
+        RowHeightsFieldId = RowWeightsFieldId + 1,
+        NextFieldId = RowHeightsFieldId + 1
     };
 
-    static const OSG::BitVector RowsFieldMask;
-    static const OSG::BitVector ColumnsFieldMask;
-    static const OSG::BitVector ColumnWeightsFieldMask;
-    static const OSG::BitVector ColumnWidthsFieldMask;
-    static const OSG::BitVector RowWeightsFieldMask;
-    static const OSG::BitVector RowHeightsFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector RowsFieldMask =
+        (TypeTraits<BitVector>::One << RowsFieldId);
+    static const OSG::BitVector ColumnsFieldMask =
+        (TypeTraits<BitVector>::One << ColumnsFieldId);
+    static const OSG::BitVector ColumnWeightsFieldMask =
+        (TypeTraits<BitVector>::One << ColumnWeightsFieldId);
+    static const OSG::BitVector ColumnWidthsFieldMask =
+        (TypeTraits<BitVector>::One << ColumnWidthsFieldId);
+    static const OSG::BitVector RowWeightsFieldMask =
+        (TypeTraits<BitVector>::One << RowWeightsFieldId);
+    static const OSG::BitVector RowHeightsFieldMask =
+        (TypeTraits<BitVector>::One << RowHeightsFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUInt32          SFRowsType;
+    typedef SFUInt32          SFColumnsType;
+    typedef MFReal32          MFColumnWeightsType;
+    typedef MFReal32          MFColumnWidthsType;
+    typedef MFReal32          MFRowWeightsType;
+    typedef MFReal32          MFRowHeightsType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -137,41 +147,55 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayoutBase : public Layout
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUInt32            *getSFRows           (void);
-           SFUInt32            *getSFColumns        (void);
-           MFReal32            *getMFColumnWeights  (void);
-           MFReal32            *getMFColumnWidths   (void);
-           MFReal32            *getMFRowWeights     (void);
-           MFReal32            *getMFRowHeights     (void);
 
-           UInt32              &getRows           (void);
-     const UInt32              &getRows           (void) const;
-           UInt32              &getColumns        (void);
-     const UInt32              &getColumns        (void) const;
-           Real32              &getColumnWeights  (const UInt32 index);
-           MFReal32            &getColumnWeights  (void);
-     const MFReal32            &getColumnWeights  (void) const;
-           Real32              &getColumnWidths   (const UInt32 index);
-           MFReal32            &getColumnWidths   (void);
-     const MFReal32            &getColumnWidths   (void) const;
-           Real32              &getRowWeights     (const UInt32 index);
-           MFReal32            &getRowWeights     (void);
-     const MFReal32            &getRowWeights     (void) const;
-           Real32              &getRowHeights     (const UInt32 index);
-           MFReal32            &getRowHeights     (void);
-     const MFReal32            &getRowHeights     (void) const;
+                  SFUInt32            *editSFRows           (void);
+            const SFUInt32            *getSFRows            (void) const;
+
+                  SFUInt32            *editSFColumns        (void);
+            const SFUInt32            *getSFColumns         (void) const;
+
+                  MFReal32            *editMFColumnWeights  (void);
+            const MFReal32            *getMFColumnWeights   (void) const;
+
+                  MFReal32            *editMFColumnWidths   (void);
+            const MFReal32            *getMFColumnWidths    (void) const;
+
+                  MFReal32            *editMFRowWeights     (void);
+            const MFReal32            *getMFRowWeights      (void) const;
+
+                  MFReal32            *editMFRowHeights     (void);
+            const MFReal32            *getMFRowHeights      (void) const;
+
+
+                  UInt32              &editRows           (void);
+                  UInt32               getRows            (void) const;
+
+                  UInt32              &editColumns        (void);
+                  UInt32               getColumns         (void) const;
+
+                  Real32              &editColumnWeights  (const UInt32 index);
+                  Real32               getColumnWeights   (const UInt32 index) const;
+
+                  Real32              &editColumnWidths   (const UInt32 index);
+                  Real32               getColumnWidths    (const UInt32 index) const;
+
+                  Real32              &editRowWeights     (const UInt32 index);
+                  Real32               getRowWeights      (const UInt32 index) const;
+
+                  Real32              &editRowHeights     (const UInt32 index);
+                  Real32               getRowHeights      (const UInt32 index) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setRows           ( const UInt32 &value );
-     void setColumns        ( const UInt32 &value );
+            void setRows           (const UInt32 value);
+            void setColumns        (const UInt32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -179,11 +203,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayoutBase : public Layout
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -191,31 +215,48 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayoutBase : public Layout
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  GridBagLayoutPtr      create          (void); 
-    static  GridBagLayoutPtr      createEmpty     (void); 
+    static  GridBagLayoutTransitPtr  create          (void);
+    static  GridBagLayout           *createEmpty     (void);
+
+    static  GridBagLayoutTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  GridBagLayout            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  GridBagLayoutTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUInt32            _sfRows;
-    SFUInt32            _sfColumns;
-    MFReal32            _mfColumnWeights;
-    MFReal32            _mfColumnWidths;
-    MFReal32            _mfRowWeights;
-    MFReal32            _mfRowHeights;
+    SFUInt32          _sfRows;
+    SFUInt32          _sfColumns;
+    MFReal32          _mfColumnWeights;
+    MFReal32          _mfColumnWidths;
+    MFReal32          _mfRowWeights;
+    MFReal32          _mfRowHeights;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -230,69 +271,89 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayoutBase : public Layout
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~GridBagLayoutBase(void); 
+    virtual ~GridBagLayoutBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleRows            (void) const;
+    EditFieldHandlePtr editHandleRows           (void);
+    GetFieldHandlePtr  getHandleColumns         (void) const;
+    EditFieldHandlePtr editHandleColumns        (void);
+    GetFieldHandlePtr  getHandleColumnWeights   (void) const;
+    EditFieldHandlePtr editHandleColumnWeights  (void);
+    GetFieldHandlePtr  getHandleColumnWidths    (void) const;
+    EditFieldHandlePtr editHandleColumnWidths   (void);
+    GetFieldHandlePtr  getHandleRowWeights      (void) const;
+    EditFieldHandlePtr editHandleRowWeights     (void);
+    GetFieldHandlePtr  getHandleRowHeights      (void) const;
+    EditFieldHandlePtr editHandleRowHeights     (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      GridBagLayoutBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      GridBagLayoutBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      GridBagLayoutBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const GridBagLayoutBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef GridBagLayoutBase *GridBagLayoutBaseP;
 
-typedef osgIF<GridBagLayoutBase::isNodeCore,
-              CoredNodePtr<GridBagLayout>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet GridBagLayoutNodePtr;
-
-typedef RefPtr<GridBagLayoutPtr> GridBagLayoutRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGGRIDBAGLAYOUTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGGRIDBAGLAYOUTBASE_H_ */

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,87 +58,98 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include "Component/Container/OSGContainer.h" // Parent
+#include "OSGComponentContainer.h" // Parent
 
-#include <OpenSG/OSGReal32Fields.h> // SubMenuDelay type
-#include "Component/OSGComponentFields.h" // Invoker type
-#include "Component/Misc/OSGSeparatorFields.h" // DefaultSeparator type
-#include "Models/SelectionModels/OSGSingleSelectionModelFields.h" // SelectionModel type
+#include "OSGSysFields.h"               // SubMenuDelay type
+#include "OSGComponentFields.h"         // Invoker type
+#include "OSGSeparatorFields.h"         // DefaultSeparator type
+#include "OSGSingleSelectionModelFields.h" // SelectionModel type
 
 #include "OSGPopupMenuFields.h"
-#include <OpenSG/Toolbox/OSGEventProducer.h>
-#include <OpenSG/Toolbox/OSGEventProducerType.h>
-#include <OpenSG/Toolbox/OSGMethodDescription.h>
+
+//Event Producer Headers
+#include "OSGEventProducer.h"
+#include "OSGEventProducerType.h"
+#include "OSGMethodDescription.h"
 
 OSG_BEGIN_NAMESPACE
 
 class PopupMenu;
-class BinaryDataHandler;
 
 //! \brief PopupMenu Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuBase : public Container
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING PopupMenuBase : public ComponentContainer
 {
-  private:
-
-    typedef Container    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef PopupMenuPtr  Ptr;
+    typedef ComponentContainer Inherited;
+    typedef ComponentContainer ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(PopupMenu);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        SubMenuDelayFieldId     = Inherited::NextFieldId,
-        InvokerFieldId          = SubMenuDelayFieldId     + 1,
-        DefaultSeparatorFieldId = InvokerFieldId          + 1,
-        SelectionModelFieldId   = DefaultSeparatorFieldId + 1,
-        NextFieldId             = SelectionModelFieldId   + 1
+        SubMenuDelayFieldId = Inherited::NextFieldId,
+        InvokerFieldId = SubMenuDelayFieldId + 1,
+        DefaultSeparatorFieldId = InvokerFieldId + 1,
+        SelectionModelFieldId = DefaultSeparatorFieldId + 1,
+        NextFieldId = SelectionModelFieldId + 1
     };
 
-    static const OSG::BitVector SubMenuDelayFieldMask;
-    static const OSG::BitVector InvokerFieldMask;
-    static const OSG::BitVector DefaultSeparatorFieldMask;
-    static const OSG::BitVector SelectionModelFieldMask;
-
+    static const OSG::BitVector SubMenuDelayFieldMask =
+        (TypeTraits<BitVector>::One << SubMenuDelayFieldId);
+    static const OSG::BitVector InvokerFieldMask =
+        (TypeTraits<BitVector>::One << InvokerFieldId);
+    static const OSG::BitVector DefaultSeparatorFieldMask =
+        (TypeTraits<BitVector>::One << DefaultSeparatorFieldId);
+    static const OSG::BitVector SelectionModelFieldMask =
+        (TypeTraits<BitVector>::One << SelectionModelFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFReal32          SFSubMenuDelayType;
+    typedef SFUnrecComponentPtr SFInvokerType;
+    typedef SFUnrecSeparatorPtr SFDefaultSeparatorType;
+    typedef SFUnrecSingleSelectionModelPtr SFSelectionModelType;
 
     enum
     {
-        PopupMenuWillBecomeVisibleMethodId   = Inherited::NextMethodId,
-        PopupMenuWillBecomeInvisibleMethodId = PopupMenuWillBecomeVisibleMethodId   + 1,
-        PopupMenuCanceledMethodId            = PopupMenuWillBecomeInvisibleMethodId + 1,
-        PopupMenuContentsChangedMethodId     = PopupMenuCanceledMethodId            + 1,
-        NextMethodId                         = PopupMenuContentsChangedMethodId     + 1
+        PopupMenuWillBecomeVisibleMethodId = Inherited::NextProducedMethodId,
+        PopupMenuWillBecomeInvisibleMethodId = PopupMenuWillBecomeVisibleMethodId + 1,
+        PopupMenuCanceledMethodId = PopupMenuWillBecomeInvisibleMethodId + 1,
+        PopupMenuContentsChangedMethodId = PopupMenuCanceledMethodId + 1,
+        NextProducedMethodId = PopupMenuContentsChangedMethodId + 1
     };
-
-
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
-    static const  EventProducerType  &getProducerClassType  (void); 
-    static        UInt32              getProducerClassTypeId(void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
+    static const  EventProducerType  &getProducerClassType  (void);
+    static        UInt32              getProducerClassTypeId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -148,40 +159,56 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuBase : public Container
     /*! \{                                                                 */
 
 
-           SFReal32            *editSFSubMenuDelay   (void);
-     const SFReal32            *getSFSubMenuDelay   (void) const;
-
-           SFComponentPtr      *editSFInvoker        (void);
-     const SFComponentPtr      *getSFInvoker        (void) const;
-
-           SFSeparatorPtr      *editSFDefaultSeparator(void);
-     const SFSeparatorPtr      *getSFDefaultSeparator(void) const;
-
-           SFSingleSelectionModelPtr *editSFSelectionModel (void);
-     const SFSingleSelectionModelPtr *getSFSelectionModel (void) const;
+                  SFReal32            *editSFSubMenuDelay   (void);
+            const SFReal32            *getSFSubMenuDelay    (void) const;
+            const SFUnrecComponentPtr *getSFInvoker        (void) const;
+                  SFUnrecComponentPtr *editSFInvoker        (void);
+            const SFUnrecSeparatorPtr *getSFDefaultSeparator(void) const;
+                  SFUnrecSeparatorPtr *editSFDefaultSeparator(void);
+            const SFUnrecSingleSelectionModelPtr *getSFSelectionModel (void) const;
+                  SFUnrecSingleSelectionModelPtr *editSFSelectionModel (void);
 
 
-           Real32              &editSubMenuDelay   (void);
-     const Real32              &getSubMenuDelay   (void) const;
+                  Real32              &editSubMenuDelay   (void);
+                  Real32               getSubMenuDelay    (void) const;
 
-           ComponentPtr        &editInvoker        (void);
-     const ComponentPtr        &getInvoker        (void) const;
+                  Component * getInvoker        (void) const;
 
-           SeparatorPtr        &editDefaultSeparator(void);
-     const SeparatorPtr        &getDefaultSeparator(void) const;
+                  Separator * getDefaultSeparator(void) const;
 
-           SingleSelectionModelPtr &editSelectionModel (void);
-     const SingleSelectionModelPtr &getSelectionModel (void) const;
+                  SingleSelectionModel * getSelectionModel (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setSubMenuDelay   ( const Real32 &value );
-     void setInvoker        ( const ComponentPtr &value );
-     void setDefaultSeparator( const SeparatorPtr &value );
-     void setSelectionModel ( const SingleSelectionModelPtr &value );
+            void setSubMenuDelay   (const Real32 value);
+            void setInvoker        (Component * const value);
+            void setDefaultSeparator(Separator * const value);
+            void setSelectionModel (SingleSelectionModel * const value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Binary Access                              */
+    /*! \{                                                                 */
+
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -190,51 +217,52 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuBase : public Container
 
     virtual const EventProducerType &getProducerType(void) const; 
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
-    /*! \{                                                                 */
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Binary Access                              */
-    /*! \{                                                                 */
-
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  PopupMenuPtr      create          (void); 
-    static  PopupMenuPtr      createEmpty     (void); 
+    static  PopupMenuTransitPtr  create          (void);
+    static  PopupMenu           *createEmpty     (void);
+
+    static  PopupMenuTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  PopupMenu            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  PopupMenuTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFReal32            _sfSubMenuDelay;
-    SFComponentPtr      _sfInvoker;
-    SFSeparatorPtr      _sfDefaultSeparator;
-    SFSingleSelectionModelPtr   _sfSelectionModel;
+    SFReal32          _sfSubMenuDelay;
+    SFUnrecComponentPtr _sfInvoker;
+    SFUnrecSeparatorPtr _sfDefaultSeparator;
+    SFUnrecSingleSelectionModelPtr _sfSelectionModel;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -249,69 +277,88 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuBase : public Container
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~PopupMenuBase(void); 
+    virtual ~PopupMenuBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const PopupMenu *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleSubMenuDelay    (void) const;
+    EditFieldHandlePtr editHandleSubMenuDelay   (void);
+    GetFieldHandlePtr  getHandleInvoker         (void) const;
+    EditFieldHandlePtr editHandleInvoker        (void);
+    GetFieldHandlePtr  getHandleDefaultSeparator (void) const;
+    EditFieldHandlePtr editHandleDefaultSeparator(void);
+    GetFieldHandlePtr  getHandleSelectionModel  (void) const;
+    EditFieldHandlePtr editHandleSelectionModel (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      PopupMenuBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      PopupMenuBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      PopupMenuBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
+    /*---------------------------------------------------------------------*/
     static MethodDescription   *_methodDesc[];
     static EventProducerType _producerType;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const PopupMenuBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef PopupMenuBase *PopupMenuBaseP;
-
-typedef osgIF<PopupMenuBase::isNodeCore,
-              CoredNodePtr<PopupMenu>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet PopupMenuNodePtr;
-
-typedef RefPtr<PopupMenuPtr> PopupMenuRefPtr;
 
 OSG_END_NAMESPACE
 

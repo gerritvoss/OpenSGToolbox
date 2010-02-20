@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,246 +50,488 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILESHADOWBORDERINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGBorder.h"                  // InsideBorder Class
 
 #include "OSGShadowBorderBase.h"
 #include "OSGShadowBorder.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ShadowBorderBase::TopOffsetFieldMask = 
-    (TypeTraits<BitVector>::One << ShadowBorderBase::TopOffsetFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  ShadowBorderBase::BottomOffsetFieldMask = 
-    (TypeTraits<BitVector>::One << ShadowBorderBase::BottomOffsetFieldId);
+/*! \class OSG::ShadowBorder
+    UI Shadow Border.
+ */
 
-const OSG::BitVector  ShadowBorderBase::LeftOffsetFieldMask = 
-    (TypeTraits<BitVector>::One << ShadowBorderBase::LeftOffsetFieldId);
-
-const OSG::BitVector  ShadowBorderBase::RightOffsetFieldMask = 
-    (TypeTraits<BitVector>::One << ShadowBorderBase::RightOffsetFieldId);
-
-const OSG::BitVector  ShadowBorderBase::InternalColorFieldMask = 
-    (TypeTraits<BitVector>::One << ShadowBorderBase::InternalColorFieldId);
-
-const OSG::BitVector  ShadowBorderBase::EdgeColorFieldMask = 
-    (TypeTraits<BitVector>::One << ShadowBorderBase::EdgeColorFieldId);
-
-const OSG::BitVector  ShadowBorderBase::InsideBorderFieldMask = 
-    (TypeTraits<BitVector>::One << ShadowBorderBase::InsideBorderFieldId);
-
-const OSG::BitVector  ShadowBorderBase::CornerRadiusFieldMask = 
-    (TypeTraits<BitVector>::One << ShadowBorderBase::CornerRadiusFieldId);
-
-const OSG::BitVector  ShadowBorderBase::InternalToEdgeColorLengthFieldMask = 
-    (TypeTraits<BitVector>::One << ShadowBorderBase::InternalToEdgeColorLengthFieldId);
-
-const OSG::BitVector ShadowBorderBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Real32          ShadowBorderBase::_sfTopOffset
     
 */
+
 /*! \var Real32          ShadowBorderBase::_sfBottomOffset
     
 */
+
 /*! \var Real32          ShadowBorderBase::_sfLeftOffset
     
 */
+
 /*! \var Real32          ShadowBorderBase::_sfRightOffset
     
 */
+
 /*! \var Color4f         ShadowBorderBase::_sfInternalColor
     
 */
+
 /*! \var Color4f         ShadowBorderBase::_sfEdgeColor
     
 */
-/*! \var BorderPtr       ShadowBorderBase::_sfInsideBorder
+
+/*! \var Border *        ShadowBorderBase::_sfInsideBorder
     
 */
+
 /*! \var Real32          ShadowBorderBase::_sfCornerRadius
     
 */
+
 /*! \var Real32          ShadowBorderBase::_sfInternalToEdgeColorLength
     
 */
 
-//! ShadowBorder description
 
-FieldDescription *ShadowBorderBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ShadowBorder *>::_type("ShadowBorderPtr", "BorderPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ShadowBorder *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ShadowBorder *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ShadowBorder *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ShadowBorderBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "TopOffset", 
-                     TopOffsetFieldId, TopOffsetFieldMask,
-                     false,
-                     (FieldAccessMethod) &ShadowBorderBase::getSFTopOffset),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "BottomOffset", 
-                     BottomOffsetFieldId, BottomOffsetFieldMask,
-                     false,
-                     (FieldAccessMethod) &ShadowBorderBase::getSFBottomOffset),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "LeftOffset", 
-                     LeftOffsetFieldId, LeftOffsetFieldMask,
-                     false,
-                     (FieldAccessMethod) &ShadowBorderBase::getSFLeftOffset),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "RightOffset", 
-                     RightOffsetFieldId, RightOffsetFieldMask,
-                     false,
-                     (FieldAccessMethod) &ShadowBorderBase::getSFRightOffset),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "InternalColor", 
-                     InternalColorFieldId, InternalColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &ShadowBorderBase::getSFInternalColor),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "EdgeColor", 
-                     EdgeColorFieldId, EdgeColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &ShadowBorderBase::getSFEdgeColor),
-    new FieldDescription(SFBorderPtr::getClassType(), 
-                     "InsideBorder", 
-                     InsideBorderFieldId, InsideBorderFieldMask,
-                     false,
-                     (FieldAccessMethod) &ShadowBorderBase::getSFInsideBorder),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "CornerRadius", 
-                     CornerRadiusFieldId, CornerRadiusFieldMask,
-                     false,
-                     (FieldAccessMethod) &ShadowBorderBase::getSFCornerRadius),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "InternalToEdgeColorLength", 
-                     InternalToEdgeColorLengthFieldId, InternalToEdgeColorLengthFieldMask,
-                     false,
-                     (FieldAccessMethod) &ShadowBorderBase::getSFInternalToEdgeColorLength)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType ShadowBorderBase::_type(
-    "ShadowBorder",
-    "Border",
-    NULL,
-    (PrototypeCreateF) &ShadowBorderBase::createEmpty,
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "TopOffset",
+        "",
+        TopOffsetFieldId, TopOffsetFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ShadowBorder::editHandleTopOffset),
+        static_cast<FieldGetMethodSig >(&ShadowBorder::getHandleTopOffset));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "BottomOffset",
+        "",
+        BottomOffsetFieldId, BottomOffsetFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ShadowBorder::editHandleBottomOffset),
+        static_cast<FieldGetMethodSig >(&ShadowBorder::getHandleBottomOffset));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "LeftOffset",
+        "",
+        LeftOffsetFieldId, LeftOffsetFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ShadowBorder::editHandleLeftOffset),
+        static_cast<FieldGetMethodSig >(&ShadowBorder::getHandleLeftOffset));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "RightOffset",
+        "",
+        RightOffsetFieldId, RightOffsetFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ShadowBorder::editHandleRightOffset),
+        static_cast<FieldGetMethodSig >(&ShadowBorder::getHandleRightOffset));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "InternalColor",
+        "",
+        InternalColorFieldId, InternalColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ShadowBorder::editHandleInternalColor),
+        static_cast<FieldGetMethodSig >(&ShadowBorder::getHandleInternalColor));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "EdgeColor",
+        "",
+        EdgeColorFieldId, EdgeColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ShadowBorder::editHandleEdgeColor),
+        static_cast<FieldGetMethodSig >(&ShadowBorder::getHandleEdgeColor));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecBorderPtr::Description(
+        SFUnrecBorderPtr::getClassType(),
+        "InsideBorder",
+        "",
+        InsideBorderFieldId, InsideBorderFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ShadowBorder::editHandleInsideBorder),
+        static_cast<FieldGetMethodSig >(&ShadowBorder::getHandleInsideBorder));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "CornerRadius",
+        "",
+        CornerRadiusFieldId, CornerRadiusFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ShadowBorder::editHandleCornerRadius),
+        static_cast<FieldGetMethodSig >(&ShadowBorder::getHandleCornerRadius));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "InternalToEdgeColorLength",
+        "",
+        InternalToEdgeColorLengthFieldId, InternalToEdgeColorLengthFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ShadowBorder::editHandleInternalToEdgeColorLength),
+        static_cast<FieldGetMethodSig >(&ShadowBorder::getHandleInternalToEdgeColorLength));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+ShadowBorderBase::TypeObject ShadowBorderBase::_type(
+    ShadowBorderBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ShadowBorderBase::createEmptyLocal),
     ShadowBorder::initMethod,
-    _desc,
-    sizeof(_desc));
+    ShadowBorder::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ShadowBorder::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ShadowBorder\"\n"
+    "\tparent=\"Border\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "UI Shadow Border.\n"
+    "\t<Field\n"
+    "\t\tname=\"TopOffset\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"BottomOffset\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"5\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"LeftOffset\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"RightOffset\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"5\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalColor\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"EdgeColor\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InsideBorder\"\n"
+    "\t\ttype=\"Border\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"CornerRadius\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"3\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalToEdgeColorLength\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"3\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "UI Shadow Border.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(ShadowBorderBase, ShadowBorderPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ShadowBorderBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ShadowBorderBase::getType(void) const 
+FieldContainerType &ShadowBorderBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr ShadowBorderBase::shallowCopy(void) const 
-{ 
-    ShadowBorderPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const ShadowBorder *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 ShadowBorderBase::getContainerSize(void) const 
-{ 
-    return sizeof(ShadowBorder); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ShadowBorderBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &ShadowBorderBase::getType(void) const
 {
-    this->executeSyncImpl((ShadowBorderBase *) &other, whichField);
+    return _type;
 }
-#else
-void ShadowBorderBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 ShadowBorderBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((ShadowBorderBase *) &other, whichField, sInfo);
+    return sizeof(ShadowBorder);
 }
-void ShadowBorderBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFReal32 *ShadowBorderBase::editSFTopOffset(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(TopOffsetFieldMask);
+
+    return &_sfTopOffset;
 }
 
-void ShadowBorderBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFReal32 *ShadowBorderBase::getSFTopOffset(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfTopOffset;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-ShadowBorderBase::ShadowBorderBase(void) :
-    _sfTopOffset              (Real32(0)), 
-    _sfBottomOffset           (Real32(5)), 
-    _sfLeftOffset             (Real32(0)), 
-    _sfRightOffset            (Real32(5)), 
-    _sfInternalColor          (Color4f(0.0,0.0,0.0,1.0)), 
-    _sfEdgeColor              (Color4f(0.0,0.0,0.0,1.0)), 
-    _sfInsideBorder           (BorderPtr(NullFC)), 
-    _sfCornerRadius           (Real32(3)), 
-    _sfInternalToEdgeColorLength(Real32(3)), 
-    Inherited() 
+SFReal32 *ShadowBorderBase::editSFBottomOffset(void)
 {
+    editSField(BottomOffsetFieldMask);
+
+    return &_sfBottomOffset;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-ShadowBorderBase::ShadowBorderBase(const ShadowBorderBase &source) :
-    _sfTopOffset              (source._sfTopOffset              ), 
-    _sfBottomOffset           (source._sfBottomOffset           ), 
-    _sfLeftOffset             (source._sfLeftOffset             ), 
-    _sfRightOffset            (source._sfRightOffset            ), 
-    _sfInternalColor          (source._sfInternalColor          ), 
-    _sfEdgeColor              (source._sfEdgeColor              ), 
-    _sfInsideBorder           (source._sfInsideBorder           ), 
-    _sfCornerRadius           (source._sfCornerRadius           ), 
-    _sfInternalToEdgeColorLength(source._sfInternalToEdgeColorLength), 
-    Inherited                 (source)
+const SFReal32 *ShadowBorderBase::getSFBottomOffset(void) const
 {
+    return &_sfBottomOffset;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-ShadowBorderBase::~ShadowBorderBase(void)
+SFReal32 *ShadowBorderBase::editSFLeftOffset(void)
 {
+    editSField(LeftOffsetFieldMask);
+
+    return &_sfLeftOffset;
 }
+
+const SFReal32 *ShadowBorderBase::getSFLeftOffset(void) const
+{
+    return &_sfLeftOffset;
+}
+
+
+SFReal32 *ShadowBorderBase::editSFRightOffset(void)
+{
+    editSField(RightOffsetFieldMask);
+
+    return &_sfRightOffset;
+}
+
+const SFReal32 *ShadowBorderBase::getSFRightOffset(void) const
+{
+    return &_sfRightOffset;
+}
+
+
+SFColor4f *ShadowBorderBase::editSFInternalColor(void)
+{
+    editSField(InternalColorFieldMask);
+
+    return &_sfInternalColor;
+}
+
+const SFColor4f *ShadowBorderBase::getSFInternalColor(void) const
+{
+    return &_sfInternalColor;
+}
+
+
+SFColor4f *ShadowBorderBase::editSFEdgeColor(void)
+{
+    editSField(EdgeColorFieldMask);
+
+    return &_sfEdgeColor;
+}
+
+const SFColor4f *ShadowBorderBase::getSFEdgeColor(void) const
+{
+    return &_sfEdgeColor;
+}
+
+
+//! Get the ShadowBorder::_sfInsideBorder field.
+const SFUnrecBorderPtr *ShadowBorderBase::getSFInsideBorder(void) const
+{
+    return &_sfInsideBorder;
+}
+
+SFUnrecBorderPtr    *ShadowBorderBase::editSFInsideBorder   (void)
+{
+    editSField(InsideBorderFieldMask);
+
+    return &_sfInsideBorder;
+}
+
+SFReal32 *ShadowBorderBase::editSFCornerRadius(void)
+{
+    editSField(CornerRadiusFieldMask);
+
+    return &_sfCornerRadius;
+}
+
+const SFReal32 *ShadowBorderBase::getSFCornerRadius(void) const
+{
+    return &_sfCornerRadius;
+}
+
+
+SFReal32 *ShadowBorderBase::editSFInternalToEdgeColorLength(void)
+{
+    editSField(InternalToEdgeColorLengthFieldMask);
+
+    return &_sfInternalToEdgeColorLength;
+}
+
+const SFReal32 *ShadowBorderBase::getSFInternalToEdgeColorLength(void) const
+{
+    return &_sfInternalToEdgeColorLength;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ShadowBorderBase::getBinSize(const BitVector &whichField)
+UInt32 ShadowBorderBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -297,53 +539,44 @@ UInt32 ShadowBorderBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfTopOffset.getBinSize();
     }
-
     if(FieldBits::NoField != (BottomOffsetFieldMask & whichField))
     {
         returnValue += _sfBottomOffset.getBinSize();
     }
-
     if(FieldBits::NoField != (LeftOffsetFieldMask & whichField))
     {
         returnValue += _sfLeftOffset.getBinSize();
     }
-
     if(FieldBits::NoField != (RightOffsetFieldMask & whichField))
     {
         returnValue += _sfRightOffset.getBinSize();
     }
-
     if(FieldBits::NoField != (InternalColorFieldMask & whichField))
     {
         returnValue += _sfInternalColor.getBinSize();
     }
-
     if(FieldBits::NoField != (EdgeColorFieldMask & whichField))
     {
         returnValue += _sfEdgeColor.getBinSize();
     }
-
     if(FieldBits::NoField != (InsideBorderFieldMask & whichField))
     {
         returnValue += _sfInsideBorder.getBinSize();
     }
-
     if(FieldBits::NoField != (CornerRadiusFieldMask & whichField))
     {
         returnValue += _sfCornerRadius.getBinSize();
     }
-
     if(FieldBits::NoField != (InternalToEdgeColorLengthFieldMask & whichField))
     {
         returnValue += _sfInternalToEdgeColorLength.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ShadowBorderBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ShadowBorderBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -351,52 +584,42 @@ void ShadowBorderBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfTopOffset.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (BottomOffsetFieldMask & whichField))
     {
         _sfBottomOffset.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (LeftOffsetFieldMask & whichField))
     {
         _sfLeftOffset.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (RightOffsetFieldMask & whichField))
     {
         _sfRightOffset.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalColorFieldMask & whichField))
     {
         _sfInternalColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EdgeColorFieldMask & whichField))
     {
         _sfEdgeColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InsideBorderFieldMask & whichField))
     {
         _sfInsideBorder.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (CornerRadiusFieldMask & whichField))
     {
         _sfCornerRadius.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalToEdgeColorLengthFieldMask & whichField))
     {
         _sfInternalToEdgeColorLength.copyToBin(pMem);
     }
-
-
 }
 
-void ShadowBorderBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ShadowBorderBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -404,170 +627,477 @@ void ShadowBorderBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfTopOffset.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (BottomOffsetFieldMask & whichField))
     {
         _sfBottomOffset.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (LeftOffsetFieldMask & whichField))
     {
         _sfLeftOffset.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (RightOffsetFieldMask & whichField))
     {
         _sfRightOffset.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalColorFieldMask & whichField))
     {
         _sfInternalColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EdgeColorFieldMask & whichField))
     {
         _sfEdgeColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InsideBorderFieldMask & whichField))
     {
         _sfInsideBorder.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (CornerRadiusFieldMask & whichField))
     {
         _sfCornerRadius.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalToEdgeColorLengthFieldMask & whichField))
     {
         _sfInternalToEdgeColorLength.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ShadowBorderBase::executeSyncImpl(      ShadowBorderBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ShadowBorderTransitPtr ShadowBorderBase::createLocal(BitVector bFlags)
 {
+    ShadowBorderTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (TopOffsetFieldMask & whichField))
-        _sfTopOffset.syncWith(pOther->_sfTopOffset);
+        fc = dynamic_pointer_cast<ShadowBorder>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (BottomOffsetFieldMask & whichField))
-        _sfBottomOffset.syncWith(pOther->_sfBottomOffset);
-
-    if(FieldBits::NoField != (LeftOffsetFieldMask & whichField))
-        _sfLeftOffset.syncWith(pOther->_sfLeftOffset);
-
-    if(FieldBits::NoField != (RightOffsetFieldMask & whichField))
-        _sfRightOffset.syncWith(pOther->_sfRightOffset);
-
-    if(FieldBits::NoField != (InternalColorFieldMask & whichField))
-        _sfInternalColor.syncWith(pOther->_sfInternalColor);
-
-    if(FieldBits::NoField != (EdgeColorFieldMask & whichField))
-        _sfEdgeColor.syncWith(pOther->_sfEdgeColor);
-
-    if(FieldBits::NoField != (InsideBorderFieldMask & whichField))
-        _sfInsideBorder.syncWith(pOther->_sfInsideBorder);
-
-    if(FieldBits::NoField != (CornerRadiusFieldMask & whichField))
-        _sfCornerRadius.syncWith(pOther->_sfCornerRadius);
-
-    if(FieldBits::NoField != (InternalToEdgeColorLengthFieldMask & whichField))
-        _sfInternalToEdgeColorLength.syncWith(pOther->_sfInternalToEdgeColorLength);
-
-
-}
-#else
-void ShadowBorderBase::executeSyncImpl(      ShadowBorderBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (TopOffsetFieldMask & whichField))
-        _sfTopOffset.syncWith(pOther->_sfTopOffset);
-
-    if(FieldBits::NoField != (BottomOffsetFieldMask & whichField))
-        _sfBottomOffset.syncWith(pOther->_sfBottomOffset);
-
-    if(FieldBits::NoField != (LeftOffsetFieldMask & whichField))
-        _sfLeftOffset.syncWith(pOther->_sfLeftOffset);
-
-    if(FieldBits::NoField != (RightOffsetFieldMask & whichField))
-        _sfRightOffset.syncWith(pOther->_sfRightOffset);
-
-    if(FieldBits::NoField != (InternalColorFieldMask & whichField))
-        _sfInternalColor.syncWith(pOther->_sfInternalColor);
-
-    if(FieldBits::NoField != (EdgeColorFieldMask & whichField))
-        _sfEdgeColor.syncWith(pOther->_sfEdgeColor);
-
-    if(FieldBits::NoField != (InsideBorderFieldMask & whichField))
-        _sfInsideBorder.syncWith(pOther->_sfInsideBorder);
-
-    if(FieldBits::NoField != (CornerRadiusFieldMask & whichField))
-        _sfCornerRadius.syncWith(pOther->_sfCornerRadius);
-
-    if(FieldBits::NoField != (InternalToEdgeColorLengthFieldMask & whichField))
-        _sfInternalToEdgeColorLength.syncWith(pOther->_sfInternalToEdgeColorLength);
-
-
-
+    return fc;
 }
 
-void ShadowBorderBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ShadowBorderTransitPtr ShadowBorderBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ShadowBorderTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<ShadowBorder>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ShadowBorderTransitPtr ShadowBorderBase::create(void)
+{
+    ShadowBorderTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<ShadowBorder>(tmpPtr);
+    }
+
+    return fc;
+}
+
+ShadowBorder *ShadowBorderBase::createEmptyLocal(BitVector bFlags)
+{
+    ShadowBorder *returnValue;
+
+    newPtr<ShadowBorder>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+ShadowBorder *ShadowBorderBase::createEmpty(void)
+{
+    ShadowBorder *returnValue;
+
+    newPtr<ShadowBorder>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ShadowBorderBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    ShadowBorder *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ShadowBorder *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ShadowBorderBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    ShadowBorder *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ShadowBorder *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ShadowBorderBase::shallowCopy(void) const
+{
+    ShadowBorder *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const ShadowBorder *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ShadowBorderBase::ShadowBorderBase(void) :
+    Inherited(),
+    _sfTopOffset              (Real32(0)),
+    _sfBottomOffset           (Real32(5)),
+    _sfLeftOffset             (Real32(0)),
+    _sfRightOffset            (Real32(5)),
+    _sfInternalColor          (Color4f(0.0,0.0,0.0,1.0)),
+    _sfEdgeColor              (Color4f(0.0,0.0,0.0,1.0)),
+    _sfInsideBorder           (NULL),
+    _sfCornerRadius           (Real32(3)),
+    _sfInternalToEdgeColorLength(Real32(3))
+{
+}
+
+ShadowBorderBase::ShadowBorderBase(const ShadowBorderBase &source) :
+    Inherited(source),
+    _sfTopOffset              (source._sfTopOffset              ),
+    _sfBottomOffset           (source._sfBottomOffset           ),
+    _sfLeftOffset             (source._sfLeftOffset             ),
+    _sfRightOffset            (source._sfRightOffset            ),
+    _sfInternalColor          (source._sfInternalColor          ),
+    _sfEdgeColor              (source._sfEdgeColor              ),
+    _sfInsideBorder           (NULL),
+    _sfCornerRadius           (source._sfCornerRadius           ),
+    _sfInternalToEdgeColorLength(source._sfInternalToEdgeColorLength)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ShadowBorderBase::~ShadowBorderBase(void)
+{
+}
+
+void ShadowBorderBase::onCreate(const ShadowBorder *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        ShadowBorder *pThis = static_cast<ShadowBorder *>(this);
+
+        pThis->setInsideBorder(source->getInsideBorder());
+    }
+}
+
+GetFieldHandlePtr ShadowBorderBase::getHandleTopOffset       (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfTopOffset,
+             this->getType().getFieldDesc(TopOffsetFieldId),
+             const_cast<ShadowBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ShadowBorderBase::editHandleTopOffset      (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfTopOffset,
+             this->getType().getFieldDesc(TopOffsetFieldId),
+             this));
+
+
+    editSField(TopOffsetFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ShadowBorderBase::getHandleBottomOffset    (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfBottomOffset,
+             this->getType().getFieldDesc(BottomOffsetFieldId),
+             const_cast<ShadowBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ShadowBorderBase::editHandleBottomOffset   (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfBottomOffset,
+             this->getType().getFieldDesc(BottomOffsetFieldId),
+             this));
+
+
+    editSField(BottomOffsetFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ShadowBorderBase::getHandleLeftOffset      (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfLeftOffset,
+             this->getType().getFieldDesc(LeftOffsetFieldId),
+             const_cast<ShadowBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ShadowBorderBase::editHandleLeftOffset     (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfLeftOffset,
+             this->getType().getFieldDesc(LeftOffsetFieldId),
+             this));
+
+
+    editSField(LeftOffsetFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ShadowBorderBase::getHandleRightOffset     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfRightOffset,
+             this->getType().getFieldDesc(RightOffsetFieldId),
+             const_cast<ShadowBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ShadowBorderBase::editHandleRightOffset    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfRightOffset,
+             this->getType().getFieldDesc(RightOffsetFieldId),
+             this));
+
+
+    editSField(RightOffsetFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ShadowBorderBase::getHandleInternalColor   (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfInternalColor,
+             this->getType().getFieldDesc(InternalColorFieldId),
+             const_cast<ShadowBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ShadowBorderBase::editHandleInternalColor  (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfInternalColor,
+             this->getType().getFieldDesc(InternalColorFieldId),
+             this));
+
+
+    editSField(InternalColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ShadowBorderBase::getHandleEdgeColor       (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfEdgeColor,
+             this->getType().getFieldDesc(EdgeColorFieldId),
+             const_cast<ShadowBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ShadowBorderBase::editHandleEdgeColor      (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfEdgeColor,
+             this->getType().getFieldDesc(EdgeColorFieldId),
+             this));
+
+
+    editSField(EdgeColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ShadowBorderBase::getHandleInsideBorder    (void) const
+{
+    SFUnrecBorderPtr::GetHandlePtr returnValue(
+        new  SFUnrecBorderPtr::GetHandle(
+             &_sfInsideBorder,
+             this->getType().getFieldDesc(InsideBorderFieldId),
+             const_cast<ShadowBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ShadowBorderBase::editHandleInsideBorder   (void)
+{
+    SFUnrecBorderPtr::EditHandlePtr returnValue(
+        new  SFUnrecBorderPtr::EditHandle(
+             &_sfInsideBorder,
+             this->getType().getFieldDesc(InsideBorderFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ShadowBorder::setInsideBorder,
+                    static_cast<ShadowBorder *>(this), _1));
+
+    editSField(InsideBorderFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ShadowBorderBase::getHandleCornerRadius    (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfCornerRadius,
+             this->getType().getFieldDesc(CornerRadiusFieldId),
+             const_cast<ShadowBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ShadowBorderBase::editHandleCornerRadius   (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfCornerRadius,
+             this->getType().getFieldDesc(CornerRadiusFieldId),
+             this));
+
+
+    editSField(CornerRadiusFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ShadowBorderBase::getHandleInternalToEdgeColorLength (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfInternalToEdgeColorLength,
+             this->getType().getFieldDesc(InternalToEdgeColorLengthFieldId),
+             const_cast<ShadowBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ShadowBorderBase::editHandleInternalToEdgeColorLength(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfInternalToEdgeColorLength,
+             this->getType().getFieldDesc(InternalToEdgeColorLengthFieldId),
+             this));
+
+
+    editSField(InternalToEdgeColorLengthFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ShadowBorderBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ShadowBorder *pThis = static_cast<ShadowBorder *>(this);
+
+    pThis->execSync(static_cast<ShadowBorder *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ShadowBorderBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    ShadowBorder *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const ShadowBorder *>(pRefAspect),
+                  dynamic_cast<const ShadowBorder *>(this));
+
+    return returnValue;
+}
+#endif
+
+void ShadowBorderBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<ShadowBorder *>(this)->setInsideBorder(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ShadowBorderPtr>::_type("ShadowBorderPtr", "BorderPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(ShadowBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ShadowBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGSHADOWBORDERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSHADOWBORDERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSHADOWBORDERFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

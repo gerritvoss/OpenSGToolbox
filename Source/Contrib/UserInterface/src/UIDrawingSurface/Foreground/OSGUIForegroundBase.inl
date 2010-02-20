@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,104 +55,83 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &UIForegroundBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 UIForegroundBase::getClassTypeId(void) 
+OSG::UInt32 UIForegroundBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-UIForegroundPtr UIForegroundBase::create(void) 
-{
-    UIForegroundPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = UIForegroundPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-UIForegroundPtr UIForegroundBase::createEmpty(void) 
-{ 
-    UIForegroundPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 UIForegroundBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the UIForeground::_sfDrawingSurface field.
-inline
-SFUIDrawingSurfacePtr *UIForegroundBase::getSFDrawingSurface(void)
-{
-    return &_sfDrawingSurface;
-}
-
-//! Get the UIForeground::_sfMouseTransformFunctor field.
-inline
-SFUIForegroundMouseTransformFunctorPtr *UIForegroundBase::getSFMouseTransformFunctor(void)
-{
-    return &_sfMouseTransformFunctor;
-}
-
 
 //! Get the value of the UIForeground::_sfDrawingSurface field.
 inline
-UIDrawingSurfacePtr &UIForegroundBase::getDrawingSurface(void)
-{
-    return _sfDrawingSurface.getValue();
-}
-
-//! Get the value of the UIForeground::_sfDrawingSurface field.
-inline
-const UIDrawingSurfacePtr &UIForegroundBase::getDrawingSurface(void) const
+UIDrawingSurface * UIForegroundBase::getDrawingSurface(void) const
 {
     return _sfDrawingSurface.getValue();
 }
 
 //! Set the value of the UIForeground::_sfDrawingSurface field.
 inline
-void UIForegroundBase::setDrawingSurface(const UIDrawingSurfacePtr &value)
+void UIForegroundBase::setDrawingSurface(UIDrawingSurface * const value)
 {
+    editSField(DrawingSurfaceFieldMask);
+
     _sfDrawingSurface.setValue(value);
 }
 
 //! Get the value of the UIForeground::_sfMouseTransformFunctor field.
 inline
-UIForegroundMouseTransformFunctorPtr &UIForegroundBase::getMouseTransformFunctor(void)
-{
-    return _sfMouseTransformFunctor.getValue();
-}
-
-//! Get the value of the UIForeground::_sfMouseTransformFunctor field.
-inline
-const UIForegroundMouseTransformFunctorPtr &UIForegroundBase::getMouseTransformFunctor(void) const
+UIForegroundMouseTransformFunctor * UIForegroundBase::getMouseTransformFunctor(void) const
 {
     return _sfMouseTransformFunctor.getValue();
 }
 
 //! Set the value of the UIForeground::_sfMouseTransformFunctor field.
 inline
-void UIForegroundBase::setMouseTransformFunctor(const UIForegroundMouseTransformFunctorPtr &value)
+void UIForegroundBase::setMouseTransformFunctor(UIForegroundMouseTransformFunctor * const value)
 {
+    editSField(MouseTransformFunctorFieldMask);
+
     _sfMouseTransformFunctor.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void UIForegroundBase::execSync (      UIForegroundBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGUIFOREGROUNDBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
+        _sfDrawingSurface.syncWith(pFrom->_sfDrawingSurface);
+
+    if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
+        _sfMouseTransformFunctor.syncWith(pFrom->_sfMouseTransformFunctor);
+}
+#endif
+
+
+inline
+const Char8 *UIForegroundBase::getClassname(void)
+{
+    return "UIForeground";
+}
+OSG_GEN_CONTAINERPTR(UIForeground);
+
+OSG_END_NAMESPACE
 

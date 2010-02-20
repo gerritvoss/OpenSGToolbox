@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,220 +50,409 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEGRAPHICS3DEXTRUDEINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGDepthChunk.h"              // UIDepth Class
+#include "OSGMaterial.h"                // Material Class
 
 #include "OSGGraphics3DExtrudeBase.h"
 #include "OSGGraphics3DExtrude.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  Graphics3DExtrudeBase::UIDepthFieldMask = 
-    (TypeTraits<BitVector>::One << Graphics3DExtrudeBase::UIDepthFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  Graphics3DExtrudeBase::ExtrudeLengthFieldMask = 
-    (TypeTraits<BitVector>::One << Graphics3DExtrudeBase::ExtrudeLengthFieldId);
+/*! \class OSG::Graphics3DExtrude
+    A Concrete 3D Extrution UI Graphics.
+ */
 
-const OSG::BitVector  Graphics3DExtrudeBase::InternalClipPlaneOffsetFieldMask = 
-    (TypeTraits<BitVector>::One << Graphics3DExtrudeBase::InternalClipPlaneOffsetFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  Graphics3DExtrudeBase::TextOffsetFieldMask = 
-    (TypeTraits<BitVector>::One << Graphics3DExtrudeBase::TextOffsetFieldId);
-
-const OSG::BitVector  Graphics3DExtrudeBase::Enable3DTextFieldMask = 
-    (TypeTraits<BitVector>::One << Graphics3DExtrudeBase::Enable3DTextFieldId);
-
-const OSG::BitVector  Graphics3DExtrudeBase::EnableLightingFieldMask = 
-    (TypeTraits<BitVector>::One << Graphics3DExtrudeBase::EnableLightingFieldId);
-
-const OSG::BitVector  Graphics3DExtrudeBase::MaterialFieldMask = 
-    (TypeTraits<BitVector>::One << Graphics3DExtrudeBase::MaterialFieldId);
-
-const OSG::BitVector Graphics3DExtrudeBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var DepthChunkPtr   Graphics3DExtrudeBase::_sfUIDepth
+/*! \var DepthChunk *    Graphics3DExtrudeBase::_sfUIDepth
     
 */
+
 /*! \var Real32          Graphics3DExtrudeBase::_sfExtrudeLength
     
 */
+
 /*! \var Real32          Graphics3DExtrudeBase::_sfInternalClipPlaneOffset
     
 */
+
 /*! \var Real32          Graphics3DExtrudeBase::_sfTextOffset
     
 */
+
 /*! \var bool            Graphics3DExtrudeBase::_sfEnable3DText
     
 */
+
 /*! \var bool            Graphics3DExtrudeBase::_sfEnableLighting
     
 */
-/*! \var MaterialPtr     Graphics3DExtrudeBase::_sfMaterial
+
+/*! \var Material *      Graphics3DExtrudeBase::_sfMaterial
     
 */
 
-//! Graphics3DExtrude description
 
-FieldDescription *Graphics3DExtrudeBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<Graphics3DExtrude *>::_type("Graphics3DExtrudePtr", "GraphicsPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(Graphics3DExtrude *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           Graphics3DExtrude *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           Graphics3DExtrude *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void Graphics3DExtrudeBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFDepthChunkPtr::getClassType(), 
-                     "UIDepth", 
-                     UIDepthFieldId, UIDepthFieldMask,
-                     true,
-                     (FieldAccessMethod) &Graphics3DExtrudeBase::getSFUIDepth),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "ExtrudeLength", 
-                     ExtrudeLengthFieldId, ExtrudeLengthFieldMask,
-                     false,
-                     (FieldAccessMethod) &Graphics3DExtrudeBase::getSFExtrudeLength),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "InternalClipPlaneOffset", 
-                     InternalClipPlaneOffsetFieldId, InternalClipPlaneOffsetFieldMask,
-                     false,
-                     (FieldAccessMethod) &Graphics3DExtrudeBase::getSFInternalClipPlaneOffset),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "TextOffset", 
-                     TextOffsetFieldId, TextOffsetFieldMask,
-                     false,
-                     (FieldAccessMethod) &Graphics3DExtrudeBase::getSFTextOffset),
-    new FieldDescription(SFBool::getClassType(), 
-                     "Enable3DText", 
-                     Enable3DTextFieldId, Enable3DTextFieldMask,
-                     false,
-                     (FieldAccessMethod) &Graphics3DExtrudeBase::getSFEnable3DText),
-    new FieldDescription(SFBool::getClassType(), 
-                     "EnableLighting", 
-                     EnableLightingFieldId, EnableLightingFieldMask,
-                     false,
-                     (FieldAccessMethod) &Graphics3DExtrudeBase::getSFEnableLighting),
-    new FieldDescription(SFMaterialPtr::getClassType(), 
-                     "Material", 
-                     MaterialFieldId, MaterialFieldMask,
-                     false,
-                     (FieldAccessMethod) &Graphics3DExtrudeBase::getSFMaterial)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType Graphics3DExtrudeBase::_type(
-    "Graphics3DExtrude",
-    "Graphics",
-    NULL,
-    (PrototypeCreateF) &Graphics3DExtrudeBase::createEmpty,
+    pDesc = new SFUnrecDepthChunkPtr::Description(
+        SFUnrecDepthChunkPtr::getClassType(),
+        "UIDepth",
+        "",
+        UIDepthFieldId, UIDepthFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Graphics3DExtrude::editHandleUIDepth),
+        static_cast<FieldGetMethodSig >(&Graphics3DExtrude::getHandleUIDepth));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "ExtrudeLength",
+        "",
+        ExtrudeLengthFieldId, ExtrudeLengthFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Graphics3DExtrude::editHandleExtrudeLength),
+        static_cast<FieldGetMethodSig >(&Graphics3DExtrude::getHandleExtrudeLength));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "InternalClipPlaneOffset",
+        "",
+        InternalClipPlaneOffsetFieldId, InternalClipPlaneOffsetFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Graphics3DExtrude::editHandleInternalClipPlaneOffset),
+        static_cast<FieldGetMethodSig >(&Graphics3DExtrude::getHandleInternalClipPlaneOffset));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "TextOffset",
+        "",
+        TextOffsetFieldId, TextOffsetFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Graphics3DExtrude::editHandleTextOffset),
+        static_cast<FieldGetMethodSig >(&Graphics3DExtrude::getHandleTextOffset));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Enable3DText",
+        "",
+        Enable3DTextFieldId, Enable3DTextFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Graphics3DExtrude::editHandleEnable3DText),
+        static_cast<FieldGetMethodSig >(&Graphics3DExtrude::getHandleEnable3DText));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "EnableLighting",
+        "",
+        EnableLightingFieldId, EnableLightingFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Graphics3DExtrude::editHandleEnableLighting),
+        static_cast<FieldGetMethodSig >(&Graphics3DExtrude::getHandleEnableLighting));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecMaterialPtr::Description(
+        SFUnrecMaterialPtr::getClassType(),
+        "Material",
+        "",
+        MaterialFieldId, MaterialFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Graphics3DExtrude::editHandleMaterial),
+        static_cast<FieldGetMethodSig >(&Graphics3DExtrude::getHandleMaterial));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+Graphics3DExtrudeBase::TypeObject Graphics3DExtrudeBase::_type(
+    Graphics3DExtrudeBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&Graphics3DExtrudeBase::createEmptyLocal),
     Graphics3DExtrude::initMethod,
-    _desc,
-    sizeof(_desc));
+    Graphics3DExtrude::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&Graphics3DExtrude::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"Graphics3DExtrude\"\n"
+    "\tparent=\"Graphics\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A Concrete 3D Extrution UI Graphics.\n"
+    "\t<Field\n"
+    "\t\tname=\"UIDepth\"\n"
+    "\t\ttype=\"DepthChunk\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ExtrudeLength\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalClipPlaneOffset\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.0001\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TextOffset\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.0001\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Enable3DText\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"EnableLighting\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Material\"\n"
+    "\t\ttype=\"Material\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A Concrete 3D Extrution UI Graphics.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(Graphics3DExtrudeBase, Graphics3DExtrudePtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &Graphics3DExtrudeBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &Graphics3DExtrudeBase::getType(void) const 
+FieldContainerType &Graphics3DExtrudeBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr Graphics3DExtrudeBase::shallowCopy(void) const 
-{ 
-    Graphics3DExtrudePtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const Graphics3DExtrude *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 Graphics3DExtrudeBase::getContainerSize(void) const 
-{ 
-    return sizeof(Graphics3DExtrude); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void Graphics3DExtrudeBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &Graphics3DExtrudeBase::getType(void) const
 {
-    this->executeSyncImpl((Graphics3DExtrudeBase *) &other, whichField);
+    return _type;
 }
-#else
-void Graphics3DExtrudeBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 Graphics3DExtrudeBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((Graphics3DExtrudeBase *) &other, whichField, sInfo);
+    return sizeof(Graphics3DExtrude);
 }
-void Graphics3DExtrudeBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the Graphics3DExtrude::_sfUIDepth field.
+const SFUnrecDepthChunkPtr *Graphics3DExtrudeBase::getSFUIDepth(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfUIDepth;
 }
 
-void Graphics3DExtrudeBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecDepthChunkPtr *Graphics3DExtrudeBase::editSFUIDepth        (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(UIDepthFieldMask);
 
+    return &_sfUIDepth;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-Graphics3DExtrudeBase::Graphics3DExtrudeBase(void) :
-    _sfUIDepth                (DepthChunkPtr(NullFC)), 
-    _sfExtrudeLength          (Real32(1.0)), 
-    _sfInternalClipPlaneOffset(Real32(0.001)), 
-    _sfTextOffset             (Real32(0.001)), 
-    _sfEnable3DText           (bool(false)), 
-    _sfEnableLighting         (bool(false)), 
-    _sfMaterial               (MaterialPtr(NullFC)), 
-    Inherited() 
+SFReal32 *Graphics3DExtrudeBase::editSFExtrudeLength(void)
 {
+    editSField(ExtrudeLengthFieldMask);
+
+    return &_sfExtrudeLength;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-Graphics3DExtrudeBase::Graphics3DExtrudeBase(const Graphics3DExtrudeBase &source) :
-    _sfUIDepth                (source._sfUIDepth                ), 
-    _sfExtrudeLength          (source._sfExtrudeLength          ), 
-    _sfInternalClipPlaneOffset(source._sfInternalClipPlaneOffset), 
-    _sfTextOffset             (source._sfTextOffset             ), 
-    _sfEnable3DText           (source._sfEnable3DText           ), 
-    _sfEnableLighting         (source._sfEnableLighting         ), 
-    _sfMaterial               (source._sfMaterial               ), 
-    Inherited                 (source)
+const SFReal32 *Graphics3DExtrudeBase::getSFExtrudeLength(void) const
 {
+    return &_sfExtrudeLength;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-Graphics3DExtrudeBase::~Graphics3DExtrudeBase(void)
+SFReal32 *Graphics3DExtrudeBase::editSFInternalClipPlaneOffset(void)
 {
+    editSField(InternalClipPlaneOffsetFieldMask);
+
+    return &_sfInternalClipPlaneOffset;
 }
+
+const SFReal32 *Graphics3DExtrudeBase::getSFInternalClipPlaneOffset(void) const
+{
+    return &_sfInternalClipPlaneOffset;
+}
+
+
+SFReal32 *Graphics3DExtrudeBase::editSFTextOffset(void)
+{
+    editSField(TextOffsetFieldMask);
+
+    return &_sfTextOffset;
+}
+
+const SFReal32 *Graphics3DExtrudeBase::getSFTextOffset(void) const
+{
+    return &_sfTextOffset;
+}
+
+
+SFBool *Graphics3DExtrudeBase::editSFEnable3DText(void)
+{
+    editSField(Enable3DTextFieldMask);
+
+    return &_sfEnable3DText;
+}
+
+const SFBool *Graphics3DExtrudeBase::getSFEnable3DText(void) const
+{
+    return &_sfEnable3DText;
+}
+
+
+SFBool *Graphics3DExtrudeBase::editSFEnableLighting(void)
+{
+    editSField(EnableLightingFieldMask);
+
+    return &_sfEnableLighting;
+}
+
+const SFBool *Graphics3DExtrudeBase::getSFEnableLighting(void) const
+{
+    return &_sfEnableLighting;
+}
+
+
+//! Get the Graphics3DExtrude::_sfMaterial field.
+const SFUnrecMaterialPtr *Graphics3DExtrudeBase::getSFMaterial(void) const
+{
+    return &_sfMaterial;
+}
+
+SFUnrecMaterialPtr  *Graphics3DExtrudeBase::editSFMaterial       (void)
+{
+    editSField(MaterialFieldMask);
+
+    return &_sfMaterial;
+}
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 Graphics3DExtrudeBase::getBinSize(const BitVector &whichField)
+UInt32 Graphics3DExtrudeBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -271,43 +460,36 @@ UInt32 Graphics3DExtrudeBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfUIDepth.getBinSize();
     }
-
     if(FieldBits::NoField != (ExtrudeLengthFieldMask & whichField))
     {
         returnValue += _sfExtrudeLength.getBinSize();
     }
-
     if(FieldBits::NoField != (InternalClipPlaneOffsetFieldMask & whichField))
     {
         returnValue += _sfInternalClipPlaneOffset.getBinSize();
     }
-
     if(FieldBits::NoField != (TextOffsetFieldMask & whichField))
     {
         returnValue += _sfTextOffset.getBinSize();
     }
-
     if(FieldBits::NoField != (Enable3DTextFieldMask & whichField))
     {
         returnValue += _sfEnable3DText.getBinSize();
     }
-
     if(FieldBits::NoField != (EnableLightingFieldMask & whichField))
     {
         returnValue += _sfEnableLighting.getBinSize();
     }
-
     if(FieldBits::NoField != (MaterialFieldMask & whichField))
     {
         returnValue += _sfMaterial.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void Graphics3DExtrudeBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void Graphics3DExtrudeBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -315,42 +497,34 @@ void Graphics3DExtrudeBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfUIDepth.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ExtrudeLengthFieldMask & whichField))
     {
         _sfExtrudeLength.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalClipPlaneOffsetFieldMask & whichField))
     {
         _sfInternalClipPlaneOffset.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TextOffsetFieldMask & whichField))
     {
         _sfTextOffset.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (Enable3DTextFieldMask & whichField))
     {
         _sfEnable3DText.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EnableLightingFieldMask & whichField))
     {
         _sfEnableLighting.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MaterialFieldMask & whichField))
     {
         _sfMaterial.copyToBin(pMem);
     }
-
-
 }
 
-void Graphics3DExtrudeBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void Graphics3DExtrudeBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -358,148 +532,422 @@ void Graphics3DExtrudeBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfUIDepth.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ExtrudeLengthFieldMask & whichField))
     {
         _sfExtrudeLength.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalClipPlaneOffsetFieldMask & whichField))
     {
         _sfInternalClipPlaneOffset.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TextOffsetFieldMask & whichField))
     {
         _sfTextOffset.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (Enable3DTextFieldMask & whichField))
     {
         _sfEnable3DText.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EnableLightingFieldMask & whichField))
     {
         _sfEnableLighting.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MaterialFieldMask & whichField))
     {
         _sfMaterial.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void Graphics3DExtrudeBase::executeSyncImpl(      Graphics3DExtrudeBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+Graphics3DExtrudeTransitPtr Graphics3DExtrudeBase::createLocal(BitVector bFlags)
 {
+    Graphics3DExtrudeTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (UIDepthFieldMask & whichField))
-        _sfUIDepth.syncWith(pOther->_sfUIDepth);
+        fc = dynamic_pointer_cast<Graphics3DExtrude>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (ExtrudeLengthFieldMask & whichField))
-        _sfExtrudeLength.syncWith(pOther->_sfExtrudeLength);
-
-    if(FieldBits::NoField != (InternalClipPlaneOffsetFieldMask & whichField))
-        _sfInternalClipPlaneOffset.syncWith(pOther->_sfInternalClipPlaneOffset);
-
-    if(FieldBits::NoField != (TextOffsetFieldMask & whichField))
-        _sfTextOffset.syncWith(pOther->_sfTextOffset);
-
-    if(FieldBits::NoField != (Enable3DTextFieldMask & whichField))
-        _sfEnable3DText.syncWith(pOther->_sfEnable3DText);
-
-    if(FieldBits::NoField != (EnableLightingFieldMask & whichField))
-        _sfEnableLighting.syncWith(pOther->_sfEnableLighting);
-
-    if(FieldBits::NoField != (MaterialFieldMask & whichField))
-        _sfMaterial.syncWith(pOther->_sfMaterial);
-
-
-}
-#else
-void Graphics3DExtrudeBase::executeSyncImpl(      Graphics3DExtrudeBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (UIDepthFieldMask & whichField))
-        _sfUIDepth.syncWith(pOther->_sfUIDepth);
-
-    if(FieldBits::NoField != (ExtrudeLengthFieldMask & whichField))
-        _sfExtrudeLength.syncWith(pOther->_sfExtrudeLength);
-
-    if(FieldBits::NoField != (InternalClipPlaneOffsetFieldMask & whichField))
-        _sfInternalClipPlaneOffset.syncWith(pOther->_sfInternalClipPlaneOffset);
-
-    if(FieldBits::NoField != (TextOffsetFieldMask & whichField))
-        _sfTextOffset.syncWith(pOther->_sfTextOffset);
-
-    if(FieldBits::NoField != (Enable3DTextFieldMask & whichField))
-        _sfEnable3DText.syncWith(pOther->_sfEnable3DText);
-
-    if(FieldBits::NoField != (EnableLightingFieldMask & whichField))
-        _sfEnableLighting.syncWith(pOther->_sfEnableLighting);
-
-    if(FieldBits::NoField != (MaterialFieldMask & whichField))
-        _sfMaterial.syncWith(pOther->_sfMaterial);
-
-
-
+    return fc;
 }
 
-void Graphics3DExtrudeBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+Graphics3DExtrudeTransitPtr Graphics3DExtrudeBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    Graphics3DExtrudeTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<Graphics3DExtrude>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+Graphics3DExtrudeTransitPtr Graphics3DExtrudeBase::create(void)
+{
+    Graphics3DExtrudeTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<Graphics3DExtrude>(tmpPtr);
+    }
+
+    return fc;
+}
+
+Graphics3DExtrude *Graphics3DExtrudeBase::createEmptyLocal(BitVector bFlags)
+{
+    Graphics3DExtrude *returnValue;
+
+    newPtr<Graphics3DExtrude>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+Graphics3DExtrude *Graphics3DExtrudeBase::createEmpty(void)
+{
+    Graphics3DExtrude *returnValue;
+
+    newPtr<Graphics3DExtrude>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr Graphics3DExtrudeBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    Graphics3DExtrude *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Graphics3DExtrude *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr Graphics3DExtrudeBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    Graphics3DExtrude *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Graphics3DExtrude *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr Graphics3DExtrudeBase::shallowCopy(void) const
+{
+    Graphics3DExtrude *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const Graphics3DExtrude *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+Graphics3DExtrudeBase::Graphics3DExtrudeBase(void) :
+    Inherited(),
+    _sfUIDepth                (NULL),
+    _sfExtrudeLength          (Real32(1.0)),
+    _sfInternalClipPlaneOffset(Real32(0.0001)),
+    _sfTextOffset             (Real32(0.0001)),
+    _sfEnable3DText           (bool(false)),
+    _sfEnableLighting         (bool(false)),
+    _sfMaterial               (NULL)
+{
+}
+
+Graphics3DExtrudeBase::Graphics3DExtrudeBase(const Graphics3DExtrudeBase &source) :
+    Inherited(source),
+    _sfUIDepth                (NULL),
+    _sfExtrudeLength          (source._sfExtrudeLength          ),
+    _sfInternalClipPlaneOffset(source._sfInternalClipPlaneOffset),
+    _sfTextOffset             (source._sfTextOffset             ),
+    _sfEnable3DText           (source._sfEnable3DText           ),
+    _sfEnableLighting         (source._sfEnableLighting         ),
+    _sfMaterial               (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+Graphics3DExtrudeBase::~Graphics3DExtrudeBase(void)
+{
+}
+
+void Graphics3DExtrudeBase::onCreate(const Graphics3DExtrude *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        Graphics3DExtrude *pThis = static_cast<Graphics3DExtrude *>(this);
+
+        pThis->setUIDepth(source->getUIDepth());
+
+        pThis->setMaterial(source->getMaterial());
+    }
+}
+
+GetFieldHandlePtr Graphics3DExtrudeBase::getHandleUIDepth         (void) const
+{
+    SFUnrecDepthChunkPtr::GetHandlePtr returnValue(
+        new  SFUnrecDepthChunkPtr::GetHandle(
+             &_sfUIDepth,
+             this->getType().getFieldDesc(UIDepthFieldId),
+             const_cast<Graphics3DExtrudeBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr Graphics3DExtrudeBase::editHandleUIDepth        (void)
+{
+    SFUnrecDepthChunkPtr::EditHandlePtr returnValue(
+        new  SFUnrecDepthChunkPtr::EditHandle(
+             &_sfUIDepth,
+             this->getType().getFieldDesc(UIDepthFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Graphics3DExtrude::setUIDepth,
+                    static_cast<Graphics3DExtrude *>(this), _1));
+
+    editSField(UIDepthFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr Graphics3DExtrudeBase::getHandleExtrudeLength   (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfExtrudeLength,
+             this->getType().getFieldDesc(ExtrudeLengthFieldId),
+             const_cast<Graphics3DExtrudeBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr Graphics3DExtrudeBase::editHandleExtrudeLength  (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfExtrudeLength,
+             this->getType().getFieldDesc(ExtrudeLengthFieldId),
+             this));
+
+
+    editSField(ExtrudeLengthFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr Graphics3DExtrudeBase::getHandleInternalClipPlaneOffset (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfInternalClipPlaneOffset,
+             this->getType().getFieldDesc(InternalClipPlaneOffsetFieldId),
+             const_cast<Graphics3DExtrudeBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr Graphics3DExtrudeBase::editHandleInternalClipPlaneOffset(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfInternalClipPlaneOffset,
+             this->getType().getFieldDesc(InternalClipPlaneOffsetFieldId),
+             this));
+
+
+    editSField(InternalClipPlaneOffsetFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr Graphics3DExtrudeBase::getHandleTextOffset      (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfTextOffset,
+             this->getType().getFieldDesc(TextOffsetFieldId),
+             const_cast<Graphics3DExtrudeBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr Graphics3DExtrudeBase::editHandleTextOffset     (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfTextOffset,
+             this->getType().getFieldDesc(TextOffsetFieldId),
+             this));
+
+
+    editSField(TextOffsetFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr Graphics3DExtrudeBase::getHandleEnable3DText    (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfEnable3DText,
+             this->getType().getFieldDesc(Enable3DTextFieldId),
+             const_cast<Graphics3DExtrudeBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr Graphics3DExtrudeBase::editHandleEnable3DText   (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfEnable3DText,
+             this->getType().getFieldDesc(Enable3DTextFieldId),
+             this));
+
+
+    editSField(Enable3DTextFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr Graphics3DExtrudeBase::getHandleEnableLighting  (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfEnableLighting,
+             this->getType().getFieldDesc(EnableLightingFieldId),
+             const_cast<Graphics3DExtrudeBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr Graphics3DExtrudeBase::editHandleEnableLighting (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfEnableLighting,
+             this->getType().getFieldDesc(EnableLightingFieldId),
+             this));
+
+
+    editSField(EnableLightingFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr Graphics3DExtrudeBase::getHandleMaterial        (void) const
+{
+    SFUnrecMaterialPtr::GetHandlePtr returnValue(
+        new  SFUnrecMaterialPtr::GetHandle(
+             &_sfMaterial,
+             this->getType().getFieldDesc(MaterialFieldId),
+             const_cast<Graphics3DExtrudeBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr Graphics3DExtrudeBase::editHandleMaterial       (void)
+{
+    SFUnrecMaterialPtr::EditHandlePtr returnValue(
+        new  SFUnrecMaterialPtr::EditHandle(
+             &_sfMaterial,
+             this->getType().getFieldDesc(MaterialFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Graphics3DExtrude::setMaterial,
+                    static_cast<Graphics3DExtrude *>(this), _1));
+
+    editSField(MaterialFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void Graphics3DExtrudeBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Graphics3DExtrude *pThis = static_cast<Graphics3DExtrude *>(this);
+
+    pThis->execSync(static_cast<Graphics3DExtrude *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *Graphics3DExtrudeBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    Graphics3DExtrude *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const Graphics3DExtrude *>(pRefAspect),
+                  dynamic_cast<const Graphics3DExtrude *>(this));
+
+    return returnValue;
+}
+#endif
+
+void Graphics3DExtrudeBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<Graphics3DExtrude *>(this)->setUIDepth(NULL);
+
+    static_cast<Graphics3DExtrude *>(this)->setMaterial(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<Graphics3DExtrudePtr>::_type("Graphics3DExtrudePtr", "GraphicsPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(Graphics3DExtrudePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(Graphics3DExtrudePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGGRAPHICS3DEXTRUDEBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGGRAPHICS3DEXTRUDEBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGGRAPHICS3DEXTRUDEFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

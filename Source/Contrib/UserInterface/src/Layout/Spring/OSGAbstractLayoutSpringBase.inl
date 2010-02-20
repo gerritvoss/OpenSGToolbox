@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,50 +55,73 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &AbstractLayoutSpringBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 AbstractLayoutSpringBase::getClassTypeId(void) 
+OSG::UInt32 AbstractLayoutSpringBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
+    return _type.getId();
+}
 
+inline
+OSG::UInt16 AbstractLayoutSpringBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
+}
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the AbstractLayoutSpring::_sfSize field.
-inline
-SFReal32 *AbstractLayoutSpringBase::getSFSize(void)
-{
-    return &_sfSize;
-}
-
-
 //! Get the value of the AbstractLayoutSpring::_sfSize field.
+
 inline
-Real32 &AbstractLayoutSpringBase::getSize(void)
+Real32 &AbstractLayoutSpringBase::editSize(void)
 {
+    editSField(SizeFieldMask);
+
     return _sfSize.getValue();
 }
 
 //! Get the value of the AbstractLayoutSpring::_sfSize field.
 inline
-const Real32 &AbstractLayoutSpringBase::getSize(void) const
+      Real32  AbstractLayoutSpringBase::getSize(void) const
 {
     return _sfSize.getValue();
 }
 
 //! Set the value of the AbstractLayoutSpring::_sfSize field.
 inline
-void AbstractLayoutSpringBase::setSize(const Real32 &value)
+void AbstractLayoutSpringBase::setSize(const Real32 value)
 {
+    editSField(SizeFieldMask);
+
     _sfSize.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void AbstractLayoutSpringBase::execSync (      AbstractLayoutSpringBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGABSTRACTLAYOUTSPRINGBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (SizeFieldMask & whichField))
+        _sfSize.syncWith(pFrom->_sfSize);
+}
+#endif
+
+
+inline
+const Char8 *AbstractLayoutSpringBase::getClassname(void)
+{
+    return "AbstractLayoutSpring";
+}
+OSG_GEN_CONTAINERPTR(AbstractLayoutSpring);
+
+OSG_END_NAMESPACE
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,120 +50,125 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEOVERLAYLAYOUTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGOverlayLayoutBase.h"
 #include "OSGOverlayLayout.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector OverlayLayoutBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::OverlayLayout
+    A UI OverlayLayout.
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
 
-FieldContainerType OverlayLayoutBase::_type(
-    "OverlayLayout",
-    "Layout",
-    NULL,
-    (PrototypeCreateF) &OverlayLayoutBase::createEmpty,
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<OverlayLayout *>::_type("OverlayLayoutPtr", "LayoutPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(OverlayLayout *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           OverlayLayout *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           OverlayLayout *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void OverlayLayoutBase::classDescInserter(TypeObject &oType)
+{
+}
+
+
+OverlayLayoutBase::TypeObject OverlayLayoutBase::_type(
+    OverlayLayoutBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&OverlayLayoutBase::createEmptyLocal),
     OverlayLayout::initMethod,
-    NULL,
-    0);
+    OverlayLayout::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&OverlayLayout::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"OverlayLayout\"\n"
+    "\tparent=\"Layout\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI OverlayLayout.\n"
+    "</FieldContainer>\n",
+    "A UI OverlayLayout.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(OverlayLayoutBase, OverlayLayoutPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &OverlayLayoutBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &OverlayLayoutBase::getType(void) const 
+FieldContainerType &OverlayLayoutBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr OverlayLayoutBase::shallowCopy(void) const 
-{ 
-    OverlayLayoutPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const OverlayLayout *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 OverlayLayoutBase::getContainerSize(void) const 
-{ 
-    return sizeof(OverlayLayout); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void OverlayLayoutBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &OverlayLayoutBase::getType(void) const
 {
-    this->executeSyncImpl((OverlayLayoutBase *) &other, whichField);
+    return _type;
 }
-#else
-void OverlayLayoutBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 OverlayLayoutBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((OverlayLayoutBase *) &other, whichField, sInfo);
-}
-void OverlayLayoutBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(OverlayLayout);
 }
 
-void OverlayLayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-OverlayLayoutBase::OverlayLayoutBase(void) :
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-OverlayLayoutBase::OverlayLayoutBase(const OverlayLayoutBase &source) :
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-OverlayLayoutBase::~OverlayLayoutBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 OverlayLayoutBase::getBinSize(const BitVector &whichField)
+UInt32 OverlayLayoutBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -171,88 +176,198 @@ UInt32 OverlayLayoutBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void OverlayLayoutBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void OverlayLayoutBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-
 }
 
-void OverlayLayoutBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void OverlayLayoutBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void OverlayLayoutBase::executeSyncImpl(      OverlayLayoutBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+OverlayLayoutTransitPtr OverlayLayoutBase::createLocal(BitVector bFlags)
 {
+    OverlayLayoutTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
+        fc = dynamic_pointer_cast<OverlayLayout>(tmpPtr);
+    }
 
-}
-#else
-void OverlayLayoutBase::executeSyncImpl(      OverlayLayoutBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
+    return fc;
 }
 
-void OverlayLayoutBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+OverlayLayoutTransitPtr OverlayLayoutBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    OverlayLayoutTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<OverlayLayout>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+OverlayLayoutTransitPtr OverlayLayoutBase::create(void)
+{
+    OverlayLayoutTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<OverlayLayout>(tmpPtr);
+    }
+
+    return fc;
+}
+
+OverlayLayout *OverlayLayoutBase::createEmptyLocal(BitVector bFlags)
+{
+    OverlayLayout *returnValue;
+
+    newPtr<OverlayLayout>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+OverlayLayout *OverlayLayoutBase::createEmpty(void)
+{
+    OverlayLayout *returnValue;
+
+    newPtr<OverlayLayout>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr OverlayLayoutBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    OverlayLayout *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const OverlayLayout *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr OverlayLayoutBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    OverlayLayout *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const OverlayLayout *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr OverlayLayoutBase::shallowCopy(void) const
+{
+    OverlayLayout *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const OverlayLayout *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+OverlayLayoutBase::OverlayLayoutBase(void) :
+    Inherited()
+{
+}
+
+OverlayLayoutBase::OverlayLayoutBase(const OverlayLayoutBase &source) :
+    Inherited(source)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+OverlayLayoutBase::~OverlayLayoutBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void OverlayLayoutBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    OverlayLayout *pThis = static_cast<OverlayLayout *>(this);
+
+    pThis->execSync(static_cast<OverlayLayout *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *OverlayLayoutBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    OverlayLayout *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const OverlayLayout *>(pRefAspect),
+                  dynamic_cast<const OverlayLayout *>(this));
+
+    return returnValue;
+}
+#endif
+
+void OverlayLayoutBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<OverlayLayoutPtr>::_type("OverlayLayoutPtr", "LayoutPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(OverlayLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(OverlayLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGOVERLAYLAYOUTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGOVERLAYLAYOUTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGOVERLAYLAYOUTFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

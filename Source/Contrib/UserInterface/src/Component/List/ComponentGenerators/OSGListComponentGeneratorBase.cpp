@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,111 +50,124 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILELISTCOMPONENTGENERATORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGListComponentGeneratorBase.h"
 #include "OSGListComponentGenerator.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector ListComponentGeneratorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::ListComponentGenerator
+    A UI List ComponentGenerator.
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
 
-FieldContainerType ListComponentGeneratorBase::_type(
-    "ListComponentGenerator",
-    "ComponentGenerator",
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ListComponentGenerator *>::_type("ListComponentGeneratorPtr", "ComponentGeneratorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ListComponentGenerator *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ListComponentGenerator *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ListComponentGenerator *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ListComponentGeneratorBase::classDescInserter(TypeObject &oType)
+{
+}
+
+
+ListComponentGeneratorBase::TypeObject ListComponentGeneratorBase::_type(
+    ListComponentGeneratorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
     NULL,
-    NULL, 
     ListComponentGenerator::initMethod,
-    NULL,
-    0);
-
-//OSG_FIELD_CONTAINER_DEF(ListComponentGeneratorBase, ListComponentGeneratorPtr)
+    ListComponentGenerator::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ListComponentGenerator::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ListComponentGenerator\"\n"
+    "\tparent=\"ComponentGenerator\"\n"
+    "\tlibrary=\"ContribUserInterface\"\n"
+    "\tpointerfieldtypes=\"both\"\n"
+    "\tstructure=\"abstract\"\n"
+    "\tsystemcomponent=\"true\"\n"
+    "\tparentsystemcomponent=\"true\"\n"
+    "\tdecoratable=\"false\"\n"
+    "\tuseLocalIncludes=\"false\"\n"
+    "\tisNodeCore=\"false\"\n"
+    "\tauthors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI List ComponentGenerator.\n"
+    "</FieldContainer>\n",
+    "A UI List ComponentGenerator.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ListComponentGeneratorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ListComponentGeneratorBase::getType(void) const 
+FieldContainerType &ListComponentGeneratorBase::getType(void)
 {
     return _type;
-} 
-
-
-UInt32 ListComponentGeneratorBase::getContainerSize(void) const 
-{ 
-    return sizeof(ListComponentGenerator); 
 }
 
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ListComponentGeneratorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &ListComponentGeneratorBase::getType(void) const
 {
-    this->executeSyncImpl((ListComponentGeneratorBase *) &other, whichField);
+    return _type;
 }
-#else
-void ListComponentGeneratorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 ListComponentGeneratorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((ListComponentGeneratorBase *) &other, whichField, sInfo);
-}
-void ListComponentGeneratorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(ListComponentGenerator);
 }
 
-void ListComponentGeneratorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-ListComponentGeneratorBase::ListComponentGeneratorBase(void) :
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-ListComponentGeneratorBase::ListComponentGeneratorBase(const ListComponentGeneratorBase &source) :
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-ListComponentGeneratorBase::~ListComponentGeneratorBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ListComponentGeneratorBase::getBinSize(const BitVector &whichField)
+UInt32 ListComponentGeneratorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -162,88 +175,69 @@ UInt32 ListComponentGeneratorBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void ListComponentGeneratorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ListComponentGeneratorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-
 }
 
-void ListComponentGeneratorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ListComponentGeneratorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ListComponentGeneratorBase::executeSyncImpl(      ListComponentGeneratorBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ListComponentGeneratorBase::ListComponentGeneratorBase(void) :
+    Inherited()
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-
-}
-#else
-void ListComponentGeneratorBase::executeSyncImpl(      ListComponentGeneratorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
 }
 
-void ListComponentGeneratorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+ListComponentGeneratorBase::ListComponentGeneratorBase(const ListComponentGeneratorBase &source) :
+    Inherited(source)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
+
+/*-------------------------- destructors ----------------------------------*/
+
+ListComponentGeneratorBase::~ListComponentGeneratorBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ListComponentGeneratorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ListComponentGenerator *pThis = static_cast<ListComponentGenerator *>(this);
+
+    pThis->execSync(static_cast<ListComponentGenerator *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+
+void ListComponentGeneratorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ListComponentGeneratorPtr>::_type("ListComponentGeneratorPtr", "ComponentGeneratorPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(ListComponentGeneratorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ListComponentGeneratorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGLISTCOMPONENTGENERATORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGLISTCOMPONENTGENERATORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGLISTCOMPONENTGENERATORFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

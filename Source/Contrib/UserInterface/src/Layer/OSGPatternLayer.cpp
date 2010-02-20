@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,27 +40,23 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGTextureChunk.h>
-#include <OpenSG/OSGTextureTransformChunk.h>
-#include <OpenSG/OSGImage.h>
+#include <OSGConfig.h>
 
 #include "OSGPatternLayer.h"
 
+#include "OSGTextureObjChunk.h"
+#include "OSGTextureTransformChunk.h"
+#include "OSGImage.h"
+
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::PatternLayer
-UI Texture Background. 	
-*/
+// Documentation for this class is emitted in the
+// OSGPatternLayerBase.cpp file.
+// To modify it, please change the .fcd file (OSGPatternLayer.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -70,8 +66,13 @@ UI Texture Background.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void PatternLayer::initMethod (void)
+void PatternLayer::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -79,7 +80,7 @@ void PatternLayer::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void PatternLayer::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32 Opacity) const
+void PatternLayer::draw(const GraphicsWeakPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32 Opacity) const
 {
 	glPushAttrib(GL_ENABLE_BIT | GL_TRANSFORM_BIT);
 	GLdouble Plane0[4], Plane1[4], Plane2[4], Plane3[4];
@@ -107,9 +108,9 @@ void PatternLayer::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, con
     glClipPlane(GL_CLIP_PLANE3,BottomPlaneEquation.getValues());
 
     //Activate the Texture Transformation
-    if(getTransformation() != NullFC)
+    if(getTransformation() != NULL)
     {
-        getTransformation()->activate(TheGraphics->getDrawAction());
+        getTransformation()->activate(TheGraphics->getDrawEnv());
     }
 
 	Vec2f BackgroundSize (BottomRight - TopLeft);
@@ -151,9 +152,9 @@ void PatternLayer::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, con
 		getColor(), getTexture(), Opacity);
 
     //Deactivate the Texture Transformation
-    if(getTransformation() != NullFC)
+    if(getTransformation() != NULL)
     {
-        getTransformation()->deactivate(TheGraphics->getDrawAction());
+        getTransformation()->deactivate(TheGraphics->getDrawEnv());
     }
 
 	glPopAttrib();
@@ -163,21 +164,22 @@ Vec2f PatternLayer::getCorrectedPatternSize(void) const
 {
 	Vec2f PatternSize(getPatternSize());
 	if(PatternSize.x() == -1 &&
-		getTexture() != NullFC &&
-        getTexture()->getImage() != NullFC)
+		getTexture() != NULL &&
+        getTexture()->getImage() != NULL)
 	{
 		PatternSize[0] = getTexture()->getImage()->getWidth();
 	}
 
 	if(PatternSize.y() == -1 &&
-		getTexture() != NullFC &&
-        getTexture()->getImage() != NullFC)
+		getTexture() != NULL &&
+        getTexture()->getImage() != NULL)
 	{
 		PatternSize[1] = getTexture()->getImage()->getHeight();
 	}
 
 	return PatternSize;
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -200,16 +202,17 @@ PatternLayer::~PatternLayer(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void PatternLayer::changed(BitVector whichField, UInt32 origin)
+void PatternLayer::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void PatternLayer::dump(      UInt32    , 
+void PatternLayer::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump PatternLayer NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

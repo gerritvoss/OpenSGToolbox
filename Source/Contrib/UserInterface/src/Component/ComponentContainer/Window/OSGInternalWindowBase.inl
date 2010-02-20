@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,188 +55,134 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &InternalWindowBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 InternalWindowBase::getClassTypeId(void) 
+OSG::UInt32 InternalWindowBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-InternalWindowPtr InternalWindowBase::create(void) 
-{
-    InternalWindowPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = InternalWindowPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-InternalWindowPtr InternalWindowBase::createEmpty(void) 
-{ 
-    InternalWindowPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 InternalWindowBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the InternalWindow::_sfFocusedComponent field.
-inline
-SFComponentPtr *InternalWindowBase::getSFFocusedComponent(void)
-{
-    return &_sfFocusedComponent;
-}
-
-//! Get the InternalWindow::_mfActivePopupMenus field.
-inline
-MFPopupMenuPtr *InternalWindowBase::getMFActivePopupMenus(void)
-{
-    return &_mfActivePopupMenus;
-}
-
-//! Get the InternalWindow::_sfActiveToolTip field.
-inline
-SFToolTipPtr *InternalWindowBase::getSFActiveToolTip(void)
-{
-    return &_sfActiveToolTip;
-}
-
-//! Get the InternalWindow::_sfMenuBar field.
-inline
-SFMenuBarPtr *InternalWindowBase::getSFMenuBar(void)
-{
-    return &_sfMenuBar;
-}
-
-//! Get the InternalWindow::_sfTitlebar field.
-inline
-SFTitlebarPtr *InternalWindowBase::getSFTitlebar(void)
-{
-    return &_sfTitlebar;
-}
-
 
 //! Get the value of the InternalWindow::_sfFocusedComponent field.
 inline
-ComponentPtr &InternalWindowBase::getFocusedComponent(void)
-{
-    return _sfFocusedComponent.getValue();
-}
-
-//! Get the value of the InternalWindow::_sfFocusedComponent field.
-inline
-const ComponentPtr &InternalWindowBase::getFocusedComponent(void) const
+Component * InternalWindowBase::getFocusedComponent(void) const
 {
     return _sfFocusedComponent.getValue();
 }
 
 //! Set the value of the InternalWindow::_sfFocusedComponent field.
 inline
-void InternalWindowBase::setFocusedComponent(const ComponentPtr &value)
+void InternalWindowBase::setFocusedComponent(Component * const value)
 {
+    editSField(FocusedComponentFieldMask);
+
     _sfFocusedComponent.setValue(value);
 }
 
 //! Get the value of the InternalWindow::_sfActiveToolTip field.
 inline
-ToolTipPtr &InternalWindowBase::getActiveToolTip(void)
-{
-    return _sfActiveToolTip.getValue();
-}
-
-//! Get the value of the InternalWindow::_sfActiveToolTip field.
-inline
-const ToolTipPtr &InternalWindowBase::getActiveToolTip(void) const
+ToolTip * InternalWindowBase::getActiveToolTip(void) const
 {
     return _sfActiveToolTip.getValue();
 }
 
 //! Set the value of the InternalWindow::_sfActiveToolTip field.
 inline
-void InternalWindowBase::setActiveToolTip(const ToolTipPtr &value)
+void InternalWindowBase::setActiveToolTip(ToolTip * const value)
 {
+    editSField(ActiveToolTipFieldMask);
+
     _sfActiveToolTip.setValue(value);
 }
 
 //! Get the value of the InternalWindow::_sfMenuBar field.
 inline
-MenuBarPtr &InternalWindowBase::getMenuBar(void)
-{
-    return _sfMenuBar.getValue();
-}
-
-//! Get the value of the InternalWindow::_sfMenuBar field.
-inline
-const MenuBarPtr &InternalWindowBase::getMenuBar(void) const
+MenuBar * InternalWindowBase::getMenuBar(void) const
 {
     return _sfMenuBar.getValue();
 }
 
 //! Set the value of the InternalWindow::_sfMenuBar field.
 inline
-void InternalWindowBase::setMenuBar(const MenuBarPtr &value)
+void InternalWindowBase::setMenuBar(MenuBar * const value)
 {
+    editSField(MenuBarFieldMask);
+
     _sfMenuBar.setValue(value);
 }
 
 //! Get the value of the InternalWindow::_sfTitlebar field.
 inline
-TitlebarPtr &InternalWindowBase::getTitlebar(void)
-{
-    return _sfTitlebar.getValue();
-}
-
-//! Get the value of the InternalWindow::_sfTitlebar field.
-inline
-const TitlebarPtr &InternalWindowBase::getTitlebar(void) const
+Titlebar * InternalWindowBase::getTitlebar(void) const
 {
     return _sfTitlebar.getValue();
 }
 
 //! Set the value of the InternalWindow::_sfTitlebar field.
 inline
-void InternalWindowBase::setTitlebar(const TitlebarPtr &value)
+void InternalWindowBase::setTitlebar(Titlebar * const value)
 {
+    editSField(TitlebarFieldMask);
+
     _sfTitlebar.setValue(value);
 }
 
-
 //! Get the value of the \a index element the InternalWindow::_mfActivePopupMenus field.
 inline
-PopupMenuPtr &InternalWindowBase::getActivePopupMenus(const UInt32 index)
+PopupMenu * InternalWindowBase::getActivePopupMenus(const UInt32 index) const
 {
     return _mfActivePopupMenus[index];
 }
 
-//! Get the InternalWindow::_mfActivePopupMenus field.
-inline
-MFPopupMenuPtr &InternalWindowBase::getActivePopupMenus(void)
-{
-    return _mfActivePopupMenus;
-}
 
-//! Get the InternalWindow::_mfActivePopupMenus field.
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-const MFPopupMenuPtr &InternalWindowBase::getActivePopupMenus(void) const
+void InternalWindowBase::execSync (      InternalWindowBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfActivePopupMenus;
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (FocusedComponentFieldMask & whichField))
+        _sfFocusedComponent.syncWith(pFrom->_sfFocusedComponent);
+
+    if(FieldBits::NoField != (ActivePopupMenusFieldMask & whichField))
+        _mfActivePopupMenus.syncWith(pFrom->_mfActivePopupMenus,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (ActiveToolTipFieldMask & whichField))
+        _sfActiveToolTip.syncWith(pFrom->_sfActiveToolTip);
+
+    if(FieldBits::NoField != (MenuBarFieldMask & whichField))
+        _sfMenuBar.syncWith(pFrom->_sfMenuBar);
+
+    if(FieldBits::NoField != (TitlebarFieldMask & whichField))
+        _sfTitlebar.syncWith(pFrom->_sfTitlebar);
 }
+#endif
+
+
+inline
+const Char8 *InternalWindowBase::getClassname(void)
+{
+    return "InternalWindow";
+}
+OSG_GEN_CONTAINERPTR(InternalWindow);
 
 OSG_END_NAMESPACE
-
-#define OSGINTERNALWINDOWBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

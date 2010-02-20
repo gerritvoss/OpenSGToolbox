@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,23 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGOverlayLayout.h"
-#include "Component/Container/OSGContainer.h"
+#include "OSGComponentContainer.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::OverlayLayout
-A UI OverlayLayout. 
-*/
+// Documentation for this class is emitted in the
+// OSGOverlayLayoutBase.cpp file.
+// To modify it, please change the .fcd file (OSGOverlayLayout.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -66,8 +63,13 @@ A UI OverlayLayout.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void OverlayLayout::initMethod (void)
+void OverlayLayout::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -75,42 +77,38 @@ void OverlayLayout::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void OverlayLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+void OverlayLayout::updateLayout(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
 {
 	Pnt2f borderTopLeft, borderBottomRight;
-	Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(borderTopLeft, borderBottomRight);
+	dynamic_cast<const ComponentContainer*>(ParentComponent)->getInsideInsetsBounds(borderTopLeft, borderBottomRight);
 	Vec2f borderSize(borderBottomRight-borderTopLeft);
 
 	int maxX = 0;
 	int maxY = 0;
-	for(UInt32 i = 0; i < Components.size(); i++){
-		beginEditCP(Components[i], Component::SizeFieldMask);
-		   Components[i]->setSize(Components[i]->getPreferredSize());
-		endEditCP(Components[i], Component::SizeFieldMask);
-		if(Components[i]->getSize().x()>maxX)
-			maxX = Components[i]->getSize().x();
-		if(Components[i]->getSize().y()>maxY)
-			maxY = Components[i]->getSize().y();
+	for(UInt32 i = 0; i < Components->size(); i++){
+		   (*Components)[i]->setSize((*Components)[i]->getPreferredSize());
+		if((*Components)[i]->getSize().x()>maxX)
+			maxX = (*Components)[i]->getSize().x();
+		if((*Components)[i]->getSize().y()>maxY)
+			maxY = (*Components)[i]->getSize().y();
 	}
 	//overlay layout simply draws all the components on top of each other, with the reference point for all the components being the same
-	for(UInt32 i = 0; i <Components.size(); i++){
-		//Components[i]->setSize(Components[i]->getPreferredSize());
-		beginEditCP(Components[i], Component::PositionFieldMask);
-		Components[i]->setPosition(borderTopLeft + 
-            Vec2f((maxX-Components[i]->getSize().x())/2.0,
-			(maxY-Components[i]->getSize().y())/2.0));
-		endEditCP(Components[i], Component::PositionFieldMask);
+	for(UInt32 i = 0; i <Components->size(); i++){
+		//(*Components)[i]->setSize((*Components)[i]->getPreferredSize());
+		(*Components)[i]->setPosition(borderTopLeft + 
+            Vec2f((maxX-(*Components)[i]->getSize().x())/2.0,
+			(maxY-(*Components)[i]->getSize().y())/2.0));
 	}
 }
 
-Vec2f OverlayLayout::layoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent, SizeType TheSizeType) const
+Vec2f OverlayLayout::layoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent, SizeType TheSizeType) const
 {
     Vec2f Result(0.0,0.0);
 
     Vec2f ComponentSize;
-    for(UInt32 i(0) ; i<Components.size() ; ++i)
+    for(UInt32 i(0) ; i<Components->size() ; ++i)
     {
-        ComponentSize = getComponentSize(Components[i],TheSizeType);
+        ComponentSize = getComponentSize((*Components)[i],TheSizeType);
         if(ComponentSize.x() > Result.x())
         {
             Result[0] = ComponentSize.x();
@@ -124,25 +122,26 @@ Vec2f OverlayLayout::layoutSize(const MFComponentPtr Components,const ComponentP
     return Result;
 }
 
-Vec2f OverlayLayout::minimumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+Vec2f OverlayLayout::minimumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, MIN_SIZE);
 }
 
-Vec2f OverlayLayout::requestedContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+Vec2f OverlayLayout::requestedContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, REQUESTED_SIZE);
 }
 
-Vec2f OverlayLayout::preferredContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+Vec2f OverlayLayout::preferredContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, PREFERRED_SIZE);
 }
 
-Vec2f OverlayLayout::maximumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+Vec2f OverlayLayout::maximumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, MAX_SIZE);
 }
+
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -166,41 +165,17 @@ OverlayLayout::~OverlayLayout(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void OverlayLayout::changed(BitVector whichField, UInt32 origin)
+void OverlayLayout::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void OverlayLayout::dump(      UInt32    , 
+void OverlayLayout::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump OverlayLayout NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGOVERLAYLAYOUTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGOVERLAYLAYOUTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGOVERLAYLAYOUTFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

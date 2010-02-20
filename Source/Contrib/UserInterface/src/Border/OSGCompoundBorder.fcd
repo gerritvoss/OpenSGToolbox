@@ -3,31 +3,35 @@
 <FieldContainer
 	name="CompoundBorder"
 	parent="Border"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 UI Compound Border. A Compound Border made up of an inner border and outer border of any type.
 	<Field
 		name="InnerBorder"
-		type="BorderPtr"
+		type="Border"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Border/OSGBorder.h"
 		access="public"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="OuterBorder"
-		type="BorderPtr"
+		type="Border"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Border/OSGBorder.h"
 		access="public"
+		defaultValue="NULL"
 	>
 	</Field>
 </FieldContainer>

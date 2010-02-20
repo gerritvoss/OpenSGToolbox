@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,195 +50,321 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEDEFAULTBOUNDEDRANGEMODELINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGDefaultBoundedRangeModelBase.h"
 #include "OSGDefaultBoundedRangeModel.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  DefaultBoundedRangeModelBase::InternalMinimumFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultBoundedRangeModelBase::InternalMinimumFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  DefaultBoundedRangeModelBase::InternalMaximumFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultBoundedRangeModelBase::InternalMaximumFieldId);
+/*! \class OSG::DefaultBoundedRangeModel
+    A UI DefaultBoundedRangeModel.
+ */
 
-const OSG::BitVector  DefaultBoundedRangeModelBase::InternalValueFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultBoundedRangeModelBase::InternalValueFieldId);
-
-const OSG::BitVector  DefaultBoundedRangeModelBase::InternalExtentFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultBoundedRangeModelBase::InternalExtentFieldId);
-
-const OSG::BitVector  DefaultBoundedRangeModelBase::InternalValueIsAdjustingFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultBoundedRangeModelBase::InternalValueIsAdjustingFieldId);
-
-const OSG::BitVector DefaultBoundedRangeModelBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Int32           DefaultBoundedRangeModelBase::_sfInternalMinimum
     
 */
+
 /*! \var Int32           DefaultBoundedRangeModelBase::_sfInternalMaximum
     
 */
+
 /*! \var Int32           DefaultBoundedRangeModelBase::_sfInternalValue
     
 */
+
 /*! \var UInt32          DefaultBoundedRangeModelBase::_sfInternalExtent
     
 */
+
 /*! \var bool            DefaultBoundedRangeModelBase::_sfInternalValueIsAdjusting
     
 */
 
-//! DefaultBoundedRangeModel description
 
-FieldDescription *DefaultBoundedRangeModelBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<DefaultBoundedRangeModel *>::_type("DefaultBoundedRangeModelPtr", "BoundedRangeModelPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(DefaultBoundedRangeModel *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           DefaultBoundedRangeModel *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           DefaultBoundedRangeModel *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void DefaultBoundedRangeModelBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFInt32::getClassType(), 
-                     "InternalMinimum", 
-                     InternalMinimumFieldId, InternalMinimumFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DefaultBoundedRangeModelBase::editSFInternalMinimum)),
-    new FieldDescription(SFInt32::getClassType(), 
-                     "InternalMaximum", 
-                     InternalMaximumFieldId, InternalMaximumFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DefaultBoundedRangeModelBase::editSFInternalMaximum)),
-    new FieldDescription(SFInt32::getClassType(), 
-                     "InternalValue", 
-                     InternalValueFieldId, InternalValueFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DefaultBoundedRangeModelBase::editSFInternalValue)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "InternalExtent", 
-                     InternalExtentFieldId, InternalExtentFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DefaultBoundedRangeModelBase::editSFInternalExtent)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "InternalValueIsAdjusting", 
-                     InternalValueIsAdjustingFieldId, InternalValueIsAdjustingFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&DefaultBoundedRangeModelBase::editSFInternalValueIsAdjusting))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType DefaultBoundedRangeModelBase::_type(
-    "DefaultBoundedRangeModel",
-    "BoundedRangeModel",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&DefaultBoundedRangeModelBase::createEmpty),
+    pDesc = new SFInt32::Description(
+        SFInt32::getClassType(),
+        "InternalMinimum",
+        "",
+        InternalMinimumFieldId, InternalMinimumFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultBoundedRangeModel::editHandleInternalMinimum),
+        static_cast<FieldGetMethodSig >(&DefaultBoundedRangeModel::getHandleInternalMinimum));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFInt32::Description(
+        SFInt32::getClassType(),
+        "InternalMaximum",
+        "",
+        InternalMaximumFieldId, InternalMaximumFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultBoundedRangeModel::editHandleInternalMaximum),
+        static_cast<FieldGetMethodSig >(&DefaultBoundedRangeModel::getHandleInternalMaximum));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFInt32::Description(
+        SFInt32::getClassType(),
+        "InternalValue",
+        "",
+        InternalValueFieldId, InternalValueFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultBoundedRangeModel::editHandleInternalValue),
+        static_cast<FieldGetMethodSig >(&DefaultBoundedRangeModel::getHandleInternalValue));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "InternalExtent",
+        "",
+        InternalExtentFieldId, InternalExtentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultBoundedRangeModel::editHandleInternalExtent),
+        static_cast<FieldGetMethodSig >(&DefaultBoundedRangeModel::getHandleInternalExtent));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "InternalValueIsAdjusting",
+        "",
+        InternalValueIsAdjustingFieldId, InternalValueIsAdjustingFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultBoundedRangeModel::editHandleInternalValueIsAdjusting),
+        static_cast<FieldGetMethodSig >(&DefaultBoundedRangeModel::getHandleInternalValueIsAdjusting));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+DefaultBoundedRangeModelBase::TypeObject DefaultBoundedRangeModelBase::_type(
+    DefaultBoundedRangeModelBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&DefaultBoundedRangeModelBase::createEmptyLocal),
     DefaultBoundedRangeModel::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(DefaultBoundedRangeModelBase, DefaultBoundedRangeModelPtr)
+    DefaultBoundedRangeModel::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&DefaultBoundedRangeModel::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"DefaultBoundedRangeModel\"\n"
+    "\tparent=\"BoundedRangeModel\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "\tdecoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI DefaultBoundedRangeModel.\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalMinimum\"\n"
+    "\t\ttype=\"Int32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalMaximum\"\n"
+    "\t\ttype=\"Int32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalValue\"\n"
+    "\t\ttype=\"Int32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalExtent\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalValueIsAdjusting\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI DefaultBoundedRangeModel.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &DefaultBoundedRangeModelBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &DefaultBoundedRangeModelBase::getType(void) const 
+FieldContainerType &DefaultBoundedRangeModelBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr DefaultBoundedRangeModelBase::shallowCopy(void) const 
-{ 
-    DefaultBoundedRangeModelPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const DefaultBoundedRangeModel *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 DefaultBoundedRangeModelBase::getContainerSize(void) const 
-{ 
-    return sizeof(DefaultBoundedRangeModel); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DefaultBoundedRangeModelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &DefaultBoundedRangeModelBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<DefaultBoundedRangeModelBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void DefaultBoundedRangeModelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 DefaultBoundedRangeModelBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((DefaultBoundedRangeModelBase *) &other, whichField, sInfo);
+    return sizeof(DefaultBoundedRangeModel);
 }
-void DefaultBoundedRangeModelBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFInt32 *DefaultBoundedRangeModelBase::editSFInternalMinimum(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(InternalMinimumFieldMask);
+
+    return &_sfInternalMinimum;
 }
 
-void DefaultBoundedRangeModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFInt32 *DefaultBoundedRangeModelBase::getSFInternalMinimum(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfInternalMinimum;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-DefaultBoundedRangeModelBase::DefaultBoundedRangeModelBase(void) :
-    _sfInternalMinimum        (Int32(0)), 
-    _sfInternalMaximum        (Int32(1)), 
-    _sfInternalValue          (Int32(0)), 
-    _sfInternalExtent         (UInt32(1)), 
-    _sfInternalValueIsAdjusting(bool(false)), 
-    Inherited() 
+SFInt32 *DefaultBoundedRangeModelBase::editSFInternalMaximum(void)
 {
+    editSField(InternalMaximumFieldMask);
+
+    return &_sfInternalMaximum;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-DefaultBoundedRangeModelBase::DefaultBoundedRangeModelBase(const DefaultBoundedRangeModelBase &source) :
-    _sfInternalMinimum        (source._sfInternalMinimum        ), 
-    _sfInternalMaximum        (source._sfInternalMaximum        ), 
-    _sfInternalValue          (source._sfInternalValue          ), 
-    _sfInternalExtent         (source._sfInternalExtent         ), 
-    _sfInternalValueIsAdjusting(source._sfInternalValueIsAdjusting), 
-    Inherited                 (source)
+const SFInt32 *DefaultBoundedRangeModelBase::getSFInternalMaximum(void) const
 {
+    return &_sfInternalMaximum;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-DefaultBoundedRangeModelBase::~DefaultBoundedRangeModelBase(void)
+SFInt32 *DefaultBoundedRangeModelBase::editSFInternalValue(void)
 {
+    editSField(InternalValueFieldMask);
+
+    return &_sfInternalValue;
 }
+
+const SFInt32 *DefaultBoundedRangeModelBase::getSFInternalValue(void) const
+{
+    return &_sfInternalValue;
+}
+
+
+SFUInt32 *DefaultBoundedRangeModelBase::editSFInternalExtent(void)
+{
+    editSField(InternalExtentFieldMask);
+
+    return &_sfInternalExtent;
+}
+
+const SFUInt32 *DefaultBoundedRangeModelBase::getSFInternalExtent(void) const
+{
+    return &_sfInternalExtent;
+}
+
+
+SFBool *DefaultBoundedRangeModelBase::editSFInternalValueIsAdjusting(void)
+{
+    editSField(InternalValueIsAdjustingFieldMask);
+
+    return &_sfInternalValueIsAdjusting;
+}
+
+const SFBool *DefaultBoundedRangeModelBase::getSFInternalValueIsAdjusting(void) const
+{
+    return &_sfInternalValueIsAdjusting;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 DefaultBoundedRangeModelBase::getBinSize(const BitVector &whichField)
+UInt32 DefaultBoundedRangeModelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -246,33 +372,28 @@ UInt32 DefaultBoundedRangeModelBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfInternalMinimum.getBinSize();
     }
-
     if(FieldBits::NoField != (InternalMaximumFieldMask & whichField))
     {
         returnValue += _sfInternalMaximum.getBinSize();
     }
-
     if(FieldBits::NoField != (InternalValueFieldMask & whichField))
     {
         returnValue += _sfInternalValue.getBinSize();
     }
-
     if(FieldBits::NoField != (InternalExtentFieldMask & whichField))
     {
         returnValue += _sfInternalExtent.getBinSize();
     }
-
     if(FieldBits::NoField != (InternalValueIsAdjustingFieldMask & whichField))
     {
         returnValue += _sfInternalValueIsAdjusting.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void DefaultBoundedRangeModelBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void DefaultBoundedRangeModelBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -280,32 +401,26 @@ void DefaultBoundedRangeModelBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfInternalMinimum.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalMaximumFieldMask & whichField))
     {
         _sfInternalMaximum.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalValueFieldMask & whichField))
     {
         _sfInternalValue.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalExtentFieldMask & whichField))
     {
         _sfInternalExtent.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalValueIsAdjustingFieldMask & whichField))
     {
         _sfInternalValueIsAdjusting.copyToBin(pMem);
     }
-
-
 }
 
-void DefaultBoundedRangeModelBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void DefaultBoundedRangeModelBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -313,106 +428,337 @@ void DefaultBoundedRangeModelBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfInternalMinimum.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalMaximumFieldMask & whichField))
     {
         _sfInternalMaximum.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalValueFieldMask & whichField))
     {
         _sfInternalValue.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalExtentFieldMask & whichField))
     {
         _sfInternalExtent.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalValueIsAdjustingFieldMask & whichField))
     {
         _sfInternalValueIsAdjusting.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DefaultBoundedRangeModelBase::executeSyncImpl(      DefaultBoundedRangeModelBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+DefaultBoundedRangeModelTransitPtr DefaultBoundedRangeModelBase::createLocal(BitVector bFlags)
 {
+    DefaultBoundedRangeModelTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (InternalMinimumFieldMask & whichField))
-        _sfInternalMinimum.syncWith(pOther->_sfInternalMinimum);
+        fc = dynamic_pointer_cast<DefaultBoundedRangeModel>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (InternalMaximumFieldMask & whichField))
-        _sfInternalMaximum.syncWith(pOther->_sfInternalMaximum);
-
-    if(FieldBits::NoField != (InternalValueFieldMask & whichField))
-        _sfInternalValue.syncWith(pOther->_sfInternalValue);
-
-    if(FieldBits::NoField != (InternalExtentFieldMask & whichField))
-        _sfInternalExtent.syncWith(pOther->_sfInternalExtent);
-
-    if(FieldBits::NoField != (InternalValueIsAdjustingFieldMask & whichField))
-        _sfInternalValueIsAdjusting.syncWith(pOther->_sfInternalValueIsAdjusting);
-
-
-}
-#else
-void DefaultBoundedRangeModelBase::executeSyncImpl(      DefaultBoundedRangeModelBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (InternalMinimumFieldMask & whichField))
-        _sfInternalMinimum.syncWith(pOther->_sfInternalMinimum);
-
-    if(FieldBits::NoField != (InternalMaximumFieldMask & whichField))
-        _sfInternalMaximum.syncWith(pOther->_sfInternalMaximum);
-
-    if(FieldBits::NoField != (InternalValueFieldMask & whichField))
-        _sfInternalValue.syncWith(pOther->_sfInternalValue);
-
-    if(FieldBits::NoField != (InternalExtentFieldMask & whichField))
-        _sfInternalExtent.syncWith(pOther->_sfInternalExtent);
-
-    if(FieldBits::NoField != (InternalValueIsAdjustingFieldMask & whichField))
-        _sfInternalValueIsAdjusting.syncWith(pOther->_sfInternalValueIsAdjusting);
-
-
-
+    return fc;
 }
 
-void DefaultBoundedRangeModelBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+DefaultBoundedRangeModelTransitPtr DefaultBoundedRangeModelBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    DefaultBoundedRangeModelTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<DefaultBoundedRangeModel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+DefaultBoundedRangeModelTransitPtr DefaultBoundedRangeModelBase::create(void)
+{
+    DefaultBoundedRangeModelTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<DefaultBoundedRangeModel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+DefaultBoundedRangeModel *DefaultBoundedRangeModelBase::createEmptyLocal(BitVector bFlags)
+{
+    DefaultBoundedRangeModel *returnValue;
+
+    newPtr<DefaultBoundedRangeModel>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+DefaultBoundedRangeModel *DefaultBoundedRangeModelBase::createEmpty(void)
+{
+    DefaultBoundedRangeModel *returnValue;
+
+    newPtr<DefaultBoundedRangeModel>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr DefaultBoundedRangeModelBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    DefaultBoundedRangeModel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DefaultBoundedRangeModel *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DefaultBoundedRangeModelBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    DefaultBoundedRangeModel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DefaultBoundedRangeModel *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DefaultBoundedRangeModelBase::shallowCopy(void) const
+{
+    DefaultBoundedRangeModel *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const DefaultBoundedRangeModel *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+DefaultBoundedRangeModelBase::DefaultBoundedRangeModelBase(void) :
+    Inherited(),
+    _sfInternalMinimum        (Int32(0)),
+    _sfInternalMaximum        (Int32(1)),
+    _sfInternalValue          (Int32(0)),
+    _sfInternalExtent         (UInt32(1)),
+    _sfInternalValueIsAdjusting(bool(false))
+{
+}
+
+DefaultBoundedRangeModelBase::DefaultBoundedRangeModelBase(const DefaultBoundedRangeModelBase &source) :
+    Inherited(source),
+    _sfInternalMinimum        (source._sfInternalMinimum        ),
+    _sfInternalMaximum        (source._sfInternalMaximum        ),
+    _sfInternalValue          (source._sfInternalValue          ),
+    _sfInternalExtent         (source._sfInternalExtent         ),
+    _sfInternalValueIsAdjusting(source._sfInternalValueIsAdjusting)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+DefaultBoundedRangeModelBase::~DefaultBoundedRangeModelBase(void)
+{
+}
+
+
+GetFieldHandlePtr DefaultBoundedRangeModelBase::getHandleInternalMinimum (void) const
+{
+    SFInt32::GetHandlePtr returnValue(
+        new  SFInt32::GetHandle(
+             &_sfInternalMinimum,
+             this->getType().getFieldDesc(InternalMinimumFieldId),
+             const_cast<DefaultBoundedRangeModelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultBoundedRangeModelBase::editHandleInternalMinimum(void)
+{
+    SFInt32::EditHandlePtr returnValue(
+        new  SFInt32::EditHandle(
+             &_sfInternalMinimum,
+             this->getType().getFieldDesc(InternalMinimumFieldId),
+             this));
+
+
+    editSField(InternalMinimumFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultBoundedRangeModelBase::getHandleInternalMaximum (void) const
+{
+    SFInt32::GetHandlePtr returnValue(
+        new  SFInt32::GetHandle(
+             &_sfInternalMaximum,
+             this->getType().getFieldDesc(InternalMaximumFieldId),
+             const_cast<DefaultBoundedRangeModelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultBoundedRangeModelBase::editHandleInternalMaximum(void)
+{
+    SFInt32::EditHandlePtr returnValue(
+        new  SFInt32::EditHandle(
+             &_sfInternalMaximum,
+             this->getType().getFieldDesc(InternalMaximumFieldId),
+             this));
+
+
+    editSField(InternalMaximumFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultBoundedRangeModelBase::getHandleInternalValue   (void) const
+{
+    SFInt32::GetHandlePtr returnValue(
+        new  SFInt32::GetHandle(
+             &_sfInternalValue,
+             this->getType().getFieldDesc(InternalValueFieldId),
+             const_cast<DefaultBoundedRangeModelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultBoundedRangeModelBase::editHandleInternalValue  (void)
+{
+    SFInt32::EditHandlePtr returnValue(
+        new  SFInt32::EditHandle(
+             &_sfInternalValue,
+             this->getType().getFieldDesc(InternalValueFieldId),
+             this));
+
+
+    editSField(InternalValueFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultBoundedRangeModelBase::getHandleInternalExtent  (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfInternalExtent,
+             this->getType().getFieldDesc(InternalExtentFieldId),
+             const_cast<DefaultBoundedRangeModelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultBoundedRangeModelBase::editHandleInternalExtent (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfInternalExtent,
+             this->getType().getFieldDesc(InternalExtentFieldId),
+             this));
+
+
+    editSField(InternalExtentFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultBoundedRangeModelBase::getHandleInternalValueIsAdjusting (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfInternalValueIsAdjusting,
+             this->getType().getFieldDesc(InternalValueIsAdjustingFieldId),
+             const_cast<DefaultBoundedRangeModelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultBoundedRangeModelBase::editHandleInternalValueIsAdjusting(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfInternalValueIsAdjusting,
+             this->getType().getFieldDesc(InternalValueIsAdjustingFieldId),
+             this));
+
+
+    editSField(InternalValueIsAdjustingFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void DefaultBoundedRangeModelBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    DefaultBoundedRangeModel *pThis = static_cast<DefaultBoundedRangeModel *>(this);
+
+    pThis->execSync(static_cast<DefaultBoundedRangeModel *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *DefaultBoundedRangeModelBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    DefaultBoundedRangeModel *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const DefaultBoundedRangeModel *>(pRefAspect),
+                  dynamic_cast<const DefaultBoundedRangeModel *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<DefaultBoundedRangeModelPtr>::_type("DefaultBoundedRangeModelPtr", "BoundedRangeModelPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(DefaultBoundedRangeModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(DefaultBoundedRangeModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void DefaultBoundedRangeModelBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

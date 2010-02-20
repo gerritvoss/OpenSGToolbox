@@ -3,33 +3,35 @@
 <FieldContainer
 	name="Document"
 	parent="AttachmentContainer"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="abstract"
-	systemcomponent="false"
-	parentsystemcomponent="true"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 UI Document.
 	<ProducedMethod
 		name="ChangedUpdate"
-		producedEventType="DocumentEventPtr"
+		type="DocumentEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="InsertUpdate"
-		producedEventType="DocumentEventPtr"
+		type="DocumentEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="RemoveUpdate"
-		producedEventType="DocumentEventPtr"
+		type="DocumentEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="UndoableEditHappened"
-		producedEventType="UndoableEditEventPtr"
+		type="UndoableEditEventPtr"
 	>
 	</ProducedMethod>
 </FieldContainer>

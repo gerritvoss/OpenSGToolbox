@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,181 +50,285 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEETCHEDBORDERINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGEtchedBorderBase.h"
 #include "OSGEtchedBorder.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  EtchedBorderBase::HighlightFieldMask = 
-    (TypeTraits<BitVector>::One << EtchedBorderBase::HighlightFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  EtchedBorderBase::ShadowFieldMask = 
-    (TypeTraits<BitVector>::One << EtchedBorderBase::ShadowFieldId);
+/*! \class OSG::EtchedBorder
+    UI Etched Border.
+ */
 
-const OSG::BitVector  EtchedBorderBase::RaisedFieldMask = 
-    (TypeTraits<BitVector>::One << EtchedBorderBase::RaisedFieldId);
-
-const OSG::BitVector  EtchedBorderBase::WidthFieldMask = 
-    (TypeTraits<BitVector>::One << EtchedBorderBase::WidthFieldId);
-
-const OSG::BitVector EtchedBorderBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Color4f         EtchedBorderBase::_sfHighlight
     
 */
+
 /*! \var Color4f         EtchedBorderBase::_sfShadow
     
 */
+
 /*! \var bool            EtchedBorderBase::_sfRaised
     
 */
+
 /*! \var Real32          EtchedBorderBase::_sfWidth
     
 */
 
-//! EtchedBorder description
 
-FieldDescription *EtchedBorderBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<EtchedBorder *>::_type("EtchedBorderPtr", "BorderPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(EtchedBorder *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           EtchedBorder *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           EtchedBorder *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void EtchedBorderBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "Highlight", 
-                     HighlightFieldId, HighlightFieldMask,
-                     false,
-                     (FieldAccessMethod) &EtchedBorderBase::getSFHighlight),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "Shadow", 
-                     ShadowFieldId, ShadowFieldMask,
-                     false,
-                     (FieldAccessMethod) &EtchedBorderBase::getSFShadow),
-    new FieldDescription(SFBool::getClassType(), 
-                     "Raised", 
-                     RaisedFieldId, RaisedFieldMask,
-                     false,
-                     (FieldAccessMethod) &EtchedBorderBase::getSFRaised),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Width", 
-                     WidthFieldId, WidthFieldMask,
-                     false,
-                     (FieldAccessMethod) &EtchedBorderBase::getSFWidth)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType EtchedBorderBase::_type(
-    "EtchedBorder",
-    "Border",
-    NULL,
-    (PrototypeCreateF) &EtchedBorderBase::createEmpty,
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "Highlight",
+        "",
+        HighlightFieldId, HighlightFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&EtchedBorder::editHandleHighlight),
+        static_cast<FieldGetMethodSig >(&EtchedBorder::getHandleHighlight));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "Shadow",
+        "",
+        ShadowFieldId, ShadowFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&EtchedBorder::editHandleShadow),
+        static_cast<FieldGetMethodSig >(&EtchedBorder::getHandleShadow));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Raised",
+        "",
+        RaisedFieldId, RaisedFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&EtchedBorder::editHandleRaised),
+        static_cast<FieldGetMethodSig >(&EtchedBorder::getHandleRaised));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Width",
+        "",
+        WidthFieldId, WidthFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&EtchedBorder::editHandleWidth),
+        static_cast<FieldGetMethodSig >(&EtchedBorder::getHandleWidth));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+EtchedBorderBase::TypeObject EtchedBorderBase::_type(
+    EtchedBorderBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&EtchedBorderBase::createEmptyLocal),
     EtchedBorder::initMethod,
-    _desc,
-    sizeof(_desc));
+    EtchedBorder::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&EtchedBorder::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"EtchedBorder\"\n"
+    "\tparent=\"Border\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "UI Etched Border.\n"
+    "\t<Field\n"
+    "\t\tname=\"Highlight\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Shadow\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Raised\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"true\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Width\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "UI Etched Border.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(EtchedBorderBase, EtchedBorderPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &EtchedBorderBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &EtchedBorderBase::getType(void) const 
+FieldContainerType &EtchedBorderBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr EtchedBorderBase::shallowCopy(void) const 
-{ 
-    EtchedBorderPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const EtchedBorder *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 EtchedBorderBase::getContainerSize(void) const 
-{ 
-    return sizeof(EtchedBorder); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void EtchedBorderBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &EtchedBorderBase::getType(void) const
 {
-    this->executeSyncImpl((EtchedBorderBase *) &other, whichField);
+    return _type;
 }
-#else
-void EtchedBorderBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 EtchedBorderBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((EtchedBorderBase *) &other, whichField, sInfo);
+    return sizeof(EtchedBorder);
 }
-void EtchedBorderBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFColor4f *EtchedBorderBase::editSFHighlight(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(HighlightFieldMask);
+
+    return &_sfHighlight;
 }
 
-void EtchedBorderBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFColor4f *EtchedBorderBase::getSFHighlight(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfHighlight;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-EtchedBorderBase::EtchedBorderBase(void) :
-    _sfHighlight              (), 
-    _sfShadow                 (), 
-    _sfRaised                 (bool(true)), 
-    _sfWidth                  (Real32(1)), 
-    Inherited() 
+SFColor4f *EtchedBorderBase::editSFShadow(void)
 {
+    editSField(ShadowFieldMask);
+
+    return &_sfShadow;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-EtchedBorderBase::EtchedBorderBase(const EtchedBorderBase &source) :
-    _sfHighlight              (source._sfHighlight              ), 
-    _sfShadow                 (source._sfShadow                 ), 
-    _sfRaised                 (source._sfRaised                 ), 
-    _sfWidth                  (source._sfWidth                  ), 
-    Inherited                 (source)
+const SFColor4f *EtchedBorderBase::getSFShadow(void) const
 {
+    return &_sfShadow;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-EtchedBorderBase::~EtchedBorderBase(void)
+SFBool *EtchedBorderBase::editSFRaised(void)
 {
+    editSField(RaisedFieldMask);
+
+    return &_sfRaised;
 }
+
+const SFBool *EtchedBorderBase::getSFRaised(void) const
+{
+    return &_sfRaised;
+}
+
+
+SFReal32 *EtchedBorderBase::editSFWidth(void)
+{
+    editSField(WidthFieldMask);
+
+    return &_sfWidth;
+}
+
+const SFReal32 *EtchedBorderBase::getSFWidth(void) const
+{
+    return &_sfWidth;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 EtchedBorderBase::getBinSize(const BitVector &whichField)
+UInt32 EtchedBorderBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -232,28 +336,24 @@ UInt32 EtchedBorderBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfHighlight.getBinSize();
     }
-
     if(FieldBits::NoField != (ShadowFieldMask & whichField))
     {
         returnValue += _sfShadow.getBinSize();
     }
-
     if(FieldBits::NoField != (RaisedFieldMask & whichField))
     {
         returnValue += _sfRaised.getBinSize();
     }
-
     if(FieldBits::NoField != (WidthFieldMask & whichField))
     {
         returnValue += _sfWidth.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void EtchedBorderBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void EtchedBorderBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -261,27 +361,22 @@ void EtchedBorderBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfHighlight.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ShadowFieldMask & whichField))
     {
         _sfShadow.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (RaisedFieldMask & whichField))
     {
         _sfRaised.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (WidthFieldMask & whichField))
     {
         _sfWidth.copyToBin(pMem);
     }
-
-
 }
 
-void EtchedBorderBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void EtchedBorderBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -289,115 +384,306 @@ void EtchedBorderBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfHighlight.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ShadowFieldMask & whichField))
     {
         _sfShadow.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (RaisedFieldMask & whichField))
     {
         _sfRaised.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (WidthFieldMask & whichField))
     {
         _sfWidth.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void EtchedBorderBase::executeSyncImpl(      EtchedBorderBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+EtchedBorderTransitPtr EtchedBorderBase::createLocal(BitVector bFlags)
 {
+    EtchedBorderTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (HighlightFieldMask & whichField))
-        _sfHighlight.syncWith(pOther->_sfHighlight);
+        fc = dynamic_pointer_cast<EtchedBorder>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (ShadowFieldMask & whichField))
-        _sfShadow.syncWith(pOther->_sfShadow);
-
-    if(FieldBits::NoField != (RaisedFieldMask & whichField))
-        _sfRaised.syncWith(pOther->_sfRaised);
-
-    if(FieldBits::NoField != (WidthFieldMask & whichField))
-        _sfWidth.syncWith(pOther->_sfWidth);
-
-
-}
-#else
-void EtchedBorderBase::executeSyncImpl(      EtchedBorderBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (HighlightFieldMask & whichField))
-        _sfHighlight.syncWith(pOther->_sfHighlight);
-
-    if(FieldBits::NoField != (ShadowFieldMask & whichField))
-        _sfShadow.syncWith(pOther->_sfShadow);
-
-    if(FieldBits::NoField != (RaisedFieldMask & whichField))
-        _sfRaised.syncWith(pOther->_sfRaised);
-
-    if(FieldBits::NoField != (WidthFieldMask & whichField))
-        _sfWidth.syncWith(pOther->_sfWidth);
-
-
-
+    return fc;
 }
 
-void EtchedBorderBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+EtchedBorderTransitPtr EtchedBorderBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    EtchedBorderTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<EtchedBorder>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+EtchedBorderTransitPtr EtchedBorderBase::create(void)
+{
+    EtchedBorderTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<EtchedBorder>(tmpPtr);
+    }
+
+    return fc;
+}
+
+EtchedBorder *EtchedBorderBase::createEmptyLocal(BitVector bFlags)
+{
+    EtchedBorder *returnValue;
+
+    newPtr<EtchedBorder>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+EtchedBorder *EtchedBorderBase::createEmpty(void)
+{
+    EtchedBorder *returnValue;
+
+    newPtr<EtchedBorder>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr EtchedBorderBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    EtchedBorder *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const EtchedBorder *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr EtchedBorderBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    EtchedBorder *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const EtchedBorder *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr EtchedBorderBase::shallowCopy(void) const
+{
+    EtchedBorder *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const EtchedBorder *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+EtchedBorderBase::EtchedBorderBase(void) :
+    Inherited(),
+    _sfHighlight              (),
+    _sfShadow                 (),
+    _sfRaised                 (bool(true)),
+    _sfWidth                  (Real32(1))
+{
+}
+
+EtchedBorderBase::EtchedBorderBase(const EtchedBorderBase &source) :
+    Inherited(source),
+    _sfHighlight              (source._sfHighlight              ),
+    _sfShadow                 (source._sfShadow                 ),
+    _sfRaised                 (source._sfRaised                 ),
+    _sfWidth                  (source._sfWidth                  )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+EtchedBorderBase::~EtchedBorderBase(void)
+{
+}
+
+
+GetFieldHandlePtr EtchedBorderBase::getHandleHighlight       (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfHighlight,
+             this->getType().getFieldDesc(HighlightFieldId),
+             const_cast<EtchedBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr EtchedBorderBase::editHandleHighlight      (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfHighlight,
+             this->getType().getFieldDesc(HighlightFieldId),
+             this));
+
+
+    editSField(HighlightFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr EtchedBorderBase::getHandleShadow          (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfShadow,
+             this->getType().getFieldDesc(ShadowFieldId),
+             const_cast<EtchedBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr EtchedBorderBase::editHandleShadow         (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfShadow,
+             this->getType().getFieldDesc(ShadowFieldId),
+             this));
+
+
+    editSField(ShadowFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr EtchedBorderBase::getHandleRaised          (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfRaised,
+             this->getType().getFieldDesc(RaisedFieldId),
+             const_cast<EtchedBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr EtchedBorderBase::editHandleRaised         (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfRaised,
+             this->getType().getFieldDesc(RaisedFieldId),
+             this));
+
+
+    editSField(RaisedFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr EtchedBorderBase::getHandleWidth           (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfWidth,
+             this->getType().getFieldDesc(WidthFieldId),
+             const_cast<EtchedBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr EtchedBorderBase::editHandleWidth          (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfWidth,
+             this->getType().getFieldDesc(WidthFieldId),
+             this));
+
+
+    editSField(WidthFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void EtchedBorderBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    EtchedBorder *pThis = static_cast<EtchedBorder *>(this);
+
+    pThis->execSync(static_cast<EtchedBorder *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *EtchedBorderBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    EtchedBorder *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const EtchedBorder *>(pRefAspect),
+                  dynamic_cast<const EtchedBorder *>(this));
+
+    return returnValue;
+}
+#endif
+
+void EtchedBorderBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<EtchedBorderPtr>::_type("EtchedBorderPtr", "BorderPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(EtchedBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(EtchedBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGETCHEDBORDERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGETCHEDBORDERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGETCHEDBORDERFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,53 +42,58 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGDialogWindowEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DialogWindowEvent class. See \ref 
-           PageUserInterfaceDialogWindowEvent for a description.
+/*! \brief DialogWindowEvent class. See \ref
+           PageContribUserInterfaceDialogWindowEvent for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowEvent : public DialogWindowEventBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindowEvent : public DialogWindowEventBase
 {
-  private:
-
-    typedef DialogWindowEventBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
-    enum Options{DIALOG_OPTION_OK     = 0,
-				 DIALOG_OPTION_YES    = 1,
-				 DIALOG_OPTION_NO     = 2 ,
-				 DIALOG_OPTION_CANCEL = 3 ,
-				 DIALOG_OPTION_CLOSED = 4 };
+    enum Options
+    {
+        DIALOG_OPTION_OK     = 0,
+        DIALOG_OPTION_YES    = 1,
+        DIALOG_OPTION_NO     = 2 ,
+        DIALOG_OPTION_CANCEL = 3 ,
+        DIALOG_OPTION_CLOSED = 4
+    };
+
+    typedef DialogWindowEventBase Inherited;
+    typedef DialogWindowEvent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
-    static  DialogWindowEventPtr      create( FieldContainerPtr Source,
-                                        Time TimeStamp,
-                                        const UInt32& Option,
-                                        const std::string& Input); 
+    static  DialogWindowEventTransitPtr      create( FieldContainerRefPtr Source,
+                                                     Time TimeStamp,
+                                                     const UInt32& Option,
+                                                     const std::string& Input); 
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in DialogWindowEventBase.
@@ -105,20 +110,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowEvent : public DialogWindowEve
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DialogWindowEvent(void); 
+    virtual ~DialogWindowEvent(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class DialogWindowEventBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const DialogWindowEvent &source);
 };
 

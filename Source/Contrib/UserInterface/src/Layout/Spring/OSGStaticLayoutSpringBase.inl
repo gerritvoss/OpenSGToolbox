@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,132 +55,129 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &StaticLayoutSpringBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 StaticLayoutSpringBase::getClassTypeId(void) 
+OSG::UInt32 StaticLayoutSpringBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-StaticLayoutSpringPtr StaticLayoutSpringBase::create(void) 
-{
-    StaticLayoutSpringPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = StaticLayoutSpringPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-StaticLayoutSpringPtr StaticLayoutSpringBase::createEmpty(void) 
-{ 
-    StaticLayoutSpringPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 StaticLayoutSpringBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the StaticLayoutSpring::_sfMinimum field.
-inline
-SFReal32 *StaticLayoutSpringBase::getSFMinimum(void)
-{
-    return &_sfMinimum;
-}
-
-//! Get the StaticLayoutSpring::_sfMaximum field.
-inline
-SFReal32 *StaticLayoutSpringBase::getSFMaximum(void)
-{
-    return &_sfMaximum;
-}
-
-//! Get the StaticLayoutSpring::_sfPreferred field.
-inline
-SFReal32 *StaticLayoutSpringBase::getSFPreferred(void)
-{
-    return &_sfPreferred;
-}
-
-
 //! Get the value of the StaticLayoutSpring::_sfMinimum field.
+
 inline
-Real32 &StaticLayoutSpringBase::getMinimum(void)
+Real32 &StaticLayoutSpringBase::editMinimum(void)
 {
+    editSField(MinimumFieldMask);
+
     return _sfMinimum.getValue();
 }
 
 //! Get the value of the StaticLayoutSpring::_sfMinimum field.
 inline
-const Real32 &StaticLayoutSpringBase::getMinimum(void) const
+      Real32  StaticLayoutSpringBase::getMinimum(void) const
 {
     return _sfMinimum.getValue();
 }
 
 //! Set the value of the StaticLayoutSpring::_sfMinimum field.
 inline
-void StaticLayoutSpringBase::setMinimum(const Real32 &value)
+void StaticLayoutSpringBase::setMinimum(const Real32 value)
 {
+    editSField(MinimumFieldMask);
+
     _sfMinimum.setValue(value);
 }
-
 //! Get the value of the StaticLayoutSpring::_sfMaximum field.
+
 inline
-Real32 &StaticLayoutSpringBase::getMaximum(void)
+Real32 &StaticLayoutSpringBase::editMaximum(void)
 {
+    editSField(MaximumFieldMask);
+
     return _sfMaximum.getValue();
 }
 
 //! Get the value of the StaticLayoutSpring::_sfMaximum field.
 inline
-const Real32 &StaticLayoutSpringBase::getMaximum(void) const
+      Real32  StaticLayoutSpringBase::getMaximum(void) const
 {
     return _sfMaximum.getValue();
 }
 
 //! Set the value of the StaticLayoutSpring::_sfMaximum field.
 inline
-void StaticLayoutSpringBase::setMaximum(const Real32 &value)
+void StaticLayoutSpringBase::setMaximum(const Real32 value)
 {
+    editSField(MaximumFieldMask);
+
     _sfMaximum.setValue(value);
 }
-
 //! Get the value of the StaticLayoutSpring::_sfPreferred field.
+
 inline
-Real32 &StaticLayoutSpringBase::getPreferred(void)
+Real32 &StaticLayoutSpringBase::editPreferred(void)
 {
+    editSField(PreferredFieldMask);
+
     return _sfPreferred.getValue();
 }
 
 //! Get the value of the StaticLayoutSpring::_sfPreferred field.
 inline
-const Real32 &StaticLayoutSpringBase::getPreferred(void) const
+      Real32  StaticLayoutSpringBase::getPreferred(void) const
 {
     return _sfPreferred.getValue();
 }
 
 //! Set the value of the StaticLayoutSpring::_sfPreferred field.
 inline
-void StaticLayoutSpringBase::setPreferred(const Real32 &value)
+void StaticLayoutSpringBase::setPreferred(const Real32 value)
 {
+    editSField(PreferredFieldMask);
+
     _sfPreferred.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void StaticLayoutSpringBase::execSync (      StaticLayoutSpringBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGSTATICLAYOUTSPRINGBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (MinimumFieldMask & whichField))
+        _sfMinimum.syncWith(pFrom->_sfMinimum);
+
+    if(FieldBits::NoField != (MaximumFieldMask & whichField))
+        _sfMaximum.syncWith(pFrom->_sfMaximum);
+
+    if(FieldBits::NoField != (PreferredFieldMask & whichField))
+        _sfPreferred.syncWith(pFrom->_sfPreferred);
+}
+#endif
+
+
+inline
+const Char8 *StaticLayoutSpringBase::getClassname(void)
+{
+    return "StaticLayoutSpring";
+}
+OSG_GEN_CONTAINERPTR(StaticLayoutSpring);
+
+OSG_END_NAMESPACE
 

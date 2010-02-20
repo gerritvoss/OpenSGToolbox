@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,49 +42,50 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGListComponentGeneratorBase.h"
-#include "Component/List/OSGListFields.h"
+#include "OSGListFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ListComponentGenerator class. See \ref 
-           PageUserInterfaceListComponentGenerator for a description.
+/*! \brief ListComponentGenerator class. See \ref
+           PageContribUserInterfaceListComponentGenerator for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING ListComponentGenerator : public ListComponentGeneratorBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListComponentGenerator : public ListComponentGeneratorBase
 {
-  private:
-
-    typedef ListComponentGeneratorBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef ListComponentGeneratorBase Inherited;
+    typedef ListComponentGenerator     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
-	virtual ComponentPtr getComponent(ComponentPtr Parent, const boost::any& Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus);
+	virtual ComponentRefPtr getComponent(ComponentRefPtr Parent, const boost::any& Value, Int32 PrimaryAxisIndex, Int32 SecondaryAxisIndex, bool IsSelected, bool HasFocus);
 
-	virtual ComponentPtr getListComponent(ListPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus) = 0;
+	virtual ComponentRefPtr getListComponent(ListRefPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus) = 0;
 
-	/*=========================  PROTECTED  ===============================*/
+    /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ListComponentGeneratorBase.
@@ -101,20 +102,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListComponentGenerator : public ListCompon
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ListComponentGenerator(void); 
+    virtual ~ListComponentGenerator(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ListComponentGeneratorBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ListComponentGenerator &source);
 };
 
@@ -124,7 +129,5 @@ OSG_END_NAMESPACE
 
 #include "OSGListComponentGeneratorBase.inl"
 #include "OSGListComponentGenerator.inl"
-
-#define OSGLISTCOMPONENTGENERATOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGLISTCOMPONENTGENERATOR_H_ */

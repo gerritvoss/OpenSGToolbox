@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,186 +50,374 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILELOOKANDFEELINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGFieldContainer.h"          // Prototypes Class
 
 #include "OSGLookAndFeelBase.h"
 #include "OSGLookAndFeel.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  LookAndFeelBase::PrototypesFieldMask = 
-    (TypeTraits<BitVector>::One << LookAndFeelBase::PrototypesFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  LookAndFeelBase::TextCaretRateFieldMask = 
-    (TypeTraits<BitVector>::One << LookAndFeelBase::TextCaretRateFieldId);
+/*! \class OSG::LookAndFeel
+    UI LookAndFeel Interface.
+ */
 
-const OSG::BitVector  LookAndFeelBase::ToolTipPopupTimeFieldMask = 
-    (TypeTraits<BitVector>::One << LookAndFeelBase::ToolTipPopupTimeFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  LookAndFeelBase::SubMenuPopupTimeFieldMask = 
-    (TypeTraits<BitVector>::One << LookAndFeelBase::SubMenuPopupTimeFieldId);
-
-const OSG::BitVector  LookAndFeelBase::KeyAcceleratorMenuFlashTimeFieldMask = 
-    (TypeTraits<BitVector>::One << LookAndFeelBase::KeyAcceleratorMenuFlashTimeFieldId);
-
-const OSG::BitVector LookAndFeelBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var FieldContainerPtr LookAndFeelBase::_mfPrototypes
+/*! \var FieldContainer * LookAndFeelBase::_mfPrototypes
     
 */
+
 /*! \var Time            LookAndFeelBase::_sfTextCaretRate
     
 */
+
 /*! \var Time            LookAndFeelBase::_sfToolTipPopupTime
     
 */
+
 /*! \var Time            LookAndFeelBase::_sfSubMenuPopupTime
     
 */
+
 /*! \var Time            LookAndFeelBase::_sfKeyAcceleratorMenuFlashTime
     
 */
 
-//! LookAndFeel description
 
-FieldDescription *LookAndFeelBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<LookAndFeel *>::_type("LookAndFeelPtr", "FieldContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(LookAndFeel *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           LookAndFeel *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           LookAndFeel *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void LookAndFeelBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(MFFieldContainerPtr::getClassType(), 
-                     "Prototypes", 
-                     PrototypesFieldId, PrototypesFieldMask,
-                     false,
-                     (FieldAccessMethod) &LookAndFeelBase::getMFPrototypes),
-    new FieldDescription(SFTime::getClassType(), 
-                     "TextCaretRate", 
-                     TextCaretRateFieldId, TextCaretRateFieldMask,
-                     false,
-                     (FieldAccessMethod) &LookAndFeelBase::getSFTextCaretRate),
-    new FieldDescription(SFTime::getClassType(), 
-                     "ToolTipPopupTime", 
-                     ToolTipPopupTimeFieldId, ToolTipPopupTimeFieldMask,
-                     false,
-                     (FieldAccessMethod) &LookAndFeelBase::getSFToolTipPopupTime),
-    new FieldDescription(SFTime::getClassType(), 
-                     "SubMenuPopupTime", 
-                     SubMenuPopupTimeFieldId, SubMenuPopupTimeFieldMask,
-                     false,
-                     (FieldAccessMethod) &LookAndFeelBase::getSFSubMenuPopupTime),
-    new FieldDescription(SFTime::getClassType(), 
-                     "KeyAcceleratorMenuFlashTime", 
-                     KeyAcceleratorMenuFlashTimeFieldId, KeyAcceleratorMenuFlashTimeFieldMask,
-                     false,
-                     (FieldAccessMethod) &LookAndFeelBase::getSFKeyAcceleratorMenuFlashTime)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType LookAndFeelBase::_type(
-    "LookAndFeel",
-    "FieldContainer",
+    pDesc = new MFUnrecFieldContainerPtr::Description(
+        MFUnrecFieldContainerPtr::getClassType(),
+        "Prototypes",
+        "",
+        PrototypesFieldId, PrototypesFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&LookAndFeel::editHandlePrototypes),
+        static_cast<FieldGetMethodSig >(&LookAndFeel::getHandlePrototypes));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFTime::Description(
+        SFTime::getClassType(),
+        "TextCaretRate",
+        "",
+        TextCaretRateFieldId, TextCaretRateFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&LookAndFeel::editHandleTextCaretRate),
+        static_cast<FieldGetMethodSig >(&LookAndFeel::getHandleTextCaretRate));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFTime::Description(
+        SFTime::getClassType(),
+        "ToolTipPopupTime",
+        "",
+        ToolTipPopupTimeFieldId, ToolTipPopupTimeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&LookAndFeel::editHandleToolTipPopupTime),
+        static_cast<FieldGetMethodSig >(&LookAndFeel::getHandleToolTipPopupTime));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFTime::Description(
+        SFTime::getClassType(),
+        "SubMenuPopupTime",
+        "",
+        SubMenuPopupTimeFieldId, SubMenuPopupTimeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&LookAndFeel::editHandleSubMenuPopupTime),
+        static_cast<FieldGetMethodSig >(&LookAndFeel::getHandleSubMenuPopupTime));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFTime::Description(
+        SFTime::getClassType(),
+        "KeyAcceleratorMenuFlashTime",
+        "",
+        KeyAcceleratorMenuFlashTimeFieldId, KeyAcceleratorMenuFlashTimeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&LookAndFeel::editHandleKeyAcceleratorMenuFlashTime),
+        static_cast<FieldGetMethodSig >(&LookAndFeel::getHandleKeyAcceleratorMenuFlashTime));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+LookAndFeelBase::TypeObject LookAndFeelBase::_type(
+    LookAndFeelBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
     NULL,
-    NULL, 
     LookAndFeel::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(LookAndFeelBase, LookAndFeelPtr)
+    LookAndFeel::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&LookAndFeel::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"LookAndFeel\"\n"
+    "\tparent=\"FieldContainer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"abstract\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "UI LookAndFeel Interface.\n"
+    "\t<Field\n"
+    "\t\tname=\"Prototypes\"\n"
+    "\t\ttype=\"FieldContainer\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TextCaretRate\"\n"
+    "\t\ttype=\"Time\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ToolTipPopupTime\"\n"
+    "\t\ttype=\"Time\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1.5\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SubMenuPopupTime\"\n"
+    "\t\ttype=\"Time\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.25\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"KeyAcceleratorMenuFlashTime\"\n"
+    "\t\ttype=\"Time\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.15\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "UI LookAndFeel Interface.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &LookAndFeelBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &LookAndFeelBase::getType(void) const 
+FieldContainerType &LookAndFeelBase::getType(void)
 {
     return _type;
-} 
-
-
-UInt32 LookAndFeelBase::getContainerSize(void) const 
-{ 
-    return sizeof(LookAndFeel); 
 }
 
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void LookAndFeelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &LookAndFeelBase::getType(void) const
 {
-    this->executeSyncImpl((LookAndFeelBase *) &other, whichField);
+    return _type;
 }
-#else
-void LookAndFeelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 LookAndFeelBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((LookAndFeelBase *) &other, whichField, sInfo);
+    return sizeof(LookAndFeel);
 }
-void LookAndFeelBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the LookAndFeel::_mfPrototypes field.
+const MFUnrecFieldContainerPtr *LookAndFeelBase::getMFPrototypes(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_mfPrototypes;
 }
 
-void LookAndFeelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+MFUnrecFieldContainerPtr *LookAndFeelBase::editMFPrototypes     (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editMField(PrototypesFieldMask, _mfPrototypes);
 
-    _mfPrototypes.terminateShare(uiAspect, this->getContainerSize());
+    return &_mfPrototypes;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-LookAndFeelBase::LookAndFeelBase(void) :
-    _mfPrototypes             (), 
-    _sfTextCaretRate          (Time(1.0)), 
-    _sfToolTipPopupTime       (Time(1.5)), 
-    _sfSubMenuPopupTime       (Time(0.25)), 
-    _sfKeyAcceleratorMenuFlashTime(Time(0.15)), 
-    Inherited() 
+SFTime *LookAndFeelBase::editSFTextCaretRate(void)
 {
+    editSField(TextCaretRateFieldMask);
+
+    return &_sfTextCaretRate;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-LookAndFeelBase::LookAndFeelBase(const LookAndFeelBase &source) :
-    _mfPrototypes             (source._mfPrototypes             ), 
-    _sfTextCaretRate          (source._sfTextCaretRate          ), 
-    _sfToolTipPopupTime       (source._sfToolTipPopupTime       ), 
-    _sfSubMenuPopupTime       (source._sfSubMenuPopupTime       ), 
-    _sfKeyAcceleratorMenuFlashTime(source._sfKeyAcceleratorMenuFlashTime), 
-    Inherited                 (source)
+const SFTime *LookAndFeelBase::getSFTextCaretRate(void) const
 {
+    return &_sfTextCaretRate;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-LookAndFeelBase::~LookAndFeelBase(void)
+SFTime *LookAndFeelBase::editSFToolTipPopupTime(void)
 {
+    editSField(ToolTipPopupTimeFieldMask);
+
+    return &_sfToolTipPopupTime;
 }
+
+const SFTime *LookAndFeelBase::getSFToolTipPopupTime(void) const
+{
+    return &_sfToolTipPopupTime;
+}
+
+
+SFTime *LookAndFeelBase::editSFSubMenuPopupTime(void)
+{
+    editSField(SubMenuPopupTimeFieldMask);
+
+    return &_sfSubMenuPopupTime;
+}
+
+const SFTime *LookAndFeelBase::getSFSubMenuPopupTime(void) const
+{
+    return &_sfSubMenuPopupTime;
+}
+
+
+SFTime *LookAndFeelBase::editSFKeyAcceleratorMenuFlashTime(void)
+{
+    editSField(KeyAcceleratorMenuFlashTimeFieldMask);
+
+    return &_sfKeyAcceleratorMenuFlashTime;
+}
+
+const SFTime *LookAndFeelBase::getSFKeyAcceleratorMenuFlashTime(void) const
+{
+    return &_sfKeyAcceleratorMenuFlashTime;
+}
+
+
+
+
+void LookAndFeelBase::pushToPrototypes(FieldContainer * const value)
+{
+    editMField(PrototypesFieldMask, _mfPrototypes);
+
+    _mfPrototypes.push_back(value);
+}
+
+void LookAndFeelBase::assignPrototypes(const MFUnrecFieldContainerPtr &value)
+{
+    MFUnrecFieldContainerPtr::const_iterator elemIt  =
+        value.begin();
+    MFUnrecFieldContainerPtr::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<LookAndFeel *>(this)->clearPrototypes();
+
+    while(elemIt != elemEnd)
+    {
+        this->pushToPrototypes(*elemIt);
+
+        ++elemIt;
+    }
+}
+
+void LookAndFeelBase::removeFromPrototypes(UInt32 uiIndex)
+{
+    if(uiIndex < _mfPrototypes.size())
+    {
+        editMField(PrototypesFieldMask, _mfPrototypes);
+
+        _mfPrototypes.erase(uiIndex);
+    }
+}
+
+void LookAndFeelBase::removeObjFromPrototypes(FieldContainer * const value)
+{
+    Int32 iElemIdx = _mfPrototypes.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(PrototypesFieldMask, _mfPrototypes);
+
+        _mfPrototypes.erase(iElemIdx);
+    }
+}
+void LookAndFeelBase::clearPrototypes(void)
+{
+    editMField(PrototypesFieldMask, _mfPrototypes);
+
+
+    _mfPrototypes.clear();
+}
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 LookAndFeelBase::getBinSize(const BitVector &whichField)
+UInt32 LookAndFeelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -237,33 +425,28 @@ UInt32 LookAndFeelBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _mfPrototypes.getBinSize();
     }
-
     if(FieldBits::NoField != (TextCaretRateFieldMask & whichField))
     {
         returnValue += _sfTextCaretRate.getBinSize();
     }
-
     if(FieldBits::NoField != (ToolTipPopupTimeFieldMask & whichField))
     {
         returnValue += _sfToolTipPopupTime.getBinSize();
     }
-
     if(FieldBits::NoField != (SubMenuPopupTimeFieldMask & whichField))
     {
         returnValue += _sfSubMenuPopupTime.getBinSize();
     }
-
     if(FieldBits::NoField != (KeyAcceleratorMenuFlashTimeFieldMask & whichField))
     {
         returnValue += _sfKeyAcceleratorMenuFlashTime.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void LookAndFeelBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void LookAndFeelBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -271,32 +454,26 @@ void LookAndFeelBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _mfPrototypes.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TextCaretRateFieldMask & whichField))
     {
         _sfTextCaretRate.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ToolTipPopupTimeFieldMask & whichField))
     {
         _sfToolTipPopupTime.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SubMenuPopupTimeFieldMask & whichField))
     {
         _sfSubMenuPopupTime.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (KeyAcceleratorMenuFlashTimeFieldMask & whichField))
     {
         _sfKeyAcceleratorMenuFlashTime.copyToBin(pMem);
     }
-
-
 }
 
-void LookAndFeelBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void LookAndFeelBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -304,129 +481,243 @@ void LookAndFeelBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _mfPrototypes.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TextCaretRateFieldMask & whichField))
     {
         _sfTextCaretRate.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ToolTipPopupTimeFieldMask & whichField))
     {
         _sfToolTipPopupTime.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SubMenuPopupTimeFieldMask & whichField))
     {
         _sfSubMenuPopupTime.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (KeyAcceleratorMenuFlashTimeFieldMask & whichField))
     {
         _sfKeyAcceleratorMenuFlashTime.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void LookAndFeelBase::executeSyncImpl(      LookAndFeelBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+LookAndFeelBase::LookAndFeelBase(void) :
+    Inherited(),
+    _mfPrototypes             (),
+    _sfTextCaretRate          (Time(1.0)),
+    _sfToolTipPopupTime       (Time(1.5)),
+    _sfSubMenuPopupTime       (Time(0.25)),
+    _sfKeyAcceleratorMenuFlashTime(Time(0.15))
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-    if(FieldBits::NoField != (PrototypesFieldMask & whichField))
-        _mfPrototypes.syncWith(pOther->_mfPrototypes);
-
-    if(FieldBits::NoField != (TextCaretRateFieldMask & whichField))
-        _sfTextCaretRate.syncWith(pOther->_sfTextCaretRate);
-
-    if(FieldBits::NoField != (ToolTipPopupTimeFieldMask & whichField))
-        _sfToolTipPopupTime.syncWith(pOther->_sfToolTipPopupTime);
-
-    if(FieldBits::NoField != (SubMenuPopupTimeFieldMask & whichField))
-        _sfSubMenuPopupTime.syncWith(pOther->_sfSubMenuPopupTime);
-
-    if(FieldBits::NoField != (KeyAcceleratorMenuFlashTimeFieldMask & whichField))
-        _sfKeyAcceleratorMenuFlashTime.syncWith(pOther->_sfKeyAcceleratorMenuFlashTime);
-
-
-}
-#else
-void LookAndFeelBase::executeSyncImpl(      LookAndFeelBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (TextCaretRateFieldMask & whichField))
-        _sfTextCaretRate.syncWith(pOther->_sfTextCaretRate);
-
-    if(FieldBits::NoField != (ToolTipPopupTimeFieldMask & whichField))
-        _sfToolTipPopupTime.syncWith(pOther->_sfToolTipPopupTime);
-
-    if(FieldBits::NoField != (SubMenuPopupTimeFieldMask & whichField))
-        _sfSubMenuPopupTime.syncWith(pOther->_sfSubMenuPopupTime);
-
-    if(FieldBits::NoField != (KeyAcceleratorMenuFlashTimeFieldMask & whichField))
-        _sfKeyAcceleratorMenuFlashTime.syncWith(pOther->_sfKeyAcceleratorMenuFlashTime);
-
-
-    if(FieldBits::NoField != (PrototypesFieldMask & whichField))
-        _mfPrototypes.syncWith(pOther->_mfPrototypes, sInfo);
-
-
 }
 
-void LookAndFeelBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+LookAndFeelBase::LookAndFeelBase(const LookAndFeelBase &source) :
+    Inherited(source),
+    _mfPrototypes             (),
+    _sfTextCaretRate          (source._sfTextCaretRate          ),
+    _sfToolTipPopupTime       (source._sfToolTipPopupTime       ),
+    _sfSubMenuPopupTime       (source._sfSubMenuPopupTime       ),
+    _sfKeyAcceleratorMenuFlashTime(source._sfKeyAcceleratorMenuFlashTime)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
-    if(FieldBits::NoField != (PrototypesFieldMask & whichField))
-        _mfPrototypes.beginEdit(uiAspect, uiContainerSize);
 
+/*-------------------------- destructors ----------------------------------*/
+
+LookAndFeelBase::~LookAndFeelBase(void)
+{
+}
+
+void LookAndFeelBase::onCreate(const LookAndFeel *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        LookAndFeel *pThis = static_cast<LookAndFeel *>(this);
+
+        MFUnrecFieldContainerPtr::const_iterator PrototypesIt  =
+            source->_mfPrototypes.begin();
+        MFUnrecFieldContainerPtr::const_iterator PrototypesEnd =
+            source->_mfPrototypes.end  ();
+
+        while(PrototypesIt != PrototypesEnd)
+        {
+            pThis->pushToPrototypes(*PrototypesIt);
+
+            ++PrototypesIt;
+        }
+    }
+}
+
+GetFieldHandlePtr LookAndFeelBase::getHandlePrototypes      (void) const
+{
+    MFUnrecFieldContainerPtr::GetHandlePtr returnValue(
+        new  MFUnrecFieldContainerPtr::GetHandle(
+             &_mfPrototypes,
+             this->getType().getFieldDesc(PrototypesFieldId),
+             const_cast<LookAndFeelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr LookAndFeelBase::editHandlePrototypes     (void)
+{
+    MFUnrecFieldContainerPtr::EditHandlePtr returnValue(
+        new  MFUnrecFieldContainerPtr::EditHandle(
+             &_mfPrototypes,
+             this->getType().getFieldDesc(PrototypesFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&LookAndFeel::pushToPrototypes,
+                    static_cast<LookAndFeel *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&LookAndFeel::removeFromPrototypes,
+                    static_cast<LookAndFeel *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&LookAndFeel::removeObjFromPrototypes,
+                    static_cast<LookAndFeel *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&LookAndFeel::clearPrototypes,
+                    static_cast<LookAndFeel *>(this)));
+
+    editMField(PrototypesFieldMask, _mfPrototypes);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr LookAndFeelBase::getHandleTextCaretRate   (void) const
+{
+    SFTime::GetHandlePtr returnValue(
+        new  SFTime::GetHandle(
+             &_sfTextCaretRate,
+             this->getType().getFieldDesc(TextCaretRateFieldId),
+             const_cast<LookAndFeelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr LookAndFeelBase::editHandleTextCaretRate  (void)
+{
+    SFTime::EditHandlePtr returnValue(
+        new  SFTime::EditHandle(
+             &_sfTextCaretRate,
+             this->getType().getFieldDesc(TextCaretRateFieldId),
+             this));
+
+
+    editSField(TextCaretRateFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr LookAndFeelBase::getHandleToolTipPopupTime (void) const
+{
+    SFTime::GetHandlePtr returnValue(
+        new  SFTime::GetHandle(
+             &_sfToolTipPopupTime,
+             this->getType().getFieldDesc(ToolTipPopupTimeFieldId),
+             const_cast<LookAndFeelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr LookAndFeelBase::editHandleToolTipPopupTime(void)
+{
+    SFTime::EditHandlePtr returnValue(
+        new  SFTime::EditHandle(
+             &_sfToolTipPopupTime,
+             this->getType().getFieldDesc(ToolTipPopupTimeFieldId),
+             this));
+
+
+    editSField(ToolTipPopupTimeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr LookAndFeelBase::getHandleSubMenuPopupTime (void) const
+{
+    SFTime::GetHandlePtr returnValue(
+        new  SFTime::GetHandle(
+             &_sfSubMenuPopupTime,
+             this->getType().getFieldDesc(SubMenuPopupTimeFieldId),
+             const_cast<LookAndFeelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr LookAndFeelBase::editHandleSubMenuPopupTime(void)
+{
+    SFTime::EditHandlePtr returnValue(
+        new  SFTime::EditHandle(
+             &_sfSubMenuPopupTime,
+             this->getType().getFieldDesc(SubMenuPopupTimeFieldId),
+             this));
+
+
+    editSField(SubMenuPopupTimeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr LookAndFeelBase::getHandleKeyAcceleratorMenuFlashTime (void) const
+{
+    SFTime::GetHandlePtr returnValue(
+        new  SFTime::GetHandle(
+             &_sfKeyAcceleratorMenuFlashTime,
+             this->getType().getFieldDesc(KeyAcceleratorMenuFlashTimeFieldId),
+             const_cast<LookAndFeelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr LookAndFeelBase::editHandleKeyAcceleratorMenuFlashTime(void)
+{
+    SFTime::EditHandlePtr returnValue(
+        new  SFTime::EditHandle(
+             &_sfKeyAcceleratorMenuFlashTime,
+             this->getType().getFieldDesc(KeyAcceleratorMenuFlashTimeFieldId),
+             this));
+
+
+    editSField(KeyAcceleratorMenuFlashTimeFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void LookAndFeelBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    LookAndFeel *pThis = static_cast<LookAndFeel *>(this);
+
+    pThis->execSync(static_cast<LookAndFeel *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+
+void LookAndFeelBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<LookAndFeel *>(this)->clearPrototypes();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<LookAndFeelPtr>::_type("LookAndFeelPtr", "FieldContainerPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(LookAndFeelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(LookAndFeelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGLOOKANDFEELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGLOOKANDFEELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGLOOKANDFEELFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

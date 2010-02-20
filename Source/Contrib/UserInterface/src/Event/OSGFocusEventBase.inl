@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,116 +55,92 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &FocusEventBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 FocusEventBase::getClassTypeId(void) 
+OSG::UInt32 FocusEventBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-FocusEventPtr FocusEventBase::create(void) 
-{
-    FocusEventPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = FocusEventPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-FocusEventPtr FocusEventBase::createEmpty(void) 
-{ 
-    FocusEventPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 FocusEventBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the FocusEvent::_sfIsTemporary field.
-inline
-const SFBool *FocusEventBase::getSFIsTemporary(void) const
-{
-    return &_sfIsTemporary;
-}
-
-//! Get the FocusEvent::_sfIsTemporary field.
-inline
-SFBool *FocusEventBase::editSFIsTemporary(void)
-{
-    return &_sfIsTemporary;
-}
-
-//! Get the FocusEvent::_sfOppositeComponent field.
-inline
-const SFComponentPtr *FocusEventBase::getSFOppositeComponent(void) const
-{
-    return &_sfOppositeComponent;
-}
-
-//! Get the FocusEvent::_sfOppositeComponent field.
-inline
-SFComponentPtr *FocusEventBase::editSFOppositeComponent(void)
-{
-    return &_sfOppositeComponent;
-}
-
-
 //! Get the value of the FocusEvent::_sfIsTemporary field.
+
 inline
 bool &FocusEventBase::editIsTemporary(void)
 {
+    editSField(IsTemporaryFieldMask);
+
     return _sfIsTemporary.getValue();
 }
 
 //! Get the value of the FocusEvent::_sfIsTemporary field.
 inline
-const bool &FocusEventBase::getIsTemporary(void) const
+      bool  FocusEventBase::getIsTemporary(void) const
 {
     return _sfIsTemporary.getValue();
 }
 
 //! Set the value of the FocusEvent::_sfIsTemporary field.
 inline
-void FocusEventBase::setIsTemporary(const bool &value)
+void FocusEventBase::setIsTemporary(const bool value)
 {
+    editSField(IsTemporaryFieldMask);
+
     _sfIsTemporary.setValue(value);
 }
 
 //! Get the value of the FocusEvent::_sfOppositeComponent field.
 inline
-ComponentPtr &FocusEventBase::editOppositeComponent(void)
-{
-    return _sfOppositeComponent.getValue();
-}
-
-//! Get the value of the FocusEvent::_sfOppositeComponent field.
-inline
-const ComponentPtr &FocusEventBase::getOppositeComponent(void) const
+Component * FocusEventBase::getOppositeComponent(void) const
 {
     return _sfOppositeComponent.getValue();
 }
 
 //! Set the value of the FocusEvent::_sfOppositeComponent field.
 inline
-void FocusEventBase::setOppositeComponent(const ComponentPtr &value)
+void FocusEventBase::setOppositeComponent(Component * const value)
 {
+    editSField(OppositeComponentFieldMask);
+
     _sfOppositeComponent.setValue(value);
 }
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void FocusEventBase::execSync (      FocusEventBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (IsTemporaryFieldMask & whichField))
+        _sfIsTemporary.syncWith(pFrom->_sfIsTemporary);
+
+    if(FieldBits::NoField != (OppositeComponentFieldMask & whichField))
+        _sfOppositeComponent.syncWith(pFrom->_sfOppositeComponent);
+}
+#endif
+
+
+inline
+const Char8 *FocusEventBase::getClassname(void)
+{
+    return "FocusEvent";
+}
+OSG_GEN_CONTAINERPTR(FocusEvent);
 
 OSG_END_NAMESPACE
 

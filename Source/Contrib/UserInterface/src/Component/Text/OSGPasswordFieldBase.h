@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,65 +58,71 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGTextField.h" // Parent
 
-#include <OpenSG/OSGStringFields.h> // EchoChar type
-#include <OpenSG/OSGStringFields.h> // Echo type
+#include "OSGBaseFields.h"              // EchoChar type
 
 #include "OSGPasswordFieldFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class PasswordField;
-class BinaryDataHandler;
 
 //! \brief PasswordField Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING PasswordFieldBase : public TextField
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING PasswordFieldBase : public TextField
 {
-  private:
-
-    typedef TextField    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef PasswordFieldPtr  Ptr;
+    typedef TextField Inherited;
+    typedef TextField ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(PasswordField);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
         EchoCharFieldId = Inherited::NextFieldId,
-        EchoFieldId     = EchoCharFieldId + 1,
-        NextFieldId     = EchoFieldId     + 1
+        EchoFieldId = EchoCharFieldId + 1,
+        NextFieldId = EchoFieldId + 1
     };
 
-    static const OSG::BitVector EchoCharFieldMask;
-    static const OSG::BitVector EchoFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector EchoCharFieldMask =
+        (TypeTraits<BitVector>::One << EchoCharFieldId);
+    static const OSG::BitVector EchoFieldMask =
+        (TypeTraits<BitVector>::One << EchoFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFString          SFEchoCharType;
+    typedef SFString          SFEchoType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -125,21 +131,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING PasswordFieldBase : public TextField
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFString            *getSFEchoChar       (void);
 
-           std::string         &getEchoChar       (void);
-     const std::string         &getEchoChar       (void) const;
+                  SFString            *editSFEchoChar       (void);
+            const SFString            *getSFEchoChar        (void) const;
+
+
+                  std::string         &editEchoChar       (void);
+            const std::string         &getEchoChar        (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setEchoChar       ( const std::string &value );
+            void setEchoChar       (const std::string &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -147,11 +156,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING PasswordFieldBase : public TextField
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -159,27 +168,44 @@ class OSG_USERINTERFACELIB_DLLMAPPING PasswordFieldBase : public TextField
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  PasswordFieldPtr      create          (void); 
-    static  PasswordFieldPtr      createEmpty     (void); 
+    static  PasswordFieldTransitPtr  create          (void);
+    static  PasswordField           *createEmpty     (void);
+
+    static  PasswordFieldTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  PasswordField            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  PasswordFieldTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFString            _sfEchoChar;
-    SFString            _sfEcho;
+    SFString          _sfEchoChar;
+    SFString          _sfEcho;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -194,86 +220,106 @@ class OSG_USERINTERFACELIB_DLLMAPPING PasswordFieldBase : public TextField
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~PasswordFieldBase(void); 
+    virtual ~PasswordFieldBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleEchoChar        (void) const;
+    EditFieldHandlePtr editHandleEchoChar       (void);
+    GetFieldHandlePtr  getHandleEcho            (void) const;
+    EditFieldHandlePtr editHandleEcho           (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFString            *getSFEcho           (void);
 
-           std::string         &getEcho           (void);
-     const std::string         &getEcho           (void) const;
+                  SFString            *editSFEcho           (void);
+            const SFString            *getSFEcho            (void) const;
+
+
+                  std::string         &editEcho           (void);
+            const std::string         &getEcho            (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setEcho           (const std::string &value);
+            void setEcho           (const std::string &value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      PasswordFieldBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      PasswordFieldBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      PasswordFieldBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const PasswordFieldBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef PasswordFieldBase *PasswordFieldBaseP;
 
-typedef osgIF<PasswordFieldBase::isNodeCore,
-              CoredNodePtr<PasswordField>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet PasswordFieldNodePtr;
-
-typedef RefPtr<PasswordFieldPtr> PasswordFieldRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGPASSWORDFIELDBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGPASSWORDFIELDBASE_H_ */

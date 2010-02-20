@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,64 +58,71 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h> // Parent
+#include "OSGEvent.h" // Parent
 
-#include <OpenSG/OSGUInt32Fields.h> // Key type
-#include <OpenSG/OSGUInt32Fields.h> // Modifiers type
+#include "OSGSysFields.h"               // Key type
 
 #include "OSGKeyAcceleratorEventFields.h"
+
 OSG_BEGIN_NAMESPACE
 
 class KeyAcceleratorEvent;
-class BinaryDataHandler;
 
 //! \brief KeyAcceleratorEvent Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING KeyAcceleratorEventBase : public Event
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING KeyAcceleratorEventBase : public Event
 {
-  private:
-
-    typedef Event    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef KeyAcceleratorEventPtr  Ptr;
+    typedef Event Inherited;
+    typedef Event ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(KeyAcceleratorEvent);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        KeyFieldId       = Inherited::NextFieldId,
-        ModifiersFieldId = KeyFieldId       + 1,
-        NextFieldId      = ModifiersFieldId + 1
+        KeyFieldId = Inherited::NextFieldId,
+        ModifiersFieldId = KeyFieldId + 1,
+        NextFieldId = ModifiersFieldId + 1
     };
 
-    static const OSG::BitVector KeyFieldMask;
-    static const OSG::BitVector ModifiersFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector KeyFieldMask =
+        (TypeTraits<BitVector>::One << KeyFieldId);
+    static const OSG::BitVector ModifiersFieldMask =
+        (TypeTraits<BitVector>::One << ModifiersFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUInt32          SFKeyType;
+    typedef SFUInt32          SFModifiersType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -125,26 +132,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING KeyAcceleratorEventBase : public Event
     /*! \{                                                                 */
 
 
-           SFUInt32            *editSFKey            (void);
-     const SFUInt32            *getSFKey            (void) const;
-     const SFUInt32            *getSFModifiers      (void) const;
+            const SFUInt32            *getSFKey             (void) const;
+
+            const SFUInt32            *getSFModifiers       (void) const;
 
 
-           UInt32              &editKey            (void);
-     const UInt32              &getKey            (void) const;
+                  UInt32               getKey             (void) const;
 
-     const UInt32              &getModifiers      (void) const;
+                  UInt32               getModifiers       (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setKey            ( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -152,11 +157,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING KeyAcceleratorEventBase : public Event
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -164,27 +169,44 @@ class OSG_USERINTERFACELIB_DLLMAPPING KeyAcceleratorEventBase : public Event
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  KeyAcceleratorEventPtr      create          (void); 
-    static  KeyAcceleratorEventPtr      createEmpty     (void); 
+    static  KeyAcceleratorEventTransitPtr  create          (void);
+    static  KeyAcceleratorEvent           *createEmpty     (void);
+
+    static  KeyAcceleratorEventTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  KeyAcceleratorEvent            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  KeyAcceleratorEventTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUInt32            _sfKey;
-    SFUInt32            _sfModifiers;
+    SFUInt32          _sfKey;
+    SFUInt32          _sfModifiers;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -199,82 +221,108 @@ class OSG_USERINTERFACELIB_DLLMAPPING KeyAcceleratorEventBase : public Event
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~KeyAcceleratorEventBase(void); 
+    virtual ~KeyAcceleratorEventBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleKey             (void) const;
+    EditFieldHandlePtr editHandleKey            (void);
+    GetFieldHandlePtr  getHandleModifiers       (void) const;
+    EditFieldHandlePtr editHandleModifiers      (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUInt32            *editSFModifiers      (void);
 
-           UInt32              &editModifiers      (void);
+                  SFUInt32            *editSFKey            (void);
+
+                  SFUInt32            *editSFModifiers      (void);
+
+
+                  UInt32              &editKey            (void);
+
+                  UInt32              &editModifiers      (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setModifiers      (const UInt32 &value);
+            void setKey            (const UInt32 value);
+            void setModifiers      (const UInt32 value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      KeyAcceleratorEventBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      KeyAcceleratorEventBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      KeyAcceleratorEventBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const KeyAcceleratorEventBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef KeyAcceleratorEventBase *KeyAcceleratorEventBaseP;
-
-typedef osgIF<KeyAcceleratorEventBase::isNodeCore,
-              CoredNodePtr<KeyAcceleratorEvent>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet KeyAcceleratorEventNodePtr;
-
-typedef RefPtr<KeyAcceleratorEventPtr> KeyAcceleratorEventRefPtr;
 
 OSG_END_NAMESPACE
 

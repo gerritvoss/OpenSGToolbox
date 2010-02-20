@@ -3,28 +3,31 @@
 <FieldContainer
 	name="ComponentHeightLayoutSpring"
 	parent="AbstractLayoutSpring"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI ComponentHeight LayoutSpring.
 	<Field
 		name="Component"
-		type="ComponentPtr"
+		type="Component"
+        category="pointer"
 		cardinality="single"
       visibility="external"
-		defaultValue="NullFC"
-      header="Component/OSGComponentFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
    </Field>
 	<Field
 		name="SizeField"
 		type="UInt32"
+        category="data"
 		cardinality="single"
       visibility="external"
 		defaultValue="ComponentHeightLayoutSpring::PREFERRED_SIZE"

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,78 +55,83 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &CompoundLayoutSpringBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 CompoundLayoutSpringBase::getClassTypeId(void) 
+OSG::UInt32 CompoundLayoutSpringBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
+    return _type.getId();
+}
 
+inline
+OSG::UInt16 CompoundLayoutSpringBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
+}
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the CompoundLayoutSpring::_sfSpring1 field.
-inline
-SFLayoutSpringPtr *CompoundLayoutSpringBase::getSFSpring1(void)
-{
-    return &_sfSpring1;
-}
-
-//! Get the CompoundLayoutSpring::_sfSpring2 field.
-inline
-SFLayoutSpringPtr *CompoundLayoutSpringBase::getSFSpring2(void)
-{
-    return &_sfSpring2;
-}
-
 
 //! Get the value of the CompoundLayoutSpring::_sfSpring1 field.
 inline
-LayoutSpringPtr &CompoundLayoutSpringBase::getSpring1(void)
-{
-    return _sfSpring1.getValue();
-}
-
-//! Get the value of the CompoundLayoutSpring::_sfSpring1 field.
-inline
-const LayoutSpringPtr &CompoundLayoutSpringBase::getSpring1(void) const
+LayoutSpring * CompoundLayoutSpringBase::getSpring1(void) const
 {
     return _sfSpring1.getValue();
 }
 
 //! Set the value of the CompoundLayoutSpring::_sfSpring1 field.
 inline
-void CompoundLayoutSpringBase::setSpring1(const LayoutSpringPtr &value)
+void CompoundLayoutSpringBase::setSpring1(LayoutSpring * const value)
 {
+    editSField(Spring1FieldMask);
+
     _sfSpring1.setValue(value);
 }
 
 //! Get the value of the CompoundLayoutSpring::_sfSpring2 field.
 inline
-LayoutSpringPtr &CompoundLayoutSpringBase::getSpring2(void)
-{
-    return _sfSpring2.getValue();
-}
-
-//! Get the value of the CompoundLayoutSpring::_sfSpring2 field.
-inline
-const LayoutSpringPtr &CompoundLayoutSpringBase::getSpring2(void) const
+LayoutSpring * CompoundLayoutSpringBase::getSpring2(void) const
 {
     return _sfSpring2.getValue();
 }
 
 //! Set the value of the CompoundLayoutSpring::_sfSpring2 field.
 inline
-void CompoundLayoutSpringBase::setSpring2(const LayoutSpringPtr &value)
+void CompoundLayoutSpringBase::setSpring2(LayoutSpring * const value)
 {
+    editSField(Spring2FieldMask);
+
     _sfSpring2.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void CompoundLayoutSpringBase::execSync (      CompoundLayoutSpringBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGCOMPOUNDLAYOUTSPRINGBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (Spring1FieldMask & whichField))
+        _sfSpring1.syncWith(pFrom->_sfSpring1);
+
+    if(FieldBits::NoField != (Spring2FieldMask & whichField))
+        _sfSpring2.syncWith(pFrom->_sfSpring2);
+}
+#endif
+
+
+inline
+const Char8 *CompoundLayoutSpringBase::getClassname(void)
+{
+    return "CompoundLayoutSpring";
+}
+OSG_GEN_CONTAINERPTR(CompoundLayoutSpring);
+
+OSG_END_NAMESPACE
 

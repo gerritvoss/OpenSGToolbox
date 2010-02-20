@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,10 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
-#include <OpenSG/Input/OSGWindowEventProducer.h>
 OSG_BEGIN_NAMESPACE
 
 
@@ -59,176 +55,80 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &UIDrawingSurfaceBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 UIDrawingSurfaceBase::getClassTypeId(void) 
+OSG::UInt32 UIDrawingSurfaceBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-UIDrawingSurfacePtr UIDrawingSurfaceBase::create(void) 
-{
-    UIDrawingSurfacePtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = UIDrawingSurfacePtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-UIDrawingSurfacePtr UIDrawingSurfaceBase::createEmpty(void) 
-{ 
-    UIDrawingSurfacePtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 UIDrawingSurfaceBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the UIDrawingSurface::_mfInternalWindows field.
-inline
-MFInternalWindowPtr *UIDrawingSurfaceBase::getMFInternalWindows(void)
-{
-    return &_mfInternalWindows;
-}
 
-//! Get the UIDrawingSurface::_sfFocusedWindow field.
-inline
-SFInternalWindowPtr *UIDrawingSurfaceBase::getSFFocusedWindow(void)
-{
-    return &_sfFocusedWindow;
-}
-
-//! Get the UIDrawingSurface::_sfEventProducer field.
-inline
-SFWindowEventProducerPtr *UIDrawingSurfaceBase::getSFEventProducer(void)
-{
-    return &_sfEventProducer;
-}
-
-//! Get the UIDrawingSurface::_sfGraphics field.
-inline
-SFGraphicsPtr *UIDrawingSurfaceBase::getSFGraphics(void)
-{
-    return &_sfGraphics;
-}
-
-//! Get the UIDrawingSurface::_sfMouseTransformFunctor field.
-inline
-SFUIDrawingSurfaceMouseTransformFunctorPtr *UIDrawingSurfaceBase::getSFMouseTransformFunctor(void)
-{
-    return &_sfMouseTransformFunctor;
-}
-
-//! Get the UIDrawingSurface::_sfSize field.
-inline
-SFVec2f *UIDrawingSurfaceBase::getSFSize(void)
-{
-    return &_sfSize;
-}
-
-
-//! Get the value of the UIDrawingSurface::_sfFocusedWindow field.
-inline
-InternalWindowPtr &UIDrawingSurfaceBase::getFocusedWindow(void)
-{
-    return _sfFocusedWindow.getValue();
-}
-
-//! Get the value of the UIDrawingSurface::_sfFocusedWindow field.
-inline
-const InternalWindowPtr &UIDrawingSurfaceBase::getFocusedWindow(void) const
-{
-    return _sfFocusedWindow.getValue();
-}
-
-//! Set the value of the UIDrawingSurface::_sfFocusedWindow field.
-inline
-void UIDrawingSurfaceBase::setFocusedWindow(const InternalWindowPtr &value)
-{
-    _sfFocusedWindow.setValue(value);
-}
 
 //! Get the value of the UIDrawingSurface::_sfEventProducer field.
 inline
-WindowEventProducerPtr &UIDrawingSurfaceBase::getEventProducer(void)
-{
-    return _sfEventProducer.getValue();
-}
-
-//! Get the value of the UIDrawingSurface::_sfEventProducer field.
-inline
-const WindowEventProducerPtr &UIDrawingSurfaceBase::getEventProducer(void) const
+WindowEventProducer * UIDrawingSurfaceBase::getEventProducer(void) const
 {
     return _sfEventProducer.getValue();
 }
 
 //! Set the value of the UIDrawingSurface::_sfEventProducer field.
 inline
-void UIDrawingSurfaceBase::setEventProducer(const WindowEventProducerPtr &value)
+void UIDrawingSurfaceBase::setEventProducer(WindowEventProducer * const value)
 {
+    editSField(EventProducerFieldMask);
+
     _sfEventProducer.setValue(value);
 }
 
 //! Get the value of the UIDrawingSurface::_sfGraphics field.
 inline
-GraphicsPtr &UIDrawingSurfaceBase::getGraphics(void)
-{
-    return _sfGraphics.getValue();
-}
-
-//! Get the value of the UIDrawingSurface::_sfGraphics field.
-inline
-const GraphicsPtr &UIDrawingSurfaceBase::getGraphics(void) const
+Graphics * UIDrawingSurfaceBase::getGraphics(void) const
 {
     return _sfGraphics.getValue();
 }
 
 //! Set the value of the UIDrawingSurface::_sfGraphics field.
 inline
-void UIDrawingSurfaceBase::setGraphics(const GraphicsPtr &value)
+void UIDrawingSurfaceBase::setGraphics(Graphics * const value)
 {
+    editSField(GraphicsFieldMask);
+
     _sfGraphics.setValue(value);
 }
 
 //! Get the value of the UIDrawingSurface::_sfMouseTransformFunctor field.
 inline
-UIDrawingSurfaceMouseTransformFunctorPtr &UIDrawingSurfaceBase::getMouseTransformFunctor(void)
-{
-    return _sfMouseTransformFunctor.getValue();
-}
-
-//! Get the value of the UIDrawingSurface::_sfMouseTransformFunctor field.
-inline
-const UIDrawingSurfaceMouseTransformFunctorPtr &UIDrawingSurfaceBase::getMouseTransformFunctor(void) const
+UIDrawingSurfaceMouseTransformFunctor * UIDrawingSurfaceBase::getMouseTransformFunctor(void) const
 {
     return _sfMouseTransformFunctor.getValue();
 }
 
 //! Set the value of the UIDrawingSurface::_sfMouseTransformFunctor field.
 inline
-void UIDrawingSurfaceBase::setMouseTransformFunctor(const UIDrawingSurfaceMouseTransformFunctorPtr &value)
+void UIDrawingSurfaceBase::setMouseTransformFunctor(UIDrawingSurfaceMouseTransformFunctor * const value)
 {
+    editSField(MouseTransformFunctorFieldMask);
+
     _sfMouseTransformFunctor.setValue(value);
 }
-
 //! Get the value of the UIDrawingSurface::_sfSize field.
+
 inline
-Vec2f &UIDrawingSurfaceBase::getSize(void)
+Vec2f &UIDrawingSurfaceBase::editSize(void)
 {
+    editSField(SizeFieldMask);
+
     return _sfSize.getValue();
 }
 
@@ -243,32 +143,52 @@ const Vec2f &UIDrawingSurfaceBase::getSize(void) const
 inline
 void UIDrawingSurfaceBase::setSize(const Vec2f &value)
 {
+    editSField(SizeFieldMask);
+
     _sfSize.setValue(value);
 }
 
 
-//! Get the value of the \a index element the UIDrawingSurface::_mfInternalWindows field.
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-InternalWindowPtr &UIDrawingSurfaceBase::getInternalWindows(const UInt32 index)
+void UIDrawingSurfaceBase::execSync (      UIDrawingSurfaceBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfInternalWindows[index];
-}
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-//! Get the UIDrawingSurface::_mfInternalWindows field.
-inline
-MFInternalWindowPtr &UIDrawingSurfaceBase::getInternalWindows(void)
-{
-    return _mfInternalWindows;
-}
+    if(FieldBits::NoField != (InternalWindowsFieldMask & whichField))
+        _mfInternalWindows.syncWith(pFrom->_mfInternalWindows,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
 
-//! Get the UIDrawingSurface::_mfInternalWindows field.
-inline
-const MFInternalWindowPtr &UIDrawingSurfaceBase::getInternalWindows(void) const
-{
-    return _mfInternalWindows;
+    if(FieldBits::NoField != (FocusedWindowFieldMask & whichField))
+        _sfFocusedWindow.syncWith(pFrom->_sfFocusedWindow);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+        _sfEventProducer.syncWith(pFrom->_sfEventProducer);
+
+    if(FieldBits::NoField != (GraphicsFieldMask & whichField))
+        _sfGraphics.syncWith(pFrom->_sfGraphics);
+
+    if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
+        _sfMouseTransformFunctor.syncWith(pFrom->_sfMouseTransformFunctor);
+
+    if(FieldBits::NoField != (SizeFieldMask & whichField))
+        _sfSize.syncWith(pFrom->_sfSize);
 }
+#endif
+
+
+inline
+const Char8 *UIDrawingSurfaceBase::getClassname(void)
+{
+    return "UIDrawingSurface";
+}
+OSG_GEN_CONTAINERPTR(UIDrawingSurface);
 
 OSG_END_NAMESPACE
-
-#define OSGUIDRAWINGSURFACEBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

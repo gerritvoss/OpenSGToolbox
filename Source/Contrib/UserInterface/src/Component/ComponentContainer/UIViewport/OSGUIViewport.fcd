@@ -2,48 +2,52 @@
 
 <FieldContainer
 	name="UIViewport"
-	parent="Container"
-	library="UserInterface"
-	pointerfieldtypes="both"
+	parent="ComponentContainer"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
+    systemcomponent="true"
+    parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="true"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
     parentProducer="Component"
 >
 A UI UIViewport
 	<Field
 		name="ViewPosition"
-		type="Pnt2s"
+		type="Pnt2f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="0,0"
+		defaultValue="0.0f,0.0f"
 	>
 	</Field>
 	<Field
 		name="ViewComponent"
-		type="ComponentPtr"
+		type="Component"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Component/OSGComponentFields.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="ViewSize"
-		type="Vec2s"
+		type="Vec2f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="-1,-1"
+		defaultValue="-1.0f,-1.0f"
 	>
 	</Field>
 	<ProducedMethod
 		name="StateChanged"
-		producedEventType="ChangeEventPtr"
+		type="ChangeEventPtr"
 	>
 	</ProducedMethod>
 </FieldContainer>

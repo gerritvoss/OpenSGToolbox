@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,135 +50,218 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEABSTRACTBRANCHELEMENTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGElement.h"                 // ChildElements Class
 
 #include "OSGAbstractBranchElementBase.h"
 #include "OSGAbstractBranchElement.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  AbstractBranchElementBase::ChildElementsFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractBranchElementBase::ChildElementsFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector AbstractBranchElementBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::AbstractBranchElement
+    Document Element
+ */
 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-// Field descriptions
-
-/*! \var ElementPtr      AbstractBranchElementBase::_mfChildElements
+/*! \var Element *       AbstractBranchElementBase::_mfChildElements
     
 */
 
-//! AbstractBranchElement description
 
-FieldDescription *AbstractBranchElementBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<AbstractBranchElement *>::_type("AbstractBranchElementPtr", "AbstractElementPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(AbstractBranchElement *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           AbstractBranchElement *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           AbstractBranchElement *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void AbstractBranchElementBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(MFElementPtr::getClassType(), 
-                     "ChildElements", 
-                     ChildElementsFieldId, ChildElementsFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AbstractBranchElementBase::editMFChildElements))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType AbstractBranchElementBase::_type(
-    "AbstractBranchElement",
-    "AbstractElement",
+    pDesc = new MFUnrecElementPtr::Description(
+        MFUnrecElementPtr::getClassType(),
+        "ChildElements",
+        "",
+        ChildElementsFieldId, ChildElementsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbstractBranchElement::editHandleChildElements),
+        static_cast<FieldGetMethodSig >(&AbstractBranchElement::getHandleChildElements));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+AbstractBranchElementBase::TypeObject AbstractBranchElementBase::_type(
+    AbstractBranchElementBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
     NULL,
-    NULL, 
     AbstractBranchElement::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(AbstractBranchElementBase, AbstractBranchElementPtr)
+    AbstractBranchElement::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&AbstractBranchElement::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"AbstractBranchElement\"\n"
+    "\tparent=\"AbstractElement\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"abstract\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "Document Element\n"
+    "\t<Field\n"
+    "\t\tname=\"ChildElements\"\n"
+    "\t\ttype=\"Element\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "Document Element\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &AbstractBranchElementBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &AbstractBranchElementBase::getType(void) const 
+FieldContainerType &AbstractBranchElementBase::getType(void)
 {
     return _type;
-} 
-
-
-UInt32 AbstractBranchElementBase::getContainerSize(void) const 
-{ 
-    return sizeof(AbstractBranchElement); 
 }
 
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void AbstractBranchElementBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &AbstractBranchElementBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<AbstractBranchElementBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void AbstractBranchElementBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 AbstractBranchElementBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((AbstractBranchElementBase *) &other, whichField, sInfo);
+    return sizeof(AbstractBranchElement);
 }
-void AbstractBranchElementBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the AbstractBranchElement::_mfChildElements field.
+const MFUnrecElementPtr *AbstractBranchElementBase::getMFChildElements(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_mfChildElements;
 }
 
-void AbstractBranchElementBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+MFUnrecElementPtr   *AbstractBranchElementBase::editMFChildElements  (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editMField(ChildElementsFieldMask, _mfChildElements);
 
-    _mfChildElements.terminateShare(uiAspect, this->getContainerSize());
+    return &_mfChildElements;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-AbstractBranchElementBase::AbstractBranchElementBase(void) :
-    _mfChildElements          (), 
-    Inherited() 
+void AbstractBranchElementBase::pushToChildElements(Element * const value)
 {
+    editMField(ChildElementsFieldMask, _mfChildElements);
+
+    _mfChildElements.push_back(value);
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-AbstractBranchElementBase::AbstractBranchElementBase(const AbstractBranchElementBase &source) :
-    _mfChildElements          (source._mfChildElements          ), 
-    Inherited                 (source)
+void AbstractBranchElementBase::assignChildElements(const MFUnrecElementPtr &value)
 {
+    MFUnrecElementPtr::const_iterator elemIt  =
+        value.begin();
+    MFUnrecElementPtr::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<AbstractBranchElement *>(this)->clearChildElements();
+
+    while(elemIt != elemEnd)
+    {
+        this->pushToChildElements(*elemIt);
+
+        ++elemIt;
+    }
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-AbstractBranchElementBase::~AbstractBranchElementBase(void)
+void AbstractBranchElementBase::removeFromChildElements(UInt32 uiIndex)
 {
+    if(uiIndex < _mfChildElements.size())
+    {
+        editMField(ChildElementsFieldMask, _mfChildElements);
+
+        _mfChildElements.erase(uiIndex);
+    }
 }
+
+void AbstractBranchElementBase::removeObjFromChildElements(Element * const value)
+{
+    Int32 iElemIdx = _mfChildElements.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(ChildElementsFieldMask, _mfChildElements);
+
+        _mfChildElements.erase(iElemIdx);
+    }
+}
+void AbstractBranchElementBase::clearChildElements(void)
+{
+    editMField(ChildElementsFieldMask, _mfChildElements);
+
+
+    _mfChildElements.clear();
+}
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 AbstractBranchElementBase::getBinSize(const BitVector &whichField)
+UInt32 AbstractBranchElementBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -187,12 +270,11 @@ UInt32 AbstractBranchElementBase::getBinSize(const BitVector &whichField)
         returnValue += _mfChildElements.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void AbstractBranchElementBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void AbstractBranchElementBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -200,12 +282,10 @@ void AbstractBranchElementBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _mfChildElements.copyToBin(pMem);
     }
-
-
 }
 
-void AbstractBranchElementBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void AbstractBranchElementBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -213,65 +293,119 @@ void AbstractBranchElementBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _mfChildElements.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void AbstractBranchElementBase::executeSyncImpl(      AbstractBranchElementBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+AbstractBranchElementBase::AbstractBranchElementBase(void) :
+    Inherited(),
+    _mfChildElements          ()
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-    if(FieldBits::NoField != (ChildElementsFieldMask & whichField))
-        _mfChildElements.syncWith(pOther->_mfChildElements);
-
-
-}
-#else
-void AbstractBranchElementBase::executeSyncImpl(      AbstractBranchElementBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-    if(FieldBits::NoField != (ChildElementsFieldMask & whichField))
-        _mfChildElements.syncWith(pOther->_mfChildElements, sInfo);
-
-
 }
 
-void AbstractBranchElementBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+AbstractBranchElementBase::AbstractBranchElementBase(const AbstractBranchElementBase &source) :
+    Inherited(source),
+    _mfChildElements          ()
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
-    if(FieldBits::NoField != (ChildElementsFieldMask & whichField))
-        _mfChildElements.beginEdit(uiAspect, uiContainerSize);
 
+/*-------------------------- destructors ----------------------------------*/
+
+AbstractBranchElementBase::~AbstractBranchElementBase(void)
+{
+}
+
+void AbstractBranchElementBase::onCreate(const AbstractBranchElement *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        AbstractBranchElement *pThis = static_cast<AbstractBranchElement *>(this);
+
+        MFUnrecElementPtr::const_iterator ChildElementsIt  =
+            source->_mfChildElements.begin();
+        MFUnrecElementPtr::const_iterator ChildElementsEnd =
+            source->_mfChildElements.end  ();
+
+        while(ChildElementsIt != ChildElementsEnd)
+        {
+            pThis->pushToChildElements(*ChildElementsIt);
+
+            ++ChildElementsIt;
+        }
+    }
+}
+
+GetFieldHandlePtr AbstractBranchElementBase::getHandleChildElements   (void) const
+{
+    MFUnrecElementPtr::GetHandlePtr returnValue(
+        new  MFUnrecElementPtr::GetHandle(
+             &_mfChildElements,
+             this->getType().getFieldDesc(ChildElementsFieldId),
+             const_cast<AbstractBranchElementBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbstractBranchElementBase::editHandleChildElements  (void)
+{
+    MFUnrecElementPtr::EditHandlePtr returnValue(
+        new  MFUnrecElementPtr::EditHandle(
+             &_mfChildElements,
+             this->getType().getFieldDesc(ChildElementsFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&AbstractBranchElement::pushToChildElements,
+                    static_cast<AbstractBranchElement *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&AbstractBranchElement::removeFromChildElements,
+                    static_cast<AbstractBranchElement *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&AbstractBranchElement::removeObjFromChildElements,
+                    static_cast<AbstractBranchElement *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&AbstractBranchElement::clearChildElements,
+                    static_cast<AbstractBranchElement *>(this)));
+
+    editMField(ChildElementsFieldMask, _mfChildElements);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void AbstractBranchElementBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    AbstractBranchElement *pThis = static_cast<AbstractBranchElement *>(this);
+
+    pThis->execSync(static_cast<AbstractBranchElement *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
 
-OSG_END_NAMESPACE
+void AbstractBranchElementBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
+    static_cast<AbstractBranchElement *>(this)->clearChildElements();
 
-OSG_BEGIN_NAMESPACE
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<AbstractBranchElementPtr>::_type("AbstractBranchElementPtr", "AbstractElementPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(AbstractBranchElementPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(AbstractBranchElementPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+}
 
 
 OSG_END_NAMESPACE
-

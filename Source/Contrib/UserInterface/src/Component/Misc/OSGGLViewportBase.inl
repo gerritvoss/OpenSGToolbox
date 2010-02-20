@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,81 +55,64 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &GLViewportBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 GLViewportBase::getClassTypeId(void) 
+OSG::UInt32 GLViewportBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-GLViewportPtr GLViewportBase::create(void) 
-{
-    GLViewportPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = GLViewportPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-GLViewportPtr GLViewportBase::createEmpty(void) 
-{ 
-    GLViewportPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 GLViewportBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the GLViewport::_sfPort field.
-inline
-SFViewportPtr *GLViewportBase::getSFPort(void)
-{
-    return &_sfPort;
-}
-
 
 //! Get the value of the GLViewport::_sfPort field.
 inline
-ViewportPtr &GLViewportBase::getPort(void)
-{
-    return _sfPort.getValue();
-}
-
-//! Get the value of the GLViewport::_sfPort field.
-inline
-const ViewportPtr &GLViewportBase::getPort(void) const
+Viewport * GLViewportBase::getPort(void) const
 {
     return _sfPort.getValue();
 }
 
 //! Set the value of the GLViewport::_sfPort field.
 inline
-void GLViewportBase::setPort(const ViewportPtr &value)
+void GLViewportBase::setPort(Viewport * const value)
 {
-	//Remove old port from parent window
-	//if(getPort() != NullFC && getPort()->getParent() != NullFC)
-	//{
-	//	getPort()->getParent()->subPort(getPort());
-	//}
+    editSField(PortFieldMask);
+
     _sfPort.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void GLViewportBase::execSync (      GLViewportBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGGLVIEWPORTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (PortFieldMask & whichField))
+        _sfPort.syncWith(pFrom->_sfPort);
+}
+#endif
+
+
+inline
+const Char8 *GLViewportBase::getClassname(void)
+{
+    return "GLViewport";
+}
+OSG_GEN_CONTAINERPTR(GLViewport);
+
+OSG_END_NAMESPACE
 

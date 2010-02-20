@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,75 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "Component/Container/OSGContainerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class AbstractWindow;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! AbstractWindowPtr
+OSG_GEN_CONTAINERPTR(AbstractWindow);
 
-typedef FCPtr<ContainerPtr, AbstractWindow> AbstractWindowPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<AbstractWindowPtr> : 
-    public FieldTraitsRecurseMapper<AbstractWindowPtr, true>
+struct FieldTraits<AbstractWindow *> :
+    public FieldTraitsFCPtrBase<AbstractWindow *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFAbstractWindowPtr"; }
-    static const char *getMName(void) { return "MFAbstractWindowPtr"; }
+    typedef FieldTraits<AbstractWindow *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFAbstractWindowPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFAbstractWindowPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<AbstractWindowPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<AbstractWindow *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecAbstractWindowPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<AbstractWindow *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecAbstractWindowPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractWindow *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakAbstractWindowPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractWindow *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdAbstractWindowPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractWindow *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecAbstractWindowPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractWindow *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecAbstractWindowPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractWindow *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakAbstractWindowPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractWindow *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdAbstractWindowPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<AbstractWindow *,
+                      RecordedRefCountPolicy  > SFRecAbstractWindowPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<AbstractWindow *,
+                      UnrecordedRefCountPolicy> SFUnrecAbstractWindowPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<AbstractWindow *,
+                      WeakRefCountPolicy      > SFWeakAbstractWindowPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<AbstractWindow *,
+                      NoRefCountPolicy        > SFUncountedAbstractWindowPtr;
 
-typedef SField<AbstractWindowPtr> SFAbstractWindowPtr;
-#endif
 
-#ifndef OSG_COMPILEABSTRACTWINDOWINST
-OSG_DLLEXPORT_DECL1(SField, AbstractWindowPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<AbstractWindow *,
+                      RecordedRefCountPolicy  > MFRecAbstractWindowPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<AbstractWindow *,
+                      UnrecordedRefCountPolicy> MFUnrecAbstractWindowPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<AbstractWindow *,
+                      WeakRefCountPolicy      > MFWeakAbstractWindowPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<AbstractWindow *,
+                      NoRefCountPolicy        > MFUncountedAbstractWindowPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<AbstractWindowPtr> MFAbstractWindowPtr;
-#endif
 
-#ifndef OSG_COMPILEABSTRACTWINDOWINST
-OSG_DLLEXPORT_DECL1(MField, AbstractWindowPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecAbstractWindowPtr : 
+    public PointerSField<AbstractWindow *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecAbstractWindowPtr : 
+    public PointerSField<AbstractWindow *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakAbstractWindowPtr :
+    public PointerSField<AbstractWindow *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedAbstractWindowPtr :
+    public PointerSField<AbstractWindow *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecAbstractWindowPtr :
+    public PointerMField<AbstractWindow *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecAbstractWindowPtr :
+    public PointerMField<AbstractWindow *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakAbstractWindowPtr :
+    public PointerMField<AbstractWindow *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedAbstractWindowPtr :
+    public PointerMField<AbstractWindow *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

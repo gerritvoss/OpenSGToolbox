@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/OSGFieldContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class DataFlavor;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! DataFlavorPtr
+OSG_GEN_CONTAINERPTR(DataFlavor);
 
-typedef FCPtr<FieldContainerPtr, DataFlavor> DataFlavorPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<DataFlavorPtr> : 
-    public FieldTraitsRecurseMapper<DataFlavorPtr, true>
+struct FieldTraits<DataFlavor *> :
+    public FieldTraitsFCPtrBase<DataFlavor *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFDataFlavorPtr"; }
-    static const char *getMName(void) { return "MFDataFlavorPtr"; }
+    typedef FieldTraits<DataFlavor *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFDataFlavorPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFDataFlavorPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<DataFlavorPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<DataFlavor *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecDataFlavorPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<DataFlavor *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecDataFlavorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DataFlavor *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakDataFlavorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DataFlavor *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdDataFlavorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DataFlavor *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecDataFlavorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DataFlavor *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecDataFlavorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DataFlavor *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakDataFlavorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DataFlavor *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdDataFlavorPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<DataFlavor *,
+                      RecordedRefCountPolicy  > SFRecDataFlavorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<DataFlavor *,
+                      UnrecordedRefCountPolicy> SFUnrecDataFlavorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<DataFlavor *,
+                      WeakRefCountPolicy      > SFWeakDataFlavorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<DataFlavor *,
+                      NoRefCountPolicy        > SFUncountedDataFlavorPtr;
 
-typedef SField<DataFlavorPtr> SFDataFlavorPtr;
-#endif
 
-#ifndef OSG_COMPILEDATAFLAVORINST
-OSG_DLLEXPORT_DECL1(SField, DataFlavorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<DataFlavor *,
+                      RecordedRefCountPolicy  > MFRecDataFlavorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<DataFlavor *,
+                      UnrecordedRefCountPolicy> MFUnrecDataFlavorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<DataFlavor *,
+                      WeakRefCountPolicy      > MFWeakDataFlavorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<DataFlavor *,
+                      NoRefCountPolicy        > MFUncountedDataFlavorPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<DataFlavorPtr> MFDataFlavorPtr;
-#endif
 
-#ifndef OSG_COMPILEDATAFLAVORINST
-OSG_DLLEXPORT_DECL1(MField, DataFlavorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecDataFlavorPtr : 
+    public PointerSField<DataFlavor *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecDataFlavorPtr : 
+    public PointerSField<DataFlavor *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakDataFlavorPtr :
+    public PointerSField<DataFlavor *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedDataFlavorPtr :
+    public PointerSField<DataFlavor *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecDataFlavorPtr :
+    public PointerMField<DataFlavor *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecDataFlavorPtr :
+    public PointerMField<DataFlavor *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakDataFlavorPtr :
+    public PointerMField<DataFlavor *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedDataFlavorPtr :
+    public PointerMField<DataFlavor *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGDATAFLAVORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGDATAFLAVORFIELDS_H_ */

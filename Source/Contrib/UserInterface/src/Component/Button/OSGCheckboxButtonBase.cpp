@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,233 +50,431 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILECHECKBOXBUTTONINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGUIDrawObjectCanvas.h"      // CheckboxDrawObject Class
 
 #include "OSGCheckboxButtonBase.h"
 #include "OSGCheckboxButton.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  CheckboxButtonBase::CheckboxDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << CheckboxButtonBase::CheckboxDrawObjectFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  CheckboxButtonBase::SelectedCheckboxDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << CheckboxButtonBase::SelectedCheckboxDrawObjectFieldId);
+/*! \class OSG::CheckboxButton
+    A UI Checkbox Button.
+ */
 
-const OSG::BitVector  CheckboxButtonBase::ActiveCheckboxDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << CheckboxButtonBase::ActiveCheckboxDrawObjectFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  CheckboxButtonBase::ActiveSelectedCheckboxDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << CheckboxButtonBase::ActiveSelectedCheckboxDrawObjectFieldId);
-
-const OSG::BitVector  CheckboxButtonBase::RolloverCheckboxDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << CheckboxButtonBase::RolloverCheckboxDrawObjectFieldId);
-
-const OSG::BitVector  CheckboxButtonBase::RolloverSelectedCheckboxDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << CheckboxButtonBase::RolloverSelectedCheckboxDrawObjectFieldId);
-
-const OSG::BitVector  CheckboxButtonBase::DisabledCheckboxDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << CheckboxButtonBase::DisabledCheckboxDrawObjectFieldId);
-
-const OSG::BitVector  CheckboxButtonBase::DisabledSelectedCheckboxDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << CheckboxButtonBase::DisabledSelectedCheckboxDrawObjectFieldId);
-
-const OSG::BitVector CheckboxButtonBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var UIDrawObjectCanvasPtr CheckboxButtonBase::_sfCheckboxDrawObject
-    
-*/
-/*! \var UIDrawObjectCanvasPtr CheckboxButtonBase::_sfSelectedCheckboxDrawObject
-    
-*/
-/*! \var UIDrawObjectCanvasPtr CheckboxButtonBase::_sfActiveCheckboxDrawObject
-    
-*/
-/*! \var UIDrawObjectCanvasPtr CheckboxButtonBase::_sfActiveSelectedCheckboxDrawObject
-    
-*/
-/*! \var UIDrawObjectCanvasPtr CheckboxButtonBase::_sfRolloverCheckboxDrawObject
-    
-*/
-/*! \var UIDrawObjectCanvasPtr CheckboxButtonBase::_sfRolloverSelectedCheckboxDrawObject
-    
-*/
-/*! \var UIDrawObjectCanvasPtr CheckboxButtonBase::_sfDisabledCheckboxDrawObject
-    
-*/
-/*! \var UIDrawObjectCanvasPtr CheckboxButtonBase::_sfDisabledSelectedCheckboxDrawObject
+/*! \var UIDrawObjectCanvas * CheckboxButtonBase::_sfCheckboxDrawObject
     
 */
 
-//! CheckboxButton description
+/*! \var UIDrawObjectCanvas * CheckboxButtonBase::_sfSelectedCheckboxDrawObject
+    
+*/
 
-FieldDescription *CheckboxButtonBase::_desc[] = 
+/*! \var UIDrawObjectCanvas * CheckboxButtonBase::_sfActiveCheckboxDrawObject
+    
+*/
+
+/*! \var UIDrawObjectCanvas * CheckboxButtonBase::_sfActiveSelectedCheckboxDrawObject
+    
+*/
+
+/*! \var UIDrawObjectCanvas * CheckboxButtonBase::_sfRolloverCheckboxDrawObject
+    
+*/
+
+/*! \var UIDrawObjectCanvas * CheckboxButtonBase::_sfRolloverSelectedCheckboxDrawObject
+    
+*/
+
+/*! \var UIDrawObjectCanvas * CheckboxButtonBase::_sfDisabledCheckboxDrawObject
+    
+*/
+
+/*! \var UIDrawObjectCanvas * CheckboxButtonBase::_sfDisabledSelectedCheckboxDrawObject
+    
+*/
+
+
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<CheckboxButton *>::_type("CheckboxButtonPtr", "ToggleButtonPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(CheckboxButton *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           CheckboxButton *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           CheckboxButton *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void CheckboxButtonBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "CheckboxDrawObject", 
-                     CheckboxDrawObjectFieldId, CheckboxDrawObjectFieldMask,
-                     false,
-                     (FieldAccessMethod) &CheckboxButtonBase::getSFCheckboxDrawObject),
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "SelectedCheckboxDrawObject", 
-                     SelectedCheckboxDrawObjectFieldId, SelectedCheckboxDrawObjectFieldMask,
-                     false,
-                     (FieldAccessMethod) &CheckboxButtonBase::getSFSelectedCheckboxDrawObject),
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "ActiveCheckboxDrawObject", 
-                     ActiveCheckboxDrawObjectFieldId, ActiveCheckboxDrawObjectFieldMask,
-                     false,
-                     (FieldAccessMethod) &CheckboxButtonBase::getSFActiveCheckboxDrawObject),
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "ActiveSelectedCheckboxDrawObject", 
-                     ActiveSelectedCheckboxDrawObjectFieldId, ActiveSelectedCheckboxDrawObjectFieldMask,
-                     false,
-                     (FieldAccessMethod) &CheckboxButtonBase::getSFActiveSelectedCheckboxDrawObject),
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "RolloverCheckboxDrawObject", 
-                     RolloverCheckboxDrawObjectFieldId, RolloverCheckboxDrawObjectFieldMask,
-                     false,
-                     (FieldAccessMethod) &CheckboxButtonBase::getSFRolloverCheckboxDrawObject),
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "RolloverSelectedCheckboxDrawObject", 
-                     RolloverSelectedCheckboxDrawObjectFieldId, RolloverSelectedCheckboxDrawObjectFieldMask,
-                     false,
-                     (FieldAccessMethod) &CheckboxButtonBase::getSFRolloverSelectedCheckboxDrawObject),
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "DisabledCheckboxDrawObject", 
-                     DisabledCheckboxDrawObjectFieldId, DisabledCheckboxDrawObjectFieldMask,
-                     false,
-                     (FieldAccessMethod) &CheckboxButtonBase::getSFDisabledCheckboxDrawObject),
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "DisabledSelectedCheckboxDrawObject", 
-                     DisabledSelectedCheckboxDrawObjectFieldId, DisabledSelectedCheckboxDrawObjectFieldMask,
-                     false,
-                     (FieldAccessMethod) &CheckboxButtonBase::getSFDisabledSelectedCheckboxDrawObject)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType CheckboxButtonBase::_type(
-    "CheckboxButton",
-    "ToggleButton",
-    NULL,
-    (PrototypeCreateF) &CheckboxButtonBase::createEmpty,
+    pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
+        SFUnrecUIDrawObjectCanvasPtr::getClassType(),
+        "CheckboxDrawObject",
+        "",
+        CheckboxDrawObjectFieldId, CheckboxDrawObjectFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&CheckboxButton::editHandleCheckboxDrawObject),
+        static_cast<FieldGetMethodSig >(&CheckboxButton::getHandleCheckboxDrawObject));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
+        SFUnrecUIDrawObjectCanvasPtr::getClassType(),
+        "SelectedCheckboxDrawObject",
+        "",
+        SelectedCheckboxDrawObjectFieldId, SelectedCheckboxDrawObjectFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&CheckboxButton::editHandleSelectedCheckboxDrawObject),
+        static_cast<FieldGetMethodSig >(&CheckboxButton::getHandleSelectedCheckboxDrawObject));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
+        SFUnrecUIDrawObjectCanvasPtr::getClassType(),
+        "ActiveCheckboxDrawObject",
+        "",
+        ActiveCheckboxDrawObjectFieldId, ActiveCheckboxDrawObjectFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&CheckboxButton::editHandleActiveCheckboxDrawObject),
+        static_cast<FieldGetMethodSig >(&CheckboxButton::getHandleActiveCheckboxDrawObject));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
+        SFUnrecUIDrawObjectCanvasPtr::getClassType(),
+        "ActiveSelectedCheckboxDrawObject",
+        "",
+        ActiveSelectedCheckboxDrawObjectFieldId, ActiveSelectedCheckboxDrawObjectFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&CheckboxButton::editHandleActiveSelectedCheckboxDrawObject),
+        static_cast<FieldGetMethodSig >(&CheckboxButton::getHandleActiveSelectedCheckboxDrawObject));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
+        SFUnrecUIDrawObjectCanvasPtr::getClassType(),
+        "RolloverCheckboxDrawObject",
+        "",
+        RolloverCheckboxDrawObjectFieldId, RolloverCheckboxDrawObjectFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&CheckboxButton::editHandleRolloverCheckboxDrawObject),
+        static_cast<FieldGetMethodSig >(&CheckboxButton::getHandleRolloverCheckboxDrawObject));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
+        SFUnrecUIDrawObjectCanvasPtr::getClassType(),
+        "RolloverSelectedCheckboxDrawObject",
+        "",
+        RolloverSelectedCheckboxDrawObjectFieldId, RolloverSelectedCheckboxDrawObjectFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&CheckboxButton::editHandleRolloverSelectedCheckboxDrawObject),
+        static_cast<FieldGetMethodSig >(&CheckboxButton::getHandleRolloverSelectedCheckboxDrawObject));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
+        SFUnrecUIDrawObjectCanvasPtr::getClassType(),
+        "DisabledCheckboxDrawObject",
+        "",
+        DisabledCheckboxDrawObjectFieldId, DisabledCheckboxDrawObjectFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&CheckboxButton::editHandleDisabledCheckboxDrawObject),
+        static_cast<FieldGetMethodSig >(&CheckboxButton::getHandleDisabledCheckboxDrawObject));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
+        SFUnrecUIDrawObjectCanvasPtr::getClassType(),
+        "DisabledSelectedCheckboxDrawObject",
+        "",
+        DisabledSelectedCheckboxDrawObjectFieldId, DisabledSelectedCheckboxDrawObjectFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&CheckboxButton::editHandleDisabledSelectedCheckboxDrawObject),
+        static_cast<FieldGetMethodSig >(&CheckboxButton::getHandleDisabledSelectedCheckboxDrawObject));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+CheckboxButtonBase::TypeObject CheckboxButtonBase::_type(
+    CheckboxButtonBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&CheckboxButtonBase::createEmptyLocal),
     CheckboxButton::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(CheckboxButtonBase, CheckboxButtonPtr)
+    CheckboxButton::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&CheckboxButton::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"CheckboxButton\"\n"
+    "\tparent=\"ToggleButton\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Checkbox Button.\n"
+    "\t<Field\n"
+    "\t\tname=\"CheckboxDrawObject\"\n"
+    "\t\ttype=\"UIDrawObjectCanvas\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SelectedCheckboxDrawObject\"\n"
+    "\t\ttype=\"UIDrawObjectCanvas\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ActiveCheckboxDrawObject\"\n"
+    "\t\ttype=\"UIDrawObjectCanvas\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ActiveSelectedCheckboxDrawObject\"\n"
+    "\t\ttype=\"UIDrawObjectCanvas\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"RolloverCheckboxDrawObject\"\n"
+    "\t\ttype=\"UIDrawObjectCanvas\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"RolloverSelectedCheckboxDrawObject\"\n"
+    "\t\ttype=\"UIDrawObjectCanvas\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"DisabledCheckboxDrawObject\"\n"
+    "\t\ttype=\"UIDrawObjectCanvas\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"DisabledSelectedCheckboxDrawObject\"\n"
+    "\t\ttype=\"UIDrawObjectCanvas\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI Checkbox Button.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &CheckboxButtonBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &CheckboxButtonBase::getType(void) const 
+FieldContainerType &CheckboxButtonBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr CheckboxButtonBase::shallowCopy(void) const 
-{ 
-    CheckboxButtonPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const CheckboxButton *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 CheckboxButtonBase::getContainerSize(void) const 
-{ 
-    return sizeof(CheckboxButton); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void CheckboxButtonBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &CheckboxButtonBase::getType(void) const
 {
-    this->executeSyncImpl((CheckboxButtonBase *) &other, whichField);
+    return _type;
 }
-#else
-void CheckboxButtonBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 CheckboxButtonBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((CheckboxButtonBase *) &other, whichField, sInfo);
+    return sizeof(CheckboxButton);
 }
-void CheckboxButtonBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the CheckboxButton::_sfCheckboxDrawObject field.
+const SFUnrecUIDrawObjectCanvasPtr *CheckboxButtonBase::getSFCheckboxDrawObject(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfCheckboxDrawObject;
 }
 
-void CheckboxButtonBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecUIDrawObjectCanvasPtr *CheckboxButtonBase::editSFCheckboxDrawObject(void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(CheckboxDrawObjectFieldMask);
 
+    return &_sfCheckboxDrawObject;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-CheckboxButtonBase::CheckboxButtonBase(void) :
-    _sfCheckboxDrawObject     (), 
-    _sfSelectedCheckboxDrawObject(), 
-    _sfActiveCheckboxDrawObject(), 
-    _sfActiveSelectedCheckboxDrawObject(), 
-    _sfRolloverCheckboxDrawObject(), 
-    _sfRolloverSelectedCheckboxDrawObject(), 
-    _sfDisabledCheckboxDrawObject(), 
-    _sfDisabledSelectedCheckboxDrawObject(), 
-    Inherited() 
+//! Get the CheckboxButton::_sfSelectedCheckboxDrawObject field.
+const SFUnrecUIDrawObjectCanvasPtr *CheckboxButtonBase::getSFSelectedCheckboxDrawObject(void) const
 {
+    return &_sfSelectedCheckboxDrawObject;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-CheckboxButtonBase::CheckboxButtonBase(const CheckboxButtonBase &source) :
-    _sfCheckboxDrawObject     (source._sfCheckboxDrawObject     ), 
-    _sfSelectedCheckboxDrawObject(source._sfSelectedCheckboxDrawObject), 
-    _sfActiveCheckboxDrawObject(source._sfActiveCheckboxDrawObject), 
-    _sfActiveSelectedCheckboxDrawObject(source._sfActiveSelectedCheckboxDrawObject), 
-    _sfRolloverCheckboxDrawObject(source._sfRolloverCheckboxDrawObject), 
-    _sfRolloverSelectedCheckboxDrawObject(source._sfRolloverSelectedCheckboxDrawObject), 
-    _sfDisabledCheckboxDrawObject(source._sfDisabledCheckboxDrawObject), 
-    _sfDisabledSelectedCheckboxDrawObject(source._sfDisabledSelectedCheckboxDrawObject), 
-    Inherited                 (source)
+SFUnrecUIDrawObjectCanvasPtr *CheckboxButtonBase::editSFSelectedCheckboxDrawObject(void)
 {
+    editSField(SelectedCheckboxDrawObjectFieldMask);
+
+    return &_sfSelectedCheckboxDrawObject;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-CheckboxButtonBase::~CheckboxButtonBase(void)
+//! Get the CheckboxButton::_sfActiveCheckboxDrawObject field.
+const SFUnrecUIDrawObjectCanvasPtr *CheckboxButtonBase::getSFActiveCheckboxDrawObject(void) const
 {
+    return &_sfActiveCheckboxDrawObject;
 }
+
+SFUnrecUIDrawObjectCanvasPtr *CheckboxButtonBase::editSFActiveCheckboxDrawObject(void)
+{
+    editSField(ActiveCheckboxDrawObjectFieldMask);
+
+    return &_sfActiveCheckboxDrawObject;
+}
+
+//! Get the CheckboxButton::_sfActiveSelectedCheckboxDrawObject field.
+const SFUnrecUIDrawObjectCanvasPtr *CheckboxButtonBase::getSFActiveSelectedCheckboxDrawObject(void) const
+{
+    return &_sfActiveSelectedCheckboxDrawObject;
+}
+
+SFUnrecUIDrawObjectCanvasPtr *CheckboxButtonBase::editSFActiveSelectedCheckboxDrawObject(void)
+{
+    editSField(ActiveSelectedCheckboxDrawObjectFieldMask);
+
+    return &_sfActiveSelectedCheckboxDrawObject;
+}
+
+//! Get the CheckboxButton::_sfRolloverCheckboxDrawObject field.
+const SFUnrecUIDrawObjectCanvasPtr *CheckboxButtonBase::getSFRolloverCheckboxDrawObject(void) const
+{
+    return &_sfRolloverCheckboxDrawObject;
+}
+
+SFUnrecUIDrawObjectCanvasPtr *CheckboxButtonBase::editSFRolloverCheckboxDrawObject(void)
+{
+    editSField(RolloverCheckboxDrawObjectFieldMask);
+
+    return &_sfRolloverCheckboxDrawObject;
+}
+
+//! Get the CheckboxButton::_sfRolloverSelectedCheckboxDrawObject field.
+const SFUnrecUIDrawObjectCanvasPtr *CheckboxButtonBase::getSFRolloverSelectedCheckboxDrawObject(void) const
+{
+    return &_sfRolloverSelectedCheckboxDrawObject;
+}
+
+SFUnrecUIDrawObjectCanvasPtr *CheckboxButtonBase::editSFRolloverSelectedCheckboxDrawObject(void)
+{
+    editSField(RolloverSelectedCheckboxDrawObjectFieldMask);
+
+    return &_sfRolloverSelectedCheckboxDrawObject;
+}
+
+//! Get the CheckboxButton::_sfDisabledCheckboxDrawObject field.
+const SFUnrecUIDrawObjectCanvasPtr *CheckboxButtonBase::getSFDisabledCheckboxDrawObject(void) const
+{
+    return &_sfDisabledCheckboxDrawObject;
+}
+
+SFUnrecUIDrawObjectCanvasPtr *CheckboxButtonBase::editSFDisabledCheckboxDrawObject(void)
+{
+    editSField(DisabledCheckboxDrawObjectFieldMask);
+
+    return &_sfDisabledCheckboxDrawObject;
+}
+
+//! Get the CheckboxButton::_sfDisabledSelectedCheckboxDrawObject field.
+const SFUnrecUIDrawObjectCanvasPtr *CheckboxButtonBase::getSFDisabledSelectedCheckboxDrawObject(void) const
+{
+    return &_sfDisabledSelectedCheckboxDrawObject;
+}
+
+SFUnrecUIDrawObjectCanvasPtr *CheckboxButtonBase::editSFDisabledSelectedCheckboxDrawObject(void)
+{
+    editSField(DisabledSelectedCheckboxDrawObjectFieldMask);
+
+    return &_sfDisabledSelectedCheckboxDrawObject;
+}
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 CheckboxButtonBase::getBinSize(const BitVector &whichField)
+UInt32 CheckboxButtonBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -284,48 +482,40 @@ UInt32 CheckboxButtonBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfCheckboxDrawObject.getBinSize();
     }
-
     if(FieldBits::NoField != (SelectedCheckboxDrawObjectFieldMask & whichField))
     {
         returnValue += _sfSelectedCheckboxDrawObject.getBinSize();
     }
-
     if(FieldBits::NoField != (ActiveCheckboxDrawObjectFieldMask & whichField))
     {
         returnValue += _sfActiveCheckboxDrawObject.getBinSize();
     }
-
     if(FieldBits::NoField != (ActiveSelectedCheckboxDrawObjectFieldMask & whichField))
     {
         returnValue += _sfActiveSelectedCheckboxDrawObject.getBinSize();
     }
-
     if(FieldBits::NoField != (RolloverCheckboxDrawObjectFieldMask & whichField))
     {
         returnValue += _sfRolloverCheckboxDrawObject.getBinSize();
     }
-
     if(FieldBits::NoField != (RolloverSelectedCheckboxDrawObjectFieldMask & whichField))
     {
         returnValue += _sfRolloverSelectedCheckboxDrawObject.getBinSize();
     }
-
     if(FieldBits::NoField != (DisabledCheckboxDrawObjectFieldMask & whichField))
     {
         returnValue += _sfDisabledCheckboxDrawObject.getBinSize();
     }
-
     if(FieldBits::NoField != (DisabledSelectedCheckboxDrawObjectFieldMask & whichField))
     {
         returnValue += _sfDisabledSelectedCheckboxDrawObject.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void CheckboxButtonBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void CheckboxButtonBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -333,47 +523,38 @@ void CheckboxButtonBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfCheckboxDrawObject.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectedCheckboxDrawObjectFieldMask & whichField))
     {
         _sfSelectedCheckboxDrawObject.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ActiveCheckboxDrawObjectFieldMask & whichField))
     {
         _sfActiveCheckboxDrawObject.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ActiveSelectedCheckboxDrawObjectFieldMask & whichField))
     {
         _sfActiveSelectedCheckboxDrawObject.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (RolloverCheckboxDrawObjectFieldMask & whichField))
     {
         _sfRolloverCheckboxDrawObject.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (RolloverSelectedCheckboxDrawObjectFieldMask & whichField))
     {
         _sfRolloverSelectedCheckboxDrawObject.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DisabledCheckboxDrawObjectFieldMask & whichField))
     {
         _sfDisabledCheckboxDrawObject.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DisabledSelectedCheckboxDrawObjectFieldMask & whichField))
     {
         _sfDisabledSelectedCheckboxDrawObject.copyToBin(pMem);
     }
-
-
 }
 
-void CheckboxButtonBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void CheckboxButtonBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -381,159 +562,495 @@ void CheckboxButtonBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfCheckboxDrawObject.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectedCheckboxDrawObjectFieldMask & whichField))
     {
         _sfSelectedCheckboxDrawObject.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ActiveCheckboxDrawObjectFieldMask & whichField))
     {
         _sfActiveCheckboxDrawObject.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ActiveSelectedCheckboxDrawObjectFieldMask & whichField))
     {
         _sfActiveSelectedCheckboxDrawObject.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (RolloverCheckboxDrawObjectFieldMask & whichField))
     {
         _sfRolloverCheckboxDrawObject.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (RolloverSelectedCheckboxDrawObjectFieldMask & whichField))
     {
         _sfRolloverSelectedCheckboxDrawObject.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DisabledCheckboxDrawObjectFieldMask & whichField))
     {
         _sfDisabledCheckboxDrawObject.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DisabledSelectedCheckboxDrawObjectFieldMask & whichField))
     {
         _sfDisabledSelectedCheckboxDrawObject.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void CheckboxButtonBase::executeSyncImpl(      CheckboxButtonBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+CheckboxButtonTransitPtr CheckboxButtonBase::createLocal(BitVector bFlags)
 {
+    CheckboxButtonTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (CheckboxDrawObjectFieldMask & whichField))
-        _sfCheckboxDrawObject.syncWith(pOther->_sfCheckboxDrawObject);
+        fc = dynamic_pointer_cast<CheckboxButton>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (SelectedCheckboxDrawObjectFieldMask & whichField))
-        _sfSelectedCheckboxDrawObject.syncWith(pOther->_sfSelectedCheckboxDrawObject);
-
-    if(FieldBits::NoField != (ActiveCheckboxDrawObjectFieldMask & whichField))
-        _sfActiveCheckboxDrawObject.syncWith(pOther->_sfActiveCheckboxDrawObject);
-
-    if(FieldBits::NoField != (ActiveSelectedCheckboxDrawObjectFieldMask & whichField))
-        _sfActiveSelectedCheckboxDrawObject.syncWith(pOther->_sfActiveSelectedCheckboxDrawObject);
-
-    if(FieldBits::NoField != (RolloverCheckboxDrawObjectFieldMask & whichField))
-        _sfRolloverCheckboxDrawObject.syncWith(pOther->_sfRolloverCheckboxDrawObject);
-
-    if(FieldBits::NoField != (RolloverSelectedCheckboxDrawObjectFieldMask & whichField))
-        _sfRolloverSelectedCheckboxDrawObject.syncWith(pOther->_sfRolloverSelectedCheckboxDrawObject);
-
-    if(FieldBits::NoField != (DisabledCheckboxDrawObjectFieldMask & whichField))
-        _sfDisabledCheckboxDrawObject.syncWith(pOther->_sfDisabledCheckboxDrawObject);
-
-    if(FieldBits::NoField != (DisabledSelectedCheckboxDrawObjectFieldMask & whichField))
-        _sfDisabledSelectedCheckboxDrawObject.syncWith(pOther->_sfDisabledSelectedCheckboxDrawObject);
-
-
-}
-#else
-void CheckboxButtonBase::executeSyncImpl(      CheckboxButtonBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (CheckboxDrawObjectFieldMask & whichField))
-        _sfCheckboxDrawObject.syncWith(pOther->_sfCheckboxDrawObject);
-
-    if(FieldBits::NoField != (SelectedCheckboxDrawObjectFieldMask & whichField))
-        _sfSelectedCheckboxDrawObject.syncWith(pOther->_sfSelectedCheckboxDrawObject);
-
-    if(FieldBits::NoField != (ActiveCheckboxDrawObjectFieldMask & whichField))
-        _sfActiveCheckboxDrawObject.syncWith(pOther->_sfActiveCheckboxDrawObject);
-
-    if(FieldBits::NoField != (ActiveSelectedCheckboxDrawObjectFieldMask & whichField))
-        _sfActiveSelectedCheckboxDrawObject.syncWith(pOther->_sfActiveSelectedCheckboxDrawObject);
-
-    if(FieldBits::NoField != (RolloverCheckboxDrawObjectFieldMask & whichField))
-        _sfRolloverCheckboxDrawObject.syncWith(pOther->_sfRolloverCheckboxDrawObject);
-
-    if(FieldBits::NoField != (RolloverSelectedCheckboxDrawObjectFieldMask & whichField))
-        _sfRolloverSelectedCheckboxDrawObject.syncWith(pOther->_sfRolloverSelectedCheckboxDrawObject);
-
-    if(FieldBits::NoField != (DisabledCheckboxDrawObjectFieldMask & whichField))
-        _sfDisabledCheckboxDrawObject.syncWith(pOther->_sfDisabledCheckboxDrawObject);
-
-    if(FieldBits::NoField != (DisabledSelectedCheckboxDrawObjectFieldMask & whichField))
-        _sfDisabledSelectedCheckboxDrawObject.syncWith(pOther->_sfDisabledSelectedCheckboxDrawObject);
-
-
-
+    return fc;
 }
 
-void CheckboxButtonBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+CheckboxButtonTransitPtr CheckboxButtonBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    CheckboxButtonTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<CheckboxButton>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+CheckboxButtonTransitPtr CheckboxButtonBase::create(void)
+{
+    CheckboxButtonTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<CheckboxButton>(tmpPtr);
+    }
+
+    return fc;
+}
+
+CheckboxButton *CheckboxButtonBase::createEmptyLocal(BitVector bFlags)
+{
+    CheckboxButton *returnValue;
+
+    newPtr<CheckboxButton>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+CheckboxButton *CheckboxButtonBase::createEmpty(void)
+{
+    CheckboxButton *returnValue;
+
+    newPtr<CheckboxButton>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr CheckboxButtonBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    CheckboxButton *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const CheckboxButton *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr CheckboxButtonBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    CheckboxButton *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const CheckboxButton *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr CheckboxButtonBase::shallowCopy(void) const
+{
+    CheckboxButton *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const CheckboxButton *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+CheckboxButtonBase::CheckboxButtonBase(void) :
+    Inherited(),
+    _sfCheckboxDrawObject     (NULL),
+    _sfSelectedCheckboxDrawObject(NULL),
+    _sfActiveCheckboxDrawObject(NULL),
+    _sfActiveSelectedCheckboxDrawObject(NULL),
+    _sfRolloverCheckboxDrawObject(NULL),
+    _sfRolloverSelectedCheckboxDrawObject(NULL),
+    _sfDisabledCheckboxDrawObject(NULL),
+    _sfDisabledSelectedCheckboxDrawObject(NULL)
+{
+}
+
+CheckboxButtonBase::CheckboxButtonBase(const CheckboxButtonBase &source) :
+    Inherited(source),
+    _sfCheckboxDrawObject     (NULL),
+    _sfSelectedCheckboxDrawObject(NULL),
+    _sfActiveCheckboxDrawObject(NULL),
+    _sfActiveSelectedCheckboxDrawObject(NULL),
+    _sfRolloverCheckboxDrawObject(NULL),
+    _sfRolloverSelectedCheckboxDrawObject(NULL),
+    _sfDisabledCheckboxDrawObject(NULL),
+    _sfDisabledSelectedCheckboxDrawObject(NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+CheckboxButtonBase::~CheckboxButtonBase(void)
+{
+}
+
+void CheckboxButtonBase::onCreate(const CheckboxButton *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        CheckboxButton *pThis = static_cast<CheckboxButton *>(this);
+
+        pThis->setCheckboxDrawObject(source->getCheckboxDrawObject());
+
+        pThis->setSelectedCheckboxDrawObject(source->getSelectedCheckboxDrawObject());
+
+        pThis->setActiveCheckboxDrawObject(source->getActiveCheckboxDrawObject());
+
+        pThis->setActiveSelectedCheckboxDrawObject(source->getActiveSelectedCheckboxDrawObject());
+
+        pThis->setRolloverCheckboxDrawObject(source->getRolloverCheckboxDrawObject());
+
+        pThis->setRolloverSelectedCheckboxDrawObject(source->getRolloverSelectedCheckboxDrawObject());
+
+        pThis->setDisabledCheckboxDrawObject(source->getDisabledCheckboxDrawObject());
+
+        pThis->setDisabledSelectedCheckboxDrawObject(source->getDisabledSelectedCheckboxDrawObject());
+    }
+}
+
+GetFieldHandlePtr CheckboxButtonBase::getHandleCheckboxDrawObject (void) const
+{
+    SFUnrecUIDrawObjectCanvasPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::GetHandle(
+             &_sfCheckboxDrawObject,
+             this->getType().getFieldDesc(CheckboxDrawObjectFieldId),
+             const_cast<CheckboxButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr CheckboxButtonBase::editHandleCheckboxDrawObject(void)
+{
+    SFUnrecUIDrawObjectCanvasPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::EditHandle(
+             &_sfCheckboxDrawObject,
+             this->getType().getFieldDesc(CheckboxDrawObjectFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&CheckboxButton::setCheckboxDrawObject,
+                    static_cast<CheckboxButton *>(this), _1));
+
+    editSField(CheckboxDrawObjectFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr CheckboxButtonBase::getHandleSelectedCheckboxDrawObject (void) const
+{
+    SFUnrecUIDrawObjectCanvasPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::GetHandle(
+             &_sfSelectedCheckboxDrawObject,
+             this->getType().getFieldDesc(SelectedCheckboxDrawObjectFieldId),
+             const_cast<CheckboxButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr CheckboxButtonBase::editHandleSelectedCheckboxDrawObject(void)
+{
+    SFUnrecUIDrawObjectCanvasPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::EditHandle(
+             &_sfSelectedCheckboxDrawObject,
+             this->getType().getFieldDesc(SelectedCheckboxDrawObjectFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&CheckboxButton::setSelectedCheckboxDrawObject,
+                    static_cast<CheckboxButton *>(this), _1));
+
+    editSField(SelectedCheckboxDrawObjectFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr CheckboxButtonBase::getHandleActiveCheckboxDrawObject (void) const
+{
+    SFUnrecUIDrawObjectCanvasPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::GetHandle(
+             &_sfActiveCheckboxDrawObject,
+             this->getType().getFieldDesc(ActiveCheckboxDrawObjectFieldId),
+             const_cast<CheckboxButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr CheckboxButtonBase::editHandleActiveCheckboxDrawObject(void)
+{
+    SFUnrecUIDrawObjectCanvasPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::EditHandle(
+             &_sfActiveCheckboxDrawObject,
+             this->getType().getFieldDesc(ActiveCheckboxDrawObjectFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&CheckboxButton::setActiveCheckboxDrawObject,
+                    static_cast<CheckboxButton *>(this), _1));
+
+    editSField(ActiveCheckboxDrawObjectFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr CheckboxButtonBase::getHandleActiveSelectedCheckboxDrawObject (void) const
+{
+    SFUnrecUIDrawObjectCanvasPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::GetHandle(
+             &_sfActiveSelectedCheckboxDrawObject,
+             this->getType().getFieldDesc(ActiveSelectedCheckboxDrawObjectFieldId),
+             const_cast<CheckboxButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr CheckboxButtonBase::editHandleActiveSelectedCheckboxDrawObject(void)
+{
+    SFUnrecUIDrawObjectCanvasPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::EditHandle(
+             &_sfActiveSelectedCheckboxDrawObject,
+             this->getType().getFieldDesc(ActiveSelectedCheckboxDrawObjectFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&CheckboxButton::setActiveSelectedCheckboxDrawObject,
+                    static_cast<CheckboxButton *>(this), _1));
+
+    editSField(ActiveSelectedCheckboxDrawObjectFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr CheckboxButtonBase::getHandleRolloverCheckboxDrawObject (void) const
+{
+    SFUnrecUIDrawObjectCanvasPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::GetHandle(
+             &_sfRolloverCheckboxDrawObject,
+             this->getType().getFieldDesc(RolloverCheckboxDrawObjectFieldId),
+             const_cast<CheckboxButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr CheckboxButtonBase::editHandleRolloverCheckboxDrawObject(void)
+{
+    SFUnrecUIDrawObjectCanvasPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::EditHandle(
+             &_sfRolloverCheckboxDrawObject,
+             this->getType().getFieldDesc(RolloverCheckboxDrawObjectFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&CheckboxButton::setRolloverCheckboxDrawObject,
+                    static_cast<CheckboxButton *>(this), _1));
+
+    editSField(RolloverCheckboxDrawObjectFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr CheckboxButtonBase::getHandleRolloverSelectedCheckboxDrawObject (void) const
+{
+    SFUnrecUIDrawObjectCanvasPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::GetHandle(
+             &_sfRolloverSelectedCheckboxDrawObject,
+             this->getType().getFieldDesc(RolloverSelectedCheckboxDrawObjectFieldId),
+             const_cast<CheckboxButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr CheckboxButtonBase::editHandleRolloverSelectedCheckboxDrawObject(void)
+{
+    SFUnrecUIDrawObjectCanvasPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::EditHandle(
+             &_sfRolloverSelectedCheckboxDrawObject,
+             this->getType().getFieldDesc(RolloverSelectedCheckboxDrawObjectFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&CheckboxButton::setRolloverSelectedCheckboxDrawObject,
+                    static_cast<CheckboxButton *>(this), _1));
+
+    editSField(RolloverSelectedCheckboxDrawObjectFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr CheckboxButtonBase::getHandleDisabledCheckboxDrawObject (void) const
+{
+    SFUnrecUIDrawObjectCanvasPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::GetHandle(
+             &_sfDisabledCheckboxDrawObject,
+             this->getType().getFieldDesc(DisabledCheckboxDrawObjectFieldId),
+             const_cast<CheckboxButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr CheckboxButtonBase::editHandleDisabledCheckboxDrawObject(void)
+{
+    SFUnrecUIDrawObjectCanvasPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::EditHandle(
+             &_sfDisabledCheckboxDrawObject,
+             this->getType().getFieldDesc(DisabledCheckboxDrawObjectFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&CheckboxButton::setDisabledCheckboxDrawObject,
+                    static_cast<CheckboxButton *>(this), _1));
+
+    editSField(DisabledCheckboxDrawObjectFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr CheckboxButtonBase::getHandleDisabledSelectedCheckboxDrawObject (void) const
+{
+    SFUnrecUIDrawObjectCanvasPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::GetHandle(
+             &_sfDisabledSelectedCheckboxDrawObject,
+             this->getType().getFieldDesc(DisabledSelectedCheckboxDrawObjectFieldId),
+             const_cast<CheckboxButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr CheckboxButtonBase::editHandleDisabledSelectedCheckboxDrawObject(void)
+{
+    SFUnrecUIDrawObjectCanvasPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::EditHandle(
+             &_sfDisabledSelectedCheckboxDrawObject,
+             this->getType().getFieldDesc(DisabledSelectedCheckboxDrawObjectFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&CheckboxButton::setDisabledSelectedCheckboxDrawObject,
+                    static_cast<CheckboxButton *>(this), _1));
+
+    editSField(DisabledSelectedCheckboxDrawObjectFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void CheckboxButtonBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    CheckboxButton *pThis = static_cast<CheckboxButton *>(this);
+
+    pThis->execSync(static_cast<CheckboxButton *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *CheckboxButtonBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    CheckboxButton *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const CheckboxButton *>(pRefAspect),
+                  dynamic_cast<const CheckboxButton *>(this));
+
+    return returnValue;
+}
+#endif
+
+void CheckboxButtonBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<CheckboxButton *>(this)->setCheckboxDrawObject(NULL);
+
+    static_cast<CheckboxButton *>(this)->setSelectedCheckboxDrawObject(NULL);
+
+    static_cast<CheckboxButton *>(this)->setActiveCheckboxDrawObject(NULL);
+
+    static_cast<CheckboxButton *>(this)->setActiveSelectedCheckboxDrawObject(NULL);
+
+    static_cast<CheckboxButton *>(this)->setRolloverCheckboxDrawObject(NULL);
+
+    static_cast<CheckboxButton *>(this)->setRolloverSelectedCheckboxDrawObject(NULL);
+
+    static_cast<CheckboxButton *>(this)->setDisabledCheckboxDrawObject(NULL);
+
+    static_cast<CheckboxButton *>(this)->setDisabledSelectedCheckboxDrawObject(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<CheckboxButtonPtr>::_type("CheckboxButtonPtr", "ToggleButtonPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(CheckboxButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(CheckboxButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGCHECKBOXBUTTONBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCHECKBOXBUTTONBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCHECKBOXBUTTONFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

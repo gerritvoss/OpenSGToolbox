@@ -31,20 +31,20 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGEventListener.h>
+#include "OSGEventListener.h"
 #include "OSGTextEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING TextListener : public EventListener
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextListener : public EventListener
 {
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void textValueChanged(const TextEventPtr e) = 0;
+   virtual void textValueChanged(const TextEventUnrecPtr e) = 0;
 };
 
 typedef TextListener* TextListenerPtr;

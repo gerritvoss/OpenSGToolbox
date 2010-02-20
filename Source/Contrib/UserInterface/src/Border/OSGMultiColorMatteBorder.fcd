@@ -3,18 +3,21 @@
 <FieldContainer
 	name="MultiColorMatteBorder"
 	parent="Border"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 UI MultiColor Matte Border. Creates a matte-look border using a different color for each side. (The difference between this border and a line border is that you can specify the individual border dimensions as well as colors.)
 	<Field
 		name="LeftWidth"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1"
@@ -24,6 +27,7 @@ UI MultiColor Matte Border. Creates a matte-look border using a different color 
 	<Field
 		name="RightWidth"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1"
@@ -33,6 +37,7 @@ UI MultiColor Matte Border. Creates a matte-look border using a different color 
 	<Field
 		name="TopWidth"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1"
@@ -42,6 +47,7 @@ UI MultiColor Matte Border. Creates a matte-look border using a different color 
 	<Field
 		name="BottomWidth"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1"
@@ -51,6 +57,7 @@ UI MultiColor Matte Border. Creates a matte-look border using a different color 
 	<Field
 		name="LeftLineTopColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,0.0,0.0,1.0"
@@ -60,6 +67,7 @@ UI MultiColor Matte Border. Creates a matte-look border using a different color 
 	<Field
 		name="LeftLineBottomColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,0.0,0.0,1.0"
@@ -69,6 +77,7 @@ UI MultiColor Matte Border. Creates a matte-look border using a different color 
 	<Field
 		name="TopLineLeftColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,0.0,0.0,1.0"
@@ -78,6 +87,7 @@ UI MultiColor Matte Border. Creates a matte-look border using a different color 
 	<Field
 		name="TopLineRightColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,0.0,0.0,1.0"
@@ -87,6 +97,7 @@ UI MultiColor Matte Border. Creates a matte-look border using a different color 
 	<Field
 		name="RightLineTopColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,0.0,0.0,1.0"
@@ -96,6 +107,7 @@ UI MultiColor Matte Border. Creates a matte-look border using a different color 
 	<Field
 		name="RightLineBottomColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,0.0,0.0,1.0"
@@ -105,6 +117,7 @@ UI MultiColor Matte Border. Creates a matte-look border using a different color 
 	<Field
 		name="BottomLineLeftColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,0.0,0.0,1.0"
@@ -114,6 +127,7 @@ UI MultiColor Matte Border. Creates a matte-look border using a different color 
 	<Field
 		name="BottomLineRightColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,0.0,0.0,1.0"

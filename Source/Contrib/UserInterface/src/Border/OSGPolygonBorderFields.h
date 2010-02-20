@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGBorderFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class PolygonBorder;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! PolygonBorderPtr
+OSG_GEN_CONTAINERPTR(PolygonBorder);
 
-typedef FCPtr<BorderPtr, PolygonBorder> PolygonBorderPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<PolygonBorderPtr> : 
-    public FieldTraitsRecurseMapper<PolygonBorderPtr, true>
+struct FieldTraits<PolygonBorder *> :
+    public FieldTraitsFCPtrBase<PolygonBorder *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFPolygonBorderPtr"; }
-    static const char *getMName(void) { return "MFPolygonBorderPtr"; }
+    typedef FieldTraits<PolygonBorder *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFPolygonBorderPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFPolygonBorderPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<PolygonBorderPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<PolygonBorder *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecPolygonBorderPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<PolygonBorder *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecPolygonBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PolygonBorder *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakPolygonBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PolygonBorder *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdPolygonBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PolygonBorder *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecPolygonBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PolygonBorder *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecPolygonBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PolygonBorder *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakPolygonBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PolygonBorder *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdPolygonBorderPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<PolygonBorder *,
+                      RecordedRefCountPolicy  > SFRecPolygonBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<PolygonBorder *,
+                      UnrecordedRefCountPolicy> SFUnrecPolygonBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<PolygonBorder *,
+                      WeakRefCountPolicy      > SFWeakPolygonBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<PolygonBorder *,
+                      NoRefCountPolicy        > SFUncountedPolygonBorderPtr;
 
-typedef SField<PolygonBorderPtr> SFPolygonBorderPtr;
-#endif
 
-#ifndef OSG_COMPILEPOLYGONBORDERINST
-OSG_DLLEXPORT_DECL1(SField, PolygonBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<PolygonBorder *,
+                      RecordedRefCountPolicy  > MFRecPolygonBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<PolygonBorder *,
+                      UnrecordedRefCountPolicy> MFUnrecPolygonBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<PolygonBorder *,
+                      WeakRefCountPolicy      > MFWeakPolygonBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<PolygonBorder *,
+                      NoRefCountPolicy        > MFUncountedPolygonBorderPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<PolygonBorderPtr> MFPolygonBorderPtr;
-#endif
 
-#ifndef OSG_COMPILEPOLYGONBORDERINST
-OSG_DLLEXPORT_DECL1(MField, PolygonBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecPolygonBorderPtr : 
+    public PointerSField<PolygonBorder *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecPolygonBorderPtr : 
+    public PointerSField<PolygonBorder *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakPolygonBorderPtr :
+    public PointerSField<PolygonBorder *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedPolygonBorderPtr :
+    public PointerSField<PolygonBorder *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecPolygonBorderPtr :
+    public PointerMField<PolygonBorder *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecPolygonBorderPtr :
+    public PointerMField<PolygonBorder *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakPolygonBorderPtr :
+    public PointerMField<PolygonBorder *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedPolygonBorderPtr :
+    public PointerMField<PolygonBorder *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGPOLYGONBORDERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGPOLYGONBORDERFIELDS_H_ */

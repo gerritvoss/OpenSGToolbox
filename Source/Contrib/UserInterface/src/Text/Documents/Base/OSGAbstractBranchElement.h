@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,42 +42,44 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGAbstractBranchElementBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief AbstractBranchElement class. See \ref 
-           PageUserInterfaceAbstractBranchElement for a description.
+/*! \brief AbstractBranchElement class. See \ref
+           PageContribUserInterfaceAbstractBranchElement for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractBranchElement : public AbstractBranchElementBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractBranchElement : public AbstractBranchElementBase
 {
-  private:
-
-    typedef AbstractBranchElementBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef AbstractBranchElementBase Inherited;
+    typedef AbstractBranchElement     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in AbstractBranchElementBase.
@@ -94,20 +96,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractBranchElement : public AbstractBra
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~AbstractBranchElement(void); 
+    virtual ~AbstractBranchElement(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class AbstractBranchElementBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const AbstractBranchElement &source);
 };
 

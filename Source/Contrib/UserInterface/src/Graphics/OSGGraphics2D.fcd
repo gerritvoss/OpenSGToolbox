@@ -3,22 +3,65 @@
 <FieldContainer
 	name="Graphics2D"
 	parent="Graphics"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A Concrete 2D UI Graphics.
 	<Field
 		name="UIDepth"
-		type="DepthChunkPtr"
+		type="DepthChunk"
+        category="pointer"
 		cardinality="single"
 		visibility="internal"
 		access="protected"
-		defaultValue="NullFC"
+		defaultValue="NULL"
+	>
+	</Field>
+	<Field
+		name="ColorMask"
+		type="ColorMaskChunk"
+        category="pointer"
+		cardinality="single"
+		visibility="internal"
+		access="protected"
+		defaultValue="NULL"
+	>
+	</Field>
+	<Field
+		name="StenciledAreaSetup"
+		type="StencilChunk"
+        category="pointer"
+		cardinality="single"
+		visibility="internal"
+		access="protected"
+		defaultValue="NULL"
+	>
+	</Field>
+	<Field
+		name="StenciledAreaCleanup"
+		type="StencilChunk"
+        category="pointer"
+		cardinality="single"
+		visibility="internal"
+		access="protected"
+		defaultValue="NULL"
+	>
+	</Field>
+	<Field
+		name="StenciledAreaTest"
+		type="StencilChunk"
+        category="pointer"
+		cardinality="single"
+		visibility="internal"
+		access="protected"
+		defaultValue="NULL"
 	>
 	</Field>
 </FieldContainer>

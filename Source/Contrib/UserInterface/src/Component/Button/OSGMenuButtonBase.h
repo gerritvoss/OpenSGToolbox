@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,81 +58,90 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGToggleButton.h" // Parent
 
-#include "Component/List/Models/OSGListModelFields.h" // Model type
-#include "ComponentGenerators/OSGComponentGeneratorFields.h" // CellGenerator type
-#include "Component/Menu/OSGListGeneratedPopupMenuFields.h" // MenuButtonPopupMenu type
+#include "OSGListModelFields.h"         // Model type
+#include "OSGComponentGeneratorFields.h" // CellGenerator type
+#include "OSGListGeneratedPopupMenuFields.h" // MenuButtonPopupMenu type
 
 #include "OSGMenuButtonFields.h"
-#include <OpenSG/Toolbox/OSGEventProducer.h>
-#include <OpenSG/Toolbox/OSGEventProducerType.h>
-#include <OpenSG/Toolbox/OSGMethodDescription.h>
+
+//Event Producer Headers
+#include "OSGEventProducer.h"
+#include "OSGEventProducerType.h"
+#include "OSGMethodDescription.h"
 
 OSG_BEGIN_NAMESPACE
 
 class MenuButton;
-class BinaryDataHandler;
 
 //! \brief MenuButton Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING MenuButtonBase : public ToggleButton
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuButtonBase : public ToggleButton
 {
-  private:
-
-    typedef ToggleButton    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef MenuButtonPtr  Ptr;
+    typedef ToggleButton Inherited;
+    typedef ToggleButton ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(MenuButton);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        ModelFieldId               = Inherited::NextFieldId,
-        CellGeneratorFieldId       = ModelFieldId               + 1,
-        MenuButtonPopupMenuFieldId = CellGeneratorFieldId       + 1,
-        NextFieldId                = MenuButtonPopupMenuFieldId + 1
+        ModelFieldId = Inherited::NextFieldId,
+        CellGeneratorFieldId = ModelFieldId + 1,
+        MenuButtonPopupMenuFieldId = CellGeneratorFieldId + 1,
+        NextFieldId = MenuButtonPopupMenuFieldId + 1
     };
 
-    static const OSG::BitVector ModelFieldMask;
-    static const OSG::BitVector CellGeneratorFieldMask;
-    static const OSG::BitVector MenuButtonPopupMenuFieldMask;
-
+    static const OSG::BitVector ModelFieldMask =
+        (TypeTraits<BitVector>::One << ModelFieldId);
+    static const OSG::BitVector CellGeneratorFieldMask =
+        (TypeTraits<BitVector>::One << CellGeneratorFieldId);
+    static const OSG::BitVector MenuButtonPopupMenuFieldMask =
+        (TypeTraits<BitVector>::One << MenuButtonPopupMenuFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecListModelPtr SFModelType;
+    typedef SFUnrecComponentGeneratorPtr SFCellGeneratorType;
+    typedef SFUnrecListGeneratedPopupMenuPtr SFMenuButtonPopupMenuType;
 
     enum
     {
-        MenuActionPerformedMethodId = Inherited::NextMethodId,
-        NextMethodId                = MenuActionPerformedMethodId + 1
+        MenuActionPerformedMethodId = Inherited::NextProducedMethodId,
+        NextProducedMethodId = MenuActionPerformedMethodId + 1
     };
-
-
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
-    static const  EventProducerType  &getProducerClassType  (void); 
-    static        UInt32              getProducerClassTypeId(void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
+    static const  EventProducerType  &getProducerClassType  (void);
+    static        UInt32              getProducerClassTypeId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -141,28 +150,45 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuButtonBase : public ToggleButton
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-
-           SFListModelPtr      *editSFModel          (void);
-     const SFListModelPtr      *getSFModel          (void) const;
-
-           SFComponentGeneratorPtr *editSFCellGenerator  (void);
-     const SFComponentGeneratorPtr *getSFCellGenerator  (void) const;
+            const SFUnrecListModelPtr *getSFModel          (void) const;
+                  SFUnrecListModelPtr *editSFModel          (void);
+            const SFUnrecComponentGeneratorPtr *getSFCellGenerator  (void) const;
+                  SFUnrecComponentGeneratorPtr *editSFCellGenerator  (void);
 
 
-           ListModelPtr        &editModel          (void);
-     const ListModelPtr        &getModel          (void) const;
+                  ListModel * getModel          (void) const;
 
-           ComponentGeneratorPtr &editCellGenerator  (void);
-     const ComponentGeneratorPtr &getCellGenerator  (void) const;
-
+                  ComponentGenerator * getCellGenerator  (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setModel          ( const ListModelPtr &value );
-     void setCellGenerator  ( const ComponentGeneratorPtr &value );
+            void setModel          (ListModel * const value);
+            void setCellGenerator  (ComponentGenerator * const value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Binary Access                              */
+    /*! \{                                                                 */
+
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -171,50 +197,51 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuButtonBase : public ToggleButton
 
     virtual const EventProducerType &getProducerType(void) const; 
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
-    /*! \{                                                                 */
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Binary Access                              */
-    /*! \{                                                                 */
-
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  MenuButtonPtr      create          (void); 
-    static  MenuButtonPtr      createEmpty     (void); 
+    static  MenuButtonTransitPtr  create          (void);
+    static  MenuButton           *createEmpty     (void);
+
+    static  MenuButtonTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  MenuButton            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  MenuButtonTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFListModelPtr      _sfModel;
-    SFComponentGeneratorPtr   _sfCellGenerator;
-    SFListGeneratedPopupMenuPtr   _sfMenuButtonPopupMenu;
+    SFUnrecListModelPtr _sfModel;
+    SFUnrecComponentGeneratorPtr _sfCellGenerator;
+    SFUnrecListGeneratedPopupMenuPtr _sfMenuButtonPopupMenu;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -229,87 +256,109 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuButtonBase : public ToggleButton
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~MenuButtonBase(void); 
+    virtual ~MenuButtonBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const MenuButton *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleModel           (void) const;
+    EditFieldHandlePtr editHandleModel          (void);
+    GetFieldHandlePtr  getHandleCellGenerator   (void) const;
+    EditFieldHandlePtr editHandleCellGenerator  (void);
+    GetFieldHandlePtr  getHandleMenuButtonPopupMenu (void) const;
+    EditFieldHandlePtr editHandleMenuButtonPopupMenu(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFListGeneratedPopupMenuPtr *editSFMenuButtonPopupMenu(void);
-     const SFListGeneratedPopupMenuPtr *getSFMenuButtonPopupMenu(void) const;
+            const SFUnrecListGeneratedPopupMenuPtr *getSFMenuButtonPopupMenu (void) const;
+                  SFUnrecListGeneratedPopupMenuPtr *editSFMenuButtonPopupMenu(void);
 
-           ListGeneratedPopupMenuPtr &editMenuButtonPopupMenu(void);
-     const ListGeneratedPopupMenuPtr &getMenuButtonPopupMenu(void) const;
+
+                  ListGeneratedPopupMenu * getMenuButtonPopupMenu(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setMenuButtonPopupMenu(const ListGeneratedPopupMenuPtr &value);
+            void setMenuButtonPopupMenu(ListGeneratedPopupMenu * const value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      MenuButtonBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      MenuButtonBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      MenuButtonBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
+    /*---------------------------------------------------------------------*/
     static MethodDescription   *_methodDesc[];
     static EventProducerType _producerType;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const MenuButtonBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef MenuButtonBase *MenuButtonBaseP;
-
-typedef osgIF<MenuButtonBase::isNodeCore,
-              CoredNodePtr<MenuButton>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet MenuButtonNodePtr;
-
-typedef RefPtr<MenuButtonPtr> MenuButtonRefPtr;
 
 OSG_END_NAMESPACE
 

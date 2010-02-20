@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,76 +55,73 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &DefaultSingleSelectionModelBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 DefaultSingleSelectionModelBase::getClassTypeId(void) 
+OSG::UInt32 DefaultSingleSelectionModelBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-DefaultSingleSelectionModelPtr DefaultSingleSelectionModelBase::create(void) 
-{
-    DefaultSingleSelectionModelPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = DefaultSingleSelectionModelPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-DefaultSingleSelectionModelPtr DefaultSingleSelectionModelBase::createEmpty(void) 
-{ 
-    DefaultSingleSelectionModelPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 DefaultSingleSelectionModelBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the DefaultSingleSelectionModel::_sfInternalSelectedIndex field.
-inline
-SFInt32 *DefaultSingleSelectionModelBase::getSFInternalSelectedIndex(void)
-{
-    return &_sfInternalSelectedIndex;
-}
-
-
 //! Get the value of the DefaultSingleSelectionModel::_sfInternalSelectedIndex field.
+
 inline
-Int32 &DefaultSingleSelectionModelBase::getInternalSelectedIndex(void)
+Int32 &DefaultSingleSelectionModelBase::editInternalSelectedIndex(void)
 {
+    editSField(InternalSelectedIndexFieldMask);
+
     return _sfInternalSelectedIndex.getValue();
 }
 
 //! Get the value of the DefaultSingleSelectionModel::_sfInternalSelectedIndex field.
 inline
-const Int32 &DefaultSingleSelectionModelBase::getInternalSelectedIndex(void) const
+      Int32  DefaultSingleSelectionModelBase::getInternalSelectedIndex(void) const
 {
     return _sfInternalSelectedIndex.getValue();
 }
 
 //! Set the value of the DefaultSingleSelectionModel::_sfInternalSelectedIndex field.
 inline
-void DefaultSingleSelectionModelBase::setInternalSelectedIndex(const Int32 &value)
+void DefaultSingleSelectionModelBase::setInternalSelectedIndex(const Int32 value)
 {
+    editSField(InternalSelectedIndexFieldMask);
+
     _sfInternalSelectedIndex.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void DefaultSingleSelectionModelBase::execSync (      DefaultSingleSelectionModelBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGDEFAULTSINGLESELECTIONMODELBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (InternalSelectedIndexFieldMask & whichField))
+        _sfInternalSelectedIndex.syncWith(pFrom->_sfInternalSelectedIndex);
+}
+#endif
+
+
+inline
+const Char8 *DefaultSingleSelectionModelBase::getClassname(void)
+{
+    return "DefaultSingleSelectionModel";
+}
+OSG_GEN_CONTAINERPTR(DefaultSingleSelectionModel);
+
+OSG_END_NAMESPACE
 

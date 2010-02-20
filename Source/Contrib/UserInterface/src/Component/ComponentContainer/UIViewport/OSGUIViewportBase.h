@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,80 +58,89 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include "OSGContainer.h" // Parent
+#include "OSGComponentContainer.h" // Parent
 
-#include "Component/OSGComponentFields.h" // ViewComponent type
-#include <OpenSG/OSGVec2sFields.h> // ViewSize type
+#include "OSGVecFields.h"               // ViewPosition type
+#include "OSGComponentFields.h"         // ViewComponent type
 
 #include "OSGUIViewportFields.h"
-#include <OpenSG/Toolbox/OSGEventProducer.h>
-#include <OpenSG/Toolbox/OSGEventProducerType.h>
-#include <OpenSG/Toolbox/OSGMethodDescription.h>
+
+//Event Producer Headers
+#include "OSGEventProducer.h"
+#include "OSGEventProducerType.h"
+#include "OSGMethodDescription.h"
 
 OSG_BEGIN_NAMESPACE
 
 class UIViewport;
-class BinaryDataHandler;
 
 //! \brief UIViewport Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING UIViewportBase : public Container
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIViewportBase : public ComponentContainer
 {
-  private:
-
-    typedef Container    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef UIViewportPtr  Ptr;
+    typedef ComponentContainer Inherited;
+    typedef ComponentContainer ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(UIViewport);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        ViewPositionFieldId  = Inherited::NextFieldId,
-        ViewComponentFieldId = ViewPositionFieldId  + 1,
-        ViewSizeFieldId      = ViewComponentFieldId + 1,
-        NextFieldId          = ViewSizeFieldId      + 1
+        ViewPositionFieldId = Inherited::NextFieldId,
+        ViewComponentFieldId = ViewPositionFieldId + 1,
+        ViewSizeFieldId = ViewComponentFieldId + 1,
+        NextFieldId = ViewSizeFieldId + 1
     };
 
-    static const OSG::BitVector ViewPositionFieldMask;
-    static const OSG::BitVector ViewComponentFieldMask;
-    static const OSG::BitVector ViewSizeFieldMask;
-
+    static const OSG::BitVector ViewPositionFieldMask =
+        (TypeTraits<BitVector>::One << ViewPositionFieldId);
+    static const OSG::BitVector ViewComponentFieldMask =
+        (TypeTraits<BitVector>::One << ViewComponentFieldId);
+    static const OSG::BitVector ViewSizeFieldMask =
+        (TypeTraits<BitVector>::One << ViewSizeFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFPnt2f           SFViewPositionType;
+    typedef SFUnrecComponentPtr SFViewComponentType;
+    typedef SFVec2f           SFViewSizeType;
 
     enum
     {
-        StateChangedMethodId = Inherited::NextMethodId,
-        NextMethodId         = StateChangedMethodId + 1
+        StateChangedMethodId = Inherited::NextProducedMethodId,
+        NextProducedMethodId = StateChangedMethodId + 1
     };
-
-
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
-    static const  EventProducerType  &getProducerClassType  (void); 
-    static        UInt32              getProducerClassTypeId(void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
+    static const  EventProducerType  &getProducerClassType  (void);
+    static        UInt32              getProducerClassTypeId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -141,33 +150,53 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIViewportBase : public Container
     /*! \{                                                                 */
 
 
-           SFPnt2s             *editSFViewPosition   (void);
-     const SFPnt2s             *getSFViewPosition   (void) const;
+                  SFPnt2f             *editSFViewPosition   (void);
+            const SFPnt2f             *getSFViewPosition    (void) const;
+            const SFUnrecComponentPtr *getSFViewComponent  (void) const;
+                  SFUnrecComponentPtr *editSFViewComponent  (void);
 
-           SFComponentPtr      *editSFViewComponent  (void);
-     const SFComponentPtr      *getSFViewComponent  (void) const;
-
-           SFVec2s             *editSFViewSize       (void);
-     const SFVec2s             *getSFViewSize       (void) const;
+                  SFVec2f             *editSFViewSize       (void);
+            const SFVec2f             *getSFViewSize        (void) const;
 
 
-           Pnt2s               &editViewPosition   (void);
-     const Pnt2s               &getViewPosition   (void) const;
+                  Pnt2f               &editViewPosition   (void);
+            const Pnt2f               &getViewPosition    (void) const;
 
-           ComponentPtr        &editViewComponent  (void);
-     const ComponentPtr        &getViewComponent  (void) const;
+                  Component * getViewComponent  (void) const;
 
-           Vec2s               &editViewSize       (void);
-     const Vec2s               &getViewSize       (void) const;
+                  Vec2f               &editViewSize       (void);
+            const Vec2f               &getViewSize        (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setViewPosition   ( const Pnt2s &value );
-     void setViewComponent  ( const ComponentPtr &value );
-     void setViewSize       ( const Vec2s &value );
+            void setViewPosition   (const Pnt2f &value);
+            void setViewComponent  (Component * const value);
+            void setViewSize       (const Vec2f &value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Binary Access                              */
+    /*! \{                                                                 */
+
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -176,50 +205,51 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIViewportBase : public Container
 
     virtual const EventProducerType &getProducerType(void) const; 
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
-    /*! \{                                                                 */
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Binary Access                              */
-    /*! \{                                                                 */
-
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  UIViewportPtr      create          (void); 
-    static  UIViewportPtr      createEmpty     (void); 
+    static  UIViewportTransitPtr  create          (void);
+    static  UIViewport           *createEmpty     (void);
+
+    static  UIViewportTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  UIViewport            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  UIViewportTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFPnt2s             _sfViewPosition;
-    SFComponentPtr      _sfViewComponent;
-    SFVec2s             _sfViewSize;
+    SFPnt2f           _sfViewPosition;
+    SFUnrecComponentPtr _sfViewComponent;
+    SFVec2f           _sfViewSize;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -234,69 +264,86 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIViewportBase : public Container
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~UIViewportBase(void); 
+    virtual ~UIViewportBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const UIViewport *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleViewPosition    (void) const;
+    EditFieldHandlePtr editHandleViewPosition   (void);
+    GetFieldHandlePtr  getHandleViewComponent   (void) const;
+    EditFieldHandlePtr editHandleViewComponent  (void);
+    GetFieldHandlePtr  getHandleViewSize        (void) const;
+    EditFieldHandlePtr editHandleViewSize       (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      UIViewportBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      UIViewportBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      UIViewportBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
+    /*---------------------------------------------------------------------*/
     static MethodDescription   *_methodDesc[];
     static EventProducerType _producerType;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const UIViewportBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef UIViewportBase *UIViewportBaseP;
-
-typedef osgIF<UIViewportBase::isNodeCore,
-              CoredNodePtr<UIViewport>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet UIViewportNodePtr;
-
-typedef RefPtr<UIViewportPtr> UIViewportRefPtr;
 
 OSG_END_NAMESPACE
 

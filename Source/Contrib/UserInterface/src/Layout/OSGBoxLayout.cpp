@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,22 +40,26 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
+
 #include "OSGBoxLayout.h"
-#include "OSGUserInterfaceDef.h"
-#include "Util/OSGUIDrawUtils.h"
-#include "Component/Container/OSGContainer.h"
+#include "OSGUIDrawUtils.h"
+#include "OSGComponentContainer.h"
 
 OSG_BEGIN_NAMESPACE
 
+// Documentation for this class is emitted in the
+// OSGBoxLayoutBase.cpp file.
+// To modify it, please change the .fcd file (OSGBoxLayout.fcd) and
+// regenerate the base file.
 /***************************************************************************\
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::BoxLayout
+/*! \class OSG::BoxLayout
 A UI BoxLayout. 
 Based off of the Java.swing boxLayout, which bears the following description:
 
@@ -86,8 +90,13 @@ right edge of the component otherwise.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void BoxLayout::initMethod (void)
+void BoxLayout::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -95,7 +104,7 @@ void BoxLayout::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void BoxLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+void BoxLayout::updateLayout(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
 {
 	/*!
       totalMajorAxis will be the sum of the MajorAxis of all of the
@@ -107,7 +116,7 @@ void BoxLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr 
 	if(getOrientation() != HORIZONTAL_ORIENTATION ) AxisIndex = 1;
 
 	Pnt2f borderTopLeft, borderBottomRight;
-	Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(borderTopLeft, borderBottomRight);
+	dynamic_cast<const ComponentContainer*>(ParentComponent)->getInsideInsetsBounds(borderTopLeft, borderBottomRight);
 	Vec2f borderSize(borderBottomRight-borderTopLeft);
 	Real32 MajorAxis(borderSize[AxisIndex]);
 	Real32 totalMajorAxis(0);
@@ -121,16 +130,16 @@ void BoxLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr 
 	  preferred size, gets a sum of all the MajorAxes, and finds the
 	  largest height.
     */
-	for(UInt32 i=0 ; i<Components.size() ; ++i)
+	for(UInt32 i=0 ; i<Components->size() ; ++i)
 	{	// set the component to its preferred size
 		// get sum of all components
-		totalMajorAxis += Components[i]->getPreferredSize()[AxisIndex];
-		if (Components[i]->getPreferredSize()[(AxisIndex+1)%2] > largestMinorAxis)
-			largestMinorAxis = Components[i]->getPreferredSize()[(AxisIndex+1)%2];
+		totalMajorAxis += (*Components)[i]->getPreferredSize()[AxisIndex];
+		if ((*Components)[i]->getPreferredSize()[(AxisIndex+1)%2] > largestMinorAxis)
+			largestMinorAxis = (*Components)[i]->getPreferredSize()[(AxisIndex+1)%2];
 	}
 	if(MajorAxis > totalMajorAxis)
 	{
-		spacing = (MajorAxis-totalMajorAxis)/(Components.size()+1);
+		spacing = (MajorAxis-totalMajorAxis)/(Components->size()+1);
 		// in the case where there isn't equal spacing between each button,
 		// translate more the first time to center the components
 		if(spacing < getMajorAxisMinimumGap())
@@ -141,7 +150,7 @@ void BoxLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr 
 		{
 			spacing = getMajorAxisMaximumGap();
 		}
-		borderTopLeft[AxisIndex] += (MajorAxis - (spacing*(Components.size()+1)+totalMajorAxis))*getMajorAxisAlignment() + spacing;
+		borderTopLeft[AxisIndex] += (MajorAxis - (spacing*(Components->size()+1)+totalMajorAxis))*getMajorAxisAlignment() + spacing;
 	}
 	else
 	{
@@ -162,51 +171,49 @@ void BoxLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr 
 	  This second sweep through the components sets each component to the
 	  matching highest height, then positions each component equally spaced apart
     */
-	for(UInt32 i=0; i<Components.size(); ++i)
+	for(UInt32 i=0; i<Components->size(); ++i)
 	{	
 		// for each individual button, keep track of the offsetMinorAxis in height
 		// for use in keeping them vertically centered
 		offset[(AxisIndex+1)%2] = 0;
 		// change the component's height only if necessary
-		if (largestMinorAxis > Components[i]->getPreferredSize()[(AxisIndex+1)%2])
+		if (largestMinorAxis > (*Components)[i]->getPreferredSize()[(AxisIndex+1)%2])
 		{	
-			if (largestMinorAxis <= Components[i]->getMaxSize()[(AxisIndex+1)%2])
+			if (largestMinorAxis <= (*Components)[i]->getMaxSize()[(AxisIndex+1)%2])
 			{	// for when the max height is larger than the largestMinorAxis
-				size[AxisIndex] = Components[i]->getPreferredSize()[AxisIndex];
+				size[AxisIndex] = (*Components)[i]->getPreferredSize()[AxisIndex];
 				size[(AxisIndex+1)%2] = largestMinorAxis;
 			}
 			else
 			{	// in this case, max out the button to its max height
-				size[AxisIndex] = Components[i]->getPreferredSize()[AxisIndex];
-				size[(AxisIndex+1)%2] = Components[i]->getMaxSize()[(AxisIndex+1)%2];
+				size[AxisIndex] = (*Components)[i]->getPreferredSize()[AxisIndex];
+				size[(AxisIndex+1)%2] = (*Components)[i]->getMaxSize()[(AxisIndex+1)%2];
 
 				// find how far to set offset to make this button properly aligned
 				if(getOrientation() == HORIZONTAL_ORIENTATION)
 				{
-					offset = Vec2f(calculateAlignment(Pnt2f(0,0), Vec2f(0.0f, largestMinorAxis), Vec2f(0.0f,Components[i]->getMaxSize().y()), getComponentAlignment(), 0.0f));
+					offset = Vec2f(calculateAlignment(Pnt2f(0,0), Vec2f(0.0f, largestMinorAxis), Vec2f(0.0f,(*Components)[i]->getMaxSize().y()), getComponentAlignment(), 0.0f));
 				}
 				else
 				{
-					offset = Vec2f(calculateAlignment(Pnt2f(0,0), Vec2f(largestMinorAxis,0.0f), Vec2f(Components[i]->getMaxSize().x(),0.0f), 0.0f, getComponentAlignment()));
+					offset = Vec2f(calculateAlignment(Pnt2f(0,0), Vec2f(largestMinorAxis,0.0f), Vec2f((*Components)[i]->getMaxSize().x(),0.0f), 0.0f, getComponentAlignment()));
 				}
 			}
 		}
 		else
 		{
-			size = Components[i]->getPreferredSize();
+			size = (*Components)[i]->getPreferredSize();
 		}
-		beginEditCP(Components[i], Component::SizeFieldMask|Component::PositionFieldMask);
-			Components[i]->setSize(size);
-			Components[i]->setPosition(borderTopLeft + offset);
-		endEditCP(Components[i], Component::SizeFieldMask|Component::PositionFieldMask);
+			(*Components)[i]->setSize(size);
+			(*Components)[i]->setPosition(borderTopLeft + offset);
 
 		// now set offset for the next button
-		offset[AxisIndex] += spacing + Components[i]->getPreferredSize()[AxisIndex];
+		offset[AxisIndex] += spacing + (*Components)[i]->getPreferredSize()[AxisIndex];
 	}
 }
 
 
-Vec2f BoxLayout::layoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent, SizeType TheSizeType) const
+Vec2f BoxLayout::layoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent, SizeType TheSizeType) const
 {
     Real32 MinorAxisMax(0.0f);
     Real32 MajorAxisSum(0.0f);
@@ -217,9 +224,9 @@ Vec2f BoxLayout::layoutSize(const MFComponentPtr Components,const ComponentPtr P
 	UInt32 MinorAxisIndex((MajorAxisIndex+1)%2);
 
     Vec2f ComponentSize;
-    for(UInt32 i(0) ; i<Components.size() ; ++i)
+    for(UInt32 i(0) ; i<Components->size() ; ++i)
     {
-        ComponentSize = getComponentSize(Components[i],TheSizeType);
+        ComponentSize = getComponentSize((*Components)[i],TheSizeType);
         if(ComponentSize[MinorAxisIndex] > MinorAxisMax)
         {
             MinorAxisMax = ComponentSize[MinorAxisIndex];
@@ -233,25 +240,26 @@ Vec2f BoxLayout::layoutSize(const MFComponentPtr Components,const ComponentPtr P
     return Result;
 }
 
-Vec2f BoxLayout::minimumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+Vec2f BoxLayout::minimumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, MIN_SIZE);
 }
 
-Vec2f BoxLayout::requestedContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+Vec2f BoxLayout::requestedContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, REQUESTED_SIZE);
 }
 
-Vec2f BoxLayout::preferredContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+Vec2f BoxLayout::preferredContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, PREFERRED_SIZE);
 }
 
-Vec2f BoxLayout::maximumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+Vec2f BoxLayout::maximumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, MAX_SIZE);
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -274,41 +282,17 @@ BoxLayout::~BoxLayout(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void BoxLayout::changed(BitVector whichField, UInt32 origin)
+void BoxLayout::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void BoxLayout::dump(      UInt32    , 
+void BoxLayout::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump BoxLayout NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGBOXLAYOUTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGBOXLAYOUTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGBOXLAYOUTFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

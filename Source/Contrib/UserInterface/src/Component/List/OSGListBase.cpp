@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,194 +50,323 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILELISTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGListModel.h"               // Model Class
+#include "OSGComponentGenerator.h"      // CellGenerator Class
 
 #include "OSGListBase.h"
 #include "OSGList.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ListBase::OrientationFieldMask = 
-    (TypeTraits<BitVector>::One << ListBase::OrientationFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  ListBase::CellMajorAxisLengthFieldMask = 
-    (TypeTraits<BitVector>::One << ListBase::CellMajorAxisLengthFieldId);
+/*! \class OSG::List
+    A UI List.
+ */
 
-const OSG::BitVector  ListBase::ModelFieldMask = 
-    (TypeTraits<BitVector>::One << ListBase::ModelFieldId);
-
-const OSG::BitVector  ListBase::CellGeneratorFieldMask = 
-    (TypeTraits<BitVector>::One << ListBase::CellGeneratorFieldId);
-
-const OSG::BitVector  ListBase::AutoScrollToFocusedFieldMask = 
-    (TypeTraits<BitVector>::One << ListBase::AutoScrollToFocusedFieldId);
-
-const OSG::BitVector ListBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var UInt32          ListBase::_sfOrientation
     
 */
+
 /*! \var UInt32          ListBase::_sfCellMajorAxisLength
     
 */
-/*! \var ListModelPtr    ListBase::_sfModel
+
+/*! \var ListModel *     ListBase::_sfModel
     
 */
-/*! \var ComponentGeneratorPtr ListBase::_sfCellGenerator
+
+/*! \var ComponentGenerator * ListBase::_sfCellGenerator
     
 */
+
 /*! \var bool            ListBase::_sfAutoScrollToFocused
     
 */
 
-//! List description
 
-FieldDescription *ListBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<List *>::_type("ListPtr", "ComponentContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(List *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           List *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           List *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ListBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "Orientation", 
-                     OrientationFieldId, OrientationFieldMask,
-                     false,
-                     (FieldAccessMethod) &ListBase::getSFOrientation),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "CellMajorAxisLength", 
-                     CellMajorAxisLengthFieldId, CellMajorAxisLengthFieldMask,
-                     false,
-                     (FieldAccessMethod) &ListBase::getSFCellMajorAxisLength),
-    new FieldDescription(SFListModelPtr::getClassType(), 
-                     "Model", 
-                     ModelFieldId, ModelFieldMask,
-                     false,
-                     (FieldAccessMethod) &ListBase::getSFModel),
-    new FieldDescription(SFComponentGeneratorPtr::getClassType(), 
-                     "CellGenerator", 
-                     CellGeneratorFieldId, CellGeneratorFieldMask,
-                     false,
-                     (FieldAccessMethod) &ListBase::getSFCellGenerator),
-    new FieldDescription(SFBool::getClassType(), 
-                     "AutoScrollToFocused", 
-                     AutoScrollToFocusedFieldId, AutoScrollToFocusedFieldMask,
-                     false,
-                     (FieldAccessMethod) &ListBase::getSFAutoScrollToFocused)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType ListBase::_type(
-    "List",
-    "Container",
-    NULL,
-    (PrototypeCreateF) &ListBase::createEmpty,
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "Orientation",
+        "",
+        OrientationFieldId, OrientationFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&List::editHandleOrientation),
+        static_cast<FieldGetMethodSig >(&List::getHandleOrientation));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "CellMajorAxisLength",
+        "",
+        CellMajorAxisLengthFieldId, CellMajorAxisLengthFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&List::editHandleCellMajorAxisLength),
+        static_cast<FieldGetMethodSig >(&List::getHandleCellMajorAxisLength));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecListModelPtr::Description(
+        SFUnrecListModelPtr::getClassType(),
+        "Model",
+        "",
+        ModelFieldId, ModelFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&List::editHandleModel),
+        static_cast<FieldGetMethodSig >(&List::getHandleModel));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecComponentGeneratorPtr::Description(
+        SFUnrecComponentGeneratorPtr::getClassType(),
+        "CellGenerator",
+        "",
+        CellGeneratorFieldId, CellGeneratorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&List::editHandleCellGenerator),
+        static_cast<FieldGetMethodSig >(&List::getHandleCellGenerator));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "AutoScrollToFocused",
+        "",
+        AutoScrollToFocusedFieldId, AutoScrollToFocusedFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&List::editHandleAutoScrollToFocused),
+        static_cast<FieldGetMethodSig >(&List::getHandleAutoScrollToFocused));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+ListBase::TypeObject ListBase::_type(
+    ListBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ListBase::createEmptyLocal),
     List::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(ListBase, ListPtr)
+    List::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&List::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"List\"\n"
+    "\tparent=\"ComponentContainer\"\n"
+    "\tlibrary=\"ContribUserInterface\"\n"
+    "\tpointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "\tsystemcomponent=\"true\"\n"
+    "\tparentsystemcomponent=\"true\"\n"
+    "\tdecoratable=\"false\"\n"
+    "\tuseLocalIncludes=\"false\"\n"
+    "\tisNodeCore=\"false\"\n"
+    "\tauthors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "\t>\n"
+    "\tA UI List.\n"
+    "\t<Field\n"
+    "\t\tname=\"Orientation\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"List::VERTICAL_ORIENTATION\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"CellMajorAxisLength\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"50\"\n"
+    "\t\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Model\"\n"
+    "\t\ttype=\"ListModel\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"CellGenerator\"\n"
+    "\t\ttype=\"ComponentGenerator\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"AutoScrollToFocused\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"true\"\n"
+    "\t\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI List.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ListBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ListBase::getType(void) const 
+FieldContainerType &ListBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr ListBase::shallowCopy(void) const 
-{ 
-    ListPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const List *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 ListBase::getContainerSize(void) const 
-{ 
-    return sizeof(List); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ListBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &ListBase::getType(void) const
 {
-    this->executeSyncImpl((ListBase *) &other, whichField);
+    return _type;
 }
-#else
-void ListBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 ListBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((ListBase *) &other, whichField, sInfo);
+    return sizeof(List);
 }
-void ListBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFUInt32 *ListBase::editSFOrientation(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(OrientationFieldMask);
+
+    return &_sfOrientation;
 }
 
-void ListBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFUInt32 *ListBase::getSFOrientation(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfOrientation;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-ListBase::ListBase(void) :
-    _sfOrientation            (UInt32(List::VERTICAL_ORIENTATION)), 
-    _sfCellMajorAxisLength    (UInt32(50)), 
-    _sfModel                  (ListModelPtr(NullFC)), 
-    _sfCellGenerator          (ComponentGeneratorPtr(NullFC)), 
-    _sfAutoScrollToFocused    (bool(true)), 
-    Inherited() 
+SFUInt32 *ListBase::editSFCellMajorAxisLength(void)
 {
+    editSField(CellMajorAxisLengthFieldMask);
+
+    return &_sfCellMajorAxisLength;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-ListBase::ListBase(const ListBase &source) :
-    _sfOrientation            (source._sfOrientation            ), 
-    _sfCellMajorAxisLength    (source._sfCellMajorAxisLength    ), 
-    _sfModel                  (source._sfModel                  ), 
-    _sfCellGenerator          (source._sfCellGenerator          ), 
-    _sfAutoScrollToFocused    (source._sfAutoScrollToFocused    ), 
-    Inherited                 (source)
+const SFUInt32 *ListBase::getSFCellMajorAxisLength(void) const
 {
+    return &_sfCellMajorAxisLength;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-ListBase::~ListBase(void)
+//! Get the List::_sfModel field.
+const SFUnrecListModelPtr *ListBase::getSFModel(void) const
 {
+    return &_sfModel;
 }
+
+SFUnrecListModelPtr *ListBase::editSFModel          (void)
+{
+    editSField(ModelFieldMask);
+
+    return &_sfModel;
+}
+
+//! Get the List::_sfCellGenerator field.
+const SFUnrecComponentGeneratorPtr *ListBase::getSFCellGenerator(void) const
+{
+    return &_sfCellGenerator;
+}
+
+SFUnrecComponentGeneratorPtr *ListBase::editSFCellGenerator  (void)
+{
+    editSField(CellGeneratorFieldMask);
+
+    return &_sfCellGenerator;
+}
+
+SFBool *ListBase::editSFAutoScrollToFocused(void)
+{
+    editSField(AutoScrollToFocusedFieldMask);
+
+    return &_sfAutoScrollToFocused;
+}
+
+const SFBool *ListBase::getSFAutoScrollToFocused(void) const
+{
+    return &_sfAutoScrollToFocused;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ListBase::getBinSize(const BitVector &whichField)
+UInt32 ListBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -245,33 +374,28 @@ UInt32 ListBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfOrientation.getBinSize();
     }
-
     if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
     {
         returnValue += _sfCellMajorAxisLength.getBinSize();
     }
-
     if(FieldBits::NoField != (ModelFieldMask & whichField))
     {
         returnValue += _sfModel.getBinSize();
     }
-
     if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
     {
         returnValue += _sfCellGenerator.getBinSize();
     }
-
     if(FieldBits::NoField != (AutoScrollToFocusedFieldMask & whichField))
     {
         returnValue += _sfAutoScrollToFocused.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ListBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ListBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -279,32 +403,26 @@ void ListBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfOrientation.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
     {
         _sfCellMajorAxisLength.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ModelFieldMask & whichField))
     {
         _sfModel.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
     {
         _sfCellGenerator.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (AutoScrollToFocusedFieldMask & whichField))
     {
         _sfAutoScrollToFocused.copyToBin(pMem);
     }
-
-
 }
 
-void ListBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ListBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -312,126 +430,360 @@ void ListBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfOrientation.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
     {
         _sfCellMajorAxisLength.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ModelFieldMask & whichField))
     {
         _sfModel.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
     {
         _sfCellGenerator.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (AutoScrollToFocusedFieldMask & whichField))
     {
         _sfAutoScrollToFocused.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ListBase::executeSyncImpl(      ListBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ListTransitPtr ListBase::createLocal(BitVector bFlags)
 {
+    ListTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (OrientationFieldMask & whichField))
-        _sfOrientation.syncWith(pOther->_sfOrientation);
+        fc = dynamic_pointer_cast<List>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
-        _sfCellMajorAxisLength.syncWith(pOther->_sfCellMajorAxisLength);
-
-    if(FieldBits::NoField != (ModelFieldMask & whichField))
-        _sfModel.syncWith(pOther->_sfModel);
-
-    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
-        _sfCellGenerator.syncWith(pOther->_sfCellGenerator);
-
-    if(FieldBits::NoField != (AutoScrollToFocusedFieldMask & whichField))
-        _sfAutoScrollToFocused.syncWith(pOther->_sfAutoScrollToFocused);
-
-
-}
-#else
-void ListBase::executeSyncImpl(      ListBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (OrientationFieldMask & whichField))
-        _sfOrientation.syncWith(pOther->_sfOrientation);
-
-    if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
-        _sfCellMajorAxisLength.syncWith(pOther->_sfCellMajorAxisLength);
-
-    if(FieldBits::NoField != (ModelFieldMask & whichField))
-        _sfModel.syncWith(pOther->_sfModel);
-
-    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
-        _sfCellGenerator.syncWith(pOther->_sfCellGenerator);
-
-    if(FieldBits::NoField != (AutoScrollToFocusedFieldMask & whichField))
-        _sfAutoScrollToFocused.syncWith(pOther->_sfAutoScrollToFocused);
-
-
-
+    return fc;
 }
 
-void ListBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ListTransitPtr ListBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ListTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<List>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ListTransitPtr ListBase::create(void)
+{
+    ListTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<List>(tmpPtr);
+    }
+
+    return fc;
+}
+
+List *ListBase::createEmptyLocal(BitVector bFlags)
+{
+    List *returnValue;
+
+    newPtr<List>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+List *ListBase::createEmpty(void)
+{
+    List *returnValue;
+
+    newPtr<List>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ListBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    List *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const List *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ListBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    List *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const List *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ListBase::shallowCopy(void) const
+{
+    List *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const List *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ListBase::ListBase(void) :
+    Inherited(),
+    _sfOrientation            (UInt32(List::VERTICAL_ORIENTATION)),
+    _sfCellMajorAxisLength    (UInt32(50)),
+    _sfModel                  (NULL),
+    _sfCellGenerator          (NULL),
+    _sfAutoScrollToFocused    (bool(true))
+{
+}
+
+ListBase::ListBase(const ListBase &source) :
+    Inherited(source),
+    _sfOrientation            (source._sfOrientation            ),
+    _sfCellMajorAxisLength    (source._sfCellMajorAxisLength    ),
+    _sfModel                  (NULL),
+    _sfCellGenerator          (NULL),
+    _sfAutoScrollToFocused    (source._sfAutoScrollToFocused    )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ListBase::~ListBase(void)
+{
+}
+
+void ListBase::onCreate(const List *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        List *pThis = static_cast<List *>(this);
+
+        pThis->setModel(source->getModel());
+
+        pThis->setCellGenerator(source->getCellGenerator());
+    }
+}
+
+GetFieldHandlePtr ListBase::getHandleOrientation     (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfOrientation,
+             this->getType().getFieldDesc(OrientationFieldId),
+             const_cast<ListBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ListBase::editHandleOrientation    (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfOrientation,
+             this->getType().getFieldDesc(OrientationFieldId),
+             this));
+
+
+    editSField(OrientationFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ListBase::getHandleCellMajorAxisLength (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfCellMajorAxisLength,
+             this->getType().getFieldDesc(CellMajorAxisLengthFieldId),
+             const_cast<ListBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ListBase::editHandleCellMajorAxisLength(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfCellMajorAxisLength,
+             this->getType().getFieldDesc(CellMajorAxisLengthFieldId),
+             this));
+
+
+    editSField(CellMajorAxisLengthFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ListBase::getHandleModel           (void) const
+{
+    SFUnrecListModelPtr::GetHandlePtr returnValue(
+        new  SFUnrecListModelPtr::GetHandle(
+             &_sfModel,
+             this->getType().getFieldDesc(ModelFieldId),
+             const_cast<ListBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ListBase::editHandleModel          (void)
+{
+    SFUnrecListModelPtr::EditHandlePtr returnValue(
+        new  SFUnrecListModelPtr::EditHandle(
+             &_sfModel,
+             this->getType().getFieldDesc(ModelFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&List::setModel,
+                    static_cast<List *>(this), _1));
+
+    editSField(ModelFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ListBase::getHandleCellGenerator   (void) const
+{
+    SFUnrecComponentGeneratorPtr::GetHandlePtr returnValue(
+        new  SFUnrecComponentGeneratorPtr::GetHandle(
+             &_sfCellGenerator,
+             this->getType().getFieldDesc(CellGeneratorFieldId),
+             const_cast<ListBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ListBase::editHandleCellGenerator  (void)
+{
+    SFUnrecComponentGeneratorPtr::EditHandlePtr returnValue(
+        new  SFUnrecComponentGeneratorPtr::EditHandle(
+             &_sfCellGenerator,
+             this->getType().getFieldDesc(CellGeneratorFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&List::setCellGenerator,
+                    static_cast<List *>(this), _1));
+
+    editSField(CellGeneratorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ListBase::getHandleAutoScrollToFocused (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfAutoScrollToFocused,
+             this->getType().getFieldDesc(AutoScrollToFocusedFieldId),
+             const_cast<ListBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ListBase::editHandleAutoScrollToFocused(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfAutoScrollToFocused,
+             this->getType().getFieldDesc(AutoScrollToFocusedFieldId),
+             this));
+
+
+    editSField(AutoScrollToFocusedFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ListBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    List *pThis = static_cast<List *>(this);
+
+    pThis->execSync(static_cast<List *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ListBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    List *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const List *>(pRefAspect),
+                  dynamic_cast<const List *>(this));
+
+    return returnValue;
+}
+#endif
+
+void ListBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<List *>(this)->setModel(NULL);
+
+    static_cast<List *>(this)->setCellGenerator(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ListPtr>::_type("ListPtr", "ContainerPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(ListPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ListPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGLISTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGLISTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGLISTFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

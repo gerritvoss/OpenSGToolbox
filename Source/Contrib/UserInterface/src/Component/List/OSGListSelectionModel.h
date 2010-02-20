@@ -43,18 +43,18 @@
 #pragma once
 #endif
  
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 #include "OSGListSelectionListener.h"
-#include <OpenSG/OSGFieldContainerPtr.h>
+#include "OSGFieldContainer.h"
 
 #include <boost/shared_ptr.hpp>
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 	 
-class OSG_USERINTERFACELIB_DLLMAPPING ListSelectionModel
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListSelectionModel
 {
 private:
 protected:

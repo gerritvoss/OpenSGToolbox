@@ -45,7 +45,7 @@
 
 #define OSG_COMPILEUSERINTERFACELIB
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 #include "OSGUndoManager.h"
 
@@ -57,7 +57,7 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::UndoManager
+/*! \class OSG::UndoManager
 A UndoManager. 
 */
 
@@ -92,7 +92,7 @@ void UndoManager::removeChangeListener(ChangeListenerPtr l)
 
 void UndoManager::produceStateChanged(void)
 {
-   const ChangeEventPtr TheEvent = ChangeEvent::create(NullFC, getSystemTime());
+   const ChangeEventUnrecPtr TheEvent = ChangeEvent::create(NULL, getSystemTime());
    ChangeListenerSet ModelListenerSet(_ChangeListeners);
    for(ChangeListenerSet::iterator SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
@@ -257,7 +257,7 @@ void UndoManager::undo(void)
 	}
 }
 
-void UndoManager::undoableEditHappened(UndoableEditEventPtr e)
+void UndoManager::undoableEditHappened(UndoableEditEventUnrecPtr e)
 {
 	addEdit(e->getUndoableEdit());
 }
@@ -286,7 +286,7 @@ UndoableEditPtr UndoManager::editToBeRedone(void) const
         }
     }
 
-	return UndoableEditPtr(NULL);
+	return UndoableEditPtr();
 }
 
 UndoableEditPtr UndoManager::editToBeUndone(void) const
@@ -301,7 +301,7 @@ UndoableEditPtr UndoManager::editToBeUndone(void) const
         }
     }
 
-	return UndoableEditPtr(NULL);
+	return UndoableEditPtr();
 }
 
 void UndoManager::undoOrRedoTo(const UInt32& index)
@@ -459,7 +459,7 @@ UndoableEditPtr UndoManager::editToBeRedone(const UInt32& offset) const
         }
     }
 
-	return UndoableEditPtr(NULL);
+	return UndoableEditPtr();
 }
 
 UndoableEditPtr UndoManager::editToBeUndone(const UInt32& offset) const
@@ -482,7 +482,7 @@ UndoableEditPtr UndoManager::editToBeUndone(const UInt32& offset) const
         }
     }
 
-	return UndoableEditPtr(NULL);
+	return UndoableEditPtr();
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -519,21 +519,6 @@ UndoManagerPtr UndoManager::create(void)
 }
 
 /*----------------------------- class specific ----------------------------*/
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,142 +50,168 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEMATERIALLAYERINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGMaterial.h"                // Material Class
 
 #include "OSGMaterialLayerBase.h"
 #include "OSGMaterialLayer.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  MaterialLayerBase::MaterialFieldMask = 
-    (TypeTraits<BitVector>::One << MaterialLayerBase::MaterialFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector MaterialLayerBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::MaterialLayer
+    UI Material Background.
+ */
 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-// Field descriptions
-
-/*! \var MaterialPtr     MaterialLayerBase::_sfMaterial
+/*! \var Material *      MaterialLayerBase::_sfMaterial
     
 */
 
-//! MaterialLayer description
 
-FieldDescription *MaterialLayerBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<MaterialLayer *>::_type("MaterialLayerPtr", "LayerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(MaterialLayer *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           MaterialLayer *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           MaterialLayer *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void MaterialLayerBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFMaterialPtr::getClassType(), 
-                     "Material", 
-                     MaterialFieldId, MaterialFieldMask,
-                     false,
-                     (FieldAccessMethod) &MaterialLayerBase::getSFMaterial)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType MaterialLayerBase::_type(
-    "MaterialLayer",
-    "Layer",
-    NULL,
-    (PrototypeCreateF) &MaterialLayerBase::createEmpty,
+    pDesc = new SFUnrecMaterialPtr::Description(
+        SFUnrecMaterialPtr::getClassType(),
+        "Material",
+        "",
+        MaterialFieldId, MaterialFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MaterialLayer::editHandleMaterial),
+        static_cast<FieldGetMethodSig >(&MaterialLayer::getHandleMaterial));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+MaterialLayerBase::TypeObject MaterialLayerBase::_type(
+    MaterialLayerBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&MaterialLayerBase::createEmptyLocal),
     MaterialLayer::initMethod,
-    _desc,
-    sizeof(_desc));
+    MaterialLayer::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&MaterialLayer::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"MaterialLayer\"\n"
+    "\tparent=\"Layer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "UI Material Background.\n"
+    "\t<Field\n"
+    "\t\tname=\"Material\"\n"
+    "\t\ttype=\"Material\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "UI Material Background.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(MaterialLayerBase, MaterialLayerPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &MaterialLayerBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &MaterialLayerBase::getType(void) const 
+FieldContainerType &MaterialLayerBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr MaterialLayerBase::shallowCopy(void) const 
-{ 
-    MaterialLayerPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const MaterialLayer *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 MaterialLayerBase::getContainerSize(void) const 
-{ 
-    return sizeof(MaterialLayer); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void MaterialLayerBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &MaterialLayerBase::getType(void) const
 {
-    this->executeSyncImpl((MaterialLayerBase *) &other, whichField);
+    return _type;
 }
-#else
-void MaterialLayerBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 MaterialLayerBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((MaterialLayerBase *) &other, whichField, sInfo);
+    return sizeof(MaterialLayer);
 }
-void MaterialLayerBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the MaterialLayer::_sfMaterial field.
+const SFUnrecMaterialPtr *MaterialLayerBase::getSFMaterial(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfMaterial;
 }
 
-void MaterialLayerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecMaterialPtr  *MaterialLayerBase::editSFMaterial       (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(MaterialFieldMask);
 
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-MaterialLayerBase::MaterialLayerBase(void) :
-    _sfMaterial               (), 
-    Inherited() 
-{
+    return &_sfMaterial;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-MaterialLayerBase::MaterialLayerBase(const MaterialLayerBase &source) :
-    _sfMaterial               (source._sfMaterial               ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-MaterialLayerBase::~MaterialLayerBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 MaterialLayerBase::getBinSize(const BitVector &whichField)
+UInt32 MaterialLayerBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -194,12 +220,11 @@ UInt32 MaterialLayerBase::getBinSize(const BitVector &whichField)
         returnValue += _sfMaterial.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void MaterialLayerBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void MaterialLayerBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -207,12 +232,10 @@ void MaterialLayerBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfMaterial.copyToBin(pMem);
     }
-
-
 }
 
-void MaterialLayerBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void MaterialLayerBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -220,82 +243,229 @@ void MaterialLayerBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfMaterial.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void MaterialLayerBase::executeSyncImpl(      MaterialLayerBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+MaterialLayerTransitPtr MaterialLayerBase::createLocal(BitVector bFlags)
 {
+    MaterialLayerTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (MaterialFieldMask & whichField))
-        _sfMaterial.syncWith(pOther->_sfMaterial);
+        fc = dynamic_pointer_cast<MaterialLayer>(tmpPtr);
+    }
 
-
-}
-#else
-void MaterialLayerBase::executeSyncImpl(      MaterialLayerBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (MaterialFieldMask & whichField))
-        _sfMaterial.syncWith(pOther->_sfMaterial);
-
-
-
+    return fc;
 }
 
-void MaterialLayerBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+MaterialLayerTransitPtr MaterialLayerBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    MaterialLayerTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<MaterialLayer>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+MaterialLayerTransitPtr MaterialLayerBase::create(void)
+{
+    MaterialLayerTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<MaterialLayer>(tmpPtr);
+    }
+
+    return fc;
+}
+
+MaterialLayer *MaterialLayerBase::createEmptyLocal(BitVector bFlags)
+{
+    MaterialLayer *returnValue;
+
+    newPtr<MaterialLayer>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+MaterialLayer *MaterialLayerBase::createEmpty(void)
+{
+    MaterialLayer *returnValue;
+
+    newPtr<MaterialLayer>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr MaterialLayerBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    MaterialLayer *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const MaterialLayer *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr MaterialLayerBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    MaterialLayer *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const MaterialLayer *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr MaterialLayerBase::shallowCopy(void) const
+{
+    MaterialLayer *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const MaterialLayer *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+MaterialLayerBase::MaterialLayerBase(void) :
+    Inherited(),
+    _sfMaterial               (NULL)
+{
+}
+
+MaterialLayerBase::MaterialLayerBase(const MaterialLayerBase &source) :
+    Inherited(source),
+    _sfMaterial               (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+MaterialLayerBase::~MaterialLayerBase(void)
+{
+}
+
+void MaterialLayerBase::onCreate(const MaterialLayer *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        MaterialLayer *pThis = static_cast<MaterialLayer *>(this);
+
+        pThis->setMaterial(source->getMaterial());
+    }
+}
+
+GetFieldHandlePtr MaterialLayerBase::getHandleMaterial        (void) const
+{
+    SFUnrecMaterialPtr::GetHandlePtr returnValue(
+        new  SFUnrecMaterialPtr::GetHandle(
+             &_sfMaterial,
+             this->getType().getFieldDesc(MaterialFieldId),
+             const_cast<MaterialLayerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MaterialLayerBase::editHandleMaterial       (void)
+{
+    SFUnrecMaterialPtr::EditHandlePtr returnValue(
+        new  SFUnrecMaterialPtr::EditHandle(
+             &_sfMaterial,
+             this->getType().getFieldDesc(MaterialFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&MaterialLayer::setMaterial,
+                    static_cast<MaterialLayer *>(this), _1));
+
+    editSField(MaterialFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void MaterialLayerBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    MaterialLayer *pThis = static_cast<MaterialLayer *>(this);
+
+    pThis->execSync(static_cast<MaterialLayer *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *MaterialLayerBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    MaterialLayer *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const MaterialLayer *>(pRefAspect),
+                  dynamic_cast<const MaterialLayer *>(this));
+
+    return returnValue;
+}
+#endif
+
+void MaterialLayerBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<MaterialLayer *>(this)->setMaterial(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<MaterialLayerPtr>::_type("MaterialLayerPtr", "LayerPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(MaterialLayerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(MaterialLayerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGMATERIALLAYERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGMATERIALLAYERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGMATERIALLAYERFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

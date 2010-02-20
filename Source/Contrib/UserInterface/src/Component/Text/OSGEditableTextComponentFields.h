@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGTextComponentFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class EditableTextComponent;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! EditableTextComponentPtr
+OSG_GEN_CONTAINERPTR(EditableTextComponent);
 
-typedef FCPtr<TextComponentPtr, EditableTextComponent> EditableTextComponentPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<EditableTextComponentPtr> : 
-    public FieldTraitsRecurseMapper<EditableTextComponentPtr, true>
+struct FieldTraits<EditableTextComponent *> :
+    public FieldTraitsFCPtrBase<EditableTextComponent *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFEditableTextComponentPtr"; }
-    static const char *getMName(void) { return "MFEditableTextComponentPtr"; }
+    typedef FieldTraits<EditableTextComponent *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFEditableTextComponentPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFEditableTextComponentPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<EditableTextComponentPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<EditableTextComponent *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecEditableTextComponentPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<EditableTextComponent *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecEditableTextComponentPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<EditableTextComponent *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakEditableTextComponentPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<EditableTextComponent *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdEditableTextComponentPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<EditableTextComponent *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecEditableTextComponentPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<EditableTextComponent *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecEditableTextComponentPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<EditableTextComponent *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakEditableTextComponentPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<EditableTextComponent *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdEditableTextComponentPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<EditableTextComponent *,
+                      RecordedRefCountPolicy  > SFRecEditableTextComponentPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<EditableTextComponent *,
+                      UnrecordedRefCountPolicy> SFUnrecEditableTextComponentPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<EditableTextComponent *,
+                      WeakRefCountPolicy      > SFWeakEditableTextComponentPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<EditableTextComponent *,
+                      NoRefCountPolicy        > SFUncountedEditableTextComponentPtr;
 
-typedef SField<EditableTextComponentPtr> SFEditableTextComponentPtr;
-#endif
 
-#ifndef OSG_COMPILEEDITABLETEXTCOMPONENTINST
-OSG_DLLEXPORT_DECL1(SField, EditableTextComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<EditableTextComponent *,
+                      RecordedRefCountPolicy  > MFRecEditableTextComponentPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<EditableTextComponent *,
+                      UnrecordedRefCountPolicy> MFUnrecEditableTextComponentPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<EditableTextComponent *,
+                      WeakRefCountPolicy      > MFWeakEditableTextComponentPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<EditableTextComponent *,
+                      NoRefCountPolicy        > MFUncountedEditableTextComponentPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<EditableTextComponentPtr> MFEditableTextComponentPtr;
-#endif
 
-#ifndef OSG_COMPILEEDITABLETEXTCOMPONENTINST
-OSG_DLLEXPORT_DECL1(MField, EditableTextComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecEditableTextComponentPtr : 
+    public PointerSField<EditableTextComponent *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecEditableTextComponentPtr : 
+    public PointerSField<EditableTextComponent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakEditableTextComponentPtr :
+    public PointerSField<EditableTextComponent *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedEditableTextComponentPtr :
+    public PointerSField<EditableTextComponent *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecEditableTextComponentPtr :
+    public PointerMField<EditableTextComponent *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecEditableTextComponentPtr :
+    public PointerMField<EditableTextComponent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakEditableTextComponentPtr :
+    public PointerMField<EditableTextComponent *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedEditableTextComponentPtr :
+    public PointerMField<EditableTextComponent *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGEDITABLETEXTCOMPONENTFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGEDITABLETEXTCOMPONENTFIELDS_H_ */

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,80 +58,80 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGSingleSelectionModel.h" // Parent
 
-#include <OpenSG/OSGInt32Fields.h> // InternalSelectedIndex type
+#include "OSGSysFields.h"               // InternalSelectedIndex type
 
 #include "OSGDefaultSingleSelectionModelFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class DefaultSingleSelectionModel;
-class BinaryDataHandler;
 
 //! \brief DefaultSingleSelectionModel Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultSingleSelectionModelBase : public SingleSelectionModel
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultSingleSelectionModelBase : public SingleSelectionModel
 {
-  private:
-
-    typedef SingleSelectionModel    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef DefaultSingleSelectionModelPtr  Ptr;
+    typedef SingleSelectionModel Inherited;
+    typedef SingleSelectionModel ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(DefaultSingleSelectionModel);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
         InternalSelectedIndexFieldId = Inherited::NextFieldId,
-        NextFieldId                  = InternalSelectedIndexFieldId + 1
+        NextFieldId = InternalSelectedIndexFieldId + 1
     };
 
-    static const OSG::BitVector InternalSelectedIndexFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector InternalSelectedIndexFieldMask =
+        (TypeTraits<BitVector>::One << InternalSelectedIndexFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFInt32           SFInternalSelectedIndexType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
-    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -139,26 +139,43 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultSingleSelectionModelBase : public S
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  DefaultSingleSelectionModelPtr      create          (void); 
-    static  DefaultSingleSelectionModelPtr      createEmpty     (void); 
+    static  DefaultSingleSelectionModelTransitPtr  create          (void);
+    static  DefaultSingleSelectionModel           *createEmpty     (void);
+
+    static  DefaultSingleSelectionModelTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  DefaultSingleSelectionModel            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  DefaultSingleSelectionModelTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFInt32             _sfInternalSelectedIndex;
+    SFInt32           _sfInternalSelectedIndex;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -173,86 +190,104 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultSingleSelectionModelBase : public S
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DefaultSingleSelectionModelBase(void); 
+    virtual ~DefaultSingleSelectionModelBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleInternalSelectedIndex (void) const;
+    EditFieldHandlePtr editHandleInternalSelectedIndex(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFInt32             *getSFInternalSelectedIndex(void);
 
-           Int32               &getInternalSelectedIndex(void);
-     const Int32               &getInternalSelectedIndex(void) const;
+                  SFInt32             *editSFInternalSelectedIndex(void);
+            const SFInt32             *getSFInternalSelectedIndex (void) const;
+
+
+                  Int32               &editInternalSelectedIndex(void);
+                  Int32                getInternalSelectedIndex (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setInternalSelectedIndex(const Int32 &value);
+            void setInternalSelectedIndex(const Int32 value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      DefaultSingleSelectionModelBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      DefaultSingleSelectionModelBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      DefaultSingleSelectionModelBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const DefaultSingleSelectionModelBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef DefaultSingleSelectionModelBase *DefaultSingleSelectionModelBaseP;
 
-typedef osgIF<DefaultSingleSelectionModelBase::isNodeCore,
-              CoredNodePtr<DefaultSingleSelectionModel>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet DefaultSingleSelectionModelNodePtr;
-
-typedef RefPtr<DefaultSingleSelectionModelPtr> DefaultSingleSelectionModelRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGDEFAULTSINGLESELECTIONMODELBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGDEFAULTSINGLESELECTIONMODELBASE_H_ */

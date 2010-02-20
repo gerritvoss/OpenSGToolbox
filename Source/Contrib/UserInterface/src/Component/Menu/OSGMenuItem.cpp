@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,30 +40,25 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGMenuItem.h"
-#include "Util/OSGUIDrawUtils.h"
-#include "Component/Container/Window/OSGInternalWindow.h"
-#include "LookAndFeel/OSGLookAndFeelManager.h"
-#include "Component/Menu/OSGMenu.h"
+#include "OSGUIDrawUtils.h"
+#include "OSGInternalWindow.h"
+#include "OSGLookAndFeelManager.h"
+#include "OSGMenu.h"
 
 #include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::MenuItem
-A UI MenuItem. 
-*/
+// Documentation for this class is emitted in the
+// OSGMenuItemBase.cpp file.
+// To modify it, please change the .fcd file (OSGMenuItem.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -73,9 +68,15 @@ A UI MenuItem.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void MenuItem::initMethod (void)
+void MenuItem::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
+
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -89,10 +90,10 @@ EventConnection MenuItem::addActionListener(ActionListenerPtr Listener)
        boost::bind(&MenuItem::removeActionListener, this, Listener));
 }
 
-void MenuItem::drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, Real32 Opacity) const
+void MenuItem::drawText(const GraphicsWeakPtr TheGraphics, const Pnt2f& TopLeft, Real32 Opacity) const
 {
    //If I have Text Then Draw it
-   if(getText() != "" && getFont() != NullFC)
+   if(getText() != "" && getFont() != NULL)
    {
        Pnt2f b, BottomRight;
        getInsideBorderBounds(b, BottomRight);
@@ -125,32 +126,30 @@ void MenuItem::drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, Rea
    }
 }
 
-void MenuItem::mouseReleased(const MouseEventPtr e)
+void MenuItem::mouseReleased(const MouseEventUnrecPtr e)
 {
     if(getSelected() && getEnabled())
     {
-	   produceActionPerformed(ActionEvent::create(MenuItemPtr(this), e->getTimeStamp()));
+	   produceActionPerformed(ActionEvent::create(MenuItemRefPtr(this), e->getTimeStamp()));
        getParentWindow()->destroyPopupMenu();
-       beginEditCP(MenuItemPtr(this), SelectedFieldMask);
           setSelected(false);
-       endEditCP(MenuItemPtr(this), SelectedFieldMask);
     }
     
 	if(getEnabled())
 	{
 		if(e->getButton() == MouseEvent::BUTTON1 && _Armed)
 		{
-			ButtonPtr(this)->setActive(false);
+			ButtonRefPtr(this)->setActive(false);
 			_Armed = false;
 		}
 	}
 	Component::mouseReleased(e);
 }
 
-MenuPtr MenuItem::getTopLevelMenu(void) const
+MenuRefPtr MenuItem::getTopLevelMenu(void) const
 {
-    MenuPtr c(getParentMenu());
-    while(c != NullFC)
+    MenuRefPtr c(getParentMenu());
+    while(c != NULL)
     {
         if(c->getTopLevelMenu())
         {
@@ -158,12 +157,12 @@ MenuPtr MenuItem::getTopLevelMenu(void) const
         }
         c = c->getParentMenu();
     }
-    return NullFC;
+    return NULL;
 }
 
 void MenuItem::activate(void)
 {
-    produceActionPerformed(ActionEvent::create(MenuItemPtr(this), getSystemTime()));
+    produceActionPerformed(ActionEvent::create(MenuItemRefPtr(this), getSystemTime()));
 }
 
 Vec2f MenuItem::getContentRequestedSize(void) const
@@ -187,11 +186,11 @@ Vec2f MenuItem::getContentRequestedSize(void) const
 	return RequestedSize;
 }
 
-void MenuItem::actionPreformed(const ActionEventPtr e)
+void MenuItem::actionPreformed(const ActionEventUnrecPtr e)
 {
 }
 
-void MenuItem::produceActionPerformed(const ActionEventPtr e)
+void MenuItem::produceActionPerformed(const ActionEventUnrecPtr e)
 {
     actionPreformed(e);
     for(ActionListenerSetConstItor SetItor(_ActionListeners.begin()) ; SetItor != _ActionListeners.end() ; ++SetItor)
@@ -242,8 +241,8 @@ void MenuItem::updateAcceleratorText(void)
 
 MenuItem::MenuItem(void) :
     Inherited(),
-    _MenuItemKeyAcceleratorListener(MenuItemPtr(this)),
-    _KeyAcceleratorMenuFlashUpdateListener(MenuItemPtr(this)),
+    _MenuItemKeyAcceleratorListener(this),
+    _KeyAcceleratorMenuFlashUpdateListener(this),
     _DrawAsThoughSelected(false),
     _AcceleratorText(""),
     _MnemonicTextPosition(-1)
@@ -252,8 +251,8 @@ MenuItem::MenuItem(void) :
 
 MenuItem::MenuItem(const MenuItem &source) :
     Inherited(source),
-    _MenuItemKeyAcceleratorListener(MenuItemPtr(this)),
-    _KeyAcceleratorMenuFlashUpdateListener(MenuItemPtr(this)),
+    _MenuItemKeyAcceleratorListener(this),
+    _KeyAcceleratorMenuFlashUpdateListener(this),
     _DrawAsThoughSelected(false),
     _AcceleratorText(source._AcceleratorText),
     _MnemonicTextPosition(source._MnemonicTextPosition)
@@ -266,11 +265,14 @@ MenuItem::~MenuItem(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void MenuItem::changed(BitVector whichField, UInt32 origin)
+void MenuItem::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
+
     if((whichField & ParentWindowFieldMask) &&
-        getParentWindow() != NullFC &&
+        getParentWindow() != NULL &&
         getEnabled() && 
         getAcceleratorKey() != KeyEvent::KEY_NONE
         )
@@ -278,7 +280,7 @@ void MenuItem::changed(BitVector whichField, UInt32 origin)
         getParentWindow()->addKeyAccelerator(static_cast<KeyEvent::Key>(getAcceleratorKey()), getAcceleratorModifiers(), &_MenuItemKeyAcceleratorListener);
     }
     if((whichField & EnabledFieldMask) &&
-        getParentWindow() != NullFC &&
+        getParentWindow() != NULL &&
         !getEnabled() && 
         getAcceleratorKey() != KeyEvent::KEY_NONE)
     {
@@ -332,7 +334,7 @@ void MenuItem::changed(BitVector whichField, UInt32 origin)
             }
 
 			//Update Parent Menu
-			if(getParentContainer() != NullFC)
+			if(getParentContainer() != NULL)
 			{
 				getParentContainer()->updateLayout();
 			}
@@ -342,17 +344,17 @@ void MenuItem::changed(BitVector whichField, UInt32 origin)
     }
 }
 
-void MenuItem::dump(      UInt32    , 
+void MenuItem::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump MenuItem NI" << std::endl;
 }
 
-void MenuItem::MenuItemKeyAcceleratorListener::acceleratorTyped(const KeyAcceleratorEventPtr e)
+void MenuItem::MenuItemKeyAcceleratorListener::acceleratorTyped(const KeyAcceleratorEventUnrecPtr e)
 {
     //Set TopLevelMenu
-    MenuPtr TopMenu(_MenuItem->getTopLevelMenu());
-    if(TopMenu != NullFC)
+    MenuRefPtr TopMenu(_MenuItem->getTopLevelMenu());
+    if(TopMenu != NULL)
     {
         TopMenu->setDrawAsThoughSelected(true);
 
@@ -367,18 +369,18 @@ void MenuItem::KeyAcceleratorMenuFlashUpdateListener::disconnect(void)
     _MenuItem->getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
 }
 
-void MenuItem::KeyAcceleratorMenuFlashUpdateListener::update(const UpdateEventPtr e)
+void MenuItem::KeyAcceleratorMenuFlashUpdateListener::update(const UpdateEventUnrecPtr e)
 {
     _FlashElps += e->getElapsedTime();
     if(_FlashElps > LookAndFeelManager::the()->getLookAndFeel()->getKeyAcceleratorMenuFlashTime())
     {
-        MenuPtr TopMenu(_MenuItem->getTopLevelMenu());
-        if(TopMenu != NullFC)
+        MenuRefPtr TopMenu(_MenuItem->getTopLevelMenu());
+        if(TopMenu != NULL)
         {
             TopMenu->setDrawAsThoughSelected(false);
         }
         disconnect();
     }
 }
-OSG_END_NAMESPACE
 
+OSG_END_NAMESPACE

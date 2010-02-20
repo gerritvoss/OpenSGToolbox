@@ -28,11 +28,11 @@
 \*---------------------------------------------------------------------------*/
 #include "OSGUIDrawUtils.h"
 
-#include "Component/Container/Window/OSGInternalWindow.h"
-#include "Component/Misc/OSGRotatedComponent.h"
-#include "UIDrawingSurface/OSGUIDrawingSurface.h"
-#include "UIDrawingSurface/OSGUIDrawingSurfaceMouseTransformFunctor.h"
-#include "Graphics/UIDrawObjects/OSGUIDrawObject.h"
+#include "OSGInternalWindow.h"
+#include "OSGRotatedComponent.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGUIDrawingSurfaceMouseTransformFunctor.h"
+#include "OSGUIDrawObject.h"
 
 #include <deque>
 
@@ -59,8 +59,8 @@ void quadIntersection(const Pnt2f& Quad1TopLeft, const Pnt2f& Quad1BottomRight,
     ResultQuadBottomRight[1] = osgMin(Quad1BottomRight[1],Quad2BottomRight[1]);
 }
 
-void componentQuadIntersection(const ComponentPtr c1,
-                                const ComponentPtr c2,
+void componentQuadIntersection(const Component* c1,
+                                const Component* c2,
                                 Pnt2f& ResultQuadTopLeft, Pnt2f& ResultQuadBottomRight)
 {
     Pnt2f Quad1TopLeft,Quad2TopLeft;
@@ -76,24 +76,26 @@ void componentQuadIntersection(const ComponentPtr c1,
 
 bool isContainedBounds(const Pnt2f& Point, const Pnt2f& TopLeft, const Pnt2f& BottomRight)
 {
-	return (Point.x() >= TopLeft.x()) &&
-		(Point.x() <= BottomRight.x()) &&
-		(Point.y() >= TopLeft.y()) &&
-		(Point.y() <= BottomRight.y());
+    return (Point.x() >= TopLeft.x()) &&
+        (Point.x() <= BottomRight.x()) &&
+        (Point.y() >= TopLeft.y()) &&
+        (Point.y() <= BottomRight.y());
 }
 
-bool isContainedClipBounds(const Pnt2f& Point, const ComponentPtr Comp)
+bool isContainedClipBounds(const Pnt2f& Point, const Component* Comp)
 {
-	Pnt2f CompTopLeft,CompBottomRight;
+    Pnt2f CompTopLeft,CompBottomRight;
 
-	Comp->getClipBounds(CompTopLeft, CompBottomRight);
+    Comp->getClipBounds(CompTopLeft, CompBottomRight);
 
-	//Point is in screen coordinates
-	//Convert it into component coordinates
-	return isContainedBounds(DrawingSurfaceToComponent(Point,Comp), CompTopLeft, CompBottomRight);
+    //Point is in screen coordinates
+    //Convert it into component coordinates
+    return isContainedBounds(DrawingSurfaceToComponent(Point,Comp), CompTopLeft, CompBottomRight);
 }
 
-Pnt2f ViewportToDrawingSurface(const Pnt2f& ViewportPoint, const UIDrawingSurfacePtr DrawingSurface, const ViewportPtr TheViewport)
+Pnt2f ViewportToDrawingSurface(const Pnt2f& ViewportPoint, 
+                               const UIDrawingSurface* DrawingSurface,
+                               const Viewport* TheViewport)
 {
     //Get Window to Drawing Surface
     Pnt2f DrawingSurfacePoint;
@@ -103,132 +105,134 @@ Pnt2f ViewportToDrawingSurface(const Pnt2f& ViewportPoint, const UIDrawingSurfac
     return DrawingSurfacePoint;
 }
 
-Pnt2f DrawingSurfaceToViewport(const Pnt2f& DrawingSurfacePoint, const UIDrawingSurfacePtr DrawingSurface, const ViewportPtr TheViewport)
+Pnt2f DrawingSurfaceToViewport(const Pnt2f& DrawingSurfacePoint,
+                               const UIDrawingSurface* DrawingSurface,
+                               const Viewport* TheViewport)
 {
     //Get Window to Drawing Surface
     Pnt2f ViewportPoint;
-	DrawingSurface->getMouseTransformFunctor()->renderingSurfaceToViewport(DrawingSurfacePoint, TheViewport, ViewportPoint);
+    DrawingSurface->getMouseTransformFunctor()->renderingSurfaceToViewport(DrawingSurfacePoint, TheViewport, ViewportPoint);
 
     //Then get DrawingSurface to component
     return ViewportPoint;
 }
 
-Pnt2f ViewportToComponent(const Pnt2f& ViewportPoint, const ComponentPtr Comp, const ViewportPtr TheViewport)
+Pnt2f ViewportToComponent(const Pnt2f& ViewportPoint, const Component* Comp, const Viewport* TheViewport)
 {
     //Then get Viewport to component
     return DrawingSurfaceToComponent(ViewportToDrawingSurface(ViewportPoint, Comp->getParentWindow()->getDrawingSurface(), TheViewport), Comp);
 }
 
-Pnt2f ViewportToWindow(const Pnt2f& ViewportPoint, const ViewportPtr TheViewport)
+Pnt2f ViewportToWindow(const Pnt2f& ViewportPoint, const Viewport* TheViewport)
 {
     return Pnt2f(ViewportPoint.x() + TheViewport->getPixelLeft(), (TheViewport->getPixelTop() - TheViewport->getPixelBottom()) - ViewportPoint.y());
 }
 
-Pnt2f ComponentToViewport(const Pnt2f& ComponentPoint, const ComponentPtr Comp, const ViewportPtr TheViewport)
+Pnt2f ComponentToViewport(const Pnt2f& ComponentPoint, const Component* Comp, const Viewport* TheViewport)
 {
     return DrawingSurfaceToViewport(ComponentToDrawingSurface(ComponentPoint, Comp), Comp->getParentWindow()->getDrawingSurface(), TheViewport);
 }
 
-Pnt2f ComponentToWindow(const Pnt2f& ComponentPoint, const ComponentPtr Comp, const ViewportPtr TheViewport)
+Pnt2f ComponentToWindow(const Pnt2f& ComponentPoint, const Component* Comp, const Viewport* TheViewport)
 {
-	return ViewportToWindow(ComponentToViewport(ComponentPoint, Comp, TheViewport), TheViewport);
+    return ViewportToWindow(ComponentToViewport(ComponentPoint, Comp, TheViewport), TheViewport);
 }
 
-Pnt2f DrawingSurfaceToComponent(const Pnt2f& DrawingSurfacePoint, const ComponentPtr Comp)
+Pnt2f DrawingSurfaceToComponent(const Pnt2f& DrawingSurfacePoint, const Component* Comp)
 {
-    std::deque<ComponentPtr> PathToComponent;
-	Pnt2f Result(DrawingSurfacePoint);
-	ComponentPtr CompRecurse = Comp;
-	while(CompRecurse != NullFC)
-	{
-		PathToComponent.push_front(CompRecurse);
-		CompRecurse = CompRecurse->getParentContainer();
-	}
+    std::deque<const Component*> PathToComponent;
+    Pnt2f Result(DrawingSurfacePoint);
+    const Component* CompRecurse = Comp;
+    while(CompRecurse != NULL)
+    {
+        PathToComponent.push_front(CompRecurse);
+        CompRecurse = CompRecurse->getParentContainer();
+    }
 
     //bool WasPrevComponentRotated(false);
-	for(UInt32 i(0) ; i<PathToComponent.size() ; ++i)
-	{
+    for(UInt32 i(0) ; i<PathToComponent.size() ; ++i)
+    {
         Result = PathToComponent[i]->getParentToLocal(Result);
         /*if(WasPrevComponentRotated)
         {
-	        WasPrevComponentRotated = false;
-		    Result = RotatedComponent::Ptr::dcast(PathToComponent[i-1])->getLocalToInternalComponent(Result);
+            WasPrevComponentRotated = false;
+            Result = dynamic_pointer_cast<RotatedComponent>(PathToComponent[i-1])->getLocalToInternalComponent(Result);
         }
-	    if(PathToComponent[i]->getType() == RotatedComponent::getClassType())
-	    {
-	        WasPrevComponentRotated = true;
-		    Result -= Vec2f(PathToComponent[i]->getPosition());
-	    }
-	    else
-	    {
-		    Result -= Vec2f(PathToComponent[i]->getPosition());
-		}*/
-	}
+        if(PathToComponent[i]->getType() == RotatedComponent::getClassType())
+        {
+            WasPrevComponentRotated = true;
+            Result -= Vec2f(PathToComponent[i]->getPosition());
+        }
+        else
+        {
+            Result -= Vec2f(PathToComponent[i]->getPosition());
+        }*/
+    }
 
-	return Result;
+    return Result;
 }
 
-Pnt2f ComponentToDrawingSurface(const Pnt2f& ComponentPoint, const ComponentPtr Comp)
+Pnt2f ComponentToDrawingSurface(const Pnt2f& ComponentPoint, const Component* Comp)
 {
-	Pnt2f Result(ComponentPoint);
-	ComponentPtr CompRecurse = Comp;
-	while(CompRecurse != NullFC)
-	{
-		Result += Vec2f(CompRecurse->getPosition());
-		CompRecurse = CompRecurse->getParentContainer();
-	}
-	return Result;
+    Pnt2f Result(ComponentPoint);
+    const Component* CompRecurse = Comp;
+    while(CompRecurse != NULL)
+    {
+        Result += Vec2f(CompRecurse->getPosition());
+        CompRecurse = CompRecurse->getParentContainer();
+    }
+    return Result;
 }
 
-Pnt2f ComponentToComponent(const Pnt2f& ComponentPoint, const ComponentPtr Comp, const ComponentPtr ParentComp)
+Pnt2f ComponentToComponent(const Pnt2f& ComponentPoint, const Component* Comp, const Component* ParentComp)
 {
-	Pnt2f Result(ComponentPoint);
-	ComponentPtr CompRecurse = Comp;
-	while(CompRecurse != NullFC &&
+    Pnt2f Result(ComponentPoint);
+    const Component* CompRecurse = Comp;
+    while(CompRecurse != NULL &&
           CompRecurse != ParentComp)
-	{
+    {
         Result = CompRecurse->getLocalToParent(Result);
-		CompRecurse = CompRecurse->getParentContainer();
-	}
-	return Result;
+        CompRecurse = CompRecurse->getParentContainer();
+    }
+    return Result;
 }
 
-Pnt2f ComponentToFrame(const Pnt2f& ComponentPoint, const ComponentPtr Comp)
+Pnt2f ComponentToFrame(const Pnt2f& ComponentPoint, const Component* Comp)
 {
-	Pnt2f Result(ComponentPoint);
-	ComponentPtr CompRecurse = Comp;
-	while(CompRecurse != NullFC &&
+    Pnt2f Result(ComponentPoint);
+    const Component* CompRecurse = Comp;
+    while(CompRecurse != NULL &&
           CompRecurse != Comp->getParentWindow())
-	{
+    {
         Result = CompRecurse->getLocalToParent(Result);
-		CompRecurse = CompRecurse->getParentContainer();
-	}
-	return Result;
+        CompRecurse = CompRecurse->getParentContainer();
+    }
+    return Result;
 }
 
 Pnt2f Rotate(const Pnt2f& Point, const Real32& Angle)
 {
-    return Pnt2f(Point.x()*osgcos(Angle) - Point.y()*osgsin(Angle), Point.x()*osgsin(Angle) + Point.y()*osgcos(Angle));
+    return Pnt2f(Point.x()*osgCos(Angle) - Point.y()*osgSin(Angle), Point.x()*osgSin(Angle) + Point.y()*osgCos(Angle));
 }
 
 
-void getDrawObjectBounds(MFUIDrawObjectPtr DrawObjects, Pnt2f& TopLeft, Pnt2f& BottomRight)
+void getDrawObjectBounds(MFUnrecUIDrawObjectPtr DrawObjects, Pnt2f& TopLeft, Pnt2f& BottomRight)
 {
-	if(DrawObjects.size() > 0)
-	{
-		Pnt2f TempTopLeft, TempBottomRight;
-		DrawObjects[0]->getBounds(TopLeft, BottomRight);
-		//Determine Top Left And Bottom Right
-		for(UInt32 i(0) ; i<DrawObjects.size(); ++i)
-		{
-			DrawObjects[i]->getBounds(TempTopLeft, TempBottomRight);
-		    TopLeft.setValues( osgMin(TopLeft.x(), TempTopLeft.x()),
-				               osgMin(TopLeft.y(), TempTopLeft.y()) );
+    if(DrawObjects.size() > 0)
+    {
+        Pnt2f TempTopLeft, TempBottomRight;
+        DrawObjects[0]->getBounds(TopLeft, BottomRight);
+        //Determine Top Left And Bottom Right
+        for(UInt32 i(0) ; i<DrawObjects.size(); ++i)
+        {
+            DrawObjects[i]->getBounds(TempTopLeft, TempBottomRight);
+            TopLeft.setValues( osgMin(TopLeft.x(), TempTopLeft.x()),
+                               osgMin(TopLeft.y(), TempTopLeft.y()) );
 
-		    BottomRight.setValues(osgMax<UInt16>(BottomRight.x(), TempBottomRight.x()),
-		                          osgMax<UInt16>(BottomRight.y(), TempBottomRight.y()) );
-		}
-	}
+            BottomRight.setValues(osgMax<UInt16>(BottomRight.x(), TempBottomRight.x()),
+                                  osgMax<UInt16>(BottomRight.y(), TempBottomRight.y()) );
+        }
+    }
 }
 
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,120 +50,125 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEEMPTYLAYERINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGEmptyLayerBase.h"
 #include "OSGEmptyLayer.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector EmptyLayerBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::EmptyLayer
+    UI Empty Background.
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
 
-FieldContainerType EmptyLayerBase::_type(
-    "EmptyLayer",
-    "Layer",
-    NULL,
-    (PrototypeCreateF) &EmptyLayerBase::createEmpty,
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<EmptyLayer *>::_type("EmptyLayerPtr", "LayerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(EmptyLayer *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           EmptyLayer *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           EmptyLayer *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void EmptyLayerBase::classDescInserter(TypeObject &oType)
+{
+}
+
+
+EmptyLayerBase::TypeObject EmptyLayerBase::_type(
+    EmptyLayerBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&EmptyLayerBase::createEmptyLocal),
     EmptyLayer::initMethod,
-    NULL,
-    0);
+    EmptyLayer::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&EmptyLayer::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"EmptyLayer\"\n"
+    "\tparent=\"Layer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "UI Empty Background.\n"
+    "</FieldContainer>\n",
+    "UI Empty Background.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(EmptyLayerBase, EmptyLayerPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &EmptyLayerBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &EmptyLayerBase::getType(void) const 
+FieldContainerType &EmptyLayerBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr EmptyLayerBase::shallowCopy(void) const 
-{ 
-    EmptyLayerPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const EmptyLayer *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 EmptyLayerBase::getContainerSize(void) const 
-{ 
-    return sizeof(EmptyLayer); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void EmptyLayerBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &EmptyLayerBase::getType(void) const
 {
-    this->executeSyncImpl((EmptyLayerBase *) &other, whichField);
+    return _type;
 }
-#else
-void EmptyLayerBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 EmptyLayerBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((EmptyLayerBase *) &other, whichField, sInfo);
-}
-void EmptyLayerBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(EmptyLayer);
 }
 
-void EmptyLayerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-EmptyLayerBase::EmptyLayerBase(void) :
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-EmptyLayerBase::EmptyLayerBase(const EmptyLayerBase &source) :
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-EmptyLayerBase::~EmptyLayerBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 EmptyLayerBase::getBinSize(const BitVector &whichField)
+UInt32 EmptyLayerBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -171,88 +176,198 @@ UInt32 EmptyLayerBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void EmptyLayerBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void EmptyLayerBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-
 }
 
-void EmptyLayerBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void EmptyLayerBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void EmptyLayerBase::executeSyncImpl(      EmptyLayerBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+EmptyLayerTransitPtr EmptyLayerBase::createLocal(BitVector bFlags)
 {
+    EmptyLayerTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
+        fc = dynamic_pointer_cast<EmptyLayer>(tmpPtr);
+    }
 
-}
-#else
-void EmptyLayerBase::executeSyncImpl(      EmptyLayerBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
+    return fc;
 }
 
-void EmptyLayerBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+EmptyLayerTransitPtr EmptyLayerBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    EmptyLayerTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<EmptyLayer>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+EmptyLayerTransitPtr EmptyLayerBase::create(void)
+{
+    EmptyLayerTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<EmptyLayer>(tmpPtr);
+    }
+
+    return fc;
+}
+
+EmptyLayer *EmptyLayerBase::createEmptyLocal(BitVector bFlags)
+{
+    EmptyLayer *returnValue;
+
+    newPtr<EmptyLayer>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+EmptyLayer *EmptyLayerBase::createEmpty(void)
+{
+    EmptyLayer *returnValue;
+
+    newPtr<EmptyLayer>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr EmptyLayerBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    EmptyLayer *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const EmptyLayer *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr EmptyLayerBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    EmptyLayer *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const EmptyLayer *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr EmptyLayerBase::shallowCopy(void) const
+{
+    EmptyLayer *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const EmptyLayer *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+EmptyLayerBase::EmptyLayerBase(void) :
+    Inherited()
+{
+}
+
+EmptyLayerBase::EmptyLayerBase(const EmptyLayerBase &source) :
+    Inherited(source)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+EmptyLayerBase::~EmptyLayerBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void EmptyLayerBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    EmptyLayer *pThis = static_cast<EmptyLayer *>(this);
+
+    pThis->execSync(static_cast<EmptyLayer *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *EmptyLayerBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    EmptyLayer *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const EmptyLayer *>(pRefAspect),
+                  dynamic_cast<const EmptyLayer *>(this));
+
+    return returnValue;
+}
+#endif
+
+void EmptyLayerBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<EmptyLayerPtr>::_type("EmptyLayerPtr", "LayerPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(EmptyLayerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(EmptyLayerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGEMPTYLAYERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGEMPTYLAYERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGEMPTYLAYERFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

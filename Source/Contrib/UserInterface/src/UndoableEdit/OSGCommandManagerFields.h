@@ -31,16 +31,16 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGIntrusivePtrImplBase.h>
+#include <boost/shared_ptr.hpp>
 
 
 OSG_BEGIN_NAMESPACE
 
 class CommandManager;
-typedef boost::intrusive_ptr<CommandManager> CommandManagerPtr;
+typedef boost::shared_ptr<CommandManager> CommandManagerPtr;
 
 OSG_END_NAMESPACE
 

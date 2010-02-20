@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -38,8 +38,6 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 inline
@@ -67,7 +65,7 @@ void Button::setActive(bool Value)
 }
 
 inline
-Button::ButtonArmedListener::ButtonArmedListener(ButtonPtr TheButton) :
+Button::ButtonArmedListener::ButtonArmedListener(ButtonRefPtr TheButton) :
 _Button(TheButton)
 {
 }
@@ -90,4 +88,3 @@ void Button::ButtonArmedListener::reset(void)
 }
 
 OSG_END_NAMESPACE
-

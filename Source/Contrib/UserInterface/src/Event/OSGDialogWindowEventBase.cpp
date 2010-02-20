@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,156 +50,205 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEDIALOGWINDOWEVENTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGDialogWindowEventBase.h"
 #include "OSGDialogWindowEvent.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  DialogWindowEventBase::OptionFieldMask = 
-    (TypeTraits<BitVector>::One << DialogWindowEventBase::OptionFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  DialogWindowEventBase::InputFieldMask = 
-    (TypeTraits<BitVector>::One << DialogWindowEventBase::InputFieldId);
+/*! \class OSG::DialogWindowEvent
+    
+ */
 
-const OSG::BitVector DialogWindowEventBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var UInt8           DialogWindowEventBase::_sfOption
     
 */
+
 /*! \var std::string     DialogWindowEventBase::_sfInput
     
 */
 
-//! DialogWindowEvent description
 
-FieldDescription *DialogWindowEventBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<DialogWindowEvent *>::_type("DialogWindowEventPtr", "EventPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(DialogWindowEvent *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           DialogWindowEvent *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           DialogWindowEvent *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void DialogWindowEventBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUInt8::getClassType(), 
-                     "Option", 
-                     OptionFieldId, OptionFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DialogWindowEventBase::editSFOption)),
-    new FieldDescription(SFString::getClassType(), 
-                     "Input", 
-                     InputFieldId, InputFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DialogWindowEventBase::editSFInput))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType DialogWindowEventBase::_type(
-    "DialogWindowEvent",
-    "Event",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&DialogWindowEventBase::createEmpty),
+    pDesc = new SFUInt8::Description(
+        SFUInt8::getClassType(),
+        "Option",
+        "",
+        OptionFieldId, OptionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DialogWindowEvent::editHandleOption),
+        static_cast<FieldGetMethodSig >(&DialogWindowEvent::getHandleOption));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFString::Description(
+        SFString::getClassType(),
+        "Input",
+        "",
+        InputFieldId, InputFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DialogWindowEvent::editHandleInput),
+        static_cast<FieldGetMethodSig >(&DialogWindowEvent::getHandleInput));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+DialogWindowEventBase::TypeObject DialogWindowEventBase::_type(
+    DialogWindowEventBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&DialogWindowEventBase::createEmptyLocal),
     DialogWindowEvent::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(DialogWindowEventBase, DialogWindowEventPtr)
+    DialogWindowEvent::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&DialogWindowEvent::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"DialogWindowEvent\"\n"
+    "\tparent=\"Event\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"Option\"\n"
+    "\t\ttype=\"UInt8\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"DialogWindowEvent::DIALOG_OPTION_OK\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Input\"\n"
+    "\t\ttype=\"std::string\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &DialogWindowEventBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &DialogWindowEventBase::getType(void) const 
+FieldContainerType &DialogWindowEventBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr DialogWindowEventBase::shallowCopy(void) const 
-{ 
-    DialogWindowEventPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const DialogWindowEvent *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 DialogWindowEventBase::getContainerSize(void) const 
-{ 
-    return sizeof(DialogWindowEvent); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DialogWindowEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &DialogWindowEventBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<DialogWindowEventBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void DialogWindowEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 DialogWindowEventBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((DialogWindowEventBase *) &other, whichField, sInfo);
+    return sizeof(DialogWindowEvent);
 }
-void DialogWindowEventBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFUInt8 *DialogWindowEventBase::editSFOption(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(OptionFieldMask);
+
+    return &_sfOption;
 }
 
-void DialogWindowEventBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFUInt8 *DialogWindowEventBase::getSFOption(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfOption;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-DialogWindowEventBase::DialogWindowEventBase(void) :
-    _sfOption                 (UInt8(DialogWindowEvent::DIALOG_OPTION_OK)), 
-    _sfInput                  (), 
-    Inherited() 
+SFString *DialogWindowEventBase::editSFInput(void)
 {
+    editSField(InputFieldMask);
+
+    return &_sfInput;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-DialogWindowEventBase::DialogWindowEventBase(const DialogWindowEventBase &source) :
-    _sfOption                 (source._sfOption                 ), 
-    _sfInput                  (source._sfInput                  ), 
-    Inherited                 (source)
+const SFString *DialogWindowEventBase::getSFInput(void) const
 {
+    return &_sfInput;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-DialogWindowEventBase::~DialogWindowEventBase(void)
-{
-}
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 DialogWindowEventBase::getBinSize(const BitVector &whichField)
+UInt32 DialogWindowEventBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -207,18 +256,16 @@ UInt32 DialogWindowEventBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfOption.getBinSize();
     }
-
     if(FieldBits::NoField != (InputFieldMask & whichField))
     {
         returnValue += _sfInput.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void DialogWindowEventBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void DialogWindowEventBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -226,17 +273,14 @@ void DialogWindowEventBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfOption.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InputFieldMask & whichField))
     {
         _sfInput.copyToBin(pMem);
     }
-
-
 }
 
-void DialogWindowEventBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void DialogWindowEventBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -244,71 +288,244 @@ void DialogWindowEventBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfOption.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InputFieldMask & whichField))
     {
         _sfInput.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DialogWindowEventBase::executeSyncImpl(      DialogWindowEventBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+DialogWindowEventTransitPtr DialogWindowEventBase::createLocal(BitVector bFlags)
 {
+    DialogWindowEventTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (OptionFieldMask & whichField))
-        _sfOption.syncWith(pOther->_sfOption);
+        fc = dynamic_pointer_cast<DialogWindowEvent>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (InputFieldMask & whichField))
-        _sfInput.syncWith(pOther->_sfInput);
-
-
-}
-#else
-void DialogWindowEventBase::executeSyncImpl(      DialogWindowEventBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (OptionFieldMask & whichField))
-        _sfOption.syncWith(pOther->_sfOption);
-
-    if(FieldBits::NoField != (InputFieldMask & whichField))
-        _sfInput.syncWith(pOther->_sfInput);
-
-
-
+    return fc;
 }
 
-void DialogWindowEventBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+DialogWindowEventTransitPtr DialogWindowEventBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    DialogWindowEventTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<DialogWindowEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+DialogWindowEventTransitPtr DialogWindowEventBase::create(void)
+{
+    DialogWindowEventTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<DialogWindowEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+DialogWindowEvent *DialogWindowEventBase::createEmptyLocal(BitVector bFlags)
+{
+    DialogWindowEvent *returnValue;
+
+    newPtr<DialogWindowEvent>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+DialogWindowEvent *DialogWindowEventBase::createEmpty(void)
+{
+    DialogWindowEvent *returnValue;
+
+    newPtr<DialogWindowEvent>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr DialogWindowEventBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    DialogWindowEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DialogWindowEvent *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DialogWindowEventBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    DialogWindowEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DialogWindowEvent *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DialogWindowEventBase::shallowCopy(void) const
+{
+    DialogWindowEvent *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const DialogWindowEvent *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+DialogWindowEventBase::DialogWindowEventBase(void) :
+    Inherited(),
+    _sfOption                 (UInt8(DialogWindowEvent::DIALOG_OPTION_OK)),
+    _sfInput                  ()
+{
+}
+
+DialogWindowEventBase::DialogWindowEventBase(const DialogWindowEventBase &source) :
+    Inherited(source),
+    _sfOption                 (source._sfOption                 ),
+    _sfInput                  (source._sfInput                  )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+DialogWindowEventBase::~DialogWindowEventBase(void)
+{
+}
+
+
+GetFieldHandlePtr DialogWindowEventBase::getHandleOption          (void) const
+{
+    SFUInt8::GetHandlePtr returnValue(
+        new  SFUInt8::GetHandle(
+             &_sfOption,
+             this->getType().getFieldDesc(OptionFieldId),
+             const_cast<DialogWindowEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DialogWindowEventBase::editHandleOption         (void)
+{
+    SFUInt8::EditHandlePtr returnValue(
+        new  SFUInt8::EditHandle(
+             &_sfOption,
+             this->getType().getFieldDesc(OptionFieldId),
+             this));
+
+
+    editSField(OptionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DialogWindowEventBase::getHandleInput           (void) const
+{
+    SFString::GetHandlePtr returnValue(
+        new  SFString::GetHandle(
+             &_sfInput,
+             this->getType().getFieldDesc(InputFieldId),
+             const_cast<DialogWindowEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DialogWindowEventBase::editHandleInput          (void)
+{
+    SFString::EditHandlePtr returnValue(
+        new  SFString::EditHandle(
+             &_sfInput,
+             this->getType().getFieldDesc(InputFieldId),
+             this));
+
+
+    editSField(InputFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void DialogWindowEventBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    DialogWindowEvent *pThis = static_cast<DialogWindowEvent *>(this);
+
+    pThis->execSync(static_cast<DialogWindowEvent *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *DialogWindowEventBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    DialogWindowEvent *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const DialogWindowEvent *>(pRefAspect),
+                  dynamic_cast<const DialogWindowEvent *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<DialogWindowEventPtr>::_type("DialogWindowEventPtr", "EventPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(DialogWindowEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void DialogWindowEventBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,74 +58,87 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGAbstractWindow.h" // Parent
 
-#include "Component/OSGComponentFields.h" // FocusedComponent type
-#include "Component/Menu/OSGPopupMenuFields.h" // ActivePopupMenus type
-#include "Component/Misc/OSGToolTipFields.h" // ActiveToolTip type
-#include "Component/Menu/OSGMenuBarFields.h" // MenuBar type
-#include "Component/Container/Window/OSGTitlebarFields.h" // Titlebar type
+#include "OSGComponentFields.h"         // FocusedComponent type
+#include "OSGPopupMenuFields.h"         // ActivePopupMenus type
+#include "OSGToolTipFields.h"           // ActiveToolTip type
+#include "OSGMenuBarFields.h"           // MenuBar type
+#include "OSGTitlebarFields.h"          // Titlebar type
 
 #include "OSGInternalWindowFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class InternalWindow;
-class BinaryDataHandler;
 
 //! \brief InternalWindow Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING InternalWindowBase : public AbstractWindow
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindowBase : public AbstractWindow
 {
-  private:
-
-    typedef AbstractWindow    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef InternalWindowPtr  Ptr;
+    typedef AbstractWindow Inherited;
+    typedef AbstractWindow ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(InternalWindow);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
         FocusedComponentFieldId = Inherited::NextFieldId,
         ActivePopupMenusFieldId = FocusedComponentFieldId + 1,
-        ActiveToolTipFieldId    = ActivePopupMenusFieldId + 1,
-        MenuBarFieldId          = ActiveToolTipFieldId    + 1,
-        TitlebarFieldId         = MenuBarFieldId          + 1,
-        NextFieldId             = TitlebarFieldId         + 1
+        ActiveToolTipFieldId = ActivePopupMenusFieldId + 1,
+        MenuBarFieldId = ActiveToolTipFieldId + 1,
+        TitlebarFieldId = MenuBarFieldId + 1,
+        NextFieldId = TitlebarFieldId + 1
     };
 
-    static const OSG::BitVector FocusedComponentFieldMask;
-    static const OSG::BitVector ActivePopupMenusFieldMask;
-    static const OSG::BitVector ActiveToolTipFieldMask;
-    static const OSG::BitVector MenuBarFieldMask;
-    static const OSG::BitVector TitlebarFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector FocusedComponentFieldMask =
+        (TypeTraits<BitVector>::One << FocusedComponentFieldId);
+    static const OSG::BitVector ActivePopupMenusFieldMask =
+        (TypeTraits<BitVector>::One << ActivePopupMenusFieldId);
+    static const OSG::BitVector ActiveToolTipFieldMask =
+        (TypeTraits<BitVector>::One << ActiveToolTipFieldId);
+    static const OSG::BitVector MenuBarFieldMask =
+        (TypeTraits<BitVector>::One << MenuBarFieldId);
+    static const OSG::BitVector TitlebarFieldMask =
+        (TypeTraits<BitVector>::One << TitlebarFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecComponentPtr SFFocusedComponentType;
+    typedef MFUnrecPopupMenuPtr MFActivePopupMenusType;
+    typedef SFUnrecToolTipPtr SFActiveToolTipType;
+    typedef SFUnrecMenuBarPtr SFMenuBarType;
+    typedef SFUnrecTitlebarPtr SFTitlebarType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -134,49 +147,64 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindowBase : public AbstractWindow
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFComponentPtr      *getSFFocusedComponent(void);
-           MFPopupMenuPtr      *getMFActivePopupMenus(void);
-           SFToolTipPtr        *getSFActiveToolTip  (void);
-           SFMenuBarPtr        *getSFMenuBar        (void);
-           SFTitlebarPtr       *getSFTitlebar       (void);
+            const SFUnrecComponentPtr *getSFFocusedComponent(void) const;
+                  SFUnrecComponentPtr *editSFFocusedComponent(void);
+            const MFUnrecPopupMenuPtr *getMFActivePopupMenus(void) const;
+                  MFUnrecPopupMenuPtr *editMFActivePopupMenus(void);
+            const SFUnrecToolTipPtr   *getSFActiveToolTip  (void) const;
+                  SFUnrecToolTipPtr   *editSFActiveToolTip  (void);
+            const SFUnrecMenuBarPtr   *getSFMenuBar        (void) const;
+                  SFUnrecMenuBarPtr   *editSFMenuBar        (void);
+            const SFUnrecTitlebarPtr  *getSFTitlebar       (void) const;
+                  SFUnrecTitlebarPtr  *editSFTitlebar       (void);
 
-           ComponentPtr        &getFocusedComponent(void);
-     const ComponentPtr        &getFocusedComponent(void) const;
-           ToolTipPtr          &getActiveToolTip  (void);
-     const ToolTipPtr          &getActiveToolTip  (void) const;
-           MenuBarPtr          &getMenuBar        (void);
-     const MenuBarPtr          &getMenuBar        (void) const;
-           TitlebarPtr         &getTitlebar       (void);
-     const TitlebarPtr         &getTitlebar       (void) const;
-           PopupMenuPtr        &getActivePopupMenus(const UInt32 index);
-           MFPopupMenuPtr      &getActivePopupMenus(void);
-     const MFPopupMenuPtr      &getActivePopupMenus(void) const;
+
+                  Component * getFocusedComponent(void) const;
+
+                  PopupMenu * getActivePopupMenus(const UInt32 index) const;
+
+                  ToolTip * getActiveToolTip  (void) const;
+
+                  MenuBar * getMenuBar        (void) const;
+
+                  Titlebar * getTitlebar       (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setFocusedComponent( const ComponentPtr &value );
-     void setActiveToolTip  ( const ToolTipPtr &value );
-     void setMenuBar        ( const MenuBarPtr &value );
-     void setTitlebar       ( const TitlebarPtr &value );
+            void setFocusedComponent(Component * const value);
+            void setActiveToolTip  (ToolTip * const value);
+            void setMenuBar        (MenuBar * const value);
+            void setTitlebar       (Titlebar * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
     /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    void pushToActivePopupMenus           (PopupMenu * const value   );
+    void assignActivePopupMenus          (const MFUnrecPopupMenuPtr &value);
+    void removeFromActivePopupMenus (UInt32               uiIndex );
+    void removeObjFromActivePopupMenus(PopupMenu * const value   );
+    void clearActivePopupMenus            (void                         );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -184,30 +212,47 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindowBase : public AbstractWindow
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  InternalWindowPtr      create          (void); 
-    static  InternalWindowPtr      createEmpty     (void); 
+    static  InternalWindowTransitPtr  create          (void);
+    static  InternalWindow           *createEmpty     (void);
+
+    static  InternalWindowTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  InternalWindow            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  InternalWindowTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFComponentPtr      _sfFocusedComponent;
-    MFPopupMenuPtr      _mfActivePopupMenus;
-    SFToolTipPtr        _sfActiveToolTip;
-    SFMenuBarPtr        _sfMenuBar;
-    SFTitlebarPtr       _sfTitlebar;
+    SFUnrecComponentPtr _sfFocusedComponent;
+    MFUnrecPopupMenuPtr _mfActivePopupMenus;
+    SFUnrecToolTipPtr _sfActiveToolTip;
+    SFUnrecMenuBarPtr _sfMenuBar;
+    SFUnrecTitlebarPtr _sfTitlebar;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -222,69 +267,88 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindowBase : public AbstractWindow
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~InternalWindowBase(void); 
+    virtual ~InternalWindowBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const InternalWindow *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleFocusedComponent (void) const;
+    EditFieldHandlePtr editHandleFocusedComponent(void);
+    GetFieldHandlePtr  getHandleActivePopupMenus (void) const;
+    EditFieldHandlePtr editHandleActivePopupMenus(void);
+    GetFieldHandlePtr  getHandleActiveToolTip   (void) const;
+    EditFieldHandlePtr editHandleActiveToolTip  (void);
+    GetFieldHandlePtr  getHandleMenuBar         (void) const;
+    EditFieldHandlePtr editHandleMenuBar        (void);
+    GetFieldHandlePtr  getHandleTitlebar        (void) const;
+    EditFieldHandlePtr editHandleTitlebar       (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      InternalWindowBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      InternalWindowBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      InternalWindowBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const InternalWindowBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef InternalWindowBase *InternalWindowBaseP;
 
-typedef osgIF<InternalWindowBase::isNodeCore,
-              CoredNodePtr<InternalWindow>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet InternalWindowNodePtr;
-
-typedef RefPtr<InternalWindowPtr> InternalWindowRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGINTERNALWINDOWBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGINTERNALWINDOWBASE_H_ */

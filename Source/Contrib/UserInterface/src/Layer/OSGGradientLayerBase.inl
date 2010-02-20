@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,85 +55,31 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &GradientLayerBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 GradientLayerBase::getClassTypeId(void) 
+OSG::UInt32 GradientLayerBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-GradientLayerPtr GradientLayerBase::create(void) 
-{
-    GradientLayerPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = GradientLayerPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-GradientLayerPtr GradientLayerBase::createEmpty(void) 
-{ 
-    GradientLayerPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 GradientLayerBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the GradientLayer::_sfStartPosition field.
-inline
-SFPnt2f *GradientLayerBase::getSFStartPosition(void)
-{
-    return &_sfStartPosition;
-}
-
-//! Get the GradientLayer::_sfEndPosition field.
-inline
-SFPnt2f *GradientLayerBase::getSFEndPosition(void)
-{
-    return &_sfEndPosition;
-}
-
-//! Get the GradientLayer::_mfColors field.
-inline
-MFColor4f *GradientLayerBase::getMFColors(void)
-{
-    return &_mfColors;
-}
-
-//! Get the GradientLayer::_mfStops field.
-inline
-MFReal32 *GradientLayerBase::getMFStops(void)
-{
-    return &_mfStops;
-}
-
-//! Get the GradientLayer::_sfSpreadMethod field.
-inline
-SFUInt32 *GradientLayerBase::getSFSpreadMethod(void)
-{
-    return &_sfSpreadMethod;
-}
-
-
 //! Get the value of the GradientLayer::_sfStartPosition field.
+
 inline
-Pnt2f &GradientLayerBase::getStartPosition(void)
+Pnt2f &GradientLayerBase::editStartPosition(void)
 {
+    editSField(StartPositionFieldMask);
+
     return _sfStartPosition.getValue();
 }
 
@@ -150,13 +94,17 @@ const Pnt2f &GradientLayerBase::getStartPosition(void) const
 inline
 void GradientLayerBase::setStartPosition(const Pnt2f &value)
 {
+    editSField(StartPositionFieldMask);
+
     _sfStartPosition.setValue(value);
 }
-
 //! Get the value of the GradientLayer::_sfEndPosition field.
+
 inline
-Pnt2f &GradientLayerBase::getEndPosition(void)
+Pnt2f &GradientLayerBase::editEndPosition(void)
 {
+    editSField(EndPositionFieldMask);
+
     return _sfEndPosition.getValue();
 }
 
@@ -171,74 +119,109 @@ const Pnt2f &GradientLayerBase::getEndPosition(void) const
 inline
 void GradientLayerBase::setEndPosition(const Pnt2f &value)
 {
+    editSField(EndPositionFieldMask);
+
     _sfEndPosition.setValue(value);
 }
-
 //! Get the value of the GradientLayer::_sfSpreadMethod field.
+
 inline
-UInt32 &GradientLayerBase::getSpreadMethod(void)
+UInt32 &GradientLayerBase::editSpreadMethod(void)
 {
+    editSField(SpreadMethodFieldMask);
+
     return _sfSpreadMethod.getValue();
 }
 
 //! Get the value of the GradientLayer::_sfSpreadMethod field.
 inline
-const UInt32 &GradientLayerBase::getSpreadMethod(void) const
+      UInt32  GradientLayerBase::getSpreadMethod(void) const
 {
     return _sfSpreadMethod.getValue();
 }
 
 //! Set the value of the GradientLayer::_sfSpreadMethod field.
 inline
-void GradientLayerBase::setSpreadMethod(const UInt32 &value)
+void GradientLayerBase::setSpreadMethod(const UInt32 value)
 {
+    editSField(SpreadMethodFieldMask);
+
     _sfSpreadMethod.setValue(value);
 }
 
-
 //! Get the value of the \a index element the GradientLayer::_mfColors field.
 inline
-Color4f &GradientLayerBase::getColors(const UInt32 index)
+const Color4f &GradientLayerBase::getColors(const UInt32 index) const
 {
     return _mfColors[index];
 }
 
-//! Get the GradientLayer::_mfColors field.
 inline
-MFColor4f &GradientLayerBase::getColors(void)
+Color4f &GradientLayerBase::editColors(const UInt32 index)
 {
-    return _mfColors;
+    editMField(ColorsFieldMask, _mfColors);
+
+    return _mfColors[index];
 }
 
-//! Get the GradientLayer::_mfColors field.
-inline
-const MFColor4f &GradientLayerBase::getColors(void) const
-{
-    return _mfColors;
-}
 
 //! Get the value of the \a index element the GradientLayer::_mfStops field.
 inline
-Real32 &GradientLayerBase::getStops(const UInt32 index)
+      Real32  GradientLayerBase::getStops(const UInt32 index) const
 {
     return _mfStops[index];
 }
 
-//! Get the GradientLayer::_mfStops field.
 inline
-MFReal32 &GradientLayerBase::getStops(void)
+Real32 &GradientLayerBase::editStops(const UInt32 index)
 {
-    return _mfStops;
+    editMField(StopsFieldMask, _mfStops);
+
+    return _mfStops[index];
 }
 
-//! Get the GradientLayer::_mfStops field.
+
+
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-const MFReal32 &GradientLayerBase::getStops(void) const
+void GradientLayerBase::execSync (      GradientLayerBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfStops;
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (StartPositionFieldMask & whichField))
+        _sfStartPosition.syncWith(pFrom->_sfStartPosition);
+
+    if(FieldBits::NoField != (EndPositionFieldMask & whichField))
+        _sfEndPosition.syncWith(pFrom->_sfEndPosition);
+
+    if(FieldBits::NoField != (ColorsFieldMask & whichField))
+        _mfColors.syncWith(pFrom->_mfColors,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (StopsFieldMask & whichField))
+        _mfStops.syncWith(pFrom->_mfStops,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (SpreadMethodFieldMask & whichField))
+        _sfSpreadMethod.syncWith(pFrom->_sfSpreadMethod);
 }
+#endif
+
+
+inline
+const Char8 *GradientLayerBase::getClassname(void)
+{
+    return "GradientLayer";
+}
+OSG_GEN_CONTAINERPTR(GradientLayer);
 
 OSG_END_NAMESPACE
-
-#define OSGGRADIENTLAYERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

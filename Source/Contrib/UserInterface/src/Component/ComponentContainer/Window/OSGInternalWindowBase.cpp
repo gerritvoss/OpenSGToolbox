@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,195 +50,378 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEINTERNALWINDOWINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGComponent.h"               // FocusedComponent Class
+#include "OSGPopupMenu.h"               // ActivePopupMenus Class
+#include "OSGToolTip.h"                 // ActiveToolTip Class
+#include "OSGMenuBar.h"                 // MenuBar Class
+#include "OSGTitlebar.h"                // Titlebar Class
 
 #include "OSGInternalWindowBase.h"
 #include "OSGInternalWindow.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  InternalWindowBase::FocusedComponentFieldMask = 
-    (TypeTraits<BitVector>::One << InternalWindowBase::FocusedComponentFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  InternalWindowBase::ActivePopupMenusFieldMask = 
-    (TypeTraits<BitVector>::One << InternalWindowBase::ActivePopupMenusFieldId);
+/*! \class OSG::InternalWindow
+    A UI Internal Window.
+ */
 
-const OSG::BitVector  InternalWindowBase::ActiveToolTipFieldMask = 
-    (TypeTraits<BitVector>::One << InternalWindowBase::ActiveToolTipFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  InternalWindowBase::MenuBarFieldMask = 
-    (TypeTraits<BitVector>::One << InternalWindowBase::MenuBarFieldId);
-
-const OSG::BitVector  InternalWindowBase::TitlebarFieldMask = 
-    (TypeTraits<BitVector>::One << InternalWindowBase::TitlebarFieldId);
-
-const OSG::BitVector InternalWindowBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var ComponentPtr    InternalWindowBase::_sfFocusedComponent
-    
-*/
-/*! \var PopupMenuPtr    InternalWindowBase::_mfActivePopupMenus
-    
-*/
-/*! \var ToolTipPtr      InternalWindowBase::_sfActiveToolTip
-    
-*/
-/*! \var MenuBarPtr      InternalWindowBase::_sfMenuBar
-    
-*/
-/*! \var TitlebarPtr     InternalWindowBase::_sfTitlebar
+/*! \var Component *     InternalWindowBase::_sfFocusedComponent
     
 */
 
-//! InternalWindow description
+/*! \var PopupMenu *     InternalWindowBase::_mfActivePopupMenus
+    
+*/
 
-FieldDescription *InternalWindowBase::_desc[] = 
+/*! \var ToolTip *       InternalWindowBase::_sfActiveToolTip
+    
+*/
+
+/*! \var MenuBar *       InternalWindowBase::_sfMenuBar
+    
+*/
+
+/*! \var Titlebar *      InternalWindowBase::_sfTitlebar
+    
+*/
+
+
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<InternalWindow *>::_type("InternalWindowPtr", "AbstractWindowPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(InternalWindow *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           InternalWindow *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           InternalWindow *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void InternalWindowBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFComponentPtr::getClassType(), 
-                     "FocusedComponent", 
-                     FocusedComponentFieldId, FocusedComponentFieldMask,
-                     false,
-                     (FieldAccessMethod) &InternalWindowBase::getSFFocusedComponent),
-    new FieldDescription(MFPopupMenuPtr::getClassType(), 
-                     "ActivePopupMenus", 
-                     ActivePopupMenusFieldId, ActivePopupMenusFieldMask,
-                     true,
-                     (FieldAccessMethod) &InternalWindowBase::getMFActivePopupMenus),
-    new FieldDescription(SFToolTipPtr::getClassType(), 
-                     "ActiveToolTip", 
-                     ActiveToolTipFieldId, ActiveToolTipFieldMask,
-                     false,
-                     (FieldAccessMethod) &InternalWindowBase::getSFActiveToolTip),
-    new FieldDescription(SFMenuBarPtr::getClassType(), 
-                     "MenuBar", 
-                     MenuBarFieldId, MenuBarFieldMask,
-                     false,
-                     (FieldAccessMethod) &InternalWindowBase::getSFMenuBar),
-    new FieldDescription(SFTitlebarPtr::getClassType(), 
-                     "Titlebar", 
-                     TitlebarFieldId, TitlebarFieldMask,
-                     false,
-                     (FieldAccessMethod) &InternalWindowBase::getSFTitlebar)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType InternalWindowBase::_type(
-    "InternalWindow",
-    "AbstractWindow",
-    NULL,
-    (PrototypeCreateF) &InternalWindowBase::createEmpty,
+    pDesc = new SFUnrecComponentPtr::Description(
+        SFUnrecComponentPtr::getClassType(),
+        "FocusedComponent",
+        "",
+        FocusedComponentFieldId, FocusedComponentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&InternalWindow::editHandleFocusedComponent),
+        static_cast<FieldGetMethodSig >(&InternalWindow::getHandleFocusedComponent));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new MFUnrecPopupMenuPtr::Description(
+        MFUnrecPopupMenuPtr::getClassType(),
+        "ActivePopupMenus",
+        "",
+        ActivePopupMenusFieldId, ActivePopupMenusFieldMask,
+        true,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&InternalWindow::editHandleActivePopupMenus),
+        static_cast<FieldGetMethodSig >(&InternalWindow::getHandleActivePopupMenus));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecToolTipPtr::Description(
+        SFUnrecToolTipPtr::getClassType(),
+        "ActiveToolTip",
+        "",
+        ActiveToolTipFieldId, ActiveToolTipFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&InternalWindow::editHandleActiveToolTip),
+        static_cast<FieldGetMethodSig >(&InternalWindow::getHandleActiveToolTip));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecMenuBarPtr::Description(
+        SFUnrecMenuBarPtr::getClassType(),
+        "MenuBar",
+        "",
+        MenuBarFieldId, MenuBarFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&InternalWindow::editHandleMenuBar),
+        static_cast<FieldGetMethodSig >(&InternalWindow::getHandleMenuBar));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecTitlebarPtr::Description(
+        SFUnrecTitlebarPtr::getClassType(),
+        "Titlebar",
+        "",
+        TitlebarFieldId, TitlebarFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&InternalWindow::editHandleTitlebar),
+        static_cast<FieldGetMethodSig >(&InternalWindow::getHandleTitlebar));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+InternalWindowBase::TypeObject InternalWindowBase::_type(
+    InternalWindowBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&InternalWindowBase::createEmptyLocal),
     InternalWindow::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(InternalWindowBase, InternalWindowPtr)
+    InternalWindow::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&InternalWindow::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "    name=\"InternalWindow\"\n"
+    "    parent=\"AbstractWindow\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "    structure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    >\n"
+    "    A UI Internal Window.\n"
+    "    <Field\n"
+    "        name=\"FocusedComponent\"\n"
+    "        type=\"Component\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"ActivePopupMenus\"\n"
+    "        type=\"PopupMenu\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"multi\"\n"
+    "        visibility=\"internal\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"ActiveToolTip\"\n"
+    "        type=\"ToolTip\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"MenuBar\"\n"
+    "        type=\"MenuBar\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Titlebar\"\n"
+    "        type=\"Titlebar\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "</FieldContainer>\n",
+    "A UI Internal Window.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &InternalWindowBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &InternalWindowBase::getType(void) const 
+FieldContainerType &InternalWindowBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr InternalWindowBase::shallowCopy(void) const 
-{ 
-    InternalWindowPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const InternalWindow *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 InternalWindowBase::getContainerSize(void) const 
-{ 
-    return sizeof(InternalWindow); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void InternalWindowBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &InternalWindowBase::getType(void) const
 {
-    this->executeSyncImpl((InternalWindowBase *) &other, whichField);
+    return _type;
 }
-#else
-void InternalWindowBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 InternalWindowBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((InternalWindowBase *) &other, whichField, sInfo);
+    return sizeof(InternalWindow);
 }
-void InternalWindowBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the InternalWindow::_sfFocusedComponent field.
+const SFUnrecComponentPtr *InternalWindowBase::getSFFocusedComponent(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfFocusedComponent;
 }
 
-void InternalWindowBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecComponentPtr *InternalWindowBase::editSFFocusedComponent(void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(FocusedComponentFieldMask);
 
-    _mfActivePopupMenus.terminateShare(uiAspect, this->getContainerSize());
+    return &_sfFocusedComponent;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-InternalWindowBase::InternalWindowBase(void) :
-    _sfFocusedComponent       (ComponentPtr(NullFC)), 
-    _mfActivePopupMenus       (), 
-    _sfActiveToolTip          (ToolTipPtr(NullFC)), 
-    _sfMenuBar                (MenuBarPtr(NullFC)), 
-    _sfTitlebar               (TitlebarPtr(NullFC)), 
-    Inherited() 
+//! Get the InternalWindow::_mfActivePopupMenus field.
+const MFUnrecPopupMenuPtr *InternalWindowBase::getMFActivePopupMenus(void) const
 {
+    return &_mfActivePopupMenus;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-InternalWindowBase::InternalWindowBase(const InternalWindowBase &source) :
-    _sfFocusedComponent       (source._sfFocusedComponent       ), 
-    _mfActivePopupMenus       (source._mfActivePopupMenus       ), 
-    _sfActiveToolTip          (source._sfActiveToolTip          ), 
-    _sfMenuBar                (source._sfMenuBar                ), 
-    _sfTitlebar               (source._sfTitlebar               ), 
-    Inherited                 (source)
+MFUnrecPopupMenuPtr *InternalWindowBase::editMFActivePopupMenus(void)
 {
+    editMField(ActivePopupMenusFieldMask, _mfActivePopupMenus);
+
+    return &_mfActivePopupMenus;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-InternalWindowBase::~InternalWindowBase(void)
+//! Get the InternalWindow::_sfActiveToolTip field.
+const SFUnrecToolTipPtr *InternalWindowBase::getSFActiveToolTip(void) const
 {
+    return &_sfActiveToolTip;
 }
+
+SFUnrecToolTipPtr   *InternalWindowBase::editSFActiveToolTip  (void)
+{
+    editSField(ActiveToolTipFieldMask);
+
+    return &_sfActiveToolTip;
+}
+
+//! Get the InternalWindow::_sfMenuBar field.
+const SFUnrecMenuBarPtr *InternalWindowBase::getSFMenuBar(void) const
+{
+    return &_sfMenuBar;
+}
+
+SFUnrecMenuBarPtr   *InternalWindowBase::editSFMenuBar        (void)
+{
+    editSField(MenuBarFieldMask);
+
+    return &_sfMenuBar;
+}
+
+//! Get the InternalWindow::_sfTitlebar field.
+const SFUnrecTitlebarPtr *InternalWindowBase::getSFTitlebar(void) const
+{
+    return &_sfTitlebar;
+}
+
+SFUnrecTitlebarPtr  *InternalWindowBase::editSFTitlebar       (void)
+{
+    editSField(TitlebarFieldMask);
+
+    return &_sfTitlebar;
+}
+
+
+
+void InternalWindowBase::pushToActivePopupMenus(PopupMenu * const value)
+{
+    editMField(ActivePopupMenusFieldMask, _mfActivePopupMenus);
+
+    _mfActivePopupMenus.push_back(value);
+}
+
+void InternalWindowBase::assignActivePopupMenus(const MFUnrecPopupMenuPtr &value)
+{
+    MFUnrecPopupMenuPtr::const_iterator elemIt  =
+        value.begin();
+    MFUnrecPopupMenuPtr::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<InternalWindow *>(this)->clearActivePopupMenus();
+
+    while(elemIt != elemEnd)
+    {
+        this->pushToActivePopupMenus(*elemIt);
+
+        ++elemIt;
+    }
+}
+
+void InternalWindowBase::removeFromActivePopupMenus(UInt32 uiIndex)
+{
+    if(uiIndex < _mfActivePopupMenus.size())
+    {
+        editMField(ActivePopupMenusFieldMask, _mfActivePopupMenus);
+
+        _mfActivePopupMenus.erase(uiIndex);
+    }
+}
+
+void InternalWindowBase::removeObjFromActivePopupMenus(PopupMenu * const value)
+{
+    Int32 iElemIdx = _mfActivePopupMenus.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(ActivePopupMenusFieldMask, _mfActivePopupMenus);
+
+        _mfActivePopupMenus.erase(iElemIdx);
+    }
+}
+void InternalWindowBase::clearActivePopupMenus(void)
+{
+    editMField(ActivePopupMenusFieldMask, _mfActivePopupMenus);
+
+
+    _mfActivePopupMenus.clear();
+}
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 InternalWindowBase::getBinSize(const BitVector &whichField)
+UInt32 InternalWindowBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -246,33 +429,28 @@ UInt32 InternalWindowBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfFocusedComponent.getBinSize();
     }
-
     if(FieldBits::NoField != (ActivePopupMenusFieldMask & whichField))
     {
         returnValue += _mfActivePopupMenus.getBinSize();
     }
-
     if(FieldBits::NoField != (ActiveToolTipFieldMask & whichField))
     {
         returnValue += _sfActiveToolTip.getBinSize();
     }
-
     if(FieldBits::NoField != (MenuBarFieldMask & whichField))
     {
         returnValue += _sfMenuBar.getBinSize();
     }
-
     if(FieldBits::NoField != (TitlebarFieldMask & whichField))
     {
         returnValue += _sfTitlebar.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void InternalWindowBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void InternalWindowBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -280,32 +458,26 @@ void InternalWindowBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfFocusedComponent.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ActivePopupMenusFieldMask & whichField))
     {
         _mfActivePopupMenus.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ActiveToolTipFieldMask & whichField))
     {
         _sfActiveToolTip.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MenuBarFieldMask & whichField))
     {
         _sfMenuBar.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TitlebarFieldMask & whichField))
     {
         _sfTitlebar.copyToBin(pMem);
     }
-
-
 }
 
-void InternalWindowBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void InternalWindowBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -313,129 +485,400 @@ void InternalWindowBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfFocusedComponent.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ActivePopupMenusFieldMask & whichField))
     {
         _mfActivePopupMenus.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ActiveToolTipFieldMask & whichField))
     {
         _sfActiveToolTip.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MenuBarFieldMask & whichField))
     {
         _sfMenuBar.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TitlebarFieldMask & whichField))
     {
         _sfTitlebar.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void InternalWindowBase::executeSyncImpl(      InternalWindowBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+InternalWindowTransitPtr InternalWindowBase::createLocal(BitVector bFlags)
 {
+    InternalWindowTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (FocusedComponentFieldMask & whichField))
-        _sfFocusedComponent.syncWith(pOther->_sfFocusedComponent);
+        fc = dynamic_pointer_cast<InternalWindow>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (ActivePopupMenusFieldMask & whichField))
-        _mfActivePopupMenus.syncWith(pOther->_mfActivePopupMenus);
-
-    if(FieldBits::NoField != (ActiveToolTipFieldMask & whichField))
-        _sfActiveToolTip.syncWith(pOther->_sfActiveToolTip);
-
-    if(FieldBits::NoField != (MenuBarFieldMask & whichField))
-        _sfMenuBar.syncWith(pOther->_sfMenuBar);
-
-    if(FieldBits::NoField != (TitlebarFieldMask & whichField))
-        _sfTitlebar.syncWith(pOther->_sfTitlebar);
-
-
-}
-#else
-void InternalWindowBase::executeSyncImpl(      InternalWindowBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (FocusedComponentFieldMask & whichField))
-        _sfFocusedComponent.syncWith(pOther->_sfFocusedComponent);
-
-    if(FieldBits::NoField != (ActiveToolTipFieldMask & whichField))
-        _sfActiveToolTip.syncWith(pOther->_sfActiveToolTip);
-
-    if(FieldBits::NoField != (MenuBarFieldMask & whichField))
-        _sfMenuBar.syncWith(pOther->_sfMenuBar);
-
-    if(FieldBits::NoField != (TitlebarFieldMask & whichField))
-        _sfTitlebar.syncWith(pOther->_sfTitlebar);
-
-
-    if(FieldBits::NoField != (ActivePopupMenusFieldMask & whichField))
-        _mfActivePopupMenus.syncWith(pOther->_mfActivePopupMenus, sInfo);
-
-
+    return fc;
 }
 
-void InternalWindowBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+InternalWindowTransitPtr InternalWindowBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    InternalWindowTransitPtr fc;
 
-    if(FieldBits::NoField != (ActivePopupMenusFieldMask & whichField))
-        _mfActivePopupMenus.beginEdit(uiAspect, uiContainerSize);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
+        fc = dynamic_pointer_cast<InternalWindow>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+InternalWindowTransitPtr InternalWindowBase::create(void)
+{
+    InternalWindowTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<InternalWindow>(tmpPtr);
+    }
+
+    return fc;
+}
+
+InternalWindow *InternalWindowBase::createEmptyLocal(BitVector bFlags)
+{
+    InternalWindow *returnValue;
+
+    newPtr<InternalWindow>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+InternalWindow *InternalWindowBase::createEmpty(void)
+{
+    InternalWindow *returnValue;
+
+    newPtr<InternalWindow>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr InternalWindowBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    InternalWindow *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const InternalWindow *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr InternalWindowBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    InternalWindow *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const InternalWindow *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr InternalWindowBase::shallowCopy(void) const
+{
+    InternalWindow *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const InternalWindow *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+InternalWindowBase::InternalWindowBase(void) :
+    Inherited(),
+    _sfFocusedComponent       (NULL),
+    _mfActivePopupMenus       (),
+    _sfActiveToolTip          (NULL),
+    _sfMenuBar                (NULL),
+    _sfTitlebar               (NULL)
+{
+}
+
+InternalWindowBase::InternalWindowBase(const InternalWindowBase &source) :
+    Inherited(source),
+    _sfFocusedComponent       (NULL),
+    _mfActivePopupMenus       (),
+    _sfActiveToolTip          (NULL),
+    _sfMenuBar                (NULL),
+    _sfTitlebar               (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+InternalWindowBase::~InternalWindowBase(void)
+{
+}
+
+void InternalWindowBase::onCreate(const InternalWindow *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        InternalWindow *pThis = static_cast<InternalWindow *>(this);
+
+        pThis->setFocusedComponent(source->getFocusedComponent());
+
+        MFUnrecPopupMenuPtr::const_iterator ActivePopupMenusIt  =
+            source->_mfActivePopupMenus.begin();
+        MFUnrecPopupMenuPtr::const_iterator ActivePopupMenusEnd =
+            source->_mfActivePopupMenus.end  ();
+
+        while(ActivePopupMenusIt != ActivePopupMenusEnd)
+        {
+            pThis->pushToActivePopupMenus(*ActivePopupMenusIt);
+
+            ++ActivePopupMenusIt;
+        }
+
+        pThis->setActiveToolTip(source->getActiveToolTip());
+
+        pThis->setMenuBar(source->getMenuBar());
+
+        pThis->setTitlebar(source->getTitlebar());
+    }
+}
+
+GetFieldHandlePtr InternalWindowBase::getHandleFocusedComponent (void) const
+{
+    SFUnrecComponentPtr::GetHandlePtr returnValue(
+        new  SFUnrecComponentPtr::GetHandle(
+             &_sfFocusedComponent,
+             this->getType().getFieldDesc(FocusedComponentFieldId),
+             const_cast<InternalWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr InternalWindowBase::editHandleFocusedComponent(void)
+{
+    SFUnrecComponentPtr::EditHandlePtr returnValue(
+        new  SFUnrecComponentPtr::EditHandle(
+             &_sfFocusedComponent,
+             this->getType().getFieldDesc(FocusedComponentFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&InternalWindow::setFocusedComponent,
+                    static_cast<InternalWindow *>(this), _1));
+
+    editSField(FocusedComponentFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr InternalWindowBase::getHandleActivePopupMenus (void) const
+{
+    MFUnrecPopupMenuPtr::GetHandlePtr returnValue(
+        new  MFUnrecPopupMenuPtr::GetHandle(
+             &_mfActivePopupMenus,
+             this->getType().getFieldDesc(ActivePopupMenusFieldId),
+             const_cast<InternalWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr InternalWindowBase::editHandleActivePopupMenus(void)
+{
+    MFUnrecPopupMenuPtr::EditHandlePtr returnValue(
+        new  MFUnrecPopupMenuPtr::EditHandle(
+             &_mfActivePopupMenus,
+             this->getType().getFieldDesc(ActivePopupMenusFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&InternalWindow::pushToActivePopupMenus,
+                    static_cast<InternalWindow *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&InternalWindow::removeFromActivePopupMenus,
+                    static_cast<InternalWindow *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&InternalWindow::removeObjFromActivePopupMenus,
+                    static_cast<InternalWindow *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&InternalWindow::clearActivePopupMenus,
+                    static_cast<InternalWindow *>(this)));
+
+    editMField(ActivePopupMenusFieldMask, _mfActivePopupMenus);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr InternalWindowBase::getHandleActiveToolTip   (void) const
+{
+    SFUnrecToolTipPtr::GetHandlePtr returnValue(
+        new  SFUnrecToolTipPtr::GetHandle(
+             &_sfActiveToolTip,
+             this->getType().getFieldDesc(ActiveToolTipFieldId),
+             const_cast<InternalWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr InternalWindowBase::editHandleActiveToolTip  (void)
+{
+    SFUnrecToolTipPtr::EditHandlePtr returnValue(
+        new  SFUnrecToolTipPtr::EditHandle(
+             &_sfActiveToolTip,
+             this->getType().getFieldDesc(ActiveToolTipFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&InternalWindow::setActiveToolTip,
+                    static_cast<InternalWindow *>(this), _1));
+
+    editSField(ActiveToolTipFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr InternalWindowBase::getHandleMenuBar         (void) const
+{
+    SFUnrecMenuBarPtr::GetHandlePtr returnValue(
+        new  SFUnrecMenuBarPtr::GetHandle(
+             &_sfMenuBar,
+             this->getType().getFieldDesc(MenuBarFieldId),
+             const_cast<InternalWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr InternalWindowBase::editHandleMenuBar        (void)
+{
+    SFUnrecMenuBarPtr::EditHandlePtr returnValue(
+        new  SFUnrecMenuBarPtr::EditHandle(
+             &_sfMenuBar,
+             this->getType().getFieldDesc(MenuBarFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&InternalWindow::setMenuBar,
+                    static_cast<InternalWindow *>(this), _1));
+
+    editSField(MenuBarFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr InternalWindowBase::getHandleTitlebar        (void) const
+{
+    SFUnrecTitlebarPtr::GetHandlePtr returnValue(
+        new  SFUnrecTitlebarPtr::GetHandle(
+             &_sfTitlebar,
+             this->getType().getFieldDesc(TitlebarFieldId),
+             const_cast<InternalWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr InternalWindowBase::editHandleTitlebar       (void)
+{
+    SFUnrecTitlebarPtr::EditHandlePtr returnValue(
+        new  SFUnrecTitlebarPtr::EditHandle(
+             &_sfTitlebar,
+             this->getType().getFieldDesc(TitlebarFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&InternalWindow::setTitlebar,
+                    static_cast<InternalWindow *>(this), _1));
+
+    editSField(TitlebarFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void InternalWindowBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    InternalWindow *pThis = static_cast<InternalWindow *>(this);
+
+    pThis->execSync(static_cast<InternalWindow *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *InternalWindowBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    InternalWindow *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const InternalWindow *>(pRefAspect),
+                  dynamic_cast<const InternalWindow *>(this));
+
+    return returnValue;
+}
+#endif
+
+void InternalWindowBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<InternalWindow *>(this)->setFocusedComponent(NULL);
+
+    static_cast<InternalWindow *>(this)->clearActivePopupMenus();
+
+    static_cast<InternalWindow *>(this)->setActiveToolTip(NULL);
+
+    static_cast<InternalWindow *>(this)->setMenuBar(NULL);
+
+    static_cast<InternalWindow *>(this)->setTitlebar(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<InternalWindowPtr>::_type("InternalWindowPtr", "AbstractWindowPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(InternalWindowPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(InternalWindowPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGINTERNALWINDOWBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGINTERNALWINDOWBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGINTERNALWINDOWFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

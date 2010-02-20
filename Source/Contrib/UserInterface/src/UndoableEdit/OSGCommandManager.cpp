@@ -26,7 +26,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 #include <iostream>
 
@@ -39,7 +39,7 @@ OSG_USING_NAMESPACE
 
 void CommandManager::produceCommandExecuted(CommandPtr TheCommand)
 {
-	const CommandEventPtr e = CommandEvent::create(NullFC, getSystemTime(), TheCommand);
+	const CommandEventUnrecPtr e = CommandEvent::create(NULL, getSystemTime(), TheCommand);
 	CommandListenerSet Listeners(_CommandListeners);
 	for(CommandListenerSet::const_iterator SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
@@ -48,7 +48,7 @@ void CommandManager::produceCommandExecuted(CommandPtr TheCommand)
 	if(_UndoManager != NULL && 
 		TheCommand->getType().isDerivedFrom(UndoableCommand::getClassType()))
 	{
-        const UndoableEditEventPtr Event = UndoableEditEvent::create(e->getSource(), e->getTimeStamp(), UndoableCommand::dcast(TheCommand));
+        const UndoableEditEventUnrecPtr Event = UndoableEditEvent::create(e->getSource(), e->getTimeStamp(), UndoableCommand::dcast(TheCommand));
 		_UndoManager->undoableEditHappened(Event);
 	}
 }
@@ -91,20 +91,19 @@ CommandManagerPtr CommandManager::create(UndoManagerPtr UndoManager)
 /*-------------------------------------------------------------------------*/
 /*                            Constructors                                 */
 
-CommandManager::CommandManager(UndoManagerPtr UndoManager) : Inherited(),
+CommandManager::CommandManager(UndoManagerPtr UndoManager) :
 								_UndoManager(UndoManager)
 {
 }
     
 
-CommandManager::CommandManager(const CommandManager& source) : Inherited(source),
+CommandManager::CommandManager(const CommandManager& source) :
 								_UndoManager(source._UndoManager)
 {
 }
 
 void CommandManager::operator =(const CommandManager& source)
 {
-	Inherited::operator =(source);
 	_UndoManager = source._UndoManager;
 }
 /*-------------------------------------------------------------------------*/

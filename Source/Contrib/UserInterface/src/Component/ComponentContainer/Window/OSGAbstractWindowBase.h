@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,134 +58,160 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include "Component/Container/OSGContainer.h" // Parent
+#include "OSGComponentContainer.h" // Parent
 
-#include "UIDrawingSurface/OSGUIDrawingSurfaceFields.h" // DrawingSurface type
-#include <OpenSG/OSGBoolFields.h> // Closable type
-#include <OpenSG/OSGBoolFields.h> // Iconable type
-#include <OpenSG/OSGBoolFields.h> // Maximizable type
-#include <OpenSG/OSGBoolFields.h> // IsClosed type
-#include <OpenSG/OSGBoolFields.h> // IsIcon type
-#include <OpenSG/OSGBoolFields.h> // IsMaximized type
-#include <OpenSG/OSGBoolFields.h> // Resizable type
-#include <OpenSG/OSGBoolFields.h> // IsSelected type
-#include <OpenSG/OSGStringFields.h> // Title type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // DesktopIcon type
-#include <OpenSG/OSGBoolFields.h> // AllwaysOnTop type
-#include <OpenSG/OSGBoolFields.h> // DrawTitlebar type
-#include <OpenSG/OSGBoolFields.h> // DrawDecorations type
-#include <OpenSG/OSGBoolFields.h> // LockInput type
-#include <OpenSG/OSGVec2fFields.h> // AlignmentInDrawingSurface type
-#include <OpenSG/OSGVec2fFields.h> // ScalingInDrawingSurface type
-#include <OpenSG/OSGUInt32Fields.h> // ResizeModifyCursorWidth type
+#include "OSGUIDrawingSurfaceFields.h"  // DrawingSurface type
+#include "OSGSysFields.h"               // Closable type
+#include "OSGBaseFields.h"              // Title type
+#include "OSGUIDrawObjectCanvasFields.h" // DesktopIcon type
+#include "OSGVecFields.h"               // AlignmentInDrawingSurface type
 
 #include "OSGAbstractWindowFields.h"
-#include <OpenSG/Toolbox/OSGEventProducer.h>
-#include <OpenSG/Toolbox/OSGEventProducerType.h>
-#include <OpenSG/Toolbox/OSGMethodDescription.h>
+
+//Event Producer Headers
+#include "OSGEventProducer.h"
+#include "OSGEventProducerType.h"
+#include "OSGMethodDescription.h"
 
 OSG_BEGIN_NAMESPACE
 
 class AbstractWindow;
-class BinaryDataHandler;
 
 //! \brief AbstractWindow Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindowBase : public ComponentContainer
 {
-  private:
-
-    typedef Container    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef AbstractWindowPtr  Ptr;
+    typedef ComponentContainer Inherited;
+    typedef ComponentContainer ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(AbstractWindow);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        DrawingSurfaceFieldId            = Inherited::NextFieldId,
-        ClosableFieldId                  = DrawingSurfaceFieldId            + 1,
-        IconableFieldId                  = ClosableFieldId                  + 1,
-        MaximizableFieldId               = IconableFieldId                  + 1,
-        IsClosedFieldId                  = MaximizableFieldId               + 1,
-        IsIconFieldId                    = IsClosedFieldId                  + 1,
-        IsMaximizedFieldId               = IsIconFieldId                    + 1,
-        ResizableFieldId                 = IsMaximizedFieldId               + 1,
-        IsSelectedFieldId                = ResizableFieldId                 + 1,
-        TitleFieldId                     = IsSelectedFieldId                + 1,
-        DesktopIconFieldId               = TitleFieldId                     + 1,
-        AllwaysOnTopFieldId              = DesktopIconFieldId               + 1,
-        DrawTitlebarFieldId              = AllwaysOnTopFieldId              + 1,
-        DrawDecorationsFieldId           = DrawTitlebarFieldId              + 1,
-        LockInputFieldId                 = DrawDecorationsFieldId           + 1,
-        AlignmentInDrawingSurfaceFieldId = LockInputFieldId                 + 1,
-        ScalingInDrawingSurfaceFieldId   = AlignmentInDrawingSurfaceFieldId + 1,
-        ResizeModifyCursorWidthFieldId   = ScalingInDrawingSurfaceFieldId   + 1,
-        NextFieldId                      = ResizeModifyCursorWidthFieldId   + 1
+        DrawingSurfaceFieldId = Inherited::NextFieldId,
+        ClosableFieldId = DrawingSurfaceFieldId + 1,
+        IconableFieldId = ClosableFieldId + 1,
+        MaximizableFieldId = IconableFieldId + 1,
+        IsClosedFieldId = MaximizableFieldId + 1,
+        IsIconFieldId = IsClosedFieldId + 1,
+        IsMaximizedFieldId = IsIconFieldId + 1,
+        ResizableFieldId = IsMaximizedFieldId + 1,
+        IsSelectedFieldId = ResizableFieldId + 1,
+        TitleFieldId = IsSelectedFieldId + 1,
+        DesktopIconFieldId = TitleFieldId + 1,
+        AllwaysOnTopFieldId = DesktopIconFieldId + 1,
+        DrawTitlebarFieldId = AllwaysOnTopFieldId + 1,
+        DrawDecorationsFieldId = DrawTitlebarFieldId + 1,
+        LockInputFieldId = DrawDecorationsFieldId + 1,
+        AlignmentInDrawingSurfaceFieldId = LockInputFieldId + 1,
+        ScalingInDrawingSurfaceFieldId = AlignmentInDrawingSurfaceFieldId + 1,
+        ResizeModifyCursorWidthFieldId = ScalingInDrawingSurfaceFieldId + 1,
+        NextFieldId = ResizeModifyCursorWidthFieldId + 1
     };
 
-    static const OSG::BitVector DrawingSurfaceFieldMask;
-    static const OSG::BitVector ClosableFieldMask;
-    static const OSG::BitVector IconableFieldMask;
-    static const OSG::BitVector MaximizableFieldMask;
-    static const OSG::BitVector IsClosedFieldMask;
-    static const OSG::BitVector IsIconFieldMask;
-    static const OSG::BitVector IsMaximizedFieldMask;
-    static const OSG::BitVector ResizableFieldMask;
-    static const OSG::BitVector IsSelectedFieldMask;
-    static const OSG::BitVector TitleFieldMask;
-    static const OSG::BitVector DesktopIconFieldMask;
-    static const OSG::BitVector AllwaysOnTopFieldMask;
-    static const OSG::BitVector DrawTitlebarFieldMask;
-    static const OSG::BitVector DrawDecorationsFieldMask;
-    static const OSG::BitVector LockInputFieldMask;
-    static const OSG::BitVector AlignmentInDrawingSurfaceFieldMask;
-    static const OSG::BitVector ScalingInDrawingSurfaceFieldMask;
-    static const OSG::BitVector ResizeModifyCursorWidthFieldMask;
-
+    static const OSG::BitVector DrawingSurfaceFieldMask =
+        (TypeTraits<BitVector>::One << DrawingSurfaceFieldId);
+    static const OSG::BitVector ClosableFieldMask =
+        (TypeTraits<BitVector>::One << ClosableFieldId);
+    static const OSG::BitVector IconableFieldMask =
+        (TypeTraits<BitVector>::One << IconableFieldId);
+    static const OSG::BitVector MaximizableFieldMask =
+        (TypeTraits<BitVector>::One << MaximizableFieldId);
+    static const OSG::BitVector IsClosedFieldMask =
+        (TypeTraits<BitVector>::One << IsClosedFieldId);
+    static const OSG::BitVector IsIconFieldMask =
+        (TypeTraits<BitVector>::One << IsIconFieldId);
+    static const OSG::BitVector IsMaximizedFieldMask =
+        (TypeTraits<BitVector>::One << IsMaximizedFieldId);
+    static const OSG::BitVector ResizableFieldMask =
+        (TypeTraits<BitVector>::One << ResizableFieldId);
+    static const OSG::BitVector IsSelectedFieldMask =
+        (TypeTraits<BitVector>::One << IsSelectedFieldId);
+    static const OSG::BitVector TitleFieldMask =
+        (TypeTraits<BitVector>::One << TitleFieldId);
+    static const OSG::BitVector DesktopIconFieldMask =
+        (TypeTraits<BitVector>::One << DesktopIconFieldId);
+    static const OSG::BitVector AllwaysOnTopFieldMask =
+        (TypeTraits<BitVector>::One << AllwaysOnTopFieldId);
+    static const OSG::BitVector DrawTitlebarFieldMask =
+        (TypeTraits<BitVector>::One << DrawTitlebarFieldId);
+    static const OSG::BitVector DrawDecorationsFieldMask =
+        (TypeTraits<BitVector>::One << DrawDecorationsFieldId);
+    static const OSG::BitVector LockInputFieldMask =
+        (TypeTraits<BitVector>::One << LockInputFieldId);
+    static const OSG::BitVector AlignmentInDrawingSurfaceFieldMask =
+        (TypeTraits<BitVector>::One << AlignmentInDrawingSurfaceFieldId);
+    static const OSG::BitVector ScalingInDrawingSurfaceFieldMask =
+        (TypeTraits<BitVector>::One << ScalingInDrawingSurfaceFieldId);
+    static const OSG::BitVector ResizeModifyCursorWidthFieldMask =
+        (TypeTraits<BitVector>::One << ResizeModifyCursorWidthFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecUIDrawingSurfacePtr SFDrawingSurfaceType;
+    typedef SFBool            SFClosableType;
+    typedef SFBool            SFIconableType;
+    typedef SFBool            SFMaximizableType;
+    typedef SFBool            SFIsClosedType;
+    typedef SFBool            SFIsIconType;
+    typedef SFBool            SFIsMaximizedType;
+    typedef SFBool            SFResizableType;
+    typedef SFBool            SFIsSelectedType;
+    typedef SFString          SFTitleType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFDesktopIconType;
+    typedef SFBool            SFAllwaysOnTopType;
+    typedef SFBool            SFDrawTitlebarType;
+    typedef SFBool            SFDrawDecorationsType;
+    typedef SFBool            SFLockInputType;
+    typedef SFVec2f           SFAlignmentInDrawingSurfaceType;
+    typedef SFVec2f           SFScalingInDrawingSurfaceType;
+    typedef SFUInt32          SFResizeModifyCursorWidthType;
 
     enum
     {
-        WindowOpenedMethodId      = Inherited::NextMethodId,
-        WindowClosingMethodId     = WindowOpenedMethodId      + 1,
-        WindowClosedMethodId      = WindowClosingMethodId     + 1,
-        WindowIconifiedMethodId   = WindowClosedMethodId      + 1,
-        WindowDeiconifiedMethodId = WindowIconifiedMethodId   + 1,
-        WindowActivatedMethodId   = WindowDeiconifiedMethodId + 1,
-        WindowDeactivatedMethodId = WindowActivatedMethodId   + 1,
-        WindowEnteredMethodId     = WindowDeactivatedMethodId + 1,
-        WindowExitedMethodId      = WindowEnteredMethodId     + 1,
-        NextMethodId              = WindowExitedMethodId      + 1
+        WindowOpenedMethodId = Inherited::NextProducedMethodId,
+        WindowClosingMethodId = WindowOpenedMethodId + 1,
+        WindowClosedMethodId = WindowClosingMethodId + 1,
+        WindowIconifiedMethodId = WindowClosedMethodId + 1,
+        WindowDeiconifiedMethodId = WindowIconifiedMethodId + 1,
+        WindowActivatedMethodId = WindowDeiconifiedMethodId + 1,
+        WindowDeactivatedMethodId = WindowActivatedMethodId + 1,
+        WindowEnteredMethodId = WindowDeactivatedMethodId + 1,
+        WindowExitedMethodId = WindowEnteredMethodId + 1,
+        NextProducedMethodId = WindowExitedMethodId + 1
     };
-
-
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
-    static const  EventProducerType  &getProducerClassType  (void); 
-    static        UInt32              getProducerClassTypeId(void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
+    static const  EventProducerType  &getProducerClassType  (void);
+    static        UInt32              getProducerClassTypeId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -194,139 +220,157 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+            const SFUnrecUIDrawingSurfacePtr *getSFDrawingSurface (void) const;
+                  SFUnrecUIDrawingSurfacePtr *editSFDrawingSurface (void);
 
-           SFUIDrawingSurfacePtr *editSFDrawingSurface (void);
-     const SFUIDrawingSurfacePtr *getSFDrawingSurface (void) const;
+                  SFBool              *editSFClosable       (void);
+            const SFBool              *getSFClosable        (void) const;
 
-           SFBool              *editSFClosable       (void);
-     const SFBool              *getSFClosable       (void) const;
+                  SFBool              *editSFIconable       (void);
+            const SFBool              *getSFIconable        (void) const;
 
-           SFBool              *editSFIconable       (void);
-     const SFBool              *getSFIconable       (void) const;
+                  SFBool              *editSFMaximizable    (void);
+            const SFBool              *getSFMaximizable     (void) const;
 
-           SFBool              *editSFMaximizable    (void);
-     const SFBool              *getSFMaximizable    (void) const;
+                  SFBool              *editSFIsClosed       (void);
+            const SFBool              *getSFIsClosed        (void) const;
 
-           SFBool              *editSFIsClosed       (void);
-     const SFBool              *getSFIsClosed       (void) const;
+                  SFBool              *editSFIsIcon         (void);
+            const SFBool              *getSFIsIcon          (void) const;
 
-           SFBool              *editSFIsIcon         (void);
-     const SFBool              *getSFIsIcon         (void) const;
+                  SFBool              *editSFIsMaximized    (void);
+            const SFBool              *getSFIsMaximized     (void) const;
 
-           SFBool              *editSFIsMaximized    (void);
-     const SFBool              *getSFIsMaximized    (void) const;
+                  SFBool              *editSFResizable      (void);
+            const SFBool              *getSFResizable       (void) const;
 
-           SFBool              *editSFResizable      (void);
-     const SFBool              *getSFResizable      (void) const;
+                  SFBool              *editSFIsSelected     (void);
+            const SFBool              *getSFIsSelected      (void) const;
 
-           SFBool              *editSFIsSelected     (void);
-     const SFBool              *getSFIsSelected     (void) const;
+                  SFString            *editSFTitle          (void);
+            const SFString            *getSFTitle           (void) const;
+            const SFUnrecUIDrawObjectCanvasPtr *getSFDesktopIcon    (void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFDesktopIcon    (void);
 
-           SFString            *editSFTitle          (void);
-     const SFString            *getSFTitle          (void) const;
+                  SFBool              *editSFAllwaysOnTop   (void);
+            const SFBool              *getSFAllwaysOnTop    (void) const;
 
-           SFUIDrawObjectCanvasPtr *editSFDesktopIcon    (void);
-     const SFUIDrawObjectCanvasPtr *getSFDesktopIcon    (void) const;
+                  SFBool              *editSFDrawTitlebar   (void);
+            const SFBool              *getSFDrawTitlebar    (void) const;
 
-           SFBool              *editSFAllwaysOnTop   (void);
-     const SFBool              *getSFAllwaysOnTop   (void) const;
+                  SFBool              *editSFDrawDecorations(void);
+            const SFBool              *getSFDrawDecorations (void) const;
 
-           SFBool              *editSFDrawTitlebar   (void);
-     const SFBool              *getSFDrawTitlebar   (void) const;
+                  SFBool              *editSFLockInput      (void);
+            const SFBool              *getSFLockInput       (void) const;
 
-           SFBool              *editSFDrawDecorations(void);
-     const SFBool              *getSFDrawDecorations(void) const;
+                  SFVec2f             *editSFAlignmentInDrawingSurface(void);
+            const SFVec2f             *getSFAlignmentInDrawingSurface (void) const;
 
-           SFBool              *editSFLockInput      (void);
-     const SFBool              *getSFLockInput      (void) const;
+                  SFVec2f             *editSFScalingInDrawingSurface(void);
+            const SFVec2f             *getSFScalingInDrawingSurface (void) const;
 
-           SFVec2f             *editSFAlignmentInDrawingSurface(void);
-     const SFVec2f             *getSFAlignmentInDrawingSurface(void) const;
-
-           SFVec2f             *editSFScalingInDrawingSurface(void);
-     const SFVec2f             *getSFScalingInDrawingSurface(void) const;
-
-           SFUInt32            *editSFResizeModifyCursorWidth(void);
-     const SFUInt32            *getSFResizeModifyCursorWidth(void) const;
+                  SFUInt32            *editSFResizeModifyCursorWidth(void);
+            const SFUInt32            *getSFResizeModifyCursorWidth (void) const;
 
 
-           UIDrawingSurfacePtr &editDrawingSurface (void);
-     const UIDrawingSurfacePtr &getDrawingSurface (void) const;
+                  UIDrawingSurface * getDrawingSurface (void) const;
 
-           bool                &editClosable       (void);
-     const bool                &getClosable       (void) const;
+                  bool                &editClosable       (void);
+                  bool                 getClosable        (void) const;
 
-           bool                &editIconable       (void);
-     const bool                &getIconable       (void) const;
+                  bool                &editIconable       (void);
+                  bool                 getIconable        (void) const;
 
-           bool                &editMaximizable    (void);
-     const bool                &getMaximizable    (void) const;
+                  bool                &editMaximizable    (void);
+                  bool                 getMaximizable     (void) const;
 
-           bool                &editIsClosed       (void);
-     const bool                &getIsClosed       (void) const;
+                  bool                &editIsClosed       (void);
+                  bool                 getIsClosed        (void) const;
 
-           bool                &editIsIcon         (void);
-     const bool                &getIsIcon         (void) const;
+                  bool                &editIsIcon         (void);
+                  bool                 getIsIcon          (void) const;
 
-           bool                &editIsMaximized    (void);
-     const bool                &getIsMaximized    (void) const;
+                  bool                &editIsMaximized    (void);
+                  bool                 getIsMaximized     (void) const;
 
-           bool                &editResizable      (void);
-     const bool                &getResizable      (void) const;
+                  bool                &editResizable      (void);
+                  bool                 getResizable       (void) const;
 
-           bool                &editIsSelected     (void);
-     const bool                &getIsSelected     (void) const;
+                  bool                &editIsSelected     (void);
+                  bool                 getIsSelected      (void) const;
 
-           std::string         &editTitle          (void);
-     const std::string         &getTitle          (void) const;
+                  std::string         &editTitle          (void);
+            const std::string         &getTitle           (void) const;
 
-           UIDrawObjectCanvasPtr &editDesktopIcon    (void);
-     const UIDrawObjectCanvasPtr &getDesktopIcon    (void) const;
+                  UIDrawObjectCanvas * getDesktopIcon    (void) const;
 
-           bool                &editAllwaysOnTop   (void);
-     const bool                &getAllwaysOnTop   (void) const;
+                  bool                &editAllwaysOnTop   (void);
+                  bool                 getAllwaysOnTop    (void) const;
 
-           bool                &editDrawTitlebar   (void);
-     const bool                &getDrawTitlebar   (void) const;
+                  bool                &editDrawTitlebar   (void);
+                  bool                 getDrawTitlebar    (void) const;
 
-           bool                &editDrawDecorations(void);
-     const bool                &getDrawDecorations(void) const;
+                  bool                &editDrawDecorations(void);
+                  bool                 getDrawDecorations (void) const;
 
-           bool                &editLockInput      (void);
-     const bool                &getLockInput      (void) const;
+                  bool                &editLockInput      (void);
+                  bool                 getLockInput       (void) const;
 
-           Vec2f               &editAlignmentInDrawingSurface(void);
-     const Vec2f               &getAlignmentInDrawingSurface(void) const;
+                  Vec2f               &editAlignmentInDrawingSurface(void);
+            const Vec2f               &getAlignmentInDrawingSurface (void) const;
 
-           Vec2f               &editScalingInDrawingSurface(void);
-     const Vec2f               &getScalingInDrawingSurface(void) const;
+                  Vec2f               &editScalingInDrawingSurface(void);
+            const Vec2f               &getScalingInDrawingSurface (void) const;
 
-           UInt32              &editResizeModifyCursorWidth(void);
-     const UInt32              &getResizeModifyCursorWidth(void) const;
+                  UInt32              &editResizeModifyCursorWidth(void);
+                  UInt32               getResizeModifyCursorWidth (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setDrawingSurface ( const UIDrawingSurfacePtr &value );
-     void setClosable       ( const bool &value );
-     void setIconable       ( const bool &value );
-     void setMaximizable    ( const bool &value );
-     void setIsClosed       ( const bool &value );
-     void setIsIcon         ( const bool &value );
-     void setIsMaximized    ( const bool &value );
-     void setResizable      ( const bool &value );
-     void setIsSelected     ( const bool &value );
-     void setTitle          ( const std::string &value );
-     void setDesktopIcon    ( const UIDrawObjectCanvasPtr &value );
-     void setAllwaysOnTop   ( const bool &value );
-     void setDrawTitlebar   ( const bool &value );
-     void setDrawDecorations( const bool &value );
-     void setLockInput      ( const bool &value );
-     void setAlignmentInDrawingSurface( const Vec2f &value );
-     void setScalingInDrawingSurface( const Vec2f &value );
-     void setResizeModifyCursorWidth( const UInt32 &value );
+            void setDrawingSurface (UIDrawingSurface * const value);
+            void setClosable       (const bool value);
+            void setIconable       (const bool value);
+            void setMaximizable    (const bool value);
+            void setIsClosed       (const bool value);
+            void setIsIcon         (const bool value);
+            void setIsMaximized    (const bool value);
+            void setResizable      (const bool value);
+            void setIsSelected     (const bool value);
+            void setTitle          (const std::string &value);
+            void setDesktopIcon    (UIDrawObjectCanvas * const value);
+            void setAllwaysOnTop   (const bool value);
+            void setDrawTitlebar   (const bool value);
+            void setDrawDecorations(const bool value);
+            void setLockInput      (const bool value);
+            void setAlignmentInDrawingSurface(const Vec2f &value);
+            void setScalingInDrawingSurface(const Vec2f &value);
+            void setResizeModifyCursorWidth(const UInt32 value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Binary Access                              */
+    /*! \{                                                                 */
+
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -335,49 +379,39 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
 
     virtual const EventProducerType &getProducerType(void) const; 
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
-    /*! \{                                                                 */
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Binary Access                              */
-    /*! \{                                                                 */
-
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUIDrawingSurfacePtr   _sfDrawingSurface;
-    SFBool              _sfClosable;
-    SFBool              _sfIconable;
-    SFBool              _sfMaximizable;
-    SFBool              _sfIsClosed;
-    SFBool              _sfIsIcon;
-    SFBool              _sfIsMaximized;
-    SFBool              _sfResizable;
-    SFBool              _sfIsSelected;
-    SFString            _sfTitle;
-    SFUIDrawObjectCanvasPtr   _sfDesktopIcon;
-    SFBool              _sfAllwaysOnTop;
-    SFBool              _sfDrawTitlebar;
-    SFBool              _sfDrawDecorations;
-    SFBool              _sfLockInput;
-    SFVec2f             _sfAlignmentInDrawingSurface;
-    SFVec2f             _sfScalingInDrawingSurface;
-    SFUInt32            _sfResizeModifyCursorWidth;
+    SFUnrecUIDrawingSurfacePtr _sfDrawingSurface;
+    SFBool            _sfClosable;
+    SFBool            _sfIconable;
+    SFBool            _sfMaximizable;
+    SFBool            _sfIsClosed;
+    SFBool            _sfIsIcon;
+    SFBool            _sfIsMaximized;
+    SFBool            _sfResizable;
+    SFBool            _sfIsSelected;
+    SFString          _sfTitle;
+    SFUnrecUIDrawObjectCanvasPtr _sfDesktopIcon;
+    SFBool            _sfAllwaysOnTop;
+    SFBool            _sfDrawTitlebar;
+    SFBool            _sfDrawDecorations;
+    SFBool            _sfLockInput;
+    SFVec2f           _sfAlignmentInDrawingSurface;
+    SFVec2f           _sfScalingInDrawingSurface;
+    SFUInt32          _sfResizeModifyCursorWidth;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -392,69 +426,111 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~AbstractWindowBase(void); 
+    virtual ~AbstractWindowBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const AbstractWindow *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleDrawingSurface  (void) const;
+    EditFieldHandlePtr editHandleDrawingSurface (void);
+    GetFieldHandlePtr  getHandleClosable        (void) const;
+    EditFieldHandlePtr editHandleClosable       (void);
+    GetFieldHandlePtr  getHandleIconable        (void) const;
+    EditFieldHandlePtr editHandleIconable       (void);
+    GetFieldHandlePtr  getHandleMaximizable     (void) const;
+    EditFieldHandlePtr editHandleMaximizable    (void);
+    GetFieldHandlePtr  getHandleIsClosed        (void) const;
+    EditFieldHandlePtr editHandleIsClosed       (void);
+    GetFieldHandlePtr  getHandleIsIcon          (void) const;
+    EditFieldHandlePtr editHandleIsIcon         (void);
+    GetFieldHandlePtr  getHandleIsMaximized     (void) const;
+    EditFieldHandlePtr editHandleIsMaximized    (void);
+    GetFieldHandlePtr  getHandleResizable       (void) const;
+    EditFieldHandlePtr editHandleResizable      (void);
+    GetFieldHandlePtr  getHandleIsSelected      (void) const;
+    EditFieldHandlePtr editHandleIsSelected     (void);
+    GetFieldHandlePtr  getHandleTitle           (void) const;
+    EditFieldHandlePtr editHandleTitle          (void);
+    GetFieldHandlePtr  getHandleDesktopIcon     (void) const;
+    EditFieldHandlePtr editHandleDesktopIcon    (void);
+    GetFieldHandlePtr  getHandleAllwaysOnTop    (void) const;
+    EditFieldHandlePtr editHandleAllwaysOnTop   (void);
+    GetFieldHandlePtr  getHandleDrawTitlebar    (void) const;
+    EditFieldHandlePtr editHandleDrawTitlebar   (void);
+    GetFieldHandlePtr  getHandleDrawDecorations (void) const;
+    EditFieldHandlePtr editHandleDrawDecorations(void);
+    GetFieldHandlePtr  getHandleLockInput       (void) const;
+    EditFieldHandlePtr editHandleLockInput      (void);
+    GetFieldHandlePtr  getHandleAlignmentInDrawingSurface (void) const;
+    EditFieldHandlePtr editHandleAlignmentInDrawingSurface(void);
+    GetFieldHandlePtr  getHandleScalingInDrawingSurface (void) const;
+    EditFieldHandlePtr editHandleScalingInDrawingSurface(void);
+    GetFieldHandlePtr  getHandleResizeModifyCursorWidth (void) const;
+    EditFieldHandlePtr editHandleResizeModifyCursorWidth(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      AbstractWindowBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      AbstractWindowBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      AbstractWindowBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
+    /*---------------------------------------------------------------------*/
     static MethodDescription   *_methodDesc[];
     static EventProducerType _producerType;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const AbstractWindowBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef AbstractWindowBase *AbstractWindowBaseP;
-
-typedef osgIF<AbstractWindowBase::isNodeCore,
-              CoredNodePtr<AbstractWindow>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet AbstractWindowNodePtr;
-
-typedef RefPtr<AbstractWindowPtr> AbstractWindowRefPtr;
 
 OSG_END_NAMESPACE
 

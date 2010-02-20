@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,16 +55,15 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &ComponentBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ComponentBase::getClassTypeId(void) 
+OSG::UInt32 ComponentBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
+    return _type.getId();
+}
 //! access the producer type of the class
 inline
 const EventProducerType &ComponentBase::getProducerClassType(void)
@@ -81,16 +78,133 @@ UInt32 ComponentBase::getProducerClassTypeId(void)
     return _producerType.getId();
 }
 
+inline
+OSG::UInt16 ComponentBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void ComponentBase::execSync (      ComponentBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (PositionFieldMask & whichField))
+        _sfPosition.syncWith(pFrom->_sfPosition);
+
+    if(FieldBits::NoField != (ClipBoundsFieldMask & whichField))
+        _sfClipBounds.syncWith(pFrom->_sfClipBounds);
+
+    if(FieldBits::NoField != (MinSizeFieldMask & whichField))
+        _sfMinSize.syncWith(pFrom->_sfMinSize);
+
+    if(FieldBits::NoField != (MaxSizeFieldMask & whichField))
+        _sfMaxSize.syncWith(pFrom->_sfMaxSize);
+
+    if(FieldBits::NoField != (PreferredSizeFieldMask & whichField))
+        _sfPreferredSize.syncWith(pFrom->_sfPreferredSize);
+
+    if(FieldBits::NoField != (SizeFieldMask & whichField))
+        _sfSize.syncWith(pFrom->_sfSize);
+
+    if(FieldBits::NoField != (VisibleFieldMask & whichField))
+        _sfVisible.syncWith(pFrom->_sfVisible);
+
+    if(FieldBits::NoField != (EnabledFieldMask & whichField))
+        _sfEnabled.syncWith(pFrom->_sfEnabled);
+
+    if(FieldBits::NoField != (FocusedFieldMask & whichField))
+        _sfFocused.syncWith(pFrom->_sfFocused);
+
+    if(FieldBits::NoField != (ConstraintsFieldMask & whichField))
+        _sfConstraints.syncWith(pFrom->_sfConstraints);
+
+    if(FieldBits::NoField != (BorderFieldMask & whichField))
+        _sfBorder.syncWith(pFrom->_sfBorder);
+
+    if(FieldBits::NoField != (BackgroundFieldMask & whichField))
+        _sfBackground.syncWith(pFrom->_sfBackground);
+
+    if(FieldBits::NoField != (DisabledBorderFieldMask & whichField))
+        _sfDisabledBorder.syncWith(pFrom->_sfDisabledBorder);
+
+    if(FieldBits::NoField != (DisabledBackgroundFieldMask & whichField))
+        _sfDisabledBackground.syncWith(pFrom->_sfDisabledBackground);
+
+    if(FieldBits::NoField != (DragEnabledFieldMask & whichField))
+        _sfDragEnabled.syncWith(pFrom->_sfDragEnabled);
+
+    if(FieldBits::NoField != (TransferHandlerFieldMask & whichField))
+        _sfTransferHandler.syncWith(pFrom->_sfTransferHandler);
+
+    if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
+        _sfFocusedBorder.syncWith(pFrom->_sfFocusedBorder);
+
+    if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
+        _sfFocusedBackground.syncWith(pFrom->_sfFocusedBackground);
+
+    if(FieldBits::NoField != (RolloverBorderFieldMask & whichField))
+        _sfRolloverBorder.syncWith(pFrom->_sfRolloverBorder);
+
+    if(FieldBits::NoField != (RolloverBackgroundFieldMask & whichField))
+        _sfRolloverBackground.syncWith(pFrom->_sfRolloverBackground);
+
+    if(FieldBits::NoField != (ToolTipTextFieldMask & whichField))
+        _sfToolTipText.syncWith(pFrom->_sfToolTipText);
+
+    if(FieldBits::NoField != (OpacityFieldMask & whichField))
+        _sfOpacity.syncWith(pFrom->_sfOpacity);
+
+    if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
+        _sfParentContainer.syncWith(pFrom->_sfParentContainer);
+
+    if(FieldBits::NoField != (ParentWindowFieldMask & whichField))
+        _sfParentWindow.syncWith(pFrom->_sfParentWindow);
+
+    if(FieldBits::NoField != (ClippingFieldMask & whichField))
+        _sfClipping.syncWith(pFrom->_sfClipping);
+
+    if(FieldBits::NoField != (PopupMenuFieldMask & whichField))
+        _sfPopupMenu.syncWith(pFrom->_sfPopupMenu);
+
+    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
+        _sfFocusedForeground.syncWith(pFrom->_sfFocusedForeground);
+
+    if(FieldBits::NoField != (RolloverForegroundFieldMask & whichField))
+        _sfRolloverForeground.syncWith(pFrom->_sfRolloverForeground);
+
+    if(FieldBits::NoField != (DisabledForegroundFieldMask & whichField))
+        _sfDisabledForeground.syncWith(pFrom->_sfDisabledForeground);
+
+    if(FieldBits::NoField != (ForegroundFieldMask & whichField))
+        _sfForeground.syncWith(pFrom->_sfForeground);
+
+    if(FieldBits::NoField != (CursorFieldMask & whichField))
+        _sfCursor.syncWith(pFrom->_sfCursor);
+}
+#endif
 
 
 inline
-EventConnection ComponentBase::attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
+const Char8 *ComponentBase::getClassname(void)
+{
+    return "Component";
+}
+
+inline
+EventConnection ComponentBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
 {
     return _Producer.attachActivity(TheActivity, ProducedEventId);
 }
 
 inline
-bool ComponentBase::isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const
+bool ComponentBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
 {
     return _Producer.isActivityAttached(TheActivity, ProducedEventId);
 }
@@ -102,13 +216,13 @@ UInt32 ComponentBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
 }
 
 inline
-ActivityPtr ComponentBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
+ActivityRefPtr ComponentBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
 {
     return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
 }
 
 inline
-void ComponentBase::detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
+void ComponentBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
 {
     _Producer.detachActivity(TheActivity, ProducedEventId);
 }
@@ -120,7 +234,7 @@ UInt32 ComponentBase::getNumProducedEvents(void) const
 }
 
 inline
-const MethodDescription *ComponentBase::getProducedEventDescription(const Char8 *ProducedEventName) const
+const MethodDescription *ComponentBase::getProducedEventDescription(const std::string &ProducedEventName) const
 {
     return _Producer.getProducedEventDescription(ProducedEventName);
 }
@@ -132,7 +246,7 @@ const MethodDescription *ComponentBase::getProducedEventDescription(UInt32 Produ
 }
 
 inline
-UInt32 ComponentBase::getProducedEventId(const Char8 *ProducedEventName) const
+UInt32 ComponentBase::getProducedEventId(const std::string &ProducedEventName) const
 {
     return _Producer.getProducedEventId(ProducedEventName);
 }
@@ -150,4 +264,7 @@ EventProducerPtr &ComponentBase::editEventProducer(void)
     return _sfEventProducer.getValue();
 }
 
+OSG_GEN_CONTAINERPTR(Component);
+
 OSG_END_NAMESPACE
+

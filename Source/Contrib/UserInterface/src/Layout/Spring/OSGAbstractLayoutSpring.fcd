@@ -3,22 +3,24 @@
 <FieldContainer
 	name="AbstractLayoutSpring"
 	parent="LayoutSpring"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="abstract"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI AbstractLayoutSpring.
 	<Field
 		name="Size"
 		type="Real32"
+        category="data"
 		cardinality="single"
-      visibility="external"
+        visibility="external"
 		defaultValue="LayoutSpring::VALUE_NOT_SET"
-		defaultHeader="Layout/Spring/OSGLayoutSpring.h"
 		access="public"
 	>
    </Field>

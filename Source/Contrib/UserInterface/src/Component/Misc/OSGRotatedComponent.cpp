@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,26 +40,21 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGRotatedComponent.h"
-#include "Util/OSGUIDrawUtils.h"
-#include "Component/Container/Window/OSGInternalWindow.h"
+#include "OSGUIDrawUtils.h"
+#include "OSGInternalWindow.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::RotatedComponent
-A UI Button. 	
-*/
+// Documentation for this class is emitted in the
+// OSGRotatedComponentBase.cpp file.
+// To modify it, please change the .fcd file (OSGRotatedComponent.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -69,8 +64,13 @@ A UI Button.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void RotatedComponent::initMethod (void)
+void RotatedComponent::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -78,46 +78,46 @@ void RotatedComponent::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-Pnt2f RotatedComponent::getParentToLocal(const Pnt2f& Location)
+Pnt2f RotatedComponent::getParentToLocal(const Pnt2f& Location) const
 {
     Pnt2f Result(Inherited::getParentToLocal(Location));
     Result = Result - Vec2f(static_cast<Real32>(getSize().x())/2.0,static_cast<Real32>(getSize().y())/2.0);
-    Result.setValues( Result[0]*osgcos(getAngle()) - Result[1]*osgsin(getAngle()), Result[0]*osgsin(getAngle()) + Result[1]*osgcos(getAngle()));
+    Result.setValues( Result[0]*osgCos(getAngle()) - Result[1]*osgSin(getAngle()), Result[0]*osgSin(getAngle()) + Result[1]*osgCos(getAngle()));
     Result = Result + Vec2f(static_cast<Real32>(getInternalComponent()->getSize().x())/2.0,static_cast<Real32>(getInternalComponent()->getSize().y())/2.0);
     return Result;
 }
 
-Pnt2f RotatedComponent::getLocalToParent(const Pnt2f& Location)
+Pnt2f RotatedComponent::getLocalToParent(const Pnt2f& Location) const
 {
     Pnt2f Result(Location);
     Result = Result - Vec2f(static_cast<Real32>(getInternalComponent()->getSize().x())/2.0,static_cast<Real32>(getInternalComponent()->getSize().y())/2.0);
-    
-    Result.setValues( Result[0]*osgcos(-getAngle()) - Result[1]*osgsin(-getAngle()), Result[0]*osgsin(-getAngle()) + Result[1]*osgcos(-getAngle()));
-    
+
+    Result.setValues( Result[0]*osgCos(-getAngle()) - Result[1]*osgSin(-getAngle()), Result[0]*osgSin(-getAngle()) + Result[1]*osgCos(-getAngle()));
+
     Result = Result + Vec2f(static_cast<Real32>(getSize().x())/2.0,static_cast<Real32>(getSize().y())/2.0);
     Result = Inherited::getLocalToParent(Result);
     return Result;
 }
 
-void RotatedComponent::drawInternal(const GraphicsPtr TheGraphics, Real32 Opacity) const
+void RotatedComponent::drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opacity) const
 {
-    if(getInternalComponent() != NullFC)
+    if(getInternalComponent() != NULL)
     {
         Pnt2f TopLeft, BottomRight;
         getInsideInsetsBounds(TopLeft, BottomRight);
 
         TheGraphics->incrDrawBounderiesNesting();
-        
+
         TheGraphics->initAddDrawBounderies();
         TheGraphics->drawRect(TopLeft, BottomRight,Color4f(0.0f,0.0f,0.0f,1.0f),1.0);
         TheGraphics->uninitAddDrawBounderies();
 
         TheGraphics->activateDrawBounderiesTest();
-        
-        
+
+
         glPushMatrix();
         glTranslatef(static_cast<Real32>(getSize().x())/2.0,static_cast<Real32>(getSize().y())/2.0,0.0);
-        glRotatef(-osgrad2degree(getAngle()), 0.0,0.0,1.0);
+        glRotatef(-osgRad2Degree(getAngle()), 0.0,0.0,1.0);
         glTranslatef(-static_cast<Real32>(getInternalComponent()->getSize().x())/2.0,-static_cast<Real32>(getInternalComponent()->getSize().y())/2.0,0.0);
         getInternalComponent()->draw(TheGraphics, getOpacity()*Opacity);
         glPopMatrix();
@@ -135,146 +135,144 @@ void RotatedComponent::updateLayout(void)
 {
     Pnt2f TopLeft, BottomRight;
     getInsideInsetsBounds(TopLeft, BottomRight);
-    
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+
+    for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
     {
-        beginEditCP(getChildren()[i],PositionFieldMask | SizeFieldMask);
-            getChildren()[i]->setPosition(Pnt2f(0,0));
-            getChildren()[i]->setSize(getChildren()[i]->getPreferredSize());
-        endEditCP(getChildren()[i],PositionFieldMask | SizeFieldMask);
+        getChildren(i)->setPosition(Pnt2f(0,0));
+        getChildren(i)->setSize(getChildren(i)->getPreferredSize());
     }
 }
 
-void RotatedComponent::mouseClicked(const MouseEventPtr e)
+void RotatedComponent::mouseClicked(const MouseEventUnrecPtr e)
 {
-	bool isContained;
-    for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
+    bool isContained;
+    for(Int32 i(getMFChildren()->size()-1) ; i>=0 ; --i)
     {
-        isContained = getChildren()[i]->isContained(e->getLocation(), true);
-		checkMouseEnterExit(e,e->getLocation(),getChildren()[i],isContained,e->getViewport());
-		if(isContained)
-		{
-			getChildren()[i]->mouseClicked(e);
-			break;
-		}
-    }
-	Component::mouseClicked(e);
-}
-
-void RotatedComponent::mouseEntered(const MouseEventPtr e)
-{
-	bool isContained;
-    for(Int32 i(0) ; i<getChildren().size() ; ++i)
-    {
-        isContained = getChildren()[i]->isContained(e->getLocation(), true);
-		checkMouseEnterExit(e,e->getLocation(),getChildren()[i],isContained,e->getViewport());
-    }
-	Component::mouseEntered(e);
-}
-
-void RotatedComponent::mouseExited(const MouseEventPtr e)
-{
-	bool isContained;
-    for(Int32 i(0) ; i<getChildren().size() ; ++i)
-    {
-        isContained = getChildren()[i]->isContained(e->getLocation(), true);
-		checkMouseEnterExit(e,e->getLocation(),getChildren()[i],isContained,e->getViewport());
-    }
-	Component::mouseExited(e);
-}
-
-void RotatedComponent::mousePressed(const MouseEventPtr e)
-{
-	bool isContained(false);
-    for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
-    {
-        isContained = getChildren()[i]->isContained(e->getLocation(), true);
-		checkMouseEnterExit(e,e->getLocation(),getChildren()[i],isContained,e->getViewport());
-		if(isContained)
-		{
-			//Give myself temporary focus
-			takeFocus(true);
-			if(!getChildren()[i]->getType().isDerivedFrom(Container::getClassType()))
-			{
-				getChildren()[i]->takeFocus();
-			}
-			getChildren()[i]->mousePressed(e);
-			break;
-		}
-    }
-	if(isContained)
-	{
-		//Remove my temporary focus
-		giveFocus(NullFC, false);
-	}
-	else
-	{
-		//Give myself permenant focus
-		takeFocus();
-	}
-	Component::mousePressed(e);
-}
-
-void RotatedComponent::mouseReleased(const MouseEventPtr e)
-{
-	bool isContained;
-    for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
-    {
-        isContained = getChildren()[i]->isContained(e->getLocation(), true);
-		checkMouseEnterExit(e,e->getLocation(),getChildren()[i],isContained,e->getViewport());
-		if(isContained)
-		{
-			getChildren()[i]->mouseReleased(e);
-			break;
-		}
-    }
-	Component::mouseReleased(e);
-}
-
-
-void RotatedComponent::mouseMoved(const MouseEventPtr e)
-{
-	bool isContained;
-    for(Int32 i(0) ; i<getChildren().size() ; ++i)
-    {
-        isContained = getChildren()[i]->isContained(e->getLocation(), true);
-		checkMouseEnterExit(e,e->getLocation(),getChildren()[i],isContained,e->getViewport());
-		if(isContained)
-		{
-			getChildren()[i]->mouseMoved(e);
-		}
-    }
-	Component::mouseMoved(e);
-}
-
-void RotatedComponent::mouseDragged(const MouseEventPtr e)
-{
-	bool isContained;
-    for(Int32 i(0) ; i<getChildren().size() ; ++i)
-    {
-        isContained = getChildren()[i]->isContained(e->getLocation(), true);
-		checkMouseEnterExit(e,e->getLocation(),getChildren()[i],isContained,e->getViewport());
-		if(isContained)
-		{
-			getChildren()[i]->mouseDragged(e);
-		}
-    }
-	Component::mouseDragged(e);
-}
-
-void RotatedComponent::mouseWheelMoved(const MouseWheelEventPtr e)
-{
-	bool isContained;
-    for(Int32 i(0) ; i<getChildren().size() ; ++i)
-    {
-        isContained = getChildren()[i]->isContained(e->getLocation(), true);
-		checkMouseEnterExit(e,e->getLocation(),getChildren()[i],isContained,e->getViewport());
-		if(isContained)
-		{
-			getChildren()[i]->mouseWheelMoved(e);
+        isContained = getChildren(i)->isContained(e->getLocation(), true);
+        checkMouseEnterExit(e,e->getLocation(),getChildren(i),isContained,e->getViewport());
+        if(isContained)
+        {
+            getChildren(i)->mouseClicked(e);
+            break;
         }
     }
-	Component::mouseWheelMoved(e);
+    Component::mouseClicked(e);
+}
+
+void RotatedComponent::mouseEntered(const MouseEventUnrecPtr e)
+{
+    bool isContained;
+    for(Int32 i(0) ; i<getMFChildren()->size() ; ++i)
+    {
+        isContained = getChildren(i)->isContained(e->getLocation(), true);
+        checkMouseEnterExit(e,e->getLocation(),getChildren(i),isContained,e->getViewport());
+    }
+    Component::mouseEntered(e);
+}
+
+void RotatedComponent::mouseExited(const MouseEventUnrecPtr e)
+{
+    bool isContained;
+    for(Int32 i(0) ; i<getMFChildren()->size() ; ++i)
+    {
+        isContained = getChildren(i)->isContained(e->getLocation(), true);
+        checkMouseEnterExit(e,e->getLocation(),getChildren(i),isContained,e->getViewport());
+    }
+    Component::mouseExited(e);
+}
+
+void RotatedComponent::mousePressed(const MouseEventUnrecPtr e)
+{
+    bool isContained(false);
+    for(Int32 i(getMFChildren()->size()-1) ; i>=0 ; --i)
+    {
+        isContained = getChildren(i)->isContained(e->getLocation(), true);
+        checkMouseEnterExit(e,e->getLocation(),getChildren(i),isContained,e->getViewport());
+        if(isContained)
+        {
+            //Give myself temporary focus
+            takeFocus(true);
+            if(!getChildren(i)->getType().isDerivedFrom(ComponentContainer::getClassType()))
+            {
+                getChildren(i)->takeFocus();
+            }
+            getChildren(i)->mousePressed(e);
+            break;
+        }
+    }
+    if(isContained)
+    {
+        //Remove my temporary focus
+        giveFocus(NULL, false);
+    }
+    else
+    {
+        //Give myself permenant focus
+        takeFocus();
+    }
+    Component::mousePressed(e);
+}
+
+void RotatedComponent::mouseReleased(const MouseEventUnrecPtr e)
+{
+    bool isContained;
+    for(Int32 i(getMFChildren()->size()-1) ; i>=0 ; --i)
+    {
+        isContained = getChildren(i)->isContained(e->getLocation(), true);
+        checkMouseEnterExit(e,e->getLocation(),getChildren(i),isContained,e->getViewport());
+        if(isContained)
+        {
+            getChildren(i)->mouseReleased(e);
+            break;
+        }
+    }
+    Component::mouseReleased(e);
+}
+
+
+void RotatedComponent::mouseMoved(const MouseEventUnrecPtr e)
+{
+    bool isContained;
+    for(Int32 i(0) ; i<getMFChildren()->size() ; ++i)
+    {
+        isContained = getChildren(i)->isContained(e->getLocation(), true);
+        checkMouseEnterExit(e,e->getLocation(),getChildren(i),isContained,e->getViewport());
+        if(isContained)
+        {
+            getChildren(i)->mouseMoved(e);
+        }
+    }
+    Component::mouseMoved(e);
+}
+
+void RotatedComponent::mouseDragged(const MouseEventUnrecPtr e)
+{
+    bool isContained;
+    for(Int32 i(0) ; i<getMFChildren()->size() ; ++i)
+    {
+        isContained = getChildren(i)->isContained(e->getLocation(), true);
+        checkMouseEnterExit(e,e->getLocation(),getChildren(i),isContained,e->getViewport());
+        if(isContained)
+        {
+            getChildren(i)->mouseDragged(e);
+        }
+    }
+    Component::mouseDragged(e);
+}
+
+void RotatedComponent::mouseWheelMoved(const MouseWheelEventUnrecPtr e)
+{
+    bool isContained;
+    for(Int32 i(0) ; i<getMFChildren()->size() ; ++i)
+    {
+        isContained = getChildren(i)->isContained(e->getLocation(), true);
+        checkMouseEnterExit(e,e->getLocation(),getChildren(i),isContained,e->getViewport());
+        if(isContained)
+        {
+            getChildren(i)->mouseWheelMoved(e);
+        }
+    }
+    Component::mouseWheelMoved(e);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -299,26 +297,26 @@ RotatedComponent::~RotatedComponent(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void RotatedComponent::changed(BitVector whichField, UInt32 origin)
+void RotatedComponent::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 
     if(whichField & InternalComponentFieldMask)
     {
-        beginEditCP(RotatedComponentPtr(this), ChildrenFieldMask);
-            getChildren().clear();
-            if(getInternalComponent() != NullFC)
+            clearChildren();
+            if(getInternalComponent() != NULL)
             {
-                getChildren().push_back(getInternalComponent());
+                pushToChildren(getInternalComponent());
             }
-        endEditCP(RotatedComponentPtr(this), ChildrenFieldMask);
     }
         
     if((whichField & InternalComponentFieldMask) ||
        (whichField & AngleFieldMask) || 
        (whichField & ResizePolicyFieldMask))
     {
-        if(getInternalComponent() != NullFC)
+        if(getInternalComponent() != NULL)
         {
             Vec2f Size;
             switch (static_cast<ResizePolicy>(getResizePolicy()))
@@ -353,10 +351,8 @@ void RotatedComponent::changed(BitVector whichField, UInt32 origin)
 	                Pnt2f TopLeft, BottomRight;
 	                getBounds(TopLeft, BottomRight);
                     
-                    beginEditCP(RotatedComponentPtr(this), PreferredSizeFieldMask);
                         setPreferredSize(Vec2f(Max.x() - Min.x() + (BorderTopLeft.x() - TopLeft.x()) + (BottomRight.x() - BorderBottomRight.x()),
                                                Max.y() - Min.y() + (BorderTopLeft.y() - TopLeft.y()) + (BottomRight.y() - BorderBottomRight.y())));
-                    endEditCP(RotatedComponentPtr(this), PreferredSizeFieldMask);
                     break;
                 }
             case RESIZE_TO_MAX:
@@ -366,9 +362,7 @@ void RotatedComponent::changed(BitVector whichField, UInt32 origin)
                     //Get the distance from the Center to one of the TopLeft Corner
                     Real32 Length = 2*ComponentCenter.dist(Pnt2f(0,0));
                     
-                    beginEditCP(RotatedComponentPtr(this), PreferredSizeFieldMask);
                         setPreferredSize(Vec2f(Length,Length));
-                    endEditCP(RotatedComponentPtr(this), PreferredSizeFieldMask);
                     break;
                 }
             case NO_RESIZING:
@@ -378,23 +372,22 @@ void RotatedComponent::changed(BitVector whichField, UInt32 origin)
             getInternalComponent()->updateClipBounds();
 
 			//Check the Mouse
-			if( getParentWindow() != NullFC &&
-				getParentWindow()->getDrawingSurface() != NullFC &&
-				getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+			if( getParentWindow() != NULL &&
+				getParentWindow()->getDrawingSurface() != NULL &&
+				getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
 			{
 				Pnt2f MouseLoc(getParentWindow()->getDrawingSurface()->getEventProducer()->getMousePosition());
-				const MouseEventPtr e = MouseEvent::create(getParentWindow()->getDrawingSurface()->getEventProducer(),getSystemTime(),MouseEvent::NO_BUTTON,0,MouseLoc, NullFC);
+				const MouseEventUnrecPtr e = MouseEvent::create(getParentWindow()->getDrawingSurface()->getEventProducer(),getSystemTime(),MouseEvent::NO_BUTTON,0,MouseLoc, NULL);
 				checkMouseEnterExit(e,e->getLocation(),getInternalComponent(),getInternalComponent()->isContained(MouseLoc, true),e->getViewport());
 			}
         }
     }
 }
 
-void RotatedComponent::dump(      UInt32    , 
+void RotatedComponent::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump RotatedComponent NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

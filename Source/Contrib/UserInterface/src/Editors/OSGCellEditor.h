@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,47 +42,48 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGCellEditorBase.h"
-#include <OpenSG/Toolbox/OSGEvent.h>
+#include "OSGEvent.h"
 #include "OSGCellEditorListener.h"
 #include <boost/any.hpp>
-#include "Component/OSGComponentFields.h"
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGComponentFields.h"
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief CellEditor class. See \ref 
-           PageUserInterfaceCellEditor for a description.
+/*! \brief CellEditor class. See \ref
+           PageContribUserInterfaceCellEditor for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING CellEditor : public CellEditorBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING CellEditor : public CellEditorBase
 {
-  private:
-
-    typedef CellEditorBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef CellEditorBase Inherited;
+    typedef CellEditor     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
     //Adds a listener to the list that's notified when the editor stops, or cancels editing.
     virtual EventConnection addCellEditorListener(CellEditorListenerPtr l) = 0;
 	virtual bool isCellEditorListenerAttached(CellEditorListenerPtr l) const = 0;
@@ -97,18 +98,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING CellEditor : public CellEditorBase
     virtual boost::any getCellEditorValue(void) const = 0;
 
     //Asks the editor if it can start editing using anEvent.
-    virtual bool isCellEditable(const EventPtr anEvent) const = 0;
+    virtual bool isCellEditable(const EventUnrecPtr anEvent) const = 0;
 
     //Returns true if the editing cell should be selected, false otherwise.
-    virtual bool shouldSelectCell(const EventPtr anEvent) const = 0;
+    virtual bool shouldSelectCell(const EventUnrecPtr anEvent) const = 0;
 
     //Tells the editor to stop editing and accept any partially edited value as the value of the editor.
     virtual bool stopCellEditing(void) = 0;
     
     //Get the Editor Component
-    virtual ComponentPtr getCellEditor(const boost::any& Value, bool IsSelected) = 0;
+    virtual ComponentRefPtr getCellEditor(const boost::any& Value, bool IsSelected) = 0;
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in CellEditorBase.
@@ -125,20 +127,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING CellEditor : public CellEditorBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~CellEditor(void); 
+    virtual ~CellEditor(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class CellEditorBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const CellEditor &source);
 };
 

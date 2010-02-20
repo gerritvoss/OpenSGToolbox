@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,61 +58,71 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include "OSGRadioButtonFields.h" // SelectedButton type
+#include "OSGFieldContainer.h" // Parent
+
+#include "OSGRadioButtonFields.h"       // SelectedButton type
 
 #include "OSGRadioButtonGroupFields.h"
+
 OSG_BEGIN_NAMESPACE
 
 class RadioButtonGroup;
-class BinaryDataHandler;
 
 //! \brief RadioButtonGroup Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonGroupBase : public FieldContainer
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING RadioButtonGroupBase : public FieldContainer
 {
-  private:
-
-    typedef FieldContainer    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef RadioButtonGroupPtr  Ptr;
+    typedef FieldContainer Inherited;
+    typedef FieldContainer ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(RadioButtonGroup);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
         SelectedButtonFieldId = Inherited::NextFieldId,
-        GroupButtonsFieldId   = SelectedButtonFieldId + 1,
-        NextFieldId           = GroupButtonsFieldId   + 1
+        GroupButtonsFieldId = SelectedButtonFieldId + 1,
+        NextFieldId = GroupButtonsFieldId + 1
     };
 
-    static const OSG::BitVector SelectedButtonFieldMask;
-    static const OSG::BitVector GroupButtonsFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector SelectedButtonFieldMask =
+        (TypeTraits<BitVector>::One << SelectedButtonFieldId);
+    static const OSG::BitVector GroupButtonsFieldMask =
+        (TypeTraits<BitVector>::One << GroupButtonsFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecRadioButtonPtr SFSelectedButtonType;
+    typedef MFUnrecRadioButtonPtr MFGroupButtonsType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -121,46 +131,49 @@ class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonGroupBase : public FieldContain
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-
-           SFRadioButtonPtr    *editSFSelectedButton (void);
-     const SFRadioButtonPtr    *getSFSelectedButton (void) const;
-
-           MFRadioButtonPtr    *editMFGroupButtons   (void);
-     const MFRadioButtonPtr    *getMFGroupButtons   (void) const;
+            const SFUnrecRadioButtonPtr *getSFSelectedButton (void) const;
+                  SFUnrecRadioButtonPtr *editSFSelectedButton (void);
+            const MFUnrecRadioButtonPtr *getMFGroupButtons   (void) const;
+                  MFUnrecRadioButtonPtr *editMFGroupButtons   (void);
 
 
-           RadioButtonPtr      &editSelectedButton (void);
-     const RadioButtonPtr      &getSelectedButton (void) const;
+                  RadioButton * getSelectedButton (void) const;
 
-           RadioButtonPtr      &editGroupButtons   (const UInt32 index);
-     const RadioButtonPtr      &getGroupButtons   (const UInt32 index) const;
-#ifndef OSG_2_PREP
-           MFRadioButtonPtr    &getGroupButtons   (void);
-     const MFRadioButtonPtr    &getGroupButtons   (void) const;
-#endif
+                  RadioButton * getGroupButtons   (const UInt32 index) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setSelectedButton ( const RadioButtonPtr &value );
+            void setSelectedButton (RadioButton * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
     /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    void pushToGroupButtons           (RadioButton * const value   );
+    void assignGroupButtons          (const MFUnrecRadioButtonPtr &value);
+    void removeFromGroupButtons (UInt32               uiIndex );
+    void removeObjFromGroupButtons(RadioButton * const value   );
+    void clearGroupButtons            (void                         );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -168,27 +181,44 @@ class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonGroupBase : public FieldContain
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  RadioButtonGroupPtr      create          (void); 
-    static  RadioButtonGroupPtr      createEmpty     (void); 
+    static  RadioButtonGroupTransitPtr  create          (void);
+    static  RadioButtonGroup           *createEmpty     (void);
+
+    static  RadioButtonGroupTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  RadioButtonGroup            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  RadioButtonGroupTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFRadioButtonPtr    _sfSelectedButton;
-    MFRadioButtonPtr    _mfGroupButtons;
+    SFUnrecRadioButtonPtr _sfSelectedButton;
+    MFUnrecRadioButtonPtr _mfGroupButtons;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -203,66 +233,81 @@ class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonGroupBase : public FieldContain
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~RadioButtonGroupBase(void); 
+    virtual ~RadioButtonGroupBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const RadioButtonGroup *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleSelectedButton  (void) const;
+    EditFieldHandlePtr editHandleSelectedButton (void);
+    GetFieldHandlePtr  getHandleGroupButtons    (void) const;
+    EditFieldHandlePtr editHandleGroupButtons   (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      RadioButtonGroupBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      RadioButtonGroupBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      RadioButtonGroupBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const RadioButtonGroupBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef RadioButtonGroupBase *RadioButtonGroupBaseP;
-
-typedef osgIF<RadioButtonGroupBase::isNodeCore,
-              CoredNodePtr<RadioButtonGroup>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet RadioButtonGroupNodePtr;
-
-typedef RefPtr<RadioButtonGroupPtr> RadioButtonGroupRefPtr;
 
 OSG_END_NAMESPACE
 

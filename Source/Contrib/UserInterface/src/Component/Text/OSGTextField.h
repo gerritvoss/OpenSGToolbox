@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,60 +42,60 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGTextFieldBase.h"
-#include "Event/OSGActionListener.h"
-#include <OpenSG/Input/OSGWindowEventProducer.h>
-#include <OpenSG/Input/OSGMouseAdapter.h>
-#include <OpenSG/Input/OSGMouseMotionAdapter.h>
-#include <OpenSG/Input/OSGKeyAdapter.h>
+#include "OSGActionListener.h"
+#include "OSGWindowEventProducer.h"
+#include "OSGMouseAdapter.h"
+#include "OSGMouseMotionAdapter.h"
+#include "OSGKeyAdapter.h"
 
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TextField class. See \ref 
-           PageUserInterfaceTextField for a description.
+/*! \brief TextField class. See \ref
+           PageContribUserInterfaceTextField for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
-
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextField : public TextFieldBase
 {
-  private:
-
-    typedef TextFieldBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef TextFieldBase Inherited;
+    typedef TextField     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
-    /*! \}*/
+    /*! \}                                                                 */
+
 	Vec2f getContentRequestedSize(void) const;
 
-	virtual void keyTyped(const KeyEventPtr e);
+	virtual void keyTyped(const KeyEventUnrecPtr e);
 
-	virtual void mouseClicked(const MouseEventPtr e);
-	virtual void mousePressed(const MouseEventPtr e);
+	virtual void mouseClicked(const MouseEventUnrecPtr e);
+	virtual void mousePressed(const MouseEventUnrecPtr e);
 	
-	virtual void focusGained(const FocusEventPtr e);
-	virtual void focusLost(const FocusEventPtr e);
+	virtual void focusGained(const FocusEventUnrecPtr e);
+	virtual void focusLost(const FocusEventUnrecPtr e);
 
     EventConnection addActionListener(ActionListenerPtr Listener);
 	bool isActionListenerAttached(ActionListenerPtr Listener) const;
@@ -105,8 +105,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
 
     virtual void detachFromEventProducer(void);
     
-
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in TextFieldBase.
@@ -123,11 +123,18 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TextField(void); 
+    virtual ~TextField(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
     
-	virtual void drawInternal(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
+	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
 	void calculateTextBounds(const UInt32 StartIndex, const UInt32 EndIndex, Pnt2f& TopLeft, Pnt2f& BottomRight);
 
 	typedef std::set<ActionListenerPtr> ActionListenerSet;
@@ -136,19 +143,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
 	
     ActionListenerSet       _ActionListeners;
 	
-    virtual void produceActionPerformed(const ActionEventPtr e);
+    virtual void produceActionPerformed(const ActionEventUnrecPtr e);
 	
 	Time _CurrentCaretBlinkElps;
 
 	class CaretUpdateListener : public UpdateListener
 	{
 	public:
-		CaretUpdateListener(TextFieldPtr TheTextField);
-        virtual void update(const UpdateEventPtr e);
+		CaretUpdateListener(TextFieldRefPtr TheTextField);
+        virtual void update(const UpdateEventUnrecPtr e);
 
         void disconnect(void);
 	private:
-		TextFieldPtr _TextField;
+		TextFieldRefPtr _TextField;
 	};
 
 	friend class CarentUpdateListener;
@@ -158,33 +165,31 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
 	class MouseDownListener : public MouseAdapter,public MouseMotionAdapter,public KeyAdapter
 	{
 	public :
-		MouseDownListener(TextFieldPtr TheTextField);
+		MouseDownListener(TextFieldRefPtr TheTextField);
 		
-        virtual void keyTyped(const KeyEventPtr e);
+        virtual void keyTyped(const KeyEventUnrecPtr e);
 
-        virtual void mouseReleased(const MouseEventPtr e);
-        virtual void mouseDragged(const MouseEventPtr e);
+        virtual void mouseReleased(const MouseEventUnrecPtr e);
+        virtual void mouseDragged(const MouseEventUnrecPtr e);
 
         void disconnect(void);
 	protected :
-		TextFieldPtr _TextField;
+		TextFieldRefPtr _TextField;
 	};
 
 	friend class MouseDownListener;
 
 	MouseDownListener _MouseDownListener;
 
-    void mouseDraggedAfterArming(const MouseEventPtr e);
+    void mouseDraggedAfterArming(const MouseEventUnrecPtr e);
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class TextFieldBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const TextField &source);
 };
 

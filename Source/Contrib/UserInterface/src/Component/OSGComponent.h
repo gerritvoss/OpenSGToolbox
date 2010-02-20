@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,54 +42,58 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGComponentBase.h"
-#include "Graphics/OSGGraphics.h"
+#include "OSGGraphics.h"
 
-#include <OpenSG/Input/OSGKeyListener.h>
-#include <OpenSG/Input/OSGMouseListener.h>
-#include <OpenSG/Input/OSGMouseWheelListener.h>
-#include <OpenSG/Input/OSGMouseMotionListener.h>
-#include <OpenSG/Input/OSGUpdateListener.h>
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGKeyListener.h"
+#include "OSGMouseListener.h"
+#include "OSGMouseWheelListener.h"
+#include "OSGMouseMotionListener.h"
+#include "OSGUpdateListener.h"
+#include "OSGEventConnection.h"
 
 #include <set>
 
-#include "Event/OSGFocusListener.h"
-#include "Event/OSGComponentListener.h"
+#include "OSGFocusListener.h"
+#include "OSGComponentListener.h"
 
-#include "Component/Misc/OSGToolTipFields.h"
+#include "OSGToolTipFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
-{
-  private:
+/*! \brief Component class. See \ref
+           PageContribUserInterfaceComponent for a description.
+*/
 
-    typedef ComponentBase Inherited;
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Component : public ComponentBase
+{
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef ComponentBase Inherited;
+    typedef Component     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void draw(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
+	virtual void draw(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
 
     virtual void getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
 	virtual void getClipBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
@@ -102,27 +106,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
 	virtual Vec2f getBorderingLength(void) const;
 	
 	//Mouse Events
-    virtual void mouseClicked(const MouseEventPtr e);
-    virtual void mouseEntered(const MouseEventPtr e);
-    virtual void mouseExited(const MouseEventPtr e);
-    virtual void mousePressed(const MouseEventPtr e);
-    virtual void mouseReleased(const MouseEventPtr e);
+    virtual void mouseClicked(const MouseEventUnrecPtr e);
+    virtual void mouseEntered(const MouseEventUnrecPtr e);
+    virtual void mouseExited(const MouseEventUnrecPtr e);
+    virtual void mousePressed(const MouseEventUnrecPtr e);
+    virtual void mouseReleased(const MouseEventUnrecPtr e);
 
 	//Mouse Motion Events
-    virtual void mouseMoved(const MouseEventPtr e);
-    virtual void mouseDragged(const MouseEventPtr e);
+    virtual void mouseMoved(const MouseEventUnrecPtr e);
+    virtual void mouseDragged(const MouseEventUnrecPtr e);
 
 	//Mouse Wheel Events
-    virtual void mouseWheelMoved(const MouseWheelEventPtr e);
+    virtual void mouseWheelMoved(const MouseWheelEventUnrecPtr e);
 
 	//Key Events
-	virtual void keyPressed(const KeyEventPtr e);
-	virtual void keyReleased(const KeyEventPtr e);
-	virtual void keyTyped(const KeyEventPtr e);
+	virtual void keyPressed(const KeyEventUnrecPtr e);
+	virtual void keyReleased(const KeyEventUnrecPtr e);
+	virtual void keyTyped(const KeyEventUnrecPtr e);
 
 	//Focus Events
-	virtual void focusGained(const FocusEventPtr e);
-	virtual void focusLost(const FocusEventPtr e);
+	virtual void focusGained(const FocusEventUnrecPtr e);
+	virtual void focusLost(const FocusEventUnrecPtr e);
 
     //Detach From Event Producer
     //This method should disconnect all Event Connection to
@@ -162,7 +166,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
 
     //Returns the tooltip location in this component's coordinate system
     virtual Pnt2f getToolTipLocation(Pnt2f MousePosition);
-    virtual ToolTipPtr createToolTip(void);
+    virtual ToolTipRefPtr createToolTip(void);
     
     //Scrollable Interface
     //Returns the preferred size of the viewport for a view component.
@@ -189,19 +193,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
 	virtual void scrollToPoint(const Pnt2f& PointInComponent);
 
     static const OSG::BitVector BordersFieldMask;
-	virtual void setBorders(BorderPtr TheBorder);
+	virtual void setBorders(BorderRefPtr TheBorder);
 
     static const OSG::BitVector BackgroundsFieldMask;
-	virtual void setBackgrounds(LayerPtr TheBackground);
+	virtual void setBackgrounds(LayerRefPtr TheBackground);
     
     static const OSG::BitVector ForegroundsFieldMask;
-	virtual void setForegrounds(LayerPtr TheForeground);
+	virtual void setForegrounds(LayerRefPtr TheForeground);
 
-    virtual Pnt2f getParentToLocal(const Pnt2f& Location);
+    virtual Pnt2f getParentToLocal(const Pnt2f& Location) const;
 
-    virtual Pnt2f getLocalToParent(const Pnt2f& Location);
-
+    virtual Pnt2f getLocalToParent(const Pnt2f& Location) const;
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ComponentBase.
@@ -218,61 +222,68 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Component(void); 
+    virtual ~Component(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
 
-	virtual bool setupClipping(const GraphicsPtr Graphics) const;
-    virtual void drawBorder(const GraphicsPtr TheGraphics, const BorderPtr Border, Real32 Opacity) const;
-    virtual void drawBackground(const GraphicsPtr TheGraphics, const LayerPtr Background, Real32 Opacity) const;
-    virtual void drawForeground(const GraphicsPtr TheGraphics, const LayerPtr Foreground, Real32 Opacity) const;
+	virtual bool setupClipping(const GraphicsWeakPtr Graphics) const;
+    virtual void drawBorder(const GraphicsWeakPtr TheGraphics, const BorderRefPtr Border, Real32 Opacity) const;
+    virtual void drawBackground(const GraphicsWeakPtr TheGraphics, const LayerRefPtr Background, Real32 Opacity) const;
+    virtual void drawForeground(const GraphicsWeakPtr TheGraphics, const LayerRefPtr Foreground, Real32 Opacity) const;
     
-	virtual void drawInternal(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const = 0;
-	virtual void drawUnclipped(const GraphicsPtr TheGraphics, Real32 Opacity) const;
+	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const = 0;
+	virtual void drawUnclipped(const GraphicsWeakPtr TheGraphics, Real32 Opacity) const;
 	
-    virtual bool giveFocus(ComponentPtr NewFocusedComponent, bool Temporary= false);
-    virtual BorderPtr getDrawnBorder(void) const;
-    virtual LayerPtr getDrawnBackground(void) const;
-    virtual LayerPtr getDrawnForeground(void) const;
+    virtual bool giveFocus(ComponentRefPtr NewFocusedComponent, bool Temporary= false);
+    virtual BorderRefPtr getDrawnBorder(void) const;
+    virtual LayerRefPtr getDrawnBackground(void) const;
+    virtual LayerRefPtr getDrawnForeground(void) const;
 
     class ComponentUpdater : public UpdateListener
     {
     public:
-        ComponentUpdater(ComponentPtr TheComponent);
+        ComponentUpdater(ComponentRefPtr TheComponent);
 
-        virtual void update(const UpdateEventPtr e);
+        virtual void update(const UpdateEventUnrecPtr e);
     private:
-        ComponentPtr _Component;
+        ComponentRefPtr _Component;
     };
 
     class DeactivateToolTipListener : public MouseListener
     {
     public:
-        DeactivateToolTipListener(ComponentPtr TheComponent);
+        DeactivateToolTipListener(ComponentRefPtr TheComponent);
 
-        virtual void mouseClicked(const MouseEventPtr e);
-        virtual void mouseEntered(const MouseEventPtr e);
-        virtual void mouseExited(const MouseEventPtr e);
-        virtual void mousePressed(const MouseEventPtr e);
-        virtual void mouseReleased(const MouseEventPtr e);
+        virtual void mouseClicked(const MouseEventUnrecPtr e);
+        virtual void mouseEntered(const MouseEventUnrecPtr e);
+        virtual void mouseExited(const MouseEventUnrecPtr e);
+        virtual void mousePressed(const MouseEventUnrecPtr e);
+        virtual void mouseReleased(const MouseEventUnrecPtr e);
     private:
-        ComponentPtr _Component;
+        ComponentRefPtr _Component;
     };
 
     class ActivateToolTipListener : public MouseListener
     {
     public:
-        ActivateToolTipListener(ComponentPtr TheComponent);
+        ActivateToolTipListener(ComponentRefPtr TheComponent);
 
-        virtual void mouseClicked(const MouseEventPtr e);
-        virtual void mouseEntered(const MouseEventPtr e);
-        virtual void mouseExited(const MouseEventPtr e);
-        virtual void mousePressed(const MouseEventPtr e);
-        virtual void mouseReleased(const MouseEventPtr e);
+        virtual void mouseClicked(const MouseEventUnrecPtr e);
+        virtual void mouseEntered(const MouseEventUnrecPtr e);
+        virtual void mouseExited(const MouseEventUnrecPtr e);
+        virtual void mousePressed(const MouseEventUnrecPtr e);
+        virtual void mouseReleased(const MouseEventUnrecPtr e);
 
         void disconnect(void);
     private:
-        ComponentPtr _Component;
+        ComponentRefPtr _Component;
     };
     
     friend class ComponentUpdater;
@@ -292,15 +303,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
     virtual void setClipBottomRight(const Pnt2f &value);
 
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ComponentBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const Component &source);
 	
 	typedef std::set<MouseMotionListenerPtr> MouseMotionListenerSet;
@@ -309,8 +318,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
 	
     MouseMotionListenerSet       _MouseMotionListeners;
 	
-    virtual void produceMouseMoved(const MouseEventPtr e);
-    virtual void produceMouseDragged(const MouseEventPtr e);
+    virtual void produceMouseMoved(const MouseEventUnrecPtr e);
+    virtual void produceMouseDragged(const MouseEventUnrecPtr e);
 
 	typedef std::set<MouseWheelListenerPtr> MouseWheelListenerSet;
     typedef MouseWheelListenerSet::iterator MouseWheelListenerSetItor;
@@ -318,7 +327,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
 	
     MouseWheelListenerSet       _MouseWheelListeners;
 	
-    void produceMouseWheelMoved(const MouseWheelEventPtr e);
+    void produceMouseWheelMoved(const MouseWheelEventUnrecPtr e);
 	
 	typedef std::set<MouseListenerPtr> MouseListenerSet;
     typedef MouseListenerSet::iterator MouseListenerSetItor;
@@ -326,11 +335,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
 	
     MouseListenerSet       _MouseListeners;
 	
-    void produceMouseClicked(const MouseEventPtr e);
-    void produceMouseEntered(const MouseEventPtr e);
-    void produceMouseExited(const MouseEventPtr e);
-    void produceMousePressed(const MouseEventPtr e);
-    void produceMouseReleased(const MouseEventPtr e);
+    void produceMouseClicked(const MouseEventUnrecPtr e);
+    void produceMouseEntered(const MouseEventUnrecPtr e);
+    void produceMouseExited(const MouseEventUnrecPtr e);
+    void produceMousePressed(const MouseEventUnrecPtr e);
+    void produceMouseReleased(const MouseEventUnrecPtr e);
 	
 	typedef std::set<KeyListenerPtr> KeyListenerSet;
     typedef KeyListenerSet::iterator KeyListenerSetItor;
@@ -338,35 +347,35 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
 	
     KeyListenerSet       _KeyListeners;
 	
-    void produceKeyPressed(const KeyEventPtr e);
-    void produceKeyReleased(const KeyEventPtr e);
-    void produceKeyTyped(const KeyEventPtr e);
+    void produceKeyPressed(const KeyEventUnrecPtr e);
+    void produceKeyReleased(const KeyEventUnrecPtr e);
+    void produceKeyTyped(const KeyEventUnrecPtr e);
     
 	typedef std::set<FocusListenerPtr> FocusListenerSet;
     typedef FocusListenerSet::iterator FocusListenerSetItor;
     typedef FocusListenerSet::const_iterator FocusListenerSetConstItor;
 	
     FocusListenerSet       _FocusListeners;
-    void produceFocusGained(const FocusEventPtr e);
-    void produceFocusLost(const FocusEventPtr e);
+    void produceFocusGained(const FocusEventUnrecPtr e);
+    void produceFocusLost(const FocusEventUnrecPtr e);
     
 	typedef std::set<ComponentListenerPtr> ComponentListenerSet;
     typedef ComponentListenerSet::iterator ComponentListenerSetItor;
     typedef ComponentListenerSet::const_iterator ComponentListenerSetConstItor;
 	
     ComponentListenerSet       _ComponentListeners;
-    void produceComponentHidden(const ComponentEventPtr e);
-    void produceComponentVisible(const ComponentEventPtr e);
-    void produceComponentMoved(const ComponentEventPtr e);
-    void produceComponentResized(const ComponentEventPtr e);
-    void produceComponentEnabled(const ComponentEventPtr e);
-    void produceComponentDisabled(const ComponentEventPtr e);
-	
+    void produceComponentHidden(const ComponentEventUnrecPtr e);
+    void produceComponentVisible(const ComponentEventUnrecPtr e);
+    void produceComponentMoved(const ComponentEventUnrecPtr e);
+    void produceComponentResized(const ComponentEventUnrecPtr e);
+    void produceComponentEnabled(const ComponentEventUnrecPtr e);
+    void produceComponentDisabled(const ComponentEventUnrecPtr e);
 };
 
 typedef Component *ComponentP;
 
 OSG_END_NAMESPACE
+
 
 #include "OSGComponentBase.inl"
 #include "OSGComponent.inl"

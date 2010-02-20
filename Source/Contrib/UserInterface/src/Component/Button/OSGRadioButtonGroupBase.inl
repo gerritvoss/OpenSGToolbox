@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,124 +55,77 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &RadioButtonGroupBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 RadioButtonGroupBase::getClassTypeId(void) 
+OSG::UInt32 RadioButtonGroupBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-RadioButtonGroupPtr RadioButtonGroupBase::create(void) 
-{
-    RadioButtonGroupPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = RadioButtonGroupPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-RadioButtonGroupPtr RadioButtonGroupBase::createEmpty(void) 
-{ 
-    RadioButtonGroupPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 RadioButtonGroupBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the RadioButtonGroup::_sfSelectedButton field.
-inline
-const SFRadioButtonPtr *RadioButtonGroupBase::getSFSelectedButton(void) const
-{
-    return &_sfSelectedButton;
-}
-
-//! Get the RadioButtonGroup::_sfSelectedButton field.
-inline
-SFRadioButtonPtr *RadioButtonGroupBase::editSFSelectedButton(void)
-{
-    return &_sfSelectedButton;
-}
-
-//! Get the RadioButtonGroup::_mfGroupButtons field.
-inline
-const MFRadioButtonPtr *RadioButtonGroupBase::getMFGroupButtons(void) const
-{
-    return &_mfGroupButtons;
-}
-
-//! Get the RadioButtonGroup::_mfGroupButtons field.
-inline
-MFRadioButtonPtr *RadioButtonGroupBase::editMFGroupButtons(void)
-{
-    return &_mfGroupButtons;
-}
-
 
 //! Get the value of the RadioButtonGroup::_sfSelectedButton field.
 inline
-RadioButtonPtr &RadioButtonGroupBase::editSelectedButton(void)
-{
-    return _sfSelectedButton.getValue();
-}
-
-//! Get the value of the RadioButtonGroup::_sfSelectedButton field.
-inline
-const RadioButtonPtr &RadioButtonGroupBase::getSelectedButton(void) const
+RadioButton * RadioButtonGroupBase::getSelectedButton(void) const
 {
     return _sfSelectedButton.getValue();
 }
 
 //! Set the value of the RadioButtonGroup::_sfSelectedButton field.
 inline
-void RadioButtonGroupBase::setSelectedButton(const RadioButtonPtr &value)
+void RadioButtonGroupBase::setSelectedButton(RadioButton * const value)
 {
+    editSField(SelectedButtonFieldMask);
+
     _sfSelectedButton.setValue(value);
 }
 
-
 //! Get the value of the \a index element the RadioButtonGroup::_mfGroupButtons field.
 inline
-RadioButtonPtr &RadioButtonGroupBase::editGroupButtons(const UInt32 index)
+RadioButton * RadioButtonGroupBase::getGroupButtons(const UInt32 index) const
 {
     return _mfGroupButtons[index];
 }
 
-//! Get the value of the \a index element the RadioButtonGroup::_mfGroupButtons field.
-inline
-const RadioButtonPtr &RadioButtonGroupBase::getGroupButtons(const UInt32 index) const
-{
-    return _mfGroupButtons[index];
-}
 
-#ifndef OSG_2_PREP
-//! Get the RadioButtonGroup::_mfGroupButtons field.
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-MFRadioButtonPtr &RadioButtonGroupBase::getGroupButtons(void)
+void RadioButtonGroupBase::execSync (      RadioButtonGroupBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfGroupButtons;
-}
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-//! Get the RadioButtonGroup::_mfGroupButtons field.
-inline
-const MFRadioButtonPtr &RadioButtonGroupBase::getGroupButtons(void) const
-{
-    return _mfGroupButtons;
-}
+    if(FieldBits::NoField != (SelectedButtonFieldMask & whichField))
+        _sfSelectedButton.syncWith(pFrom->_sfSelectedButton);
 
+    if(FieldBits::NoField != (GroupButtonsFieldMask & whichField))
+        _mfGroupButtons.syncWith(pFrom->_mfGroupButtons,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+}
 #endif
+
+
+inline
+const Char8 *RadioButtonGroupBase::getClassname(void)
+{
+    return "RadioButtonGroup";
+}
+OSG_GEN_CONTAINERPTR(RadioButtonGroup);
+
 OSG_END_NAMESPACE
+

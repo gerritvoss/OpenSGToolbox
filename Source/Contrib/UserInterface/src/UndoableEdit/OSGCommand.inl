@@ -1,22 +1,21 @@
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
 OSG_BEGIN_NAMESPACE
 
 inline
-Command::Command(void) : Inherited()
+Command::Command(void)
 {
 }
 
 inline
-Command::Command(const Command& source) : Inherited(source)
+Command::Command(const Command& source)
 {
 }
 
 inline 
 void Command::operator =(const Command& source)
 {
-	Inherited::operator=(source);
 }
 
 OSG_END_NAMESPACE

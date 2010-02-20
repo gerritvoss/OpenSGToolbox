@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,146 +50,208 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILECOMPOUNDLAYOUTSPRINGINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGLayoutSpring.h"            // Spring1 Class
 
 #include "OSGCompoundLayoutSpringBase.h"
 #include "OSGCompoundLayoutSpring.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  CompoundLayoutSpringBase::Spring1FieldMask = 
-    (TypeTraits<BitVector>::One << CompoundLayoutSpringBase::Spring1FieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  CompoundLayoutSpringBase::Spring2FieldMask = 
-    (TypeTraits<BitVector>::One << CompoundLayoutSpringBase::Spring2FieldId);
+/*! \class OSG::CompoundLayoutSpring
+    A UI Compound LayoutSpring. Use the instance variables of the StaticSpring superclass to cache values that have already been calculated.
+ */
 
-const OSG::BitVector CompoundLayoutSpringBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-
-// Field descriptions
-
-/*! \var LayoutSpringPtr CompoundLayoutSpringBase::_sfSpring1
-    
-*/
-/*! \var LayoutSpringPtr CompoundLayoutSpringBase::_sfSpring2
+/*! \var LayoutSpring *  CompoundLayoutSpringBase::_sfSpring1
     
 */
 
-//! CompoundLayoutSpring description
+/*! \var LayoutSpring *  CompoundLayoutSpringBase::_sfSpring2
+    
+*/
 
-FieldDescription *CompoundLayoutSpringBase::_desc[] = 
+
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<CompoundLayoutSpring *>::_type("CompoundLayoutSpringPtr", "StaticLayoutSpringPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(CompoundLayoutSpring *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           CompoundLayoutSpring *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           CompoundLayoutSpring *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void CompoundLayoutSpringBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFLayoutSpringPtr::getClassType(), 
-                     "Spring1", 
-                     Spring1FieldId, Spring1FieldMask,
-                     false,
-                     (FieldAccessMethod) &CompoundLayoutSpringBase::getSFSpring1),
-    new FieldDescription(SFLayoutSpringPtr::getClassType(), 
-                     "Spring2", 
-                     Spring2FieldId, Spring2FieldMask,
-                     false,
-                     (FieldAccessMethod) &CompoundLayoutSpringBase::getSFSpring2)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType CompoundLayoutSpringBase::_type(
-    "CompoundLayoutSpring",
-    "StaticLayoutSpring",
+    pDesc = new SFUnrecLayoutSpringPtr::Description(
+        SFUnrecLayoutSpringPtr::getClassType(),
+        "Spring1",
+        "",
+        Spring1FieldId, Spring1FieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&CompoundLayoutSpring::editHandleSpring1),
+        static_cast<FieldGetMethodSig >(&CompoundLayoutSpring::getHandleSpring1));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecLayoutSpringPtr::Description(
+        SFUnrecLayoutSpringPtr::getClassType(),
+        "Spring2",
+        "",
+        Spring2FieldId, Spring2FieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&CompoundLayoutSpring::editHandleSpring2),
+        static_cast<FieldGetMethodSig >(&CompoundLayoutSpring::getHandleSpring2));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+CompoundLayoutSpringBase::TypeObject CompoundLayoutSpringBase::_type(
+    CompoundLayoutSpringBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
     NULL,
-    NULL, 
     CompoundLayoutSpring::initMethod,
-    _desc,
-    sizeof(_desc));
+    CompoundLayoutSpring::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&CompoundLayoutSpring::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"CompoundLayoutSpring\"\n"
+    "\tparent=\"StaticLayoutSpring\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"abstract\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Compound LayoutSpring. Use the instance variables of the StaticSpring superclass to cache values that have already been calculated.\n"
+    "\t<Field\n"
+    "\t\tname=\"Spring1\"\n"
+    "\t\ttype=\"LayoutSpring\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "      visibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Spring2\"\n"
+    "\t\ttype=\"LayoutSpring\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "      visibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "</FieldContainer>\n",
+    "A UI Compound LayoutSpring. Use the instance variables of the StaticSpring superclass to cache values that have already been calculated.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(CompoundLayoutSpringBase, CompoundLayoutSpringPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &CompoundLayoutSpringBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &CompoundLayoutSpringBase::getType(void) const 
+FieldContainerType &CompoundLayoutSpringBase::getType(void)
 {
     return _type;
-} 
-
-
-UInt32 CompoundLayoutSpringBase::getContainerSize(void) const 
-{ 
-    return sizeof(CompoundLayoutSpring); 
 }
 
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void CompoundLayoutSpringBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &CompoundLayoutSpringBase::getType(void) const
 {
-    this->executeSyncImpl((CompoundLayoutSpringBase *) &other, whichField);
+    return _type;
 }
-#else
-void CompoundLayoutSpringBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 CompoundLayoutSpringBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((CompoundLayoutSpringBase *) &other, whichField, sInfo);
+    return sizeof(CompoundLayoutSpring);
 }
-void CompoundLayoutSpringBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the CompoundLayoutSpring::_sfSpring1 field.
+const SFUnrecLayoutSpringPtr *CompoundLayoutSpringBase::getSFSpring1(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfSpring1;
 }
 
-void CompoundLayoutSpringBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecLayoutSpringPtr *CompoundLayoutSpringBase::editSFSpring1        (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(Spring1FieldMask);
 
+    return &_sfSpring1;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-CompoundLayoutSpringBase::CompoundLayoutSpringBase(void) :
-    _sfSpring1                (LayoutSpringPtr(NullFC)), 
-    _sfSpring2                (LayoutSpringPtr(NullFC)), 
-    Inherited() 
+//! Get the CompoundLayoutSpring::_sfSpring2 field.
+const SFUnrecLayoutSpringPtr *CompoundLayoutSpringBase::getSFSpring2(void) const
 {
+    return &_sfSpring2;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-CompoundLayoutSpringBase::CompoundLayoutSpringBase(const CompoundLayoutSpringBase &source) :
-    _sfSpring1                (source._sfSpring1                ), 
-    _sfSpring2                (source._sfSpring2                ), 
-    Inherited                 (source)
+SFUnrecLayoutSpringPtr *CompoundLayoutSpringBase::editSFSpring2        (void)
 {
+    editSField(Spring2FieldMask);
+
+    return &_sfSpring2;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-CompoundLayoutSpringBase::~CompoundLayoutSpringBase(void)
-{
-}
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 CompoundLayoutSpringBase::getBinSize(const BitVector &whichField)
+UInt32 CompoundLayoutSpringBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -197,18 +259,16 @@ UInt32 CompoundLayoutSpringBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfSpring1.getBinSize();
     }
-
     if(FieldBits::NoField != (Spring2FieldMask & whichField))
     {
         returnValue += _sfSpring2.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void CompoundLayoutSpringBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void CompoundLayoutSpringBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -216,17 +276,14 @@ void CompoundLayoutSpringBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfSpring1.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (Spring2FieldMask & whichField))
     {
         _sfSpring2.copyToBin(pMem);
     }
-
-
 }
 
-void CompoundLayoutSpringBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void CompoundLayoutSpringBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -234,93 +291,138 @@ void CompoundLayoutSpringBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfSpring1.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (Spring2FieldMask & whichField))
     {
         _sfSpring2.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void CompoundLayoutSpringBase::executeSyncImpl(      CompoundLayoutSpringBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+CompoundLayoutSpringBase::CompoundLayoutSpringBase(void) :
+    Inherited(),
+    _sfSpring1                (NULL),
+    _sfSpring2                (NULL)
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-    if(FieldBits::NoField != (Spring1FieldMask & whichField))
-        _sfSpring1.syncWith(pOther->_sfSpring1);
-
-    if(FieldBits::NoField != (Spring2FieldMask & whichField))
-        _sfSpring2.syncWith(pOther->_sfSpring2);
-
-
-}
-#else
-void CompoundLayoutSpringBase::executeSyncImpl(      CompoundLayoutSpringBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (Spring1FieldMask & whichField))
-        _sfSpring1.syncWith(pOther->_sfSpring1);
-
-    if(FieldBits::NoField != (Spring2FieldMask & whichField))
-        _sfSpring2.syncWith(pOther->_sfSpring2);
-
-
-
 }
 
-void CompoundLayoutSpringBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+CompoundLayoutSpringBase::CompoundLayoutSpringBase(const CompoundLayoutSpringBase &source) :
+    Inherited(source),
+    _sfSpring1                (NULL),
+    _sfSpring2                (NULL)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
+
+/*-------------------------- destructors ----------------------------------*/
+
+CompoundLayoutSpringBase::~CompoundLayoutSpringBase(void)
+{
+}
+
+void CompoundLayoutSpringBase::onCreate(const CompoundLayoutSpring *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        CompoundLayoutSpring *pThis = static_cast<CompoundLayoutSpring *>(this);
+
+        pThis->setSpring1(source->getSpring1());
+
+        pThis->setSpring2(source->getSpring2());
+    }
+}
+
+GetFieldHandlePtr CompoundLayoutSpringBase::getHandleSpring1         (void) const
+{
+    SFUnrecLayoutSpringPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayoutSpringPtr::GetHandle(
+             &_sfSpring1,
+             this->getType().getFieldDesc(Spring1FieldId),
+             const_cast<CompoundLayoutSpringBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr CompoundLayoutSpringBase::editHandleSpring1        (void)
+{
+    SFUnrecLayoutSpringPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayoutSpringPtr::EditHandle(
+             &_sfSpring1,
+             this->getType().getFieldDesc(Spring1FieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&CompoundLayoutSpring::setSpring1,
+                    static_cast<CompoundLayoutSpring *>(this), _1));
+
+    editSField(Spring1FieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr CompoundLayoutSpringBase::getHandleSpring2         (void) const
+{
+    SFUnrecLayoutSpringPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayoutSpringPtr::GetHandle(
+             &_sfSpring2,
+             this->getType().getFieldDesc(Spring2FieldId),
+             const_cast<CompoundLayoutSpringBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr CompoundLayoutSpringBase::editHandleSpring2        (void)
+{
+    SFUnrecLayoutSpringPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayoutSpringPtr::EditHandle(
+             &_sfSpring2,
+             this->getType().getFieldDesc(Spring2FieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&CompoundLayoutSpring::setSpring2,
+                    static_cast<CompoundLayoutSpring *>(this), _1));
+
+    editSField(Spring2FieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void CompoundLayoutSpringBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    CompoundLayoutSpring *pThis = static_cast<CompoundLayoutSpring *>(this);
+
+    pThis->execSync(static_cast<CompoundLayoutSpring *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+
+void CompoundLayoutSpringBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<CompoundLayoutSpring *>(this)->setSpring1(NULL);
+
+    static_cast<CompoundLayoutSpring *>(this)->setSpring2(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<CompoundLayoutSpringPtr>::_type("CompoundLayoutSpringPtr", "StaticLayoutSpringPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(CompoundLayoutSpringPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(CompoundLayoutSpringPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGCOMPOUNDLAYOUTSPRINGBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCOMPOUNDLAYOUTSPRINGBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCOMPOUNDLAYOUTSPRINGFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

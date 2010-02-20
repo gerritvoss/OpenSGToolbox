@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,42 +36,46 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGCONTAINER_H_
-#define _OSGCONTAINER_H_
+#ifndef _OSGCOMPONENTCONTAINER_H_
+#define _OSGCOMPONENTCONTAINER_H_
 #ifdef __sgi
 #pragma once
 #endif
 
-#include "OSGUserInterfaceDef.h"
-#include "OSGUserInterfaceDef.h"
-
-#include "OSGContainerBase.h"
+#include "OSGComponentContainerBase.h"
 #include <map>
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING Container : public ContainerBase
-{
-  private:
+/*! \brief ComponentContainer class. See \ref
+           PageContribUserInterfaceComponentContainer for a description.
+*/
 
-    typedef ContainerBase Inherited;
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentContainer : public ComponentContainerBase
+{
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef ComponentContainerBase Inherited;
+    typedef ComponentContainer     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -90,74 +94,79 @@ class OSG_USERINTERFACELIB_DLLMAPPING Container : public ContainerBase
 	void setTopInset ( const Real32 &value );
 	void setBottomInset ( const Real32 &value );
 
-    virtual Int32 getChildIndex(ComponentPtr Child);
+    virtual Int32 getChildIndex(ComponentRefPtr Child);
 
     virtual void updateLayout(void);
 	virtual Vec2f getContentRequestedSize(void) const;
 	virtual Vec2f getBorderingLength(void) const;
 	
 	//Mouse Events
-    virtual void mouseClicked(const MouseEventPtr e);
-    virtual void mouseEntered(const MouseEventPtr e);
-    virtual void mouseExited(const MouseEventPtr e);
-    virtual void mousePressed(const MouseEventPtr e);
-    virtual void mouseReleased(const MouseEventPtr e);
+    virtual void mouseClicked ( const MouseEventUnrecPtr e);
+    virtual void mouseEntered ( const MouseEventUnrecPtr e);
+    virtual void mouseExited  ( const MouseEventUnrecPtr e);
+    virtual void mousePressed ( const MouseEventUnrecPtr e);
+    virtual void mouseReleased( const MouseEventUnrecPtr e);
 
 	//Mouse Motion Events
-    virtual void mouseMoved(const MouseEventPtr e);
-    virtual void mouseDragged(const MouseEventPtr e);
+    virtual void mouseMoved(const MouseEventUnrecPtr e);
+    virtual void mouseDragged(const MouseEventUnrecPtr e);
 
 	//Mouse Wheel Events
-    virtual void mouseWheelMoved(const MouseWheelEventPtr e);
+    virtual void mouseWheelMoved(const MouseWheelEventUnrecPtr e);
 
     virtual void detachFromEventProducer(void);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
-    // Variables should all be in ContainerBase.
+    // Variables should all be in ComponentContainerBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    Container(void);
-    Container(const Container &source);
+    ComponentContainer(void);
+    ComponentContainer(const ComponentContainer &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Container(void); 
+    virtual ~ComponentContainer(void);
 
     /*! \}                                                                 */
-	virtual void drawInternal(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
 
-	void checkMouseEnterExit(const InputEventPtr e, const Pnt2f& MouseLocation, ComponentPtr Comp, bool isMouseContained, ViewportPtr TheViewport);
-	virtual void produceMouseExitOnComponent(const MouseEventPtr e, ComponentPtr Comp);
-	virtual void produceMouseEnterOnComponent(const MouseEventPtr e, ComponentPtr Comp);
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
+
+	void checkMouseEnterExit(const InputEventUnrecPtr e, const Pnt2f& MouseLocation, ComponentRefPtr Comp, bool isMouseContained, ViewportRefPtr TheViewport);
+	virtual void produceMouseExitOnComponent(const MouseEventUnrecPtr e, ComponentRefPtr Comp);
+	virtual void produceMouseEnterOnComponent(const MouseEventUnrecPtr e, ComponentRefPtr Comp);
     void removeMousePresenceOnComponents(void);
-    
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
-    friend class ContainerBase;
-
-    static void initMethod(void);
+    friend class ComponentContainerBase;
 
     // prohibit default functions (move to 'public' if you need one)
-
-    void operator =(const Container &source);
+    void operator =(const ComponentContainer &source);
 };
 
-typedef Container *ContainerP;
+typedef ComponentContainer *ComponentContainerP;
 
 OSG_END_NAMESPACE
 
-#include "OSGContainerBase.inl"
-#include "OSGContainer.inl"
+#include "OSGLayout.h"
 
-#define OSGCONTAINER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#include "OSGComponentContainerBase.inl"
+#include "OSGComponentContainer.inl"
 
-#endif /* _OSGCONTAINER_H_ */
+#endif /* _OSGCOMPONENTCONTAINER_H_ */

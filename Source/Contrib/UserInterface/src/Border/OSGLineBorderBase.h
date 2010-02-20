@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,68 +58,77 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGBorder.h" // Parent
 
-#include <OpenSG/OSGReal32Fields.h> // Width type
-#include <OpenSG/OSGColor4fFields.h> // Color type
-#include <OpenSG/OSGMaterialFields.h> // Material type
+#include "OSGSysFields.h"               // Width type
+#include "OSGBaseFields.h"              // Color type
+#include "OSGMaterialFields.h"          // Material type
 
 #include "OSGLineBorderFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class LineBorder;
-class BinaryDataHandler;
 
 //! \brief LineBorder Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING LineBorderBase : public Border
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING LineBorderBase : public Border
 {
-  private:
-
-    typedef Border    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef LineBorderPtr  Ptr;
+    typedef Border Inherited;
+    typedef Border ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(LineBorder);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        WidthFieldId    = Inherited::NextFieldId,
-        ColorFieldId    = WidthFieldId    + 1,
-        MaterialFieldId = ColorFieldId    + 1,
-        NextFieldId     = MaterialFieldId + 1
+        WidthFieldId = Inherited::NextFieldId,
+        ColorFieldId = WidthFieldId + 1,
+        MaterialFieldId = ColorFieldId + 1,
+        NextFieldId = MaterialFieldId + 1
     };
 
-    static const OSG::BitVector WidthFieldMask;
-    static const OSG::BitVector ColorFieldMask;
-    static const OSG::BitVector MaterialFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector WidthFieldMask =
+        (TypeTraits<BitVector>::One << WidthFieldId);
+    static const OSG::BitVector ColorFieldMask =
+        (TypeTraits<BitVector>::One << ColorFieldId);
+    static const OSG::BitVector MaterialFieldMask =
+        (TypeTraits<BitVector>::One << MaterialFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFReal32          SFWidthType;
+    typedef SFColor4f         SFColorType;
+    typedef SFUnrecMaterialPtr SFMaterialType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -128,29 +137,41 @@ class OSG_USERINTERFACELIB_DLLMAPPING LineBorderBase : public Border
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *getSFWidth          (void);
-           SFColor4f           *getSFColor          (void);
-           SFMaterialPtr       *getSFMaterial       (void);
 
-           Real32              &getWidth          (void);
-     const Real32              &getWidth          (void) const;
-           Color4f             &getColor          (void);
-     const Color4f             &getColor          (void) const;
-           MaterialPtr         &getMaterial       (void);
-     const MaterialPtr         &getMaterial       (void) const;
+                  SFReal32            *editSFWidth          (void);
+            const SFReal32            *getSFWidth           (void) const;
+
+                  SFColor4f           *editSFColor          (void);
+            const SFColor4f           *getSFColor           (void) const;
+            const SFUnrecMaterialPtr  *getSFMaterial       (void) const;
+                  SFUnrecMaterialPtr  *editSFMaterial       (void);
+
+
+                  Real32              &editWidth          (void);
+                  Real32               getWidth           (void) const;
+
+                  Color4f             &editColor          (void);
+            const Color4f             &getColor           (void) const;
+
+                  Material * getMaterial       (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setWidth          ( const Real32 &value );
-     void setColor          ( const Color4f &value );
-     void setMaterial       ( const MaterialPtr &value );
+            void setWidth          (const Real32 value);
+            void setColor          (const Color4f &value);
+            void setMaterial       (Material * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -158,11 +179,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING LineBorderBase : public Border
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -170,28 +191,45 @@ class OSG_USERINTERFACELIB_DLLMAPPING LineBorderBase : public Border
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  LineBorderPtr      create          (void); 
-    static  LineBorderPtr      createEmpty     (void); 
+    static  LineBorderTransitPtr  create          (void);
+    static  LineBorder           *createEmpty     (void);
+
+    static  LineBorderTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  LineBorder            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  LineBorderTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFReal32            _sfWidth;
-    SFColor4f           _sfColor;
-    SFMaterialPtr       _sfMaterial;
+    SFReal32          _sfWidth;
+    SFColor4f         _sfColor;
+    SFUnrecMaterialPtr _sfMaterial;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -206,69 +244,84 @@ class OSG_USERINTERFACELIB_DLLMAPPING LineBorderBase : public Border
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~LineBorderBase(void); 
+    virtual ~LineBorderBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const LineBorder *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleWidth           (void) const;
+    EditFieldHandlePtr editHandleWidth          (void);
+    GetFieldHandlePtr  getHandleColor           (void) const;
+    EditFieldHandlePtr editHandleColor          (void);
+    GetFieldHandlePtr  getHandleMaterial        (void) const;
+    EditFieldHandlePtr editHandleMaterial       (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      LineBorderBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      LineBorderBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      LineBorderBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const LineBorderBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef LineBorderBase *LineBorderBaseP;
 
-typedef osgIF<LineBorderBase::isNodeCore,
-              CoredNodePtr<LineBorder>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet LineBorderNodePtr;
-
-typedef RefPtr<LineBorderPtr> LineBorderRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGLINEBORDERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGLINEBORDERBASE_H_ */

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,142 +50,166 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEUIRECTANGLEMOUSETRANSFORMFUNCTORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGUIRectangle.h"             // Parent Class
 
 #include "OSGUIRectangleMouseTransformFunctorBase.h"
 #include "OSGUIRectangleMouseTransformFunctor.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  UIRectangleMouseTransformFunctorBase::ParentFieldMask = 
-    (TypeTraits<BitVector>::One << UIRectangleMouseTransformFunctorBase::ParentFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector UIRectangleMouseTransformFunctorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::UIRectangleMouseTransformFunctor
+    A UI UIRectangleMouseTransformFunctor.
+ */
 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-// Field descriptions
-
-/*! \var UIRectanglePtr  UIRectangleMouseTransformFunctorBase::_sfParent
+/*! \var UIRectangle *   UIRectangleMouseTransformFunctorBase::_sfParent
     
 */
 
-//! UIRectangleMouseTransformFunctor description
 
-FieldDescription *UIRectangleMouseTransformFunctorBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<UIRectangleMouseTransformFunctor *>::_type("UIRectangleMouseTransformFunctorPtr", "UIDrawingSurfaceMouseTransformFunctorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(UIRectangleMouseTransformFunctor *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           UIRectangleMouseTransformFunctor *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           UIRectangleMouseTransformFunctor *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void UIRectangleMouseTransformFunctorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUIRectanglePtr::getClassType(), 
-                     "Parent", 
-                     ParentFieldId, ParentFieldMask,
-                     false,
-                     (FieldAccessMethod) &UIRectangleMouseTransformFunctorBase::getSFParent)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType UIRectangleMouseTransformFunctorBase::_type(
-    "UIRectangleMouseTransformFunctor",
-    "UIDrawingSurfaceMouseTransformFunctor",
-    NULL,
-    (PrototypeCreateF) &UIRectangleMouseTransformFunctorBase::createEmpty,
+    pDesc = new SFUnrecUIRectanglePtr::Description(
+        SFUnrecUIRectanglePtr::getClassType(),
+        "Parent",
+        "",
+        ParentFieldId, ParentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&UIRectangleMouseTransformFunctor::editHandleParent),
+        static_cast<FieldGetMethodSig >(&UIRectangleMouseTransformFunctor::getHandleParent));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+UIRectangleMouseTransformFunctorBase::TypeObject UIRectangleMouseTransformFunctorBase::_type(
+    UIRectangleMouseTransformFunctorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&UIRectangleMouseTransformFunctorBase::createEmptyLocal),
     UIRectangleMouseTransformFunctor::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(UIRectangleMouseTransformFunctorBase, UIRectangleMouseTransformFunctorPtr)
+    UIRectangleMouseTransformFunctor::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&UIRectangleMouseTransformFunctor::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"UIRectangleMouseTransformFunctor\"\n"
+    "\tparent=\"UIDrawingSurfaceMouseTransformFunctor\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI UIRectangleMouseTransformFunctor.\n"
+    "\t<Field\n"
+    "\t\tname=\"Parent\"\n"
+    "\t\ttype=\"UIRectangle\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI UIRectangleMouseTransformFunctor.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &UIRectangleMouseTransformFunctorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &UIRectangleMouseTransformFunctorBase::getType(void) const 
+FieldContainerType &UIRectangleMouseTransformFunctorBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr UIRectangleMouseTransformFunctorBase::shallowCopy(void) const 
-{ 
-    UIRectangleMouseTransformFunctorPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const UIRectangleMouseTransformFunctor *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 UIRectangleMouseTransformFunctorBase::getContainerSize(void) const 
-{ 
-    return sizeof(UIRectangleMouseTransformFunctor); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void UIRectangleMouseTransformFunctorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &UIRectangleMouseTransformFunctorBase::getType(void) const
 {
-    this->executeSyncImpl((UIRectangleMouseTransformFunctorBase *) &other, whichField);
+    return _type;
 }
-#else
-void UIRectangleMouseTransformFunctorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 UIRectangleMouseTransformFunctorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((UIRectangleMouseTransformFunctorBase *) &other, whichField, sInfo);
+    return sizeof(UIRectangleMouseTransformFunctor);
 }
-void UIRectangleMouseTransformFunctorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the UIRectangleMouseTransformFunctor::_sfParent field.
+const SFUnrecUIRectanglePtr *UIRectangleMouseTransformFunctorBase::getSFParent(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfParent;
 }
 
-void UIRectangleMouseTransformFunctorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecUIRectanglePtr *UIRectangleMouseTransformFunctorBase::editSFParent         (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(ParentFieldMask);
 
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-UIRectangleMouseTransformFunctorBase::UIRectangleMouseTransformFunctorBase(void) :
-    _sfParent                 (UIRectanglePtr(NullFC)), 
-    Inherited() 
-{
+    return &_sfParent;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-UIRectangleMouseTransformFunctorBase::UIRectangleMouseTransformFunctorBase(const UIRectangleMouseTransformFunctorBase &source) :
-    _sfParent                 (source._sfParent                 ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-UIRectangleMouseTransformFunctorBase::~UIRectangleMouseTransformFunctorBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 UIRectangleMouseTransformFunctorBase::getBinSize(const BitVector &whichField)
+UInt32 UIRectangleMouseTransformFunctorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -194,12 +218,11 @@ UInt32 UIRectangleMouseTransformFunctorBase::getBinSize(const BitVector &whichFi
         returnValue += _sfParent.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void UIRectangleMouseTransformFunctorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void UIRectangleMouseTransformFunctorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -207,12 +230,10 @@ void UIRectangleMouseTransformFunctorBase::copyToBin(      BinaryDataHandler &pM
     {
         _sfParent.copyToBin(pMem);
     }
-
-
 }
 
-void UIRectangleMouseTransformFunctorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void UIRectangleMouseTransformFunctorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -220,82 +241,229 @@ void UIRectangleMouseTransformFunctorBase::copyFromBin(      BinaryDataHandler &
     {
         _sfParent.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void UIRectangleMouseTransformFunctorBase::executeSyncImpl(      UIRectangleMouseTransformFunctorBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+UIRectangleMouseTransformFunctorTransitPtr UIRectangleMouseTransformFunctorBase::createLocal(BitVector bFlags)
 {
+    UIRectangleMouseTransformFunctorTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (ParentFieldMask & whichField))
-        _sfParent.syncWith(pOther->_sfParent);
+        fc = dynamic_pointer_cast<UIRectangleMouseTransformFunctor>(tmpPtr);
+    }
 
-
-}
-#else
-void UIRectangleMouseTransformFunctorBase::executeSyncImpl(      UIRectangleMouseTransformFunctorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ParentFieldMask & whichField))
-        _sfParent.syncWith(pOther->_sfParent);
-
-
-
+    return fc;
 }
 
-void UIRectangleMouseTransformFunctorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+UIRectangleMouseTransformFunctorTransitPtr UIRectangleMouseTransformFunctorBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    UIRectangleMouseTransformFunctorTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<UIRectangleMouseTransformFunctor>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+UIRectangleMouseTransformFunctorTransitPtr UIRectangleMouseTransformFunctorBase::create(void)
+{
+    UIRectangleMouseTransformFunctorTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<UIRectangleMouseTransformFunctor>(tmpPtr);
+    }
+
+    return fc;
+}
+
+UIRectangleMouseTransformFunctor *UIRectangleMouseTransformFunctorBase::createEmptyLocal(BitVector bFlags)
+{
+    UIRectangleMouseTransformFunctor *returnValue;
+
+    newPtr<UIRectangleMouseTransformFunctor>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+UIRectangleMouseTransformFunctor *UIRectangleMouseTransformFunctorBase::createEmpty(void)
+{
+    UIRectangleMouseTransformFunctor *returnValue;
+
+    newPtr<UIRectangleMouseTransformFunctor>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr UIRectangleMouseTransformFunctorBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    UIRectangleMouseTransformFunctor *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const UIRectangleMouseTransformFunctor *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr UIRectangleMouseTransformFunctorBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    UIRectangleMouseTransformFunctor *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const UIRectangleMouseTransformFunctor *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr UIRectangleMouseTransformFunctorBase::shallowCopy(void) const
+{
+    UIRectangleMouseTransformFunctor *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const UIRectangleMouseTransformFunctor *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+UIRectangleMouseTransformFunctorBase::UIRectangleMouseTransformFunctorBase(void) :
+    Inherited(),
+    _sfParent                 (NULL)
+{
+}
+
+UIRectangleMouseTransformFunctorBase::UIRectangleMouseTransformFunctorBase(const UIRectangleMouseTransformFunctorBase &source) :
+    Inherited(source),
+    _sfParent                 (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+UIRectangleMouseTransformFunctorBase::~UIRectangleMouseTransformFunctorBase(void)
+{
+}
+
+void UIRectangleMouseTransformFunctorBase::onCreate(const UIRectangleMouseTransformFunctor *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        UIRectangleMouseTransformFunctor *pThis = static_cast<UIRectangleMouseTransformFunctor *>(this);
+
+        pThis->setParent(source->getParent());
+    }
+}
+
+GetFieldHandlePtr UIRectangleMouseTransformFunctorBase::getHandleParent          (void) const
+{
+    SFUnrecUIRectanglePtr::GetHandlePtr returnValue(
+        new  SFUnrecUIRectanglePtr::GetHandle(
+             &_sfParent,
+             this->getType().getFieldDesc(ParentFieldId),
+             const_cast<UIRectangleMouseTransformFunctorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr UIRectangleMouseTransformFunctorBase::editHandleParent         (void)
+{
+    SFUnrecUIRectanglePtr::EditHandlePtr returnValue(
+        new  SFUnrecUIRectanglePtr::EditHandle(
+             &_sfParent,
+             this->getType().getFieldDesc(ParentFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&UIRectangleMouseTransformFunctor::setParent,
+                    static_cast<UIRectangleMouseTransformFunctor *>(this), _1));
+
+    editSField(ParentFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void UIRectangleMouseTransformFunctorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    UIRectangleMouseTransformFunctor *pThis = static_cast<UIRectangleMouseTransformFunctor *>(this);
+
+    pThis->execSync(static_cast<UIRectangleMouseTransformFunctor *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *UIRectangleMouseTransformFunctorBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    UIRectangleMouseTransformFunctor *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const UIRectangleMouseTransformFunctor *>(pRefAspect),
+                  dynamic_cast<const UIRectangleMouseTransformFunctor *>(this));
+
+    return returnValue;
+}
+#endif
+
+void UIRectangleMouseTransformFunctorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<UIRectangleMouseTransformFunctor *>(this)->setParent(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<UIRectangleMouseTransformFunctorPtr>::_type("UIRectangleMouseTransformFunctorPtr", "UIDrawingSurfaceMouseTransformFunctorPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(UIRectangleMouseTransformFunctorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(UIRectangleMouseTransformFunctorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGUIRECTANGLEMOUSETRANSFORMFUNCTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGUIRECTANGLEMOUSETRANSFORMFUNCTORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGUIRECTANGLEMOUSETRANSFORMFUNCTORFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

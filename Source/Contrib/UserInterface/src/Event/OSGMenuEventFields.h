@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,64 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/Toolbox/OSGEventFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class MenuEvent;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! MenuEventPtr
+OSG_GEN_CONTAINERPTR(MenuEvent);
 
-typedef FCPtr<EventPtr, MenuEvent> MenuEventPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<MenuEventPtr> : 
-    public FieldTraitsRecurseMapper<MenuEventPtr, true>
+struct FieldTraits<MenuEvent *> :
+    public FieldTraitsFCPtrBase<MenuEvent *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFMenuEventPtr"; }
+    typedef FieldTraits<MenuEvent *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFMenuEventPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFMenuEventPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<MenuEventPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<MenuEvent *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecMenuEventPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<MenuEvent *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecMenuEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MenuEvent *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakMenuEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MenuEvent *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdMenuEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MenuEvent *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecMenuEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MenuEvent *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecMenuEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MenuEvent *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakMenuEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MenuEvent *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdMenuEventPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MenuEvent *,
+                      RecordedRefCountPolicy  > SFRecMenuEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MenuEvent *,
+                      UnrecordedRefCountPolicy> SFUnrecMenuEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MenuEvent *,
+                      WeakRefCountPolicy      > SFWeakMenuEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MenuEvent *,
+                      NoRefCountPolicy        > SFUncountedMenuEventPtr;
 
-typedef SField<MenuEventPtr> SFMenuEventPtr;
-#endif
 
-#ifndef OSG_COMPILEMENUEVENTINST
-OSG_DLLEXPORT_DECL1(SField, MenuEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MenuEvent *,
+                      RecordedRefCountPolicy  > MFRecMenuEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MenuEvent *,
+                      UnrecordedRefCountPolicy> MFUnrecMenuEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MenuEvent *,
+                      WeakRefCountPolicy      > MFWeakMenuEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MenuEvent *,
+                      NoRefCountPolicy        > MFUncountedMenuEventPtr;
+
+
+
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecMenuEventPtr : 
+    public PointerSField<MenuEvent *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecMenuEventPtr : 
+    public PointerSField<MenuEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakMenuEventPtr :
+    public PointerSField<MenuEvent *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedMenuEventPtr :
+    public PointerSField<MenuEvent *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecMenuEventPtr :
+    public PointerMField<MenuEvent *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecMenuEventPtr :
+    public PointerMField<MenuEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakMenuEventPtr :
+    public PointerMField<MenuEvent *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedMenuEventPtr :
+    public PointerMField<MenuEvent *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,133 +50,166 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILELAYOUTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGComponentContainer.h"      // ParentContainer Class
 
 #include "OSGLayoutBase.h"
 #include "OSGLayout.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  LayoutBase::ParentContainerFieldMask = 
-    (TypeTraits<BitVector>::One << LayoutBase::ParentContainerFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector LayoutBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::Layout
+    A UI Layout Interface.
+ */
 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-// Field descriptions
-
-/*! \var AttachmentContainerPtr LayoutBase::_sfParentContainer
+/*! \var ComponentContainer * LayoutBase::_sfParentContainer
     
 */
 
-//! Layout description
 
-FieldDescription *LayoutBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<Layout *>::_type("LayoutPtr", "AttachmentContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(Layout *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           Layout *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           Layout *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void LayoutBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFAttachmentContainerPtr::getClassType(), 
-                     "ParentContainer", 
-                     ParentContainerFieldId, ParentContainerFieldMask,
-                     false,
-                     (FieldAccessMethod) &LayoutBase::getSFParentContainer)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType LayoutBase::_type(
-    "Layout",
-    "AttachmentContainer",
+    pDesc = new SFUnrecComponentContainerPtr::Description(
+        SFUnrecComponentContainerPtr::getClassType(),
+        "ParentContainer",
+        "",
+        ParentContainerFieldId, ParentContainerFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Layout::editHandleParentContainer),
+        static_cast<FieldGetMethodSig >(&Layout::getHandleParentContainer));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+LayoutBase::TypeObject LayoutBase::_type(
+    LayoutBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
     NULL,
-    NULL, 
     Layout::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(LayoutBase, LayoutPtr)
+    Layout::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&Layout::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"Layout\"\n"
+    "\tparent=\"AttachmentContainer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"abstract\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Layout Interface.\n"
+    "\t<Field\n"
+    "\t\tname=\"ParentContainer\"\n"
+    "\t\ttype=\"ComponentContainer\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI Layout Interface.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &LayoutBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &LayoutBase::getType(void) const 
+FieldContainerType &LayoutBase::getType(void)
 {
     return _type;
-} 
-
-
-UInt32 LayoutBase::getContainerSize(void) const 
-{ 
-    return sizeof(Layout); 
 }
 
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void LayoutBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &LayoutBase::getType(void) const
 {
-    this->executeSyncImpl((LayoutBase *) &other, whichField);
+    return _type;
 }
-#else
-void LayoutBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 LayoutBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((LayoutBase *) &other, whichField, sInfo);
+    return sizeof(Layout);
 }
-void LayoutBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the Layout::_sfParentContainer field.
+const SFUnrecComponentContainerPtr *LayoutBase::getSFParentContainer(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfParentContainer;
 }
 
-void LayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecComponentContainerPtr *LayoutBase::editSFParentContainer(void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(ParentContainerFieldMask);
 
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-LayoutBase::LayoutBase(void) :
-    _sfParentContainer        (AttachmentContainerPtr(NullFC)), 
-    Inherited() 
-{
+    return &_sfParentContainer;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-LayoutBase::LayoutBase(const LayoutBase &source) :
-    _sfParentContainer        (source._sfParentContainer        ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-LayoutBase::~LayoutBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 LayoutBase::getBinSize(const BitVector &whichField)
+UInt32 LayoutBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -185,12 +218,11 @@ UInt32 LayoutBase::getBinSize(const BitVector &whichField)
         returnValue += _sfParentContainer.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void LayoutBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void LayoutBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -198,12 +230,10 @@ void LayoutBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfParentContainer.copyToBin(pMem);
     }
-
-
 }
 
-void LayoutBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void LayoutBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -211,82 +241,100 @@ void LayoutBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfParentContainer.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void LayoutBase::executeSyncImpl(      LayoutBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+LayoutBase::LayoutBase(void) :
+    Inherited(),
+    _sfParentContainer        (NULL)
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-    if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
-        _sfParentContainer.syncWith(pOther->_sfParentContainer);
-
-
-}
-#else
-void LayoutBase::executeSyncImpl(      LayoutBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
-        _sfParentContainer.syncWith(pOther->_sfParentContainer);
-
-
-
 }
 
-void LayoutBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+LayoutBase::LayoutBase(const LayoutBase &source) :
+    Inherited(source),
+    _sfParentContainer        (NULL)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
+
+/*-------------------------- destructors ----------------------------------*/
+
+LayoutBase::~LayoutBase(void)
+{
+}
+
+void LayoutBase::onCreate(const Layout *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        Layout *pThis = static_cast<Layout *>(this);
+
+        pThis->setParentContainer(source->getParentContainer());
+    }
+}
+
+GetFieldHandlePtr LayoutBase::getHandleParentContainer (void) const
+{
+    SFUnrecComponentContainerPtr::GetHandlePtr returnValue(
+        new  SFUnrecComponentContainerPtr::GetHandle(
+             &_sfParentContainer,
+             this->getType().getFieldDesc(ParentContainerFieldId),
+             const_cast<LayoutBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr LayoutBase::editHandleParentContainer(void)
+{
+    SFUnrecComponentContainerPtr::EditHandlePtr returnValue(
+        new  SFUnrecComponentContainerPtr::EditHandle(
+             &_sfParentContainer,
+             this->getType().getFieldDesc(ParentContainerFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Layout::setParentContainer,
+                    static_cast<Layout *>(this), _1));
+
+    editSField(ParentContainerFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void LayoutBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Layout *pThis = static_cast<Layout *>(this);
+
+    pThis->execSync(static_cast<Layout *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+
+void LayoutBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<Layout *>(this)->setParentContainer(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<LayoutPtr>::_type("LayoutPtr", "AttachmentContainerPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(LayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(LayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGLAYOUTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGLAYOUTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGLAYOUTFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

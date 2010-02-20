@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,68 +58,75 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGAbstractLayoutSpring.h" // Parent
 
-#include <OpenSG/OSGReal32Fields.h> // Minimum type
-#include <OpenSG/OSGReal32Fields.h> // Maximum type
-#include <OpenSG/OSGReal32Fields.h> // Preferred type
+#include "OSGSysFields.h"               // Minimum type
 
 #include "OSGStaticLayoutSpringFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class StaticLayoutSpring;
-class BinaryDataHandler;
 
 //! \brief StaticLayoutSpring Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING StaticLayoutSpringBase : public AbstractLayoutSpring
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING StaticLayoutSpringBase : public AbstractLayoutSpring
 {
-  private:
-
-    typedef AbstractLayoutSpring    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef StaticLayoutSpringPtr  Ptr;
+    typedef AbstractLayoutSpring Inherited;
+    typedef AbstractLayoutSpring ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(StaticLayoutSpring);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        MinimumFieldId   = Inherited::NextFieldId,
-        MaximumFieldId   = MinimumFieldId   + 1,
-        PreferredFieldId = MaximumFieldId   + 1,
-        NextFieldId      = PreferredFieldId + 1
+        MinimumFieldId = Inherited::NextFieldId,
+        MaximumFieldId = MinimumFieldId + 1,
+        PreferredFieldId = MaximumFieldId + 1,
+        NextFieldId = PreferredFieldId + 1
     };
 
-    static const OSG::BitVector MinimumFieldMask;
-    static const OSG::BitVector MaximumFieldMask;
-    static const OSG::BitVector PreferredFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector MinimumFieldMask =
+        (TypeTraits<BitVector>::One << MinimumFieldId);
+    static const OSG::BitVector MaximumFieldMask =
+        (TypeTraits<BitVector>::One << MaximumFieldId);
+    static const OSG::BitVector PreferredFieldMask =
+        (TypeTraits<BitVector>::One << PreferredFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFReal32          SFMinimumType;
+    typedef SFReal32          SFMaximumType;
+    typedef SFReal32          SFPreferredType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -128,29 +135,38 @@ class OSG_USERINTERFACELIB_DLLMAPPING StaticLayoutSpringBase : public AbstractLa
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *getSFMinimum        (void);
-           SFReal32            *getSFMaximum        (void);
-           SFReal32            *getSFPreferred      (void);
 
-           Real32              &getMinimum        (void);
-     const Real32              &getMinimum        (void) const;
-           Real32              &getMaximum        (void);
-     const Real32              &getMaximum        (void) const;
-           Real32              &getPreferred      (void);
-     const Real32              &getPreferred      (void) const;
+                  SFReal32            *editSFMinimum        (void);
+            const SFReal32            *getSFMinimum         (void) const;
+
+                  SFReal32            *editSFMaximum        (void);
+            const SFReal32            *getSFMaximum         (void) const;
+
+                  SFReal32            *editSFPreferred      (void);
+            const SFReal32            *getSFPreferred       (void) const;
+
+
+                  Real32              &editMinimum        (void);
+                  Real32               getMinimum         (void) const;
+
+                  Real32              &editMaximum        (void);
+                  Real32               getMaximum         (void) const;
+
+                  Real32              &editPreferred      (void);
+                  Real32               getPreferred       (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setMinimum        ( const Real32 &value );
-     void setMaximum        ( const Real32 &value );
-     void setPreferred      ( const Real32 &value );
+            void setMinimum        (const Real32 value);
+            void setMaximum        (const Real32 value);
+            void setPreferred      (const Real32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -158,11 +174,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING StaticLayoutSpringBase : public AbstractLa
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -170,28 +186,45 @@ class OSG_USERINTERFACELIB_DLLMAPPING StaticLayoutSpringBase : public AbstractLa
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  StaticLayoutSpringPtr      create          (void); 
-    static  StaticLayoutSpringPtr      createEmpty     (void); 
+    static  StaticLayoutSpringTransitPtr  create          (void);
+    static  StaticLayoutSpring           *createEmpty     (void);
+
+    static  StaticLayoutSpringTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  StaticLayoutSpring            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  StaticLayoutSpringTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFReal32            _sfMinimum;
-    SFReal32            _sfMaximum;
-    SFReal32            _sfPreferred;
+    SFReal32          _sfMinimum;
+    SFReal32          _sfMaximum;
+    SFReal32          _sfPreferred;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -206,69 +239,83 @@ class OSG_USERINTERFACELIB_DLLMAPPING StaticLayoutSpringBase : public AbstractLa
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~StaticLayoutSpringBase(void); 
+    virtual ~StaticLayoutSpringBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleMinimum         (void) const;
+    EditFieldHandlePtr editHandleMinimum        (void);
+    GetFieldHandlePtr  getHandleMaximum         (void) const;
+    EditFieldHandlePtr editHandleMaximum        (void);
+    GetFieldHandlePtr  getHandlePreferred       (void) const;
+    EditFieldHandlePtr editHandlePreferred      (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      StaticLayoutSpringBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      StaticLayoutSpringBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      StaticLayoutSpringBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const StaticLayoutSpringBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef StaticLayoutSpringBase *StaticLayoutSpringBaseP;
 
-typedef osgIF<StaticLayoutSpringBase::isNodeCore,
-              CoredNodePtr<StaticLayoutSpring>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet StaticLayoutSpringNodePtr;
-
-typedef RefPtr<StaticLayoutSpringPtr> StaticLayoutSpringRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGSTATICLAYOUTSPRINGBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGSTATICLAYOUTSPRINGBASE_H_ */

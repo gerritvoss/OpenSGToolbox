@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,50 +42,52 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGCommandEventBase.h"
 #include "OSGCommand.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief CommandEvent class. See \ref 
-           PageUserInterfaceCommandEvent for a description.
+/*! \brief CommandEvent class. See \ref
+           PageContribUserInterfaceCommandEvent for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING CommandEvent : public CommandEventBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING CommandEvent : public CommandEventBase
 {
-  private:
-
-    typedef CommandEventBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef CommandEventBase Inherited;
+    typedef CommandEvent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
-    static  CommandEventPtr      create(  FieldContainerPtr Source,
-                                          Time TimeStamp,
-                                          CommandPtr TheCommand); 
+    static  CommandEventTransitPtr      create(  FieldContainerRefPtr Source,
+                                                 Time TimeStamp,
+                                                 CommandPtr TheCommand); 
 
     const CommandPtr getCommand(void) const;
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in CommandEventBase.
@@ -102,22 +104,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING CommandEvent : public CommandEventBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~CommandEvent(void); 
+    virtual ~CommandEvent(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+
+    CommandPtr _Command;
+
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class CommandEventBase;
 
-    CommandPtr _Command;
-
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const CommandEvent &source);
 };
 

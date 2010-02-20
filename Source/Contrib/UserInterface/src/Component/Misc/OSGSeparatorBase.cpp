@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,169 +50,247 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILESEPARATORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGSeparatorBase.h"
 #include "OSGSeparator.h"
 
-#include <Component/Misc/OSGSeparator.h>                 // Orientation default header
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  SeparatorBase::OrientationFieldMask = 
-    (TypeTraits<BitVector>::One << SeparatorBase::OrientationFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  SeparatorBase::SeparatorSizeFieldMask = 
-    (TypeTraits<BitVector>::One << SeparatorBase::SeparatorSizeFieldId);
+/*! \class OSG::Separator
+    A UI Separator.
+ */
 
-const OSG::BitVector  SeparatorBase::ColorFieldMask = 
-    (TypeTraits<BitVector>::One << SeparatorBase::ColorFieldId);
-
-const OSG::BitVector SeparatorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var UInt32          SeparatorBase::_sfOrientation
     
 */
+
 /*! \var Real32          SeparatorBase::_sfSeparatorSize
     
 */
+
 /*! \var Color4f         SeparatorBase::_sfColor
     
 */
 
-//! Separator description
 
-FieldDescription *SeparatorBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<Separator *>::_type("SeparatorPtr", "ComponentPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(Separator *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           Separator *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           Separator *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void SeparatorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "Orientation", 
-                     OrientationFieldId, OrientationFieldMask,
-                     false,
-                     (FieldAccessMethod) &SeparatorBase::getSFOrientation),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "SeparatorSize", 
-                     SeparatorSizeFieldId, SeparatorSizeFieldMask,
-                     false,
-                     (FieldAccessMethod) &SeparatorBase::getSFSeparatorSize),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "Color", 
-                     ColorFieldId, ColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &SeparatorBase::getSFColor)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType SeparatorBase::_type(
-    "Separator",
-    "Component",
-    NULL,
-    (PrototypeCreateF) &SeparatorBase::createEmpty,
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "Orientation",
+        "",
+        OrientationFieldId, OrientationFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Separator::editHandleOrientation),
+        static_cast<FieldGetMethodSig >(&Separator::getHandleOrientation));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "SeparatorSize",
+        "",
+        SeparatorSizeFieldId, SeparatorSizeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Separator::editHandleSeparatorSize),
+        static_cast<FieldGetMethodSig >(&Separator::getHandleSeparatorSize));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "Color",
+        "",
+        ColorFieldId, ColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Separator::editHandleColor),
+        static_cast<FieldGetMethodSig >(&Separator::getHandleColor));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+SeparatorBase::TypeObject SeparatorBase::_type(
+    SeparatorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&SeparatorBase::createEmptyLocal),
     Separator::initMethod,
-    _desc,
-    sizeof(_desc));
+    Separator::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&Separator::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"Separator\"\n"
+    "\tparent=\"Component\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Separator.\n"
+    "\t<Field\n"
+    "\t\tname=\"Orientation\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"Separator::VERTICAL_ORIENTATION\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SeparatorSize\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Color\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"Color4f(0.0f,0.0f,0.0f,1.0f)\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI Separator.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(SeparatorBase, SeparatorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &SeparatorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &SeparatorBase::getType(void) const 
+FieldContainerType &SeparatorBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr SeparatorBase::shallowCopy(void) const 
-{ 
-    SeparatorPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const Separator *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 SeparatorBase::getContainerSize(void) const 
-{ 
-    return sizeof(Separator); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void SeparatorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &SeparatorBase::getType(void) const
 {
-    this->executeSyncImpl((SeparatorBase *) &other, whichField);
+    return _type;
 }
-#else
-void SeparatorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 SeparatorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((SeparatorBase *) &other, whichField, sInfo);
+    return sizeof(Separator);
 }
-void SeparatorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFUInt32 *SeparatorBase::editSFOrientation(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(OrientationFieldMask);
+
+    return &_sfOrientation;
 }
 
-void SeparatorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFUInt32 *SeparatorBase::getSFOrientation(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfOrientation;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-SeparatorBase::SeparatorBase(void) :
-    _sfOrientation            (UInt32(Separator::VERTICAL_ORIENTATION)), 
-    _sfSeparatorSize          (Real32(1.0f)), 
-    _sfColor                  (Color4f(Color4f(0.0f,0.0f,0.0f,1.0f))), 
-    Inherited() 
+SFReal32 *SeparatorBase::editSFSeparatorSize(void)
 {
+    editSField(SeparatorSizeFieldMask);
+
+    return &_sfSeparatorSize;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-SeparatorBase::SeparatorBase(const SeparatorBase &source) :
-    _sfOrientation            (source._sfOrientation            ), 
-    _sfSeparatorSize          (source._sfSeparatorSize          ), 
-    _sfColor                  (source._sfColor                  ), 
-    Inherited                 (source)
+const SFReal32 *SeparatorBase::getSFSeparatorSize(void) const
 {
+    return &_sfSeparatorSize;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-SeparatorBase::~SeparatorBase(void)
+SFColor4f *SeparatorBase::editSFColor(void)
 {
+    editSField(ColorFieldMask);
+
+    return &_sfColor;
 }
+
+const SFColor4f *SeparatorBase::getSFColor(void) const
+{
+    return &_sfColor;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 SeparatorBase::getBinSize(const BitVector &whichField)
+UInt32 SeparatorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -220,23 +298,20 @@ UInt32 SeparatorBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfOrientation.getBinSize();
     }
-
     if(FieldBits::NoField != (SeparatorSizeFieldMask & whichField))
     {
         returnValue += _sfSeparatorSize.getBinSize();
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         returnValue += _sfColor.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void SeparatorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void SeparatorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -244,22 +319,18 @@ void SeparatorBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfOrientation.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SeparatorSizeFieldMask & whichField))
     {
         _sfSeparatorSize.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         _sfColor.copyToBin(pMem);
     }
-
-
 }
 
-void SeparatorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void SeparatorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -267,104 +338,275 @@ void SeparatorBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfOrientation.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SeparatorSizeFieldMask & whichField))
     {
         _sfSeparatorSize.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         _sfColor.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void SeparatorBase::executeSyncImpl(      SeparatorBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+SeparatorTransitPtr SeparatorBase::createLocal(BitVector bFlags)
 {
+    SeparatorTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (OrientationFieldMask & whichField))
-        _sfOrientation.syncWith(pOther->_sfOrientation);
+        fc = dynamic_pointer_cast<Separator>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (SeparatorSizeFieldMask & whichField))
-        _sfSeparatorSize.syncWith(pOther->_sfSeparatorSize);
-
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
-
-
-}
-#else
-void SeparatorBase::executeSyncImpl(      SeparatorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (OrientationFieldMask & whichField))
-        _sfOrientation.syncWith(pOther->_sfOrientation);
-
-    if(FieldBits::NoField != (SeparatorSizeFieldMask & whichField))
-        _sfSeparatorSize.syncWith(pOther->_sfSeparatorSize);
-
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
-
-
-
+    return fc;
 }
 
-void SeparatorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+SeparatorTransitPtr SeparatorBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    SeparatorTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<Separator>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+SeparatorTransitPtr SeparatorBase::create(void)
+{
+    SeparatorTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<Separator>(tmpPtr);
+    }
+
+    return fc;
+}
+
+Separator *SeparatorBase::createEmptyLocal(BitVector bFlags)
+{
+    Separator *returnValue;
+
+    newPtr<Separator>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+Separator *SeparatorBase::createEmpty(void)
+{
+    Separator *returnValue;
+
+    newPtr<Separator>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr SeparatorBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    Separator *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Separator *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr SeparatorBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    Separator *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Separator *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr SeparatorBase::shallowCopy(void) const
+{
+    Separator *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const Separator *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+SeparatorBase::SeparatorBase(void) :
+    Inherited(),
+    _sfOrientation            (UInt32(Separator::VERTICAL_ORIENTATION)),
+    _sfSeparatorSize          (Real32(1.0f)),
+    _sfColor                  (Color4f(Color4f(0.0f,0.0f,0.0f,1.0f)))
+{
+}
+
+SeparatorBase::SeparatorBase(const SeparatorBase &source) :
+    Inherited(source),
+    _sfOrientation            (source._sfOrientation            ),
+    _sfSeparatorSize          (source._sfSeparatorSize          ),
+    _sfColor                  (source._sfColor                  )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+SeparatorBase::~SeparatorBase(void)
+{
+}
+
+
+GetFieldHandlePtr SeparatorBase::getHandleOrientation     (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfOrientation,
+             this->getType().getFieldDesc(OrientationFieldId),
+             const_cast<SeparatorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SeparatorBase::editHandleOrientation    (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfOrientation,
+             this->getType().getFieldDesc(OrientationFieldId),
+             this));
+
+
+    editSField(OrientationFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SeparatorBase::getHandleSeparatorSize   (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfSeparatorSize,
+             this->getType().getFieldDesc(SeparatorSizeFieldId),
+             const_cast<SeparatorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SeparatorBase::editHandleSeparatorSize  (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfSeparatorSize,
+             this->getType().getFieldDesc(SeparatorSizeFieldId),
+             this));
+
+
+    editSField(SeparatorSizeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SeparatorBase::getHandleColor           (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfColor,
+             this->getType().getFieldDesc(ColorFieldId),
+             const_cast<SeparatorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SeparatorBase::editHandleColor          (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfColor,
+             this->getType().getFieldDesc(ColorFieldId),
+             this));
+
+
+    editSField(ColorFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void SeparatorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Separator *pThis = static_cast<Separator *>(this);
+
+    pThis->execSync(static_cast<Separator *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *SeparatorBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    Separator *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const Separator *>(pRefAspect),
+                  dynamic_cast<const Separator *>(this));
+
+    return returnValue;
+}
+#endif
+
+void SeparatorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<SeparatorPtr>::_type("SeparatorPtr", "ComponentPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(SeparatorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(SeparatorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGSEPARATORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSEPARATORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSEPARATORFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

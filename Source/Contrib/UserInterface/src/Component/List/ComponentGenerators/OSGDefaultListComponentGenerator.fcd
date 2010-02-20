@@ -3,87 +3,90 @@
 <FieldContainer
 	name="DefaultListComponentGenerator"
 	parent="ListComponentGenerator"
-	library="UserInterface"
+	library="ContribUserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
+	systemcomponent="true"
+	parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="true"
+	useLocalIncludes="false"
+	isNodeCore="false"
+	authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI Default List ComponentGenerator.
 	<Field
 		name="DrawObjectPrototype"
-		type="ComponentPtr"
+		type="Component"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/OSGComponentFields.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="SelectedBackground"
-		type="LayerPtr"
+		type="Layer"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Layer/OSGLayerFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="FocusedBackground"
-		type="LayerPtr"
+		type="Layer"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Layer/OSGLayerFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="SelectedForeground"
-		type="LayerPtr"
+		type="Layer"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Layer/OSGLayerFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="FocusedForeground"
-		type="LayerPtr"
+		type="Layer"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Layer/OSGLayerFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="SelectedBorder"
-		type="BorderPtr"
+		type="Border"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Border/OSGBorderFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="FocusedBorder"
-		type="BorderPtr"
+		type="Border"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Border/OSGBorderFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="SelectedTextColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,0.0,0.0,1.0"
@@ -93,6 +96,7 @@ A UI Default List ComponentGenerator.
 	<Field
 		name="FocusedTextColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,0.0,0.0,1.0"
@@ -102,6 +106,7 @@ A UI Default List ComponentGenerator.
 	<Field
 		name="FocusedTextColorHasPriority"
 		type="bool"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="true"
@@ -111,6 +116,7 @@ A UI Default List ComponentGenerator.
 	<Field
 		name="FocusedBorderHasPriority"
 		type="bool"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="true"
@@ -120,6 +126,7 @@ A UI Default List ComponentGenerator.
 	<Field
 		name="FocusedBackgroundHasPriority"
 		type="bool"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="true"

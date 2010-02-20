@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGXMLLookAndFeel.h"
 #include <boost/filesystem/operations.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::XMLLookAndFeel
-UI XML LookAndFeel. 	
-*/
+// Documentation for this class is emitted in the
+// OSGXMLLookAndFeelBase.cpp file.
+// To modify it, please change the .fcd file (OSGXMLLookAndFeel.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -68,13 +63,18 @@ UI XML LookAndFeel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void XMLLookAndFeel::initMethod (void)
+void XMLLookAndFeel::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-XMLLookAndFeelPtr XMLLookAndFeel::create(const Path& LoadFile)
+XMLLookAndFeelUnrecPtr XMLLookAndFeel::create(const BoostPath& LoadFile)
 {
-    XMLLookAndFeelPtr Result = NullFC;
+    XMLLookAndFeelUnrecPtr Result = NULL;
     if(boost::filesystem::exists(LoadFile))
     {
         FCFileType::FCPtrStore Containers;
@@ -85,7 +85,7 @@ XMLLookAndFeelPtr XMLLookAndFeel::create(const Path& LoadFile)
         {
             if((*ContainerItor)->getType() == XMLLookAndFeel::getClassType())
             {
-                Result = XMLLookAndFeel::Ptr::dcast((*ContainerItor));
+                Result = dynamic_pointer_cast<XMLLookAndFeel>(*ContainerItor);
                 break;
             }
         }
@@ -101,7 +101,7 @@ XMLLookAndFeelPtr XMLLookAndFeel::create(const Path& LoadFile)
 void XMLLookAndFeel::init(void)
 {
     //Get All of the prototypes of the Base Look and feel
-    if(getBaseLookAndFeel() != NullFC)
+    if(getBaseLookAndFeel() != NULL)
     {
         getBaseLookAndFeel()->init();
     }
@@ -136,41 +136,17 @@ XMLLookAndFeel::~XMLLookAndFeel(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void XMLLookAndFeel::changed(BitVector whichField, UInt32 origin)
+void XMLLookAndFeel::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void XMLLookAndFeel::dump(      UInt32    , 
+void XMLLookAndFeel::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump XMLLookAndFeel NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGXMLLOOKANDFEELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGXMLLOOKANDFEELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGXMLLOOKANDFEELFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

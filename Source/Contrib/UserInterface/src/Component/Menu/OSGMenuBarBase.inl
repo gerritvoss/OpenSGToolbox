@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,104 +55,92 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &MenuBarBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 MenuBarBase::getClassTypeId(void) 
+OSG::UInt32 MenuBarBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-MenuBarPtr MenuBarBase::create(void) 
-{
-    MenuBarPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = MenuBarPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-MenuBarPtr MenuBarBase::createEmpty(void) 
-{ 
-    MenuBarPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 MenuBarBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the MenuBar::_sfMenuDelay field.
-inline
-SFReal32 *MenuBarBase::getSFMenuDelay(void)
-{
-    return &_sfMenuDelay;
-}
-
-//! Get the MenuBar::_sfSelectionModel field.
-inline
-SFSingleSelectionModelPtr *MenuBarBase::getSFSelectionModel(void)
-{
-    return &_sfSelectionModel;
-}
-
-
 //! Get the value of the MenuBar::_sfMenuDelay field.
+
 inline
-Real32 &MenuBarBase::getMenuDelay(void)
+Real32 &MenuBarBase::editMenuDelay(void)
 {
+    editSField(MenuDelayFieldMask);
+
     return _sfMenuDelay.getValue();
 }
 
 //! Get the value of the MenuBar::_sfMenuDelay field.
 inline
-const Real32 &MenuBarBase::getMenuDelay(void) const
+      Real32  MenuBarBase::getMenuDelay(void) const
 {
     return _sfMenuDelay.getValue();
 }
 
 //! Set the value of the MenuBar::_sfMenuDelay field.
 inline
-void MenuBarBase::setMenuDelay(const Real32 &value)
+void MenuBarBase::setMenuDelay(const Real32 value)
 {
+    editSField(MenuDelayFieldMask);
+
     _sfMenuDelay.setValue(value);
 }
 
 //! Get the value of the MenuBar::_sfSelectionModel field.
 inline
-SingleSelectionModelPtr &MenuBarBase::getSelectionModel(void)
-{
-    return _sfSelectionModel.getValue();
-}
-
-//! Get the value of the MenuBar::_sfSelectionModel field.
-inline
-const SingleSelectionModelPtr &MenuBarBase::getSelectionModel(void) const
+SingleSelectionModel * MenuBarBase::getSelectionModel(void) const
 {
     return _sfSelectionModel.getValue();
 }
 
 //! Set the value of the MenuBar::_sfSelectionModel field.
 inline
-void MenuBarBase::setSelectionModel(const SingleSelectionModelPtr &value)
+void MenuBarBase::setSelectionModel(SingleSelectionModel * const value)
 {
+    editSField(SelectionModelFieldMask);
+
     _sfSelectionModel.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void MenuBarBase::execSync (      MenuBarBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGMENUBARBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (MenuDelayFieldMask & whichField))
+        _sfMenuDelay.syncWith(pFrom->_sfMenuDelay);
+
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
+        _sfSelectionModel.syncWith(pFrom->_sfSelectionModel);
+}
+#endif
+
+
+inline
+const Char8 *MenuBarBase::getClassname(void)
+{
+    return "MenuBar";
+}
+OSG_GEN_CONTAINERPTR(MenuBar);
+
+OSG_END_NAMESPACE
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,27 +40,22 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGUIFont.h"
-#include <OpenSG/OSGTextTXFParam.h>
-#include <OpenSG/OSGTextureChunk.h>
-#include <OpenSG/Toolbox/OSGFilePathAttachment.h>
+#include "OSGTextTXFParam.h"
+#include "OSGTextureObjChunk.h"
+#include "OSGFilePathAttachment.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::UIFont
-UI Font.  
-*/
+// Documentation for this class is emitted in the
+// OSGUIFontBase.cpp file.
+// To modify it, please change the .fcd file (OSGUIFont.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -70,17 +65,21 @@ UI Font.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void UIFont::initMethod (void)
+void UIFont::initMethod(InitPhase ePhase)
 {
-    FilePathAttachment::registerHandler(UIFont::getClassType(),UIFont::createFont);
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
- FieldContainerPtr UIFont::createFont( const Path& FilePath )
- {
-     UIFontPtr Result = UIFont::create();
-     FilePathAttachment::setFilePath(Result, FilePath);
-     return Result;
- }
+FieldContainerTransitPtr UIFont::createFont( const BoostPath& FilePath )
+{
+    UIFont* Result = UIFont::createEmpty();
+    FilePathAttachment::setFilePath(Result, FilePath);
+    return FieldContainerTransitPtr(Result);
+}
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -88,68 +87,51 @@ void UIFont::initMethod (void)
 
 void UIFont::initText(void)
 {
-   // Cleanup
-   if (_face != NULL)
-      subRefP(_face);
+    // Create the font
 
-   // Create the font
+    //Check if I have a FilePathAttachment
+    const BoostPath* FilePath(FilePathAttachment::getFilePath(UIFontRefPtr(this)));
+    if(FilePath != NULL)
+    {
+        //Create the font from a file
+        _face = TextTXFFace::createFromFile(FilePath->string().c_str());
+    }
+    else
+    {
+        TextTXFParam param;
+        param.size = getGlyphPixelSize();
+        param.gap = getGap();
+        param.textureWidth = getTextureWidth();
 
-   //Check if I have a FilePathAttachment
-   const Path* FilePath(FilePathAttachment::getFilePath(UIFontPtr(this)));
-   if(FilePath != NULL)
-   {
-       //Create the font from a file
-       _face = TextTXFFace::createFromFile(FilePath->string().c_str());
-   }
-   else
-   {
-       TextTXFParam param;
-       param.size = getGlyphPixelSize();
-       param.gap = getGap();
-       param.textureWidth = getTextureWidth();
-
-       //Use my Family Field to create font texture
-       _face = TextTXFFace::create(getFamily(), static_cast<TextFace::Style>(getStyle()), param);
-   }
+        //Use my Family Field to create font texture
+        _face = TextTXFFace::create(getFamily(), static_cast<TextFace::Style>(getStyle()), param);
+    }
 
 
-   if (_face != NULL)
-   {
-      beginEditCP(UIFontPtr(this), TextureFieldMask);
-         setTexture(TextureChunk::create());
-      endEditCP(UIFontPtr(this), TextureFieldMask);
+    TextureObjChunkUnrecPtr TheChunk(TextureObjChunk::create());
+    setTexture(TheChunk);
 
-      beginEditCP(getTexture());
-      {
-            ImagePtr image = _face->getTexture();
-            getTexture()->setImage(image);
-            getTexture()->setWrapS(GL_CLAMP);
-            getTexture()->setWrapT(GL_CLAMP);
-            //if(getAntiAliasing())
-            //{
-                getTexture()->setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
-                getTexture()->setMagFilter(GL_LINEAR);
-            //}
-            //else
-            //{
-                //getTexture()->setMinFilter(GL_NEAREST);
-                //getTexture()->setMagFilter(GL_NEAREST);
-            //}
-            getTexture()->setEnvMode(GL_MODULATE);
-      }
-      endEditCP(getTexture());
-    // Increment reference counters
-    addRefP(_face);
-   }
-   else
-   {
-      beginEditCP(UIFontPtr(this), TextureFieldMask);
-         setTexture(TextureChunk::create());
-      endEditCP(UIFontPtr(this), TextureFieldMask);
-   }
+    if (_face != NULL)
+    {
+        ImageRefPtr image = _face->getTexture();
+        getTexture()->setImage(image);
+        getTexture()->setWrapS(GL_CLAMP);
+        getTexture()->setWrapT(GL_CLAMP);
+        //if(getAntiAliasing())
+        //{
+        getTexture()->setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
+        getTexture()->setMagFilter(GL_LINEAR);
+        //}
+        //else
+        //{
+        //getTexture()->setMinFilter(GL_NEAREST);
+        //getTexture()->setMagFilter(GL_NEAREST);
+        //}
+        //getTexture()->setEnvMode(GL_MODULATE);
+    }
 
     // We failed to create the font - fallback to the default font
-    //if (_face == 0)
+    //if (_face == NULL)
     //{
     //    _face = getStatisticsDefaultFont();
     //    getTexture() = getStatisticsDefaultFontTexture();
@@ -159,58 +141,59 @@ void UIFont::initText(void)
 
 void UIFont::getBounds(const std::string& Text, Pnt2f& TopLeft, Pnt2f& BottomRight)
 {
-   TextLayoutParam layoutParam;
-   layoutParam.spacing = 1.1;
-   layoutParam.majorAlignment = TextLayoutParam::ALIGN_BEGIN;
-   layoutParam.minorAlignment = TextLayoutParam::ALIGN_BEGIN;
- 
-   TextLayoutResult layoutResult;
-   layout(Text, layoutParam, layoutResult);
+    TextLayoutParam layoutParam;
+    layoutParam.spacing = 1.1;
+    layoutParam.majorAlignment = TextLayoutParam::ALIGN_BEGIN;
+    layoutParam.minorAlignment = TextLayoutParam::ALIGN_BEGIN;
 
-   //Vec2f BottomLeft, TopRight;
-   Vec2f size = Vec2f(layoutResult.textBounds.x()*getSize(),layoutResult.textBounds.y()*getSize());
-  // _face->calculateBoundingBox(layoutResult,BottomLeft, TopRight);
+    TextLayoutResult layoutResult;
+    layout(Text, layoutParam, layoutResult);
 
-   TopLeft.setValues(0, 0);
-   BottomRight.setValue(size);
+    //Vec2f BottomLeft, TopRight;
+    Vec2f size = Vec2f(layoutResult.textBounds.x()*getSize(),layoutResult.textBounds.y()*getSize());
+    // _face->calculateBoundingBox(layoutResult,BottomLeft, TopRight);
+
+    TopLeft.setValues(0, 0);
+    BottomRight.setValue(size);
 }
 
 Vec2f UIFont::getBounds(const std::string& Text)
 {
-   Pnt2f TopLeft, BottomRight;
-   getBounds(Text, TopLeft, BottomRight);
-   return (BottomRight-TopLeft);
+    Pnt2f TopLeft, BottomRight;
+    getBounds(Text, TopLeft, BottomRight);
+    return (BottomRight-TopLeft);
 }
 
 void UIFont::layout(const std::string &utf8Text, const TextLayoutParam &param, TextLayoutResult &result)
 {
-   if (_face == NULL)
-   {
-      initText();
-   }
-   
-   if (_face != NULL)
-   {
-	   _face->layout(utf8Text,param,result);
-   }
+    if (_face == NULL)
+    {
+        initText();
+    }
+
+    if (_face != NULL)
+    {
+        _face->layout(utf8Text,param,result);
+    }
 }
 
 const TextTXFGlyph* UIFont::getTXFGlyph(TextGlyph::Index glyphIndex)
 {
-   if (_face == NULL)
-   {
-      initText();
-   }
-   
-   if (_face != NULL)
-   {
-	   return &(_face->getTXFGlyph(glyphIndex));
-   }
-   else
-   {
-       return NULL;
-   }
+    if (_face == NULL)
+    {
+        initText();
+    }
+
+    if (_face != NULL)
+    {
+        return &(_face->getTXFGlyph(glyphIndex));
+    }
+    else
+    {
+        return NULL;
+    }
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -219,27 +202,27 @@ const TextTXFGlyph* UIFont::getTXFGlyph(TextGlyph::Index glyphIndex)
 
 UIFont::UIFont(void) :
     Inherited(),
-       _face(NULL)
+    _face(NULL)
 {
 }
 
 UIFont::UIFont(const UIFont &source) :
     Inherited(source),
-       _face(NULL)
+    _face(NULL)
 {
 }
 
 UIFont::~UIFont(void)
 {
-   if (_face != NULL)
-      subRefP(_face);
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void UIFont::changed(BitVector whichField, UInt32 origin)
+void UIFont::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
     
     if(whichField & 
         ( FamilyFieldMask
@@ -252,28 +235,25 @@ void UIFont::changed(BitVector whichField, UInt32 origin)
         initText();
     }
     if((whichField & AntiAliasingFieldMask) &&
-        getTexture() != NullFC)
+        getTexture() != NULL)
     {
-        beginEditCP(getTexture(), TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask);
-            //if(getAntiAliasing())
-            //{
-                getTexture()->setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
-                getTexture()->setMagFilter(GL_LINEAR);
-            //}
-            //else
-            //{
-                //getTexture()->setMinFilter(GL_NEAREST);
-                //getTexture()->setMagFilter(GL_NEAREST);
-            //}
-        endEditCP(getTexture(), TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask);
+        //if(getAntiAliasing())
+        //{
+            getTexture()->setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
+            getTexture()->setMagFilter(GL_LINEAR);
+        //}
+        //else
+        //{
+            //getTexture()->setMinFilter(GL_NEAREST);
+            //getTexture()->setMagFilter(GL_NEAREST);
+        //}
     }
 }
 
-void UIFont::dump(      UInt32    , 
+void UIFont::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump UIFont NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

@@ -26,7 +26,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 OSG_BEGIN_NAMESPACE
 

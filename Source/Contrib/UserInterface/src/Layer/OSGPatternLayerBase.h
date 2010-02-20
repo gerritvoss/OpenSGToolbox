@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,95 +58,115 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGLayer.h" // Parent
 
-#include <OpenSG/OSGTextureChunkFields.h> // Texture type
-#include <OpenSG/OSGTextureTransformChunkFields.h> // Transformation type
-#include <OpenSG/OSGColor4fFields.h> // Color type
-#include <OpenSG/OSGVec2sFields.h> // PatternSize type
-#include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
-#include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
-#include <OpenSG/OSGUInt32Fields.h> // HorizontalRepeat type
-#include <OpenSG/OSGUInt32Fields.h> // VerticalRepeat type
-#include <OpenSG/OSGReal32Fields.h> // HorizontalRepeatValue type
-#include <OpenSG/OSGReal32Fields.h> // VerticalRepeatValue type
-#include <OpenSG/OSGVec2fFields.h> // TopLeftTextureCoord type
-#include <OpenSG/OSGVec2fFields.h> // BottomRightTextureCoord type
+#include "OSGTextureObjChunkFields.h"   // Texture type
+#include "OSGTextureTransformChunkFields.h" // Transformation type
+#include "OSGBaseFields.h"              // Color type
+#include "OSGVecFields.h"               // PatternSize type
+#include "OSGSysFields.h"               // VerticalAlignment type
 
 #include "OSGPatternLayerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class PatternLayer;
-class BinaryDataHandler;
 
 //! \brief PatternLayer Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING PatternLayerBase : public Layer
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING PatternLayerBase : public Layer
 {
-  private:
-
-    typedef Layer    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef PatternLayerPtr  Ptr;
+    typedef Layer Inherited;
+    typedef Layer ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(PatternLayer);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        TextureFieldId                 = Inherited::NextFieldId,
-        TransformationFieldId          = TextureFieldId                 + 1,
-        ColorFieldId                   = TransformationFieldId          + 1,
-        PatternSizeFieldId             = ColorFieldId                   + 1,
-        VerticalAlignmentFieldId       = PatternSizeFieldId             + 1,
-        HorizontalAlignmentFieldId     = VerticalAlignmentFieldId       + 1,
-        HorizontalRepeatFieldId        = HorizontalAlignmentFieldId     + 1,
-        VerticalRepeatFieldId          = HorizontalRepeatFieldId        + 1,
-        HorizontalRepeatValueFieldId   = VerticalRepeatFieldId          + 1,
-        VerticalRepeatValueFieldId     = HorizontalRepeatValueFieldId   + 1,
-        TopLeftTextureCoordFieldId     = VerticalRepeatValueFieldId     + 1,
-        BottomRightTextureCoordFieldId = TopLeftTextureCoordFieldId     + 1,
-        NextFieldId                    = BottomRightTextureCoordFieldId + 1
+        TextureFieldId = Inherited::NextFieldId,
+        TransformationFieldId = TextureFieldId + 1,
+        ColorFieldId = TransformationFieldId + 1,
+        PatternSizeFieldId = ColorFieldId + 1,
+        VerticalAlignmentFieldId = PatternSizeFieldId + 1,
+        HorizontalAlignmentFieldId = VerticalAlignmentFieldId + 1,
+        HorizontalRepeatFieldId = HorizontalAlignmentFieldId + 1,
+        VerticalRepeatFieldId = HorizontalRepeatFieldId + 1,
+        HorizontalRepeatValueFieldId = VerticalRepeatFieldId + 1,
+        VerticalRepeatValueFieldId = HorizontalRepeatValueFieldId + 1,
+        TopLeftTextureCoordFieldId = VerticalRepeatValueFieldId + 1,
+        BottomRightTextureCoordFieldId = TopLeftTextureCoordFieldId + 1,
+        NextFieldId = BottomRightTextureCoordFieldId + 1
     };
 
-    static const OSG::BitVector TextureFieldMask;
-    static const OSG::BitVector TransformationFieldMask;
-    static const OSG::BitVector ColorFieldMask;
-    static const OSG::BitVector PatternSizeFieldMask;
-    static const OSG::BitVector VerticalAlignmentFieldMask;
-    static const OSG::BitVector HorizontalAlignmentFieldMask;
-    static const OSG::BitVector HorizontalRepeatFieldMask;
-    static const OSG::BitVector VerticalRepeatFieldMask;
-    static const OSG::BitVector HorizontalRepeatValueFieldMask;
-    static const OSG::BitVector VerticalRepeatValueFieldMask;
-    static const OSG::BitVector TopLeftTextureCoordFieldMask;
-    static const OSG::BitVector BottomRightTextureCoordFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector TextureFieldMask =
+        (TypeTraits<BitVector>::One << TextureFieldId);
+    static const OSG::BitVector TransformationFieldMask =
+        (TypeTraits<BitVector>::One << TransformationFieldId);
+    static const OSG::BitVector ColorFieldMask =
+        (TypeTraits<BitVector>::One << ColorFieldId);
+    static const OSG::BitVector PatternSizeFieldMask =
+        (TypeTraits<BitVector>::One << PatternSizeFieldId);
+    static const OSG::BitVector VerticalAlignmentFieldMask =
+        (TypeTraits<BitVector>::One << VerticalAlignmentFieldId);
+    static const OSG::BitVector HorizontalAlignmentFieldMask =
+        (TypeTraits<BitVector>::One << HorizontalAlignmentFieldId);
+    static const OSG::BitVector HorizontalRepeatFieldMask =
+        (TypeTraits<BitVector>::One << HorizontalRepeatFieldId);
+    static const OSG::BitVector VerticalRepeatFieldMask =
+        (TypeTraits<BitVector>::One << VerticalRepeatFieldId);
+    static const OSG::BitVector HorizontalRepeatValueFieldMask =
+        (TypeTraits<BitVector>::One << HorizontalRepeatValueFieldId);
+    static const OSG::BitVector VerticalRepeatValueFieldMask =
+        (TypeTraits<BitVector>::One << VerticalRepeatValueFieldId);
+    static const OSG::BitVector TopLeftTextureCoordFieldMask =
+        (TypeTraits<BitVector>::One << TopLeftTextureCoordFieldId);
+    static const OSG::BitVector BottomRightTextureCoordFieldMask =
+        (TypeTraits<BitVector>::One << BottomRightTextureCoordFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecTextureObjChunkPtr SFTextureType;
+    typedef SFUnrecTextureTransformChunkPtr SFTransformationType;
+    typedef SFColor4f         SFColorType;
+    typedef SFVec2f           SFPatternSizeType;
+    typedef SFReal32          SFVerticalAlignmentType;
+    typedef SFReal32          SFHorizontalAlignmentType;
+    typedef SFUInt32          SFHorizontalRepeatType;
+    typedef SFUInt32          SFVerticalRepeatType;
+    typedef SFReal32          SFHorizontalRepeatValueType;
+    typedef SFReal32          SFVerticalRepeatValueType;
+    typedef SFVec2f           SFTopLeftTextureCoordType;
+    typedef SFVec2f           SFBottomRightTextureCoordType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -155,149 +175,88 @@ class OSG_USERINTERFACELIB_DLLMAPPING PatternLayerBase : public Layer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+            const SFUnrecTextureObjChunkPtr *getSFTexture        (void) const;
+                  SFUnrecTextureObjChunkPtr *editSFTexture        (void);
+            const SFUnrecTextureTransformChunkPtr *getSFTransformation (void) const;
+                  SFUnrecTextureTransformChunkPtr *editSFTransformation (void);
 
-           SFTextureChunkPtr   *editSFTexture        (void);
-     const SFTextureChunkPtr   *getSFTexture        (void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFTexture        (void);
-#endif
+                  SFColor4f           *editSFColor          (void);
+            const SFColor4f           *getSFColor           (void) const;
 
-           SFTextureTransformChunkPtr *editSFTransformation (void);
-     const SFTextureTransformChunkPtr *getSFTransformation (void) const;
-#ifndef OSG_2_PREP
-           SFTextureTransformChunkPtr *getSFTransformation (void);
-#endif
+                  SFVec2f             *editSFPatternSize    (void);
+            const SFVec2f             *getSFPatternSize     (void) const;
 
-           SFColor4f           *editSFColor          (void);
-     const SFColor4f           *getSFColor          (void) const;
-#ifndef OSG_2_PREP
-           SFColor4f           *getSFColor          (void);
-#endif
+                  SFReal32            *editSFVerticalAlignment(void);
+            const SFReal32            *getSFVerticalAlignment (void) const;
 
-           SFVec2s             *editSFPatternSize    (void);
-     const SFVec2s             *getSFPatternSize    (void) const;
-#ifndef OSG_2_PREP
-           SFVec2s             *getSFPatternSize    (void);
-#endif
+                  SFReal32            *editSFHorizontalAlignment(void);
+            const SFReal32            *getSFHorizontalAlignment (void) const;
 
-           SFReal32            *editSFVerticalAlignment(void);
-     const SFReal32            *getSFVerticalAlignment(void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFVerticalAlignment(void);
-#endif
+                  SFUInt32            *editSFHorizontalRepeat(void);
+            const SFUInt32            *getSFHorizontalRepeat (void) const;
 
-           SFReal32            *editSFHorizontalAlignment(void);
-     const SFReal32            *getSFHorizontalAlignment(void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFHorizontalAlignment(void);
-#endif
+                  SFUInt32            *editSFVerticalRepeat (void);
+            const SFUInt32            *getSFVerticalRepeat  (void) const;
 
-           SFUInt32            *editSFHorizontalRepeat(void);
-     const SFUInt32            *getSFHorizontalRepeat(void) const;
-#ifndef OSG_2_PREP
-           SFUInt32            *getSFHorizontalRepeat(void);
-#endif
+                  SFReal32            *editSFHorizontalRepeatValue(void);
+            const SFReal32            *getSFHorizontalRepeatValue (void) const;
 
-           SFUInt32            *editSFVerticalRepeat (void);
-     const SFUInt32            *getSFVerticalRepeat (void) const;
-#ifndef OSG_2_PREP
-           SFUInt32            *getSFVerticalRepeat (void);
-#endif
-
-           SFReal32            *editSFHorizontalRepeatValue(void);
-     const SFReal32            *getSFHorizontalRepeatValue(void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFHorizontalRepeatValue(void);
-#endif
-
-           SFReal32            *editSFVerticalRepeatValue(void);
-     const SFReal32            *getSFVerticalRepeatValue(void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFVerticalRepeatValue(void);
-#endif
+                  SFReal32            *editSFVerticalRepeatValue(void);
+            const SFReal32            *getSFVerticalRepeatValue (void) const;
 
 
-           TextureChunkPtr     &editTexture        (void);
-     const TextureChunkPtr     &getTexture        (void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getTexture        (void);
-#endif
+                  TextureObjChunk * getTexture        (void) const;
 
-           TextureTransformChunkPtr &editTransformation (void);
-     const TextureTransformChunkPtr &getTransformation (void) const;
-#ifndef OSG_2_PREP
-           TextureTransformChunkPtr &getTransformation (void);
-#endif
+                  TextureTransformChunk * getTransformation (void) const;
 
-           Color4f             &editColor          (void);
-     const Color4f             &getColor          (void) const;
-#ifndef OSG_2_PREP
-           Color4f             &getColor          (void);
-#endif
+                  Color4f             &editColor          (void);
+            const Color4f             &getColor           (void) const;
 
-           Vec2s               &editPatternSize    (void);
-     const Vec2s               &getPatternSize    (void) const;
-#ifndef OSG_2_PREP
-           Vec2s               &getPatternSize    (void);
-#endif
+                  Vec2f               &editPatternSize    (void);
+            const Vec2f               &getPatternSize     (void) const;
 
-           Real32              &editVerticalAlignment(void);
-     const Real32              &getVerticalAlignment(void) const;
-#ifndef OSG_2_PREP
-           Real32              &getVerticalAlignment(void);
-#endif
+                  Real32              &editVerticalAlignment(void);
+                  Real32               getVerticalAlignment (void) const;
 
-           Real32              &editHorizontalAlignment(void);
-     const Real32              &getHorizontalAlignment(void) const;
-#ifndef OSG_2_PREP
-           Real32              &getHorizontalAlignment(void);
-#endif
+                  Real32              &editHorizontalAlignment(void);
+                  Real32               getHorizontalAlignment (void) const;
 
-           UInt32              &editHorizontalRepeat(void);
-     const UInt32              &getHorizontalRepeat(void) const;
-#ifndef OSG_2_PREP
-           UInt32              &getHorizontalRepeat(void);
-#endif
+                  UInt32              &editHorizontalRepeat(void);
+                  UInt32               getHorizontalRepeat (void) const;
 
-           UInt32              &editVerticalRepeat (void);
-     const UInt32              &getVerticalRepeat (void) const;
-#ifndef OSG_2_PREP
-           UInt32              &getVerticalRepeat (void);
-#endif
+                  UInt32              &editVerticalRepeat (void);
+                  UInt32               getVerticalRepeat  (void) const;
 
-           Real32              &editHorizontalRepeatValue(void);
-     const Real32              &getHorizontalRepeatValue(void) const;
-#ifndef OSG_2_PREP
-           Real32              &getHorizontalRepeatValue(void);
-#endif
+                  Real32              &editHorizontalRepeatValue(void);
+                  Real32               getHorizontalRepeatValue (void) const;
 
-           Real32              &editVerticalRepeatValue(void);
-     const Real32              &getVerticalRepeatValue(void) const;
-#ifndef OSG_2_PREP
-           Real32              &getVerticalRepeatValue(void);
-#endif
-
-
+                  Real32              &editVerticalRepeatValue(void);
+                  Real32               getVerticalRepeatValue (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setTexture        ( const TextureChunkPtr &value );
-     void setTransformation ( const TextureTransformChunkPtr &value );
-     void setColor          ( const Color4f &value );
-     void setPatternSize    ( const Vec2s &value );
-     void setVerticalAlignment( const Real32 &value );
-     void setHorizontalAlignment( const Real32 &value );
-     void setHorizontalRepeat( const UInt32 &value );
-     void setVerticalRepeat ( const UInt32 &value );
-     void setHorizontalRepeatValue( const Real32 &value );
-     void setVerticalRepeatValue( const Real32 &value );
+            void setTexture        (TextureObjChunk * const value);
+            void setTransformation (TextureTransformChunk * const value);
+            void setColor          (const Color4f &value);
+            void setPatternSize    (const Vec2f &value);
+            void setVerticalAlignment(const Real32 value);
+            void setHorizontalAlignment(const Real32 value);
+            void setHorizontalRepeat(const UInt32 value);
+            void setVerticalRepeat (const UInt32 value);
+            void setHorizontalRepeatValue(const Real32 value);
+            void setVerticalRepeatValue(const Real32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -305,11 +264,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING PatternLayerBase : public Layer
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -317,37 +276,54 @@ class OSG_USERINTERFACELIB_DLLMAPPING PatternLayerBase : public Layer
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  PatternLayerPtr      create          (void); 
-    static  PatternLayerPtr      createEmpty     (void); 
+    static  PatternLayerTransitPtr  create          (void);
+    static  PatternLayer           *createEmpty     (void);
+
+    static  PatternLayerTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  PatternLayer            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  PatternLayerTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFTextureChunkPtr   _sfTexture;
-    SFTextureTransformChunkPtr   _sfTransformation;
-    SFColor4f           _sfColor;
-    SFVec2s             _sfPatternSize;
-    SFReal32            _sfVerticalAlignment;
-    SFReal32            _sfHorizontalAlignment;
-    SFUInt32            _sfHorizontalRepeat;
-    SFUInt32            _sfVerticalRepeat;
-    SFReal32            _sfHorizontalRepeatValue;
-    SFReal32            _sfVerticalRepeatValue;
-    SFVec2f             _sfTopLeftTextureCoord;
-    SFVec2f             _sfBottomRightTextureCoord;
+    SFUnrecTextureObjChunkPtr _sfTexture;
+    SFUnrecTextureTransformChunkPtr _sfTransformation;
+    SFColor4f         _sfColor;
+    SFVec2f           _sfPatternSize;
+    SFReal32          _sfVerticalAlignment;
+    SFReal32          _sfHorizontalAlignment;
+    SFUInt32          _sfHorizontalRepeat;
+    SFUInt32          _sfVerticalRepeat;
+    SFReal32          _sfHorizontalRepeatValue;
+    SFReal32          _sfVerticalRepeatValue;
+    SFVec2f           _sfTopLeftTextureCoord;
+    SFVec2f           _sfBottomRightTextureCoord;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -362,101 +338,133 @@ class OSG_USERINTERFACELIB_DLLMAPPING PatternLayerBase : public Layer
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~PatternLayerBase(void); 
+    virtual ~PatternLayerBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const PatternLayer *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleTexture         (void) const;
+    EditFieldHandlePtr editHandleTexture        (void);
+    GetFieldHandlePtr  getHandleTransformation  (void) const;
+    EditFieldHandlePtr editHandleTransformation (void);
+    GetFieldHandlePtr  getHandleColor           (void) const;
+    EditFieldHandlePtr editHandleColor          (void);
+    GetFieldHandlePtr  getHandlePatternSize     (void) const;
+    EditFieldHandlePtr editHandlePatternSize    (void);
+    GetFieldHandlePtr  getHandleVerticalAlignment (void) const;
+    EditFieldHandlePtr editHandleVerticalAlignment(void);
+    GetFieldHandlePtr  getHandleHorizontalAlignment (void) const;
+    EditFieldHandlePtr editHandleHorizontalAlignment(void);
+    GetFieldHandlePtr  getHandleHorizontalRepeat (void) const;
+    EditFieldHandlePtr editHandleHorizontalRepeat(void);
+    GetFieldHandlePtr  getHandleVerticalRepeat  (void) const;
+    EditFieldHandlePtr editHandleVerticalRepeat (void);
+    GetFieldHandlePtr  getHandleHorizontalRepeatValue (void) const;
+    EditFieldHandlePtr editHandleHorizontalRepeatValue(void);
+    GetFieldHandlePtr  getHandleVerticalRepeatValue (void) const;
+    EditFieldHandlePtr editHandleVerticalRepeatValue(void);
+    GetFieldHandlePtr  getHandleTopLeftTextureCoord (void) const;
+    EditFieldHandlePtr editHandleTopLeftTextureCoord(void);
+    GetFieldHandlePtr  getHandleBottomRightTextureCoord (void) const;
+    EditFieldHandlePtr editHandleBottomRightTextureCoord(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFVec2f             *editSFTopLeftTextureCoord(void);
-     const SFVec2f             *getSFTopLeftTextureCoord(void) const;
-#ifndef OSG_2_PREP
-           SFVec2f             *getSFTopLeftTextureCoord(void);
-#endif
-           SFVec2f             *editSFBottomRightTextureCoord(void);
-     const SFVec2f             *getSFBottomRightTextureCoord(void) const;
-#ifndef OSG_2_PREP
-           SFVec2f             *getSFBottomRightTextureCoord(void);
-#endif
 
-           Vec2f               &editTopLeftTextureCoord(void);
-     const Vec2f               &getTopLeftTextureCoord(void) const;
-#ifndef OSG_2_PREP
-           Vec2f               &getTopLeftTextureCoord(void);
-#endif
-           Vec2f               &editBottomRightTextureCoord(void);
-     const Vec2f               &getBottomRightTextureCoord(void) const;
-#ifndef OSG_2_PREP
-           Vec2f               &getBottomRightTextureCoord(void);
-#endif
+                  SFVec2f             *editSFTopLeftTextureCoord(void);
+            const SFVec2f             *getSFTopLeftTextureCoord (void) const;
+
+                  SFVec2f             *editSFBottomRightTextureCoord(void);
+            const SFVec2f             *getSFBottomRightTextureCoord (void) const;
+
+
+                  Vec2f               &editTopLeftTextureCoord(void);
+            const Vec2f               &getTopLeftTextureCoord (void) const;
+
+                  Vec2f               &editBottomRightTextureCoord(void);
+            const Vec2f               &getBottomRightTextureCoord (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setTopLeftTextureCoord(const Vec2f &value);
-     void setBottomRightTextureCoord(const Vec2f &value);
+            void setTopLeftTextureCoord(const Vec2f &value);
+            void setBottomRightTextureCoord(const Vec2f &value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      PatternLayerBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      PatternLayerBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      PatternLayerBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const PatternLayerBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef PatternLayerBase *PatternLayerBaseP;
-
-typedef osgIF<PatternLayerBase::isNodeCore,
-              CoredNodePtr<PatternLayer>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet PatternLayerNodePtr;
-
-typedef RefPtr<PatternLayerPtr> PatternLayerRefPtr;
 
 OSG_END_NAMESPACE
 

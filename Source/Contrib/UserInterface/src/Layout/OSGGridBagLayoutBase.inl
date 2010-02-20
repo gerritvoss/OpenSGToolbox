@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,216 +55,189 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &GridBagLayoutBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 GridBagLayoutBase::getClassTypeId(void) 
+OSG::UInt32 GridBagLayoutBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-GridBagLayoutPtr GridBagLayoutBase::create(void) 
-{
-    GridBagLayoutPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = GridBagLayoutPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-GridBagLayoutPtr GridBagLayoutBase::createEmpty(void) 
-{ 
-    GridBagLayoutPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 GridBagLayoutBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the GridBagLayout::_sfRows field.
-inline
-SFUInt32 *GridBagLayoutBase::getSFRows(void)
-{
-    return &_sfRows;
-}
-
-//! Get the GridBagLayout::_sfColumns field.
-inline
-SFUInt32 *GridBagLayoutBase::getSFColumns(void)
-{
-    return &_sfColumns;
-}
-
-//! Get the GridBagLayout::_mfColumnWeights field.
-inline
-MFReal32 *GridBagLayoutBase::getMFColumnWeights(void)
-{
-    return &_mfColumnWeights;
-}
-
-//! Get the GridBagLayout::_mfColumnWidths field.
-inline
-MFReal32 *GridBagLayoutBase::getMFColumnWidths(void)
-{
-    return &_mfColumnWidths;
-}
-
-//! Get the GridBagLayout::_mfRowWeights field.
-inline
-MFReal32 *GridBagLayoutBase::getMFRowWeights(void)
-{
-    return &_mfRowWeights;
-}
-
-//! Get the GridBagLayout::_mfRowHeights field.
-inline
-MFReal32 *GridBagLayoutBase::getMFRowHeights(void)
-{
-    return &_mfRowHeights;
-}
-
-
 //! Get the value of the GridBagLayout::_sfRows field.
+
 inline
-UInt32 &GridBagLayoutBase::getRows(void)
+UInt32 &GridBagLayoutBase::editRows(void)
 {
+    editSField(RowsFieldMask);
+
     return _sfRows.getValue();
 }
 
 //! Get the value of the GridBagLayout::_sfRows field.
 inline
-const UInt32 &GridBagLayoutBase::getRows(void) const
+      UInt32  GridBagLayoutBase::getRows(void) const
 {
     return _sfRows.getValue();
 }
 
 //! Set the value of the GridBagLayout::_sfRows field.
 inline
-void GridBagLayoutBase::setRows(const UInt32 &value)
+void GridBagLayoutBase::setRows(const UInt32 value)
 {
+    editSField(RowsFieldMask);
+
     _sfRows.setValue(value);
 }
-
 //! Get the value of the GridBagLayout::_sfColumns field.
+
 inline
-UInt32 &GridBagLayoutBase::getColumns(void)
+UInt32 &GridBagLayoutBase::editColumns(void)
 {
+    editSField(ColumnsFieldMask);
+
     return _sfColumns.getValue();
 }
 
 //! Get the value of the GridBagLayout::_sfColumns field.
 inline
-const UInt32 &GridBagLayoutBase::getColumns(void) const
+      UInt32  GridBagLayoutBase::getColumns(void) const
 {
     return _sfColumns.getValue();
 }
 
 //! Set the value of the GridBagLayout::_sfColumns field.
 inline
-void GridBagLayoutBase::setColumns(const UInt32 &value)
+void GridBagLayoutBase::setColumns(const UInt32 value)
 {
+    editSField(ColumnsFieldMask);
+
     _sfColumns.setValue(value);
 }
 
-
 //! Get the value of the \a index element the GridBagLayout::_mfColumnWeights field.
 inline
-Real32 &GridBagLayoutBase::getColumnWeights(const UInt32 index)
+      Real32  GridBagLayoutBase::getColumnWeights(const UInt32 index) const
 {
     return _mfColumnWeights[index];
 }
 
-//! Get the GridBagLayout::_mfColumnWeights field.
 inline
-MFReal32 &GridBagLayoutBase::getColumnWeights(void)
+Real32 &GridBagLayoutBase::editColumnWeights(const UInt32 index)
 {
-    return _mfColumnWeights;
+    editMField(ColumnWeightsFieldMask, _mfColumnWeights);
+
+    return _mfColumnWeights[index];
 }
 
-//! Get the GridBagLayout::_mfColumnWeights field.
-inline
-const MFReal32 &GridBagLayoutBase::getColumnWeights(void) const
-{
-    return _mfColumnWeights;
-}
 
 //! Get the value of the \a index element the GridBagLayout::_mfColumnWidths field.
 inline
-Real32 &GridBagLayoutBase::getColumnWidths(const UInt32 index)
+      Real32  GridBagLayoutBase::getColumnWidths(const UInt32 index) const
 {
     return _mfColumnWidths[index];
 }
 
-//! Get the GridBagLayout::_mfColumnWidths field.
 inline
-MFReal32 &GridBagLayoutBase::getColumnWidths(void)
+Real32 &GridBagLayoutBase::editColumnWidths(const UInt32 index)
 {
-    return _mfColumnWidths;
+    editMField(ColumnWidthsFieldMask, _mfColumnWidths);
+
+    return _mfColumnWidths[index];
 }
 
-//! Get the GridBagLayout::_mfColumnWidths field.
-inline
-const MFReal32 &GridBagLayoutBase::getColumnWidths(void) const
-{
-    return _mfColumnWidths;
-}
 
 //! Get the value of the \a index element the GridBagLayout::_mfRowWeights field.
 inline
-Real32 &GridBagLayoutBase::getRowWeights(const UInt32 index)
+      Real32  GridBagLayoutBase::getRowWeights(const UInt32 index) const
 {
     return _mfRowWeights[index];
 }
 
-//! Get the GridBagLayout::_mfRowWeights field.
 inline
-MFReal32 &GridBagLayoutBase::getRowWeights(void)
+Real32 &GridBagLayoutBase::editRowWeights(const UInt32 index)
 {
-    return _mfRowWeights;
+    editMField(RowWeightsFieldMask, _mfRowWeights);
+
+    return _mfRowWeights[index];
 }
 
-//! Get the GridBagLayout::_mfRowWeights field.
-inline
-const MFReal32 &GridBagLayoutBase::getRowWeights(void) const
-{
-    return _mfRowWeights;
-}
 
 //! Get the value of the \a index element the GridBagLayout::_mfRowHeights field.
 inline
-Real32 &GridBagLayoutBase::getRowHeights(const UInt32 index)
+      Real32  GridBagLayoutBase::getRowHeights(const UInt32 index) const
 {
     return _mfRowHeights[index];
 }
 
-//! Get the GridBagLayout::_mfRowHeights field.
 inline
-MFReal32 &GridBagLayoutBase::getRowHeights(void)
+Real32 &GridBagLayoutBase::editRowHeights(const UInt32 index)
 {
-    return _mfRowHeights;
+    editMField(RowHeightsFieldMask, _mfRowHeights);
+
+    return _mfRowHeights[index];
 }
 
-//! Get the GridBagLayout::_mfRowHeights field.
+
+
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-const MFReal32 &GridBagLayoutBase::getRowHeights(void) const
+void GridBagLayoutBase::execSync (      GridBagLayoutBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfRowHeights;
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (RowsFieldMask & whichField))
+        _sfRows.syncWith(pFrom->_sfRows);
+
+    if(FieldBits::NoField != (ColumnsFieldMask & whichField))
+        _sfColumns.syncWith(pFrom->_sfColumns);
+
+    if(FieldBits::NoField != (ColumnWeightsFieldMask & whichField))
+        _mfColumnWeights.syncWith(pFrom->_mfColumnWeights,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (ColumnWidthsFieldMask & whichField))
+        _mfColumnWidths.syncWith(pFrom->_mfColumnWidths,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (RowWeightsFieldMask & whichField))
+        _mfRowWeights.syncWith(pFrom->_mfRowWeights,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (RowHeightsFieldMask & whichField))
+        _mfRowHeights.syncWith(pFrom->_mfRowHeights,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
 }
+#endif
+
+
+inline
+const Char8 *GridBagLayoutBase::getClassname(void)
+{
+    return "GridBagLayout";
+}
+OSG_GEN_CONTAINERPTR(GridBagLayout);
 
 OSG_END_NAMESPACE
-
-#define OSGGRIDBAGLAYOUTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

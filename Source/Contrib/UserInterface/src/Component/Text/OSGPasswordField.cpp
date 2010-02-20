@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,32 +40,27 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGPasswordField.h"
-#include "Util/OSGUIDrawUtils.h"
+#include "OSGUIDrawUtils.h"
 
-#include "Component/Container/Window/OSGInternalWindow.h"
-#include "UIDrawingSurface/OSGUIDrawingSurface.h"
-#include <OpenSG/Input/OSGWindowEventProducer.h>
-#include <OpenSG/Input/OSGStringUtils.h>
+#include "OSGInternalWindow.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGWindowEventProducer.h"
+#include "OSGStringUtils.h"
 
-#include "LookAndFeel/OSGLookAndFeelManager.h"
+#include "OSGLookAndFeelManager.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::PasswordField
-A UI Password Field  	
-*/
+// Documentation for this class is emitted in the
+// OSGPasswordFieldBase.cpp file.
+// To modify it, please change the .fcd file (OSGPasswordField.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -75,8 +70,13 @@ A UI Password Field
  *                           Class methods                                 *
 \***************************************************************************/
 
-void PasswordField::initMethod (void)
+void PasswordField::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -89,7 +89,7 @@ std::string PasswordField::getDrawnText(void) const
 	return getEcho();
 }
 
-void PasswordField::mouseClicked(const MouseEventPtr e)
+void PasswordField::mouseClicked(const MouseEventUnrecPtr e)
 {	
 	if(e->getButton() == e->BUTTON1)
 	{
@@ -103,6 +103,7 @@ void PasswordField::mouseClicked(const MouseEventPtr e)
 	TextComponent::mouseClicked(e);
 
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -125,9 +126,11 @@ PasswordField::~PasswordField(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void PasswordField::changed(BitVector whichField, UInt32 origin)
+void PasswordField::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
     
     if(whichField & TextFieldMask)
     {
@@ -140,36 +143,10 @@ void PasswordField::changed(BitVector whichField, UInt32 origin)
     }
 }
 
-void PasswordField::dump(      UInt32    , 
+void PasswordField::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump PasswordField NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGPASSWORDFIELDBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPASSWORDFIELDBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGPASSWORDFIELDFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

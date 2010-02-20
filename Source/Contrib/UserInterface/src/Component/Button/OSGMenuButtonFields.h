@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,75 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGToggleButtonFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class MenuButton;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! MenuButtonPtr
+OSG_GEN_CONTAINERPTR(MenuButton);
 
-typedef FCPtr<ToggleButtonPtr, MenuButton> MenuButtonPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<MenuButtonPtr> : 
-    public FieldTraitsRecurseMapper<MenuButtonPtr, true>
+struct FieldTraits<MenuButton *> :
+    public FieldTraitsFCPtrBase<MenuButton *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFMenuButtonPtr"; }
-    static const char *getMName(void) { return "MFMenuButtonPtr"; }
+    typedef FieldTraits<MenuButton *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFMenuButtonPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFMenuButtonPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<MenuButtonPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<MenuButton *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecMenuButtonPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<MenuButton *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecMenuButtonPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MenuButton *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakMenuButtonPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MenuButton *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdMenuButtonPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MenuButton *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecMenuButtonPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MenuButton *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecMenuButtonPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MenuButton *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakMenuButtonPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MenuButton *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdMenuButtonPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MenuButton *,
+                      RecordedRefCountPolicy  > SFRecMenuButtonPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MenuButton *,
+                      UnrecordedRefCountPolicy> SFUnrecMenuButtonPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MenuButton *,
+                      WeakRefCountPolicy      > SFWeakMenuButtonPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MenuButton *,
+                      NoRefCountPolicy        > SFUncountedMenuButtonPtr;
 
-typedef SField<MenuButtonPtr> SFMenuButtonPtr;
-#endif
 
-#ifndef OSG_COMPILEMENUBUTTONINST
-OSG_DLLEXPORT_DECL1(SField, MenuButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MenuButton *,
+                      RecordedRefCountPolicy  > MFRecMenuButtonPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MenuButton *,
+                      UnrecordedRefCountPolicy> MFUnrecMenuButtonPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MenuButton *,
+                      WeakRefCountPolicy      > MFWeakMenuButtonPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MenuButton *,
+                      NoRefCountPolicy        > MFUncountedMenuButtonPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<MenuButtonPtr> MFMenuButtonPtr;
-#endif
 
-#ifndef OSG_COMPILEMENUBUTTONINST
-OSG_DLLEXPORT_DECL1(MField, MenuButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecMenuButtonPtr : 
+    public PointerSField<MenuButton *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecMenuButtonPtr : 
+    public PointerSField<MenuButton *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakMenuButtonPtr :
+    public PointerSField<MenuButton *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedMenuButtonPtr :
+    public PointerSField<MenuButton *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecMenuButtonPtr :
+    public PointerMField<MenuButton *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecMenuButtonPtr :
+    public PointerMField<MenuButton *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakMenuButtonPtr :
+    public PointerMField<MenuButton *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedMenuButtonPtr :
+    public PointerMField<MenuButton *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

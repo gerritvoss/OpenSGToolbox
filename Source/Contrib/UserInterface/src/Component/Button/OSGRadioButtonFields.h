@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGToggleButtonFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class RadioButton;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! RadioButtonPtr
+OSG_GEN_CONTAINERPTR(RadioButton);
 
-typedef FCPtr<ToggleButtonPtr, RadioButton> RadioButtonPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<RadioButtonPtr> : 
-    public FieldTraitsRecurseMapper<RadioButtonPtr, true>
+struct FieldTraits<RadioButton *> :
+    public FieldTraitsFCPtrBase<RadioButton *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFRadioButtonPtr"; }
-    static const char *getMName(void) { return "MFRadioButtonPtr"; }
+    typedef FieldTraits<RadioButton *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFRadioButtonPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFRadioButtonPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<RadioButtonPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<RadioButton *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecRadioButtonPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<RadioButton *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecRadioButtonPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RadioButton *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakRadioButtonPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RadioButton *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdRadioButtonPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RadioButton *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecRadioButtonPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RadioButton *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecRadioButtonPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RadioButton *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakRadioButtonPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RadioButton *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdRadioButtonPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<RadioButton *,
+                      RecordedRefCountPolicy  > SFRecRadioButtonPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<RadioButton *,
+                      UnrecordedRefCountPolicy> SFUnrecRadioButtonPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<RadioButton *,
+                      WeakRefCountPolicy      > SFWeakRadioButtonPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<RadioButton *,
+                      NoRefCountPolicy        > SFUncountedRadioButtonPtr;
 
-typedef SField<RadioButtonPtr> SFRadioButtonPtr;
-#endif
 
-#ifndef OSG_COMPILERADIOBUTTONINST
-OSG_DLLEXPORT_DECL1(SField, RadioButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<RadioButton *,
+                      RecordedRefCountPolicy  > MFRecRadioButtonPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<RadioButton *,
+                      UnrecordedRefCountPolicy> MFUnrecRadioButtonPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<RadioButton *,
+                      WeakRefCountPolicy      > MFWeakRadioButtonPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<RadioButton *,
+                      NoRefCountPolicy        > MFUncountedRadioButtonPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<RadioButtonPtr> MFRadioButtonPtr;
-#endif
 
-#ifndef OSG_COMPILERADIOBUTTONINST
-OSG_DLLEXPORT_DECL1(MField, RadioButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecRadioButtonPtr : 
+    public PointerSField<RadioButton *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecRadioButtonPtr : 
+    public PointerSField<RadioButton *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakRadioButtonPtr :
+    public PointerSField<RadioButton *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedRadioButtonPtr :
+    public PointerSField<RadioButton *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecRadioButtonPtr :
+    public PointerMField<RadioButton *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecRadioButtonPtr :
+    public PointerMField<RadioButton *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakRadioButtonPtr :
+    public PointerMField<RadioButton *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedRadioButtonPtr :
+    public PointerMField<RadioButton *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGRADIOBUTTONFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGRADIOBUTTONFIELDS_H_ */

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,27 +40,25 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGGL.h>
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGTextLayoutParam.h>
-#include <OpenSG/OSGTextLayoutResult.h>
-#include <OpenSG/OSGTextureChunk.h>
-#include <OpenSG/OSGDepthChunk.h>
+#include <OSGConfig.h>
 
 #include "OSGGraphics2D.h"
+#include "OSGGL.h"
+#include "OSGTextLayoutParam.h"
+#include "OSGTextLayoutResult.h"
+#include "OSGTextureObjChunk.h"
+#include "OSGDepthChunk.h"
+#include "OSGPrimeMaterial.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::Graphics2D
-A Concrete 2D UI Graphics.
-*/
+// Documentation for this class is emitted in the
+// OSGGraphics2DBase.cpp file.
+// To modify it, please change the .fcd file (OSGGraphics2D.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -70,55 +68,53 @@ A Concrete 2D UI Graphics.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void Graphics2D::initMethod (void)
+void Graphics2D::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-ColorMaskChunkPtr Graphics2D::createColorMask(void)
+
+ColorMaskChunkUnrecPtr Graphics2D::createColorMask(void)
 {
-    ColorMaskChunkPtr _ColorMask = ColorMaskChunk::create();
-    beginEditCP(_ColorMask, ColorMaskChunk::MaskRFieldMask | ColorMaskChunk::MaskGFieldMask | ColorMaskChunk::MaskBFieldMask | ColorMaskChunk::MaskAFieldMask);
+    ColorMaskChunkUnrecPtr _ColorMask = ColorMaskChunk::create();
         _ColorMask->setMask(false, false, false,false);
-    endEditCP(_ColorMask, ColorMaskChunk::MaskRFieldMask | ColorMaskChunk::MaskGFieldMask | ColorMaskChunk::MaskBFieldMask | ColorMaskChunk::MaskAFieldMask);
     return _ColorMask;
 }
 
-StencilChunkPtr Graphics2D::createStenciledAreaSetup(void)
+StencilChunkUnrecPtr Graphics2D::createStenciledAreaSetup(void)
 {
-    StencilChunkPtr _StenciledAreaSetup = StencilChunk::create();
-    beginEditCP(_StenciledAreaSetup, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
+    StencilChunkUnrecPtr _StenciledAreaSetup = StencilChunk::create();
         _StenciledAreaSetup->setStencilFunc(GL_ALWAYS);
         _StenciledAreaSetup->setStencilOpFail(GL_INCR);
         _StenciledAreaSetup->setStencilOpZFail(GL_INCR);
         _StenciledAreaSetup->setStencilOpZPass(GL_INCR);
         _StenciledAreaSetup->setStencilMask(UInt32(0xFFFFFFFF));
-    endEditCP(_StenciledAreaSetup, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
     return _StenciledAreaSetup;
 }
 
-StencilChunkPtr Graphics2D::createStenciledAreaCleanup(void)
+StencilChunkUnrecPtr Graphics2D::createStenciledAreaCleanup(void)
 {
-    StencilChunkPtr _StenciledAreaCleanup = StencilChunk::create();
-    beginEditCP(_StenciledAreaCleanup, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
+    StencilChunkUnrecPtr _StenciledAreaCleanup = StencilChunk::create();
         _StenciledAreaCleanup->setStencilFunc(GL_ALWAYS);
         _StenciledAreaCleanup->setStencilOpFail(GL_DECR);
         _StenciledAreaCleanup->setStencilOpZFail(GL_DECR);
         _StenciledAreaCleanup->setStencilOpZPass(GL_DECR);
         _StenciledAreaCleanup->setStencilMask(UInt32(0xFFFFFFFF));
-    endEditCP(_StenciledAreaCleanup, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
     return _StenciledAreaCleanup;
 }
 
-StencilChunkPtr Graphics2D::createStenciledAreaTest(void)
+StencilChunkUnrecPtr Graphics2D::createStenciledAreaTest(void)
 {
-    StencilChunkPtr _StenciledAreaTest = StencilChunk::create();
-    beginEditCP(_StenciledAreaTest, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
+    StencilChunkUnrecPtr _StenciledAreaTest = StencilChunk::create();
         _StenciledAreaTest->setStencilFunc(GL_LEQUAL);
         _StenciledAreaTest->setStencilOpFail(GL_KEEP);
         _StenciledAreaTest->setStencilOpZFail(GL_KEEP);
         _StenciledAreaTest->setStencilOpZPass(GL_KEEP);
         _StenciledAreaTest->setStencilMask(UInt32(0xFFFFFFFF));
-    endEditCP(_StenciledAreaTest, StencilChunk::StencilFuncFieldMask | StencilChunk::StencilValueFieldMask | StencilChunk::StencilOpFailFieldMask | StencilChunk::StencilOpZFailFieldMask| StencilChunk::StencilOpZPassFieldMask| StencilChunk::StencilMaskFieldMask);
     return _StenciledAreaTest;
 }
 
@@ -128,7 +124,7 @@ StencilChunkPtr Graphics2D::createStenciledAreaTest(void)
 
 Real32 Graphics2D::getClipPlaneOffset(void) const
 {
-	return 0.0f;
+    return 0.0f;
 }
 
 void Graphics2D::preDraw()
@@ -136,271 +132,269 @@ void Graphics2D::preDraw()
     //Reset the Stencil Nesting
     _StencilNesting = 0;
 
-   glPushAttrib(GL_LIGHTING_BIT | GL_POLYGON_BIT | GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT);
-   
-	getUIDepth()->activate(getDrawAction());
+    glPushAttrib(GL_LIGHTING_BIT | GL_POLYGON_BIT | GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT);
 
-	//_light = glIsEnabled(GL_LIGHTING);
+    getUIDepth()->activate(getDrawEnv());
 
-	//glGetIntegerv(GL_POLYGON_MODE, _fill);
-	glPolygonMode(GL_FRONT, GL_FILL);
+    //_light = glIsEnabled(GL_LIGHTING);
 
-	//_depth = glIsEnabled(GL_DEPTH_TEST);
-	//glDisable(GL_DEPTH_TEST);
+    //glGetIntegerv(GL_POLYGON_MODE, _fill);
+    glPolygonMode(GL_FRONT, GL_FILL);
 
-	//_colmat = glIsEnabled(GL_COLOR_MATERIAL);
-	glDisable(GL_COLOR_MATERIAL);
+    //_depth = glIsEnabled(GL_DEPTH_TEST);
+    //glDisable(GL_DEPTH_TEST);
 
-	if(getEnablePointAntiAliasing())
-	{
-		glEnable(GL_POINT_SMOOTH);
-	}
-	if(getEnableLineAntiAliasing())
-	{
-		glEnable(GL_LINE_SMOOTH);
-	}
-	if(getEnablePolygonAntiAliasing())
-	{
-		glEnable(GL_POLYGON_SMOOTH);
-	}
-	glClearStencil(0);
-	glClear(GL_STENCIL_BUFFER_BIT);
+    //_colmat = glIsEnabled(GL_COLOR_MATERIAL);
+    glDisable(GL_COLOR_MATERIAL);
+
+    if(getEnablePointAntiAliasing())
+    {
+        glEnable(GL_POINT_SMOOTH);
+    }
+    if(getEnableLineAntiAliasing())
+    {
+        glEnable(GL_LINE_SMOOTH);
+    }
+    if(getEnablePolygonAntiAliasing())
+    {
+        glEnable(GL_POLYGON_SMOOTH);
+    }
+    glClearStencil(0);
+    glClear(GL_STENCIL_BUFFER_BIT);
 }
 
 void Graphics2D::postDraw()
 {
-	/*if(_depth == GL_TRUE)
-	{
-		glEnable(GL_DEPTH_TEST);
-	}
-	if(_light == GL_TRUE)
-	{
-		glEnable(GL_LIGHTING);
-	}
-	if(_colmat == GL_TRUE)
-	{
-		glEnable(GL_COLOR_MATERIAL);
-	}
-	glPolygonMode(GL_FRONT, _fill[0]);
-	glPolygonMode(GL_BACK , _fill[1]);*/
-   
-	getUIDepth()->deactivate(getDrawAction());
-   glPopAttrib();
+    /*if(_depth == GL_TRUE)
+      {
+      glEnable(GL_DEPTH_TEST);
+      }
+      if(_light == GL_TRUE)
+      {
+      glEnable(GL_LIGHTING);
+      }
+      if(_colmat == GL_TRUE)
+      {
+      glEnable(GL_COLOR_MATERIAL);
+      }
+      glPolygonMode(GL_FRONT, _fill[0]);
+      glPolygonMode(GL_BACK , _fill[1]);*/
+
+    getUIDepth()->deactivate(getDrawEnv());
+    glPopAttrib();
 }
 
 void Graphics2D::drawRect(const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Color4f& Color, const Real32& Opacity) const
 {
-   Real32 Alpha(Color.alpha() * Opacity * getOpacity());
-	if(Alpha < 1.0 || getEnablePolygonAntiAliasing())
-	{
-		//Setup the Blending equations properly
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_BLEND);
-	}
+    Real32 Alpha(Color.alpha() * Opacity * getOpacity());
+    if(Alpha < 1.0 || getEnablePolygonAntiAliasing())
+    {
+        //Setup the Blending equations properly
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+    }
 
-	glBegin(GL_QUADS);
-      glColor4f(Color.red(), Color.green(), Color.blue(), Alpha );
-	   glVertex2fv(TopLeft.getValues());
-	   glVertex2f(BottomRight.x(), TopLeft.y());
-	   glVertex2fv(BottomRight.getValues());
-	   glVertex2f(TopLeft.x(), BottomRight.y());
-	glEnd();
-	
-	if(Alpha < 1.0 || getEnablePolygonAntiAliasing())
-	{
-		glDisable(GL_BLEND);
-	}
+    glBegin(GL_QUADS);
+    glColor4f(Color.red(), Color.green(), Color.blue(), Alpha );
+    glVertex2fv(TopLeft.getValues());
+    glVertex2f(BottomRight.x(), TopLeft.y());
+    glVertex2fv(BottomRight.getValues());
+    glVertex2f(TopLeft.x(), BottomRight.y());
+    glEnd();
+
+    if(Alpha < 1.0 || getEnablePolygonAntiAliasing())
+    {
+        glDisable(GL_BLEND);
+    }
 }
 
 void Graphics2D::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& p3, const Pnt2f& p4, 
-						const Color4f& c1, const Color4f& c2, const Color4f& c3, const Color4f& c4,
-						const Real32& Opacity) const
+                          const Color4f& c1, const Color4f& c2, const Color4f& c3, const Color4f& c4,
+                          const Real32& Opacity) const
 {
-	Real32 MinAlpha( osgMin(osgMin(c1.alpha(), c2.alpha()), osgMin(c3.alpha(), c4.alpha())) * Opacity * getOpacity());
-	if(MinAlpha < 1.0)
-	{
-		//Setup the Blending equations properly
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_BLEND);
-	}
-	
-	glBegin(GL_QUADS);
-	   glColor4f(c1.red(), c1.green(), c1.blue(), c1.alpha() * Opacity * getOpacity() );
-	   glVertex2fv(p1.getValues());
-	   glColor4f(c2.red(), c2.green(), c2.blue(), c2.alpha() * Opacity * getOpacity() );
-	   glVertex2fv(p2.getValues());
-	   glColor4f(c3.red(), c3.green(), c3.blue(), c3.alpha() * Opacity * getOpacity() );
-	   glVertex2fv(p3.getValues());
-	   glColor4f(c4.red(), c4.green(), c4.blue(), c4.alpha() * Opacity * getOpacity() );
-	   glVertex2fv(p4.getValues());
-	glEnd();
+    Real32 MinAlpha( osgMin(osgMin(c1.alpha(), c2.alpha()), osgMin(c3.alpha(), c4.alpha())) * Opacity * getOpacity());
+    if(MinAlpha < 1.0)
+    {
+        //Setup the Blending equations properly
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+    }
 
-	if(MinAlpha < 1.0)
-	{
-		glDisable(GL_BLEND);
-	}
+    glBegin(GL_QUADS);
+    glColor4f(c1.red(), c1.green(), c1.blue(), c1.alpha() * Opacity * getOpacity() );
+    glVertex2fv(p1.getValues());
+    glColor4f(c2.red(), c2.green(), c2.blue(), c2.alpha() * Opacity * getOpacity() );
+    glVertex2fv(p2.getValues());
+    glColor4f(c3.red(), c3.green(), c3.blue(), c3.alpha() * Opacity * getOpacity() );
+    glVertex2fv(p3.getValues());
+    glColor4f(c4.red(), c4.green(), c4.blue(), c4.alpha() * Opacity * getOpacity() );
+    glVertex2fv(p4.getValues());
+    glEnd();
+
+    if(MinAlpha < 1.0)
+    {
+        glDisable(GL_BLEND);
+    }
 }
 
 void Graphics2D::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& p3, const Pnt2f& p4, 
-						const Vec2f& t1, const Vec2f& t2, const Vec2f& t3, const Vec2f& t4,
-						const Color4f& color, const TextureChunkPtr Texture,
-						const Real32& Opacity) const
+                          const Vec2f& t1, const Vec2f& t2, const Vec2f& t3, const Vec2f& t4,
+                          const Color4f& color, const TextureObjChunkUnrecPtr Texture,
+                          const Real32& Opacity) const
 {
-	Real32 Alpha( Opacity * getOpacity() * color.alpha());
-	if(Alpha < 1.0 || Texture->getImage()->hasAlphaChannel())
-	{
-		//Setup the Blending equations properly
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_BLEND);
-	}
+    Real32 Alpha( Opacity * getOpacity() * color.alpha());
+    if(Alpha < 1.0 || Texture->getImage()->hasAlphaChannel())
+    {
+        //Setup the Blending equations properly
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+    }
 
-	if(Texture != NullFC)
-	{
-		Texture->activate(getDrawAction());
-	}
-	
-	glBegin(GL_QUADS);
-	   glColor4f(color.red(), color.green(), color.blue(), Alpha );
-	   glTexCoord2fv(t4.getValues());
-	   glVertex2fv(p1.getValues());
-	   glTexCoord2fv(t3.getValues());
-	   glVertex2fv(p2.getValues());
-	   glTexCoord2fv(t2.getValues());
-	   glVertex2fv(p3.getValues());
-	   glTexCoord2fv(t1.getValues());
-	   glVertex2fv(p4.getValues());
-	glEnd();
-	
-	if(Texture != NullFC)
-	{
-		Texture->deactivate(getDrawAction());
-	}
+    if(Texture != NULL)
+    {
+        Texture->activate(getDrawEnv());
+    }
 
-	if(Alpha < 1.0 || Texture->getImage()->hasAlphaChannel())
-	{
-		glDisable(GL_BLEND);
-	}
+    glBegin(GL_QUADS);
+    glColor4f(color.red(), color.green(), color.blue(), Alpha );
+    glTexCoord2fv(t4.getValues());
+    glVertex2fv(p1.getValues());
+    glTexCoord2fv(t3.getValues());
+    glVertex2fv(p2.getValues());
+    glTexCoord2fv(t2.getValues());
+    glVertex2fv(p3.getValues());
+    glTexCoord2fv(t1.getValues());
+    glVertex2fv(p4.getValues());
+    glEnd();
+
+    if(Texture != NULL)
+    {
+        Texture->deactivate(getDrawEnv());
+    }
+
+    if(Alpha < 1.0 || Texture->getImage()->hasAlphaChannel())
+    {
+        glDisable(GL_BLEND);
+    }
 }
 
 void Graphics2D::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& p3, const Pnt2f& p4, 
-						const Vec2f& t1, const Vec2f& t2, const Vec2f& t3, const Vec2f& t4,
-						const MaterialPtr Material,
-						const Real32& Opacity) const
+                          const Vec2f& t1, const Vec2f& t2, const Vec2f& t3, const Vec2f& t4,
+                          const MaterialUnrecPtr Material,
+                          const Real32& Opacity) const
 {
-	Real32 Alpha( Opacity * getOpacity());
-	if(Alpha < 1.0 || Material->isTransparent())
-	{
-		//Setup the Blending equations properly
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_BLEND);
-	}
+    Real32 Alpha( Opacity * getOpacity());
+    if(Alpha < 1.0 || Material->isTransparent())
+    {
+        //Setup the Blending equations properly
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+    }
 
-   StatePtr state = NullFC;
-	if(Material != NullFC)
-	{
-      state = Material->makeState();
+    StateUnrecPtr state = NULL;
+    if(Material != NULL)
+    {
+        state =
+            Material->finalize(0x000000)->getState();
 
-      addRefCP(state);
+        state->activate(getDrawEnv());
+    }
 
-      state->activate(getDrawAction());
-	}
-	
-	glBegin(GL_QUADS);
-	   glColor4f(1.0, 1.0, 1.0, Alpha );
-	   glTexCoord2fv(t1.getValues());
-	   glVertex2fv(p1.getValues());
-	   glTexCoord2fv(t2.getValues());
-	   glVertex2fv(p2.getValues());
-	   glTexCoord2fv(t3.getValues());
-	   glVertex2fv(p3.getValues());
-	   glTexCoord2fv(t4.getValues());
-	   glVertex2fv(p4.getValues());
-	glEnd();
-	
-	if(state != NullFC)
-	{
-		state->deactivate(getDrawAction());
-      subRefCP(state);
-	}
+    glBegin(GL_QUADS);
+        glColor4f(1.0, 1.0, 1.0, Alpha );
+        glTexCoord2fv(t1.getValues());
+        glVertex2fv(p1.getValues());
+        glTexCoord2fv(t2.getValues());
+        glVertex2fv(p2.getValues());
+        glTexCoord2fv(t3.getValues());
+        glVertex2fv(p3.getValues());
+        glTexCoord2fv(t4.getValues());
+        glVertex2fv(p4.getValues());
+    glEnd();
 
-	if(Alpha < 1.0 || Material->isTransparent())
-	{
-		glDisable(GL_BLEND);
-	}
+    if(state != NULL)
+    {
+        state->deactivate(getDrawEnv());
+    }
+
+    if(Alpha < 1.0 || Material->isTransparent())
+    {
+        glDisable(GL_BLEND);
+    }
 }
 
 void Graphics2D::drawLine(const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32& Width, const Color4f& Color, const Real32& Opacity) const
 {
-	GLfloat previousLineWidth;
-	glGetFloatv(GL_LINE_WIDTH, &previousLineWidth);
-   Real32 Alpha(Color.alpha() * Opacity * getOpacity());
-	if(Alpha < 1.0)
-	{
-		//Setup the blending equations properly
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_BLEND);
-	}
-	glLineWidth(Width);
-	glBegin(GL_LINES);
-      glColor4f(Color.red(), Color.green(), Color.blue(), Alpha );
-		glVertex2fv(TopLeft.getValues());
-		glVertex2fv(BottomRight.getValues());
-	glEnd();
-	if(Alpha < 1.0)
-	{
-		glDisable(GL_BLEND);
-	}
-	glLineWidth(previousLineWidth);
+    GLfloat previousLineWidth;
+    glGetFloatv(GL_LINE_WIDTH, &previousLineWidth);
+    Real32 Alpha(Color.alpha() * Opacity * getOpacity());
+    if(Alpha < 1.0)
+    {
+        //Setup the blending equations properly
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+    }
+    glLineWidth(Width);
+    glBegin(GL_LINES);
+    glColor4f(Color.red(), Color.green(), Color.blue(), Alpha );
+    glVertex2fv(TopLeft.getValues());
+    glVertex2fv(BottomRight.getValues());
+    glEnd();
+    if(Alpha < 1.0)
+    {
+        glDisable(GL_BLEND);
+    }
+    glLineWidth(previousLineWidth);
 }
 
 void Graphics2D::drawPolygon(const MFPnt2f Verticies, const Color4f& Color, const Real32& Opacity) const
 {
-   Real32 Alpha(Color.alpha() * Opacity * getOpacity());
-	if(Alpha < 1.0)
-	{
-		//Setup the Blending equations properly
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_BLEND);
-	}
-	
-	glBegin(GL_POLYGON);
-      glColor4f(Color.red(), Color.green(), Color.blue(), Alpha );
-	   for(UInt32 i=0 ; i<Verticies.size() ; ++i)
-	   {
-	      glVertex2fv(Verticies[i].getValues());
-	   }
-	glEnd();
-	
-	if(Alpha < 1.0)
-	{
-		glDisable(GL_BLEND);
-	}
+    Real32 Alpha(Color.alpha() * Opacity * getOpacity());
+    if(Alpha < 1.0)
+    {
+        //Setup the Blending equations properly
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+    }
+
+    glBegin(GL_POLYGON);
+    glColor4f(Color.red(), Color.green(), Color.blue(), Alpha );
+    for(UInt32 i=0 ; i<Verticies.size() ; ++i)
+    {
+        glVertex2fv(Verticies[i].getValues());
+    }
+    glEnd();
+
+    if(Alpha < 1.0)
+    {
+        glDisable(GL_BLEND);
+    }
 }
 
 void Graphics2D::drawDisc(const Pnt2f& Center, const Real32& Width, const Real32& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const UInt16& SubDivisions, const Color4f& CenterColor, const Color4f& OuterColor, const Real32& Opacity) const
 {
-	Real32 angleNow = StartAngleRad;
-	Real32 angleDiff = (EndAngleRad-StartAngleRad)/(static_cast<Real32>(SubDivisions));
-	if(EndAngleRad-StartAngleRad > 2*3.1415926535)
-		angleDiff = 2*3.1415926535/static_cast<Real32>(SubDivisions);
+    Real32 angleNow = StartAngleRad;
+    Real32 angleDiff = (EndAngleRad-StartAngleRad)/(static_cast<Real32>(SubDivisions));
+    if(EndAngleRad-StartAngleRad > 2*3.1415926535)
+        angleDiff = 2*3.1415926535/static_cast<Real32>(SubDivisions);
     if(CenterColor.alpha() < 1.0 ||
        OuterColor.alpha() < 1.0)
-	{
-		//Setup the blending equations properly
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_BLEND);
-	}
-	
-	glBegin(GL_TRIANGLE_FAN);
-      glColor4f(CenterColor.red(), CenterColor.green(), CenterColor.blue(), CenterColor.alpha() * Opacity * getOpacity() );
-      glVertex2fv(Center.getValues());
-      glColor4f(OuterColor.red(), OuterColor.green(), OuterColor.blue(), OuterColor.alpha() * Opacity * getOpacity() );
-      for(UInt16 i = 0 ; i<SubDivisions+1 ; ++i)
-      {
-			glVertex2f(static_cast<Real32>(Center.x()) + static_cast<Real32>(Width)*osgcos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(Height)*osgsin(angleNow));
-			angleNow += angleDiff;
-		}
-	glEnd();
+    {
+        //Setup the blending equations properly
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+    }
+
+    glBegin(GL_TRIANGLE_FAN);
+    glColor4f(CenterColor.red(), CenterColor.green(), CenterColor.blue(), CenterColor.alpha() * Opacity * getOpacity() );
+    glVertex2fv(Center.getValues());
+    glColor4f(OuterColor.red(), OuterColor.green(), OuterColor.blue(), OuterColor.alpha() * Opacity * getOpacity() );
+    for(UInt16 i = 0 ; i<SubDivisions+1 ; ++i)
+    {
+        glVertex2f(static_cast<Real32>(Center.x()) + static_cast<Real32>(Width)*osgCos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(Height)*osgSin(angleNow));
+        angleNow += angleDiff;
+    }
+    glEnd();
 
     if(CenterColor.alpha() < 1.0 ||
        OuterColor.alpha() < 1.0)
@@ -410,28 +404,28 @@ void Graphics2D::drawDisc(const Pnt2f& Center, const Real32& Width, const Real32
 }
 void Graphics2D::drawComplexDisc(const Pnt2f& Center, const Real32& InnerRadius, const Real32& OuterRadius, const Real32& StartAngleRad, const Real32& EndAngleRad, const UInt16& SubDivisions, const Color4f& CenterColor, const Color4f& OuterColor, const Real32& Opacity) const
 {	
-	Real32 angleNow = StartAngleRad;
-	Real32 angleDiff = (EndAngleRad-StartAngleRad)/(static_cast<Real32>(SubDivisions));
-	if(EndAngleRad-StartAngleRad > 2*3.1415926535)
-		angleDiff = 2*3.1415926535/static_cast<Real32>(SubDivisions);
-	if(CenterColor.alpha() < 1.0 ||
+    Real32 angleNow = StartAngleRad;
+    Real32 angleDiff = (EndAngleRad-StartAngleRad)/(static_cast<Real32>(SubDivisions));
+    if(EndAngleRad-StartAngleRad > 2*3.1415926535)
+        angleDiff = 2*3.1415926535/static_cast<Real32>(SubDivisions);
+    if(CenterColor.alpha() < 1.0 ||
        OuterColor.alpha() < 1.0)
-	{
-		//Setup the blending equations properly
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_BLEND);
-	}
-	glBegin(GL_QUAD_STRIP);
+    {
+        //Setup the blending equations properly
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+    }
+    glBegin(GL_QUAD_STRIP);
     for(UInt16 i = 0 ; i<SubDivisions+1 ; ++i)
-	{
-		glColor4f(OuterColor.red(), OuterColor.green(), OuterColor.blue(), OuterColor.alpha());
-		glVertex2f(static_cast<Real32>(Center.x()) + static_cast<Real32>(OuterRadius)*osgcos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(OuterRadius)*osgsin(angleNow));
-		glColor4f(CenterColor.red(), CenterColor.green(), CenterColor.blue(), CenterColor.alpha());
-		glVertex2f(static_cast<Real32>(Center.x()) + static_cast<Real32>(InnerRadius)*osgcos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(InnerRadius)*osgsin(angleNow));
-		angleNow += angleDiff;
-	}
-	glEnd();
-	if(CenterColor.alpha() < 1.0 ||
+    {
+        glColor4f(OuterColor.red(), OuterColor.green(), OuterColor.blue(), OuterColor.alpha());
+        glVertex2f(static_cast<Real32>(Center.x()) + static_cast<Real32>(OuterRadius)*osgCos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(OuterRadius)*osgSin(angleNow));
+        glColor4f(CenterColor.red(), CenterColor.green(), CenterColor.blue(), CenterColor.alpha());
+        glVertex2f(static_cast<Real32>(Center.x()) + static_cast<Real32>(InnerRadius)*osgCos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(InnerRadius)*osgSin(angleNow));
+        angleNow += angleDiff;
+    }
+    glEnd();
+    if(CenterColor.alpha() < 1.0 ||
        OuterColor.alpha() < 1.0)
     {
         glDisable(GL_BLEND);
@@ -440,48 +434,48 @@ void Graphics2D::drawComplexDisc(const Pnt2f& Center, const Real32& InnerRadius,
 
 void Graphics2D::drawArc(const Pnt2f& Center, const Real32& Width, const Real32& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const Real32& LineWidth, const UInt16& SubDivisions, const Color4f& Color, const Real32& Opacity) const
 {
-	GLfloat previousLineWidth;
-	glGetFloatv(GL_LINE_WIDTH, &previousLineWidth);
-	Real32 angleNow = StartAngleRad;
-	Real32 angleDiff = (EndAngleRad-StartAngleRad)/(static_cast<Real32>(SubDivisions));
-	//If andle difference is bigger to a circle, set it to equal to a circle
-	if(EndAngleRad-StartAngleRad > 2*3.1415926535)
-		angleDiff = 2*3.1415926535/static_cast<Real32>(SubDivisions);
-   Real32 Alpha(Color.alpha() * Opacity * getOpacity());
-	if(Alpha < 1.0)
-	{
-		//Setup the blending equations properly
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_BLEND);
-	}
-	glLineWidth(LineWidth);
-	glBegin(GL_LINE_STRIP);
-      glColor4f(Color.red(), Color.green(), Color.blue(), Alpha );
-		//draw vertex lines
-      for(UInt16 i = 0 ; i<SubDivisions+1 ; ++i)
-      {
-			glVertex2f( static_cast<Real32>(Center.x()) + static_cast<Real32>(Width)*osgcos(angleNow ),static_cast<Real32>(Center.y()) +static_cast<Real32>(Height)*osgsin(angleNow));
-			//glVertex2f(Center.x() + Width*osgcos(angleNow + angleDiff), Center.y() + Height*osgsin(angleNow+angleDiff));
-			angleNow += angleDiff;
-		}
-	glEnd();
+    GLfloat previousLineWidth;
+    glGetFloatv(GL_LINE_WIDTH, &previousLineWidth);
+    Real32 angleNow = StartAngleRad;
+    Real32 angleDiff = (EndAngleRad-StartAngleRad)/(static_cast<Real32>(SubDivisions));
+    //If andle difference is bigger to a circle, set it to equal to a circle
+    if(EndAngleRad-StartAngleRad > 2*3.1415926535)
+        angleDiff = 2*3.1415926535/static_cast<Real32>(SubDivisions);
+    Real32 Alpha(Color.alpha() * Opacity * getOpacity());
+    if(Alpha < 1.0)
+    {
+        //Setup the blending equations properly
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+    }
+    glLineWidth(LineWidth);
+    glBegin(GL_LINE_STRIP);
+    glColor4f(Color.red(), Color.green(), Color.blue(), Alpha );
+    //draw vertex lines
+    for(UInt16 i = 0 ; i<SubDivisions+1 ; ++i)
+    {
+        glVertex2f( static_cast<Real32>(Center.x()) + static_cast<Real32>(Width)*osgCos(angleNow ),static_cast<Real32>(Center.y()) +static_cast<Real32>(Height)*osgSin(angleNow));
+        //glVertex2f(Center.x() + Width*osgcos(angleNow + angleDiff), Center.y() + Height*osgsin(angleNow+angleDiff));
+        angleNow += angleDiff;
+    }
+    glEnd();
 
-	
-	if(Alpha < 1.0)
-	{
-		glDisable(GL_BLEND);
-	}
-   glLineWidth(previousLineWidth);
+
+    if(Alpha < 1.0)
+    {
+        glDisable(GL_BLEND);
+    }
+    glLineWidth(previousLineWidth);
 }
 
-void Graphics2D::drawTextUnderline(const Pnt2f& Position, const std::string& Text, const UIFontPtr TheFont, const Color4f& Color, const Real32& Opacity) const
+void Graphics2D::drawTextUnderline(const Pnt2f& Position, const std::string& Text, const UIFontUnrecPtr TheFont, const Color4f& Color, const Real32& Opacity) const
 {
     Pnt2f TextTopLeft, TextBottomRight;
     TheFont->getBounds(Text, TextTopLeft, TextBottomRight);
-    
+
     Pnt2f CharacterTopLeft, CharacterBottomRight;
     TheFont->getBounds("A", CharacterTopLeft, CharacterBottomRight);
-    
+
     //Line Start Point
     Pnt2f LineStart(Position.x() + TextTopLeft.x(), Position.y() + CharacterBottomRight.y()-1);
     //Line End Point
@@ -490,7 +484,7 @@ void Graphics2D::drawTextUnderline(const Pnt2f& Position, const std::string& Tex
     drawRect(LineStart, LineEnd, Color, Opacity);
 }
 
-void Graphics2D::drawText(const Pnt2f& Position, const std::string& Text, const UIFontPtr TheFont, const Color4f& Color, const Real32& Opacity) const
+void Graphics2D::drawText(const Pnt2f& Position, const std::string& Text, const UIFontUnrecPtr TheFont, const Color4f& Color, const Real32& Opacity) const
 {
     TextLayoutParam layoutParam;
     layoutParam.spacing = 1.1;
@@ -500,7 +494,7 @@ void Graphics2D::drawText(const Pnt2f& Position, const std::string& Text, const 
     TextLayoutResult layoutResult;
     TheFont->layout(Text, layoutParam, layoutResult);
 
-    TheFont->getTexture()->activate(getDrawAction());
+    TheFont->getTexture()->activate(getDrawEnv());
 
     Real32 Alpha(Color.alpha() * Opacity * getOpacity());
 
@@ -516,13 +510,13 @@ void Graphics2D::drawText(const Pnt2f& Position, const std::string& Text, const 
     drawCharacters(layoutResult, TheFont);
     glPopMatrix();
 
-    TheFont->getTexture()->deactivate(getDrawAction());
+    TheFont->getTexture()->deactivate(getDrawEnv());
 
     glDisable(GL_BLEND);
     glPopAttrib();
 }
 
-void Graphics2D::drawCharacters( const TextLayoutResult& layoutResult, const UIFontPtr TheFont) const
+void Graphics2D::drawCharacters( const TextLayoutResult& layoutResult, const UIFontUnrecPtr TheFont) const
 {
     glBegin(GL_QUADS);
 
@@ -570,46 +564,6 @@ void Graphics2D::drawCharacters( const TextLayoutResult& layoutResult, const UIF
     glEnd();
 }
 
-ColorMaskChunkPtr Graphics2D::getColorMask(void)
-{
-    if(_ColorMask == NullFC)
-    {
-        _ColorMask = createColorMask();
-        addRefCP(_ColorMask);
-    }
-    return _ColorMask;
-}
-
-StencilChunkPtr Graphics2D::getStenciledAreaSetup(void)
-{
-    if(_StenciledAreaSetup == NullFC)
-    {
-        _StenciledAreaSetup = createStenciledAreaSetup();
-        addRefCP(_StenciledAreaSetup);
-    }
-    return _StenciledAreaSetup;
-}
-
-StencilChunkPtr Graphics2D::getStenciledAreaCleanup(void)
-{
-    if(_StenciledAreaCleanup == NullFC)
-    {
-        _StenciledAreaCleanup = createStenciledAreaCleanup();
-        addRefCP(_StenciledAreaCleanup);
-    }
-    return _StenciledAreaCleanup;
-}
-
-StencilChunkPtr Graphics2D::getStenciledAreaTest(void)
-{
-    if(_StenciledAreaTest == NullFC)
-    {
-        _StenciledAreaTest = createStenciledAreaTest();
-        addRefCP(_StenciledAreaTest);
-    }
-    return _StenciledAreaTest;
-}
-
 void Graphics2D::incrDrawBounderiesNesting(void)
 {
     ++_StencilNesting;
@@ -626,69 +580,61 @@ void Graphics2D::decrDrawBounderiesNestring(void)
 void Graphics2D::initAddDrawBounderies(void)
 {
     //Mask the RGBA channels
-    getColorMask()->activate(getDrawAction());
+    getColorMask()->activate(getDrawEnv());
 
     //Setup to draw to the stencil buffer
-    beginEditCP(getStenciledAreaSetup(), StencilChunk::StencilValueFieldMask);
-        getStenciledAreaSetup()->setStencilValue(_StencilNesting);
-    endEditCP(getStenciledAreaSetup(), StencilChunk::StencilValueFieldMask);
-    getStenciledAreaSetup()->activate(getDrawAction());
+    getStenciledAreaSetup()->setStencilValue(_StencilNesting);
+    getStenciledAreaSetup()->activate(getDrawEnv());
 }
 
 void Graphics2D::uninitAddDrawBounderies(void)
 {
     //Unset drawing to the stencil buffer
-    getStenciledAreaSetup()->deactivate(getDrawAction());
+    getStenciledAreaSetup()->deactivate(getDrawEnv());
 
     //Unmask the RGBA channels
-    getColorMask()->deactivate(getDrawAction());
+    getColorMask()->deactivate(getDrawEnv());
 }
 
 void Graphics2D::initRemoveDrawBounderies(void)
 {
     //Mask the RGBA channels
-    getColorMask()->activate(getDrawAction());
+    getColorMask()->activate(getDrawEnv());
 
     //Setup to draw to the stencil buffer
-    beginEditCP(getStenciledAreaCleanup(), StencilChunk::StencilValueFieldMask);
-        getStenciledAreaCleanup()->setStencilValue(_StencilNesting-1);
-    endEditCP(getStenciledAreaCleanup(), StencilChunk::StencilValueFieldMask);
-    getStenciledAreaCleanup()->activate(getDrawAction());
+    getStenciledAreaCleanup()->setStencilValue(_StencilNesting-1);
+    getStenciledAreaCleanup()->activate(getDrawEnv());
 }
 
 void Graphics2D::uninitRemoveDrawBounderies(void)
 {
     //Unset drawing to the stencil buffer
-    getStenciledAreaCleanup()->deactivate(getDrawAction());
+    getStenciledAreaCleanup()->deactivate(getDrawEnv());
 
     //Unmask the RGBA channels
-    getColorMask()->deactivate(getDrawAction());
+    getColorMask()->deactivate(getDrawEnv());
 }
 
 void Graphics2D::activateDrawBounderiesTest(void)
 {
     //Setup testing against the stencil stencil buffer
-    beginEditCP(getStenciledAreaTest(), StencilChunk::StencilValueFieldMask);
-        getStenciledAreaTest()->setStencilValue(_StencilNesting);
-    endEditCP(getStenciledAreaTest(), StencilChunk::StencilValueFieldMask);
-    getStenciledAreaTest()->activate(getDrawAction());
+    getStenciledAreaTest()->setStencilValue(_StencilNesting);
+    getStenciledAreaTest()->activate(getDrawEnv());
 }
 
 void Graphics2D::deactivateDrawBounderiesTest(void)
 {
     if(_StencilNesting > 0)
     {
-        beginEditCP(getStenciledAreaTest(), StencilChunk::StencilValueFieldMask);
-            getStenciledAreaTest()->setStencilValue(_StencilNesting);
-        endEditCP(getStenciledAreaTest(), StencilChunk::StencilValueFieldMask);
+        getStenciledAreaTest()->setStencilValue(_StencilNesting);
 
         //Reset testing against the stencil stencil buffer
-        getStenciledAreaTest()->activate(getDrawAction());
+        getStenciledAreaTest()->activate(getDrawEnv());
     }
     else
     {
         //Unset testing against the stencil stencil buffer
-        getStenciledAreaTest()->deactivate(getDrawAction());
+        getStenciledAreaTest()->deactivate(getDrawEnv());
     }
 }
 
@@ -701,72 +647,50 @@ void Graphics2D::deactivateDrawBounderiesTest(void)
 Graphics2D::Graphics2D(void) :
     Inherited()
 {
-	beginEditCP(Graphics2DPtr(this), UIDepthFieldMask);
-		setUIDepth(DepthChunk::create());
-	endEditCP(Graphics2DPtr(this), UIDepthFieldMask);
-
-	beginEditCP(getUIDepth(), DepthChunk::ReadOnlyFieldMask);
-		getUIDepth()->setReadOnly(true);
-	endEditCP(getUIDepth(), DepthChunk::ReadOnlyFieldMask);
 }
 
 Graphics2D::Graphics2D(const Graphics2D &source) :
     Inherited(source)
 {
-	beginEditCP(Graphics2DPtr(this), UIDepthFieldMask);
-		setUIDepth(DepthChunk::create());
-	endEditCP(Graphics2DPtr(this), UIDepthFieldMask);
-
-	beginEditCP(getUIDepth(), DepthChunk::ReadOnlyFieldMask);
-		getUIDepth()->setReadOnly(true);
-	endEditCP(getUIDepth(), DepthChunk::ReadOnlyFieldMask);
 }
 
 Graphics2D::~Graphics2D(void)
 {
-    subRefCP(_ColorMask);
-    subRefCP(_StenciledAreaSetup);
-    subRefCP(_StenciledAreaCleanup);
-    subRefCP(_StenciledAreaTest);
+}
+
+void Graphics2D::onCreate(const Graphics2D *Id)
+{
+    //Depth Chunk
+    DepthChunkUnrecPtr TheChunk(DepthChunk::create());
+    setUIDepth(TheChunk);
+    getUIDepth()->setReadOnly(true);
+
+    //ColorMask
+    setColorMask(createColorMask());
+
+    //Stencil Chunks
+    setStenciledAreaSetup(createStenciledAreaSetup());
+    setStenciledAreaCleanup(createStenciledAreaCleanup());
+    setStenciledAreaTest(createStenciledAreaTest());
+}
+
+void Graphics2D::onDestroy()
+{
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void Graphics2D::changed(BitVector whichField, UInt32 origin)
+void Graphics2D::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void Graphics2D::dump(      UInt32    , 
+void Graphics2D::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump Graphics2D NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGGRAPHICS2DBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGGRAPHICS2DBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGGRAPHICS2DFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

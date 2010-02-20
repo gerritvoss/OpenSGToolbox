@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,12 +40,10 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGLayoutSpring.h"
 #include "OSGStaticLayoutSpring.h"
@@ -58,13 +56,10 @@
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::LayoutSpring
-A UI LayoutSpring. 
-*/
+// Documentation for this class is emitted in the
+// OSGLayoutSpringBase.cpp file.
+// To modify it, please change the .fcd file (OSGLayoutSpring.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -76,8 +71,13 @@ Real32 LayoutSpring::VALUE_NOT_SET = TypeTraits< Real32 >::getMin();
  *                           Class methods                                 *
 \***************************************************************************/
 
-void LayoutSpring::initMethod (void)
+void LayoutSpring::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -96,7 +96,7 @@ void LayoutSpring::setStrain(Real32 strain)
     setValue(getPreferredValue() + static_cast<Real32>(strain * range(strain < 0)));
 }
 
-bool LayoutSpring::isCyclic(SpringLayoutPtr l) const
+bool LayoutSpring::isCyclic(const SpringLayout* l) const
 {
     return false;
 }
@@ -113,57 +113,57 @@ Real32 LayoutSpring::range(bool contract) const
     }
 }
 
-LayoutSpringPtr LayoutSpring::constant(const Real32& pref)
+LayoutSpringRefPtr LayoutSpring::constant(const Real32& pref)
 {
     return StaticLayoutSpring::create(pref);
 }
 
-LayoutSpringPtr LayoutSpring::constant(const Real32& min, const Real32& pref, const Real32& max)
+LayoutSpringRefPtr LayoutSpring::constant(const Real32& min, const Real32& pref, const Real32& max)
 {
     return StaticLayoutSpring::create(min, pref, max);
 }
 
-LayoutSpringPtr LayoutSpring::minus(LayoutSpringPtr s)
+LayoutSpringRefPtr LayoutSpring::minus(LayoutSpringRefPtr s)
 {
     return NegativeLayoutSpring::create(s);
 }
 
-LayoutSpringPtr LayoutSpring::sum(LayoutSpringPtr s1, LayoutSpringPtr s2)
+LayoutSpringRefPtr LayoutSpring::sum(LayoutSpringRefPtr s1, LayoutSpringRefPtr s2)
 {
     return SumLayoutSpring::create(s1, s2);
 }
 
-LayoutSpringPtr LayoutSpring::max(LayoutSpringPtr s1, LayoutSpringPtr s2)
+LayoutSpringRefPtr LayoutSpring::max(LayoutSpringRefPtr s1, LayoutSpringRefPtr s2)
 {
     return MaxLayoutSpring::create(s1, s2);
 }
 
-LayoutSpringPtr LayoutSpring::difference(LayoutSpringPtr s1, LayoutSpringPtr s2)
+LayoutSpringRefPtr LayoutSpring::difference(LayoutSpringRefPtr s1, LayoutSpringRefPtr s2)
 {
     return SumLayoutSpring::create(s1, minus(s2));
 }
 
-LayoutSpringPtr LayoutSpring::scale(LayoutSpringPtr s, const Real32& factor)
+LayoutSpringRefPtr LayoutSpring::scale(LayoutSpringRefPtr s, const Real32& factor)
 {
     return ScaleLayoutSpring::create(s, factor);
 }
 
-LayoutSpringPtr LayoutSpring::width(ComponentPtr c)
+LayoutSpringRefPtr LayoutSpring::width(ComponentRefPtr c)
 {
     return ComponentWidthLayoutSpring::create(c);
 }
 
-LayoutSpringPtr LayoutSpring::height(ComponentPtr c)
+LayoutSpringRefPtr LayoutSpring::height(ComponentRefPtr c)
 {
     return ComponentHeightLayoutSpring::create(c);
 }
 
-LayoutSpringPtr LayoutSpring::requestedWidth(ComponentPtr c)
+LayoutSpringRefPtr LayoutSpring::requestedWidth(ComponentRefPtr c)
 {
     return ComponentWidthLayoutSpring::create(c, ComponentWidthLayoutSpring::REQUESTED_SIZE);
 }
 
-LayoutSpringPtr LayoutSpring::requestedHeight(ComponentPtr c)
+LayoutSpringRefPtr LayoutSpring::requestedHeight(ComponentRefPtr c)
 {
     return ComponentHeightLayoutSpring::create(c, ComponentWidthLayoutSpring::REQUESTED_SIZE);
 }
@@ -190,41 +190,17 @@ LayoutSpring::~LayoutSpring(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void LayoutSpring::changed(BitVector whichField, UInt32 origin)
+void LayoutSpring::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void LayoutSpring::dump(      UInt32    , 
+void LayoutSpring::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump LayoutSpring NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGLAYOUTSPRINGBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGLAYOUTSPRINGBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGLAYOUTSPRINGFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

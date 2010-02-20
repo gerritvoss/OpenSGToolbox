@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,156 +50,209 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEFOCUSEVENTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGComponent.h"               // OppositeComponent Class
 
 #include "OSGFocusEventBase.h"
 #include "OSGFocusEvent.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  FocusEventBase::IsTemporaryFieldMask = 
-    (TypeTraits<BitVector>::One << FocusEventBase::IsTemporaryFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  FocusEventBase::OppositeComponentFieldMask = 
-    (TypeTraits<BitVector>::One << FocusEventBase::OppositeComponentFieldId);
+/*! \class OSG::FocusEvent
+    
+ */
 
-const OSG::BitVector FocusEventBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var bool            FocusEventBase::_sfIsTemporary
     
 */
-/*! \var ComponentPtr    FocusEventBase::_sfOppositeComponent
+
+/*! \var Component *     FocusEventBase::_sfOppositeComponent
     
 */
 
-//! FocusEvent description
 
-FieldDescription *FocusEventBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<FocusEvent *>::_type("FocusEventPtr", "EventPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(FocusEvent *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           FocusEvent *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           FocusEvent *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void FocusEventBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFBool::getClassType(), 
-                     "IsTemporary", 
-                     IsTemporaryFieldId, IsTemporaryFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&FocusEventBase::editSFIsTemporary)),
-    new FieldDescription(SFComponentPtr::getClassType(), 
-                     "OppositeComponent", 
-                     OppositeComponentFieldId, OppositeComponentFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&FocusEventBase::editSFOppositeComponent))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType FocusEventBase::_type(
-    "FocusEvent",
-    "Event",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&FocusEventBase::createEmpty),
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "IsTemporary",
+        "",
+        IsTemporaryFieldId, IsTemporaryFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&FocusEvent::editHandleIsTemporary),
+        static_cast<FieldGetMethodSig >(&FocusEvent::getHandleIsTemporary));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecComponentPtr::Description(
+        SFUnrecComponentPtr::getClassType(),
+        "OppositeComponent",
+        "",
+        OppositeComponentFieldId, OppositeComponentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&FocusEvent::editHandleOppositeComponent),
+        static_cast<FieldGetMethodSig >(&FocusEvent::getHandleOppositeComponent));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+FocusEventBase::TypeObject FocusEventBase::_type(
+    FocusEventBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&FocusEventBase::createEmptyLocal),
     FocusEvent::initMethod,
-    _desc,
-    sizeof(_desc));
+    FocusEvent::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&FocusEvent::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"FocusEvent\"\n"
+    "\tparent=\"Event\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"IsTemporary\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"OppositeComponent\"\n"
+    "\t\ttype=\"Component\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(FocusEventBase, FocusEventPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &FocusEventBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &FocusEventBase::getType(void) const 
+FieldContainerType &FocusEventBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr FocusEventBase::shallowCopy(void) const 
-{ 
-    FocusEventPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const FocusEvent *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 FocusEventBase::getContainerSize(void) const 
-{ 
-    return sizeof(FocusEvent); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void FocusEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &FocusEventBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<FocusEventBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void FocusEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 FocusEventBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((FocusEventBase *) &other, whichField, sInfo);
+    return sizeof(FocusEvent);
 }
-void FocusEventBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFBool *FocusEventBase::editSFIsTemporary(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(IsTemporaryFieldMask);
+
+    return &_sfIsTemporary;
 }
 
-void FocusEventBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFBool *FocusEventBase::getSFIsTemporary(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfIsTemporary;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-FocusEventBase::FocusEventBase(void) :
-    _sfIsTemporary            (bool(false)), 
-    _sfOppositeComponent      (ComponentPtr(NullFC)), 
-    Inherited() 
+//! Get the FocusEvent::_sfOppositeComponent field.
+const SFUnrecComponentPtr *FocusEventBase::getSFOppositeComponent(void) const
 {
+    return &_sfOppositeComponent;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-FocusEventBase::FocusEventBase(const FocusEventBase &source) :
-    _sfIsTemporary            (source._sfIsTemporary            ), 
-    _sfOppositeComponent      (source._sfOppositeComponent      ), 
-    Inherited                 (source)
+SFUnrecComponentPtr *FocusEventBase::editSFOppositeComponent(void)
 {
+    editSField(OppositeComponentFieldMask);
+
+    return &_sfOppositeComponent;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-FocusEventBase::~FocusEventBase(void)
-{
-}
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 FocusEventBase::getBinSize(const BitVector &whichField)
+UInt32 FocusEventBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -207,18 +260,16 @@ UInt32 FocusEventBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfIsTemporary.getBinSize();
     }
-
     if(FieldBits::NoField != (OppositeComponentFieldMask & whichField))
     {
         returnValue += _sfOppositeComponent.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void FocusEventBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void FocusEventBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -226,17 +277,14 @@ void FocusEventBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfIsTemporary.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (OppositeComponentFieldMask & whichField))
     {
         _sfOppositeComponent.copyToBin(pMem);
     }
-
-
 }
 
-void FocusEventBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void FocusEventBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -244,71 +292,260 @@ void FocusEventBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfIsTemporary.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (OppositeComponentFieldMask & whichField))
     {
         _sfOppositeComponent.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void FocusEventBase::executeSyncImpl(      FocusEventBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+FocusEventTransitPtr FocusEventBase::createLocal(BitVector bFlags)
 {
+    FocusEventTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (IsTemporaryFieldMask & whichField))
-        _sfIsTemporary.syncWith(pOther->_sfIsTemporary);
+        fc = dynamic_pointer_cast<FocusEvent>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (OppositeComponentFieldMask & whichField))
-        _sfOppositeComponent.syncWith(pOther->_sfOppositeComponent);
-
-
-}
-#else
-void FocusEventBase::executeSyncImpl(      FocusEventBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (IsTemporaryFieldMask & whichField))
-        _sfIsTemporary.syncWith(pOther->_sfIsTemporary);
-
-    if(FieldBits::NoField != (OppositeComponentFieldMask & whichField))
-        _sfOppositeComponent.syncWith(pOther->_sfOppositeComponent);
-
-
-
+    return fc;
 }
 
-void FocusEventBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+FocusEventTransitPtr FocusEventBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    FocusEventTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<FocusEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+FocusEventTransitPtr FocusEventBase::create(void)
+{
+    FocusEventTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<FocusEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+FocusEvent *FocusEventBase::createEmptyLocal(BitVector bFlags)
+{
+    FocusEvent *returnValue;
+
+    newPtr<FocusEvent>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+FocusEvent *FocusEventBase::createEmpty(void)
+{
+    FocusEvent *returnValue;
+
+    newPtr<FocusEvent>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr FocusEventBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    FocusEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const FocusEvent *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr FocusEventBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    FocusEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const FocusEvent *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr FocusEventBase::shallowCopy(void) const
+{
+    FocusEvent *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const FocusEvent *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+FocusEventBase::FocusEventBase(void) :
+    Inherited(),
+    _sfIsTemporary            (bool(false)),
+    _sfOppositeComponent      (NULL)
+{
+}
+
+FocusEventBase::FocusEventBase(const FocusEventBase &source) :
+    Inherited(source),
+    _sfIsTemporary            (source._sfIsTemporary            ),
+    _sfOppositeComponent      (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+FocusEventBase::~FocusEventBase(void)
+{
+}
+
+void FocusEventBase::onCreate(const FocusEvent *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        FocusEvent *pThis = static_cast<FocusEvent *>(this);
+
+        pThis->setOppositeComponent(source->getOppositeComponent());
+    }
+}
+
+GetFieldHandlePtr FocusEventBase::getHandleIsTemporary     (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfIsTemporary,
+             this->getType().getFieldDesc(IsTemporaryFieldId),
+             const_cast<FocusEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr FocusEventBase::editHandleIsTemporary    (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfIsTemporary,
+             this->getType().getFieldDesc(IsTemporaryFieldId),
+             this));
+
+
+    editSField(IsTemporaryFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr FocusEventBase::getHandleOppositeComponent (void) const
+{
+    SFUnrecComponentPtr::GetHandlePtr returnValue(
+        new  SFUnrecComponentPtr::GetHandle(
+             &_sfOppositeComponent,
+             this->getType().getFieldDesc(OppositeComponentFieldId),
+             const_cast<FocusEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr FocusEventBase::editHandleOppositeComponent(void)
+{
+    SFUnrecComponentPtr::EditHandlePtr returnValue(
+        new  SFUnrecComponentPtr::EditHandle(
+             &_sfOppositeComponent,
+             this->getType().getFieldDesc(OppositeComponentFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&FocusEvent::setOppositeComponent,
+                    static_cast<FocusEvent *>(this), _1));
+
+    editSField(OppositeComponentFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void FocusEventBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    FocusEvent *pThis = static_cast<FocusEvent *>(this);
+
+    pThis->execSync(static_cast<FocusEvent *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *FocusEventBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    FocusEvent *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const FocusEvent *>(pRefAspect),
+                  dynamic_cast<const FocusEvent *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<FocusEventPtr>::_type("FocusEventPtr", "EventPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(FocusEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void FocusEventBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<FocusEvent *>(this)->setOppositeComponent(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-

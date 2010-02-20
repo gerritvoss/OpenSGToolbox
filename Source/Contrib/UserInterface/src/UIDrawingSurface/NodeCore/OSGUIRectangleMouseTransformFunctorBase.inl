@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,76 +55,64 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &UIRectangleMouseTransformFunctorBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 UIRectangleMouseTransformFunctorBase::getClassTypeId(void) 
+OSG::UInt32 UIRectangleMouseTransformFunctorBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-UIRectangleMouseTransformFunctorPtr UIRectangleMouseTransformFunctorBase::create(void) 
-{
-    UIRectangleMouseTransformFunctorPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = UIRectangleMouseTransformFunctorPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-UIRectangleMouseTransformFunctorPtr UIRectangleMouseTransformFunctorBase::createEmpty(void) 
-{ 
-    UIRectangleMouseTransformFunctorPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 UIRectangleMouseTransformFunctorBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the UIRectangleMouseTransformFunctor::_sfParent field.
-inline
-SFUIRectanglePtr *UIRectangleMouseTransformFunctorBase::getSFParent(void)
-{
-    return &_sfParent;
-}
-
 
 //! Get the value of the UIRectangleMouseTransformFunctor::_sfParent field.
 inline
-UIRectanglePtr &UIRectangleMouseTransformFunctorBase::getParent(void)
-{
-    return _sfParent.getValue();
-}
-
-//! Get the value of the UIRectangleMouseTransformFunctor::_sfParent field.
-inline
-const UIRectanglePtr &UIRectangleMouseTransformFunctorBase::getParent(void) const
+UIRectangle * UIRectangleMouseTransformFunctorBase::getParent(void) const
 {
     return _sfParent.getValue();
 }
 
 //! Set the value of the UIRectangleMouseTransformFunctor::_sfParent field.
 inline
-void UIRectangleMouseTransformFunctorBase::setParent(const UIRectanglePtr &value)
+void UIRectangleMouseTransformFunctorBase::setParent(UIRectangle * const value)
 {
+    editSField(ParentFieldMask);
+
     _sfParent.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void UIRectangleMouseTransformFunctorBase::execSync (      UIRectangleMouseTransformFunctorBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGUIRECTANGLEMOUSETRANSFORMFUNCTORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (ParentFieldMask & whichField))
+        _sfParent.syncWith(pFrom->_sfParent);
+}
+#endif
+
+
+inline
+const Char8 *UIRectangleMouseTransformFunctorBase::getClassname(void)
+{
+    return "UIRectangleMouseTransformFunctor";
+}
+OSG_GEN_CONTAINERPTR(UIRectangleMouseTransformFunctor);
+
+OSG_END_NAMESPACE
 

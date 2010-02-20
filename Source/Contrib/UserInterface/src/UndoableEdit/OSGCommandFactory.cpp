@@ -26,38 +26,58 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 #include <iostream>
 
 #include "OSGCommandFactory.h"
+#include "OSGFactoryController.h"
+#include "OSGSingletonHolder.ins"
 
-OSG_USING_NAMESPACE
+OSG_BEGIN_NAMESPACE
 
-CommandFactory *CommandFactory::_the = NULL;
+OSG_SINGLETON_INST(CommandFactoryBase, addPostFactoryExitFunction)
 
-CommandFactory *CommandFactory::the(void)
+template class SingletonHolder<CommandFactoryBase>;
+
+
+bool CommandFactoryBase::initialize(void)
 {
-    if(_the == NULL)
-        _the = new CommandFactory;
+    return true;
+}
 
-    return _the;
+bool CommandFactoryBase::initializeFactoryPost(void)
+{
+    return true;
+}
+
+bool CommandFactoryBase::terminate(void)
+{
+    return true;
+}
+
+bool CommandFactoryBase::onLoadInitialize(void)
+{
+    return true;
 }
 
 /*-------------------------------------------------------------------------*/
 /*                            Constructors                                 */
 
-CommandFactory::CommandFactory(void) : Inherited()
+CommandFactoryBase::CommandFactoryBase(void) :
+     Inherited    ("CommandFactory")
 {
 }
     
 /*-------------------------------------------------------------------------*/
 /*                             Destructor                                  */
 
-CommandFactory::~CommandFactory(void)
+CommandFactoryBase::~CommandFactoryBase(void)
 {
 }
 
 /*-------------------------------------------------------------------------*/
 /*                             Comparison                                  */
+
+OSG_END_NAMESPACE
 

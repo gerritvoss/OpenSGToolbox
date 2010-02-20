@@ -3,32 +3,34 @@
 <FieldContainer
 	name="RadioButtonGroup"
 	parent="FieldContainer"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI Radio Button Group.
 	<Field
 		name="SelectedButton"
-		type="RadioButtonPtr"
+		type="RadioButton"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="OSGRadioButtonFields.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="GroupButtons"
-		type="RadioButtonPtr"
+		type="RadioButton"
+		category="pointer"
 		cardinality="multi"
 		visibility="external"
 		access="public"
-		header="OSGRadioButtonFields.h"
 	>
 	</Field>
 </FieldContainer>

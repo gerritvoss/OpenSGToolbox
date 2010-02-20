@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,156 +50,260 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEUIDRAWOBJECTCANVASINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGUIDrawObject.h"            // DrawObjects Class
 
 #include "OSGUIDrawObjectCanvasBase.h"
 #include "OSGUIDrawObjectCanvas.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  UIDrawObjectCanvasBase::DrawObjectsFieldMask = 
-    (TypeTraits<BitVector>::One << UIDrawObjectCanvasBase::DrawObjectsFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  UIDrawObjectCanvasBase::UsePreferredSizeAsRequestedFieldMask = 
-    (TypeTraits<BitVector>::One << UIDrawObjectCanvasBase::UsePreferredSizeAsRequestedFieldId);
+/*! \class OSG::UIDrawObjectCanvas
+    A UI UIDrawObjectCanvas.
+ */
 
-const OSG::BitVector UIDrawObjectCanvasBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-
-// Field descriptions
-
-/*! \var UIDrawObjectPtr UIDrawObjectCanvasBase::_mfDrawObjects
+/*! \var UIDrawObject *  UIDrawObjectCanvasBase::_mfDrawObjects
     
 */
+
 /*! \var bool            UIDrawObjectCanvasBase::_sfUsePreferredSizeAsRequested
     
 */
 
-//! UIDrawObjectCanvas description
 
-FieldDescription *UIDrawObjectCanvasBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<UIDrawObjectCanvas *>::_type("UIDrawObjectCanvasPtr", "ComponentPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(UIDrawObjectCanvas *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           UIDrawObjectCanvas *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           UIDrawObjectCanvas *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void UIDrawObjectCanvasBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(MFUIDrawObjectPtr::getClassType(), 
-                     "DrawObjects", 
-                     DrawObjectsFieldId, DrawObjectsFieldMask,
-                     false,
-                     (FieldAccessMethod) &UIDrawObjectCanvasBase::getMFDrawObjects),
-    new FieldDescription(SFBool::getClassType(), 
-                     "UsePreferredSizeAsRequested", 
-                     UsePreferredSizeAsRequestedFieldId, UsePreferredSizeAsRequestedFieldMask,
-                     false,
-                     (FieldAccessMethod) &UIDrawObjectCanvasBase::getSFUsePreferredSizeAsRequested)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType UIDrawObjectCanvasBase::_type(
-    "UIDrawObjectCanvas",
-    "Component",
-    NULL,
-    (PrototypeCreateF) &UIDrawObjectCanvasBase::createEmpty,
+    pDesc = new MFUnrecUIDrawObjectPtr::Description(
+        MFUnrecUIDrawObjectPtr::getClassType(),
+        "DrawObjects",
+        "",
+        DrawObjectsFieldId, DrawObjectsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&UIDrawObjectCanvas::editHandleDrawObjects),
+        static_cast<FieldGetMethodSig >(&UIDrawObjectCanvas::getHandleDrawObjects));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "UsePreferredSizeAsRequested",
+        "",
+        UsePreferredSizeAsRequestedFieldId, UsePreferredSizeAsRequestedFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&UIDrawObjectCanvas::editHandleUsePreferredSizeAsRequested),
+        static_cast<FieldGetMethodSig >(&UIDrawObjectCanvas::getHandleUsePreferredSizeAsRequested));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+UIDrawObjectCanvasBase::TypeObject UIDrawObjectCanvasBase::_type(
+    UIDrawObjectCanvasBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&UIDrawObjectCanvasBase::createEmptyLocal),
     UIDrawObjectCanvas::initMethod,
-    _desc,
-    sizeof(_desc));
+    UIDrawObjectCanvas::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&UIDrawObjectCanvas::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"UIDrawObjectCanvas\"\n"
+    "\tparent=\"Component\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI UIDrawObjectCanvas.\n"
+    "\t<Field\n"
+    "\t\tname=\"DrawObjects\"\n"
+    "\t\ttype=\"UIDrawObject\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"UsePreferredSizeAsRequested\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI UIDrawObjectCanvas.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(UIDrawObjectCanvasBase, UIDrawObjectCanvasPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &UIDrawObjectCanvasBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &UIDrawObjectCanvasBase::getType(void) const 
+FieldContainerType &UIDrawObjectCanvasBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr UIDrawObjectCanvasBase::shallowCopy(void) const 
-{ 
-    UIDrawObjectCanvasPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const UIDrawObjectCanvas *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 UIDrawObjectCanvasBase::getContainerSize(void) const 
-{ 
-    return sizeof(UIDrawObjectCanvas); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void UIDrawObjectCanvasBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &UIDrawObjectCanvasBase::getType(void) const
 {
-    this->executeSyncImpl((UIDrawObjectCanvasBase *) &other, whichField);
+    return _type;
 }
-#else
-void UIDrawObjectCanvasBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 UIDrawObjectCanvasBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((UIDrawObjectCanvasBase *) &other, whichField, sInfo);
+    return sizeof(UIDrawObjectCanvas);
 }
-void UIDrawObjectCanvasBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the UIDrawObjectCanvas::_mfDrawObjects field.
+const MFUnrecUIDrawObjectPtr *UIDrawObjectCanvasBase::getMFDrawObjects(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_mfDrawObjects;
 }
 
-void UIDrawObjectCanvasBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+MFUnrecUIDrawObjectPtr *UIDrawObjectCanvasBase::editMFDrawObjects    (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editMField(DrawObjectsFieldMask, _mfDrawObjects);
 
-    _mfDrawObjects.terminateShare(uiAspect, this->getContainerSize());
+    return &_mfDrawObjects;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-UIDrawObjectCanvasBase::UIDrawObjectCanvasBase(void) :
-    _mfDrawObjects            (), 
-    _sfUsePreferredSizeAsRequested(bool(false)), 
-    Inherited() 
+SFBool *UIDrawObjectCanvasBase::editSFUsePreferredSizeAsRequested(void)
 {
+    editSField(UsePreferredSizeAsRequestedFieldMask);
+
+    return &_sfUsePreferredSizeAsRequested;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-UIDrawObjectCanvasBase::UIDrawObjectCanvasBase(const UIDrawObjectCanvasBase &source) :
-    _mfDrawObjects            (source._mfDrawObjects            ), 
-    _sfUsePreferredSizeAsRequested(source._sfUsePreferredSizeAsRequested), 
-    Inherited                 (source)
+const SFBool *UIDrawObjectCanvasBase::getSFUsePreferredSizeAsRequested(void) const
 {
+    return &_sfUsePreferredSizeAsRequested;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-UIDrawObjectCanvasBase::~UIDrawObjectCanvasBase(void)
+
+
+void UIDrawObjectCanvasBase::pushToDrawObjects(UIDrawObject * const value)
 {
+    editMField(DrawObjectsFieldMask, _mfDrawObjects);
+
+    _mfDrawObjects.push_back(value);
 }
+
+void UIDrawObjectCanvasBase::assignDrawObjects(const MFUnrecUIDrawObjectPtr &value)
+{
+    MFUnrecUIDrawObjectPtr::const_iterator elemIt  =
+        value.begin();
+    MFUnrecUIDrawObjectPtr::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<UIDrawObjectCanvas *>(this)->clearDrawObjects();
+
+    while(elemIt != elemEnd)
+    {
+        this->pushToDrawObjects(*elemIt);
+
+        ++elemIt;
+    }
+}
+
+void UIDrawObjectCanvasBase::removeFromDrawObjects(UInt32 uiIndex)
+{
+    if(uiIndex < _mfDrawObjects.size())
+    {
+        editMField(DrawObjectsFieldMask, _mfDrawObjects);
+
+        _mfDrawObjects.erase(uiIndex);
+    }
+}
+
+void UIDrawObjectCanvasBase::removeObjFromDrawObjects(UIDrawObject * const value)
+{
+    Int32 iElemIdx = _mfDrawObjects.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(DrawObjectsFieldMask, _mfDrawObjects);
+
+        _mfDrawObjects.erase(iElemIdx);
+    }
+}
+void UIDrawObjectCanvasBase::clearDrawObjects(void)
+{
+    editMField(DrawObjectsFieldMask, _mfDrawObjects);
+
+
+    _mfDrawObjects.clear();
+}
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 UIDrawObjectCanvasBase::getBinSize(const BitVector &whichField)
+UInt32 UIDrawObjectCanvasBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -207,18 +311,16 @@ UInt32 UIDrawObjectCanvasBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _mfDrawObjects.getBinSize();
     }
-
     if(FieldBits::NoField != (UsePreferredSizeAsRequestedFieldMask & whichField))
     {
         returnValue += _sfUsePreferredSizeAsRequested.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void UIDrawObjectCanvasBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void UIDrawObjectCanvasBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -226,17 +328,14 @@ void UIDrawObjectCanvasBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _mfDrawObjects.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (UsePreferredSizeAsRequestedFieldMask & whichField))
     {
         _sfUsePreferredSizeAsRequested.copyToBin(pMem);
     }
-
-
 }
 
-void UIDrawObjectCanvasBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void UIDrawObjectCanvasBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -244,96 +343,279 @@ void UIDrawObjectCanvasBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _mfDrawObjects.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (UsePreferredSizeAsRequestedFieldMask & whichField))
     {
         _sfUsePreferredSizeAsRequested.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void UIDrawObjectCanvasBase::executeSyncImpl(      UIDrawObjectCanvasBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+UIDrawObjectCanvasTransitPtr UIDrawObjectCanvasBase::createLocal(BitVector bFlags)
 {
+    UIDrawObjectCanvasTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (DrawObjectsFieldMask & whichField))
-        _mfDrawObjects.syncWith(pOther->_mfDrawObjects);
+        fc = dynamic_pointer_cast<UIDrawObjectCanvas>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (UsePreferredSizeAsRequestedFieldMask & whichField))
-        _sfUsePreferredSizeAsRequested.syncWith(pOther->_sfUsePreferredSizeAsRequested);
-
-
-}
-#else
-void UIDrawObjectCanvasBase::executeSyncImpl(      UIDrawObjectCanvasBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (UsePreferredSizeAsRequestedFieldMask & whichField))
-        _sfUsePreferredSizeAsRequested.syncWith(pOther->_sfUsePreferredSizeAsRequested);
-
-
-    if(FieldBits::NoField != (DrawObjectsFieldMask & whichField))
-        _mfDrawObjects.syncWith(pOther->_mfDrawObjects, sInfo);
-
-
+    return fc;
 }
 
-void UIDrawObjectCanvasBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+UIDrawObjectCanvasTransitPtr UIDrawObjectCanvasBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    UIDrawObjectCanvasTransitPtr fc;
 
-    if(FieldBits::NoField != (DrawObjectsFieldMask & whichField))
-        _mfDrawObjects.beginEdit(uiAspect, uiContainerSize);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
+        fc = dynamic_pointer_cast<UIDrawObjectCanvas>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+UIDrawObjectCanvasTransitPtr UIDrawObjectCanvasBase::create(void)
+{
+    UIDrawObjectCanvasTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<UIDrawObjectCanvas>(tmpPtr);
+    }
+
+    return fc;
+}
+
+UIDrawObjectCanvas *UIDrawObjectCanvasBase::createEmptyLocal(BitVector bFlags)
+{
+    UIDrawObjectCanvas *returnValue;
+
+    newPtr<UIDrawObjectCanvas>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+UIDrawObjectCanvas *UIDrawObjectCanvasBase::createEmpty(void)
+{
+    UIDrawObjectCanvas *returnValue;
+
+    newPtr<UIDrawObjectCanvas>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr UIDrawObjectCanvasBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    UIDrawObjectCanvas *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const UIDrawObjectCanvas *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr UIDrawObjectCanvasBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    UIDrawObjectCanvas *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const UIDrawObjectCanvas *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr UIDrawObjectCanvasBase::shallowCopy(void) const
+{
+    UIDrawObjectCanvas *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const UIDrawObjectCanvas *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+UIDrawObjectCanvasBase::UIDrawObjectCanvasBase(void) :
+    Inherited(),
+    _mfDrawObjects            (),
+    _sfUsePreferredSizeAsRequested(bool(false))
+{
+}
+
+UIDrawObjectCanvasBase::UIDrawObjectCanvasBase(const UIDrawObjectCanvasBase &source) :
+    Inherited(source),
+    _mfDrawObjects            (),
+    _sfUsePreferredSizeAsRequested(source._sfUsePreferredSizeAsRequested)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+UIDrawObjectCanvasBase::~UIDrawObjectCanvasBase(void)
+{
+}
+
+void UIDrawObjectCanvasBase::onCreate(const UIDrawObjectCanvas *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        UIDrawObjectCanvas *pThis = static_cast<UIDrawObjectCanvas *>(this);
+
+        MFUnrecUIDrawObjectPtr::const_iterator DrawObjectsIt  =
+            source->_mfDrawObjects.begin();
+        MFUnrecUIDrawObjectPtr::const_iterator DrawObjectsEnd =
+            source->_mfDrawObjects.end  ();
+
+        while(DrawObjectsIt != DrawObjectsEnd)
+        {
+            pThis->pushToDrawObjects(*DrawObjectsIt);
+
+            ++DrawObjectsIt;
+        }
+    }
+}
+
+GetFieldHandlePtr UIDrawObjectCanvasBase::getHandleDrawObjects     (void) const
+{
+    MFUnrecUIDrawObjectPtr::GetHandlePtr returnValue(
+        new  MFUnrecUIDrawObjectPtr::GetHandle(
+             &_mfDrawObjects,
+             this->getType().getFieldDesc(DrawObjectsFieldId),
+             const_cast<UIDrawObjectCanvasBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr UIDrawObjectCanvasBase::editHandleDrawObjects    (void)
+{
+    MFUnrecUIDrawObjectPtr::EditHandlePtr returnValue(
+        new  MFUnrecUIDrawObjectPtr::EditHandle(
+             &_mfDrawObjects,
+             this->getType().getFieldDesc(DrawObjectsFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&UIDrawObjectCanvas::pushToDrawObjects,
+                    static_cast<UIDrawObjectCanvas *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&UIDrawObjectCanvas::removeFromDrawObjects,
+                    static_cast<UIDrawObjectCanvas *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&UIDrawObjectCanvas::removeObjFromDrawObjects,
+                    static_cast<UIDrawObjectCanvas *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&UIDrawObjectCanvas::clearDrawObjects,
+                    static_cast<UIDrawObjectCanvas *>(this)));
+
+    editMField(DrawObjectsFieldMask, _mfDrawObjects);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr UIDrawObjectCanvasBase::getHandleUsePreferredSizeAsRequested (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfUsePreferredSizeAsRequested,
+             this->getType().getFieldDesc(UsePreferredSizeAsRequestedFieldId),
+             const_cast<UIDrawObjectCanvasBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr UIDrawObjectCanvasBase::editHandleUsePreferredSizeAsRequested(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfUsePreferredSizeAsRequested,
+             this->getType().getFieldDesc(UsePreferredSizeAsRequestedFieldId),
+             this));
+
+
+    editSField(UsePreferredSizeAsRequestedFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void UIDrawObjectCanvasBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    UIDrawObjectCanvas *pThis = static_cast<UIDrawObjectCanvas *>(this);
+
+    pThis->execSync(static_cast<UIDrawObjectCanvas *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *UIDrawObjectCanvasBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    UIDrawObjectCanvas *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const UIDrawObjectCanvas *>(pRefAspect),
+                  dynamic_cast<const UIDrawObjectCanvas *>(this));
+
+    return returnValue;
+}
+#endif
+
+void UIDrawObjectCanvasBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<UIDrawObjectCanvas *>(this)->clearDrawObjects();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<UIDrawObjectCanvasPtr>::_type("UIDrawObjectCanvasPtr", "ComponentPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(UIDrawObjectCanvasPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(UIDrawObjectCanvasPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGUIDRAWOBJECTCANVASBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGUIDRAWOBJECTCANVASBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGUIDRAWOBJECTCANVASFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

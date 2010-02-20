@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGBoundedRangeModel.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::BoundedRangeModel
-A UI BoundedRangeModel. 
-*/
+// Documentation for this class is emitted in the
+// OSGBoundedRangeModelBase.cpp file.
+// To modify it, please change the .fcd file (OSGBoundedRangeModel.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,8 +62,13 @@ A UI BoundedRangeModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void BoundedRangeModel::initMethod (void)
+void BoundedRangeModel::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -98,16 +98,17 @@ BoundedRangeModel::~BoundedRangeModel(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void BoundedRangeModel::changed(BitVector whichField, UInt32 origin)
+void BoundedRangeModel::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void BoundedRangeModel::dump(      UInt32    , 
+void BoundedRangeModel::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump BoundedRangeModel NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

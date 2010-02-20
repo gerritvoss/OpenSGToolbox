@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,155 +50,208 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILECOMPONENTWIDTHLAYOUTSPRINGINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGComponent.h"               // Component Class
 
 #include "OSGComponentWidthLayoutSpringBase.h"
 #include "OSGComponentWidthLayoutSpring.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ComponentWidthLayoutSpringBase::ComponentFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentWidthLayoutSpringBase::ComponentFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  ComponentWidthLayoutSpringBase::SizeFieldFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentWidthLayoutSpringBase::SizeFieldFieldId);
+/*! \class OSG::ComponentWidthLayoutSpring
+    A UI ComponentWidth LayoutSpring.
+ */
 
-const OSG::BitVector ComponentWidthLayoutSpringBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-
-// Field descriptions
-
-/*! \var ComponentPtr    ComponentWidthLayoutSpringBase::_sfComponent
+/*! \var Component *     ComponentWidthLayoutSpringBase::_sfComponent
     
 */
+
 /*! \var UInt32          ComponentWidthLayoutSpringBase::_sfSizeField
     
 */
 
-//! ComponentWidthLayoutSpring description
 
-FieldDescription *ComponentWidthLayoutSpringBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ComponentWidthLayoutSpring *>::_type("ComponentWidthLayoutSpringPtr", "AbstractLayoutSpringPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ComponentWidthLayoutSpring *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ComponentWidthLayoutSpring *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ComponentWidthLayoutSpring *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ComponentWidthLayoutSpringBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFComponentPtr::getClassType(), 
-                     "Component", 
-                     ComponentFieldId, ComponentFieldMask,
-                     false,
-                     (FieldAccessMethod) &ComponentWidthLayoutSpringBase::getSFComponent),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "SizeField", 
-                     SizeFieldFieldId, SizeFieldFieldMask,
-                     false,
-                     (FieldAccessMethod) &ComponentWidthLayoutSpringBase::getSFSizeField)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType ComponentWidthLayoutSpringBase::_type(
-    "ComponentWidthLayoutSpring",
-    "AbstractLayoutSpring",
-    NULL,
-    (PrototypeCreateF) &ComponentWidthLayoutSpringBase::createEmpty,
+    pDesc = new SFUnrecComponentPtr::Description(
+        SFUnrecComponentPtr::getClassType(),
+        "Component",
+        "",
+        ComponentFieldId, ComponentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ComponentWidthLayoutSpring::editHandleComponent),
+        static_cast<FieldGetMethodSig >(&ComponentWidthLayoutSpring::getHandleComponent));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "SizeField",
+        "",
+        SizeFieldFieldId, SizeFieldFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ComponentWidthLayoutSpring::editHandleSizeField),
+        static_cast<FieldGetMethodSig >(&ComponentWidthLayoutSpring::getHandleSizeField));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+ComponentWidthLayoutSpringBase::TypeObject ComponentWidthLayoutSpringBase::_type(
+    ComponentWidthLayoutSpringBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ComponentWidthLayoutSpringBase::createEmptyLocal),
     ComponentWidthLayoutSpring::initMethod,
-    _desc,
-    sizeof(_desc));
+    ComponentWidthLayoutSpring::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ComponentWidthLayoutSpring::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ComponentWidthLayoutSpring\"\n"
+    "\tparent=\"AbstractLayoutSpring\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI ComponentWidth LayoutSpring.\n"
+    "\t<Field\n"
+    "\t\tname=\"Component\"\n"
+    "\t\ttype=\"Component\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "      visibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SizeField\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "      visibility=\"external\"\n"
+    "\t\tdefaultValue=\"ComponentWidthLayoutSpring::PREFERRED_SIZE\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "</FieldContainer>\n",
+    "A UI ComponentWidth LayoutSpring.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(ComponentWidthLayoutSpringBase, ComponentWidthLayoutSpringPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ComponentWidthLayoutSpringBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ComponentWidthLayoutSpringBase::getType(void) const 
+FieldContainerType &ComponentWidthLayoutSpringBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr ComponentWidthLayoutSpringBase::shallowCopy(void) const 
-{ 
-    ComponentWidthLayoutSpringPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const ComponentWidthLayoutSpring *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 ComponentWidthLayoutSpringBase::getContainerSize(void) const 
-{ 
-    return sizeof(ComponentWidthLayoutSpring); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ComponentWidthLayoutSpringBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &ComponentWidthLayoutSpringBase::getType(void) const
 {
-    this->executeSyncImpl((ComponentWidthLayoutSpringBase *) &other, whichField);
+    return _type;
 }
-#else
-void ComponentWidthLayoutSpringBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 ComponentWidthLayoutSpringBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((ComponentWidthLayoutSpringBase *) &other, whichField, sInfo);
+    return sizeof(ComponentWidthLayoutSpring);
 }
-void ComponentWidthLayoutSpringBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the ComponentWidthLayoutSpring::_sfComponent field.
+const SFUnrecComponentPtr *ComponentWidthLayoutSpringBase::getSFComponent(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfComponent;
 }
 
-void ComponentWidthLayoutSpringBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecComponentPtr *ComponentWidthLayoutSpringBase::editSFComponent      (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(ComponentFieldMask);
 
+    return &_sfComponent;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-ComponentWidthLayoutSpringBase::ComponentWidthLayoutSpringBase(void) :
-    _sfComponent              (ComponentPtr(NullFC)), 
-    _sfSizeField              (UInt32(ComponentWidthLayoutSpring::PREFERRED_SIZE)), 
-    Inherited() 
+SFUInt32 *ComponentWidthLayoutSpringBase::editSFSizeField(void)
 {
+    editSField(SizeFieldFieldMask);
+
+    return &_sfSizeField;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-ComponentWidthLayoutSpringBase::ComponentWidthLayoutSpringBase(const ComponentWidthLayoutSpringBase &source) :
-    _sfComponent              (source._sfComponent              ), 
-    _sfSizeField              (source._sfSizeField              ), 
-    Inherited                 (source)
+const SFUInt32 *ComponentWidthLayoutSpringBase::getSFSizeField(void) const
 {
+    return &_sfSizeField;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-ComponentWidthLayoutSpringBase::~ComponentWidthLayoutSpringBase(void)
-{
-}
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ComponentWidthLayoutSpringBase::getBinSize(const BitVector &whichField)
+UInt32 ComponentWidthLayoutSpringBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -206,18 +259,16 @@ UInt32 ComponentWidthLayoutSpringBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfComponent.getBinSize();
     }
-
     if(FieldBits::NoField != (SizeFieldFieldMask & whichField))
     {
         returnValue += _sfSizeField.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ComponentWidthLayoutSpringBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ComponentWidthLayoutSpringBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -225,17 +276,14 @@ void ComponentWidthLayoutSpringBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfComponent.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SizeFieldFieldMask & whichField))
     {
         _sfSizeField.copyToBin(pMem);
     }
-
-
 }
 
-void ComponentWidthLayoutSpringBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ComponentWidthLayoutSpringBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -243,93 +291,260 @@ void ComponentWidthLayoutSpringBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfComponent.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SizeFieldFieldMask & whichField))
     {
         _sfSizeField.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ComponentWidthLayoutSpringBase::executeSyncImpl(      ComponentWidthLayoutSpringBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ComponentWidthLayoutSpringTransitPtr ComponentWidthLayoutSpringBase::createLocal(BitVector bFlags)
 {
+    ComponentWidthLayoutSpringTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (ComponentFieldMask & whichField))
-        _sfComponent.syncWith(pOther->_sfComponent);
+        fc = dynamic_pointer_cast<ComponentWidthLayoutSpring>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (SizeFieldFieldMask & whichField))
-        _sfSizeField.syncWith(pOther->_sfSizeField);
-
-
-}
-#else
-void ComponentWidthLayoutSpringBase::executeSyncImpl(      ComponentWidthLayoutSpringBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ComponentFieldMask & whichField))
-        _sfComponent.syncWith(pOther->_sfComponent);
-
-    if(FieldBits::NoField != (SizeFieldFieldMask & whichField))
-        _sfSizeField.syncWith(pOther->_sfSizeField);
-
-
-
+    return fc;
 }
 
-void ComponentWidthLayoutSpringBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ComponentWidthLayoutSpringTransitPtr ComponentWidthLayoutSpringBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ComponentWidthLayoutSpringTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<ComponentWidthLayoutSpring>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ComponentWidthLayoutSpringTransitPtr ComponentWidthLayoutSpringBase::create(void)
+{
+    ComponentWidthLayoutSpringTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<ComponentWidthLayoutSpring>(tmpPtr);
+    }
+
+    return fc;
+}
+
+ComponentWidthLayoutSpring *ComponentWidthLayoutSpringBase::createEmptyLocal(BitVector bFlags)
+{
+    ComponentWidthLayoutSpring *returnValue;
+
+    newPtr<ComponentWidthLayoutSpring>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+ComponentWidthLayoutSpring *ComponentWidthLayoutSpringBase::createEmpty(void)
+{
+    ComponentWidthLayoutSpring *returnValue;
+
+    newPtr<ComponentWidthLayoutSpring>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ComponentWidthLayoutSpringBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    ComponentWidthLayoutSpring *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ComponentWidthLayoutSpring *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ComponentWidthLayoutSpringBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    ComponentWidthLayoutSpring *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ComponentWidthLayoutSpring *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ComponentWidthLayoutSpringBase::shallowCopy(void) const
+{
+    ComponentWidthLayoutSpring *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const ComponentWidthLayoutSpring *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ComponentWidthLayoutSpringBase::ComponentWidthLayoutSpringBase(void) :
+    Inherited(),
+    _sfComponent              (NULL),
+    _sfSizeField              (UInt32(ComponentWidthLayoutSpring::PREFERRED_SIZE))
+{
+}
+
+ComponentWidthLayoutSpringBase::ComponentWidthLayoutSpringBase(const ComponentWidthLayoutSpringBase &source) :
+    Inherited(source),
+    _sfComponent              (NULL),
+    _sfSizeField              (source._sfSizeField              )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ComponentWidthLayoutSpringBase::~ComponentWidthLayoutSpringBase(void)
+{
+}
+
+void ComponentWidthLayoutSpringBase::onCreate(const ComponentWidthLayoutSpring *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        ComponentWidthLayoutSpring *pThis = static_cast<ComponentWidthLayoutSpring *>(this);
+
+        pThis->setComponent(source->getComponent());
+    }
+}
+
+GetFieldHandlePtr ComponentWidthLayoutSpringBase::getHandleComponent       (void) const
+{
+    SFUnrecComponentPtr::GetHandlePtr returnValue(
+        new  SFUnrecComponentPtr::GetHandle(
+             &_sfComponent,
+             this->getType().getFieldDesc(ComponentFieldId),
+             const_cast<ComponentWidthLayoutSpringBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentWidthLayoutSpringBase::editHandleComponent      (void)
+{
+    SFUnrecComponentPtr::EditHandlePtr returnValue(
+        new  SFUnrecComponentPtr::EditHandle(
+             &_sfComponent,
+             this->getType().getFieldDesc(ComponentFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ComponentWidthLayoutSpring::setComponent,
+                    static_cast<ComponentWidthLayoutSpring *>(this), _1));
+
+    editSField(ComponentFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentWidthLayoutSpringBase::getHandleSizeField       (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfSizeField,
+             this->getType().getFieldDesc(SizeFieldFieldId),
+             const_cast<ComponentWidthLayoutSpringBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentWidthLayoutSpringBase::editHandleSizeField      (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfSizeField,
+             this->getType().getFieldDesc(SizeFieldFieldId),
+             this));
+
+
+    editSField(SizeFieldFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ComponentWidthLayoutSpringBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ComponentWidthLayoutSpring *pThis = static_cast<ComponentWidthLayoutSpring *>(this);
+
+    pThis->execSync(static_cast<ComponentWidthLayoutSpring *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ComponentWidthLayoutSpringBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    ComponentWidthLayoutSpring *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const ComponentWidthLayoutSpring *>(pRefAspect),
+                  dynamic_cast<const ComponentWidthLayoutSpring *>(this));
+
+    return returnValue;
+}
+#endif
+
+void ComponentWidthLayoutSpringBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<ComponentWidthLayoutSpring *>(this)->setComponent(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ComponentWidthLayoutSpringPtr>::_type("ComponentWidthLayoutSpringPtr", "AbstractLayoutSpringPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(ComponentWidthLayoutSpringPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ComponentWidthLayoutSpringPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGCOMPONENTWIDTHLAYOUTSPRINGBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCOMPONENTWIDTHLAYOUTSPRINGBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCOMPONENTWIDTHLAYOUTSPRINGFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

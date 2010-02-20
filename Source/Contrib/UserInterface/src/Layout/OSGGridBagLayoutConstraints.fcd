@@ -3,18 +3,21 @@
 <FieldContainer
 	name="GridBagLayoutConstraints"
 	parent="LayoutConstraints"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI GridBagLayoutConstraints.
 	<Field
 		name="GridX"
 		type="UInt16"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0"
@@ -25,6 +28,7 @@ A UI GridBagLayoutConstraints.
 	<Field
 		name="GridY"
 		type="UInt16"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0"
@@ -35,6 +39,7 @@ A UI GridBagLayoutConstraints.
 	<Field
 		name="GridWidth"
 		type="UInt16"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1"
@@ -45,6 +50,7 @@ A UI GridBagLayoutConstraints.
 	<Field
 		name="GridHeight"
 		type="UInt16"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1"
@@ -55,6 +61,7 @@ A UI GridBagLayoutConstraints.
 	<Field
 		name="Fill"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -64,6 +71,7 @@ A UI GridBagLayoutConstraints.
 	<Field
 		name="HorizontalAlignment"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -74,6 +82,7 @@ A UI GridBagLayoutConstraints.
 	<Field
 		name="VerticalAlignment"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -84,6 +93,7 @@ A UI GridBagLayoutConstraints.
 	<Field
 		name="WeightX"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1.0"
@@ -94,6 +104,7 @@ A UI GridBagLayoutConstraints.
 	<Field
 		name="WeightY"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1.0"
@@ -104,6 +115,7 @@ A UI GridBagLayoutConstraints.
 	<Field
 		name="InternalPadX"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0"
@@ -114,6 +126,7 @@ A UI GridBagLayoutConstraints.
 	<Field
 		name="InternalPadY"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0"
@@ -124,6 +137,7 @@ A UI GridBagLayoutConstraints.
 	<Field
 		name="PadLeft"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0"
@@ -134,6 +148,7 @@ A UI GridBagLayoutConstraints.
 	<Field
 		name="PadRight"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0"
@@ -144,6 +159,7 @@ A UI GridBagLayoutConstraints.
 	<Field
 		name="PadTop"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0"
@@ -154,6 +170,7 @@ A UI GridBagLayoutConstraints.
 	<Field
 		name="PadBottom"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0"

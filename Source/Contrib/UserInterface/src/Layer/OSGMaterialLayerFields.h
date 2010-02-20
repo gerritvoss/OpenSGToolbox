@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGLayerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class MaterialLayer;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! MaterialLayerPtr
+OSG_GEN_CONTAINERPTR(MaterialLayer);
 
-typedef FCPtr<LayerPtr, MaterialLayer> MaterialLayerPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<MaterialLayerPtr> : 
-    public FieldTraitsRecurseMapper<MaterialLayerPtr, true>
+struct FieldTraits<MaterialLayer *> :
+    public FieldTraitsFCPtrBase<MaterialLayer *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFMaterialLayerPtr"; }
-    static const char *getMName(void) { return "MFMaterialLayerPtr"; }
+    typedef FieldTraits<MaterialLayer *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFMaterialLayerPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFMaterialLayerPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<MaterialLayerPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<MaterialLayer *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecMaterialLayerPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<MaterialLayer *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecMaterialLayerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MaterialLayer *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakMaterialLayerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MaterialLayer *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdMaterialLayerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MaterialLayer *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecMaterialLayerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MaterialLayer *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecMaterialLayerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MaterialLayer *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakMaterialLayerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MaterialLayer *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdMaterialLayerPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MaterialLayer *,
+                      RecordedRefCountPolicy  > SFRecMaterialLayerPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MaterialLayer *,
+                      UnrecordedRefCountPolicy> SFUnrecMaterialLayerPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MaterialLayer *,
+                      WeakRefCountPolicy      > SFWeakMaterialLayerPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MaterialLayer *,
+                      NoRefCountPolicy        > SFUncountedMaterialLayerPtr;
 
-typedef SField<MaterialLayerPtr> SFMaterialLayerPtr;
-#endif
 
-#ifndef OSG_COMPILEMATERIALLAYERINST
-OSG_DLLEXPORT_DECL1(SField, MaterialLayerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MaterialLayer *,
+                      RecordedRefCountPolicy  > MFRecMaterialLayerPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MaterialLayer *,
+                      UnrecordedRefCountPolicy> MFUnrecMaterialLayerPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MaterialLayer *,
+                      WeakRefCountPolicy      > MFWeakMaterialLayerPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MaterialLayer *,
+                      NoRefCountPolicy        > MFUncountedMaterialLayerPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<MaterialLayerPtr> MFMaterialLayerPtr;
-#endif
 
-#ifndef OSG_COMPILEMATERIALLAYERINST
-OSG_DLLEXPORT_DECL1(MField, MaterialLayerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecMaterialLayerPtr : 
+    public PointerSField<MaterialLayer *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecMaterialLayerPtr : 
+    public PointerSField<MaterialLayer *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakMaterialLayerPtr :
+    public PointerSField<MaterialLayer *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedMaterialLayerPtr :
+    public PointerSField<MaterialLayer *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecMaterialLayerPtr :
+    public PointerMField<MaterialLayer *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecMaterialLayerPtr :
+    public PointerMField<MaterialLayer *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakMaterialLayerPtr :
+    public PointerMField<MaterialLayer *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedMaterialLayerPtr :
+    public PointerMField<MaterialLayer *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGMATERIALLAYERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGMATERIALLAYERFIELDS_H_ */

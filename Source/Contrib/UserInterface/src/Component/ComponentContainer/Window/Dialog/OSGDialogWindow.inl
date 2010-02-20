@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com), Mark Stenerson             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -38,22 +38,6 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
-inline
-bool DialogWindow::isDialogWindowListenerAttached(DialogWindowListenerPtr Listener) const
-{
-    return _DialogWindowListeners.find(Listener) != _DialogWindowListeners.end();
-}
-
-inline
-bool DialogWindow::isEventListenerAttached(EventListenerPtr Listener) const
-{
-    return _EventListeners.find(Listener) != _EventListeners.end();
-}
-
-
 OSG_END_NAMESPACE
-

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGRadioButtonGroup.h"
 #include "OSGRadioButton.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::RadioButtonGroup
-A UI Radio Button Group. 	
-*/
+// Documentation for this class is emitted in the
+// OSGRadioButtonGroupBase.cpp file.
+// To modify it, please change the .fcd file (OSGRadioButtonGroup.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -68,102 +63,102 @@ A UI Radio Button Group.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void RadioButtonGroup::initMethod (void)
+void RadioButtonGroup::initMethod(InitPhase ePhase)
 {
-}
+    Inherited::initMethod(ePhase);
 
-void RadioButtonGroup::addButton(RadioButtonPtr Button)
-{
-	getGroupButtons().push_back(Button);
-    if(Button->getSelected())
+    if(ePhase == TypeObject::SystemPost)
     {
-		RadioButtonPtr SelectedButton(getSelectedButton());
-        if(SelectedButton == NullFC)
-        {
-            setSelectedButton(SelectedButton);
-        }
-        else
-        {
-            beginEditCP(Button, RadioButton::SelectedFieldMask);
-                Button->setSelected(false);
-            endEditCP(Button, RadioButton::SelectedFieldMask);
-        }
     }
-	Button->addButtonSelectedListener(this);
 }
-
-void RadioButtonGroup::removeButton(RadioButtonPtr Button)
-{
-	MFRadioButtonPtr *curButtons = editMFGroupButtons();
-	std::vector<RadioButtonPtr>::iterator ButtonIter = std::find((*curButtons).begin(),(*curButtons).end(),Button);
-	if(ButtonIter != (*curButtons).end())
-	{
-		(*curButtons).erase(ButtonIter);		
-		Button->removeButtonSelectedListener(this);
-	}
-}
-
-void RadioButtonGroup::removeButton(UInt32 Index)
-{
-	MFRadioButtonPtr *curButtons = editMFGroupButtons();
-	std::vector<RadioButtonPtr>::iterator ButtonIter = (*curButtons).begin();
-	for(Int32 i = 0; i < Index && ButtonIter != (*curButtons).end(); i++)
-	{
-		++ButtonIter;
-	}
-	if(ButtonIter != (*curButtons).end())
-	{
-		(*curButtons).erase(ButtonIter);
-		(*ButtonIter)->removeButtonSelectedListener(this);
-	}
-}
-UInt32 RadioButtonGroup::getButtonCount(void) const
-{
-	return getGroupButtons().size();
-}
-
-
-bool RadioButtonGroup::isSelected(const RadioButtonPtr Button) const
-{
-	if(Button == getSelectedButton())
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-void RadioButtonGroup::buttonSelected(const ButtonSelectedEventPtr e)
-{
-	RadioButtonPtr TheButton = RadioButton::Ptr::dcast(e->getSource());
-    RadioButtonPtr PreviousSelected(getSelectedButton());
-	if(PreviousSelected != TheButton)
-	{
-		setSelectedButton(TheButton);
-		if(PreviousSelected != NullFC)
-		{
-            beginEditCP(PreviousSelected, RadioButton::SelectedFieldMask);
-			    PreviousSelected->setSelected(false);
-            endEditCP(PreviousSelected, RadioButton::SelectedFieldMask);
-		}
-	}
-}
-
-void RadioButtonGroup::buttonDeselected(const ButtonSelectedEventPtr e)
-{
-	if(getSelectedButton() == RadioButton::Ptr::dcast(e->getSource()))
-	{
-		setSelectedButton(NullFC);
-	}
-}
-
 
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+void RadioButtonGroup::addButton(RadioButtonRefPtr Button)
+{
+    pushToGroupButtons(Button);
+    if(Button->getSelected())
+    {
+        RadioButtonRefPtr SelectedButton(getSelectedButton());
+        if(SelectedButton == NULL)
+        {
+            setSelectedButton(SelectedButton);
+        }
+        else
+        {
+            Button->setSelected(false);
+        }
+    }
+    Button->addButtonSelectedListener(this);
+}
+
+void RadioButtonGroup::removeButton(RadioButtonRefPtr Button)
+{
+    MFUnrecRadioButtonPtr *curButtons = editMFGroupButtons();
+    MFUnrecRadioButtonPtr::iterator ButtonIter = std::find((*curButtons).begin(),(*curButtons).end(),Button);
+    if(ButtonIter != (*curButtons).end())
+    {
+        (*curButtons).erase(ButtonIter);		
+        Button->removeButtonSelectedListener(this);
+    }
+}
+
+void RadioButtonGroup::removeButton(UInt32 Index)
+{
+    MFUnrecRadioButtonPtr *curButtons = editMFGroupButtons();
+    MFUnrecRadioButtonPtr::iterator ButtonIter = (*curButtons).begin();
+    for(Int32 i = 0; i < Index && ButtonIter != (*curButtons).end(); i++)
+    {
+        ++ButtonIter;
+    }
+    if(ButtonIter != (*curButtons).end())
+    {
+        (*curButtons).erase(ButtonIter);
+        (*ButtonIter)->removeButtonSelectedListener(this);
+    }
+}
+UInt32 RadioButtonGroup::getButtonCount(void) const
+{
+    return getMFGroupButtons()->size();
+}
+
+
+bool RadioButtonGroup::isSelected(const RadioButtonRefPtr Button) const
+{
+    if(Button == getSelectedButton())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+void RadioButtonGroup::buttonSelected(const ButtonSelectedEventUnrecPtr e)
+{
+    RadioButtonRefPtr TheButton = dynamic_cast<RadioButton*>(e->getSource());
+    RadioButtonRefPtr PreviousSelected(getSelectedButton());
+    if(PreviousSelected != TheButton)
+    {
+        setSelectedButton(TheButton);
+        if(PreviousSelected != NULL)
+        {
+            PreviousSelected->setSelected(false);
+        }
+    }
+}
+
+void RadioButtonGroup::buttonDeselected(const ButtonSelectedEventUnrecPtr e)
+{
+    if(getSelectedButton() == e->getSource())
+    {
+        setSelectedButton(NULL);
+    }
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -187,11 +182,15 @@ RadioButtonGroup::~RadioButtonGroup(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void RadioButtonGroup::changed(BitVector whichField, UInt32 origin)
+void RadioButtonGroup::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
+    Inherited::changed(whichField, origin, details);
+
 	if(whichField & GroupButtonsFieldMask)
     {
-        for(UInt32 i(0) ; i<getGroupButtons().size() ; ++i)
+        for(UInt32 i(0) ; i<getMFGroupButtons()->size() ; ++i)
         {
 			getGroupButtons(i)->addButtonSelectedListener(this);
         }
@@ -199,30 +198,25 @@ void RadioButtonGroup::changed(BitVector whichField, UInt32 origin)
 
 	if(whichField & SelectedButtonFieldMask)
     {
-		RadioButtonPtr SelectedButton(getSelectedButton());
-		RadioButtonPtr tmpButton;
-		for(UInt32 i(0) ; i<getGroupButtons().size() ; ++i)
+		RadioButtonRefPtr SelectedButton(getSelectedButton());
+		RadioButtonRefPtr tmpButton;
+		for(UInt32 i(0) ; i<getMFGroupButtons()->size() ; ++i)
         {
 			tmpButton = getGroupButtons(i);
-			beginEditCP(tmpButton, RadioButton::SelectedFieldMask);
 				if(tmpButton == SelectedButton)
 					tmpButton->setSelected(true);
 				else
 					tmpButton->setSelected(false);
-			endEditCP(tmpButton, RadioButton::SelectedFieldMask);
 			
         }
     }
 
-    Inherited::changed(whichField, origin);
 }
 
-void RadioButtonGroup::dump(      UInt32    , 
+void RadioButtonGroup::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump RadioButtonGroup NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

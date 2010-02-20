@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,34 +40,30 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGRenderAction.h>
-#include <OpenSG/OSGDrawAction.h>
-#include <OpenSG/OSGIntersectAction.h>
-#include <OpenSG/OSGSimpleGeometry.h>
-#include <OpenSG/OSGColorMaskChunk.h>
-#include <OpenSG/OSGPolygonChunk.h>
-
-#include "UIDrawingSurface/OSGUIDrawingSurface.h"
+#include <OSGConfig.h>
 
 #include "OSGUIRectangle.h"
-#include "UIDrawingSurface/NodeCore/OSGUIRectangleMouseTransformFunctor.h"   // MouseTransformFunctor default header
-#include "Component/Container/Window/OSGInternalWindow.h"
+#include "OSGRenderAction.h"
+#include "OSGIntersectAction.h"
+#include "OSGSimpleGeometry.h"
+#include "OSGColorMaskChunk.h"
+#include "OSGPolygonChunk.h"
+
+#include "OSGUIDrawingSurface.h"
+
+#include "OSGUIRectangleMouseTransformFunctor.h"   // MouseTransformFunctor default header
+#include "OSGInternalWindow.h"
+#include "OSGGL.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::UIRectangle
-A UI Rectangle. 	
-*/
+// Documentation for this class is emitted in the
+// OSGUIRectangleBase.cpp file.
+// To modify it, please change the .fcd file (OSGUIRectangle.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -77,22 +73,67 @@ A UI Rectangle.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void UIRectangle::initMethod (void)
+void UIRectangle::initMethod(InitPhase ePhase)
 {
-    DrawAction::registerEnterDefault(getClassType(),
-        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, UIRectanglePtr,
-              CNodePtr, Action *>(&UIRectangle::drawActionHandler));
+    Inherited::initMethod(ePhase);
 
-    IntersectAction::registerEnterDefault(getClassType(),
-        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, UIRectanglePtr,
-              CNodePtr, Action *>(&UIRectangle::intersect));
+    if(ePhase == TypeObject::SystemPost)
+    {
+        RenderAction::registerEnterDefault(
+            UIRectangle::getClassType(),
+            reinterpret_cast<Action::Callback>(
+                &UIRectangle::renderActionEnterHandler));
 
-    RenderAction::registerEnterDefault(getClassType(),
-        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, UIRectanglePtr,
-              CNodePtr, Action *>(&UIRectangle::renderActionHandler));
+        RenderAction::registerLeaveDefault(
+            UIRectangle::getClassType(),
+            reinterpret_cast<Action::Callback>(
+                &UIRectangle::renderActionLeaveHandler));
+#ifndef OSG_EMBEDDED
+        IntersectAction::registerEnterDefault(
+            UIRectangle::getClassType(),
+            reinterpret_cast<Action::Callback>(
+                &UIRectangle::intersect));
+#endif
+    }
 }
 
-Action::ResultE UIRectangle::drawPrimitives (DrawActionBase *action)
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+Action::ResultE UIRectangle::renderActionEnterHandler(Action *action)
+{
+    RenderAction *a = dynamic_cast<RenderAction *>(action);
+
+    Material::DrawFunctor func;
+
+    func = boost::bind(&UIRectangle::drawPrimitives, this, _1);
+
+    a->dropFunctor(func, NULL);
+
+    if(a->pushVisibility())
+    {
+        if(a->selectVisibles() == 0)
+        {
+            a->popVisibility();
+            return Action::Skip;
+        }
+    }
+    
+    return Action::Continue;
+}
+
+Action::ResultE UIRectangle::renderActionLeaveHandler(Action *action)
+{
+    RenderAction *a = dynamic_cast<RenderAction *>(action);
+    
+    a->popVisibility();
+    
+    return Action::Continue;
+}
+
+Action::ResultE UIRectangle::drawPrimitives          (DrawEnv *pEnv  )
 {
     glPushMatrix();
 
@@ -100,50 +141,37 @@ Action::ResultE UIRectangle::drawPrimitives (DrawActionBase *action)
 
     glScalef(1.0,-1.0,1.0);
 	//Render the UI to the Rectangle
-    getDrawingSurface()->getGraphics()->setDrawAction(action);
+    getDrawingSurface()->getGraphics()->setDrawEnv(pEnv);
 	//Call The PreDraw on the Graphics
 	getDrawingSurface()->getGraphics()->preDraw();
 
 	//Draw all of the InternalWindows
-	for(UInt32 i(0) ; i<getDrawingSurface()->getInternalWindows().size() ; ++i)
+	for(UInt32 i(0) ; i<getDrawingSurface()->getMFInternalWindows()->size() ; ++i)
 	{
-		getDrawingSurface()->getInternalWindows()[i]->draw(getDrawingSurface()->getGraphics());
+		getDrawingSurface()->getInternalWindows(i)->draw(getDrawingSurface()->getGraphics());
 	}
 
 	//Call the PostDraw on the Graphics
 	getDrawingSurface()->getGraphics()->postDraw();
     glPopMatrix();
 	
-	getRectColorMask()->activate(action);
-	getRectPolygon()->activate(action);
+	getRectColorMask()->activate(pEnv);
+	getRectPolygon()->activate(pEnv);
 	glBegin(GL_QUADS);
 	   glVertex3fv(getPoint().getValues());
 	   glVertex3f(getPoint().x(), getPoint().y()+getHeight(), getPoint().z());
 	   glVertex3f(getPoint().x()+getWidth(), getPoint().y()+getHeight(), getPoint().z());
 	   glVertex3f(getPoint().x()+getWidth(), getPoint().y(), getPoint().z());
 	glEnd();
-	getRectPolygon()->deactivate(action);
-	getRectColorMask()->deactivate(action);
+	getRectPolygon()->deactivate(pEnv);
+	getRectColorMask()->deactivate(pEnv);
 
-    return Action::Continue;
-}
-
-Action::ResultE UIRectangle::drawActionHandler( Action* action )
-{
-    return drawPrimitives(dynamic_cast<DrawAction *>(action));
-}
-
-Action::ResultE UIRectangle::renderActionHandler( Action* action )
-{
-    Material::DrawFunctor func;
-    func = osgTypedMethodFunctor1ObjPtr(this,
-                                                  &UIRectangle::drawPrimitives);
-    dynamic_cast<RenderAction *>(action)->dropFunctor(func, getDefaultUnlitMaterial().getCPtr());
     return Action::Continue;
 }
 
 Action::ResultE UIRectangle::intersect( Action* action )
 {
+    //TODO: Implement
     return Action::Continue;
 }
 
@@ -158,105 +186,100 @@ void UIRectangle::adjustVolume(Volume & volume)
     volume.extendBy(getPoint()+ Vec3f(0.0,getHeight(),0.0));
 }
 
-/***************************************************************************\
- *                           Instance methods                              *
-\***************************************************************************/
+void UIRectangle::fill(DrawableStatsAttachment *pStat)
+{
+    if(pStat == NULL)
+    {
+        FINFO(("UIRectangle::fill(DrawableStatsAttachment *): "
+               "No attachment given.\n"));
+
+        return;
+    }
+
+    //Determine the stats of the UI
+    //pStat->setVertices(vertices);
+    //pStat->setPoints(point);
+    //pStat->setLines(line);
+    //pStat->setTriangles(triangle);
+    //pStat->setStoredAttributeBytes(storedAttBytes);
+    //pStat->setProcessedAttributeBytes(procAttBytes);
+    //pStat->setValid(true);
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
+
+void UIRectangle::onCreate(const UIRectangle * Id)
+{
+    ColorMaskChunkUnrecPtr TheMask(ColorMaskChunk::create());
+	setRectColorMask(TheMask);
+	getRectColorMask()->setMaskR(false);
+	getRectColorMask()->setMaskG(false);
+	getRectColorMask()->setMaskB(false);
+	getRectColorMask()->setMaskA(false);
+
+    PolygonChunkUnrecPtr ThePolyChunk(PolygonChunk::create());
+	setRectPolygon(ThePolyChunk);
+	getRectPolygon()->setOffsetFactor(1.0);
+	getRectPolygon()->setOffsetBias(1.0);
+	getRectPolygon()->setOffsetFill(true); 
+
+    UIRectangleMouseTransformFunctorUnrecPtr TheTransFunc(UIRectangleMouseTransformFunctor::create());
+	setMouseTransformFunctor(TheTransFunc);
+    if(getMouseTransformFunctor() != NULL)
+    {
+        getMouseTransformFunctor()->setParent(this);
+    }
+}
+
+void UIRectangle::onDestroy()
+{
+}
 
 /*----------------------- constructors & destructors ----------------------*/
 
 UIRectangle::UIRectangle(void) :
     Inherited()
 {
-	setRectColorMask(ColorMaskChunk::create());
-	getRectColorMask()->setMaskR(false);
-	getRectColorMask()->setMaskG(false);
-	getRectColorMask()->setMaskB(false);
-	getRectColorMask()->setMaskA(false);
-
-	setRectPolygon(PolygonChunk::create());
-	getRectPolygon()->setOffsetFactor(1.0);
-	getRectPolygon()->setOffsetBias(1.0);
-	getRectPolygon()->setOffsetFill(true); 
 }
 
 UIRectangle::UIRectangle(const UIRectangle &source) :
     Inherited(source)
 {
-	if(getMouseTransformFunctor() != NullFC)
-	{
-		beginEditCP(getMouseTransformFunctor(), UIRectangleMouseTransformFunctor::ParentFieldMask);
-			getMouseTransformFunctor()->setParent(UIRectanglePtr(this));
-		endEditCP(getMouseTransformFunctor(), UIRectangleMouseTransformFunctor::ParentFieldMask);
-	}
 }
 
 UIRectangle::~UIRectangle(void)
 {
-	if(getMouseTransformFunctor() != NullFC)
-	{
-		beginEditCP(getMouseTransformFunctor(), UIRectangleMouseTransformFunctor::ParentFieldMask);
-			getMouseTransformFunctor()->setParent(UIRectanglePtr(this));
-		endEditCP(getMouseTransformFunctor(), UIRectangleMouseTransformFunctor::ParentFieldMask);
-	}
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void UIRectangle::changed(BitVector whichField, UInt32 origin)
+void UIRectangle::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
     
     if( ((whichField & HeightFieldMask) ||
         (whichField & WidthFieldMask) ||
         (whichField & DrawingSurfaceFieldMask))
-        && getDrawingSurface() != NullFC)
+        && getDrawingSurface() != NULL)
     {
 		invalidateVolume();
 		
 		if(getDrawingSurface()->getSize().x() != static_cast<Real32>(getWidth()) ||
 		   getDrawingSurface()->getSize().y() != static_cast<Real32>(getHeight()))
 		{
-			beginEditCP(getDrawingSurface(), UIDrawingSurface::SizeFieldMask);
-				getDrawingSurface()->setSize(Vec2f(static_cast<Real32>(getWidth()), static_cast<Real32>(getHeight())));
-			endEditCP(getDrawingSurface(), UIDrawingSurface::SizeFieldMask);
+            getDrawingSurface()->setSize(Vec2f(static_cast<Real32>(getWidth()), static_cast<Real32>(getHeight())));
 		}
     }
 }
 
-void UIRectangle::dump(      UInt32    , 
+void UIRectangle::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump UIRectangle NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGUIRECTANGLEBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGUIRECTANGLEBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGUIRECTANGLEFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

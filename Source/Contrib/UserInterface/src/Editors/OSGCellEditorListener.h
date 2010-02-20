@@ -31,24 +31,24 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include "Event/OSGChangeEvent.h"
+#include "OSGChangeEvent.h"
 
-#include <OpenSG/Toolbox/OSGEventListener.h>
+#include "OSGEventListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING CellEditorListener : public EventListener
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING CellEditorListener : public EventListener
 {
     /*=========================  PUBLIC  ===============================*/
   public:
     //This tells the listeners the editor has canceled editing
-    virtual void editingCanceled(const ChangeEventPtr e) = 0;
+    virtual void editingCanceled(const ChangeEventUnrecPtr e) = 0;
 
     //This tells the listeners the editor has ended editing
-    virtual void editingStopped(const ChangeEventPtr e) = 0;
+    virtual void editingStopped(const ChangeEventUnrecPtr e) = 0;
 };
 
 typedef CellEditorListener* CellEditorListenerPtr;

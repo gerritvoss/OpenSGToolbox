@@ -3,112 +3,114 @@
 <FieldContainer
 	name="SpringLayoutConstraints"
 	parent="LayoutConstraints"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI SpringLayoutConstraints.
 	<Field
 		name="NorthSpring"
-		type="LayoutSpringPtr"
+		type="LayoutSpring"
+        category="pointer"
 		cardinality="single"
       visibility="external"
-		defaultValue="NullFC"
-      header="Layout/Spring/OSGLayoutSpringFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
    </Field>
 	<Field
 		name="WestSpring"
-		type="LayoutSpringPtr"
+		type="LayoutSpring"
+        category="pointer"
 		cardinality="single"
       visibility="external"
-		defaultValue="NullFC"
-      header="Layout/Spring/OSGLayoutSpringFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
    </Field>
 	<Field
 		name="EastSpring"
-		type="LayoutSpringPtr"
+		type="LayoutSpring"
+        category="pointer"
 		cardinality="single"
       visibility="external"
-		defaultValue="NullFC"
-      header="Layout/Spring/OSGLayoutSpringFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
    </Field>
 	<Field
 		name="SouthSpring"
-		type="LayoutSpringPtr"
+		type="LayoutSpring"
+        category="pointer"
 		cardinality="single"
       visibility="external"
-		defaultValue="NullFC"
-      header="Layout/Spring/OSGLayoutSpringFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
    </Field>
 	<Field
 		name="WidthSpring"
-		type="LayoutSpringPtr"
+		type="LayoutSpring"
+        category="pointer"
 		cardinality="single"
       visibility="external"
-		defaultValue="NullFC"
-      header="Layout/Spring/OSGLayoutSpringFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
    </Field>
 	<Field
 		name="HeightSpring"
-		type="LayoutSpringPtr"
+		type="LayoutSpring"
+        category="pointer"
 		cardinality="single"
       visibility="external"
-		defaultValue="NullFC"
-      header="Layout/Spring/OSGLayoutSpringFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
    </Field>
 	<Field
 		name="HorizontalCenterSpring"
-		type="LayoutSpringPtr"
+		type="LayoutSpring"
+        category="pointer"
 		cardinality="single"
       visibility="external"
-		defaultValue="NullFC"
-      header="Layout/Spring/OSGLayoutSpringFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
    </Field>
 	<Field
 		name="VerticalCenterSpring"
-		type="LayoutSpringPtr"
+		type="LayoutSpring"
+        category="pointer"
 		cardinality="single"
       visibility="external"
-		defaultValue="NullFC"
-      header="Layout/Spring/OSGLayoutSpringFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
    </Field>
 	<Field
 		name="BaselineSpring"
-		type="LayoutSpringPtr"
+		type="LayoutSpring"
+        category="pointer"
 		cardinality="single"
       visibility="external"
-		defaultValue="NullFC"
-      header="Layout/Spring/OSGLayoutSpringFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
    </Field>
 	<Field
 		name="Component"
-		type="ComponentPtr"
+		type="Component"
+        category="pointer"
 		cardinality="single"
       visibility="external"
-		defaultValue="NullFC"
-      header="Component/OSGComponentFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
    </Field>

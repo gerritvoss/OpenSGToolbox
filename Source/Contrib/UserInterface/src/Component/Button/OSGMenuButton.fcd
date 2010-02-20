@@ -3,49 +3,51 @@
 <FieldContainer
 	name="MenuButton"
 	parent="ToggleButton"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
     parentProducer="ToggleButton"
 >
 A UI MenuButton
 	<Field
 		name="Model"
-		type="ListModelPtr"
+		type="ListModel"
+		category="pointer"
 		cardinality="single"
       visibility="external"
-      header="Component/List/Models/OSGListModelFields.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 		access="public"
 	>
    </Field>
 	<Field
 		name="CellGenerator"
-		type="ComponentGeneratorPtr"
+		type="ComponentGenerator"
+		category="pointer"
 		cardinality="single"
       visibility="external"
-      header="ComponentGenerators/OSGComponentGeneratorFields.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 		access="public"
 	>
    </Field>
 	<Field
 		name="MenuButtonPopupMenu"
-		type="ListGeneratedPopupMenuPtr"
+		type="ListGeneratedPopupMenu"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="protected"
-		header="Component/Menu/OSGListGeneratedPopupMenuFields.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<ProducedMethod
 		name="MenuActionPerformed"
-		producedEventType="ActionEventPtr"
+		type="ActionEventPtr"
 	>
 	</ProducedMethod>
 </FieldContainer>

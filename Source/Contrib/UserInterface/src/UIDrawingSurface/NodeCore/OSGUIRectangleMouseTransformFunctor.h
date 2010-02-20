@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,50 +42,54 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGUIRectangleMouseTransformFunctorBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief UIRectangleMouseTransformFunctor class. See \ref 
-           PageUserInterfaceUIRectangleMouseTransformFunctor for a description.
+/*! \brief UIRectangleMouseTransformFunctor class. See \ref
+           PageContribUserInterfaceUIRectangleMouseTransformFunctor for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING UIRectangleMouseTransformFunctor : public UIRectangleMouseTransformFunctorBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIRectangleMouseTransformFunctor : public UIRectangleMouseTransformFunctorBase
 {
-  private:
+  protected:
     friend class UIRectangle;
 
-    typedef UIRectangleMouseTransformFunctorBase Inherited;
-
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef UIRectangleMouseTransformFunctorBase Inherited;
+    typedef UIRectangleMouseTransformFunctor     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual bool viewportToRenderingSurface(const Pnt2f& ViewportPoint,
-		                                    ViewportPtr TheViewport,
-		                                        Pnt2f& Result) const;
-	virtual bool renderingSurfaceToViewport(const Pnt2f& RenderingSurfacePoint,
-		                                    ViewportPtr TheViewport,
-		                                        Pnt2f& Result) const;
+
+    virtual bool viewportToRenderingSurface(const Pnt2f& ViewportPoint,
+                                            const Viewport* TheViewport,
+                                            Pnt2f& Result) const;
+
+    virtual bool renderingSurfaceToViewport(const Pnt2f& RenderingSurfacePoint,
+                                            const Viewport* TheViewport,
+                                            Pnt2f& Result) const;
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in UIRectangleMouseTransformFunctorBase.
@@ -102,20 +106,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIRectangleMouseTransformFunctor : public 
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~UIRectangleMouseTransformFunctor(void); 
+    virtual ~UIRectangleMouseTransformFunctor(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class UIRectangleMouseTransformFunctorBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const UIRectangleMouseTransformFunctor &source);
 };
 
@@ -123,9 +131,9 @@ typedef UIRectangleMouseTransformFunctor *UIRectangleMouseTransformFunctorP;
 
 OSG_END_NAMESPACE
 
+#include "OSGUIRectangle.h"
+
 #include "OSGUIRectangleMouseTransformFunctorBase.inl"
 #include "OSGUIRectangleMouseTransformFunctor.inl"
-
-#define OSGUIRECTANGLEMOUSETRANSFORMFUNCTOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGUIRECTANGLEMOUSETRANSFORMFUNCTOR_H_ */

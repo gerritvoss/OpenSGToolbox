@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,64 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/Toolbox/OSGEventFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class CaretEvent;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! CaretEventPtr
+OSG_GEN_CONTAINERPTR(CaretEvent);
 
-typedef FCPtr<EventPtr, CaretEvent> CaretEventPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<CaretEventPtr> : 
-    public FieldTraitsRecurseMapper<CaretEventPtr, true>
+struct FieldTraits<CaretEvent *> :
+    public FieldTraitsFCPtrBase<CaretEvent *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFCaretEventPtr"; }
+    typedef FieldTraits<CaretEvent *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFCaretEventPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFCaretEventPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<CaretEventPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<CaretEvent *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecCaretEventPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<CaretEvent *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecCaretEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CaretEvent *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakCaretEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CaretEvent *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdCaretEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CaretEvent *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecCaretEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CaretEvent *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecCaretEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CaretEvent *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakCaretEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CaretEvent *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdCaretEventPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<CaretEvent *,
+                      RecordedRefCountPolicy  > SFRecCaretEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<CaretEvent *,
+                      UnrecordedRefCountPolicy> SFUnrecCaretEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<CaretEvent *,
+                      WeakRefCountPolicy      > SFWeakCaretEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<CaretEvent *,
+                      NoRefCountPolicy        > SFUncountedCaretEventPtr;
 
-typedef SField<CaretEventPtr> SFCaretEventPtr;
-#endif
 
-#ifndef OSG_COMPILECARETEVENTINST
-OSG_DLLEXPORT_DECL1(SField, CaretEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<CaretEvent *,
+                      RecordedRefCountPolicy  > MFRecCaretEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<CaretEvent *,
+                      UnrecordedRefCountPolicy> MFUnrecCaretEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<CaretEvent *,
+                      WeakRefCountPolicy      > MFWeakCaretEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<CaretEvent *,
+                      NoRefCountPolicy        > MFUncountedCaretEventPtr;
+
+
+
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecCaretEventPtr : 
+    public PointerSField<CaretEvent *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecCaretEventPtr : 
+    public PointerSField<CaretEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakCaretEventPtr :
+    public PointerSField<CaretEvent *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedCaretEventPtr :
+    public PointerSField<CaretEvent *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecCaretEventPtr :
+    public PointerMField<CaretEvent *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecCaretEventPtr :
+    public PointerMField<CaretEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakCaretEventPtr :
+    public PointerMField<CaretEvent *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedCaretEventPtr :
+    public PointerMField<CaretEvent *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

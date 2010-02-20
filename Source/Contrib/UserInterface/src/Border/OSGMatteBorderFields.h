@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGBorderFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class MatteBorder;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! MatteBorderPtr
+OSG_GEN_CONTAINERPTR(MatteBorder);
 
-typedef FCPtr<BorderPtr, MatteBorder> MatteBorderPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<MatteBorderPtr> : 
-    public FieldTraitsRecurseMapper<MatteBorderPtr, true>
+struct FieldTraits<MatteBorder *> :
+    public FieldTraitsFCPtrBase<MatteBorder *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFMatteBorderPtr"; }
-    static const char *getMName(void) { return "MFMatteBorderPtr"; }
+    typedef FieldTraits<MatteBorder *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFMatteBorderPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFMatteBorderPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<MatteBorderPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<MatteBorder *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecMatteBorderPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<MatteBorder *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecMatteBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MatteBorder *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakMatteBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MatteBorder *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdMatteBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MatteBorder *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecMatteBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MatteBorder *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecMatteBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MatteBorder *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakMatteBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MatteBorder *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdMatteBorderPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MatteBorder *,
+                      RecordedRefCountPolicy  > SFRecMatteBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MatteBorder *,
+                      UnrecordedRefCountPolicy> SFUnrecMatteBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MatteBorder *,
+                      WeakRefCountPolicy      > SFWeakMatteBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MatteBorder *,
+                      NoRefCountPolicy        > SFUncountedMatteBorderPtr;
 
-typedef SField<MatteBorderPtr> SFMatteBorderPtr;
-#endif
 
-#ifndef OSG_COMPILEMATTEBORDERINST
-OSG_DLLEXPORT_DECL1(SField, MatteBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MatteBorder *,
+                      RecordedRefCountPolicy  > MFRecMatteBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MatteBorder *,
+                      UnrecordedRefCountPolicy> MFUnrecMatteBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MatteBorder *,
+                      WeakRefCountPolicy      > MFWeakMatteBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MatteBorder *,
+                      NoRefCountPolicy        > MFUncountedMatteBorderPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<MatteBorderPtr> MFMatteBorderPtr;
-#endif
 
-#ifndef OSG_COMPILEMATTEBORDERINST
-OSG_DLLEXPORT_DECL1(MField, MatteBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecMatteBorderPtr : 
+    public PointerSField<MatteBorder *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecMatteBorderPtr : 
+    public PointerSField<MatteBorder *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakMatteBorderPtr :
+    public PointerSField<MatteBorder *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedMatteBorderPtr :
+    public PointerSField<MatteBorder *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecMatteBorderPtr :
+    public PointerMField<MatteBorder *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecMatteBorderPtr :
+    public PointerMField<MatteBorder *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakMatteBorderPtr :
+    public PointerMField<MatteBorder *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedMatteBorderPtr :
+    public PointerMField<MatteBorder *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGMATTEBORDERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGMATTEBORDERFIELDS_H_ */

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Mark Stenerson             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,88 +58,99 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include "Component/Container/Window/OSGInternalWindow.h" // Parent
+#include "OSGInternalWindow.h" // Parent
 
-#include <OpenSG/OSGReal32Fields.h> // ErrorIcon type
-#include <OpenSG/OSGReal32Fields.h> // QuestionIcon type
-#include <OpenSG/OSGReal32Fields.h> // DefaultIcon type
-#include <OpenSG/OSGBoolFields.h> // ShowCancel type
-#include <OpenSG/OSGStringFields.h> // InputValues type
+#include "OSGTextureObjChunkFields.h"   // ErrorIcon type
+#include "OSGSysFields.h"               // ShowCancel type
+#include "OSGBaseFields.h"              // InputValues type
 
 #include "OSGDialogWindowFields.h"
-#include <OpenSG/Toolbox/OSGEventProducer.h>
-#include <OpenSG/Toolbox/OSGEventProducerType.h>
-#include <OpenSG/Toolbox/OSGMethodDescription.h>
+
+//Event Producer Headers
+#include "OSGEventProducer.h"
+#include "OSGEventProducerType.h"
+#include "OSGMethodDescription.h"
 
 OSG_BEGIN_NAMESPACE
 
 class DialogWindow;
-class BinaryDataHandler;
 
 //! \brief DialogWindow Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowBase : public InternalWindow
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindowBase : public InternalWindow
 {
-  private:
-
-    typedef InternalWindow    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef DialogWindowPtr  Ptr;
+    typedef InternalWindow Inherited;
+    typedef InternalWindow ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(DialogWindow);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        ErrorIconFieldId    = Inherited::NextFieldId,
-        QuestionIconFieldId = ErrorIconFieldId    + 1,
-        DefaultIconFieldId  = QuestionIconFieldId + 1,
-        ShowCancelFieldId   = DefaultIconFieldId  + 1,
-        InputValuesFieldId  = ShowCancelFieldId   + 1,
-        NextFieldId         = InputValuesFieldId  + 1
+        ErrorIconFieldId = Inherited::NextFieldId,
+        QuestionIconFieldId = ErrorIconFieldId + 1,
+        DefaultIconFieldId = QuestionIconFieldId + 1,
+        ShowCancelFieldId = DefaultIconFieldId + 1,
+        InputValuesFieldId = ShowCancelFieldId + 1,
+        NextFieldId = InputValuesFieldId + 1
     };
 
-    static const OSG::BitVector ErrorIconFieldMask;
-    static const OSG::BitVector QuestionIconFieldMask;
-    static const OSG::BitVector DefaultIconFieldMask;
-    static const OSG::BitVector ShowCancelFieldMask;
-    static const OSG::BitVector InputValuesFieldMask;
-
+    static const OSG::BitVector ErrorIconFieldMask =
+        (TypeTraits<BitVector>::One << ErrorIconFieldId);
+    static const OSG::BitVector QuestionIconFieldMask =
+        (TypeTraits<BitVector>::One << QuestionIconFieldId);
+    static const OSG::BitVector DefaultIconFieldMask =
+        (TypeTraits<BitVector>::One << DefaultIconFieldId);
+    static const OSG::BitVector ShowCancelFieldMask =
+        (TypeTraits<BitVector>::One << ShowCancelFieldId);
+    static const OSG::BitVector InputValuesFieldMask =
+        (TypeTraits<BitVector>::One << InputValuesFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecTextureObjChunkPtr SFErrorIconType;
+    typedef SFUnrecTextureObjChunkPtr SFQuestionIconType;
+    typedef SFUnrecTextureObjChunkPtr SFDefaultIconType;
+    typedef SFBool            SFShowCancelType;
+    typedef SFString          SFInputValuesType;
 
     enum
     {
-        DialogWindowClosingMethodId = Inherited::NextMethodId,
-        DialogWindowClosedMethodId  = DialogWindowClosingMethodId + 1,
-        NextMethodId                = DialogWindowClosedMethodId  + 1
+        DialogWindowClosingMethodId = Inherited::NextProducedMethodId,
+        DialogWindowClosedMethodId = DialogWindowClosingMethodId + 1,
+        NextProducedMethodId = DialogWindowClosedMethodId + 1
     };
-
-
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
-    static const  EventProducerType  &getProducerClassType  (void); 
-    static        UInt32              getProducerClassTypeId(void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
+    static const  EventProducerType  &getProducerClassType  (void);
+    static        UInt32              getProducerClassTypeId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -148,48 +159,64 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowBase : public InternalWindow
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+            const SFUnrecTextureObjChunkPtr *getSFErrorIcon      (void) const;
+                  SFUnrecTextureObjChunkPtr *editSFErrorIcon      (void);
+            const SFUnrecTextureObjChunkPtr *getSFQuestionIcon   (void) const;
+                  SFUnrecTextureObjChunkPtr *editSFQuestionIcon   (void);
+            const SFUnrecTextureObjChunkPtr *getSFDefaultIcon    (void) const;
+                  SFUnrecTextureObjChunkPtr *editSFDefaultIcon    (void);
 
-           SFReal32            *editSFErrorIcon      (void);
-     const SFReal32            *getSFErrorIcon      (void) const;
+                  SFBool              *editSFShowCancel     (void);
+            const SFBool              *getSFShowCancel      (void) const;
 
-           SFReal32            *editSFQuestionIcon   (void);
-     const SFReal32            *getSFQuestionIcon   (void) const;
-
-           SFReal32            *editSFDefaultIcon    (void);
-     const SFReal32            *getSFDefaultIcon    (void) const;
-
-           SFBool              *editSFShowCancel     (void);
-     const SFBool              *getSFShowCancel     (void) const;
-
-           SFString            *editSFInputValues    (void);
-     const SFString            *getSFInputValues    (void) const;
+                  SFString            *editSFInputValues    (void);
+            const SFString            *getSFInputValues     (void) const;
 
 
-           Real32              &editErrorIcon      (void);
-     const Real32              &getErrorIcon      (void) const;
+                  TextureObjChunk * getErrorIcon      (void) const;
 
-           Real32              &editQuestionIcon   (void);
-     const Real32              &getQuestionIcon   (void) const;
+                  TextureObjChunk * getQuestionIcon   (void) const;
 
-           Real32              &editDefaultIcon    (void);
-     const Real32              &getDefaultIcon    (void) const;
+                  TextureObjChunk * getDefaultIcon    (void) const;
 
-           bool                &editShowCancel     (void);
-     const bool                &getShowCancel     (void) const;
+                  bool                &editShowCancel     (void);
+                  bool                 getShowCancel      (void) const;
 
-           std::string         &editInputValues    (void);
-     const std::string         &getInputValues    (void) const;
+                  std::string         &editInputValues    (void);
+            const std::string         &getInputValues     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setErrorIcon      ( const Real32 &value );
-     void setQuestionIcon   ( const Real32 &value );
-     void setDefaultIcon    ( const Real32 &value );
-     void setShowCancel     ( const bool &value );
-     void setInputValues    ( const std::string &value );
+            void setErrorIcon      (TextureObjChunk * const value);
+            void setQuestionIcon   (TextureObjChunk * const value);
+            void setDefaultIcon    (TextureObjChunk * const value);
+            void setShowCancel     (const bool value);
+            void setInputValues    (const std::string &value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Binary Access                              */
+    /*! \{                                                                 */
+
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -198,52 +225,26 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowBase : public InternalWindow
 
     virtual const EventProducerType &getProducerType(void) const; 
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
-    /*! \{                                                                 */
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Binary Access                              */
-    /*! \{                                                                 */
-
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Construction                               */
-    /*! \{                                                                 */
-
-    static  DialogWindowPtr      create          (void); 
-    static  DialogWindowPtr      createEmpty     (void); 
-
-    /*! \}                                                                 */
-
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Copy                                   */
-    /*! \{                                                                 */
-
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFReal32            _sfErrorIcon;
-    SFReal32            _sfQuestionIcon;
-    SFReal32            _sfDefaultIcon;
-    SFBool              _sfShowCancel;
-    SFString            _sfInputValues;
+    SFUnrecTextureObjChunkPtr _sfErrorIcon;
+    SFUnrecTextureObjChunkPtr _sfQuestionIcon;
+    SFUnrecTextureObjChunkPtr _sfDefaultIcon;
+    SFBool            _sfShowCancel;
+    SFString          _sfInputValues;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -258,69 +259,85 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowBase : public InternalWindow
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DialogWindowBase(void); 
+    virtual ~DialogWindowBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const DialogWindow *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleErrorIcon       (void) const;
+    EditFieldHandlePtr editHandleErrorIcon      (void);
+    GetFieldHandlePtr  getHandleQuestionIcon    (void) const;
+    EditFieldHandlePtr editHandleQuestionIcon   (void);
+    GetFieldHandlePtr  getHandleDefaultIcon     (void) const;
+    EditFieldHandlePtr editHandleDefaultIcon    (void);
+    GetFieldHandlePtr  getHandleShowCancel      (void) const;
+    EditFieldHandlePtr editHandleShowCancel     (void);
+    GetFieldHandlePtr  getHandleInputValues     (void) const;
+    EditFieldHandlePtr editHandleInputValues    (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      DialogWindowBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      DialogWindowBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      DialogWindowBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
+    /*---------------------------------------------------------------------*/
     static MethodDescription   *_methodDesc[];
     static EventProducerType _producerType;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const DialogWindowBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef DialogWindowBase *DialogWindowBaseP;
-
-typedef osgIF<DialogWindowBase::isNodeCore,
-              CoredNodePtr<DialogWindow>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet DialogWindowNodePtr;
-
-typedef RefPtr<DialogWindowPtr> DialogWindowRefPtr;
 
 OSG_END_NAMESPACE
 

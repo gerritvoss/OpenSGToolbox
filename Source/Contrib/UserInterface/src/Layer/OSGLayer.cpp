@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,22 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGLayer.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::Layer
-UI Background Interface. 
-*/
+// Documentation for this class is emitted in the
+// OSGLayerBase.cpp file.
+// To modify it, please change the .fcd file (OSGLayer.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -65,8 +62,13 @@ UI Background Interface.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void Layer::initMethod (void)
+void Layer::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -96,16 +98,17 @@ Layer::~Layer(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void Layer::changed(BitVector whichField, UInt32 origin)
+void Layer::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void Layer::dump(      UInt32    , 
+void Layer::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump Layer NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

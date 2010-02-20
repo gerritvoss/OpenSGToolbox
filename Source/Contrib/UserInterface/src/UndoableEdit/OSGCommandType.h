@@ -31,14 +31,14 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGTypeBase.h>
+#include "OSGTypeBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING CommandType : public TypeBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING CommandType : public TypeBase
 {
     /*==========================  PUBLIC  =================================*/
 

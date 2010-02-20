@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,168 +50,247 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEPROXYLAYOUTSPRINGINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGSpringLayoutConstraints.h"   // Edge default header
+
+#include "OSGComponent.h"               // Component Class
+#include "OSGSpringLayout.h"            // Layout Class
 
 #include "OSGProxyLayoutSpringBase.h"
 #include "OSGProxyLayoutSpring.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ProxyLayoutSpringBase::EdgeFieldMask = 
-    (TypeTraits<BitVector>::One << ProxyLayoutSpringBase::EdgeFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  ProxyLayoutSpringBase::ComponentFieldMask = 
-    (TypeTraits<BitVector>::One << ProxyLayoutSpringBase::ComponentFieldId);
+/*! \class OSG::ProxyLayoutSpring
+    A UI Proxy LayoutSpring.
+ */
 
-const OSG::BitVector  ProxyLayoutSpringBase::LayoutFieldMask = 
-    (TypeTraits<BitVector>::One << ProxyLayoutSpringBase::LayoutFieldId);
-
-const OSG::BitVector ProxyLayoutSpringBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var UInt32          ProxyLayoutSpringBase::_sfEdge
     
 */
-/*! \var ComponentPtr    ProxyLayoutSpringBase::_sfComponent
-    
-*/
-/*! \var SpringLayoutPtr ProxyLayoutSpringBase::_sfLayout
+
+/*! \var Component *     ProxyLayoutSpringBase::_sfComponent
     
 */
 
-//! ProxyLayoutSpring description
+/*! \var SpringLayout *  ProxyLayoutSpringBase::_sfLayout
+    
+*/
 
-FieldDescription *ProxyLayoutSpringBase::_desc[] = 
+
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ProxyLayoutSpring *>::_type("ProxyLayoutSpringPtr", "LayoutSpringPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ProxyLayoutSpring *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ProxyLayoutSpring *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ProxyLayoutSpring *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ProxyLayoutSpringBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "Edge", 
-                     EdgeFieldId, EdgeFieldMask,
-                     false,
-                     (FieldAccessMethod) &ProxyLayoutSpringBase::getSFEdge),
-    new FieldDescription(SFComponentPtr::getClassType(), 
-                     "Component", 
-                     ComponentFieldId, ComponentFieldMask,
-                     false,
-                     (FieldAccessMethod) &ProxyLayoutSpringBase::getSFComponent),
-    new FieldDescription(SFSpringLayoutPtr::getClassType(), 
-                     "Layout", 
-                     LayoutFieldId, LayoutFieldMask,
-                     false,
-                     (FieldAccessMethod) &ProxyLayoutSpringBase::getSFLayout)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType ProxyLayoutSpringBase::_type(
-    "ProxyLayoutSpring",
-    "LayoutSpring",
-    NULL,
-    (PrototypeCreateF) &ProxyLayoutSpringBase::createEmpty,
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "Edge",
+        "",
+        EdgeFieldId, EdgeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ProxyLayoutSpring::editHandleEdge),
+        static_cast<FieldGetMethodSig >(&ProxyLayoutSpring::getHandleEdge));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecComponentPtr::Description(
+        SFUnrecComponentPtr::getClassType(),
+        "Component",
+        "",
+        ComponentFieldId, ComponentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ProxyLayoutSpring::editHandleComponent),
+        static_cast<FieldGetMethodSig >(&ProxyLayoutSpring::getHandleComponent));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecSpringLayoutPtr::Description(
+        SFUnrecSpringLayoutPtr::getClassType(),
+        "Layout",
+        "",
+        LayoutFieldId, LayoutFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ProxyLayoutSpring::editHandleLayout),
+        static_cast<FieldGetMethodSig >(&ProxyLayoutSpring::getHandleLayout));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+ProxyLayoutSpringBase::TypeObject ProxyLayoutSpringBase::_type(
+    ProxyLayoutSpringBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ProxyLayoutSpringBase::createEmptyLocal),
     ProxyLayoutSpring::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(ProxyLayoutSpringBase, ProxyLayoutSpringPtr)
+    ProxyLayoutSpring::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ProxyLayoutSpring::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ProxyLayoutSpring\"\n"
+    "\tparent=\"LayoutSpring\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Proxy LayoutSpring.\n"
+    "\t<Field\n"
+    "\t\tname=\"Edge\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "      visibility=\"external\"\n"
+    "\t\tdefaultValue=\"SpringLayoutConstraints::NO_EDGE\"\n"
+    "\t\tdefaultHeader=\"OSGSpringLayoutConstraints.h\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Component\"\n"
+    "\t\ttype=\"Component\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "      visibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Layout\"\n"
+    "\t\ttype=\"SpringLayout\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "      visibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "</FieldContainer>\n",
+    "A UI Proxy LayoutSpring.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ProxyLayoutSpringBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ProxyLayoutSpringBase::getType(void) const 
+FieldContainerType &ProxyLayoutSpringBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr ProxyLayoutSpringBase::shallowCopy(void) const 
-{ 
-    ProxyLayoutSpringPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const ProxyLayoutSpring *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 ProxyLayoutSpringBase::getContainerSize(void) const 
-{ 
-    return sizeof(ProxyLayoutSpring); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ProxyLayoutSpringBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &ProxyLayoutSpringBase::getType(void) const
 {
-    this->executeSyncImpl((ProxyLayoutSpringBase *) &other, whichField);
+    return _type;
 }
-#else
-void ProxyLayoutSpringBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 ProxyLayoutSpringBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((ProxyLayoutSpringBase *) &other, whichField, sInfo);
+    return sizeof(ProxyLayoutSpring);
 }
-void ProxyLayoutSpringBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFUInt32 *ProxyLayoutSpringBase::editSFEdge(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(EdgeFieldMask);
+
+    return &_sfEdge;
 }
 
-void ProxyLayoutSpringBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFUInt32 *ProxyLayoutSpringBase::getSFEdge(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfEdge;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-ProxyLayoutSpringBase::ProxyLayoutSpringBase(void) :
-    _sfEdge                   (UInt32(SpringLayoutConstraints::NO_EDGE)), 
-    _sfComponent              (ComponentPtr(NullFC)), 
-    _sfLayout                 (SpringLayoutPtr(NullFC)), 
-    Inherited() 
+//! Get the ProxyLayoutSpring::_sfComponent field.
+const SFUnrecComponentPtr *ProxyLayoutSpringBase::getSFComponent(void) const
 {
+    return &_sfComponent;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-ProxyLayoutSpringBase::ProxyLayoutSpringBase(const ProxyLayoutSpringBase &source) :
-    _sfEdge                   (source._sfEdge                   ), 
-    _sfComponent              (source._sfComponent              ), 
-    _sfLayout                 (source._sfLayout                 ), 
-    Inherited                 (source)
+SFUnrecComponentPtr *ProxyLayoutSpringBase::editSFComponent      (void)
 {
+    editSField(ComponentFieldMask);
+
+    return &_sfComponent;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-ProxyLayoutSpringBase::~ProxyLayoutSpringBase(void)
+//! Get the ProxyLayoutSpring::_sfLayout field.
+const SFUnrecSpringLayoutPtr *ProxyLayoutSpringBase::getSFLayout(void) const
 {
+    return &_sfLayout;
 }
+
+SFUnrecSpringLayoutPtr *ProxyLayoutSpringBase::editSFLayout         (void)
+{
+    editSField(LayoutFieldMask);
+
+    return &_sfLayout;
+}
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ProxyLayoutSpringBase::getBinSize(const BitVector &whichField)
+UInt32 ProxyLayoutSpringBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -219,23 +298,20 @@ UInt32 ProxyLayoutSpringBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfEdge.getBinSize();
     }
-
     if(FieldBits::NoField != (ComponentFieldMask & whichField))
     {
         returnValue += _sfComponent.getBinSize();
     }
-
     if(FieldBits::NoField != (LayoutFieldMask & whichField))
     {
         returnValue += _sfLayout.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ProxyLayoutSpringBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ProxyLayoutSpringBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -243,22 +319,18 @@ void ProxyLayoutSpringBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfEdge.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ComponentFieldMask & whichField))
     {
         _sfComponent.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (LayoutFieldMask & whichField))
     {
         _sfLayout.copyToBin(pMem);
     }
-
-
 }
 
-void ProxyLayoutSpringBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ProxyLayoutSpringBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -266,104 +338,298 @@ void ProxyLayoutSpringBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfEdge.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ComponentFieldMask & whichField))
     {
         _sfComponent.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (LayoutFieldMask & whichField))
     {
         _sfLayout.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ProxyLayoutSpringBase::executeSyncImpl(      ProxyLayoutSpringBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ProxyLayoutSpringTransitPtr ProxyLayoutSpringBase::createLocal(BitVector bFlags)
 {
+    ProxyLayoutSpringTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (EdgeFieldMask & whichField))
-        _sfEdge.syncWith(pOther->_sfEdge);
+        fc = dynamic_pointer_cast<ProxyLayoutSpring>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (ComponentFieldMask & whichField))
-        _sfComponent.syncWith(pOther->_sfComponent);
-
-    if(FieldBits::NoField != (LayoutFieldMask & whichField))
-        _sfLayout.syncWith(pOther->_sfLayout);
-
-
-}
-#else
-void ProxyLayoutSpringBase::executeSyncImpl(      ProxyLayoutSpringBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (EdgeFieldMask & whichField))
-        _sfEdge.syncWith(pOther->_sfEdge);
-
-    if(FieldBits::NoField != (ComponentFieldMask & whichField))
-        _sfComponent.syncWith(pOther->_sfComponent);
-
-    if(FieldBits::NoField != (LayoutFieldMask & whichField))
-        _sfLayout.syncWith(pOther->_sfLayout);
-
-
-
+    return fc;
 }
 
-void ProxyLayoutSpringBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ProxyLayoutSpringTransitPtr ProxyLayoutSpringBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ProxyLayoutSpringTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<ProxyLayoutSpring>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ProxyLayoutSpringTransitPtr ProxyLayoutSpringBase::create(void)
+{
+    ProxyLayoutSpringTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<ProxyLayoutSpring>(tmpPtr);
+    }
+
+    return fc;
+}
+
+ProxyLayoutSpring *ProxyLayoutSpringBase::createEmptyLocal(BitVector bFlags)
+{
+    ProxyLayoutSpring *returnValue;
+
+    newPtr<ProxyLayoutSpring>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+ProxyLayoutSpring *ProxyLayoutSpringBase::createEmpty(void)
+{
+    ProxyLayoutSpring *returnValue;
+
+    newPtr<ProxyLayoutSpring>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ProxyLayoutSpringBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    ProxyLayoutSpring *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ProxyLayoutSpring *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ProxyLayoutSpringBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    ProxyLayoutSpring *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ProxyLayoutSpring *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ProxyLayoutSpringBase::shallowCopy(void) const
+{
+    ProxyLayoutSpring *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const ProxyLayoutSpring *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ProxyLayoutSpringBase::ProxyLayoutSpringBase(void) :
+    Inherited(),
+    _sfEdge                   (UInt32(SpringLayoutConstraints::NO_EDGE)),
+    _sfComponent              (NULL),
+    _sfLayout                 (NULL)
+{
+}
+
+ProxyLayoutSpringBase::ProxyLayoutSpringBase(const ProxyLayoutSpringBase &source) :
+    Inherited(source),
+    _sfEdge                   (source._sfEdge                   ),
+    _sfComponent              (NULL),
+    _sfLayout                 (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ProxyLayoutSpringBase::~ProxyLayoutSpringBase(void)
+{
+}
+
+void ProxyLayoutSpringBase::onCreate(const ProxyLayoutSpring *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        ProxyLayoutSpring *pThis = static_cast<ProxyLayoutSpring *>(this);
+
+        pThis->setComponent(source->getComponent());
+
+        pThis->setLayout(source->getLayout());
+    }
+}
+
+GetFieldHandlePtr ProxyLayoutSpringBase::getHandleEdge            (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfEdge,
+             this->getType().getFieldDesc(EdgeFieldId),
+             const_cast<ProxyLayoutSpringBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ProxyLayoutSpringBase::editHandleEdge           (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfEdge,
+             this->getType().getFieldDesc(EdgeFieldId),
+             this));
+
+
+    editSField(EdgeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ProxyLayoutSpringBase::getHandleComponent       (void) const
+{
+    SFUnrecComponentPtr::GetHandlePtr returnValue(
+        new  SFUnrecComponentPtr::GetHandle(
+             &_sfComponent,
+             this->getType().getFieldDesc(ComponentFieldId),
+             const_cast<ProxyLayoutSpringBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ProxyLayoutSpringBase::editHandleComponent      (void)
+{
+    SFUnrecComponentPtr::EditHandlePtr returnValue(
+        new  SFUnrecComponentPtr::EditHandle(
+             &_sfComponent,
+             this->getType().getFieldDesc(ComponentFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ProxyLayoutSpring::setComponent,
+                    static_cast<ProxyLayoutSpring *>(this), _1));
+
+    editSField(ComponentFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ProxyLayoutSpringBase::getHandleLayout          (void) const
+{
+    SFUnrecSpringLayoutPtr::GetHandlePtr returnValue(
+        new  SFUnrecSpringLayoutPtr::GetHandle(
+             &_sfLayout,
+             this->getType().getFieldDesc(LayoutFieldId),
+             const_cast<ProxyLayoutSpringBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ProxyLayoutSpringBase::editHandleLayout         (void)
+{
+    SFUnrecSpringLayoutPtr::EditHandlePtr returnValue(
+        new  SFUnrecSpringLayoutPtr::EditHandle(
+             &_sfLayout,
+             this->getType().getFieldDesc(LayoutFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ProxyLayoutSpring::setLayout,
+                    static_cast<ProxyLayoutSpring *>(this), _1));
+
+    editSField(LayoutFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ProxyLayoutSpringBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ProxyLayoutSpring *pThis = static_cast<ProxyLayoutSpring *>(this);
+
+    pThis->execSync(static_cast<ProxyLayoutSpring *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ProxyLayoutSpringBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    ProxyLayoutSpring *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const ProxyLayoutSpring *>(pRefAspect),
+                  dynamic_cast<const ProxyLayoutSpring *>(this));
+
+    return returnValue;
+}
+#endif
+
+void ProxyLayoutSpringBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<ProxyLayoutSpring *>(this)->setComponent(NULL);
+
+    static_cast<ProxyLayoutSpring *>(this)->setLayout(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ProxyLayoutSpringPtr>::_type("ProxyLayoutSpringPtr", "LayoutSpringPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(ProxyLayoutSpringPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ProxyLayoutSpringPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGPROXYLAYOUTSPRINGBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPROXYLAYOUTSPRINGBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGPROXYLAYOUTSPRINGFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

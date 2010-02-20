@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,259 +50,518 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILESPRINGLAYOUTCONSTRAINTSINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGLayoutSpring.h"            // NorthSpring Class
+#include "OSGComponent.h"               // Component Class
 
 #include "OSGSpringLayoutConstraintsBase.h"
 #include "OSGSpringLayoutConstraints.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  SpringLayoutConstraintsBase::NorthSpringFieldMask = 
-    (TypeTraits<BitVector>::One << SpringLayoutConstraintsBase::NorthSpringFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  SpringLayoutConstraintsBase::WestSpringFieldMask = 
-    (TypeTraits<BitVector>::One << SpringLayoutConstraintsBase::WestSpringFieldId);
+/*! \class OSG::SpringLayoutConstraints
+    A UI SpringLayoutConstraints.
+ */
 
-const OSG::BitVector  SpringLayoutConstraintsBase::EastSpringFieldMask = 
-    (TypeTraits<BitVector>::One << SpringLayoutConstraintsBase::EastSpringFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  SpringLayoutConstraintsBase::SouthSpringFieldMask = 
-    (TypeTraits<BitVector>::One << SpringLayoutConstraintsBase::SouthSpringFieldId);
-
-const OSG::BitVector  SpringLayoutConstraintsBase::WidthSpringFieldMask = 
-    (TypeTraits<BitVector>::One << SpringLayoutConstraintsBase::WidthSpringFieldId);
-
-const OSG::BitVector  SpringLayoutConstraintsBase::HeightSpringFieldMask = 
-    (TypeTraits<BitVector>::One << SpringLayoutConstraintsBase::HeightSpringFieldId);
-
-const OSG::BitVector  SpringLayoutConstraintsBase::HorizontalCenterSpringFieldMask = 
-    (TypeTraits<BitVector>::One << SpringLayoutConstraintsBase::HorizontalCenterSpringFieldId);
-
-const OSG::BitVector  SpringLayoutConstraintsBase::VerticalCenterSpringFieldMask = 
-    (TypeTraits<BitVector>::One << SpringLayoutConstraintsBase::VerticalCenterSpringFieldId);
-
-const OSG::BitVector  SpringLayoutConstraintsBase::BaselineSpringFieldMask = 
-    (TypeTraits<BitVector>::One << SpringLayoutConstraintsBase::BaselineSpringFieldId);
-
-const OSG::BitVector  SpringLayoutConstraintsBase::ComponentFieldMask = 
-    (TypeTraits<BitVector>::One << SpringLayoutConstraintsBase::ComponentFieldId);
-
-const OSG::BitVector SpringLayoutConstraintsBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var LayoutSpringPtr SpringLayoutConstraintsBase::_sfNorthSpring
-    
-*/
-/*! \var LayoutSpringPtr SpringLayoutConstraintsBase::_sfWestSpring
-    
-*/
-/*! \var LayoutSpringPtr SpringLayoutConstraintsBase::_sfEastSpring
-    
-*/
-/*! \var LayoutSpringPtr SpringLayoutConstraintsBase::_sfSouthSpring
-    
-*/
-/*! \var LayoutSpringPtr SpringLayoutConstraintsBase::_sfWidthSpring
-    
-*/
-/*! \var LayoutSpringPtr SpringLayoutConstraintsBase::_sfHeightSpring
-    
-*/
-/*! \var LayoutSpringPtr SpringLayoutConstraintsBase::_sfHorizontalCenterSpring
-    
-*/
-/*! \var LayoutSpringPtr SpringLayoutConstraintsBase::_sfVerticalCenterSpring
-    
-*/
-/*! \var LayoutSpringPtr SpringLayoutConstraintsBase::_sfBaselineSpring
-    
-*/
-/*! \var ComponentPtr    SpringLayoutConstraintsBase::_sfComponent
+/*! \var LayoutSpring *  SpringLayoutConstraintsBase::_sfNorthSpring
     
 */
 
-//! SpringLayoutConstraints description
+/*! \var LayoutSpring *  SpringLayoutConstraintsBase::_sfWestSpring
+    
+*/
 
-FieldDescription *SpringLayoutConstraintsBase::_desc[] = 
+/*! \var LayoutSpring *  SpringLayoutConstraintsBase::_sfEastSpring
+    
+*/
+
+/*! \var LayoutSpring *  SpringLayoutConstraintsBase::_sfSouthSpring
+    
+*/
+
+/*! \var LayoutSpring *  SpringLayoutConstraintsBase::_sfWidthSpring
+    
+*/
+
+/*! \var LayoutSpring *  SpringLayoutConstraintsBase::_sfHeightSpring
+    
+*/
+
+/*! \var LayoutSpring *  SpringLayoutConstraintsBase::_sfHorizontalCenterSpring
+    
+*/
+
+/*! \var LayoutSpring *  SpringLayoutConstraintsBase::_sfVerticalCenterSpring
+    
+*/
+
+/*! \var LayoutSpring *  SpringLayoutConstraintsBase::_sfBaselineSpring
+    
+*/
+
+/*! \var Component *     SpringLayoutConstraintsBase::_sfComponent
+    
+*/
+
+
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<SpringLayoutConstraints *>::_type("SpringLayoutConstraintsPtr", "LayoutConstraintsPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(SpringLayoutConstraints *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           SpringLayoutConstraints *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           SpringLayoutConstraints *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void SpringLayoutConstraintsBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFLayoutSpringPtr::getClassType(), 
-                     "NorthSpring", 
-                     NorthSpringFieldId, NorthSpringFieldMask,
-                     false,
-                     (FieldAccessMethod) &SpringLayoutConstraintsBase::getSFNorthSpring),
-    new FieldDescription(SFLayoutSpringPtr::getClassType(), 
-                     "WestSpring", 
-                     WestSpringFieldId, WestSpringFieldMask,
-                     false,
-                     (FieldAccessMethod) &SpringLayoutConstraintsBase::getSFWestSpring),
-    new FieldDescription(SFLayoutSpringPtr::getClassType(), 
-                     "EastSpring", 
-                     EastSpringFieldId, EastSpringFieldMask,
-                     false,
-                     (FieldAccessMethod) &SpringLayoutConstraintsBase::getSFEastSpring),
-    new FieldDescription(SFLayoutSpringPtr::getClassType(), 
-                     "SouthSpring", 
-                     SouthSpringFieldId, SouthSpringFieldMask,
-                     false,
-                     (FieldAccessMethod) &SpringLayoutConstraintsBase::getSFSouthSpring),
-    new FieldDescription(SFLayoutSpringPtr::getClassType(), 
-                     "WidthSpring", 
-                     WidthSpringFieldId, WidthSpringFieldMask,
-                     false,
-                     (FieldAccessMethod) &SpringLayoutConstraintsBase::getSFWidthSpring),
-    new FieldDescription(SFLayoutSpringPtr::getClassType(), 
-                     "HeightSpring", 
-                     HeightSpringFieldId, HeightSpringFieldMask,
-                     false,
-                     (FieldAccessMethod) &SpringLayoutConstraintsBase::getSFHeightSpring),
-    new FieldDescription(SFLayoutSpringPtr::getClassType(), 
-                     "HorizontalCenterSpring", 
-                     HorizontalCenterSpringFieldId, HorizontalCenterSpringFieldMask,
-                     false,
-                     (FieldAccessMethod) &SpringLayoutConstraintsBase::getSFHorizontalCenterSpring),
-    new FieldDescription(SFLayoutSpringPtr::getClassType(), 
-                     "VerticalCenterSpring", 
-                     VerticalCenterSpringFieldId, VerticalCenterSpringFieldMask,
-                     false,
-                     (FieldAccessMethod) &SpringLayoutConstraintsBase::getSFVerticalCenterSpring),
-    new FieldDescription(SFLayoutSpringPtr::getClassType(), 
-                     "BaselineSpring", 
-                     BaselineSpringFieldId, BaselineSpringFieldMask,
-                     false,
-                     (FieldAccessMethod) &SpringLayoutConstraintsBase::getSFBaselineSpring),
-    new FieldDescription(SFComponentPtr::getClassType(), 
-                     "Component", 
-                     ComponentFieldId, ComponentFieldMask,
-                     false,
-                     (FieldAccessMethod) &SpringLayoutConstraintsBase::getSFComponent)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType SpringLayoutConstraintsBase::_type(
-    "SpringLayoutConstraints",
-    "LayoutConstraints",
-    NULL,
-    (PrototypeCreateF) &SpringLayoutConstraintsBase::createEmpty,
+    pDesc = new SFUnrecLayoutSpringPtr::Description(
+        SFUnrecLayoutSpringPtr::getClassType(),
+        "NorthSpring",
+        "",
+        NorthSpringFieldId, NorthSpringFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SpringLayoutConstraints::editHandleNorthSpring),
+        static_cast<FieldGetMethodSig >(&SpringLayoutConstraints::getHandleNorthSpring));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayoutSpringPtr::Description(
+        SFUnrecLayoutSpringPtr::getClassType(),
+        "WestSpring",
+        "",
+        WestSpringFieldId, WestSpringFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SpringLayoutConstraints::editHandleWestSpring),
+        static_cast<FieldGetMethodSig >(&SpringLayoutConstraints::getHandleWestSpring));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayoutSpringPtr::Description(
+        SFUnrecLayoutSpringPtr::getClassType(),
+        "EastSpring",
+        "",
+        EastSpringFieldId, EastSpringFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SpringLayoutConstraints::editHandleEastSpring),
+        static_cast<FieldGetMethodSig >(&SpringLayoutConstraints::getHandleEastSpring));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayoutSpringPtr::Description(
+        SFUnrecLayoutSpringPtr::getClassType(),
+        "SouthSpring",
+        "",
+        SouthSpringFieldId, SouthSpringFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SpringLayoutConstraints::editHandleSouthSpring),
+        static_cast<FieldGetMethodSig >(&SpringLayoutConstraints::getHandleSouthSpring));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayoutSpringPtr::Description(
+        SFUnrecLayoutSpringPtr::getClassType(),
+        "WidthSpring",
+        "",
+        WidthSpringFieldId, WidthSpringFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SpringLayoutConstraints::editHandleWidthSpring),
+        static_cast<FieldGetMethodSig >(&SpringLayoutConstraints::getHandleWidthSpring));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayoutSpringPtr::Description(
+        SFUnrecLayoutSpringPtr::getClassType(),
+        "HeightSpring",
+        "",
+        HeightSpringFieldId, HeightSpringFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SpringLayoutConstraints::editHandleHeightSpring),
+        static_cast<FieldGetMethodSig >(&SpringLayoutConstraints::getHandleHeightSpring));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayoutSpringPtr::Description(
+        SFUnrecLayoutSpringPtr::getClassType(),
+        "HorizontalCenterSpring",
+        "",
+        HorizontalCenterSpringFieldId, HorizontalCenterSpringFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SpringLayoutConstraints::editHandleHorizontalCenterSpring),
+        static_cast<FieldGetMethodSig >(&SpringLayoutConstraints::getHandleHorizontalCenterSpring));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayoutSpringPtr::Description(
+        SFUnrecLayoutSpringPtr::getClassType(),
+        "VerticalCenterSpring",
+        "",
+        VerticalCenterSpringFieldId, VerticalCenterSpringFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SpringLayoutConstraints::editHandleVerticalCenterSpring),
+        static_cast<FieldGetMethodSig >(&SpringLayoutConstraints::getHandleVerticalCenterSpring));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayoutSpringPtr::Description(
+        SFUnrecLayoutSpringPtr::getClassType(),
+        "BaselineSpring",
+        "",
+        BaselineSpringFieldId, BaselineSpringFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SpringLayoutConstraints::editHandleBaselineSpring),
+        static_cast<FieldGetMethodSig >(&SpringLayoutConstraints::getHandleBaselineSpring));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecComponentPtr::Description(
+        SFUnrecComponentPtr::getClassType(),
+        "Component",
+        "",
+        ComponentFieldId, ComponentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SpringLayoutConstraints::editHandleComponent),
+        static_cast<FieldGetMethodSig >(&SpringLayoutConstraints::getHandleComponent));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+SpringLayoutConstraintsBase::TypeObject SpringLayoutConstraintsBase::_type(
+    SpringLayoutConstraintsBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&SpringLayoutConstraintsBase::createEmptyLocal),
     SpringLayoutConstraints::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(SpringLayoutConstraintsBase, SpringLayoutConstraintsPtr)
+    SpringLayoutConstraints::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&SpringLayoutConstraints::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"SpringLayoutConstraints\"\n"
+    "\tparent=\"LayoutConstraints\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI SpringLayoutConstraints.\n"
+    "\t<Field\n"
+    "\t\tname=\"NorthSpring\"\n"
+    "\t\ttype=\"LayoutSpring\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "      visibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"WestSpring\"\n"
+    "\t\ttype=\"LayoutSpring\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "      visibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"EastSpring\"\n"
+    "\t\ttype=\"LayoutSpring\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "      visibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SouthSpring\"\n"
+    "\t\ttype=\"LayoutSpring\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "      visibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"WidthSpring\"\n"
+    "\t\ttype=\"LayoutSpring\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "      visibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"HeightSpring\"\n"
+    "\t\ttype=\"LayoutSpring\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "      visibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"HorizontalCenterSpring\"\n"
+    "\t\ttype=\"LayoutSpring\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "      visibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"VerticalCenterSpring\"\n"
+    "\t\ttype=\"LayoutSpring\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "      visibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"BaselineSpring\"\n"
+    "\t\ttype=\"LayoutSpring\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "      visibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Component\"\n"
+    "\t\ttype=\"Component\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "      visibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "</FieldContainer>\n",
+    "A UI SpringLayoutConstraints.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &SpringLayoutConstraintsBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &SpringLayoutConstraintsBase::getType(void) const 
+FieldContainerType &SpringLayoutConstraintsBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr SpringLayoutConstraintsBase::shallowCopy(void) const 
-{ 
-    SpringLayoutConstraintsPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const SpringLayoutConstraints *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 SpringLayoutConstraintsBase::getContainerSize(void) const 
-{ 
-    return sizeof(SpringLayoutConstraints); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void SpringLayoutConstraintsBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &SpringLayoutConstraintsBase::getType(void) const
 {
-    this->executeSyncImpl((SpringLayoutConstraintsBase *) &other, whichField);
+    return _type;
 }
-#else
-void SpringLayoutConstraintsBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 SpringLayoutConstraintsBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((SpringLayoutConstraintsBase *) &other, whichField, sInfo);
+    return sizeof(SpringLayoutConstraints);
 }
-void SpringLayoutConstraintsBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the SpringLayoutConstraints::_sfNorthSpring field.
+const SFUnrecLayoutSpringPtr *SpringLayoutConstraintsBase::getSFNorthSpring(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfNorthSpring;
 }
 
-void SpringLayoutConstraintsBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecLayoutSpringPtr *SpringLayoutConstraintsBase::editSFNorthSpring    (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(NorthSpringFieldMask);
 
+    return &_sfNorthSpring;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-SpringLayoutConstraintsBase::SpringLayoutConstraintsBase(void) :
-    _sfNorthSpring            (LayoutSpringPtr(NullFC)), 
-    _sfWestSpring             (LayoutSpringPtr(NullFC)), 
-    _sfEastSpring             (LayoutSpringPtr(NullFC)), 
-    _sfSouthSpring            (LayoutSpringPtr(NullFC)), 
-    _sfWidthSpring            (LayoutSpringPtr(NullFC)), 
-    _sfHeightSpring           (LayoutSpringPtr(NullFC)), 
-    _sfHorizontalCenterSpring (LayoutSpringPtr(NullFC)), 
-    _sfVerticalCenterSpring   (LayoutSpringPtr(NullFC)), 
-    _sfBaselineSpring         (LayoutSpringPtr(NullFC)), 
-    _sfComponent              (ComponentPtr(NullFC)), 
-    Inherited() 
+//! Get the SpringLayoutConstraints::_sfWestSpring field.
+const SFUnrecLayoutSpringPtr *SpringLayoutConstraintsBase::getSFWestSpring(void) const
 {
+    return &_sfWestSpring;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-SpringLayoutConstraintsBase::SpringLayoutConstraintsBase(const SpringLayoutConstraintsBase &source) :
-    _sfNorthSpring            (source._sfNorthSpring            ), 
-    _sfWestSpring             (source._sfWestSpring             ), 
-    _sfEastSpring             (source._sfEastSpring             ), 
-    _sfSouthSpring            (source._sfSouthSpring            ), 
-    _sfWidthSpring            (source._sfWidthSpring            ), 
-    _sfHeightSpring           (source._sfHeightSpring           ), 
-    _sfHorizontalCenterSpring (source._sfHorizontalCenterSpring ), 
-    _sfVerticalCenterSpring   (source._sfVerticalCenterSpring   ), 
-    _sfBaselineSpring         (source._sfBaselineSpring         ), 
-    _sfComponent              (source._sfComponent              ), 
-    Inherited                 (source)
+SFUnrecLayoutSpringPtr *SpringLayoutConstraintsBase::editSFWestSpring     (void)
 {
+    editSField(WestSpringFieldMask);
+
+    return &_sfWestSpring;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-SpringLayoutConstraintsBase::~SpringLayoutConstraintsBase(void)
+//! Get the SpringLayoutConstraints::_sfEastSpring field.
+const SFUnrecLayoutSpringPtr *SpringLayoutConstraintsBase::getSFEastSpring(void) const
 {
+    return &_sfEastSpring;
 }
+
+SFUnrecLayoutSpringPtr *SpringLayoutConstraintsBase::editSFEastSpring     (void)
+{
+    editSField(EastSpringFieldMask);
+
+    return &_sfEastSpring;
+}
+
+//! Get the SpringLayoutConstraints::_sfSouthSpring field.
+const SFUnrecLayoutSpringPtr *SpringLayoutConstraintsBase::getSFSouthSpring(void) const
+{
+    return &_sfSouthSpring;
+}
+
+SFUnrecLayoutSpringPtr *SpringLayoutConstraintsBase::editSFSouthSpring    (void)
+{
+    editSField(SouthSpringFieldMask);
+
+    return &_sfSouthSpring;
+}
+
+//! Get the SpringLayoutConstraints::_sfWidthSpring field.
+const SFUnrecLayoutSpringPtr *SpringLayoutConstraintsBase::getSFWidthSpring(void) const
+{
+    return &_sfWidthSpring;
+}
+
+SFUnrecLayoutSpringPtr *SpringLayoutConstraintsBase::editSFWidthSpring    (void)
+{
+    editSField(WidthSpringFieldMask);
+
+    return &_sfWidthSpring;
+}
+
+//! Get the SpringLayoutConstraints::_sfHeightSpring field.
+const SFUnrecLayoutSpringPtr *SpringLayoutConstraintsBase::getSFHeightSpring(void) const
+{
+    return &_sfHeightSpring;
+}
+
+SFUnrecLayoutSpringPtr *SpringLayoutConstraintsBase::editSFHeightSpring   (void)
+{
+    editSField(HeightSpringFieldMask);
+
+    return &_sfHeightSpring;
+}
+
+//! Get the SpringLayoutConstraints::_sfHorizontalCenterSpring field.
+const SFUnrecLayoutSpringPtr *SpringLayoutConstraintsBase::getSFHorizontalCenterSpring(void) const
+{
+    return &_sfHorizontalCenterSpring;
+}
+
+SFUnrecLayoutSpringPtr *SpringLayoutConstraintsBase::editSFHorizontalCenterSpring(void)
+{
+    editSField(HorizontalCenterSpringFieldMask);
+
+    return &_sfHorizontalCenterSpring;
+}
+
+//! Get the SpringLayoutConstraints::_sfVerticalCenterSpring field.
+const SFUnrecLayoutSpringPtr *SpringLayoutConstraintsBase::getSFVerticalCenterSpring(void) const
+{
+    return &_sfVerticalCenterSpring;
+}
+
+SFUnrecLayoutSpringPtr *SpringLayoutConstraintsBase::editSFVerticalCenterSpring(void)
+{
+    editSField(VerticalCenterSpringFieldMask);
+
+    return &_sfVerticalCenterSpring;
+}
+
+//! Get the SpringLayoutConstraints::_sfBaselineSpring field.
+const SFUnrecLayoutSpringPtr *SpringLayoutConstraintsBase::getSFBaselineSpring(void) const
+{
+    return &_sfBaselineSpring;
+}
+
+SFUnrecLayoutSpringPtr *SpringLayoutConstraintsBase::editSFBaselineSpring (void)
+{
+    editSField(BaselineSpringFieldMask);
+
+    return &_sfBaselineSpring;
+}
+
+//! Get the SpringLayoutConstraints::_sfComponent field.
+const SFUnrecComponentPtr *SpringLayoutConstraintsBase::getSFComponent(void) const
+{
+    return &_sfComponent;
+}
+
+SFUnrecComponentPtr *SpringLayoutConstraintsBase::editSFComponent      (void)
+{
+    editSField(ComponentFieldMask);
+
+    return &_sfComponent;
+}
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 SpringLayoutConstraintsBase::getBinSize(const BitVector &whichField)
+UInt32 SpringLayoutConstraintsBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -310,58 +569,48 @@ UInt32 SpringLayoutConstraintsBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfNorthSpring.getBinSize();
     }
-
     if(FieldBits::NoField != (WestSpringFieldMask & whichField))
     {
         returnValue += _sfWestSpring.getBinSize();
     }
-
     if(FieldBits::NoField != (EastSpringFieldMask & whichField))
     {
         returnValue += _sfEastSpring.getBinSize();
     }
-
     if(FieldBits::NoField != (SouthSpringFieldMask & whichField))
     {
         returnValue += _sfSouthSpring.getBinSize();
     }
-
     if(FieldBits::NoField != (WidthSpringFieldMask & whichField))
     {
         returnValue += _sfWidthSpring.getBinSize();
     }
-
     if(FieldBits::NoField != (HeightSpringFieldMask & whichField))
     {
         returnValue += _sfHeightSpring.getBinSize();
     }
-
     if(FieldBits::NoField != (HorizontalCenterSpringFieldMask & whichField))
     {
         returnValue += _sfHorizontalCenterSpring.getBinSize();
     }
-
     if(FieldBits::NoField != (VerticalCenterSpringFieldMask & whichField))
     {
         returnValue += _sfVerticalCenterSpring.getBinSize();
     }
-
     if(FieldBits::NoField != (BaselineSpringFieldMask & whichField))
     {
         returnValue += _sfBaselineSpring.getBinSize();
     }
-
     if(FieldBits::NoField != (ComponentFieldMask & whichField))
     {
         returnValue += _sfComponent.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void SpringLayoutConstraintsBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void SpringLayoutConstraintsBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -369,57 +618,46 @@ void SpringLayoutConstraintsBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfNorthSpring.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (WestSpringFieldMask & whichField))
     {
         _sfWestSpring.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EastSpringFieldMask & whichField))
     {
         _sfEastSpring.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SouthSpringFieldMask & whichField))
     {
         _sfSouthSpring.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (WidthSpringFieldMask & whichField))
     {
         _sfWidthSpring.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (HeightSpringFieldMask & whichField))
     {
         _sfHeightSpring.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (HorizontalCenterSpringFieldMask & whichField))
     {
         _sfHorizontalCenterSpring.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (VerticalCenterSpringFieldMask & whichField))
     {
         _sfVerticalCenterSpring.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (BaselineSpringFieldMask & whichField))
     {
         _sfBaselineSpring.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ComponentFieldMask & whichField))
     {
         _sfComponent.copyToBin(pMem);
     }
-
-
 }
 
-void SpringLayoutConstraintsBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void SpringLayoutConstraintsBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -427,181 +665,571 @@ void SpringLayoutConstraintsBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfNorthSpring.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (WestSpringFieldMask & whichField))
     {
         _sfWestSpring.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EastSpringFieldMask & whichField))
     {
         _sfEastSpring.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SouthSpringFieldMask & whichField))
     {
         _sfSouthSpring.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (WidthSpringFieldMask & whichField))
     {
         _sfWidthSpring.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (HeightSpringFieldMask & whichField))
     {
         _sfHeightSpring.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (HorizontalCenterSpringFieldMask & whichField))
     {
         _sfHorizontalCenterSpring.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (VerticalCenterSpringFieldMask & whichField))
     {
         _sfVerticalCenterSpring.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (BaselineSpringFieldMask & whichField))
     {
         _sfBaselineSpring.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ComponentFieldMask & whichField))
     {
         _sfComponent.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void SpringLayoutConstraintsBase::executeSyncImpl(      SpringLayoutConstraintsBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+SpringLayoutConstraintsTransitPtr SpringLayoutConstraintsBase::createLocal(BitVector bFlags)
 {
+    SpringLayoutConstraintsTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (NorthSpringFieldMask & whichField))
-        _sfNorthSpring.syncWith(pOther->_sfNorthSpring);
+        fc = dynamic_pointer_cast<SpringLayoutConstraints>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (WestSpringFieldMask & whichField))
-        _sfWestSpring.syncWith(pOther->_sfWestSpring);
-
-    if(FieldBits::NoField != (EastSpringFieldMask & whichField))
-        _sfEastSpring.syncWith(pOther->_sfEastSpring);
-
-    if(FieldBits::NoField != (SouthSpringFieldMask & whichField))
-        _sfSouthSpring.syncWith(pOther->_sfSouthSpring);
-
-    if(FieldBits::NoField != (WidthSpringFieldMask & whichField))
-        _sfWidthSpring.syncWith(pOther->_sfWidthSpring);
-
-    if(FieldBits::NoField != (HeightSpringFieldMask & whichField))
-        _sfHeightSpring.syncWith(pOther->_sfHeightSpring);
-
-    if(FieldBits::NoField != (HorizontalCenterSpringFieldMask & whichField))
-        _sfHorizontalCenterSpring.syncWith(pOther->_sfHorizontalCenterSpring);
-
-    if(FieldBits::NoField != (VerticalCenterSpringFieldMask & whichField))
-        _sfVerticalCenterSpring.syncWith(pOther->_sfVerticalCenterSpring);
-
-    if(FieldBits::NoField != (BaselineSpringFieldMask & whichField))
-        _sfBaselineSpring.syncWith(pOther->_sfBaselineSpring);
-
-    if(FieldBits::NoField != (ComponentFieldMask & whichField))
-        _sfComponent.syncWith(pOther->_sfComponent);
-
-
-}
-#else
-void SpringLayoutConstraintsBase::executeSyncImpl(      SpringLayoutConstraintsBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (NorthSpringFieldMask & whichField))
-        _sfNorthSpring.syncWith(pOther->_sfNorthSpring);
-
-    if(FieldBits::NoField != (WestSpringFieldMask & whichField))
-        _sfWestSpring.syncWith(pOther->_sfWestSpring);
-
-    if(FieldBits::NoField != (EastSpringFieldMask & whichField))
-        _sfEastSpring.syncWith(pOther->_sfEastSpring);
-
-    if(FieldBits::NoField != (SouthSpringFieldMask & whichField))
-        _sfSouthSpring.syncWith(pOther->_sfSouthSpring);
-
-    if(FieldBits::NoField != (WidthSpringFieldMask & whichField))
-        _sfWidthSpring.syncWith(pOther->_sfWidthSpring);
-
-    if(FieldBits::NoField != (HeightSpringFieldMask & whichField))
-        _sfHeightSpring.syncWith(pOther->_sfHeightSpring);
-
-    if(FieldBits::NoField != (HorizontalCenterSpringFieldMask & whichField))
-        _sfHorizontalCenterSpring.syncWith(pOther->_sfHorizontalCenterSpring);
-
-    if(FieldBits::NoField != (VerticalCenterSpringFieldMask & whichField))
-        _sfVerticalCenterSpring.syncWith(pOther->_sfVerticalCenterSpring);
-
-    if(FieldBits::NoField != (BaselineSpringFieldMask & whichField))
-        _sfBaselineSpring.syncWith(pOther->_sfBaselineSpring);
-
-    if(FieldBits::NoField != (ComponentFieldMask & whichField))
-        _sfComponent.syncWith(pOther->_sfComponent);
-
-
-
+    return fc;
 }
 
-void SpringLayoutConstraintsBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+SpringLayoutConstraintsTransitPtr SpringLayoutConstraintsBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    SpringLayoutConstraintsTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<SpringLayoutConstraints>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+SpringLayoutConstraintsTransitPtr SpringLayoutConstraintsBase::create(void)
+{
+    SpringLayoutConstraintsTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<SpringLayoutConstraints>(tmpPtr);
+    }
+
+    return fc;
+}
+
+SpringLayoutConstraints *SpringLayoutConstraintsBase::createEmptyLocal(BitVector bFlags)
+{
+    SpringLayoutConstraints *returnValue;
+
+    newPtr<SpringLayoutConstraints>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+SpringLayoutConstraints *SpringLayoutConstraintsBase::createEmpty(void)
+{
+    SpringLayoutConstraints *returnValue;
+
+    newPtr<SpringLayoutConstraints>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr SpringLayoutConstraintsBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    SpringLayoutConstraints *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const SpringLayoutConstraints *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr SpringLayoutConstraintsBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    SpringLayoutConstraints *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const SpringLayoutConstraints *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr SpringLayoutConstraintsBase::shallowCopy(void) const
+{
+    SpringLayoutConstraints *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const SpringLayoutConstraints *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+SpringLayoutConstraintsBase::SpringLayoutConstraintsBase(void) :
+    Inherited(),
+    _sfNorthSpring            (NULL),
+    _sfWestSpring             (NULL),
+    _sfEastSpring             (NULL),
+    _sfSouthSpring            (NULL),
+    _sfWidthSpring            (NULL),
+    _sfHeightSpring           (NULL),
+    _sfHorizontalCenterSpring (NULL),
+    _sfVerticalCenterSpring   (NULL),
+    _sfBaselineSpring         (NULL),
+    _sfComponent              (NULL)
+{
+}
+
+SpringLayoutConstraintsBase::SpringLayoutConstraintsBase(const SpringLayoutConstraintsBase &source) :
+    Inherited(source),
+    _sfNorthSpring            (NULL),
+    _sfWestSpring             (NULL),
+    _sfEastSpring             (NULL),
+    _sfSouthSpring            (NULL),
+    _sfWidthSpring            (NULL),
+    _sfHeightSpring           (NULL),
+    _sfHorizontalCenterSpring (NULL),
+    _sfVerticalCenterSpring   (NULL),
+    _sfBaselineSpring         (NULL),
+    _sfComponent              (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+SpringLayoutConstraintsBase::~SpringLayoutConstraintsBase(void)
+{
+}
+
+void SpringLayoutConstraintsBase::onCreate(const SpringLayoutConstraints *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        SpringLayoutConstraints *pThis = static_cast<SpringLayoutConstraints *>(this);
+
+        pThis->setNorthSpring(source->getNorthSpring());
+
+        pThis->setWestSpring(source->getWestSpring());
+
+        pThis->setEastSpring(source->getEastSpring());
+
+        pThis->setSouthSpring(source->getSouthSpring());
+
+        pThis->setWidthSpring(source->getWidthSpring());
+
+        pThis->setHeightSpring(source->getHeightSpring());
+
+        pThis->setHorizontalCenterSpring(source->getHorizontalCenterSpring());
+
+        pThis->setVerticalCenterSpring(source->getVerticalCenterSpring());
+
+        pThis->setBaselineSpring(source->getBaselineSpring());
+
+        pThis->setComponent(source->getComponent());
+    }
+}
+
+GetFieldHandlePtr SpringLayoutConstraintsBase::getHandleNorthSpring     (void) const
+{
+    SFUnrecLayoutSpringPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayoutSpringPtr::GetHandle(
+             &_sfNorthSpring,
+             this->getType().getFieldDesc(NorthSpringFieldId),
+             const_cast<SpringLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SpringLayoutConstraintsBase::editHandleNorthSpring    (void)
+{
+    SFUnrecLayoutSpringPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayoutSpringPtr::EditHandle(
+             &_sfNorthSpring,
+             this->getType().getFieldDesc(NorthSpringFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&SpringLayoutConstraints::setNorthSpring,
+                    static_cast<SpringLayoutConstraints *>(this), _1));
+
+    editSField(NorthSpringFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SpringLayoutConstraintsBase::getHandleWestSpring      (void) const
+{
+    SFUnrecLayoutSpringPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayoutSpringPtr::GetHandle(
+             &_sfWestSpring,
+             this->getType().getFieldDesc(WestSpringFieldId),
+             const_cast<SpringLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SpringLayoutConstraintsBase::editHandleWestSpring     (void)
+{
+    SFUnrecLayoutSpringPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayoutSpringPtr::EditHandle(
+             &_sfWestSpring,
+             this->getType().getFieldDesc(WestSpringFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&SpringLayoutConstraints::setWestSpring,
+                    static_cast<SpringLayoutConstraints *>(this), _1));
+
+    editSField(WestSpringFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SpringLayoutConstraintsBase::getHandleEastSpring      (void) const
+{
+    SFUnrecLayoutSpringPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayoutSpringPtr::GetHandle(
+             &_sfEastSpring,
+             this->getType().getFieldDesc(EastSpringFieldId),
+             const_cast<SpringLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SpringLayoutConstraintsBase::editHandleEastSpring     (void)
+{
+    SFUnrecLayoutSpringPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayoutSpringPtr::EditHandle(
+             &_sfEastSpring,
+             this->getType().getFieldDesc(EastSpringFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&SpringLayoutConstraints::setEastSpring,
+                    static_cast<SpringLayoutConstraints *>(this), _1));
+
+    editSField(EastSpringFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SpringLayoutConstraintsBase::getHandleSouthSpring     (void) const
+{
+    SFUnrecLayoutSpringPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayoutSpringPtr::GetHandle(
+             &_sfSouthSpring,
+             this->getType().getFieldDesc(SouthSpringFieldId),
+             const_cast<SpringLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SpringLayoutConstraintsBase::editHandleSouthSpring    (void)
+{
+    SFUnrecLayoutSpringPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayoutSpringPtr::EditHandle(
+             &_sfSouthSpring,
+             this->getType().getFieldDesc(SouthSpringFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&SpringLayoutConstraints::setSouthSpring,
+                    static_cast<SpringLayoutConstraints *>(this), _1));
+
+    editSField(SouthSpringFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SpringLayoutConstraintsBase::getHandleWidthSpring     (void) const
+{
+    SFUnrecLayoutSpringPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayoutSpringPtr::GetHandle(
+             &_sfWidthSpring,
+             this->getType().getFieldDesc(WidthSpringFieldId),
+             const_cast<SpringLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SpringLayoutConstraintsBase::editHandleWidthSpring    (void)
+{
+    SFUnrecLayoutSpringPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayoutSpringPtr::EditHandle(
+             &_sfWidthSpring,
+             this->getType().getFieldDesc(WidthSpringFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&SpringLayoutConstraints::setWidthSpring,
+                    static_cast<SpringLayoutConstraints *>(this), _1));
+
+    editSField(WidthSpringFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SpringLayoutConstraintsBase::getHandleHeightSpring    (void) const
+{
+    SFUnrecLayoutSpringPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayoutSpringPtr::GetHandle(
+             &_sfHeightSpring,
+             this->getType().getFieldDesc(HeightSpringFieldId),
+             const_cast<SpringLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SpringLayoutConstraintsBase::editHandleHeightSpring   (void)
+{
+    SFUnrecLayoutSpringPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayoutSpringPtr::EditHandle(
+             &_sfHeightSpring,
+             this->getType().getFieldDesc(HeightSpringFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&SpringLayoutConstraints::setHeightSpring,
+                    static_cast<SpringLayoutConstraints *>(this), _1));
+
+    editSField(HeightSpringFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SpringLayoutConstraintsBase::getHandleHorizontalCenterSpring (void) const
+{
+    SFUnrecLayoutSpringPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayoutSpringPtr::GetHandle(
+             &_sfHorizontalCenterSpring,
+             this->getType().getFieldDesc(HorizontalCenterSpringFieldId),
+             const_cast<SpringLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SpringLayoutConstraintsBase::editHandleHorizontalCenterSpring(void)
+{
+    SFUnrecLayoutSpringPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayoutSpringPtr::EditHandle(
+             &_sfHorizontalCenterSpring,
+             this->getType().getFieldDesc(HorizontalCenterSpringFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&SpringLayoutConstraints::setHorizontalCenterSpring,
+                    static_cast<SpringLayoutConstraints *>(this), _1));
+
+    editSField(HorizontalCenterSpringFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SpringLayoutConstraintsBase::getHandleVerticalCenterSpring (void) const
+{
+    SFUnrecLayoutSpringPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayoutSpringPtr::GetHandle(
+             &_sfVerticalCenterSpring,
+             this->getType().getFieldDesc(VerticalCenterSpringFieldId),
+             const_cast<SpringLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SpringLayoutConstraintsBase::editHandleVerticalCenterSpring(void)
+{
+    SFUnrecLayoutSpringPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayoutSpringPtr::EditHandle(
+             &_sfVerticalCenterSpring,
+             this->getType().getFieldDesc(VerticalCenterSpringFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&SpringLayoutConstraints::setVerticalCenterSpring,
+                    static_cast<SpringLayoutConstraints *>(this), _1));
+
+    editSField(VerticalCenterSpringFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SpringLayoutConstraintsBase::getHandleBaselineSpring  (void) const
+{
+    SFUnrecLayoutSpringPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayoutSpringPtr::GetHandle(
+             &_sfBaselineSpring,
+             this->getType().getFieldDesc(BaselineSpringFieldId),
+             const_cast<SpringLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SpringLayoutConstraintsBase::editHandleBaselineSpring (void)
+{
+    SFUnrecLayoutSpringPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayoutSpringPtr::EditHandle(
+             &_sfBaselineSpring,
+             this->getType().getFieldDesc(BaselineSpringFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&SpringLayoutConstraints::setBaselineSpring,
+                    static_cast<SpringLayoutConstraints *>(this), _1));
+
+    editSField(BaselineSpringFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SpringLayoutConstraintsBase::getHandleComponent       (void) const
+{
+    SFUnrecComponentPtr::GetHandlePtr returnValue(
+        new  SFUnrecComponentPtr::GetHandle(
+             &_sfComponent,
+             this->getType().getFieldDesc(ComponentFieldId),
+             const_cast<SpringLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SpringLayoutConstraintsBase::editHandleComponent      (void)
+{
+    SFUnrecComponentPtr::EditHandlePtr returnValue(
+        new  SFUnrecComponentPtr::EditHandle(
+             &_sfComponent,
+             this->getType().getFieldDesc(ComponentFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&SpringLayoutConstraints::setComponent,
+                    static_cast<SpringLayoutConstraints *>(this), _1));
+
+    editSField(ComponentFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void SpringLayoutConstraintsBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    SpringLayoutConstraints *pThis = static_cast<SpringLayoutConstraints *>(this);
+
+    pThis->execSync(static_cast<SpringLayoutConstraints *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *SpringLayoutConstraintsBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    SpringLayoutConstraints *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const SpringLayoutConstraints *>(pRefAspect),
+                  dynamic_cast<const SpringLayoutConstraints *>(this));
+
+    return returnValue;
+}
+#endif
+
+void SpringLayoutConstraintsBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<SpringLayoutConstraints *>(this)->setNorthSpring(NULL);
+
+    static_cast<SpringLayoutConstraints *>(this)->setWestSpring(NULL);
+
+    static_cast<SpringLayoutConstraints *>(this)->setEastSpring(NULL);
+
+    static_cast<SpringLayoutConstraints *>(this)->setSouthSpring(NULL);
+
+    static_cast<SpringLayoutConstraints *>(this)->setWidthSpring(NULL);
+
+    static_cast<SpringLayoutConstraints *>(this)->setHeightSpring(NULL);
+
+    static_cast<SpringLayoutConstraints *>(this)->setHorizontalCenterSpring(NULL);
+
+    static_cast<SpringLayoutConstraints *>(this)->setVerticalCenterSpring(NULL);
+
+    static_cast<SpringLayoutConstraints *>(this)->setBaselineSpring(NULL);
+
+    static_cast<SpringLayoutConstraints *>(this)->setComponent(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<SpringLayoutConstraintsPtr>::_type("SpringLayoutConstraintsPtr", "LayoutConstraintsPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(SpringLayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(SpringLayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGSPRINGLAYOUTCONSTRAINTSBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSPRINGLAYOUTCONSTRAINTSBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSPRINGLAYOUTCONSTRAINTSFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

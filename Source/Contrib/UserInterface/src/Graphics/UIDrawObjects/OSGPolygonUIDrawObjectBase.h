@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,68 +58,77 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGUIDrawObject.h" // Parent
 
-#include <OpenSG/OSGPnt2fFields.h> // Verticies type
-#include <OpenSG/OSGColor4fFields.h> // Color type
-#include <OpenSG/OSGReal32Fields.h> // Opacity type
+#include "OSGVecFields.h"               // Verticies type
+#include "OSGBaseFields.h"              // Color type
+#include "OSGSysFields.h"               // Opacity type
 
 #include "OSGPolygonUIDrawObjectFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class PolygonUIDrawObject;
-class BinaryDataHandler;
 
 //! \brief PolygonUIDrawObject Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING PolygonUIDrawObjectBase : public UIDrawObject
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING PolygonUIDrawObjectBase : public UIDrawObject
 {
-  private:
-
-    typedef UIDrawObject    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef PolygonUIDrawObjectPtr  Ptr;
+    typedef UIDrawObject Inherited;
+    typedef UIDrawObject ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(PolygonUIDrawObject);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
         VerticiesFieldId = Inherited::NextFieldId,
-        ColorFieldId     = VerticiesFieldId + 1,
-        OpacityFieldId   = ColorFieldId     + 1,
-        NextFieldId      = OpacityFieldId   + 1
+        ColorFieldId = VerticiesFieldId + 1,
+        OpacityFieldId = ColorFieldId + 1,
+        NextFieldId = OpacityFieldId + 1
     };
 
-    static const OSG::BitVector VerticiesFieldMask;
-    static const OSG::BitVector ColorFieldMask;
-    static const OSG::BitVector OpacityFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector VerticiesFieldMask =
+        (TypeTraits<BitVector>::One << VerticiesFieldId);
+    static const OSG::BitVector ColorFieldMask =
+        (TypeTraits<BitVector>::One << ColorFieldId);
+    static const OSG::BitVector OpacityFieldMask =
+        (TypeTraits<BitVector>::One << OpacityFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef MFPnt2f           MFVerticiesType;
+    typedef SFColor4f         SFColorType;
+    typedef SFReal32          SFOpacityType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -128,29 +137,37 @@ class OSG_USERINTERFACELIB_DLLMAPPING PolygonUIDrawObjectBase : public UIDrawObj
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFPnt2f             *getMFVerticies      (void);
-           SFColor4f           *getSFColor          (void);
-           SFReal32            *getSFOpacity        (void);
 
-           Color4f             &getColor          (void);
-     const Color4f             &getColor          (void) const;
-           Real32              &getOpacity        (void);
-     const Real32              &getOpacity        (void) const;
-           Pnt2f               &getVerticies      (const UInt32 index);
-           MFPnt2f             &getVerticies      (void);
-     const MFPnt2f             &getVerticies      (void) const;
+                  MFPnt2f             *editMFVerticies      (void);
+            const MFPnt2f             *getMFVerticies       (void) const;
+
+                  SFColor4f           *editSFColor          (void);
+            const SFColor4f           *getSFColor           (void) const;
+
+                  SFReal32            *editSFOpacity        (void);
+            const SFReal32            *getSFOpacity         (void) const;
+
+
+                  Pnt2f               &editVerticies      (const UInt32 index);
+            const Pnt2f               &getVerticies       (const UInt32 index) const;
+
+                  Color4f             &editColor          (void);
+            const Color4f             &getColor           (void) const;
+
+                  Real32              &editOpacity        (void);
+                  Real32               getOpacity         (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setColor          ( const Color4f &value );
-     void setOpacity        ( const Real32 &value );
+            void setColor          (const Color4f &value);
+            void setOpacity        (const Real32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -158,11 +175,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING PolygonUIDrawObjectBase : public UIDrawObj
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -170,28 +187,45 @@ class OSG_USERINTERFACELIB_DLLMAPPING PolygonUIDrawObjectBase : public UIDrawObj
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  PolygonUIDrawObjectPtr      create          (void); 
-    static  PolygonUIDrawObjectPtr      createEmpty     (void); 
+    static  PolygonUIDrawObjectTransitPtr  create          (void);
+    static  PolygonUIDrawObject           *createEmpty     (void);
+
+    static  PolygonUIDrawObjectTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  PolygonUIDrawObject            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  PolygonUIDrawObjectTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    MFPnt2f             _mfVerticies;
-    SFColor4f           _sfColor;
-    SFReal32            _sfOpacity;
+    MFPnt2f           _mfVerticies;
+    SFColor4f         _sfColor;
+    SFReal32          _sfOpacity;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -206,69 +240,83 @@ class OSG_USERINTERFACELIB_DLLMAPPING PolygonUIDrawObjectBase : public UIDrawObj
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~PolygonUIDrawObjectBase(void); 
+    virtual ~PolygonUIDrawObjectBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleVerticies       (void) const;
+    EditFieldHandlePtr editHandleVerticies      (void);
+    GetFieldHandlePtr  getHandleColor           (void) const;
+    EditFieldHandlePtr editHandleColor          (void);
+    GetFieldHandlePtr  getHandleOpacity         (void) const;
+    EditFieldHandlePtr editHandleOpacity        (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      PolygonUIDrawObjectBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      PolygonUIDrawObjectBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      PolygonUIDrawObjectBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const PolygonUIDrawObjectBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef PolygonUIDrawObjectBase *PolygonUIDrawObjectBaseP;
 
-typedef osgIF<PolygonUIDrawObjectBase::isNodeCore,
-              CoredNodePtr<PolygonUIDrawObject>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet PolygonUIDrawObjectNodePtr;
-
-typedef RefPtr<PolygonUIDrawObjectPtr> PolygonUIDrawObjectRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGPOLYGONUIDRAWOBJECTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGPOLYGONUIDRAWOBJECTBASE_H_ */

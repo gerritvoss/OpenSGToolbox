@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,64 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/Toolbox/OSGEventFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class KeyAcceleratorEvent;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! KeyAcceleratorEventPtr
+OSG_GEN_CONTAINERPTR(KeyAcceleratorEvent);
 
-typedef FCPtr<EventPtr, KeyAcceleratorEvent> KeyAcceleratorEventPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<KeyAcceleratorEventPtr> : 
-    public FieldTraitsRecurseMapper<KeyAcceleratorEventPtr, true>
+struct FieldTraits<KeyAcceleratorEvent *> :
+    public FieldTraitsFCPtrBase<KeyAcceleratorEvent *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFKeyAcceleratorEventPtr"; }
+    typedef FieldTraits<KeyAcceleratorEvent *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFKeyAcceleratorEventPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFKeyAcceleratorEventPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<KeyAcceleratorEventPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<KeyAcceleratorEvent *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecKeyAcceleratorEventPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<KeyAcceleratorEvent *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecKeyAcceleratorEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<KeyAcceleratorEvent *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakKeyAcceleratorEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<KeyAcceleratorEvent *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdKeyAcceleratorEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<KeyAcceleratorEvent *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecKeyAcceleratorEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<KeyAcceleratorEvent *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecKeyAcceleratorEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<KeyAcceleratorEvent *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakKeyAcceleratorEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<KeyAcceleratorEvent *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdKeyAcceleratorEventPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<KeyAcceleratorEvent *,
+                      RecordedRefCountPolicy  > SFRecKeyAcceleratorEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<KeyAcceleratorEvent *,
+                      UnrecordedRefCountPolicy> SFUnrecKeyAcceleratorEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<KeyAcceleratorEvent *,
+                      WeakRefCountPolicy      > SFWeakKeyAcceleratorEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<KeyAcceleratorEvent *,
+                      NoRefCountPolicy        > SFUncountedKeyAcceleratorEventPtr;
 
-typedef SField<KeyAcceleratorEventPtr> SFKeyAcceleratorEventPtr;
-#endif
 
-#ifndef OSG_COMPILEKEYACCELERATOREVENTINST
-OSG_DLLEXPORT_DECL1(SField, KeyAcceleratorEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<KeyAcceleratorEvent *,
+                      RecordedRefCountPolicy  > MFRecKeyAcceleratorEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<KeyAcceleratorEvent *,
+                      UnrecordedRefCountPolicy> MFUnrecKeyAcceleratorEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<KeyAcceleratorEvent *,
+                      WeakRefCountPolicy      > MFWeakKeyAcceleratorEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<KeyAcceleratorEvent *,
+                      NoRefCountPolicy        > MFUncountedKeyAcceleratorEventPtr;
+
+
+
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecKeyAcceleratorEventPtr : 
+    public PointerSField<KeyAcceleratorEvent *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecKeyAcceleratorEventPtr : 
+    public PointerSField<KeyAcceleratorEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakKeyAcceleratorEventPtr :
+    public PointerSField<KeyAcceleratorEvent *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedKeyAcceleratorEventPtr :
+    public PointerSField<KeyAcceleratorEvent *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecKeyAcceleratorEventPtr :
+    public PointerMField<KeyAcceleratorEvent *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecKeyAcceleratorEventPtr :
+    public PointerMField<KeyAcceleratorEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakKeyAcceleratorEventPtr :
+    public PointerMField<KeyAcceleratorEvent *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedKeyAcceleratorEventPtr :
+    public PointerMField<KeyAcceleratorEvent *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

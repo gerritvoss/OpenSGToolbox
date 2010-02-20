@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,143 +50,167 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEDRAGGESTUREEVENTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGDragGestureEventBase.h"
 #include "OSGDragGestureEvent.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  DragGestureEventBase::DragLocationFieldMask = 
-    (TypeTraits<BitVector>::One << DragGestureEventBase::DragLocationFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector DragGestureEventBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::DragGestureEvent
+    
+ */
 
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Pnt2f           DragGestureEventBase::_sfDragLocation
     
 */
 
-//! DragGestureEvent description
 
-FieldDescription *DragGestureEventBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<DragGestureEvent *>::_type("DragGestureEventPtr", "EventPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(DragGestureEvent *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           DragGestureEvent *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           DragGestureEvent *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void DragGestureEventBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFPnt2f::getClassType(), 
-                     "DragLocation", 
-                     DragLocationFieldId, DragLocationFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DragGestureEventBase::editSFDragLocation))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType DragGestureEventBase::_type(
-    "DragGestureEvent",
-    "Event",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&DragGestureEventBase::createEmpty),
+    pDesc = new SFPnt2f::Description(
+        SFPnt2f::getClassType(),
+        "DragLocation",
+        "",
+        DragLocationFieldId, DragLocationFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DragGestureEvent::editHandleDragLocation),
+        static_cast<FieldGetMethodSig >(&DragGestureEvent::getHandleDragLocation));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+DragGestureEventBase::TypeObject DragGestureEventBase::_type(
+    DragGestureEventBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&DragGestureEventBase::createEmptyLocal),
     DragGestureEvent::initMethod,
-    _desc,
-    sizeof(_desc));
+    DragGestureEvent::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&DragGestureEvent::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"DragGestureEvent\"\n"
+    "\tparent=\"Event\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"DragLocation\"\n"
+    "\t\ttype=\"Pnt2f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"0.0f,0.0f\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(DragGestureEventBase, DragGestureEventPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &DragGestureEventBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &DragGestureEventBase::getType(void) const 
+FieldContainerType &DragGestureEventBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr DragGestureEventBase::shallowCopy(void) const 
-{ 
-    DragGestureEventPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const DragGestureEvent *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 DragGestureEventBase::getContainerSize(void) const 
-{ 
-    return sizeof(DragGestureEvent); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DragGestureEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &DragGestureEventBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<DragGestureEventBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void DragGestureEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 DragGestureEventBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((DragGestureEventBase *) &other, whichField, sInfo);
+    return sizeof(DragGestureEvent);
 }
-void DragGestureEventBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFPnt2f *DragGestureEventBase::editSFDragLocation(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(DragLocationFieldMask);
+
+    return &_sfDragLocation;
 }
 
-void DragGestureEventBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFPnt2f *DragGestureEventBase::getSFDragLocation(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-DragGestureEventBase::DragGestureEventBase(void) :
-    _sfDragLocation           (Pnt2f(0.0f,0.0f)), 
-    Inherited() 
-{
+    return &_sfDragLocation;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-DragGestureEventBase::DragGestureEventBase(const DragGestureEventBase &source) :
-    _sfDragLocation           (source._sfDragLocation           ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-DragGestureEventBase::~DragGestureEventBase(void)
-{
-}
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 DragGestureEventBase::getBinSize(const BitVector &whichField)
+UInt32 DragGestureEventBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -195,12 +219,11 @@ UInt32 DragGestureEventBase::getBinSize(const BitVector &whichField)
         returnValue += _sfDragLocation.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void DragGestureEventBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void DragGestureEventBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -208,12 +231,10 @@ void DragGestureEventBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfDragLocation.copyToBin(pMem);
     }
-
-
 }
 
-void DragGestureEventBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void DragGestureEventBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -221,60 +242,213 @@ void DragGestureEventBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfDragLocation.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DragGestureEventBase::executeSyncImpl(      DragGestureEventBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+DragGestureEventTransitPtr DragGestureEventBase::createLocal(BitVector bFlags)
 {
+    DragGestureEventTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (DragLocationFieldMask & whichField))
-        _sfDragLocation.syncWith(pOther->_sfDragLocation);
+        fc = dynamic_pointer_cast<DragGestureEvent>(tmpPtr);
+    }
 
-
-}
-#else
-void DragGestureEventBase::executeSyncImpl(      DragGestureEventBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (DragLocationFieldMask & whichField))
-        _sfDragLocation.syncWith(pOther->_sfDragLocation);
-
-
-
+    return fc;
 }
 
-void DragGestureEventBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+DragGestureEventTransitPtr DragGestureEventBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    DragGestureEventTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<DragGestureEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+DragGestureEventTransitPtr DragGestureEventBase::create(void)
+{
+    DragGestureEventTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<DragGestureEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+DragGestureEvent *DragGestureEventBase::createEmptyLocal(BitVector bFlags)
+{
+    DragGestureEvent *returnValue;
+
+    newPtr<DragGestureEvent>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+DragGestureEvent *DragGestureEventBase::createEmpty(void)
+{
+    DragGestureEvent *returnValue;
+
+    newPtr<DragGestureEvent>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr DragGestureEventBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    DragGestureEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DragGestureEvent *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DragGestureEventBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    DragGestureEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DragGestureEvent *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DragGestureEventBase::shallowCopy(void) const
+{
+    DragGestureEvent *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const DragGestureEvent *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+DragGestureEventBase::DragGestureEventBase(void) :
+    Inherited(),
+    _sfDragLocation           (Pnt2f(0.0f,0.0f))
+{
+}
+
+DragGestureEventBase::DragGestureEventBase(const DragGestureEventBase &source) :
+    Inherited(source),
+    _sfDragLocation           (source._sfDragLocation           )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+DragGestureEventBase::~DragGestureEventBase(void)
+{
+}
+
+
+GetFieldHandlePtr DragGestureEventBase::getHandleDragLocation    (void) const
+{
+    SFPnt2f::GetHandlePtr returnValue(
+        new  SFPnt2f::GetHandle(
+             &_sfDragLocation,
+             this->getType().getFieldDesc(DragLocationFieldId),
+             const_cast<DragGestureEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DragGestureEventBase::editHandleDragLocation   (void)
+{
+    SFPnt2f::EditHandlePtr returnValue(
+        new  SFPnt2f::EditHandle(
+             &_sfDragLocation,
+             this->getType().getFieldDesc(DragLocationFieldId),
+             this));
+
+
+    editSField(DragLocationFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void DragGestureEventBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    DragGestureEvent *pThis = static_cast<DragGestureEvent *>(this);
+
+    pThis->execSync(static_cast<DragGestureEvent *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *DragGestureEventBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    DragGestureEvent *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const DragGestureEvent *>(pRefAspect),
+                  dynamic_cast<const DragGestureEvent *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<DragGestureEventPtr>::_type("DragGestureEventPtr", "EventPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(DragGestureEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void DragGestureEventBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

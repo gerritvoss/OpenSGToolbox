@@ -3,42 +3,44 @@
 <FieldContainer
 	name="StaticLayoutSpring"
 	parent="AbstractLayoutSpring"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI Static LayoutSpring.
 	<Field
 		name="Minimum"
 		type="Real32"
+        category="data"
 		cardinality="single"
       visibility="external"
 		defaultValue="LayoutSpring::VALUE_NOT_SET"
-		defaultHeader="Layout/Spring/OSGLayoutSpring.h"
 		access="public"
 	>
    </Field>
 	<Field
 		name="Maximum"
 		type="Real32"
+        category="data"
 		cardinality="single"
       visibility="external"
 		defaultValue="LayoutSpring::VALUE_NOT_SET"
-		defaultHeader="Layout/Spring/OSGLayoutSpring.h"
 		access="public"
 	>
    </Field>
 	<Field
 		name="Preferred"
 		type="Real32"
+        category="data"
 		cardinality="single"
       visibility="external"
 		defaultValue="LayoutSpring::VALUE_NOT_SET"
-		defaultHeader="Layout/Spring/OSGLayoutSpring.h"
 		access="public"
 	>
    </Field>

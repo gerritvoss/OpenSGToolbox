@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,26 +40,21 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGSpringLayoutConstraints.h"
-#include "Layout/Spring/OSGLayoutSpring.h"
-#include "Component/OSGComponent.h"
+#include "OSGLayoutSpring.h"
+#include "OSGComponent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::SpringLayoutConstraints
-A UI SpringLayoutConstraints. 
-*/
+// Documentation for this class is emitted in the
+// OSGSpringLayoutConstraintsBase.cpp file.
+// To modify it, please change the .fcd file (OSGSpringLayoutConstraints.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -69,86 +64,84 @@ A UI SpringLayoutConstraints.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void SpringLayoutConstraints::initMethod (void)
+void SpringLayoutConstraints::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-SpringLayoutConstraintsPtr SpringLayoutConstraints::create(LayoutSpringPtr XSpring, LayoutSpringPtr YSpring)
+
+SpringLayoutConstraintsTransitPtr SpringLayoutConstraints::create(LayoutSpringRefPtr XSpring, LayoutSpringRefPtr YSpring)
 {
-    SpringLayoutConstraintsPtr NewConstraints = createEmpty();
+    SpringLayoutConstraints* NewConstraints = createEmpty();
 
-    beginEditCP(NewConstraints, WestSpringFieldMask | NorthSpringFieldMask);
-        NewConstraints->setWestSpring(XSpring);
-        NewConstraints->setNorthSpring(YSpring);
-    endEditCP(NewConstraints, WestSpringFieldMask | NorthSpringFieldMask);
+    NewConstraints->setWestSpring(XSpring);
+    NewConstraints->setNorthSpring(YSpring);
 
-    return NewConstraints;
+    return SpringLayoutConstraintsTransitPtr(NewConstraints);
 }
 
-SpringLayoutConstraintsPtr SpringLayoutConstraints::create(LayoutSpringPtr XSpring, LayoutSpringPtr YSpring, LayoutSpringPtr WidthSpring, LayoutSpringPtr HeightSpring)
+SpringLayoutConstraintsTransitPtr SpringLayoutConstraints::create(LayoutSpringRefPtr XSpring, LayoutSpringRefPtr YSpring, LayoutSpringRefPtr WidthSpring, LayoutSpringRefPtr HeightSpring)
 {
-    SpringLayoutConstraintsPtr NewConstraints = createEmpty();
+    SpringLayoutConstraints* NewConstraints = createEmpty();
 
-    beginEditCP(NewConstraints, WestSpringFieldMask | NorthSpringFieldMask | WidthSpringFieldMask | HeightSpringFieldMask);
-        NewConstraints->setWestSpring(XSpring);
-        NewConstraints->setNorthSpring(YSpring);
-        NewConstraints->setWidthSpring(WidthSpring);
-        NewConstraints->setHeightSpring(HeightSpring);
-    endEditCP(NewConstraints, WestSpringFieldMask | NorthSpringFieldMask | WidthSpringFieldMask | HeightSpringFieldMask);
+    NewConstraints->setWestSpring(XSpring);
+    NewConstraints->setNorthSpring(YSpring);
+    NewConstraints->setWidthSpring(WidthSpring);
+    NewConstraints->setHeightSpring(HeightSpring);
 
-    return NewConstraints;
+    return SpringLayoutConstraintsTransitPtr(NewConstraints);
 }
 
-SpringLayoutConstraintsPtr SpringLayoutConstraints::create(ComponentPtr TheComponent)
+SpringLayoutConstraintsTransitPtr SpringLayoutConstraints::create(ComponentRefPtr TheComponent)
 {
-    SpringLayoutConstraintsPtr NewConstraints = createEmpty();
+    SpringLayoutConstraints* NewConstraints = createEmpty();
 
-    beginEditCP(NewConstraints, WestSpringFieldMask | NorthSpringFieldMask | WidthSpringFieldMask | HeightSpringFieldMask | ComponentFieldMask);
-        NewConstraints->setWestSpring(LayoutSpring::constant(TheComponent->getPosition().x()));
-        NewConstraints->setNorthSpring(LayoutSpring::constant(TheComponent->getPosition().y()));
-        NewConstraints->setWidthSpring(LayoutSpring::width(TheComponent));
-        NewConstraints->setHeightSpring(LayoutSpring::height(TheComponent));
-        NewConstraints->setComponent(TheComponent);
-    endEditCP(NewConstraints, WestSpringFieldMask | NorthSpringFieldMask | WidthSpringFieldMask | HeightSpringFieldMask | ComponentFieldMask);
+    NewConstraints->setWestSpring(LayoutSpring::constant(TheComponent->getPosition().x()));
+    NewConstraints->setNorthSpring(LayoutSpring::constant(TheComponent->getPosition().y()));
+    NewConstraints->setWidthSpring(LayoutSpring::width(TheComponent));
+    NewConstraints->setHeightSpring(LayoutSpring::height(TheComponent));
+    NewConstraints->setComponent(TheComponent);
 
-    return NewConstraints;
+    return SpringLayoutConstraintsTransitPtr(NewConstraints);
 }
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
-void SpringLayoutConstraints::setX(LayoutSpringPtr x)
+void SpringLayoutConstraints::setX(LayoutSpringRefPtr x)
 {
     setWest(x);
 }
 
-LayoutSpringPtr SpringLayoutConstraints::getX(void)
+LayoutSpringRefPtr SpringLayoutConstraints::getX(void)
 {
     return getWest();
 }
 
-void SpringLayoutConstraints::setY(LayoutSpringPtr y)
+void SpringLayoutConstraints::setY(LayoutSpringRefPtr y)
 {
     setNorth(y);
 }
-LayoutSpringPtr SpringLayoutConstraints::getY(void)
+LayoutSpringRefPtr SpringLayoutConstraints::getY(void)
 {
     return getNorth();
 }
 
-void SpringLayoutConstraints::setWidth(LayoutSpringPtr width)
+void SpringLayoutConstraints::setWidth(LayoutSpringRefPtr width)
 {
-    beginEditCP(SpringLayoutConstraintsPtr(this), WidthSpringFieldMask);
-        setWidthSpring(width);
-    endEditCP(SpringLayoutConstraintsPtr(this), WidthSpringFieldMask);
-    
+    setWidthSpring(width);
+
     pushToHistory(WIDTH_EDGE, width, true);
 }
 
-LayoutSpringPtr SpringLayoutConstraints::getWidth(void)
+LayoutSpringRefPtr SpringLayoutConstraints::getWidth(void)
 {
-    if(getWidthSpring() == NullFC)
+    if(getWidthSpring() == NULL)
     {
         if(defined(EAST_EDGE) && defined(WEST_EDGE))
         {
@@ -160,7 +153,7 @@ LayoutSpringPtr SpringLayoutConstraints::getWidth(void)
         }
         else
         {
-            return NullFC;
+            return NULL;
         }
     }
     else
@@ -169,18 +162,16 @@ LayoutSpringPtr SpringLayoutConstraints::getWidth(void)
     }
 }
 
-void SpringLayoutConstraints::setHeight(LayoutSpringPtr height)
+void SpringLayoutConstraints::setHeight(LayoutSpringRefPtr height)
 {
-    beginEditCP(SpringLayoutConstraintsPtr(this), HeightSpringFieldMask);
-        setHeightSpring(height);
-    endEditCP(SpringLayoutConstraintsPtr(this), HeightSpringFieldMask);
-    
+    setHeightSpring(height);
+
     pushToHistory(HEIGHT_EDGE, height, false);
 }
 
-LayoutSpringPtr SpringLayoutConstraints::getHeight(void)
+LayoutSpringRefPtr SpringLayoutConstraints::getHeight(void)
 {
-    if(getHeightSpring() == NullFC)
+    if(getHeightSpring() == NULL)
     {
         if(defined(SOUTH_EDGE) && defined(NORTH_EDGE))
         {
@@ -196,7 +187,7 @@ LayoutSpringPtr SpringLayoutConstraints::getHeight(void)
         }
         else
         {
-            return NullFC;
+            return NULL;
         }
     }
     else
@@ -205,18 +196,16 @@ LayoutSpringPtr SpringLayoutConstraints::getHeight(void)
     }
 }
 
-void SpringLayoutConstraints::setNorth(LayoutSpringPtr north)
+void SpringLayoutConstraints::setNorth(LayoutSpringRefPtr north)
 {
-    beginEditCP(SpringLayoutConstraintsPtr(this), NorthSpringFieldMask);
-        setNorthSpring(north);
-    endEditCP(SpringLayoutConstraintsPtr(this), NorthSpringFieldMask);
-    
+    setNorthSpring(north);
+
     pushToHistory(NORTH_EDGE, north, false);
 }
 
-LayoutSpringPtr SpringLayoutConstraints::getNorth(void)
+LayoutSpringRefPtr SpringLayoutConstraints::getNorth(void)
 {
-    if(getNorthSpring() == NullFC)
+    if(getNorthSpring() == NULL)
     {
         if(defined(SOUTH_EDGE) && defined(HEIGHT_EDGE))
         {
@@ -240,7 +229,7 @@ LayoutSpringPtr SpringLayoutConstraints::getNorth(void)
         }
         else
         {
-            return NullFC;
+            return NULL;
         }
     }
     else
@@ -249,18 +238,16 @@ LayoutSpringPtr SpringLayoutConstraints::getNorth(void)
     }
 }
 
-void SpringLayoutConstraints::setEast(LayoutSpringPtr east)
+void SpringLayoutConstraints::setEast(LayoutSpringRefPtr east)
 {
-    beginEditCP(SpringLayoutConstraintsPtr(this), EastSpringFieldMask);
-        setEastSpring(east);
-    endEditCP(SpringLayoutConstraintsPtr(this), EastSpringFieldMask);
-    
+    setEastSpring(east);
+
     pushToHistory(EAST_EDGE, east, true);
 }
 
-LayoutSpringPtr SpringLayoutConstraints::getEast(void)
+LayoutSpringRefPtr SpringLayoutConstraints::getEast(void)
 {
-    if(getEastSpring() == NullFC)
+    if(getEastSpring() == NULL)
     {
         if(defined(WEST_EDGE) && defined(WIDTH_EDGE))
         {
@@ -276,7 +263,7 @@ LayoutSpringPtr SpringLayoutConstraints::getEast(void)
         }
         else
         {
-            return NullFC;
+            return NULL;
         }
     }
     else
@@ -285,23 +272,23 @@ LayoutSpringPtr SpringLayoutConstraints::getEast(void)
     }
 }
 
-void SpringLayoutConstraints::pushToHistory(Edge TheEdge, LayoutSpringPtr Value, bool isHorizontal)
+void SpringLayoutConstraints::pushToHistory(Edge TheEdge, LayoutSpringRefPtr Value, bool isHorizontal)
 {
     std::deque<Edge>& History(isHorizontal ? _HorizontalHistory : _VerticalHistory);
     bool valid(true);
-    
+
     std::deque<Edge>::iterator SearchItor(std::find(History.begin(), History.end(), TheEdge));
     if (SearchItor != History.end())
     {
         History.erase(SearchItor);
         valid = false;
     }
-    else if (History.size() == 2 && Value != NullFC)
+    else if (History.size() == 2 && Value != NULL)
     {
         History.pop_front();
         valid = false;
     }
-    if (Value != NullFC)
+    if (Value != NULL)
     {
         History.push_back(TheEdge);
     }
@@ -327,23 +314,21 @@ void SpringLayoutConstraints::pushToHistory(Edge TheEdge, LayoutSpringPtr Value,
         {
             if (std::find(History.begin(), History.end(), All[i]) == History.end())
             {
-                setConstraint(All[i], NullFC);
+                setConstraint(All[i], NULL);
             }
         }
     }
 }
 
-void SpringLayoutConstraints::setSouth(LayoutSpringPtr south)
+void SpringLayoutConstraints::setSouth(LayoutSpringRefPtr south)
 {
-    beginEditCP(SpringLayoutConstraintsPtr(this), SouthSpringFieldMask);
-        setSouthSpring(south);
-    endEditCP(SpringLayoutConstraintsPtr(this), SouthSpringFieldMask);
-    
+    setSouthSpring(south);
+
     pushToHistory(SOUTH_EDGE, south, false);
 }
-LayoutSpringPtr SpringLayoutConstraints::getSouth(void)
+LayoutSpringRefPtr SpringLayoutConstraints::getSouth(void)
 {
-    if(getSouthSpring() == NullFC)
+    if(getSouthSpring() == NULL)
     {
         if(defined(NORTH_EDGE) && defined(HEIGHT_EDGE))
         {
@@ -367,7 +352,7 @@ LayoutSpringPtr SpringLayoutConstraints::getSouth(void)
         }
         else
         {
-            return NullFC;
+            return NULL;
         }
     }
     else
@@ -376,18 +361,16 @@ LayoutSpringPtr SpringLayoutConstraints::getSouth(void)
     }
 }
 
-void SpringLayoutConstraints::setWest(LayoutSpringPtr west)
+void SpringLayoutConstraints::setWest(LayoutSpringRefPtr west)
 {
-    beginEditCP(SpringLayoutConstraintsPtr(this), WestSpringFieldMask);
-        setWestSpring(west);
-    endEditCP(SpringLayoutConstraintsPtr(this), WestSpringFieldMask);
-    
+    setWestSpring(west);
+
     pushToHistory(WEST_EDGE, west, true);
 }
 
-LayoutSpringPtr SpringLayoutConstraints::getWest(void)
+LayoutSpringRefPtr SpringLayoutConstraints::getWest(void)
 {
-    if(getWestSpring() == NullFC)
+    if(getWestSpring() == NULL)
     {
         if(defined(EAST_EDGE) && defined(WIDTH_EDGE))
         {
@@ -403,7 +386,7 @@ LayoutSpringPtr SpringLayoutConstraints::getWest(void)
         }
         else
         {
-            return NullFC;
+            return NULL;
         }
     }
     else
@@ -412,18 +395,16 @@ LayoutSpringPtr SpringLayoutConstraints::getWest(void)
     }
 }
 
-void SpringLayoutConstraints::setHorizontalCenter(LayoutSpringPtr horizontalCenter)
+void SpringLayoutConstraints::setHorizontalCenter(LayoutSpringRefPtr horizontalCenter)
 {
-    beginEditCP(SpringLayoutConstraintsPtr(this), HorizontalCenterSpringFieldMask);
-        setHorizontalCenterSpring(horizontalCenter);
-    endEditCP(SpringLayoutConstraintsPtr(this), HorizontalCenterSpringFieldMask);
-    
+    setHorizontalCenterSpring(horizontalCenter);
+
     pushToHistory(HORIZONTAL_CENTER_EDGE, horizontalCenter, true);
 }
 
-LayoutSpringPtr SpringLayoutConstraints::getHorizontalCenter(void)
+LayoutSpringRefPtr SpringLayoutConstraints::getHorizontalCenter(void)
 {
-    if(getHorizontalCenterSpring() == NullFC)
+    if(getHorizontalCenterSpring() == NULL)
     {
         return sum(getWest(), scale(getWidth(), 0.5f));
     }
@@ -433,18 +414,16 @@ LayoutSpringPtr SpringLayoutConstraints::getHorizontalCenter(void)
     }
 }
 
-void SpringLayoutConstraints::setVerticalCenter(LayoutSpringPtr verticalCenter)
+void SpringLayoutConstraints::setVerticalCenter(LayoutSpringRefPtr verticalCenter)
 {
-    beginEditCP(SpringLayoutConstraintsPtr(this), VerticalCenterSpringFieldMask);
-        setVerticalCenterSpring(verticalCenter);
-    endEditCP(SpringLayoutConstraintsPtr(this), VerticalCenterSpringFieldMask);
-    
+    setVerticalCenterSpring(verticalCenter);
+
     pushToHistory(VERTICAL_CENTER_EDGE, verticalCenter, false);
 }
 
-LayoutSpringPtr SpringLayoutConstraints::getVerticalCenter(void)
+LayoutSpringRefPtr SpringLayoutConstraints::getVerticalCenter(void)
 {
-    if(getVerticalCenterSpring() == NullFC)
+    if(getVerticalCenterSpring() == NULL)
     {
         return sum(getNorth(), scale(getHeight(), 0.5f));
     }
@@ -454,18 +433,16 @@ LayoutSpringPtr SpringLayoutConstraints::getVerticalCenter(void)
     }
 }
 
-void SpringLayoutConstraints::setBaseline(LayoutSpringPtr baseline)
+void SpringLayoutConstraints::setBaseline(LayoutSpringRefPtr baseline)
 {
-    beginEditCP(SpringLayoutConstraintsPtr(this), BaselineSpringFieldMask);
-        setBaselineSpring(baseline);
-    endEditCP(SpringLayoutConstraintsPtr(this), BaselineSpringFieldMask);
-    
+    setBaselineSpring(baseline);
+
     pushToHistory(BASELINE_EDGE, baseline, false);
 }
 
-LayoutSpringPtr SpringLayoutConstraints::getBaseline(void)
+LayoutSpringRefPtr SpringLayoutConstraints::getBaseline(void)
 {
-    if(getBaselineSpring() == NullFC)
+    if(getBaselineSpring() == NULL)
     {
         return sum(getNorth(), heightToRelativeBaseline(getHeight()));
     }
@@ -475,133 +452,133 @@ LayoutSpringPtr SpringLayoutConstraints::getBaseline(void)
     }
 }
 
-void SpringLayoutConstraints::setConstraint(UInt32 Edge, LayoutSpringPtr s)
+void SpringLayoutConstraints::setConstraint(UInt32 Edge, LayoutSpringRefPtr s)
 {
     switch(Edge)
     {
-    case NORTH_EDGE:
-    case Y_EDGE:
-        setNorth(s);
-        break;
-    case EAST_EDGE:
-        setEast(s);
-        break;
-    case SOUTH_EDGE:
-        setSouth(s);
-        break;
-    case WEST_EDGE:
-    case X_EDGE:
-        setWest(s);
-        break;
-    case HORIZONTAL_CENTER_EDGE:
-        setHorizontalCenter(s);
-        break;
-    case VERTICAL_CENTER_EDGE:
-        setVerticalCenter(s);
-        break;
-    case BASELINE_EDGE:
-        setBaseline(s);
-        break;
-    case WIDTH_EDGE:
-        setWidth(s);
-        break;
-    case HEIGHT_EDGE:
-        setHeight(s);
-        break;
-    default:
-        return;
+        case NORTH_EDGE:
+        case Y_EDGE:
+            setNorth(s);
+            break;
+        case EAST_EDGE:
+            setEast(s);
+            break;
+        case SOUTH_EDGE:
+            setSouth(s);
+            break;
+        case WEST_EDGE:
+        case X_EDGE:
+            setWest(s);
+            break;
+        case HORIZONTAL_CENTER_EDGE:
+            setHorizontalCenter(s);
+            break;
+        case VERTICAL_CENTER_EDGE:
+            setVerticalCenter(s);
+            break;
+        case BASELINE_EDGE:
+            setBaseline(s);
+            break;
+        case WIDTH_EDGE:
+            setWidth(s);
+            break;
+        case HEIGHT_EDGE:
+            setHeight(s);
+            break;
+        default:
+            return;
     }
 }
 
 void SpringLayoutConstraints::reset(void)
 {
-    if(getNorthSpring() != NullFC)
+    if(getNorthSpring() != NULL)
     {
         getNorthSpring()->setValue(LayoutSpring::VALUE_NOT_SET);
     }
-    if(getSouthSpring() != NullFC)
+    if(getSouthSpring() != NULL)
     {
         getSouthSpring()->setValue(LayoutSpring::VALUE_NOT_SET);
     }
-    if(getEastSpring() != NullFC)
+    if(getEastSpring() != NULL)
     {
         getEastSpring()->setValue(LayoutSpring::VALUE_NOT_SET);
     }
-    if(getWestSpring() != NullFC)
+    if(getWestSpring() != NULL)
     {
         getWestSpring()->setValue(LayoutSpring::VALUE_NOT_SET);
     }
-    if(getWidthSpring() != NullFC)
+    if(getWidthSpring() != NULL)
     {
         getWidthSpring()->setValue(LayoutSpring::VALUE_NOT_SET);
     }
-    if(getHeightSpring() != NullFC)
+    if(getHeightSpring() != NULL)
     {
         getHeightSpring()->setValue(LayoutSpring::VALUE_NOT_SET);
     }
-    if(getHorizontalCenterSpring() != NullFC)
+    if(getHorizontalCenterSpring() != NULL)
     {
         getHorizontalCenterSpring()->setValue(LayoutSpring::VALUE_NOT_SET);
     }
-    if(getVerticalCenterSpring() != NullFC)
+    if(getVerticalCenterSpring() != NULL)
     {
         getVerticalCenterSpring()->setValue(LayoutSpring::VALUE_NOT_SET);
     }
-    if(getBaselineSpring() != NullFC)
+    if(getBaselineSpring() != NULL)
     {
         getBaselineSpring()->setValue(LayoutSpring::VALUE_NOT_SET);
     }
 }
 
-LayoutSpringPtr SpringLayoutConstraints::getConstraint(UInt32 TheEdge)
+LayoutSpringRefPtr SpringLayoutConstraints::getConstraint(UInt32 TheEdge)
 {
     switch(TheEdge)
     {
-    case NORTH_EDGE:
-    case Y_EDGE:
-        return getNorth();
-        break;
-    case EAST_EDGE:
-        return getEast();
-        break;
-    case SOUTH_EDGE:
-        return getSouth();
-        break;
-    case WEST_EDGE:
-    case X_EDGE:
-        return getWest();
-        break;
-    case HORIZONTAL_CENTER_EDGE:
-        return getHorizontalCenter();
-        break;
-    case VERTICAL_CENTER_EDGE:
-        return getVerticalCenter();
-        break;
-    case BASELINE_EDGE:
-        return getBaseline();
-        break;
-    case WIDTH_EDGE:
-        return getWidth();
-        break;
-    case HEIGHT_EDGE:
-        return getHeight();
-        break;
-    default:
-        return NullFC;
+        case NORTH_EDGE:
+        case Y_EDGE:
+            return getNorth();
+            break;
+        case EAST_EDGE:
+            return getEast();
+            break;
+        case SOUTH_EDGE:
+            return getSouth();
+            break;
+        case WEST_EDGE:
+        case X_EDGE:
+            return getWest();
+            break;
+        case HORIZONTAL_CENTER_EDGE:
+            return getHorizontalCenter();
+            break;
+        case VERTICAL_CENTER_EDGE:
+            return getVerticalCenter();
+            break;
+        case BASELINE_EDGE:
+            return getBaseline();
+            break;
+        case WIDTH_EDGE:
+            return getWidth();
+            break;
+        case HEIGHT_EDGE:
+            return getHeight();
+            break;
+        default:
+            return NULL;
     }
 }
 
-LayoutSpringPtr SpringLayoutConstraints::sum(LayoutSpringPtr s1, LayoutSpringPtr s2)
+LayoutSpringRefPtr SpringLayoutConstraints::sum(LayoutSpringRefPtr s1, LayoutSpringRefPtr s2)
 {
     return LayoutSpring::sum(s1,s2);
 }
 
-LayoutSpringPtr SpringLayoutConstraints::difference(LayoutSpringPtr s1, LayoutSpringPtr s2)
+LayoutSpringRefPtr SpringLayoutConstraints::difference(LayoutSpringRefPtr s1, LayoutSpringRefPtr s2)
 {
     return LayoutSpring::difference(s1,s2);
 }
 
-LayoutSpringPtr SpringLayoutConstraints::scale(LayoutSpringPtr s, Real32 factor)
+LayoutSpringRefPtr SpringLayoutConstraints::scale(LayoutSpringRefPtr s, Real32 factor)
 {
     return LayoutSpring::scale(s,factor);
 }
@@ -617,53 +594,53 @@ Real32 SpringLayoutConstraints::getHeightFromBaseLine(const Real32& baseline) co
     return 0;
 }
 
-LayoutSpringPtr SpringLayoutConstraints::heightToRelativeBaseline(LayoutSpringPtr s)
+LayoutSpringRefPtr SpringLayoutConstraints::heightToRelativeBaseline(LayoutSpringRefPtr s)
 {
     //TODO: Implement
-    return NullFC;
+    return NULL;
 }
 
-LayoutSpringPtr SpringLayoutConstraints::relativeBaselineToHeight(LayoutSpringPtr s)
+LayoutSpringRefPtr SpringLayoutConstraints::relativeBaselineToHeight(LayoutSpringRefPtr s)
 {
     //TODO: Implement
-    return NullFC;
+    return NULL;
 }
 
 bool SpringLayoutConstraints::defined(const UInt32 Edge) const
 {
     switch(Edge)
     {
-    case NORTH_EDGE:
-    case Y_EDGE:
-        return getNorthSpring() != NullFC;
-        break;
-    case EAST_EDGE:
-        return getEastSpring() != NullFC;
-        break;
-    case SOUTH_EDGE:
-        return getSouthSpring() != NullFC;
-        break;
-    case WEST_EDGE:
-    case X_EDGE:
-        return getWestSpring() != NullFC;
-        break;
-    case HORIZONTAL_CENTER_EDGE:
-        return getHorizontalCenterSpring() != NullFC;
-        break;
-    case VERTICAL_CENTER_EDGE:
-        return getVerticalCenterSpring() != NullFC;
-        break;
-    case BASELINE_EDGE:
-        return getBaselineSpring() != NullFC;
-        break;
-    case WIDTH_EDGE:
-        return getWidthSpring() != NullFC;
-        break;
-    case HEIGHT_EDGE:
-        return getHeightSpring() != NullFC;
-        break;
-    default:
-        return false;
+        case NORTH_EDGE:
+        case Y_EDGE:
+            return getNorthSpring() != NULL;
+            break;
+        case EAST_EDGE:
+            return getEastSpring() != NULL;
+            break;
+        case SOUTH_EDGE:
+            return getSouthSpring() != NULL;
+            break;
+        case WEST_EDGE:
+        case X_EDGE:
+            return getWestSpring() != NULL;
+            break;
+        case HORIZONTAL_CENTER_EDGE:
+            return getHorizontalCenterSpring() != NULL;
+            break;
+        case VERTICAL_CENTER_EDGE:
+            return getVerticalCenterSpring() != NULL;
+            break;
+        case BASELINE_EDGE:
+            return getBaselineSpring() != NULL;
+            break;
+        case WIDTH_EDGE:
+            return getWidthSpring() != NULL;
+            break;
+        case HEIGHT_EDGE:
+            return getHeightSpring() != NULL;
+            break;
+        default:
+            return false;
     }
 }
 
@@ -689,41 +666,17 @@ SpringLayoutConstraints::~SpringLayoutConstraints(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void SpringLayoutConstraints::changed(BitVector whichField, UInt32 origin)
+void SpringLayoutConstraints::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void SpringLayoutConstraints::dump(      UInt32    , 
+void SpringLayoutConstraints::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump SpringLayoutConstraints NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGSPRINGLAYOUTCONSTRAINTSBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSPRINGLAYOUTCONSTRAINTSBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSPRINGLAYOUTCONSTRAINTSFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

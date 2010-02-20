@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,205 +50,314 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILETEXTFIELDINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGUIFont.h"                  // EmptyDescTextFont Class
 
 #include "OSGTextFieldBase.h"
 #include "OSGTextField.h"
 
+#include <boost/bind.hpp>
+
+#include "OSGEvent.h"
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  TextFieldBase::AlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << TextFieldBase::AlignmentFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  TextFieldBase::EmptyDescTextFontFieldMask = 
-    (TypeTraits<BitVector>::One << TextFieldBase::EmptyDescTextFontFieldId);
+/*! \class OSG::TextField
+    A UI Text Field
+ */
 
-const OSG::BitVector  TextFieldBase::EmptyDescTextFieldMask = 
-    (TypeTraits<BitVector>::One << TextFieldBase::EmptyDescTextFieldId);
-
-const OSG::BitVector  TextFieldBase::EmptyDescTextColorFieldMask = 
-    (TypeTraits<BitVector>::One << TextFieldBase::EmptyDescTextColorFieldId);
-
-const OSG::BitVector TextFieldBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Vec2f           TextFieldBase::_sfAlignment
     
 */
-/*! \var UIFontPtr       TextFieldBase::_sfEmptyDescTextFont
+
+/*! \var UIFont *        TextFieldBase::_sfEmptyDescTextFont
     
 */
+
 /*! \var std::string     TextFieldBase::_sfEmptyDescText
     
 */
+
 /*! \var Color4f         TextFieldBase::_sfEmptyDescTextColor
     
 */
 
-//! TextField description
 
-FieldDescription *TextFieldBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<TextField *>::_type("TextFieldPtr", "EditableTextComponentPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(TextField *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           TextField *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           TextField *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void TextFieldBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFVec2f::getClassType(), 
-                     "Alignment", 
-                     AlignmentFieldId, AlignmentFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TextFieldBase::editSFAlignment)),
-    new FieldDescription(SFUIFontPtr::getClassType(), 
-                     "EmptyDescTextFont", 
-                     EmptyDescTextFontFieldId, EmptyDescTextFontFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TextFieldBase::editSFEmptyDescTextFont)),
-    new FieldDescription(SFString::getClassType(), 
-                     "EmptyDescText", 
-                     EmptyDescTextFieldId, EmptyDescTextFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TextFieldBase::editSFEmptyDescText)),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "EmptyDescTextColor", 
-                     EmptyDescTextColorFieldId, EmptyDescTextColorFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TextFieldBase::editSFEmptyDescTextColor))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType TextFieldBase::_type(
-    "TextField",
-    "EditableTextComponent",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&TextFieldBase::createEmpty),
+    pDesc = new SFVec2f::Description(
+        SFVec2f::getClassType(),
+        "Alignment",
+        "",
+        AlignmentFieldId, AlignmentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TextField::editHandleAlignment),
+        static_cast<FieldGetMethodSig >(&TextField::getHandleAlignment));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecUIFontPtr::Description(
+        SFUnrecUIFontPtr::getClassType(),
+        "EmptyDescTextFont",
+        "",
+        EmptyDescTextFontFieldId, EmptyDescTextFontFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TextField::editHandleEmptyDescTextFont),
+        static_cast<FieldGetMethodSig >(&TextField::getHandleEmptyDescTextFont));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFString::Description(
+        SFString::getClassType(),
+        "EmptyDescText",
+        "",
+        EmptyDescTextFieldId, EmptyDescTextFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TextField::editHandleEmptyDescText),
+        static_cast<FieldGetMethodSig >(&TextField::getHandleEmptyDescText));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "EmptyDescTextColor",
+        "",
+        EmptyDescTextColorFieldId, EmptyDescTextColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&TextField::editHandleEmptyDescTextColor),
+        static_cast<FieldGetMethodSig >(&TextField::getHandleEmptyDescTextColor));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+TextFieldBase::TypeObject TextFieldBase::_type(
+    TextFieldBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&TextFieldBase::createEmptyLocal),
     TextField::initMethod,
-    _desc,
-    sizeof(_desc));
+    TextField::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&TextField::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"TextField\"\n"
+    "\tparent=\"EditableTextComponent\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    parentProducer=\"TextComponent\"\n"
+    ">\n"
+    "A UI Text Field\n"
+    "\t<Field\n"
+    "\t\tname=\"Alignment\"\n"
+    "\t\ttype=\"Vec2f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0f, 0.5f\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"EmptyDescTextFont\"\n"
+    "\t\ttype=\"UIFont\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"EmptyDescText\"\n"
+    "\t\ttype=\"std::string\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"EmptyDescTextColor\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.3,0.3,0.3,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"ActionPerformed\"\n"
+    "\t\ttype=\"ActionEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "</FieldContainer>\n",
+    "A UI Text Field\n"
+    );
 
 //! TextField Produced Methods
 
 MethodDescription *TextFieldBase::_methodDesc[] =
 {
     new MethodDescription("ActionPerformed", 
+                    "",
                      ActionPerformedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod())
 };
 
 EventProducerType TextFieldBase::_producerType(
     "TextFieldProducerType",
     "TextComponentProducerType",
-    NULL,
+    "",
     InitEventProducerFunctor(),
     _methodDesc,
     sizeof(_methodDesc));
-//OSG_FIELD_CONTAINER_DEF(TextFieldBase, TextFieldPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &TextFieldBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &TextFieldBase::getType(void) const 
+FieldContainerType &TextFieldBase::getType(void)
 {
     return _type;
-} 
+}
+
+const FieldContainerType &TextFieldBase::getType(void) const
+{
+    return _type;
+}
 
 const EventProducerType &TextFieldBase::getProducerType(void) const
 {
     return _producerType;
 }
 
-
-FieldContainerPtr TextFieldBase::shallowCopy(void) const 
-{ 
-    TextFieldPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const TextField *>(this)); 
-
-    return returnValue; 
-}
-
-UInt32 TextFieldBase::getContainerSize(void) const 
-{ 
-    return sizeof(TextField); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TextFieldBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+UInt32 TextFieldBase::getContainerSize(void) const
 {
-    this->executeSyncImpl(static_cast<TextFieldBase *>(&other),
-                          whichField);
+    return sizeof(TextField);
 }
-#else
-void TextFieldBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFVec2f *TextFieldBase::editSFAlignment(void)
 {
-    this->executeSyncImpl((TextFieldBase *) &other, whichField, sInfo);
+    editSField(AlignmentFieldMask);
+
+    return &_sfAlignment;
 }
-void TextFieldBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+const SFVec2f *TextFieldBase::getSFAlignment(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfAlignment;
 }
 
-void TextFieldBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+
+//! Get the TextField::_sfEmptyDescTextFont field.
+const SFUnrecUIFontPtr *TextFieldBase::getSFEmptyDescTextFont(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfEmptyDescTextFont;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-TextFieldBase::TextFieldBase(void) :
-    _sfAlignment              (Vec2f(0.0f, 0.5f)), 
-    _sfEmptyDescTextFont      (), 
-    _sfEmptyDescText          (), 
-    _sfEmptyDescTextColor     (Color4f(0.3,0.3,0.3,1.0)), 
-    Inherited() 
+SFUnrecUIFontPtr    *TextFieldBase::editSFEmptyDescTextFont(void)
 {
-    _Producer.setType(&_producerType);
+    editSField(EmptyDescTextFontFieldMask);
+
+    return &_sfEmptyDescTextFont;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-TextFieldBase::TextFieldBase(const TextFieldBase &source) :
-    _sfAlignment              (source._sfAlignment              ), 
-    _sfEmptyDescTextFont      (source._sfEmptyDescTextFont      ), 
-    _sfEmptyDescText          (source._sfEmptyDescText          ), 
-    _sfEmptyDescTextColor     (source._sfEmptyDescTextColor     ), 
-    Inherited                 (source)
+SFString *TextFieldBase::editSFEmptyDescText(void)
 {
+    editSField(EmptyDescTextFieldMask);
+
+    return &_sfEmptyDescText;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-TextFieldBase::~TextFieldBase(void)
+const SFString *TextFieldBase::getSFEmptyDescText(void) const
 {
+    return &_sfEmptyDescText;
 }
+
+
+SFColor4f *TextFieldBase::editSFEmptyDescTextColor(void)
+{
+    editSField(EmptyDescTextColorFieldMask);
+
+    return &_sfEmptyDescTextColor;
+}
+
+const SFColor4f *TextFieldBase::getSFEmptyDescTextColor(void) const
+{
+    return &_sfEmptyDescTextColor;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 TextFieldBase::getBinSize(const BitVector &whichField)
+UInt32 TextFieldBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -256,28 +365,24 @@ UInt32 TextFieldBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfAlignment.getBinSize();
     }
-
     if(FieldBits::NoField != (EmptyDescTextFontFieldMask & whichField))
     {
         returnValue += _sfEmptyDescTextFont.getBinSize();
     }
-
     if(FieldBits::NoField != (EmptyDescTextFieldMask & whichField))
     {
         returnValue += _sfEmptyDescText.getBinSize();
     }
-
     if(FieldBits::NoField != (EmptyDescTextColorFieldMask & whichField))
     {
         returnValue += _sfEmptyDescTextColor.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void TextFieldBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void TextFieldBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -285,27 +390,22 @@ void TextFieldBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfAlignment.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EmptyDescTextFontFieldMask & whichField))
     {
         _sfEmptyDescTextFont.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EmptyDescTextFieldMask & whichField))
     {
         _sfEmptyDescText.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EmptyDescTextColorFieldMask & whichField))
     {
         _sfEmptyDescTextColor.copyToBin(pMem);
     }
-
-
 }
 
-void TextFieldBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void TextFieldBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -313,95 +413,323 @@ void TextFieldBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfAlignment.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EmptyDescTextFontFieldMask & whichField))
     {
         _sfEmptyDescTextFont.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EmptyDescTextFieldMask & whichField))
     {
         _sfEmptyDescText.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EmptyDescTextColorFieldMask & whichField))
     {
         _sfEmptyDescTextColor.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TextFieldBase::executeSyncImpl(      TextFieldBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+TextFieldTransitPtr TextFieldBase::createLocal(BitVector bFlags)
 {
+    TextFieldTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
-        _sfAlignment.syncWith(pOther->_sfAlignment);
+        fc = dynamic_pointer_cast<TextField>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (EmptyDescTextFontFieldMask & whichField))
-        _sfEmptyDescTextFont.syncWith(pOther->_sfEmptyDescTextFont);
-
-    if(FieldBits::NoField != (EmptyDescTextFieldMask & whichField))
-        _sfEmptyDescText.syncWith(pOther->_sfEmptyDescText);
-
-    if(FieldBits::NoField != (EmptyDescTextColorFieldMask & whichField))
-        _sfEmptyDescTextColor.syncWith(pOther->_sfEmptyDescTextColor);
-
-
-}
-#else
-void TextFieldBase::executeSyncImpl(      TextFieldBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
-        _sfAlignment.syncWith(pOther->_sfAlignment);
-
-    if(FieldBits::NoField != (EmptyDescTextFontFieldMask & whichField))
-        _sfEmptyDescTextFont.syncWith(pOther->_sfEmptyDescTextFont);
-
-    if(FieldBits::NoField != (EmptyDescTextFieldMask & whichField))
-        _sfEmptyDescText.syncWith(pOther->_sfEmptyDescText);
-
-    if(FieldBits::NoField != (EmptyDescTextColorFieldMask & whichField))
-        _sfEmptyDescTextColor.syncWith(pOther->_sfEmptyDescTextColor);
-
-
-
+    return fc;
 }
 
-void TextFieldBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+TextFieldTransitPtr TextFieldBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    TextFieldTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<TextField>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+TextFieldTransitPtr TextFieldBase::create(void)
+{
+    TextFieldTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<TextField>(tmpPtr);
+    }
+
+    return fc;
+}
+
+TextField *TextFieldBase::createEmptyLocal(BitVector bFlags)
+{
+    TextField *returnValue;
+
+    newPtr<TextField>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+TextField *TextFieldBase::createEmpty(void)
+{
+    TextField *returnValue;
+
+    newPtr<TextField>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr TextFieldBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    TextField *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const TextField *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TextFieldBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    TextField *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const TextField *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TextFieldBase::shallowCopy(void) const
+{
+    TextField *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const TextField *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+TextFieldBase::TextFieldBase(void) :
+    Inherited(),
+    _sfAlignment              (Vec2f(0.0f, 0.5f)),
+    _sfEmptyDescTextFont      (NULL),
+    _sfEmptyDescText          (),
+    _sfEmptyDescTextColor     (Color4f(0.3,0.3,0.3,1.0))
+{
+    _Producer.setType(&_producerType);
+}
+
+TextFieldBase::TextFieldBase(const TextFieldBase &source) :
+    Inherited(source),
+    _sfAlignment              (source._sfAlignment              ),
+    _sfEmptyDescTextFont      (NULL),
+    _sfEmptyDescText          (source._sfEmptyDescText          ),
+    _sfEmptyDescTextColor     (source._sfEmptyDescTextColor     )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+TextFieldBase::~TextFieldBase(void)
+{
+}
+
+void TextFieldBase::onCreate(const TextField *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        TextField *pThis = static_cast<TextField *>(this);
+
+        pThis->setEmptyDescTextFont(source->getEmptyDescTextFont());
+    }
+}
+
+GetFieldHandlePtr TextFieldBase::getHandleAlignment       (void) const
+{
+    SFVec2f::GetHandlePtr returnValue(
+        new  SFVec2f::GetHandle(
+             &_sfAlignment,
+             this->getType().getFieldDesc(AlignmentFieldId),
+             const_cast<TextFieldBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TextFieldBase::editHandleAlignment      (void)
+{
+    SFVec2f::EditHandlePtr returnValue(
+        new  SFVec2f::EditHandle(
+             &_sfAlignment,
+             this->getType().getFieldDesc(AlignmentFieldId),
+             this));
+
+
+    editSField(AlignmentFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TextFieldBase::getHandleEmptyDescTextFont (void) const
+{
+    SFUnrecUIFontPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIFontPtr::GetHandle(
+             &_sfEmptyDescTextFont,
+             this->getType().getFieldDesc(EmptyDescTextFontFieldId),
+             const_cast<TextFieldBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TextFieldBase::editHandleEmptyDescTextFont(void)
+{
+    SFUnrecUIFontPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIFontPtr::EditHandle(
+             &_sfEmptyDescTextFont,
+             this->getType().getFieldDesc(EmptyDescTextFontFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&TextField::setEmptyDescTextFont,
+                    static_cast<TextField *>(this), _1));
+
+    editSField(EmptyDescTextFontFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TextFieldBase::getHandleEmptyDescText   (void) const
+{
+    SFString::GetHandlePtr returnValue(
+        new  SFString::GetHandle(
+             &_sfEmptyDescText,
+             this->getType().getFieldDesc(EmptyDescTextFieldId),
+             const_cast<TextFieldBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TextFieldBase::editHandleEmptyDescText  (void)
+{
+    SFString::EditHandlePtr returnValue(
+        new  SFString::EditHandle(
+             &_sfEmptyDescText,
+             this->getType().getFieldDesc(EmptyDescTextFieldId),
+             this));
+
+
+    editSField(EmptyDescTextFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TextFieldBase::getHandleEmptyDescTextColor (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfEmptyDescTextColor,
+             this->getType().getFieldDesc(EmptyDescTextColorFieldId),
+             const_cast<TextFieldBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TextFieldBase::editHandleEmptyDescTextColor(void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfEmptyDescTextColor,
+             this->getType().getFieldDesc(EmptyDescTextColorFieldId),
+             this));
+
+
+    editSField(EmptyDescTextColorFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void TextFieldBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    TextField *pThis = static_cast<TextField *>(this);
+
+    pThis->execSync(static_cast<TextField *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *TextFieldBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    TextField *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const TextField *>(pRefAspect),
+                  dynamic_cast<const TextField *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TextFieldPtr>::_type("TextFieldPtr", "EditableTextComponentPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(TextFieldPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(TextFieldPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void TextFieldBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<TextField *>(this)->setEmptyDescTextFont(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-

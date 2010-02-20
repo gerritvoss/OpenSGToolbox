@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Mark Stenerson             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,222 +50,363 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEDIALOGWINDOWINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGTextureObjChunk.h"         // ErrorIcon Class
 
 #include "OSGDialogWindowBase.h"
 #include "OSGDialogWindow.h"
 
+#include <boost/bind.hpp>
+
+#include "OSGEvent.h"
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  DialogWindowBase::ErrorIconFieldMask = 
-    (TypeTraits<BitVector>::One << DialogWindowBase::ErrorIconFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  DialogWindowBase::QuestionIconFieldMask = 
-    (TypeTraits<BitVector>::One << DialogWindowBase::QuestionIconFieldId);
+/*! \class OSG::DialogWindow
+    A UI Dialog Window.
+ */
 
-const OSG::BitVector  DialogWindowBase::DefaultIconFieldMask = 
-    (TypeTraits<BitVector>::One << DialogWindowBase::DefaultIconFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  DialogWindowBase::ShowCancelFieldMask = 
-    (TypeTraits<BitVector>::One << DialogWindowBase::ShowCancelFieldId);
-
-const OSG::BitVector  DialogWindowBase::InputValuesFieldMask = 
-    (TypeTraits<BitVector>::One << DialogWindowBase::InputValuesFieldId);
-
-const OSG::BitVector DialogWindowBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var Real32          DialogWindowBase::_sfErrorIcon
+/*! \var TextureObjChunk * DialogWindowBase::_sfErrorIcon
     
 */
-/*! \var Real32          DialogWindowBase::_sfQuestionIcon
+
+/*! \var TextureObjChunk * DialogWindowBase::_sfQuestionIcon
     
 */
-/*! \var Real32          DialogWindowBase::_sfDefaultIcon
+
+/*! \var TextureObjChunk * DialogWindowBase::_sfDefaultIcon
     
 */
+
 /*! \var bool            DialogWindowBase::_sfShowCancel
     
 */
+
 /*! \var std::string     DialogWindowBase::_sfInputValues
     
 */
 
-//! DialogWindow description
 
-FieldDescription *DialogWindowBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<DialogWindow *>::_type("DialogWindowPtr", "InternalWindowPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(DialogWindow *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           DialogWindow *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           DialogWindow *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void DialogWindowBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "errorIcon", 
-                     ErrorIconFieldId, ErrorIconFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DialogWindowBase::editSFErrorIcon)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "questionIcon", 
-                     QuestionIconFieldId, QuestionIconFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DialogWindowBase::editSFQuestionIcon)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "defaultIcon", 
-                     DefaultIconFieldId, DefaultIconFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DialogWindowBase::editSFDefaultIcon)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "showCancel", 
-                     ShowCancelFieldId, ShowCancelFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DialogWindowBase::editSFShowCancel)),
-    new FieldDescription(SFString::getClassType(), 
-                     "inputValues", 
-                     InputValuesFieldId, InputValuesFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&DialogWindowBase::editSFInputValues))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType DialogWindowBase::_type(
-    "DialogWindow",
-    "InternalWindow",
+    pDesc = new SFUnrecTextureObjChunkPtr::Description(
+        SFUnrecTextureObjChunkPtr::getClassType(),
+        "ErrorIcon",
+        "",
+        ErrorIconFieldId, ErrorIconFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DialogWindow::editHandleErrorIcon),
+        static_cast<FieldGetMethodSig >(&DialogWindow::getHandleErrorIcon));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecTextureObjChunkPtr::Description(
+        SFUnrecTextureObjChunkPtr::getClassType(),
+        "QuestionIcon",
+        "",
+        QuestionIconFieldId, QuestionIconFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DialogWindow::editHandleQuestionIcon),
+        static_cast<FieldGetMethodSig >(&DialogWindow::getHandleQuestionIcon));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecTextureObjChunkPtr::Description(
+        SFUnrecTextureObjChunkPtr::getClassType(),
+        "DefaultIcon",
+        "",
+        DefaultIconFieldId, DefaultIconFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DialogWindow::editHandleDefaultIcon),
+        static_cast<FieldGetMethodSig >(&DialogWindow::getHandleDefaultIcon));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "ShowCancel",
+        "",
+        ShowCancelFieldId, ShowCancelFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DialogWindow::editHandleShowCancel),
+        static_cast<FieldGetMethodSig >(&DialogWindow::getHandleShowCancel));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFString::Description(
+        SFString::getClassType(),
+        "InputValues",
+        "",
+        InputValuesFieldId, InputValuesFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DialogWindow::editHandleInputValues),
+        static_cast<FieldGetMethodSig >(&DialogWindow::getHandleInputValues));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+DialogWindowBase::TypeObject DialogWindowBase::_type(
+    DialogWindowBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
     NULL,
-    reinterpret_cast<PrototypeCreateF>(&DialogWindowBase::createEmpty),
     DialogWindow::initMethod,
-    _desc,
-    sizeof(_desc));
+    DialogWindow::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&DialogWindow::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"DialogWindow\"\n"
+    "\tparent=\"InternalWindow\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "    structure=\"abstract\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com), Mark Stenerson             \"\n"
+    "    parentProducer=\"AbstractWindow\"\n"
+    ">\n"
+    "A UI Dialog Window.\n"
+    "\t<Field\n"
+    "\t\tname=\"ErrorIcon\"\n"
+    "\t\ttype=\"TextureObjChunk\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"QuestionIcon\"\n"
+    "\t\ttype=\"TextureObjChunk\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"DefaultIcon\"\n"
+    "\t\ttype=\"TextureObjChunk\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ShowCancel\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"true\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InputValues\"\n"
+    "\t\ttype=\"std::string\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"DialogWindowClosing\"\n"
+    "\t\ttype=\"DialogWindowEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"DialogWindowClosed\"\n"
+    "\t\ttype=\"DialogWindowEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "</FieldContainer>\n",
+    "A UI Dialog Window.\n"
+    );
 
 //! DialogWindow Produced Methods
 
 MethodDescription *DialogWindowBase::_methodDesc[] =
 {
     new MethodDescription("DialogWindowClosing", 
+                    "",
                      DialogWindowClosingMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("DialogWindowClosed", 
+                    "",
                      DialogWindowClosedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod())
 };
 
 EventProducerType DialogWindowBase::_producerType(
     "DialogWindowProducerType",
     "AbstractWindowProducerType",
-    NULL,
+    "",
     InitEventProducerFunctor(),
     _methodDesc,
     sizeof(_methodDesc));
-//OSG_FIELD_CONTAINER_DEF(DialogWindowBase, DialogWindowPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &DialogWindowBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &DialogWindowBase::getType(void) const 
+FieldContainerType &DialogWindowBase::getType(void)
 {
     return _type;
-} 
+}
+
+const FieldContainerType &DialogWindowBase::getType(void) const
+{
+    return _type;
+}
 
 const EventProducerType &DialogWindowBase::getProducerType(void) const
 {
     return _producerType;
 }
 
-
-FieldContainerPtr DialogWindowBase::shallowCopy(void) const 
-{ 
-    DialogWindowPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const DialogWindow *>(this)); 
-
-    return returnValue; 
-}
-
-UInt32 DialogWindowBase::getContainerSize(void) const 
-{ 
-    return sizeof(DialogWindow); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DialogWindowBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+UInt32 DialogWindowBase::getContainerSize(void) const
 {
-    this->executeSyncImpl(static_cast<DialogWindowBase *>(&other),
-                          whichField);
+    return sizeof(DialogWindow);
 }
-#else
-void DialogWindowBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the DialogWindow::_sfErrorIcon field.
+const SFUnrecTextureObjChunkPtr *DialogWindowBase::getSFErrorIcon(void) const
 {
-    this->executeSyncImpl((DialogWindowBase *) &other, whichField, sInfo);
+    return &_sfErrorIcon;
 }
-void DialogWindowBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+SFUnrecTextureObjChunkPtr *DialogWindowBase::editSFErrorIcon      (void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(ErrorIconFieldMask);
+
+    return &_sfErrorIcon;
 }
 
-void DialogWindowBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+//! Get the DialogWindow::_sfQuestionIcon field.
+const SFUnrecTextureObjChunkPtr *DialogWindowBase::getSFQuestionIcon(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfQuestionIcon;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-DialogWindowBase::DialogWindowBase(void) :
-    _sfErrorIcon              (), 
-    _sfQuestionIcon           (), 
-    _sfDefaultIcon            (), 
-    _sfShowCancel             (bool(true)), 
-    _sfInputValues            (), 
-    Inherited() 
+SFUnrecTextureObjChunkPtr *DialogWindowBase::editSFQuestionIcon   (void)
 {
-    _Producer.setType(&_producerType);
+    editSField(QuestionIconFieldMask);
+
+    return &_sfQuestionIcon;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-DialogWindowBase::DialogWindowBase(const DialogWindowBase &source) :
-    _sfErrorIcon              (source._sfErrorIcon              ), 
-    _sfQuestionIcon           (source._sfQuestionIcon           ), 
-    _sfDefaultIcon            (source._sfDefaultIcon            ), 
-    _sfShowCancel             (source._sfShowCancel             ), 
-    _sfInputValues            (source._sfInputValues            ), 
-    Inherited                 (source)
+//! Get the DialogWindow::_sfDefaultIcon field.
+const SFUnrecTextureObjChunkPtr *DialogWindowBase::getSFDefaultIcon(void) const
 {
+    return &_sfDefaultIcon;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-DialogWindowBase::~DialogWindowBase(void)
+SFUnrecTextureObjChunkPtr *DialogWindowBase::editSFDefaultIcon    (void)
 {
+    editSField(DefaultIconFieldMask);
+
+    return &_sfDefaultIcon;
 }
+
+SFBool *DialogWindowBase::editSFShowCancel(void)
+{
+    editSField(ShowCancelFieldMask);
+
+    return &_sfShowCancel;
+}
+
+const SFBool *DialogWindowBase::getSFShowCancel(void) const
+{
+    return &_sfShowCancel;
+}
+
+
+SFString *DialogWindowBase::editSFInputValues(void)
+{
+    editSField(InputValuesFieldMask);
+
+    return &_sfInputValues;
+}
+
+const SFString *DialogWindowBase::getSFInputValues(void) const
+{
+    return &_sfInputValues;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 DialogWindowBase::getBinSize(const BitVector &whichField)
+UInt32 DialogWindowBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -273,33 +414,28 @@ UInt32 DialogWindowBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfErrorIcon.getBinSize();
     }
-
     if(FieldBits::NoField != (QuestionIconFieldMask & whichField))
     {
         returnValue += _sfQuestionIcon.getBinSize();
     }
-
     if(FieldBits::NoField != (DefaultIconFieldMask & whichField))
     {
         returnValue += _sfDefaultIcon.getBinSize();
     }
-
     if(FieldBits::NoField != (ShowCancelFieldMask & whichField))
     {
         returnValue += _sfShowCancel.getBinSize();
     }
-
     if(FieldBits::NoField != (InputValuesFieldMask & whichField))
     {
         returnValue += _sfInputValues.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void DialogWindowBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void DialogWindowBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -307,32 +443,26 @@ void DialogWindowBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfErrorIcon.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (QuestionIconFieldMask & whichField))
     {
         _sfQuestionIcon.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DefaultIconFieldMask & whichField))
     {
         _sfDefaultIcon.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ShowCancelFieldMask & whichField))
     {
         _sfShowCancel.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InputValuesFieldMask & whichField))
     {
         _sfInputValues.copyToBin(pMem);
     }
-
-
 }
 
-void DialogWindowBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void DialogWindowBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -340,106 +470,239 @@ void DialogWindowBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfErrorIcon.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (QuestionIconFieldMask & whichField))
     {
         _sfQuestionIcon.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DefaultIconFieldMask & whichField))
     {
         _sfDefaultIcon.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ShowCancelFieldMask & whichField))
     {
         _sfShowCancel.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InputValuesFieldMask & whichField))
     {
         _sfInputValues.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DialogWindowBase::executeSyncImpl(      DialogWindowBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+DialogWindowBase::DialogWindowBase(void) :
+    Inherited(),
+    _sfErrorIcon              (NULL),
+    _sfQuestionIcon           (NULL),
+    _sfDefaultIcon            (NULL),
+    _sfShowCancel             (bool(true)),
+    _sfInputValues            ()
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-    if(FieldBits::NoField != (ErrorIconFieldMask & whichField))
-        _sfErrorIcon.syncWith(pOther->_sfErrorIcon);
-
-    if(FieldBits::NoField != (QuestionIconFieldMask & whichField))
-        _sfQuestionIcon.syncWith(pOther->_sfQuestionIcon);
-
-    if(FieldBits::NoField != (DefaultIconFieldMask & whichField))
-        _sfDefaultIcon.syncWith(pOther->_sfDefaultIcon);
-
-    if(FieldBits::NoField != (ShowCancelFieldMask & whichField))
-        _sfShowCancel.syncWith(pOther->_sfShowCancel);
-
-    if(FieldBits::NoField != (InputValuesFieldMask & whichField))
-        _sfInputValues.syncWith(pOther->_sfInputValues);
-
-
-}
-#else
-void DialogWindowBase::executeSyncImpl(      DialogWindowBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ErrorIconFieldMask & whichField))
-        _sfErrorIcon.syncWith(pOther->_sfErrorIcon);
-
-    if(FieldBits::NoField != (QuestionIconFieldMask & whichField))
-        _sfQuestionIcon.syncWith(pOther->_sfQuestionIcon);
-
-    if(FieldBits::NoField != (DefaultIconFieldMask & whichField))
-        _sfDefaultIcon.syncWith(pOther->_sfDefaultIcon);
-
-    if(FieldBits::NoField != (ShowCancelFieldMask & whichField))
-        _sfShowCancel.syncWith(pOther->_sfShowCancel);
-
-    if(FieldBits::NoField != (InputValuesFieldMask & whichField))
-        _sfInputValues.syncWith(pOther->_sfInputValues);
-
-
-
+    _Producer.setType(&_producerType);
 }
 
-void DialogWindowBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+DialogWindowBase::DialogWindowBase(const DialogWindowBase &source) :
+    Inherited(source),
+    _sfErrorIcon              (NULL),
+    _sfQuestionIcon           (NULL),
+    _sfDefaultIcon            (NULL),
+    _sfShowCancel             (source._sfShowCancel             ),
+    _sfInputValues            (source._sfInputValues            )
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
+
+/*-------------------------- destructors ----------------------------------*/
+
+DialogWindowBase::~DialogWindowBase(void)
+{
+}
+
+void DialogWindowBase::onCreate(const DialogWindow *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        DialogWindow *pThis = static_cast<DialogWindow *>(this);
+
+        pThis->setErrorIcon(source->getErrorIcon());
+
+        pThis->setQuestionIcon(source->getQuestionIcon());
+
+        pThis->setDefaultIcon(source->getDefaultIcon());
+    }
+}
+
+GetFieldHandlePtr DialogWindowBase::getHandleErrorIcon       (void) const
+{
+    SFUnrecTextureObjChunkPtr::GetHandlePtr returnValue(
+        new  SFUnrecTextureObjChunkPtr::GetHandle(
+             &_sfErrorIcon,
+             this->getType().getFieldDesc(ErrorIconFieldId),
+             const_cast<DialogWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DialogWindowBase::editHandleErrorIcon      (void)
+{
+    SFUnrecTextureObjChunkPtr::EditHandlePtr returnValue(
+        new  SFUnrecTextureObjChunkPtr::EditHandle(
+             &_sfErrorIcon,
+             this->getType().getFieldDesc(ErrorIconFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DialogWindow::setErrorIcon,
+                    static_cast<DialogWindow *>(this), _1));
+
+    editSField(ErrorIconFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DialogWindowBase::getHandleQuestionIcon    (void) const
+{
+    SFUnrecTextureObjChunkPtr::GetHandlePtr returnValue(
+        new  SFUnrecTextureObjChunkPtr::GetHandle(
+             &_sfQuestionIcon,
+             this->getType().getFieldDesc(QuestionIconFieldId),
+             const_cast<DialogWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DialogWindowBase::editHandleQuestionIcon   (void)
+{
+    SFUnrecTextureObjChunkPtr::EditHandlePtr returnValue(
+        new  SFUnrecTextureObjChunkPtr::EditHandle(
+             &_sfQuestionIcon,
+             this->getType().getFieldDesc(QuestionIconFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DialogWindow::setQuestionIcon,
+                    static_cast<DialogWindow *>(this), _1));
+
+    editSField(QuestionIconFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DialogWindowBase::getHandleDefaultIcon     (void) const
+{
+    SFUnrecTextureObjChunkPtr::GetHandlePtr returnValue(
+        new  SFUnrecTextureObjChunkPtr::GetHandle(
+             &_sfDefaultIcon,
+             this->getType().getFieldDesc(DefaultIconFieldId),
+             const_cast<DialogWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DialogWindowBase::editHandleDefaultIcon    (void)
+{
+    SFUnrecTextureObjChunkPtr::EditHandlePtr returnValue(
+        new  SFUnrecTextureObjChunkPtr::EditHandle(
+             &_sfDefaultIcon,
+             this->getType().getFieldDesc(DefaultIconFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DialogWindow::setDefaultIcon,
+                    static_cast<DialogWindow *>(this), _1));
+
+    editSField(DefaultIconFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DialogWindowBase::getHandleShowCancel      (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfShowCancel,
+             this->getType().getFieldDesc(ShowCancelFieldId),
+             const_cast<DialogWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DialogWindowBase::editHandleShowCancel     (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfShowCancel,
+             this->getType().getFieldDesc(ShowCancelFieldId),
+             this));
+
+
+    editSField(ShowCancelFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DialogWindowBase::getHandleInputValues     (void) const
+{
+    SFString::GetHandlePtr returnValue(
+        new  SFString::GetHandle(
+             &_sfInputValues,
+             this->getType().getFieldDesc(InputValuesFieldId),
+             const_cast<DialogWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DialogWindowBase::editHandleInputValues    (void)
+{
+    SFString::EditHandlePtr returnValue(
+        new  SFString::EditHandle(
+             &_sfInputValues,
+             this->getType().getFieldDesc(InputValuesFieldId),
+             this));
+
+
+    editSField(InputValuesFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void DialogWindowBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    DialogWindow *pThis = static_cast<DialogWindow *>(this);
+
+    pThis->execSync(static_cast<DialogWindow *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
 
+void DialogWindowBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<DialogWindow *>(this)->setErrorIcon(NULL);
+
+    static_cast<DialogWindow *>(this)->setQuestionIcon(NULL);
+
+    static_cast<DialogWindow *>(this)->setDefaultIcon(NULL);
+
+
+}
+
+
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<DialogWindowPtr>::_type("DialogWindowPtr", "InternalWindowPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(DialogWindowPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(DialogWindowPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-OSG_END_NAMESPACE
-

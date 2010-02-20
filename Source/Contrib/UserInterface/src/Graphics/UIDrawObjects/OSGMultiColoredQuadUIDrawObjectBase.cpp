@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,246 +50,487 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEMULTICOLOREDQUADUIDRAWOBJECTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGMultiColoredQuadUIDrawObjectBase.h"
 #include "OSGMultiColoredQuadUIDrawObject.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  MultiColoredQuadUIDrawObjectBase::Point1FieldMask = 
-    (TypeTraits<BitVector>::One << MultiColoredQuadUIDrawObjectBase::Point1FieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  MultiColoredQuadUIDrawObjectBase::Point2FieldMask = 
-    (TypeTraits<BitVector>::One << MultiColoredQuadUIDrawObjectBase::Point2FieldId);
+/*! \class OSG::MultiColoredQuadUIDrawObject
+    A UI MultiColoredQuadUIDrawObject.
+ */
 
-const OSG::BitVector  MultiColoredQuadUIDrawObjectBase::Point3FieldMask = 
-    (TypeTraits<BitVector>::One << MultiColoredQuadUIDrawObjectBase::Point3FieldId);
-
-const OSG::BitVector  MultiColoredQuadUIDrawObjectBase::Point4FieldMask = 
-    (TypeTraits<BitVector>::One << MultiColoredQuadUIDrawObjectBase::Point4FieldId);
-
-const OSG::BitVector  MultiColoredQuadUIDrawObjectBase::Color1FieldMask = 
-    (TypeTraits<BitVector>::One << MultiColoredQuadUIDrawObjectBase::Color1FieldId);
-
-const OSG::BitVector  MultiColoredQuadUIDrawObjectBase::Color2FieldMask = 
-    (TypeTraits<BitVector>::One << MultiColoredQuadUIDrawObjectBase::Color2FieldId);
-
-const OSG::BitVector  MultiColoredQuadUIDrawObjectBase::Color3FieldMask = 
-    (TypeTraits<BitVector>::One << MultiColoredQuadUIDrawObjectBase::Color3FieldId);
-
-const OSG::BitVector  MultiColoredQuadUIDrawObjectBase::Color4FieldMask = 
-    (TypeTraits<BitVector>::One << MultiColoredQuadUIDrawObjectBase::Color4FieldId);
-
-const OSG::BitVector  MultiColoredQuadUIDrawObjectBase::OpacityFieldMask = 
-    (TypeTraits<BitVector>::One << MultiColoredQuadUIDrawObjectBase::OpacityFieldId);
-
-const OSG::BitVector MultiColoredQuadUIDrawObjectBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Pnt2f           MultiColoredQuadUIDrawObjectBase::_sfPoint1
     
 */
+
 /*! \var Pnt2f           MultiColoredQuadUIDrawObjectBase::_sfPoint2
     
 */
+
 /*! \var Pnt2f           MultiColoredQuadUIDrawObjectBase::_sfPoint3
     
 */
+
 /*! \var Pnt2f           MultiColoredQuadUIDrawObjectBase::_sfPoint4
     
 */
+
 /*! \var Color4f         MultiColoredQuadUIDrawObjectBase::_sfColor1
     
 */
+
 /*! \var Color4f         MultiColoredQuadUIDrawObjectBase::_sfColor2
     
 */
+
 /*! \var Color4f         MultiColoredQuadUIDrawObjectBase::_sfColor3
     
 */
+
 /*! \var Color4f         MultiColoredQuadUIDrawObjectBase::_sfColor4
     
 */
+
 /*! \var Real32          MultiColoredQuadUIDrawObjectBase::_sfOpacity
     
 */
 
-//! MultiColoredQuadUIDrawObject description
 
-FieldDescription *MultiColoredQuadUIDrawObjectBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<MultiColoredQuadUIDrawObject *>::_type("MultiColoredQuadUIDrawObjectPtr", "UIDrawObjectPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(MultiColoredQuadUIDrawObject *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           MultiColoredQuadUIDrawObject *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           MultiColoredQuadUIDrawObject *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void MultiColoredQuadUIDrawObjectBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFPnt2f::getClassType(), 
-                     "Point1", 
-                     Point1FieldId, Point1FieldMask,
-                     false,
-                     (FieldAccessMethod) &MultiColoredQuadUIDrawObjectBase::getSFPoint1),
-    new FieldDescription(SFPnt2f::getClassType(), 
-                     "Point2", 
-                     Point2FieldId, Point2FieldMask,
-                     false,
-                     (FieldAccessMethod) &MultiColoredQuadUIDrawObjectBase::getSFPoint2),
-    new FieldDescription(SFPnt2f::getClassType(), 
-                     "Point3", 
-                     Point3FieldId, Point3FieldMask,
-                     false,
-                     (FieldAccessMethod) &MultiColoredQuadUIDrawObjectBase::getSFPoint3),
-    new FieldDescription(SFPnt2f::getClassType(), 
-                     "Point4", 
-                     Point4FieldId, Point4FieldMask,
-                     false,
-                     (FieldAccessMethod) &MultiColoredQuadUIDrawObjectBase::getSFPoint4),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "Color1", 
-                     Color1FieldId, Color1FieldMask,
-                     false,
-                     (FieldAccessMethod) &MultiColoredQuadUIDrawObjectBase::getSFColor1),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "Color2", 
-                     Color2FieldId, Color2FieldMask,
-                     false,
-                     (FieldAccessMethod) &MultiColoredQuadUIDrawObjectBase::getSFColor2),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "Color3", 
-                     Color3FieldId, Color3FieldMask,
-                     false,
-                     (FieldAccessMethod) &MultiColoredQuadUIDrawObjectBase::getSFColor3),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "Color4", 
-                     Color4FieldId, Color4FieldMask,
-                     false,
-                     (FieldAccessMethod) &MultiColoredQuadUIDrawObjectBase::getSFColor4),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Opacity", 
-                     OpacityFieldId, OpacityFieldMask,
-                     false,
-                     (FieldAccessMethod) &MultiColoredQuadUIDrawObjectBase::getSFOpacity)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType MultiColoredQuadUIDrawObjectBase::_type(
-    "MultiColoredQuadUIDrawObject",
-    "UIDrawObject",
-    NULL,
-    (PrototypeCreateF) &MultiColoredQuadUIDrawObjectBase::createEmpty,
+    pDesc = new SFPnt2f::Description(
+        SFPnt2f::getClassType(),
+        "Point1",
+        "",
+        Point1FieldId, Point1FieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MultiColoredQuadUIDrawObject::editHandlePoint1),
+        static_cast<FieldGetMethodSig >(&MultiColoredQuadUIDrawObject::getHandlePoint1));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFPnt2f::Description(
+        SFPnt2f::getClassType(),
+        "Point2",
+        "",
+        Point2FieldId, Point2FieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MultiColoredQuadUIDrawObject::editHandlePoint2),
+        static_cast<FieldGetMethodSig >(&MultiColoredQuadUIDrawObject::getHandlePoint2));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFPnt2f::Description(
+        SFPnt2f::getClassType(),
+        "Point3",
+        "",
+        Point3FieldId, Point3FieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MultiColoredQuadUIDrawObject::editHandlePoint3),
+        static_cast<FieldGetMethodSig >(&MultiColoredQuadUIDrawObject::getHandlePoint3));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFPnt2f::Description(
+        SFPnt2f::getClassType(),
+        "Point4",
+        "",
+        Point4FieldId, Point4FieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MultiColoredQuadUIDrawObject::editHandlePoint4),
+        static_cast<FieldGetMethodSig >(&MultiColoredQuadUIDrawObject::getHandlePoint4));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "Color1",
+        "",
+        Color1FieldId, Color1FieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MultiColoredQuadUIDrawObject::editHandleColor1),
+        static_cast<FieldGetMethodSig >(&MultiColoredQuadUIDrawObject::getHandleColor1));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "Color2",
+        "",
+        Color2FieldId, Color2FieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MultiColoredQuadUIDrawObject::editHandleColor2),
+        static_cast<FieldGetMethodSig >(&MultiColoredQuadUIDrawObject::getHandleColor2));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "Color3",
+        "",
+        Color3FieldId, Color3FieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MultiColoredQuadUIDrawObject::editHandleColor3),
+        static_cast<FieldGetMethodSig >(&MultiColoredQuadUIDrawObject::getHandleColor3));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "Color4",
+        "",
+        Color4FieldId, Color4FieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MultiColoredQuadUIDrawObject::editHandleColor4),
+        static_cast<FieldGetMethodSig >(&MultiColoredQuadUIDrawObject::getHandleColor4));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Opacity",
+        "",
+        OpacityFieldId, OpacityFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MultiColoredQuadUIDrawObject::editHandleOpacity),
+        static_cast<FieldGetMethodSig >(&MultiColoredQuadUIDrawObject::getHandleOpacity));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+MultiColoredQuadUIDrawObjectBase::TypeObject MultiColoredQuadUIDrawObjectBase::_type(
+    MultiColoredQuadUIDrawObjectBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&MultiColoredQuadUIDrawObjectBase::createEmptyLocal),
     MultiColoredQuadUIDrawObject::initMethod,
-    _desc,
-    sizeof(_desc));
+    MultiColoredQuadUIDrawObject::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&MultiColoredQuadUIDrawObject::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"MultiColoredQuadUIDrawObject\"\n"
+    "\tparent=\"UIDrawObject\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI MultiColoredQuadUIDrawObject.\n"
+    "\t<Field\n"
+    "\t\tname=\"Point1\"\n"
+    "\t\ttype=\"Pnt2f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0,0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Point2\"\n"
+    "\t\ttype=\"Pnt2f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0,1\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Point3\"\n"
+    "\t\ttype=\"Pnt2f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1,1\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Point4\"\n"
+    "\t\ttype=\"Pnt2f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1,0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Color1\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0,1.0,1.0,1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Color2\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0,1.0,1.0,1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Color3\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0,1.0,1.0,1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Color4\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0,1.0,1.0,1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Opacity\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI MultiColoredQuadUIDrawObject.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(MultiColoredQuadUIDrawObjectBase, MultiColoredQuadUIDrawObjectPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &MultiColoredQuadUIDrawObjectBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &MultiColoredQuadUIDrawObjectBase::getType(void) const 
+FieldContainerType &MultiColoredQuadUIDrawObjectBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr MultiColoredQuadUIDrawObjectBase::shallowCopy(void) const 
-{ 
-    MultiColoredQuadUIDrawObjectPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const MultiColoredQuadUIDrawObject *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 MultiColoredQuadUIDrawObjectBase::getContainerSize(void) const 
-{ 
-    return sizeof(MultiColoredQuadUIDrawObject); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void MultiColoredQuadUIDrawObjectBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &MultiColoredQuadUIDrawObjectBase::getType(void) const
 {
-    this->executeSyncImpl((MultiColoredQuadUIDrawObjectBase *) &other, whichField);
+    return _type;
 }
-#else
-void MultiColoredQuadUIDrawObjectBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 MultiColoredQuadUIDrawObjectBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((MultiColoredQuadUIDrawObjectBase *) &other, whichField, sInfo);
+    return sizeof(MultiColoredQuadUIDrawObject);
 }
-void MultiColoredQuadUIDrawObjectBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFPnt2f *MultiColoredQuadUIDrawObjectBase::editSFPoint1(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(Point1FieldMask);
+
+    return &_sfPoint1;
 }
 
-void MultiColoredQuadUIDrawObjectBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFPnt2f *MultiColoredQuadUIDrawObjectBase::getSFPoint1(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfPoint1;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-MultiColoredQuadUIDrawObjectBase::MultiColoredQuadUIDrawObjectBase(void) :
-    _sfPoint1                 (Pnt2f(0,0)), 
-    _sfPoint2                 (Pnt2f(0,1)), 
-    _sfPoint3                 (Pnt2f(1,1)), 
-    _sfPoint4                 (Pnt2f(1,0)), 
-    _sfColor1                 (Color4f(1.0,1.0,1.0,1.0)), 
-    _sfColor2                 (Color4f(1.0,1.0,1.0,1.0)), 
-    _sfColor3                 (Color4f(1.0,1.0,1.0,1.0)), 
-    _sfColor4                 (Color4f(1.0,1.0,1.0,1.0)), 
-    _sfOpacity                (Real32(1.0)), 
-    Inherited() 
+SFPnt2f *MultiColoredQuadUIDrawObjectBase::editSFPoint2(void)
 {
+    editSField(Point2FieldMask);
+
+    return &_sfPoint2;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-MultiColoredQuadUIDrawObjectBase::MultiColoredQuadUIDrawObjectBase(const MultiColoredQuadUIDrawObjectBase &source) :
-    _sfPoint1                 (source._sfPoint1                 ), 
-    _sfPoint2                 (source._sfPoint2                 ), 
-    _sfPoint3                 (source._sfPoint3                 ), 
-    _sfPoint4                 (source._sfPoint4                 ), 
-    _sfColor1                 (source._sfColor1                 ), 
-    _sfColor2                 (source._sfColor2                 ), 
-    _sfColor3                 (source._sfColor3                 ), 
-    _sfColor4                 (source._sfColor4                 ), 
-    _sfOpacity                (source._sfOpacity                ), 
-    Inherited                 (source)
+const SFPnt2f *MultiColoredQuadUIDrawObjectBase::getSFPoint2(void) const
 {
+    return &_sfPoint2;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-MultiColoredQuadUIDrawObjectBase::~MultiColoredQuadUIDrawObjectBase(void)
+SFPnt2f *MultiColoredQuadUIDrawObjectBase::editSFPoint3(void)
 {
+    editSField(Point3FieldMask);
+
+    return &_sfPoint3;
 }
+
+const SFPnt2f *MultiColoredQuadUIDrawObjectBase::getSFPoint3(void) const
+{
+    return &_sfPoint3;
+}
+
+
+SFPnt2f *MultiColoredQuadUIDrawObjectBase::editSFPoint4(void)
+{
+    editSField(Point4FieldMask);
+
+    return &_sfPoint4;
+}
+
+const SFPnt2f *MultiColoredQuadUIDrawObjectBase::getSFPoint4(void) const
+{
+    return &_sfPoint4;
+}
+
+
+SFColor4f *MultiColoredQuadUIDrawObjectBase::editSFColor1(void)
+{
+    editSField(Color1FieldMask);
+
+    return &_sfColor1;
+}
+
+const SFColor4f *MultiColoredQuadUIDrawObjectBase::getSFColor1(void) const
+{
+    return &_sfColor1;
+}
+
+
+SFColor4f *MultiColoredQuadUIDrawObjectBase::editSFColor2(void)
+{
+    editSField(Color2FieldMask);
+
+    return &_sfColor2;
+}
+
+const SFColor4f *MultiColoredQuadUIDrawObjectBase::getSFColor2(void) const
+{
+    return &_sfColor2;
+}
+
+
+SFColor4f *MultiColoredQuadUIDrawObjectBase::editSFColor3(void)
+{
+    editSField(Color3FieldMask);
+
+    return &_sfColor3;
+}
+
+const SFColor4f *MultiColoredQuadUIDrawObjectBase::getSFColor3(void) const
+{
+    return &_sfColor3;
+}
+
+
+SFColor4f *MultiColoredQuadUIDrawObjectBase::editSFColor4(void)
+{
+    editSField(Color4FieldMask);
+
+    return &_sfColor4;
+}
+
+const SFColor4f *MultiColoredQuadUIDrawObjectBase::getSFColor4(void) const
+{
+    return &_sfColor4;
+}
+
+
+SFReal32 *MultiColoredQuadUIDrawObjectBase::editSFOpacity(void)
+{
+    editSField(OpacityFieldMask);
+
+    return &_sfOpacity;
+}
+
+const SFReal32 *MultiColoredQuadUIDrawObjectBase::getSFOpacity(void) const
+{
+    return &_sfOpacity;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 MultiColoredQuadUIDrawObjectBase::getBinSize(const BitVector &whichField)
+UInt32 MultiColoredQuadUIDrawObjectBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -297,53 +538,44 @@ UInt32 MultiColoredQuadUIDrawObjectBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfPoint1.getBinSize();
     }
-
     if(FieldBits::NoField != (Point2FieldMask & whichField))
     {
         returnValue += _sfPoint2.getBinSize();
     }
-
     if(FieldBits::NoField != (Point3FieldMask & whichField))
     {
         returnValue += _sfPoint3.getBinSize();
     }
-
     if(FieldBits::NoField != (Point4FieldMask & whichField))
     {
         returnValue += _sfPoint4.getBinSize();
     }
-
     if(FieldBits::NoField != (Color1FieldMask & whichField))
     {
         returnValue += _sfColor1.getBinSize();
     }
-
     if(FieldBits::NoField != (Color2FieldMask & whichField))
     {
         returnValue += _sfColor2.getBinSize();
     }
-
     if(FieldBits::NoField != (Color3FieldMask & whichField))
     {
         returnValue += _sfColor3.getBinSize();
     }
-
     if(FieldBits::NoField != (Color4FieldMask & whichField))
     {
         returnValue += _sfColor4.getBinSize();
     }
-
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
     {
         returnValue += _sfOpacity.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void MultiColoredQuadUIDrawObjectBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void MultiColoredQuadUIDrawObjectBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -351,52 +583,42 @@ void MultiColoredQuadUIDrawObjectBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfPoint1.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (Point2FieldMask & whichField))
     {
         _sfPoint2.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (Point3FieldMask & whichField))
     {
         _sfPoint3.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (Point4FieldMask & whichField))
     {
         _sfPoint4.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (Color1FieldMask & whichField))
     {
         _sfColor1.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (Color2FieldMask & whichField))
     {
         _sfColor2.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (Color3FieldMask & whichField))
     {
         _sfColor3.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (Color4FieldMask & whichField))
     {
         _sfColor4.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
     {
         _sfOpacity.copyToBin(pMem);
     }
-
-
 }
 
-void MultiColoredQuadUIDrawObjectBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void MultiColoredQuadUIDrawObjectBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -404,170 +626,461 @@ void MultiColoredQuadUIDrawObjectBase::copyFromBin(      BinaryDataHandler &pMem
     {
         _sfPoint1.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (Point2FieldMask & whichField))
     {
         _sfPoint2.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (Point3FieldMask & whichField))
     {
         _sfPoint3.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (Point4FieldMask & whichField))
     {
         _sfPoint4.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (Color1FieldMask & whichField))
     {
         _sfColor1.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (Color2FieldMask & whichField))
     {
         _sfColor2.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (Color3FieldMask & whichField))
     {
         _sfColor3.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (Color4FieldMask & whichField))
     {
         _sfColor4.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
     {
         _sfOpacity.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void MultiColoredQuadUIDrawObjectBase::executeSyncImpl(      MultiColoredQuadUIDrawObjectBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+MultiColoredQuadUIDrawObjectTransitPtr MultiColoredQuadUIDrawObjectBase::createLocal(BitVector bFlags)
 {
+    MultiColoredQuadUIDrawObjectTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (Point1FieldMask & whichField))
-        _sfPoint1.syncWith(pOther->_sfPoint1);
+        fc = dynamic_pointer_cast<MultiColoredQuadUIDrawObject>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (Point2FieldMask & whichField))
-        _sfPoint2.syncWith(pOther->_sfPoint2);
-
-    if(FieldBits::NoField != (Point3FieldMask & whichField))
-        _sfPoint3.syncWith(pOther->_sfPoint3);
-
-    if(FieldBits::NoField != (Point4FieldMask & whichField))
-        _sfPoint4.syncWith(pOther->_sfPoint4);
-
-    if(FieldBits::NoField != (Color1FieldMask & whichField))
-        _sfColor1.syncWith(pOther->_sfColor1);
-
-    if(FieldBits::NoField != (Color2FieldMask & whichField))
-        _sfColor2.syncWith(pOther->_sfColor2);
-
-    if(FieldBits::NoField != (Color3FieldMask & whichField))
-        _sfColor3.syncWith(pOther->_sfColor3);
-
-    if(FieldBits::NoField != (Color4FieldMask & whichField))
-        _sfColor4.syncWith(pOther->_sfColor4);
-
-    if(FieldBits::NoField != (OpacityFieldMask & whichField))
-        _sfOpacity.syncWith(pOther->_sfOpacity);
-
-
-}
-#else
-void MultiColoredQuadUIDrawObjectBase::executeSyncImpl(      MultiColoredQuadUIDrawObjectBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (Point1FieldMask & whichField))
-        _sfPoint1.syncWith(pOther->_sfPoint1);
-
-    if(FieldBits::NoField != (Point2FieldMask & whichField))
-        _sfPoint2.syncWith(pOther->_sfPoint2);
-
-    if(FieldBits::NoField != (Point3FieldMask & whichField))
-        _sfPoint3.syncWith(pOther->_sfPoint3);
-
-    if(FieldBits::NoField != (Point4FieldMask & whichField))
-        _sfPoint4.syncWith(pOther->_sfPoint4);
-
-    if(FieldBits::NoField != (Color1FieldMask & whichField))
-        _sfColor1.syncWith(pOther->_sfColor1);
-
-    if(FieldBits::NoField != (Color2FieldMask & whichField))
-        _sfColor2.syncWith(pOther->_sfColor2);
-
-    if(FieldBits::NoField != (Color3FieldMask & whichField))
-        _sfColor3.syncWith(pOther->_sfColor3);
-
-    if(FieldBits::NoField != (Color4FieldMask & whichField))
-        _sfColor4.syncWith(pOther->_sfColor4);
-
-    if(FieldBits::NoField != (OpacityFieldMask & whichField))
-        _sfOpacity.syncWith(pOther->_sfOpacity);
-
-
-
+    return fc;
 }
 
-void MultiColoredQuadUIDrawObjectBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+MultiColoredQuadUIDrawObjectTransitPtr MultiColoredQuadUIDrawObjectBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    MultiColoredQuadUIDrawObjectTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<MultiColoredQuadUIDrawObject>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+MultiColoredQuadUIDrawObjectTransitPtr MultiColoredQuadUIDrawObjectBase::create(void)
+{
+    MultiColoredQuadUIDrawObjectTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<MultiColoredQuadUIDrawObject>(tmpPtr);
+    }
+
+    return fc;
+}
+
+MultiColoredQuadUIDrawObject *MultiColoredQuadUIDrawObjectBase::createEmptyLocal(BitVector bFlags)
+{
+    MultiColoredQuadUIDrawObject *returnValue;
+
+    newPtr<MultiColoredQuadUIDrawObject>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+MultiColoredQuadUIDrawObject *MultiColoredQuadUIDrawObjectBase::createEmpty(void)
+{
+    MultiColoredQuadUIDrawObject *returnValue;
+
+    newPtr<MultiColoredQuadUIDrawObject>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr MultiColoredQuadUIDrawObjectBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    MultiColoredQuadUIDrawObject *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const MultiColoredQuadUIDrawObject *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr MultiColoredQuadUIDrawObjectBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    MultiColoredQuadUIDrawObject *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const MultiColoredQuadUIDrawObject *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr MultiColoredQuadUIDrawObjectBase::shallowCopy(void) const
+{
+    MultiColoredQuadUIDrawObject *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const MultiColoredQuadUIDrawObject *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+MultiColoredQuadUIDrawObjectBase::MultiColoredQuadUIDrawObjectBase(void) :
+    Inherited(),
+    _sfPoint1                 (Pnt2f(0,0)),
+    _sfPoint2                 (Pnt2f(0,1)),
+    _sfPoint3                 (Pnt2f(1,1)),
+    _sfPoint4                 (Pnt2f(1,0)),
+    _sfColor1                 (Color4f(1.0,1.0,1.0,1.0)),
+    _sfColor2                 (Color4f(1.0,1.0,1.0,1.0)),
+    _sfColor3                 (Color4f(1.0,1.0,1.0,1.0)),
+    _sfColor4                 (Color4f(1.0,1.0,1.0,1.0)),
+    _sfOpacity                (Real32(1.0))
+{
+}
+
+MultiColoredQuadUIDrawObjectBase::MultiColoredQuadUIDrawObjectBase(const MultiColoredQuadUIDrawObjectBase &source) :
+    Inherited(source),
+    _sfPoint1                 (source._sfPoint1                 ),
+    _sfPoint2                 (source._sfPoint2                 ),
+    _sfPoint3                 (source._sfPoint3                 ),
+    _sfPoint4                 (source._sfPoint4                 ),
+    _sfColor1                 (source._sfColor1                 ),
+    _sfColor2                 (source._sfColor2                 ),
+    _sfColor3                 (source._sfColor3                 ),
+    _sfColor4                 (source._sfColor4                 ),
+    _sfOpacity                (source._sfOpacity                )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+MultiColoredQuadUIDrawObjectBase::~MultiColoredQuadUIDrawObjectBase(void)
+{
+}
+
+
+GetFieldHandlePtr MultiColoredQuadUIDrawObjectBase::getHandlePoint1          (void) const
+{
+    SFPnt2f::GetHandlePtr returnValue(
+        new  SFPnt2f::GetHandle(
+             &_sfPoint1,
+             this->getType().getFieldDesc(Point1FieldId),
+             const_cast<MultiColoredQuadUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MultiColoredQuadUIDrawObjectBase::editHandlePoint1         (void)
+{
+    SFPnt2f::EditHandlePtr returnValue(
+        new  SFPnt2f::EditHandle(
+             &_sfPoint1,
+             this->getType().getFieldDesc(Point1FieldId),
+             this));
+
+
+    editSField(Point1FieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MultiColoredQuadUIDrawObjectBase::getHandlePoint2          (void) const
+{
+    SFPnt2f::GetHandlePtr returnValue(
+        new  SFPnt2f::GetHandle(
+             &_sfPoint2,
+             this->getType().getFieldDesc(Point2FieldId),
+             const_cast<MultiColoredQuadUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MultiColoredQuadUIDrawObjectBase::editHandlePoint2         (void)
+{
+    SFPnt2f::EditHandlePtr returnValue(
+        new  SFPnt2f::EditHandle(
+             &_sfPoint2,
+             this->getType().getFieldDesc(Point2FieldId),
+             this));
+
+
+    editSField(Point2FieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MultiColoredQuadUIDrawObjectBase::getHandlePoint3          (void) const
+{
+    SFPnt2f::GetHandlePtr returnValue(
+        new  SFPnt2f::GetHandle(
+             &_sfPoint3,
+             this->getType().getFieldDesc(Point3FieldId),
+             const_cast<MultiColoredQuadUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MultiColoredQuadUIDrawObjectBase::editHandlePoint3         (void)
+{
+    SFPnt2f::EditHandlePtr returnValue(
+        new  SFPnt2f::EditHandle(
+             &_sfPoint3,
+             this->getType().getFieldDesc(Point3FieldId),
+             this));
+
+
+    editSField(Point3FieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MultiColoredQuadUIDrawObjectBase::getHandlePoint4          (void) const
+{
+    SFPnt2f::GetHandlePtr returnValue(
+        new  SFPnt2f::GetHandle(
+             &_sfPoint4,
+             this->getType().getFieldDesc(Point4FieldId),
+             const_cast<MultiColoredQuadUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MultiColoredQuadUIDrawObjectBase::editHandlePoint4         (void)
+{
+    SFPnt2f::EditHandlePtr returnValue(
+        new  SFPnt2f::EditHandle(
+             &_sfPoint4,
+             this->getType().getFieldDesc(Point4FieldId),
+             this));
+
+
+    editSField(Point4FieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MultiColoredQuadUIDrawObjectBase::getHandleColor1          (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfColor1,
+             this->getType().getFieldDesc(Color1FieldId),
+             const_cast<MultiColoredQuadUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MultiColoredQuadUIDrawObjectBase::editHandleColor1         (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfColor1,
+             this->getType().getFieldDesc(Color1FieldId),
+             this));
+
+
+    editSField(Color1FieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MultiColoredQuadUIDrawObjectBase::getHandleColor2          (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfColor2,
+             this->getType().getFieldDesc(Color2FieldId),
+             const_cast<MultiColoredQuadUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MultiColoredQuadUIDrawObjectBase::editHandleColor2         (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfColor2,
+             this->getType().getFieldDesc(Color2FieldId),
+             this));
+
+
+    editSField(Color2FieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MultiColoredQuadUIDrawObjectBase::getHandleColor3          (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfColor3,
+             this->getType().getFieldDesc(Color3FieldId),
+             const_cast<MultiColoredQuadUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MultiColoredQuadUIDrawObjectBase::editHandleColor3         (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfColor3,
+             this->getType().getFieldDesc(Color3FieldId),
+             this));
+
+
+    editSField(Color3FieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MultiColoredQuadUIDrawObjectBase::getHandleColor4          (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfColor4,
+             this->getType().getFieldDesc(Color4FieldId),
+             const_cast<MultiColoredQuadUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MultiColoredQuadUIDrawObjectBase::editHandleColor4         (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfColor4,
+             this->getType().getFieldDesc(Color4FieldId),
+             this));
+
+
+    editSField(Color4FieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MultiColoredQuadUIDrawObjectBase::getHandleOpacity         (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfOpacity,
+             this->getType().getFieldDesc(OpacityFieldId),
+             const_cast<MultiColoredQuadUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MultiColoredQuadUIDrawObjectBase::editHandleOpacity        (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfOpacity,
+             this->getType().getFieldDesc(OpacityFieldId),
+             this));
+
+
+    editSField(OpacityFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void MultiColoredQuadUIDrawObjectBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    MultiColoredQuadUIDrawObject *pThis = static_cast<MultiColoredQuadUIDrawObject *>(this);
+
+    pThis->execSync(static_cast<MultiColoredQuadUIDrawObject *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *MultiColoredQuadUIDrawObjectBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    MultiColoredQuadUIDrawObject *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const MultiColoredQuadUIDrawObject *>(pRefAspect),
+                  dynamic_cast<const MultiColoredQuadUIDrawObject *>(this));
+
+    return returnValue;
+}
+#endif
+
+void MultiColoredQuadUIDrawObjectBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<MultiColoredQuadUIDrawObjectPtr>::_type("MultiColoredQuadUIDrawObjectPtr", "UIDrawObjectPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(MultiColoredQuadUIDrawObjectPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(MultiColoredQuadUIDrawObjectPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGMULTICOLOREDQUADUIDRAWOBJECTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGMULTICOLOREDQUADUIDRAWOBJECTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGMULTICOLOREDQUADUIDRAWOBJECTFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

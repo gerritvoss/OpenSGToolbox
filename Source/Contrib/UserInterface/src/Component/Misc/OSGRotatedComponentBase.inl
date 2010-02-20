@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,205 +55,120 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &RotatedComponentBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 RotatedComponentBase::getClassTypeId(void) 
+OSG::UInt32 RotatedComponentBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-RotatedComponentPtr RotatedComponentBase::create(void) 
-{
-    RotatedComponentPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = RotatedComponentPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-RotatedComponentPtr RotatedComponentBase::createEmpty(void) 
-{ 
-    RotatedComponentPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 RotatedComponentBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the RotatedComponent::_sfAngle field.
-inline
-const SFReal32 *RotatedComponentBase::getSFAngle(void) const
-{
-    return &_sfAngle;
-}
-
-//! Get the RotatedComponent::_sfAngle field.
-inline
-SFReal32 *RotatedComponentBase::editSFAngle(void)
-{
-    return &_sfAngle;
-}
-
-#ifndef OSG_2_PREP
-//! Get the RotatedComponent::_sfAngle field.
-inline
-SFReal32 *RotatedComponentBase::getSFAngle(void)
-{
-    return &_sfAngle;
-}
-#endif
-
-//! Get the RotatedComponent::_sfInternalComponent field.
-inline
-const SFComponentPtr *RotatedComponentBase::getSFInternalComponent(void) const
-{
-    return &_sfInternalComponent;
-}
-
-//! Get the RotatedComponent::_sfInternalComponent field.
-inline
-SFComponentPtr *RotatedComponentBase::editSFInternalComponent(void)
-{
-    return &_sfInternalComponent;
-}
-
-#ifndef OSG_2_PREP
-//! Get the RotatedComponent::_sfInternalComponent field.
-inline
-SFComponentPtr *RotatedComponentBase::getSFInternalComponent(void)
-{
-    return &_sfInternalComponent;
-}
-#endif
-
-//! Get the RotatedComponent::_sfResizePolicy field.
-inline
-const SFUInt32 *RotatedComponentBase::getSFResizePolicy(void) const
-{
-    return &_sfResizePolicy;
-}
-
-//! Get the RotatedComponent::_sfResizePolicy field.
-inline
-SFUInt32 *RotatedComponentBase::editSFResizePolicy(void)
-{
-    return &_sfResizePolicy;
-}
-
-#ifndef OSG_2_PREP
-//! Get the RotatedComponent::_sfResizePolicy field.
-inline
-SFUInt32 *RotatedComponentBase::getSFResizePolicy(void)
-{
-    return &_sfResizePolicy;
-}
-#endif
-
-
 //! Get the value of the RotatedComponent::_sfAngle field.
+
 inline
 Real32 &RotatedComponentBase::editAngle(void)
 {
+    editSField(AngleFieldMask);
+
     return _sfAngle.getValue();
 }
 
 //! Get the value of the RotatedComponent::_sfAngle field.
 inline
-const Real32 &RotatedComponentBase::getAngle(void) const
+      Real32  RotatedComponentBase::getAngle(void) const
 {
     return _sfAngle.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the RotatedComponent::_sfAngle field.
-inline
-Real32 &RotatedComponentBase::getAngle(void)
-{
-    return _sfAngle.getValue();
-}
-#endif
 
 //! Set the value of the RotatedComponent::_sfAngle field.
 inline
-void RotatedComponentBase::setAngle(const Real32 &value)
+void RotatedComponentBase::setAngle(const Real32 value)
 {
+    editSField(AngleFieldMask);
+
     _sfAngle.setValue(value);
 }
 
 //! Get the value of the RotatedComponent::_sfInternalComponent field.
 inline
-ComponentPtr &RotatedComponentBase::editInternalComponent(void)
+Component * RotatedComponentBase::getInternalComponent(void) const
 {
     return _sfInternalComponent.getValue();
 }
-
-//! Get the value of the RotatedComponent::_sfInternalComponent field.
-inline
-const ComponentPtr &RotatedComponentBase::getInternalComponent(void) const
-{
-    return _sfInternalComponent.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the RotatedComponent::_sfInternalComponent field.
-inline
-ComponentPtr &RotatedComponentBase::getInternalComponent(void)
-{
-    return _sfInternalComponent.getValue();
-}
-#endif
 
 //! Set the value of the RotatedComponent::_sfInternalComponent field.
 inline
-void RotatedComponentBase::setInternalComponent(const ComponentPtr &value)
+void RotatedComponentBase::setInternalComponent(Component * const value)
 {
+    editSField(InternalComponentFieldMask);
+
     _sfInternalComponent.setValue(value);
 }
-
 //! Get the value of the RotatedComponent::_sfResizePolicy field.
+
 inline
 UInt32 &RotatedComponentBase::editResizePolicy(void)
 {
+    editSField(ResizePolicyFieldMask);
+
     return _sfResizePolicy.getValue();
 }
 
 //! Get the value of the RotatedComponent::_sfResizePolicy field.
 inline
-const UInt32 &RotatedComponentBase::getResizePolicy(void) const
+      UInt32  RotatedComponentBase::getResizePolicy(void) const
 {
     return _sfResizePolicy.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the RotatedComponent::_sfResizePolicy field.
-inline
-UInt32 &RotatedComponentBase::getResizePolicy(void)
-{
-    return _sfResizePolicy.getValue();
-}
-#endif
 
 //! Set the value of the RotatedComponent::_sfResizePolicy field.
 inline
-void RotatedComponentBase::setResizePolicy(const UInt32 &value)
+void RotatedComponentBase::setResizePolicy(const UInt32 value)
 {
+    editSField(ResizePolicyFieldMask);
+
     _sfResizePolicy.setValue(value);
 }
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void RotatedComponentBase::execSync (      RotatedComponentBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (AngleFieldMask & whichField))
+        _sfAngle.syncWith(pFrom->_sfAngle);
+
+    if(FieldBits::NoField != (InternalComponentFieldMask & whichField))
+        _sfInternalComponent.syncWith(pFrom->_sfInternalComponent);
+
+    if(FieldBits::NoField != (ResizePolicyFieldMask & whichField))
+        _sfResizePolicy.syncWith(pFrom->_sfResizePolicy);
+}
+#endif
+
+
+inline
+const Char8 *RotatedComponentBase::getClassname(void)
+{
+    return "RotatedComponent";
+}
+OSG_GEN_CONTAINERPTR(RotatedComponent);
 
 OSG_END_NAMESPACE
 

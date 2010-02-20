@@ -3,28 +3,31 @@
 <FieldContainer
 	name="ScaleLayoutSpring"
 	parent="LayoutSpring"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI Scale LayoutSpring.
 	<Field
 		name="Spring"
-		type="LayoutSpringPtr"
+		type="LayoutSpring"
+        category="pointer"
 		cardinality="single"
       visibility="external"
-		defaultValue="NullFC"
-		header="Layout/Spring/OSGLayoutSpringFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
    </Field>
 	<Field
 		name="Factor"
 		type="Real32"
+        category="data"
 		cardinality="single"
       visibility="external"
 		defaultValue="0.0"

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -38,8 +38,6 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 inline
@@ -59,15 +57,15 @@ void TextField::removeActionListener(ActionListenerPtr Listener)
 }
 
 inline
-TextField::CaretUpdateListener::CaretUpdateListener(TextFieldPtr TheTextField) :
+TextField::CaretUpdateListener::CaretUpdateListener(TextFieldRefPtr TheTextField) :
 									_TextField(TheTextField)
 {
 }
 
 inline
-TextField::MouseDownListener::MouseDownListener(TextFieldPtr TheTextField) :
+TextField::MouseDownListener::MouseDownListener(TextFieldRefPtr TheTextField) :
 _TextField(TheTextField)
 {
 }
-OSG_END_NAMESPACE
 
+OSG_END_NAMESPACE

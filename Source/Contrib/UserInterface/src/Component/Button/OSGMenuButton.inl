@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -38,8 +38,6 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 inline
@@ -72,9 +70,8 @@ bool MenuButton::isPopupVisible(void) const
 }
 
 inline
-MenuButton::MenuButtonEventsListener::MenuButtonEventsListener(MenuButtonPtr TheMenuButton) : _MenuButton(TheMenuButton)
+MenuButton::MenuButtonEventsListener::MenuButtonEventsListener(MenuButtonRefPtr TheMenuButton) : _MenuButton(TheMenuButton)
 {
 }
 
 OSG_END_NAMESPACE
-

@@ -2,19 +2,22 @@
 
 <FieldContainer
 	name="RotatedComponent"
-	parent="Container"
-	library="UserInterface"
-	pointerfieldtypes="both"
+	parent="ComponentContainer"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI Rotated Component.
 	<Field
 		name="Angle"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0"
@@ -24,21 +27,21 @@ A UI Rotated Component.
 	</Field>
 	<Field
 		name="InternalComponent"
-		type="ComponentPtr"
+		type="Component"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/OSGComponentFields.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="ResizePolicy"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="RotatedComponent::RESIZE_TO_MIN"
-		defaultHeader="Component/Misc/OSGRotatedComponent.h"
 		access="public"
 	>
 	</Field>

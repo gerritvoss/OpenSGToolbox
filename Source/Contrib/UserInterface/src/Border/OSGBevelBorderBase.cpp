@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,207 +50,363 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEBEVELBORDERINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGBevelBorderBase.h"
 #include "OSGBevelBorder.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  BevelBorderBase::HighlightInnerFieldMask = 
-    (TypeTraits<BitVector>::One << BevelBorderBase::HighlightInnerFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  BevelBorderBase::WidthFieldMask = 
-    (TypeTraits<BitVector>::One << BevelBorderBase::WidthFieldId);
+/*! \class OSG::BevelBorder
+    UI Bevel Border.
+ */
 
-const OSG::BitVector  BevelBorderBase::HighlightOuterFieldMask = 
-    (TypeTraits<BitVector>::One << BevelBorderBase::HighlightOuterFieldId);
-
-const OSG::BitVector  BevelBorderBase::ShadowInnerFieldMask = 
-    (TypeTraits<BitVector>::One << BevelBorderBase::ShadowInnerFieldId);
-
-const OSG::BitVector  BevelBorderBase::ShadowOuterFieldMask = 
-    (TypeTraits<BitVector>::One << BevelBorderBase::ShadowOuterFieldId);
-
-const OSG::BitVector  BevelBorderBase::RaisedFieldMask = 
-    (TypeTraits<BitVector>::One << BevelBorderBase::RaisedFieldId);
-
-const OSG::BitVector BevelBorderBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Color4f         BevelBorderBase::_sfHighlightInner
     
 */
+
 /*! \var Real32          BevelBorderBase::_sfWidth
     
 */
+
 /*! \var Color4f         BevelBorderBase::_sfHighlightOuter
     
 */
+
 /*! \var Color4f         BevelBorderBase::_sfShadowInner
     
 */
+
 /*! \var Color4f         BevelBorderBase::_sfShadowOuter
     
 */
+
 /*! \var bool            BevelBorderBase::_sfRaised
     
 */
 
-//! BevelBorder description
 
-FieldDescription *BevelBorderBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<BevelBorder *>::_type("BevelBorderPtr", "BorderPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(BevelBorder *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           BevelBorder *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           BevelBorder *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void BevelBorderBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "HighlightInner", 
-                     HighlightInnerFieldId, HighlightInnerFieldMask,
-                     false,
-                     (FieldAccessMethod) &BevelBorderBase::getSFHighlightInner),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Width", 
-                     WidthFieldId, WidthFieldMask,
-                     false,
-                     (FieldAccessMethod) &BevelBorderBase::getSFWidth),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "HighlightOuter", 
-                     HighlightOuterFieldId, HighlightOuterFieldMask,
-                     false,
-                     (FieldAccessMethod) &BevelBorderBase::getSFHighlightOuter),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "ShadowInner", 
-                     ShadowInnerFieldId, ShadowInnerFieldMask,
-                     false,
-                     (FieldAccessMethod) &BevelBorderBase::getSFShadowInner),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "ShadowOuter", 
-                     ShadowOuterFieldId, ShadowOuterFieldMask,
-                     false,
-                     (FieldAccessMethod) &BevelBorderBase::getSFShadowOuter),
-    new FieldDescription(SFBool::getClassType(), 
-                     "Raised", 
-                     RaisedFieldId, RaisedFieldMask,
-                     false,
-                     (FieldAccessMethod) &BevelBorderBase::getSFRaised)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType BevelBorderBase::_type(
-    "BevelBorder",
-    "Border",
-    NULL,
-    (PrototypeCreateF) &BevelBorderBase::createEmpty,
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "HighlightInner",
+        "",
+        HighlightInnerFieldId, HighlightInnerFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&BevelBorder::editHandleHighlightInner),
+        static_cast<FieldGetMethodSig >(&BevelBorder::getHandleHighlightInner));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Width",
+        "",
+        WidthFieldId, WidthFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&BevelBorder::editHandleWidth),
+        static_cast<FieldGetMethodSig >(&BevelBorder::getHandleWidth));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "HighlightOuter",
+        "",
+        HighlightOuterFieldId, HighlightOuterFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&BevelBorder::editHandleHighlightOuter),
+        static_cast<FieldGetMethodSig >(&BevelBorder::getHandleHighlightOuter));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "ShadowInner",
+        "",
+        ShadowInnerFieldId, ShadowInnerFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&BevelBorder::editHandleShadowInner),
+        static_cast<FieldGetMethodSig >(&BevelBorder::getHandleShadowInner));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "ShadowOuter",
+        "",
+        ShadowOuterFieldId, ShadowOuterFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&BevelBorder::editHandleShadowOuter),
+        static_cast<FieldGetMethodSig >(&BevelBorder::getHandleShadowOuter));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Raised",
+        "",
+        RaisedFieldId, RaisedFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&BevelBorder::editHandleRaised),
+        static_cast<FieldGetMethodSig >(&BevelBorder::getHandleRaised));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+BevelBorderBase::TypeObject BevelBorderBase::_type(
+    BevelBorderBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&BevelBorderBase::createEmptyLocal),
     BevelBorder::initMethod,
-    _desc,
-    sizeof(_desc));
+    BevelBorder::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&BevelBorder::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"BevelBorder\"\n"
+    "\tparent=\"Border\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "UI Bevel Border.\n"
+    "\t<Field\n"
+    "\t\tname=\"HighlightInner\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Width\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"HighlightOuter\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ShadowInner\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ShadowOuter\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Raised\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"true\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "UI Bevel Border.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(BevelBorderBase, BevelBorderPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &BevelBorderBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &BevelBorderBase::getType(void) const 
+FieldContainerType &BevelBorderBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr BevelBorderBase::shallowCopy(void) const 
-{ 
-    BevelBorderPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const BevelBorder *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 BevelBorderBase::getContainerSize(void) const 
-{ 
-    return sizeof(BevelBorder); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void BevelBorderBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &BevelBorderBase::getType(void) const
 {
-    this->executeSyncImpl((BevelBorderBase *) &other, whichField);
+    return _type;
 }
-#else
-void BevelBorderBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 BevelBorderBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((BevelBorderBase *) &other, whichField, sInfo);
+    return sizeof(BevelBorder);
 }
-void BevelBorderBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFColor4f *BevelBorderBase::editSFHighlightInner(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(HighlightInnerFieldMask);
+
+    return &_sfHighlightInner;
 }
 
-void BevelBorderBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFColor4f *BevelBorderBase::getSFHighlightInner(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfHighlightInner;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-BevelBorderBase::BevelBorderBase(void) :
-    _sfHighlightInner         (), 
-    _sfWidth                  (Real32(1)), 
-    _sfHighlightOuter         (), 
-    _sfShadowInner            (), 
-    _sfShadowOuter            (), 
-    _sfRaised                 (bool(true)), 
-    Inherited() 
+SFReal32 *BevelBorderBase::editSFWidth(void)
 {
+    editSField(WidthFieldMask);
+
+    return &_sfWidth;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-BevelBorderBase::BevelBorderBase(const BevelBorderBase &source) :
-    _sfHighlightInner         (source._sfHighlightInner         ), 
-    _sfWidth                  (source._sfWidth                  ), 
-    _sfHighlightOuter         (source._sfHighlightOuter         ), 
-    _sfShadowInner            (source._sfShadowInner            ), 
-    _sfShadowOuter            (source._sfShadowOuter            ), 
-    _sfRaised                 (source._sfRaised                 ), 
-    Inherited                 (source)
+const SFReal32 *BevelBorderBase::getSFWidth(void) const
 {
+    return &_sfWidth;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-BevelBorderBase::~BevelBorderBase(void)
+SFColor4f *BevelBorderBase::editSFHighlightOuter(void)
 {
+    editSField(HighlightOuterFieldMask);
+
+    return &_sfHighlightOuter;
 }
+
+const SFColor4f *BevelBorderBase::getSFHighlightOuter(void) const
+{
+    return &_sfHighlightOuter;
+}
+
+
+SFColor4f *BevelBorderBase::editSFShadowInner(void)
+{
+    editSField(ShadowInnerFieldMask);
+
+    return &_sfShadowInner;
+}
+
+const SFColor4f *BevelBorderBase::getSFShadowInner(void) const
+{
+    return &_sfShadowInner;
+}
+
+
+SFColor4f *BevelBorderBase::editSFShadowOuter(void)
+{
+    editSField(ShadowOuterFieldMask);
+
+    return &_sfShadowOuter;
+}
+
+const SFColor4f *BevelBorderBase::getSFShadowOuter(void) const
+{
+    return &_sfShadowOuter;
+}
+
+
+SFBool *BevelBorderBase::editSFRaised(void)
+{
+    editSField(RaisedFieldMask);
+
+    return &_sfRaised;
+}
+
+const SFBool *BevelBorderBase::getSFRaised(void) const
+{
+    return &_sfRaised;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 BevelBorderBase::getBinSize(const BitVector &whichField)
+UInt32 BevelBorderBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -258,38 +414,32 @@ UInt32 BevelBorderBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfHighlightInner.getBinSize();
     }
-
     if(FieldBits::NoField != (WidthFieldMask & whichField))
     {
         returnValue += _sfWidth.getBinSize();
     }
-
     if(FieldBits::NoField != (HighlightOuterFieldMask & whichField))
     {
         returnValue += _sfHighlightOuter.getBinSize();
     }
-
     if(FieldBits::NoField != (ShadowInnerFieldMask & whichField))
     {
         returnValue += _sfShadowInner.getBinSize();
     }
-
     if(FieldBits::NoField != (ShadowOuterFieldMask & whichField))
     {
         returnValue += _sfShadowOuter.getBinSize();
     }
-
     if(FieldBits::NoField != (RaisedFieldMask & whichField))
     {
         returnValue += _sfRaised.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void BevelBorderBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void BevelBorderBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -297,37 +447,30 @@ void BevelBorderBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfHighlightInner.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (WidthFieldMask & whichField))
     {
         _sfWidth.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (HighlightOuterFieldMask & whichField))
     {
         _sfHighlightOuter.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ShadowInnerFieldMask & whichField))
     {
         _sfShadowInner.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ShadowOuterFieldMask & whichField))
     {
         _sfShadowOuter.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (RaisedFieldMask & whichField))
     {
         _sfRaised.copyToBin(pMem);
     }
-
-
 }
 
-void BevelBorderBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void BevelBorderBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -335,137 +478,368 @@ void BevelBorderBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfHighlightInner.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (WidthFieldMask & whichField))
     {
         _sfWidth.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (HighlightOuterFieldMask & whichField))
     {
         _sfHighlightOuter.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ShadowInnerFieldMask & whichField))
     {
         _sfShadowInner.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ShadowOuterFieldMask & whichField))
     {
         _sfShadowOuter.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (RaisedFieldMask & whichField))
     {
         _sfRaised.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void BevelBorderBase::executeSyncImpl(      BevelBorderBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+BevelBorderTransitPtr BevelBorderBase::createLocal(BitVector bFlags)
 {
+    BevelBorderTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (HighlightInnerFieldMask & whichField))
-        _sfHighlightInner.syncWith(pOther->_sfHighlightInner);
+        fc = dynamic_pointer_cast<BevelBorder>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (WidthFieldMask & whichField))
-        _sfWidth.syncWith(pOther->_sfWidth);
-
-    if(FieldBits::NoField != (HighlightOuterFieldMask & whichField))
-        _sfHighlightOuter.syncWith(pOther->_sfHighlightOuter);
-
-    if(FieldBits::NoField != (ShadowInnerFieldMask & whichField))
-        _sfShadowInner.syncWith(pOther->_sfShadowInner);
-
-    if(FieldBits::NoField != (ShadowOuterFieldMask & whichField))
-        _sfShadowOuter.syncWith(pOther->_sfShadowOuter);
-
-    if(FieldBits::NoField != (RaisedFieldMask & whichField))
-        _sfRaised.syncWith(pOther->_sfRaised);
-
-
-}
-#else
-void BevelBorderBase::executeSyncImpl(      BevelBorderBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (HighlightInnerFieldMask & whichField))
-        _sfHighlightInner.syncWith(pOther->_sfHighlightInner);
-
-    if(FieldBits::NoField != (WidthFieldMask & whichField))
-        _sfWidth.syncWith(pOther->_sfWidth);
-
-    if(FieldBits::NoField != (HighlightOuterFieldMask & whichField))
-        _sfHighlightOuter.syncWith(pOther->_sfHighlightOuter);
-
-    if(FieldBits::NoField != (ShadowInnerFieldMask & whichField))
-        _sfShadowInner.syncWith(pOther->_sfShadowInner);
-
-    if(FieldBits::NoField != (ShadowOuterFieldMask & whichField))
-        _sfShadowOuter.syncWith(pOther->_sfShadowOuter);
-
-    if(FieldBits::NoField != (RaisedFieldMask & whichField))
-        _sfRaised.syncWith(pOther->_sfRaised);
-
-
-
+    return fc;
 }
 
-void BevelBorderBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+BevelBorderTransitPtr BevelBorderBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    BevelBorderTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<BevelBorder>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+BevelBorderTransitPtr BevelBorderBase::create(void)
+{
+    BevelBorderTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<BevelBorder>(tmpPtr);
+    }
+
+    return fc;
+}
+
+BevelBorder *BevelBorderBase::createEmptyLocal(BitVector bFlags)
+{
+    BevelBorder *returnValue;
+
+    newPtr<BevelBorder>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+BevelBorder *BevelBorderBase::createEmpty(void)
+{
+    BevelBorder *returnValue;
+
+    newPtr<BevelBorder>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr BevelBorderBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    BevelBorder *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const BevelBorder *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr BevelBorderBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    BevelBorder *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const BevelBorder *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr BevelBorderBase::shallowCopy(void) const
+{
+    BevelBorder *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const BevelBorder *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+BevelBorderBase::BevelBorderBase(void) :
+    Inherited(),
+    _sfHighlightInner         (),
+    _sfWidth                  (Real32(1)),
+    _sfHighlightOuter         (),
+    _sfShadowInner            (),
+    _sfShadowOuter            (),
+    _sfRaised                 (bool(true))
+{
+}
+
+BevelBorderBase::BevelBorderBase(const BevelBorderBase &source) :
+    Inherited(source),
+    _sfHighlightInner         (source._sfHighlightInner         ),
+    _sfWidth                  (source._sfWidth                  ),
+    _sfHighlightOuter         (source._sfHighlightOuter         ),
+    _sfShadowInner            (source._sfShadowInner            ),
+    _sfShadowOuter            (source._sfShadowOuter            ),
+    _sfRaised                 (source._sfRaised                 )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+BevelBorderBase::~BevelBorderBase(void)
+{
+}
+
+
+GetFieldHandlePtr BevelBorderBase::getHandleHighlightInner  (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfHighlightInner,
+             this->getType().getFieldDesc(HighlightInnerFieldId),
+             const_cast<BevelBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr BevelBorderBase::editHandleHighlightInner (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfHighlightInner,
+             this->getType().getFieldDesc(HighlightInnerFieldId),
+             this));
+
+
+    editSField(HighlightInnerFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr BevelBorderBase::getHandleWidth           (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfWidth,
+             this->getType().getFieldDesc(WidthFieldId),
+             const_cast<BevelBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr BevelBorderBase::editHandleWidth          (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfWidth,
+             this->getType().getFieldDesc(WidthFieldId),
+             this));
+
+
+    editSField(WidthFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr BevelBorderBase::getHandleHighlightOuter  (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfHighlightOuter,
+             this->getType().getFieldDesc(HighlightOuterFieldId),
+             const_cast<BevelBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr BevelBorderBase::editHandleHighlightOuter (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfHighlightOuter,
+             this->getType().getFieldDesc(HighlightOuterFieldId),
+             this));
+
+
+    editSField(HighlightOuterFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr BevelBorderBase::getHandleShadowInner     (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfShadowInner,
+             this->getType().getFieldDesc(ShadowInnerFieldId),
+             const_cast<BevelBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr BevelBorderBase::editHandleShadowInner    (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfShadowInner,
+             this->getType().getFieldDesc(ShadowInnerFieldId),
+             this));
+
+
+    editSField(ShadowInnerFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr BevelBorderBase::getHandleShadowOuter     (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfShadowOuter,
+             this->getType().getFieldDesc(ShadowOuterFieldId),
+             const_cast<BevelBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr BevelBorderBase::editHandleShadowOuter    (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfShadowOuter,
+             this->getType().getFieldDesc(ShadowOuterFieldId),
+             this));
+
+
+    editSField(ShadowOuterFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr BevelBorderBase::getHandleRaised          (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfRaised,
+             this->getType().getFieldDesc(RaisedFieldId),
+             const_cast<BevelBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr BevelBorderBase::editHandleRaised         (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfRaised,
+             this->getType().getFieldDesc(RaisedFieldId),
+             this));
+
+
+    editSField(RaisedFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void BevelBorderBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    BevelBorder *pThis = static_cast<BevelBorder *>(this);
+
+    pThis->execSync(static_cast<BevelBorder *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *BevelBorderBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    BevelBorder *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const BevelBorder *>(pRefAspect),
+                  dynamic_cast<const BevelBorder *>(this));
+
+    return returnValue;
+}
+#endif
+
+void BevelBorderBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<BevelBorderPtr>::_type("BevelBorderPtr", "BorderPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(BevelBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(BevelBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGBEVELBORDERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGBEVELBORDERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGBEVELBORDERFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

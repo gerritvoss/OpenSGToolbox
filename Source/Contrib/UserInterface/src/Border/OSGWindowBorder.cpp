@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGWindowBorder.h"
-#include "Component/OSGComponent.h"
+#include "OSGComponent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::WindowBorder
-UI Window Border. A Compound Border made up of an inner border and outer border of any type. 	
-*/
+// Documentation for this class is emitted in the
+// OSGWindowBorderBase.cpp file.
+// To modify it, please change the .fcd file (OSGWindowBorder.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -68,8 +63,13 @@ UI Window Border. A Compound Border made up of an inner border and outer border 
  *                           Class methods                                 *
 \***************************************************************************/
 
-void WindowBorder::initMethod (void)
+void WindowBorder::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -77,75 +77,74 @@ void WindowBorder::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void WindowBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity, bool Clipping) const
+void WindowBorder::draw(const GraphicsWeakPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity, bool Clipping) const
 {
-
-	Real32 LeftIn, RightIn, BottomIn, UpperIn;
+    Real32 LeftIn, RightIn, BottomIn, UpperIn;
     getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);
-	if(getTitlebar() != NullFC)
-	{
-		UpperIn += getTitlebar()->getSize().y();
-	}
-	getInnerBorder()->draw(g, x+LeftIn, y+UpperIn, Width-LeftIn-RightIn, Height-UpperIn-BottomIn, Opacity);
-	getOuterBorder()->draw(g, x, y, Width, Height, Opacity);
+    if(getTitlebar() != NULL)
+    {
+        UpperIn += getTitlebar()->getSize().y();
+    }
+    getInnerBorder()->draw(g, x+LeftIn, y+UpperIn, Width-LeftIn-RightIn, Height-UpperIn-BottomIn, Opacity);
+    getOuterBorder()->draw(g, x, y, Width, Height, Opacity);
 
 }
 
 void WindowBorder::getInsets(Real32& Left, Real32& Right,Real32& Top,Real32& Bottom) const
 {
-	Real32 LeftIn, LeftIn2, RightIn, RightIn2, BottomIn, BottomIn2, UpperIn, UpperIn2;
-	getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);
-	getInnerBorder()->getInsets(LeftIn2, RightIn2,UpperIn2, BottomIn2) ;
-	Left = LeftIn+LeftIn2;
-	Right = RightIn+RightIn2;
-	Bottom = BottomIn+BottomIn2;
-	Top = UpperIn+UpperIn2;
+    Real32 LeftIn, LeftIn2, RightIn, RightIn2, BottomIn, BottomIn2, UpperIn, UpperIn2;
+    getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);
+    getInnerBorder()->getInsets(LeftIn2, RightIn2,UpperIn2, BottomIn2) ;
+    Left = LeftIn+LeftIn2;
+    Right = RightIn+RightIn2;
+    Bottom = BottomIn+BottomIn2;
+    Top = UpperIn+UpperIn2;
 
-	if(getTitlebar() != NullFC)
-	{
-		Top += getTitlebar()->getSize().y();
-	}
+    if(getTitlebar() != NULL)
+    {
+        Top += getTitlebar()->getSize().y();
+    }
 }
 
-void WindowBorder::activateInternalDrawConstraints(const GraphicsPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
+void WindowBorder::activateInternalDrawConstraints(const GraphicsWeakPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
 {
-	Real32 LeftIn, RightIn, BottomIn, UpperIn;
-	getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);
-	if(getTitlebar() != NullFC)
-	{
-		UpperIn += getTitlebar()->getSize().y();
-	}
+    Real32 LeftIn, RightIn, BottomIn, UpperIn;
+    getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);
+    if(getTitlebar() != NULL)
+    {
+        UpperIn += getTitlebar()->getSize().y();
+    }
     getOuterBorder()->activateInternalDrawConstraints(g, x, y, Width, Height);
     getInnerBorder()->activateInternalDrawConstraints(g,x+LeftIn, y+UpperIn, Width-LeftIn-RightIn, Height-UpperIn-BottomIn);
 }
 
 bool WindowBorder::isContained(const Pnt2f& p, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
 {
-	Real32 LeftIn, RightIn, BottomIn, UpperIn;
-	getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);
-	if(getTitlebar() != NullFC)
-	{
-		UpperIn += getTitlebar()->getSize().y();
-	}
+    Real32 LeftIn, RightIn, BottomIn, UpperIn;
+    getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);
+    if(getTitlebar() != NULL)
+    {
+        UpperIn += getTitlebar()->getSize().y();
+    }
     return (getInnerBorder()->isContained(p,x+LeftIn, y+UpperIn, Width-LeftIn-RightIn, Height-UpperIn-BottomIn) ||
             getOuterBorder()->isContained(p,x,y,Width,Height));
 }
 
 void WindowBorder::getTitlebarBounds(const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, Pnt2f& TopLeft, Pnt2f& BottomRight)
 {
-	Real32 LeftIn(0.0f), RightIn(0.0f), BottomIn(0.0f), UpperIn(0.0f);
-    if(getOuterBorder() != NullFC)
+    Real32 LeftIn(0.0f), RightIn(0.0f), BottomIn(0.0f), UpperIn(0.0f);
+    if(getOuterBorder() != NULL)
     {
-	    getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);
+        getOuterBorder()->getInsets(LeftIn, RightIn, UpperIn, BottomIn);
     }
 
-	TopLeft.setValues(x+LeftIn, y+UpperIn);
-	if(getTitlebar() != NullFC)
-	{
-		UpperIn += getTitlebar()->getSize().y();
-	}
+    TopLeft.setValues(x+LeftIn, y+UpperIn);
+    if(getTitlebar() != NULL)
+    {
+        UpperIn += getTitlebar()->getSize().y();
+    }
 
-	BottomRight.setValues(x+Width-RightIn, y+UpperIn);
+    BottomRight.setValues(x+Width-RightIn, y+UpperIn);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -170,41 +169,17 @@ WindowBorder::~WindowBorder(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void WindowBorder::changed(BitVector whichField, UInt32 origin)
+void WindowBorder::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void WindowBorder::dump(      UInt32    , 
+void WindowBorder::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump WindowBorder NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGWINDOWBORDERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGWINDOWBORDERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGWINDOWBORDERFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

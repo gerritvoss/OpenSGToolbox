@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,8 +26,22 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#ifndef _OSGUSERINTERFACEDEF_H_
-#define _OSGUSERINTERFACEDEF_H_
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
+#ifndef _OSGCONTRIBUSERINTERFACEDEF_H_
+#define _OSGCONTRIBUSERINTERFACEDEF_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -35,18 +49,17 @@
 //---------------------------------------------------------------------------
 //  Defines
 //---------------------------------------------------------------------------
-
-#if defined(WIN32) && defined(OSG_BUILD_DLL)
-#   ifdef OSG_COMPILEUSERINTERFACELIB
-#       define OSG_USERINTERFACELIB_DLLMAPPING     __declspec(dllexport)
-#       define OSG_USERINTERFACELIB_DLLTMPLMAPPING __declspec(dllexport)
+#if defined(WIN32)
+#   ifdef OSG_COMPILECONTRIBUSERINTERFACELIB
+#       define OSG_CONTRIBUSERINTERFACE_DLLMAPPING  __declspec(dllexport)
+#       define OSG_CONTRIBUSERINTERFACE_EXPIMP_TMPL 
 #   else
-#       define OSG_USERINTERFACELIB_DLLMAPPING     __declspec(dllimport)
-#       define OSG_USERINTERFACELIB_DLLTMPLMAPPING __declspec(dllimport)
+#       define OSG_CONTRIBUSERINTERFACE_DLLMAPPING  __declspec(dllimport)
+#       define OSG_CONTRIBUSERINTERFACE_EXPIMP_TMPL   extern
 #   endif
 #else
-#define OSG_USERINTERFACELIB_DLLMAPPING
-#define OSG_USERINTERFACELIB_DLLTMPLMAPPING
+#define OSG_CONTRIBUSERINTERFACE_DLLMAPPING
+#define OSG_CONTRIBUSERINTERFACE_EXPIMP_TMPL
 #endif
 
 #endif /* _OSGUSERINTERFACEDEF_H_ */

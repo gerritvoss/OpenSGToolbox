@@ -3,67 +3,74 @@
 <FieldContainer
 	name="UIDrawingSurface"
 	parent="FieldContainer"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="true"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI DrawingSurface.
 	<Field
 		name="InternalWindows"
-		type="InternalWindowPtr"
+		type="InternalWindow"
+		category="pointer"
 		cardinality="multi"
 		visibility="external"
-		header="Component/Container/Window/OSGInternalWindowFields.h"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="FocusedWindow"
-		type="InternalWindowPtr"
+		type="InternalWindow"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/Container/Window/OSGInternalWindowFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="EventProducer"
-		type="WindowEventProducerPtr"
+		type="WindowEventProducer"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="OpenSG/Input/OSGWindowEventProducer.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="Graphics"
-		type="GraphicsPtr"
+		type="Graphics"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Graphics/OSGGraphics.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="MouseTransformFunctor"
-		type="UIDrawingSurfaceMouseTransformFunctorPtr"
+		type="UIDrawingSurfaceMouseTransformFunctor"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="UIDrawingSurface/OSGUIDrawingSurfaceMouseTransformFunctorFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="Size"
-		type="Vec2s"
+		type="Vec2f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="0,0"
+		defaultValue="0.0f,0.0f"
 	>
 	</Field>
 </FieldContainer>

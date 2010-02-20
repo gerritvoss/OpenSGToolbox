@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,22 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGColorLayer.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::ColorLayer
-UI Color Background. 	
-*/
+// Documentation for this class is emitted in the
+// OSGColorLayerBase.cpp file.
+// To modify it, please change the .fcd file (OSGColorLayer.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -65,8 +62,13 @@ UI Color Background.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ColorLayer::initMethod (void)
+void ColorLayer::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -74,7 +76,7 @@ void ColorLayer::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ColorLayer::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32 Opacity) const
+void ColorLayer::draw(const GraphicsWeakPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32 Opacity) const
 {
 	TheGraphics->drawRect(TopLeft, BottomRight, getColor(), Opacity);
 }
@@ -101,41 +103,17 @@ ColorLayer::~ColorLayer(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void ColorLayer::changed(BitVector whichField, UInt32 origin)
+void ColorLayer::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void ColorLayer::dump(      UInt32    , 
+void ColorLayer::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump ColorLayer NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGCOLORLAYERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCOLORLAYERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCOLORLAYERFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

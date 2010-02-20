@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,159 +50,188 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILELISTMODELINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGListModelBase.h"
 #include "OSGListModel.h"
 
+#include <boost/bind.hpp>
+
+#include "OSGEvent.h"
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ListModelBase::EventProducerFieldMask =
-    (TypeTraits<BitVector>::One << ListModelBase::EventProducerFieldId);
-const OSG::BitVector ListModelBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::ListModel
+    A UI ListModel.
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
-//! ListModel description
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
 
-FieldDescription *ListModelBase::_desc[] = 
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ListModel *>::_type("ListModelPtr", "FieldContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ListModel *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ListModel *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ListModel *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ListModelBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFEventProducerPtr::getClassType(), 
-                     "EventProducer", 
-                     EventProducerFieldId,EventProducerFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&ListModelBase::editSFEventProducer))
-};
+    FieldDescriptionBase *pDesc = NULL;
+
+    pDesc = new SFEventProducerPtr::Description(
+        SFEventProducerPtr::getClassType(),
+        "EventProducer",
+        "Event Producer",
+        EventProducerFieldId,EventProducerFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast     <FieldEditMethodSig>(&ListModel::invalidEditField),
+        static_cast     <FieldGetMethodSig >(&ListModel::invalidGetField));
+
+    oType.addInitialDesc(pDesc);
+}
 
 
-FieldContainerType ListModelBase::_type(
-    "ListModel",
-    "FieldContainer",
+ListModelBase::TypeObject ListModelBase::_type(
+    ListModelBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
     NULL,
-    NULL, 
     ListModel::initMethod,
-    _desc,
-    sizeof(_desc));
+    ListModel::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ListModel::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ListModel\"\n"
+    "\tparent=\"FieldContainer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"abstract\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI ListModel.\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"ListDataContentsChanged\"\n"
+    "\t\ttype=\"ListDataEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"ListDataIntervalAdded\"\n"
+    "\t\ttype=\"ListDataEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"ListDataIntervalRemoved\"\n"
+    "\t\ttype=\"ListDataEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "</FieldContainer>\n",
+    "A UI ListModel.\n"
+    );
 
 //! ListModel Produced Methods
 
 MethodDescription *ListModelBase::_methodDesc[] =
 {
     new MethodDescription("ListDataContentsChanged", 
+                    "",
                      ListDataContentsChangedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("ListDataIntervalAdded", 
+                    "",
                      ListDataIntervalAddedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("ListDataIntervalRemoved", 
+                    "",
                      ListDataIntervalRemovedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod())
 };
 
 EventProducerType ListModelBase::_producerType(
     "ListModelProducerType",
     "EventProducerType",
-    NULL,
+    "",
     InitEventProducerFunctor(),
     _methodDesc,
     sizeof(_methodDesc));
-//OSG_FIELD_CONTAINER_DEF(ListModelBase, ListModelPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ListModelBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ListModelBase::getType(void) const 
+FieldContainerType &ListModelBase::getType(void)
 {
     return _type;
-} 
+}
+
+const FieldContainerType &ListModelBase::getType(void) const
+{
+    return _type;
+}
 
 const EventProducerType &ListModelBase::getProducerType(void) const
 {
     return _producerType;
 }
 
-
-UInt32 ListModelBase::getContainerSize(void) const 
-{ 
-    return sizeof(ListModel); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ListModelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+UInt32 ListModelBase::getContainerSize(void) const
 {
-    this->executeSyncImpl(static_cast<ListModelBase *>(&other),
-                          whichField);
-}
-#else
-void ListModelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
-{
-    this->executeSyncImpl((ListModelBase *) &other, whichField, sInfo);
-}
-void ListModelBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(ListModel);
 }
 
-void ListModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-ListModelBase::ListModelBase(void) :
-    _Producer(&getProducerType()),
-    _sfEventProducer(&_Producer),
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-ListModelBase::ListModelBase(const ListModelBase &source) :
-    _Producer(&source.getProducerType()),
-    _sfEventProducer(&_Producer),
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-ListModelBase::~ListModelBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ListModelBase::getBinSize(const BitVector &whichField)
+UInt32 ListModelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -211,12 +240,11 @@ UInt32 ListModelBase::getBinSize(const BitVector &whichField)
         returnValue += _sfEventProducer.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ListModelBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ListModelBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -224,12 +252,10 @@ void ListModelBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfEventProducer.copyToBin(pMem);
     }
-
-
 }
 
-void ListModelBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ListModelBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -237,59 +263,61 @@ void ListModelBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfEventProducer.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ListModelBase::executeSyncImpl(      ListModelBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ListModelBase::ListModelBase(void) :
+    _Producer(&getProducerType()),
+    Inherited(),
+    _sfEventProducer(&_Producer)
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-        _sfEventProducer.syncWith(pOther->_sfEventProducer);
-
-
-}
-#else
-void ListModelBase::executeSyncImpl(      ListModelBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
 }
 
-void ListModelBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+ListModelBase::ListModelBase(const ListModelBase &source) :
+    _Producer(&source.getProducerType()),
+    Inherited(source),
+    _sfEventProducer(&_Producer)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
+
+/*-------------------------- destructors ----------------------------------*/
+
+ListModelBase::~ListModelBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ListModelBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ListModel *pThis = static_cast<ListModel *>(this);
+
+    pThis->execSync(static_cast<ListModel *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
 
-OSG_END_NAMESPACE
+void ListModelBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
 
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ListModelPtr>::_type("ListModelPtr", "FieldContainerPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(ListModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ListModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+}
 
 
 OSG_END_NAMESPACE
-

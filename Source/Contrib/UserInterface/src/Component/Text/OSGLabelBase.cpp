@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,155 +50,207 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILELABELINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGLabelBase.h"
 #include "OSGLabel.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  LabelBase::AlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << LabelBase::AlignmentFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  LabelBase::TextSelectableFieldMask = 
-    (TypeTraits<BitVector>::One << LabelBase::TextSelectableFieldId);
+/*! \class OSG::Label
+    A UI Label.
+ */
 
-const OSG::BitVector LabelBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Vec2f           LabelBase::_sfAlignment
     
 */
+
 /*! \var bool            LabelBase::_sfTextSelectable
     
 */
 
-//! Label description
 
-FieldDescription *LabelBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<Label *>::_type("LabelPtr", "TextComponentPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(Label *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           Label *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           Label *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void LabelBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFVec2f::getClassType(), 
-                     "Alignment", 
-                     AlignmentFieldId, AlignmentFieldMask,
-                     false,
-                     (FieldAccessMethod) &LabelBase::getSFAlignment),
-    new FieldDescription(SFBool::getClassType(), 
-                     "TextSelectable", 
-                     TextSelectableFieldId, TextSelectableFieldMask,
-                     false,
-                     (FieldAccessMethod) &LabelBase::getSFTextSelectable)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType LabelBase::_type(
-    "Label",
-    "TextComponent",
-    NULL,
-    (PrototypeCreateF) &LabelBase::createEmpty,
+    pDesc = new SFVec2f::Description(
+        SFVec2f::getClassType(),
+        "Alignment",
+        "",
+        AlignmentFieldId, AlignmentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Label::editHandleAlignment),
+        static_cast<FieldGetMethodSig >(&Label::getHandleAlignment));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "TextSelectable",
+        "",
+        TextSelectableFieldId, TextSelectableFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Label::editHandleTextSelectable),
+        static_cast<FieldGetMethodSig >(&Label::getHandleTextSelectable));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+LabelBase::TypeObject LabelBase::_type(
+    LabelBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&LabelBase::createEmptyLocal),
     Label::initMethod,
-    _desc,
-    sizeof(_desc));
+    Label::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&Label::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"Label\"\n"
+    "\tparent=\"TextComponent\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Label.\n"
+    "\t<Field\n"
+    "\t\tname=\"Alignment\"\n"
+    "\t\ttype=\"Vec2f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0f, 0.5f\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TextSelectable\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI Label.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(LabelBase, LabelPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &LabelBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &LabelBase::getType(void) const 
+FieldContainerType &LabelBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr LabelBase::shallowCopy(void) const 
-{ 
-    LabelPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const Label *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 LabelBase::getContainerSize(void) const 
-{ 
-    return sizeof(Label); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void LabelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &LabelBase::getType(void) const
 {
-    this->executeSyncImpl((LabelBase *) &other, whichField);
+    return _type;
 }
-#else
-void LabelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 LabelBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((LabelBase *) &other, whichField, sInfo);
+    return sizeof(Label);
 }
-void LabelBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFVec2f *LabelBase::editSFAlignment(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(AlignmentFieldMask);
+
+    return &_sfAlignment;
 }
 
-void LabelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFVec2f *LabelBase::getSFAlignment(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfAlignment;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-LabelBase::LabelBase(void) :
-    _sfAlignment              (Vec2f(0.0f, 0.5f)), 
-    _sfTextSelectable         (bool(false)), 
-    Inherited() 
+SFBool *LabelBase::editSFTextSelectable(void)
 {
+    editSField(TextSelectableFieldMask);
+
+    return &_sfTextSelectable;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-LabelBase::LabelBase(const LabelBase &source) :
-    _sfAlignment              (source._sfAlignment              ), 
-    _sfTextSelectable         (source._sfTextSelectable         ), 
-    Inherited                 (source)
+const SFBool *LabelBase::getSFTextSelectable(void) const
 {
+    return &_sfTextSelectable;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-LabelBase::~LabelBase(void)
-{
-}
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 LabelBase::getBinSize(const BitVector &whichField)
+UInt32 LabelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -206,18 +258,16 @@ UInt32 LabelBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfAlignment.getBinSize();
     }
-
     if(FieldBits::NoField != (TextSelectableFieldMask & whichField))
     {
         returnValue += _sfTextSelectable.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void LabelBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void LabelBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -225,17 +275,14 @@ void LabelBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfAlignment.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TextSelectableFieldMask & whichField))
     {
         _sfTextSelectable.copyToBin(pMem);
     }
-
-
 }
 
-void LabelBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void LabelBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -243,93 +290,244 @@ void LabelBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfAlignment.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TextSelectableFieldMask & whichField))
     {
         _sfTextSelectable.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void LabelBase::executeSyncImpl(      LabelBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+LabelTransitPtr LabelBase::createLocal(BitVector bFlags)
 {
+    LabelTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
-        _sfAlignment.syncWith(pOther->_sfAlignment);
+        fc = dynamic_pointer_cast<Label>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (TextSelectableFieldMask & whichField))
-        _sfTextSelectable.syncWith(pOther->_sfTextSelectable);
-
-
-}
-#else
-void LabelBase::executeSyncImpl(      LabelBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
-        _sfAlignment.syncWith(pOther->_sfAlignment);
-
-    if(FieldBits::NoField != (TextSelectableFieldMask & whichField))
-        _sfTextSelectable.syncWith(pOther->_sfTextSelectable);
-
-
-
+    return fc;
 }
 
-void LabelBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+LabelTransitPtr LabelBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    LabelTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<Label>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+LabelTransitPtr LabelBase::create(void)
+{
+    LabelTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<Label>(tmpPtr);
+    }
+
+    return fc;
+}
+
+Label *LabelBase::createEmptyLocal(BitVector bFlags)
+{
+    Label *returnValue;
+
+    newPtr<Label>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+Label *LabelBase::createEmpty(void)
+{
+    Label *returnValue;
+
+    newPtr<Label>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr LabelBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    Label *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Label *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr LabelBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    Label *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Label *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr LabelBase::shallowCopy(void) const
+{
+    Label *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const Label *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+LabelBase::LabelBase(void) :
+    Inherited(),
+    _sfAlignment              (Vec2f(0.0f, 0.5f)),
+    _sfTextSelectable         (bool(false))
+{
+}
+
+LabelBase::LabelBase(const LabelBase &source) :
+    Inherited(source),
+    _sfAlignment              (source._sfAlignment              ),
+    _sfTextSelectable         (source._sfTextSelectable         )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+LabelBase::~LabelBase(void)
+{
+}
+
+
+GetFieldHandlePtr LabelBase::getHandleAlignment       (void) const
+{
+    SFVec2f::GetHandlePtr returnValue(
+        new  SFVec2f::GetHandle(
+             &_sfAlignment,
+             this->getType().getFieldDesc(AlignmentFieldId),
+             const_cast<LabelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr LabelBase::editHandleAlignment      (void)
+{
+    SFVec2f::EditHandlePtr returnValue(
+        new  SFVec2f::EditHandle(
+             &_sfAlignment,
+             this->getType().getFieldDesc(AlignmentFieldId),
+             this));
+
+
+    editSField(AlignmentFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr LabelBase::getHandleTextSelectable  (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfTextSelectable,
+             this->getType().getFieldDesc(TextSelectableFieldId),
+             const_cast<LabelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr LabelBase::editHandleTextSelectable (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfTextSelectable,
+             this->getType().getFieldDesc(TextSelectableFieldId),
+             this));
+
+
+    editSField(TextSelectableFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void LabelBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Label *pThis = static_cast<Label *>(this);
+
+    pThis->execSync(static_cast<Label *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *LabelBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    Label *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const Label *>(pRefAspect),
+                  dynamic_cast<const Label *>(this));
+
+    return returnValue;
+}
+#endif
+
+void LabelBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<LabelPtr>::_type("LabelPtr", "TextComponentPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(LabelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(LabelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGLABELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGLABELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGLABELFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

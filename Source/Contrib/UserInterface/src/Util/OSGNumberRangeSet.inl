@@ -38,7 +38,7 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 OSG_BEGIN_NAMESPACE
 

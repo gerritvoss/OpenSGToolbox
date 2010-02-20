@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,22 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGToggleButton.h"
-#include "Util/OSGUIDrawUtils.h"
+#include "OSGUIDrawUtils.h"
 
 #include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::ToggleButton
-A UI Button. 
-*/
+// Documentation for this class is emitted in the
+// OSGToggleButtonBase.cpp file.
+// To modify it, please change the .fcd file (OSGToggleButton.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -80,8 +77,13 @@ const OSG::BitVector  ToggleButton::SelectedDrawObjectFieldMask =
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ToggleButton::initMethod (void)
+void ToggleButton::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -91,27 +93,25 @@ void ToggleButton::initMethod (void)
 
 EventConnection ToggleButton::addButtonSelectedListener(ButtonSelectedListenerPtr Listener)
 {
-   _ButtonSelectedListeners.insert(Listener);
-   return EventConnection(
-       boost::bind(&ToggleButton::isButtonSelectedListenerAttached, this, Listener),
-       boost::bind(&ToggleButton::removeButtonSelectedListener, this, Listener));
+    _ButtonSelectedListeners.insert(Listener);
+    return EventConnection(
+                           boost::bind(&ToggleButton::isButtonSelectedListenerAttached, this, Listener),
+                           boost::bind(&ToggleButton::removeButtonSelectedListener, this, Listener));
 }
 
-void ToggleButton::actionPreformed(const ActionEventPtr e)
+void ToggleButton::actionPreformed(const ActionEventUnrecPtr e)
 {
-    beginEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
-	    setSelected(!getSelected());
-    endEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
+    setSelected(!getSelected());
 }
 
-BorderPtr ToggleButton::getDrawnBorder(void) const
+BorderRefPtr ToggleButton::getDrawnBorder(void) const
 {
-	if(getSelected() && getEnabled())
-	{
-		return getActiveBorder();
-	}
-	else
-	{
+    if(getSelected() && getEnabled())
+    {
+        return getActiveBorder();
+    }
+    else
+    {
         return Inherited::getDrawnBorder();
     }
 }
@@ -128,57 +128,58 @@ Vec2f ToggleButton::getDrawnOffset(void) const
     }
 }
 
-LayerPtr ToggleButton::getDrawnBackground(void) const
+LayerRefPtr ToggleButton::getDrawnBackground(void) const
 {
-	if(getSelected() && getEnabled())
-	{
-		return getActiveBackground();
-	}
-	else
-	{
+    if(getSelected() && getEnabled())
+    {
+        return getActiveBackground();
+    }
+    else
+    {
         return Inherited::getDrawnBackground();
     }
 }
-LayerPtr ToggleButton::getDrawnForeground(void) const
+LayerRefPtr ToggleButton::getDrawnForeground(void) const
 {
-	if(getSelected() && getEnabled())
-	{
-		return getActiveForeground();
-	}
-	else
-	{
+    if(getSelected() && getEnabled())
+    {
+        return getActiveForeground();
+    }
+    else
+    {
         return Inherited::getDrawnForeground();
     }
 }
 
 Color4f ToggleButton::getDrawnTextColor(void) const
 {
-	if(getSelected() && getEnabled())
-	{
-		return getActiveTextColor();
-	}
-	else
-	{
+    if(getSelected() && getEnabled())
+    {
+        return getActiveTextColor();
+    }
+    else
+    {
         return Inherited::getDrawnTextColor();
     }
 }
-void  ToggleButton::produceButtonSelected(const ButtonSelectedEventPtr e)
+void  ToggleButton::produceButtonSelected(const ButtonSelectedEventUnrecPtr e)
 {
-   for(ButtonSelectedListenerSetConstItor SetItor(_ButtonSelectedListeners.begin()) ; SetItor != _ButtonSelectedListeners.end() ; ++SetItor)
-   {
-      (*SetItor)->buttonSelected(e);
-   }
-   _Producer.produceEvent(ButtonSelectedMethodId,e);
+    for(ButtonSelectedListenerSetConstItor SetItor(_ButtonSelectedListeners.begin()) ; SetItor != _ButtonSelectedListeners.end() ; ++SetItor)
+    {
+        (*SetItor)->buttonSelected(e);
+    }
+    _Producer.produceEvent(ButtonSelectedMethodId,e);
 }
 
-void  ToggleButton::produceButtonDeselected(const ButtonSelectedEventPtr e)
+void  ToggleButton::produceButtonDeselected(const ButtonSelectedEventUnrecPtr e)
 {
-   for(ButtonSelectedListenerSetConstItor SetItor(_ButtonSelectedListeners.begin()) ; SetItor != _ButtonSelectedListeners.end() ; ++SetItor)
-   {
-      (*SetItor)->buttonDeselected(e);
-   }
-   _Producer.produceEvent(ButtonDeselectedMethodId,e);
+    for(ButtonSelectedListenerSetConstItor SetItor(_ButtonSelectedListeners.begin()) ; SetItor != _ButtonSelectedListeners.end() ; ++SetItor)
+    {
+        (*SetItor)->buttonDeselected(e);
+    }
+    _Producer.produceEvent(ButtonDeselectedMethodId,e);
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -198,29 +199,36 @@ ToggleButton::ToggleButton(const ToggleButton &source) :
 ToggleButton::~ToggleButton(void)
 {
 }
+
 /*----------------------------- class specific ----------------------------*/
 
-void ToggleButton::changed(BitVector whichField, UInt32 origin)
+void ToggleButton::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
+
     if( (whichField & SelectedFieldMask) )
     {
         if(getSelected())
         {
-			produceButtonSelected( ButtonSelectedEvent::create(ComponentPtr(this),getSystemTime()) );    
+            ButtonSelectedEventUnrecPtr
+                TheEvent(ButtonSelectedEvent::create(this,getSystemTime()));
+            produceButtonSelected(TheEvent);    
         }
         else
         {
-            produceButtonDeselected( ButtonSelectedEvent::create(ComponentPtr(this),getSystemTime()) );    
+            ButtonSelectedEventUnrecPtr
+                TheEvent(ButtonSelectedEvent::create(this,getSystemTime()));
+            produceButtonDeselected(TheEvent);    
         }
-     }
+    }
 }
 
-void ToggleButton::dump(      UInt32    , 
+void ToggleButton::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump ToggleButton NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

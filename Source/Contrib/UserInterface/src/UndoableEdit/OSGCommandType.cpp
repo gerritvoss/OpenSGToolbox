@@ -26,12 +26,13 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 #include <iostream>
 
 #include "OSGCommandType.h"
 #include "OSGCommandFactory.h"
+#include "OSGTypeFactory.h"
 
 OSG_USING_NAMESPACE
 
@@ -43,7 +44,7 @@ bool CommandType::isDerivedFrom( const TypeBase & other ) const
 bool CommandType::isDerivedFrom( const CommandType & other ) const
 {
 	bool                returnValue = false;
-	TypeBase *pCurrType   = TypeFactory::the()->findType(_szParentName.str());
+	TypeBase *pCurrType   = TypeFactory::the()->findType(_szParentName.c_str());
 
 	if(_uiTypeId == other._uiTypeId)
 	{
@@ -77,7 +78,7 @@ CommandType::CommandType(const Char8  *szName,
     _uiCommandTypeId(0),
     _uiCommandTypeRootId(0)
 {
-    _uiCommandTypeId = CommandFactory::the()->registerType(this);
+    //_uiCommandTypeId = CommandFactory::the()->registerType(this);
 }
 
 CommandType::CommandType(const CommandType &source) :

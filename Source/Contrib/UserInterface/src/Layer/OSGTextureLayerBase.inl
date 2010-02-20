@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,271 +55,63 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &TextureLayerBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 TextureLayerBase::getClassTypeId(void) 
+OSG::UInt32 TextureLayerBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-TextureLayerPtr TextureLayerBase::create(void) 
-{
-    TextureLayerPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = TextureLayerPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-TextureLayerPtr TextureLayerBase::createEmpty(void) 
-{ 
-    TextureLayerPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 TextureLayerBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the TextureLayer::_sfTexture field.
-inline
-const SFTextureChunkPtr *TextureLayerBase::getSFTexture(void) const
-{
-    return &_sfTexture;
-}
-
-//! Get the TextureLayer::_sfTexture field.
-inline
-SFTextureChunkPtr *TextureLayerBase::editSFTexture(void)
-{
-    return &_sfTexture;
-}
-
-#ifndef OSG_2_PREP
-//! Get the TextureLayer::_sfTexture field.
-inline
-SFTextureChunkPtr *TextureLayerBase::getSFTexture(void)
-{
-    return &_sfTexture;
-}
-#endif
-
-//! Get the TextureLayer::_sfTransformation field.
-inline
-const SFTextureTransformChunkPtr *TextureLayerBase::getSFTransformation(void) const
-{
-    return &_sfTransformation;
-}
-
-//! Get the TextureLayer::_sfTransformation field.
-inline
-SFTextureTransformChunkPtr *TextureLayerBase::editSFTransformation(void)
-{
-    return &_sfTransformation;
-}
-
-#ifndef OSG_2_PREP
-//! Get the TextureLayer::_sfTransformation field.
-inline
-SFTextureTransformChunkPtr *TextureLayerBase::getSFTransformation(void)
-{
-    return &_sfTransformation;
-}
-#endif
-
-//! Get the TextureLayer::_sfColor field.
-inline
-const SFColor4f *TextureLayerBase::getSFColor(void) const
-{
-    return &_sfColor;
-}
-
-//! Get the TextureLayer::_sfColor field.
-inline
-SFColor4f *TextureLayerBase::editSFColor(void)
-{
-    return &_sfColor;
-}
-
-#ifndef OSG_2_PREP
-//! Get the TextureLayer::_sfColor field.
-inline
-SFColor4f *TextureLayerBase::getSFColor(void)
-{
-    return &_sfColor;
-}
-#endif
-
-//! Get the TextureLayer::_sfScale field.
-inline
-const SFUInt32 *TextureLayerBase::getSFScale(void) const
-{
-    return &_sfScale;
-}
-
-//! Get the TextureLayer::_sfScale field.
-inline
-SFUInt32 *TextureLayerBase::editSFScale(void)
-{
-    return &_sfScale;
-}
-
-#ifndef OSG_2_PREP
-//! Get the TextureLayer::_sfScale field.
-inline
-SFUInt32 *TextureLayerBase::getSFScale(void)
-{
-    return &_sfScale;
-}
-#endif
-
-//! Get the TextureLayer::_sfScaleAbsoluteSize field.
-inline
-const SFVec2s *TextureLayerBase::getSFScaleAbsoluteSize(void) const
-{
-    return &_sfScaleAbsoluteSize;
-}
-
-//! Get the TextureLayer::_sfScaleAbsoluteSize field.
-inline
-SFVec2s *TextureLayerBase::editSFScaleAbsoluteSize(void)
-{
-    return &_sfScaleAbsoluteSize;
-}
-
-#ifndef OSG_2_PREP
-//! Get the TextureLayer::_sfScaleAbsoluteSize field.
-inline
-SFVec2s *TextureLayerBase::getSFScaleAbsoluteSize(void)
-{
-    return &_sfScaleAbsoluteSize;
-}
-#endif
-
-//! Get the TextureLayer::_sfVerticalAlignment field.
-inline
-const SFReal32 *TextureLayerBase::getSFVerticalAlignment(void) const
-{
-    return &_sfVerticalAlignment;
-}
-
-//! Get the TextureLayer::_sfVerticalAlignment field.
-inline
-SFReal32 *TextureLayerBase::editSFVerticalAlignment(void)
-{
-    return &_sfVerticalAlignment;
-}
-
-#ifndef OSG_2_PREP
-//! Get the TextureLayer::_sfVerticalAlignment field.
-inline
-SFReal32 *TextureLayerBase::getSFVerticalAlignment(void)
-{
-    return &_sfVerticalAlignment;
-}
-#endif
-
-//! Get the TextureLayer::_sfHorizontalAlignment field.
-inline
-const SFReal32 *TextureLayerBase::getSFHorizontalAlignment(void) const
-{
-    return &_sfHorizontalAlignment;
-}
-
-//! Get the TextureLayer::_sfHorizontalAlignment field.
-inline
-SFReal32 *TextureLayerBase::editSFHorizontalAlignment(void)
-{
-    return &_sfHorizontalAlignment;
-}
-
-#ifndef OSG_2_PREP
-//! Get the TextureLayer::_sfHorizontalAlignment field.
-inline
-SFReal32 *TextureLayerBase::getSFHorizontalAlignment(void)
-{
-    return &_sfHorizontalAlignment;
-}
-#endif
-
 
 //! Get the value of the TextureLayer::_sfTexture field.
 inline
-TextureChunkPtr &TextureLayerBase::editTexture(void)
+TextureObjChunk * TextureLayerBase::getTexture(void) const
 {
     return _sfTexture.getValue();
 }
-
-//! Get the value of the TextureLayer::_sfTexture field.
-inline
-const TextureChunkPtr &TextureLayerBase::getTexture(void) const
-{
-    return _sfTexture.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the TextureLayer::_sfTexture field.
-inline
-TextureChunkPtr &TextureLayerBase::getTexture(void)
-{
-    return _sfTexture.getValue();
-}
-#endif
 
 //! Set the value of the TextureLayer::_sfTexture field.
 inline
-void TextureLayerBase::setTexture(const TextureChunkPtr &value)
+void TextureLayerBase::setTexture(TextureObjChunk * const value)
 {
+    editSField(TextureFieldMask);
+
     _sfTexture.setValue(value);
 }
 
 //! Get the value of the TextureLayer::_sfTransformation field.
 inline
-TextureTransformChunkPtr &TextureLayerBase::editTransformation(void)
+TextureTransformChunk * TextureLayerBase::getTransformation(void) const
 {
     return _sfTransformation.getValue();
 }
-
-//! Get the value of the TextureLayer::_sfTransformation field.
-inline
-const TextureTransformChunkPtr &TextureLayerBase::getTransformation(void) const
-{
-    return _sfTransformation.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the TextureLayer::_sfTransformation field.
-inline
-TextureTransformChunkPtr &TextureLayerBase::getTransformation(void)
-{
-    return _sfTransformation.getValue();
-}
-#endif
 
 //! Set the value of the TextureLayer::_sfTransformation field.
 inline
-void TextureLayerBase::setTransformation(const TextureTransformChunkPtr &value)
+void TextureLayerBase::setTransformation(TextureTransformChunk * const value)
 {
+    editSField(TransformationFieldMask);
+
     _sfTransformation.setValue(value);
 }
-
 //! Get the value of the TextureLayer::_sfColor field.
+
 inline
 Color4f &TextureLayerBase::editColor(void)
 {
+    editSField(ColorFieldMask);
+
     return _sfColor.getValue();
 }
 
@@ -332,56 +122,46 @@ const Color4f &TextureLayerBase::getColor(void) const
     return _sfColor.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the TextureLayer::_sfColor field.
-inline
-Color4f &TextureLayerBase::getColor(void)
-{
-    return _sfColor.getValue();
-}
-#endif
-
 //! Set the value of the TextureLayer::_sfColor field.
 inline
 void TextureLayerBase::setColor(const Color4f &value)
 {
+    editSField(ColorFieldMask);
+
     _sfColor.setValue(value);
 }
-
 //! Get the value of the TextureLayer::_sfScale field.
+
 inline
 UInt32 &TextureLayerBase::editScale(void)
 {
+    editSField(ScaleFieldMask);
+
     return _sfScale.getValue();
 }
 
 //! Get the value of the TextureLayer::_sfScale field.
 inline
-const UInt32 &TextureLayerBase::getScale(void) const
+      UInt32  TextureLayerBase::getScale(void) const
 {
     return _sfScale.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the TextureLayer::_sfScale field.
-inline
-UInt32 &TextureLayerBase::getScale(void)
-{
-    return _sfScale.getValue();
-}
-#endif
 
 //! Set the value of the TextureLayer::_sfScale field.
 inline
-void TextureLayerBase::setScale(const UInt32 &value)
+void TextureLayerBase::setScale(const UInt32 value)
 {
+    editSField(ScaleFieldMask);
+
     _sfScale.setValue(value);
 }
-
 //! Get the value of the TextureLayer::_sfScaleAbsoluteSize field.
+
 inline
 Vec2s &TextureLayerBase::editScaleAbsoluteSize(void)
 {
+    editSField(ScaleAbsoluteSizeFieldMask);
+
     return _sfScaleAbsoluteSize.getValue();
 }
 
@@ -392,82 +172,106 @@ const Vec2s &TextureLayerBase::getScaleAbsoluteSize(void) const
     return _sfScaleAbsoluteSize.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the TextureLayer::_sfScaleAbsoluteSize field.
-inline
-Vec2s &TextureLayerBase::getScaleAbsoluteSize(void)
-{
-    return _sfScaleAbsoluteSize.getValue();
-}
-#endif
-
 //! Set the value of the TextureLayer::_sfScaleAbsoluteSize field.
 inline
 void TextureLayerBase::setScaleAbsoluteSize(const Vec2s &value)
 {
+    editSField(ScaleAbsoluteSizeFieldMask);
+
     _sfScaleAbsoluteSize.setValue(value);
 }
-
 //! Get the value of the TextureLayer::_sfVerticalAlignment field.
+
 inline
 Real32 &TextureLayerBase::editVerticalAlignment(void)
 {
+    editSField(VerticalAlignmentFieldMask);
+
     return _sfVerticalAlignment.getValue();
 }
 
 //! Get the value of the TextureLayer::_sfVerticalAlignment field.
 inline
-const Real32 &TextureLayerBase::getVerticalAlignment(void) const
+      Real32  TextureLayerBase::getVerticalAlignment(void) const
 {
     return _sfVerticalAlignment.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the TextureLayer::_sfVerticalAlignment field.
-inline
-Real32 &TextureLayerBase::getVerticalAlignment(void)
-{
-    return _sfVerticalAlignment.getValue();
-}
-#endif
 
 //! Set the value of the TextureLayer::_sfVerticalAlignment field.
 inline
-void TextureLayerBase::setVerticalAlignment(const Real32 &value)
+void TextureLayerBase::setVerticalAlignment(const Real32 value)
 {
+    editSField(VerticalAlignmentFieldMask);
+
     _sfVerticalAlignment.setValue(value);
 }
-
 //! Get the value of the TextureLayer::_sfHorizontalAlignment field.
+
 inline
 Real32 &TextureLayerBase::editHorizontalAlignment(void)
 {
+    editSField(HorizontalAlignmentFieldMask);
+
     return _sfHorizontalAlignment.getValue();
 }
 
 //! Get the value of the TextureLayer::_sfHorizontalAlignment field.
 inline
-const Real32 &TextureLayerBase::getHorizontalAlignment(void) const
+      Real32  TextureLayerBase::getHorizontalAlignment(void) const
 {
     return _sfHorizontalAlignment.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the TextureLayer::_sfHorizontalAlignment field.
-inline
-Real32 &TextureLayerBase::getHorizontalAlignment(void)
-{
-    return _sfHorizontalAlignment.getValue();
-}
-#endif
 
 //! Set the value of the TextureLayer::_sfHorizontalAlignment field.
 inline
-void TextureLayerBase::setHorizontalAlignment(const Real32 &value)
+void TextureLayerBase::setHorizontalAlignment(const Real32 value)
 {
+    editSField(HorizontalAlignmentFieldMask);
+
     _sfHorizontalAlignment.setValue(value);
 }
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void TextureLayerBase::execSync (      TextureLayerBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (TextureFieldMask & whichField))
+        _sfTexture.syncWith(pFrom->_sfTexture);
+
+    if(FieldBits::NoField != (TransformationFieldMask & whichField))
+        _sfTransformation.syncWith(pFrom->_sfTransformation);
+
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+        _sfColor.syncWith(pFrom->_sfColor);
+
+    if(FieldBits::NoField != (ScaleFieldMask & whichField))
+        _sfScale.syncWith(pFrom->_sfScale);
+
+    if(FieldBits::NoField != (ScaleAbsoluteSizeFieldMask & whichField))
+        _sfScaleAbsoluteSize.syncWith(pFrom->_sfScaleAbsoluteSize);
+
+    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
+        _sfVerticalAlignment.syncWith(pFrom->_sfVerticalAlignment);
+
+    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
+        _sfHorizontalAlignment.syncWith(pFrom->_sfHorizontalAlignment);
+}
+#endif
+
+
+inline
+const Char8 *TextureLayerBase::getClassname(void)
+{
+    return "TextureLayer";
+}
+OSG_GEN_CONTAINERPTR(TextureLayer);
 
 OSG_END_NAMESPACE
 

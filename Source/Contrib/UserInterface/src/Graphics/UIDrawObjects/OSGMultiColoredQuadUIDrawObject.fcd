@@ -3,18 +3,21 @@
 <FieldContainer
 	name="MultiColoredQuadUIDrawObject"
 	parent="UIDrawObject"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI MultiColoredQuadUIDrawObject.
 	<Field
 		name="Point1"
 		type="Pnt2f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -24,6 +27,7 @@ A UI MultiColoredQuadUIDrawObject.
 	<Field
 		name="Point2"
 		type="Pnt2f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -33,6 +37,7 @@ A UI MultiColoredQuadUIDrawObject.
 	<Field
 		name="Point3"
 		type="Pnt2f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -42,6 +47,7 @@ A UI MultiColoredQuadUIDrawObject.
 	<Field
 		name="Point4"
 		type="Pnt2f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -51,6 +57,7 @@ A UI MultiColoredQuadUIDrawObject.
 	<Field
 		name="Color1"
 		type="Color4f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -60,6 +67,7 @@ A UI MultiColoredQuadUIDrawObject.
 	<Field
 		name="Color2"
 		type="Color4f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -69,6 +77,7 @@ A UI MultiColoredQuadUIDrawObject.
 	<Field
 		name="Color3"
 		type="Color4f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -78,6 +87,7 @@ A UI MultiColoredQuadUIDrawObject.
 	<Field
 		name="Color4"
 		type="Color4f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -87,6 +97,7 @@ A UI MultiColoredQuadUIDrawObject.
 	<Field
 		name="Opacity"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"

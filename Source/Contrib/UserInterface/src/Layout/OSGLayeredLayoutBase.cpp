@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,121 +50,125 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILELAYEREDLAYOUTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGLayeredLayoutBase.h"
 #include "OSGLayeredLayout.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector LayeredLayoutBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::LayeredLayout
+    A UI LayeredLayout.
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
 
-FieldContainerType LayeredLayoutBase::_type(
-    "LayeredLayout",
-    "Layout",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&LayeredLayoutBase::createEmpty),
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<LayeredLayout *>::_type("LayeredLayoutPtr", "LayoutPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(LayeredLayout *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           LayeredLayout *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           LayeredLayout *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void LayeredLayoutBase::classDescInserter(TypeObject &oType)
+{
+}
+
+
+LayeredLayoutBase::TypeObject LayeredLayoutBase::_type(
+    LayeredLayoutBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&LayeredLayoutBase::createEmptyLocal),
     LayeredLayout::initMethod,
-    NULL,
-    0);
+    LayeredLayout::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&LayeredLayout::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"LayeredLayout\"\n"
+    "\tparent=\"Layout\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI LayeredLayout.\n"
+    "</FieldContainer>\n",
+    "A UI LayeredLayout.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(LayeredLayoutBase, LayeredLayoutPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &LayeredLayoutBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &LayeredLayoutBase::getType(void) const 
+FieldContainerType &LayeredLayoutBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr LayeredLayoutBase::shallowCopy(void) const 
-{ 
-    LayeredLayoutPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const LayeredLayout *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 LayeredLayoutBase::getContainerSize(void) const 
-{ 
-    return sizeof(LayeredLayout); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void LayeredLayoutBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &LayeredLayoutBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<LayeredLayoutBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void LayeredLayoutBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 LayeredLayoutBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((LayeredLayoutBase *) &other, whichField, sInfo);
-}
-void LayeredLayoutBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(LayeredLayout);
 }
 
-void LayeredLayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-LayeredLayoutBase::LayeredLayoutBase(void) :
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-LayeredLayoutBase::LayeredLayoutBase(const LayeredLayoutBase &source) :
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-LayeredLayoutBase::~LayeredLayoutBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 LayeredLayoutBase::getBinSize(const BitVector &whichField)
+UInt32 LayeredLayoutBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -172,68 +176,198 @@ UInt32 LayeredLayoutBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void LayeredLayoutBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void LayeredLayoutBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-
 }
 
-void LayeredLayoutBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void LayeredLayoutBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void LayeredLayoutBase::executeSyncImpl(      LayeredLayoutBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+LayeredLayoutTransitPtr LayeredLayoutBase::createLocal(BitVector bFlags)
 {
+    LayeredLayoutTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
+        fc = dynamic_pointer_cast<LayeredLayout>(tmpPtr);
+    }
 
-}
-#else
-void LayeredLayoutBase::executeSyncImpl(      LayeredLayoutBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
+    return fc;
 }
 
-void LayeredLayoutBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+LayeredLayoutTransitPtr LayeredLayoutBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    LayeredLayoutTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<LayeredLayout>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+LayeredLayoutTransitPtr LayeredLayoutBase::create(void)
+{
+    LayeredLayoutTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<LayeredLayout>(tmpPtr);
+    }
+
+    return fc;
+}
+
+LayeredLayout *LayeredLayoutBase::createEmptyLocal(BitVector bFlags)
+{
+    LayeredLayout *returnValue;
+
+    newPtr<LayeredLayout>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+LayeredLayout *LayeredLayoutBase::createEmpty(void)
+{
+    LayeredLayout *returnValue;
+
+    newPtr<LayeredLayout>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr LayeredLayoutBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    LayeredLayout *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const LayeredLayout *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr LayeredLayoutBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    LayeredLayout *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const LayeredLayout *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr LayeredLayoutBase::shallowCopy(void) const
+{
+    LayeredLayout *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const LayeredLayout *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+LayeredLayoutBase::LayeredLayoutBase(void) :
+    Inherited()
+{
+}
+
+LayeredLayoutBase::LayeredLayoutBase(const LayeredLayoutBase &source) :
+    Inherited(source)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+LayeredLayoutBase::~LayeredLayoutBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void LayeredLayoutBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    LayeredLayout *pThis = static_cast<LayeredLayout *>(this);
+
+    pThis->execSync(static_cast<LayeredLayout *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *LayeredLayoutBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    LayeredLayout *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const LayeredLayout *>(pRefAspect),
+                  dynamic_cast<const LayeredLayout *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<LayeredLayoutPtr>::_type("LayeredLayoutPtr", "LayoutPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(LayeredLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(LayeredLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void LayeredLayoutBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

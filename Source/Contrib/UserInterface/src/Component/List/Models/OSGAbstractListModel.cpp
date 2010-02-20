@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,27 +40,22 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGAbstractListModel.h"
-#include "Component/List/OSGListDataListener.h"
+#include "OSGListDataListener.h"
 
 #include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::AbstractListModel
-A UI AbstractListModel. 
-*/
+// Documentation for this class is emitted in the
+// OSGAbstractListModelBase.cpp file.
+// To modify it, please change the .fcd file (OSGAbstractListModel.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -70,8 +65,13 @@ A UI AbstractListModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void AbstractListModel::initMethod (void)
+void AbstractListModel::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -96,9 +96,9 @@ void AbstractListModel::removeListDataListener(ListDataListenerPtr l)
     }
 }
 
-void AbstractListModel::produceListDataContentsChanged(FieldContainerPtr Source, UInt32 index0, UInt32 index1)
+void AbstractListModel::produceListDataContentsChanged(FieldContainerRefPtr Source, UInt32 index0, UInt32 index1)
 {
-    const ListDataEventPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
+    const ListDataEventUnrecPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
     ListDataListenerSet DataListenerSet(_DataListeners);
     for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
     {
@@ -107,9 +107,9 @@ void AbstractListModel::produceListDataContentsChanged(FieldContainerPtr Source,
     _Producer.produceEvent(ListDataContentsChangedMethodId,e);
 }
 
-void AbstractListModel::produceListDataIntervalAdded(FieldContainerPtr Source, UInt32 index0, UInt32 index1)
+void AbstractListModel::produceListDataIntervalAdded(FieldContainerRefPtr Source, UInt32 index0, UInt32 index1)
 {
-    const ListDataEventPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
+    const ListDataEventUnrecPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
     ListDataListenerSet DataListenerSet(_DataListeners);
     for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
     {
@@ -118,9 +118,9 @@ void AbstractListModel::produceListDataIntervalAdded(FieldContainerPtr Source, U
     _Producer.produceEvent(ListDataIntervalAddedMethodId,e);
 }
 
-void AbstractListModel::produceListDataIntervalRemoved(FieldContainerPtr Source, UInt32 index0, UInt32 index1)
+void AbstractListModel::produceListDataIntervalRemoved(FieldContainerRefPtr Source, UInt32 index0, UInt32 index1)
 {
-    const ListDataEventPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
+    const ListDataEventUnrecPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
     ListDataListenerSet DataListenerSet(_DataListeners);
     for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
     {
@@ -128,6 +128,7 @@ void AbstractListModel::produceListDataIntervalRemoved(FieldContainerPtr Source,
     }
     _Producer.produceEvent(ListDataIntervalRemovedMethodId,e);
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -150,41 +151,17 @@ AbstractListModel::~AbstractListModel(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void AbstractListModel::changed(BitVector whichField, UInt32 origin)
+void AbstractListModel::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void AbstractListModel::dump(      UInt32    , 
+void AbstractListModel::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump AbstractListModel NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGABSTRACTLISTMODELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGABSTRACTLISTMODELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGABSTRACTLISTMODELFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

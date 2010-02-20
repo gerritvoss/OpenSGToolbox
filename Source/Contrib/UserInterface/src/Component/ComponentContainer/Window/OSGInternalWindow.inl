@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -38,8 +38,6 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 inline
@@ -49,13 +47,13 @@ bool InternalWindow::isKeyAcceleratorAttached(KeyEvent::Key TheKey, UInt32 Modif
 }
 
 inline
-InternalWindow::PopupMenuInteractionListener::PopupMenuInteractionListener(InternalWindowPtr TheInternalWindow) :
+InternalWindow::PopupMenuInteractionListener::PopupMenuInteractionListener(InternalWindowRefPtr TheInternalWindow) :
 _InternalWindow(TheInternalWindow)
 {
 }
 
 inline
-InternalWindow::TitlebarDraggedListener::TitlebarDraggedListener(InternalWindowPtr TheInternalWindow) :
+InternalWindow::TitlebarDraggedListener::TitlebarDraggedListener(InternalWindowRefPtr TheInternalWindow) :
 	_InternalWindow(TheInternalWindow)
 {
 }
@@ -73,7 +71,7 @@ void InternalWindow::TitlebarDraggedListener::setMouseStartPosition(const Pnt2f&
 }
 
 inline
-InternalWindow::BorderDraggedListener::BorderDraggedListener(InternalWindowPtr TheInternalWindow) :
+InternalWindow::BorderDraggedListener::BorderDraggedListener(InternalWindowRefPtr TheInternalWindow) :
 	_InternalWindow(TheInternalWindow)
 {
 }
@@ -103,30 +101,27 @@ void InternalWindow::BorderDraggedListener::setBorderDragged(const WindowArea Va
 }
 
 inline
-InternalWindow::TitlebarStartDragListener::TitlebarStartDragListener(InternalWindowPtr TheInternalWindow) :
+InternalWindow::TitlebarStartDragListener::TitlebarStartDragListener(InternalWindowRefPtr TheInternalWindow) :
 	_InternalWindow(TheInternalWindow)
 {
 }
 	
 inline
-InternalWindow::CloseButtonListener::CloseButtonListener(InternalWindowPtr TheInternalWindow) :
+InternalWindow::CloseButtonListener::CloseButtonListener(InternalWindowRefPtr TheInternalWindow) :
 	_InternalWindow(TheInternalWindow)
 {
 }
 
 inline
-InternalWindow::MaximizeButtonListener::MaximizeButtonListener(InternalWindowPtr TheInternalWindow) :
+InternalWindow::MaximizeButtonListener::MaximizeButtonListener(InternalWindowRefPtr TheInternalWindow) :
 	_InternalWindow(TheInternalWindow)
 {
 }
 
 inline
-InternalWindow::IconifyButtonListener::IconifyButtonListener(InternalWindowPtr TheInternalWindow) :
+InternalWindow::IconifyButtonListener::IconifyButtonListener(InternalWindowRefPtr TheInternalWindow) :
 	_InternalWindow(TheInternalWindow)
 {
 }
 
 OSG_END_NAMESPACE
-
-#define OSGINTERNALWINDOW_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
-

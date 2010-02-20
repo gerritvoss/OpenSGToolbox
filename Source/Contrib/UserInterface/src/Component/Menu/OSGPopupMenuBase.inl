@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,16 +55,15 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &PopupMenuBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 PopupMenuBase::getClassTypeId(void) 
+OSG::UInt32 PopupMenuBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
+    return _type.getId();
+}
 //! access the producer type of the class
 inline
 const EventProducerType &PopupMenuBase::getProducerClassType(void)
@@ -81,175 +78,120 @@ UInt32 PopupMenuBase::getProducerClassTypeId(void)
     return _producerType.getId();
 }
 
-//! create a new instance of the class
 inline
-PopupMenuPtr PopupMenuBase::create(void) 
+OSG::UInt16 PopupMenuBase::getClassGroupId(void)
 {
-    PopupMenuPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = PopupMenuPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getGroupId();
 }
-
-//! create an empty new instance of the class, do not copy the prototype
-inline
-PopupMenuPtr PopupMenuBase::createEmpty(void) 
-{ 
-    PopupMenuPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
-}
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the PopupMenu::_sfSubMenuDelay field.
-inline
-const SFReal32 *PopupMenuBase::getSFSubMenuDelay(void) const
-{
-    return &_sfSubMenuDelay;
-}
-
-//! Get the PopupMenu::_sfSubMenuDelay field.
-inline
-SFReal32 *PopupMenuBase::editSFSubMenuDelay(void)
-{
-    return &_sfSubMenuDelay;
-}
-
-//! Get the PopupMenu::_sfInvoker field.
-inline
-const SFComponentPtr *PopupMenuBase::getSFInvoker(void) const
-{
-    return &_sfInvoker;
-}
-
-//! Get the PopupMenu::_sfInvoker field.
-inline
-SFComponentPtr *PopupMenuBase::editSFInvoker(void)
-{
-    return &_sfInvoker;
-}
-
-//! Get the PopupMenu::_sfDefaultSeparator field.
-inline
-const SFSeparatorPtr *PopupMenuBase::getSFDefaultSeparator(void) const
-{
-    return &_sfDefaultSeparator;
-}
-
-//! Get the PopupMenu::_sfDefaultSeparator field.
-inline
-SFSeparatorPtr *PopupMenuBase::editSFDefaultSeparator(void)
-{
-    return &_sfDefaultSeparator;
-}
-
-//! Get the PopupMenu::_sfSelectionModel field.
-inline
-const SFSingleSelectionModelPtr *PopupMenuBase::getSFSelectionModel(void) const
-{
-    return &_sfSelectionModel;
-}
-
-//! Get the PopupMenu::_sfSelectionModel field.
-inline
-SFSingleSelectionModelPtr *PopupMenuBase::editSFSelectionModel(void)
-{
-    return &_sfSelectionModel;
-}
-
-
 //! Get the value of the PopupMenu::_sfSubMenuDelay field.
+
 inline
 Real32 &PopupMenuBase::editSubMenuDelay(void)
 {
+    editSField(SubMenuDelayFieldMask);
+
     return _sfSubMenuDelay.getValue();
 }
 
 //! Get the value of the PopupMenu::_sfSubMenuDelay field.
 inline
-const Real32 &PopupMenuBase::getSubMenuDelay(void) const
+      Real32  PopupMenuBase::getSubMenuDelay(void) const
 {
     return _sfSubMenuDelay.getValue();
 }
 
 //! Set the value of the PopupMenu::_sfSubMenuDelay field.
 inline
-void PopupMenuBase::setSubMenuDelay(const Real32 &value)
+void PopupMenuBase::setSubMenuDelay(const Real32 value)
 {
+    editSField(SubMenuDelayFieldMask);
+
     _sfSubMenuDelay.setValue(value);
 }
 
 //! Get the value of the PopupMenu::_sfInvoker field.
 inline
-ComponentPtr &PopupMenuBase::editInvoker(void)
-{
-    return _sfInvoker.getValue();
-}
-
-//! Get the value of the PopupMenu::_sfInvoker field.
-inline
-const ComponentPtr &PopupMenuBase::getInvoker(void) const
+Component * PopupMenuBase::getInvoker(void) const
 {
     return _sfInvoker.getValue();
 }
 
 //! Set the value of the PopupMenu::_sfInvoker field.
 inline
-void PopupMenuBase::setInvoker(const ComponentPtr &value)
+void PopupMenuBase::setInvoker(Component * const value)
 {
+    editSField(InvokerFieldMask);
+
     _sfInvoker.setValue(value);
 }
 
 //! Get the value of the PopupMenu::_sfDefaultSeparator field.
 inline
-SeparatorPtr &PopupMenuBase::editDefaultSeparator(void)
-{
-    return _sfDefaultSeparator.getValue();
-}
-
-//! Get the value of the PopupMenu::_sfDefaultSeparator field.
-inline
-const SeparatorPtr &PopupMenuBase::getDefaultSeparator(void) const
+Separator * PopupMenuBase::getDefaultSeparator(void) const
 {
     return _sfDefaultSeparator.getValue();
 }
 
 //! Set the value of the PopupMenu::_sfDefaultSeparator field.
 inline
-void PopupMenuBase::setDefaultSeparator(const SeparatorPtr &value)
+void PopupMenuBase::setDefaultSeparator(Separator * const value)
 {
+    editSField(DefaultSeparatorFieldMask);
+
     _sfDefaultSeparator.setValue(value);
 }
 
 //! Get the value of the PopupMenu::_sfSelectionModel field.
 inline
-SingleSelectionModelPtr &PopupMenuBase::editSelectionModel(void)
-{
-    return _sfSelectionModel.getValue();
-}
-
-//! Get the value of the PopupMenu::_sfSelectionModel field.
-inline
-const SingleSelectionModelPtr &PopupMenuBase::getSelectionModel(void) const
+SingleSelectionModel * PopupMenuBase::getSelectionModel(void) const
 {
     return _sfSelectionModel.getValue();
 }
 
 //! Set the value of the PopupMenu::_sfSelectionModel field.
 inline
-void PopupMenuBase::setSelectionModel(const SingleSelectionModelPtr &value)
+void PopupMenuBase::setSelectionModel(SingleSelectionModel * const value)
 {
+    editSField(SelectionModelFieldMask);
+
     _sfSelectionModel.setValue(value);
 }
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void PopupMenuBase::execSync (      PopupMenuBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (SubMenuDelayFieldMask & whichField))
+        _sfSubMenuDelay.syncWith(pFrom->_sfSubMenuDelay);
+
+    if(FieldBits::NoField != (InvokerFieldMask & whichField))
+        _sfInvoker.syncWith(pFrom->_sfInvoker);
+
+    if(FieldBits::NoField != (DefaultSeparatorFieldMask & whichField))
+        _sfDefaultSeparator.syncWith(pFrom->_sfDefaultSeparator);
+
+    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
+        _sfSelectionModel.syncWith(pFrom->_sfSelectionModel);
+}
+#endif
+
+
+inline
+const Char8 *PopupMenuBase::getClassname(void)
+{
+    return "PopupMenu";
+}
+OSG_GEN_CONTAINERPTR(PopupMenu);
+
 OSG_END_NAMESPACE
+

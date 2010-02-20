@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,75 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/OSGFieldContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class SingleSelectionModel;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! SingleSelectionModelPtr
+OSG_GEN_CONTAINERPTR(SingleSelectionModel);
 
-typedef FCPtr<FieldContainerPtr, SingleSelectionModel> SingleSelectionModelPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<SingleSelectionModelPtr> : 
-    public FieldTraitsRecurseMapper<SingleSelectionModelPtr, true>
+struct FieldTraits<SingleSelectionModel *> :
+    public FieldTraitsFCPtrBase<SingleSelectionModel *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFSingleSelectionModelPtr"; }
-    static const char *getMName(void) { return "MFSingleSelectionModelPtr"; }
+    typedef FieldTraits<SingleSelectionModel *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFSingleSelectionModelPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFSingleSelectionModelPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<SingleSelectionModelPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<SingleSelectionModel *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecSingleSelectionModelPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<SingleSelectionModel *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecSingleSelectionModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SingleSelectionModel *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakSingleSelectionModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SingleSelectionModel *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdSingleSelectionModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SingleSelectionModel *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecSingleSelectionModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SingleSelectionModel *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecSingleSelectionModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SingleSelectionModel *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakSingleSelectionModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SingleSelectionModel *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdSingleSelectionModelPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<SingleSelectionModel *,
+                      RecordedRefCountPolicy  > SFRecSingleSelectionModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<SingleSelectionModel *,
+                      UnrecordedRefCountPolicy> SFUnrecSingleSelectionModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<SingleSelectionModel *,
+                      WeakRefCountPolicy      > SFWeakSingleSelectionModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<SingleSelectionModel *,
+                      NoRefCountPolicy        > SFUncountedSingleSelectionModelPtr;
 
-typedef SField<SingleSelectionModelPtr> SFSingleSelectionModelPtr;
-#endif
 
-#ifndef OSG_COMPILESINGLESELECTIONMODELINST
-OSG_DLLEXPORT_DECL1(SField, SingleSelectionModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<SingleSelectionModel *,
+                      RecordedRefCountPolicy  > MFRecSingleSelectionModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<SingleSelectionModel *,
+                      UnrecordedRefCountPolicy> MFUnrecSingleSelectionModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<SingleSelectionModel *,
+                      WeakRefCountPolicy      > MFWeakSingleSelectionModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<SingleSelectionModel *,
+                      NoRefCountPolicy        > MFUncountedSingleSelectionModelPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<SingleSelectionModelPtr> MFSingleSelectionModelPtr;
-#endif
 
-#ifndef OSG_COMPILESINGLESELECTIONMODELINST
-OSG_DLLEXPORT_DECL1(MField, SingleSelectionModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecSingleSelectionModelPtr : 
+    public PointerSField<SingleSelectionModel *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecSingleSelectionModelPtr : 
+    public PointerSField<SingleSelectionModel *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakSingleSelectionModelPtr :
+    public PointerSField<SingleSelectionModel *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedSingleSelectionModelPtr :
+    public PointerSField<SingleSelectionModel *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecSingleSelectionModelPtr :
+    public PointerMField<SingleSelectionModel *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecSingleSelectionModelPtr :
+    public PointerMField<SingleSelectionModel *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakSingleSelectionModelPtr :
+    public PointerMField<SingleSelectionModel *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedSingleSelectionModelPtr :
+    public PointerMField<SingleSelectionModel *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

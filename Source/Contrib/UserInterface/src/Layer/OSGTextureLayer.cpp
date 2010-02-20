@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,22 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGTextureChunk.h>
-#include <OpenSG/OSGTextureTransformChunk.h>
-#include "Util/OSGUIDrawUtils.h"
+#include <OSGConfig.h>
 
 #include "OSGTextureLayer.h"
+#include "OSGTextureObjChunk.h"
+#include "OSGTextureTransformChunk.h"
+#include "OSGUIDrawUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::TextureLayer
-UI Texture Background. 	
-*/
+// Documentation for this class is emitted in the
+// OSGTextureLayerBase.cpp file.
+// To modify it, please change the .fcd file (OSGTextureLayer.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -68,8 +65,13 @@ UI Texture Background.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void TextureLayer::initMethod (void)
+void TextureLayer::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -77,7 +79,7 @@ void TextureLayer::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void TextureLayer::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32 Opacity) const
+void TextureLayer::draw(const GraphicsWeakPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32 Opacity) const
 {
 	glPushAttrib(GL_ENABLE_BIT | GL_TRANSFORM_BIT);
 	GLdouble Plane0[4], Plane1[4], Plane2[4], Plane3[4];
@@ -114,9 +116,9 @@ void TextureLayer::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, con
     glClipPlane(GL_CLIP_PLANE3,BottomPlaneEquation.getValues());
 
     //Activate the Texture Transformation
-    if(getTransformation() != NullFC)
+    if(getTransformation() != NULL)
     {
-        getTransformation()->activate(TheGraphics->getDrawAction());
+        getTransformation()->activate(TheGraphics->getDrawEnv());
     }
 
 	Vec2f BackgroundSize (BottomRight - TopLeft);
@@ -195,9 +197,9 @@ void TextureLayer::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, con
  //   if(!WasClipPlane3Enabled) { glDisable(GL_CLIP_PLANE3); }
 
     //Deactivate the Texture Transformation
-    if(getTransformation() != NullFC)
+    if(getTransformation() != NULL)
     {
-        getTransformation()->deactivate(TheGraphics->getDrawAction());
+        getTransformation()->deactivate(TheGraphics->getDrawEnv());
     }
     
 	glPopAttrib();
@@ -206,6 +208,7 @@ void TextureLayer::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, con
 	//glClipPlane(GL_CLIP_PLANE2, Plane2);
 	//glClipPlane(GL_CLIP_PLANE3, Plane3);
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -228,16 +231,17 @@ TextureLayer::~TextureLayer(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void TextureLayer::changed(BitVector whichField, UInt32 origin)
+void TextureLayer::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void TextureLayer::dump(      UInt32    , 
+void TextureLayer::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump TextureLayer NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

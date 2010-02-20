@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,217 +50,347 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEPOPUPMENUINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGComponent.h"               // Invoker Class
+#include "OSGSeparator.h"               // DefaultSeparator Class
+#include "OSGSingleSelectionModel.h"    // SelectionModel Class
 
 #include "OSGPopupMenuBase.h"
 #include "OSGPopupMenu.h"
 
+#include <boost/bind.hpp>
+
+#include "OSGEvent.h"
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  PopupMenuBase::SubMenuDelayFieldMask = 
-    (TypeTraits<BitVector>::One << PopupMenuBase::SubMenuDelayFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  PopupMenuBase::InvokerFieldMask = 
-    (TypeTraits<BitVector>::One << PopupMenuBase::InvokerFieldId);
+/*! \class OSG::PopupMenu
+    A UI PopupMenu.
+ */
 
-const OSG::BitVector  PopupMenuBase::DefaultSeparatorFieldMask = 
-    (TypeTraits<BitVector>::One << PopupMenuBase::DefaultSeparatorFieldId);
-
-const OSG::BitVector  PopupMenuBase::SelectionModelFieldMask = 
-    (TypeTraits<BitVector>::One << PopupMenuBase::SelectionModelFieldId);
-
-const OSG::BitVector PopupMenuBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Real32          PopupMenuBase::_sfSubMenuDelay
     
 */
-/*! \var ComponentPtr    PopupMenuBase::_sfInvoker
-    
-*/
-/*! \var SeparatorPtr    PopupMenuBase::_sfDefaultSeparator
-    
-*/
-/*! \var SingleSelectionModelPtr PopupMenuBase::_sfSelectionModel
+
+/*! \var Component *     PopupMenuBase::_sfInvoker
     
 */
 
-//! PopupMenu description
+/*! \var Separator *     PopupMenuBase::_sfDefaultSeparator
+    
+*/
 
-FieldDescription *PopupMenuBase::_desc[] = 
+/*! \var SingleSelectionModel * PopupMenuBase::_sfSelectionModel
+    
+*/
+
+
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<PopupMenu *>::_type("PopupMenuPtr", "ComponentContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(PopupMenu *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           PopupMenu *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           PopupMenu *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void PopupMenuBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "SubMenuDelay", 
-                     SubMenuDelayFieldId, SubMenuDelayFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&PopupMenuBase::editSFSubMenuDelay)),
-    new FieldDescription(SFComponentPtr::getClassType(), 
-                     "Invoker", 
-                     InvokerFieldId, InvokerFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&PopupMenuBase::editSFInvoker)),
-    new FieldDescription(SFSeparatorPtr::getClassType(), 
-                     "DefaultSeparator", 
-                     DefaultSeparatorFieldId, DefaultSeparatorFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&PopupMenuBase::editSFDefaultSeparator)),
-    new FieldDescription(SFSingleSelectionModelPtr::getClassType(), 
-                     "SelectionModel", 
-                     SelectionModelFieldId, SelectionModelFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&PopupMenuBase::editSFSelectionModel))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType PopupMenuBase::_type(
-    "PopupMenu",
-    "Container",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&PopupMenuBase::createEmpty),
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "SubMenuDelay",
+        "",
+        SubMenuDelayFieldId, SubMenuDelayFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&PopupMenu::editHandleSubMenuDelay),
+        static_cast<FieldGetMethodSig >(&PopupMenu::getHandleSubMenuDelay));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecComponentPtr::Description(
+        SFUnrecComponentPtr::getClassType(),
+        "Invoker",
+        "",
+        InvokerFieldId, InvokerFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&PopupMenu::editHandleInvoker),
+        static_cast<FieldGetMethodSig >(&PopupMenu::getHandleInvoker));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecSeparatorPtr::Description(
+        SFUnrecSeparatorPtr::getClassType(),
+        "DefaultSeparator",
+        "",
+        DefaultSeparatorFieldId, DefaultSeparatorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&PopupMenu::editHandleDefaultSeparator),
+        static_cast<FieldGetMethodSig >(&PopupMenu::getHandleDefaultSeparator));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecSingleSelectionModelPtr::Description(
+        SFUnrecSingleSelectionModelPtr::getClassType(),
+        "SelectionModel",
+        "",
+        SelectionModelFieldId, SelectionModelFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&PopupMenu::editHandleSelectionModel),
+        static_cast<FieldGetMethodSig >(&PopupMenu::getHandleSelectionModel));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+PopupMenuBase::TypeObject PopupMenuBase::_type(
+    PopupMenuBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&PopupMenuBase::createEmptyLocal),
     PopupMenu::initMethod,
-    _desc,
-    sizeof(_desc));
+    PopupMenu::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&PopupMenu::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"PopupMenu\"\n"
+    "\tparent=\"ComponentContainer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    parentProducer=\"Component\"\n"
+    ">\n"
+    "A UI PopupMenu.\n"
+    "\t<Field\n"
+    "\t\tname=\"SubMenuDelay\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.5\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Invoker\"\n"
+    "\t\ttype=\"Component\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"DefaultSeparator\"\n"
+    "\t\ttype=\"Separator\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SelectionModel\"\n"
+    "\t\ttype=\"SingleSelectionModel\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"PopupMenuWillBecomeVisible\"\n"
+    "\t\ttype=\"PopupMenuEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"PopupMenuWillBecomeInvisible\"\n"
+    "\t\ttype=\"PopupMenuEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"PopupMenuCanceled\"\n"
+    "\t\ttype=\"PopupMenuEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"PopupMenuContentsChanged\"\n"
+    "\t\ttype=\"PopupMenuEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "</FieldContainer>\n",
+    "A UI PopupMenu.\n"
+    );
 
 //! PopupMenu Produced Methods
 
 MethodDescription *PopupMenuBase::_methodDesc[] =
 {
     new MethodDescription("PopupMenuWillBecomeVisible", 
+                    "",
                      PopupMenuWillBecomeVisibleMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("PopupMenuWillBecomeInvisible", 
+                    "",
                      PopupMenuWillBecomeInvisibleMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("PopupMenuCanceled", 
+                    "",
                      PopupMenuCanceledMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("PopupMenuContentsChanged", 
+                    "",
                      PopupMenuContentsChangedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod())
 };
 
 EventProducerType PopupMenuBase::_producerType(
     "PopupMenuProducerType",
     "ComponentProducerType",
-    NULL,
+    "",
     InitEventProducerFunctor(),
     _methodDesc,
     sizeof(_methodDesc));
-//OSG_FIELD_CONTAINER_DEF(PopupMenuBase, PopupMenuPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &PopupMenuBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &PopupMenuBase::getType(void) const 
+FieldContainerType &PopupMenuBase::getType(void)
 {
     return _type;
-} 
+}
+
+const FieldContainerType &PopupMenuBase::getType(void) const
+{
+    return _type;
+}
 
 const EventProducerType &PopupMenuBase::getProducerType(void) const
 {
     return _producerType;
 }
 
-
-FieldContainerPtr PopupMenuBase::shallowCopy(void) const 
-{ 
-    PopupMenuPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const PopupMenu *>(this)); 
-
-    return returnValue; 
-}
-
-UInt32 PopupMenuBase::getContainerSize(void) const 
-{ 
-    return sizeof(PopupMenu); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void PopupMenuBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+UInt32 PopupMenuBase::getContainerSize(void) const
 {
-    this->executeSyncImpl(static_cast<PopupMenuBase *>(&other),
-                          whichField);
+    return sizeof(PopupMenu);
 }
-#else
-void PopupMenuBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFReal32 *PopupMenuBase::editSFSubMenuDelay(void)
 {
-    this->executeSyncImpl((PopupMenuBase *) &other, whichField, sInfo);
+    editSField(SubMenuDelayFieldMask);
+
+    return &_sfSubMenuDelay;
 }
-void PopupMenuBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+const SFReal32 *PopupMenuBase::getSFSubMenuDelay(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfSubMenuDelay;
 }
 
-void PopupMenuBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+
+//! Get the PopupMenu::_sfInvoker field.
+const SFUnrecComponentPtr *PopupMenuBase::getSFInvoker(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfInvoker;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-PopupMenuBase::PopupMenuBase(void) :
-    _sfSubMenuDelay           (Real32(0.5)), 
-    _sfInvoker                (ComponentPtr(NullFC)), 
-    _sfDefaultSeparator       (SeparatorPtr(NullFC)), 
-    _sfSelectionModel         (SingleSelectionModelPtr(NullFC)), 
-    Inherited() 
+SFUnrecComponentPtr *PopupMenuBase::editSFInvoker        (void)
 {
-    _Producer.setType(&_producerType);
+    editSField(InvokerFieldMask);
+
+    return &_sfInvoker;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-PopupMenuBase::PopupMenuBase(const PopupMenuBase &source) :
-    _sfSubMenuDelay           (source._sfSubMenuDelay           ), 
-    _sfInvoker                (source._sfInvoker                ), 
-    _sfDefaultSeparator       (source._sfDefaultSeparator       ), 
-    _sfSelectionModel         (source._sfSelectionModel         ), 
-    Inherited                 (source)
+//! Get the PopupMenu::_sfDefaultSeparator field.
+const SFUnrecSeparatorPtr *PopupMenuBase::getSFDefaultSeparator(void) const
 {
+    return &_sfDefaultSeparator;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-PopupMenuBase::~PopupMenuBase(void)
+SFUnrecSeparatorPtr *PopupMenuBase::editSFDefaultSeparator(void)
 {
+    editSField(DefaultSeparatorFieldMask);
+
+    return &_sfDefaultSeparator;
 }
+
+//! Get the PopupMenu::_sfSelectionModel field.
+const SFUnrecSingleSelectionModelPtr *PopupMenuBase::getSFSelectionModel(void) const
+{
+    return &_sfSelectionModel;
+}
+
+SFUnrecSingleSelectionModelPtr *PopupMenuBase::editSFSelectionModel (void)
+{
+    editSField(SelectionModelFieldMask);
+
+    return &_sfSelectionModel;
+}
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 PopupMenuBase::getBinSize(const BitVector &whichField)
+UInt32 PopupMenuBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -268,28 +398,24 @@ UInt32 PopupMenuBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfSubMenuDelay.getBinSize();
     }
-
     if(FieldBits::NoField != (InvokerFieldMask & whichField))
     {
         returnValue += _sfInvoker.getBinSize();
     }
-
     if(FieldBits::NoField != (DefaultSeparatorFieldMask & whichField))
     {
         returnValue += _sfDefaultSeparator.getBinSize();
     }
-
     if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
     {
         returnValue += _sfSelectionModel.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void PopupMenuBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void PopupMenuBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -297,27 +423,22 @@ void PopupMenuBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfSubMenuDelay.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InvokerFieldMask & whichField))
     {
         _sfInvoker.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DefaultSeparatorFieldMask & whichField))
     {
         _sfDefaultSeparator.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
     {
         _sfSelectionModel.copyToBin(pMem);
     }
-
-
 }
 
-void PopupMenuBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void PopupMenuBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -325,95 +446,337 @@ void PopupMenuBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfSubMenuDelay.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InvokerFieldMask & whichField))
     {
         _sfInvoker.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DefaultSeparatorFieldMask & whichField))
     {
         _sfDefaultSeparator.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
     {
         _sfSelectionModel.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void PopupMenuBase::executeSyncImpl(      PopupMenuBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+PopupMenuTransitPtr PopupMenuBase::createLocal(BitVector bFlags)
 {
+    PopupMenuTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (SubMenuDelayFieldMask & whichField))
-        _sfSubMenuDelay.syncWith(pOther->_sfSubMenuDelay);
+        fc = dynamic_pointer_cast<PopupMenu>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (InvokerFieldMask & whichField))
-        _sfInvoker.syncWith(pOther->_sfInvoker);
-
-    if(FieldBits::NoField != (DefaultSeparatorFieldMask & whichField))
-        _sfDefaultSeparator.syncWith(pOther->_sfDefaultSeparator);
-
-    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
-        _sfSelectionModel.syncWith(pOther->_sfSelectionModel);
-
-
-}
-#else
-void PopupMenuBase::executeSyncImpl(      PopupMenuBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (SubMenuDelayFieldMask & whichField))
-        _sfSubMenuDelay.syncWith(pOther->_sfSubMenuDelay);
-
-    if(FieldBits::NoField != (InvokerFieldMask & whichField))
-        _sfInvoker.syncWith(pOther->_sfInvoker);
-
-    if(FieldBits::NoField != (DefaultSeparatorFieldMask & whichField))
-        _sfDefaultSeparator.syncWith(pOther->_sfDefaultSeparator);
-
-    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
-        _sfSelectionModel.syncWith(pOther->_sfSelectionModel);
-
-
-
+    return fc;
 }
 
-void PopupMenuBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+PopupMenuTransitPtr PopupMenuBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    PopupMenuTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<PopupMenu>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+PopupMenuTransitPtr PopupMenuBase::create(void)
+{
+    PopupMenuTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<PopupMenu>(tmpPtr);
+    }
+
+    return fc;
+}
+
+PopupMenu *PopupMenuBase::createEmptyLocal(BitVector bFlags)
+{
+    PopupMenu *returnValue;
+
+    newPtr<PopupMenu>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+PopupMenu *PopupMenuBase::createEmpty(void)
+{
+    PopupMenu *returnValue;
+
+    newPtr<PopupMenu>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr PopupMenuBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    PopupMenu *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const PopupMenu *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr PopupMenuBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    PopupMenu *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const PopupMenu *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr PopupMenuBase::shallowCopy(void) const
+{
+    PopupMenu *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const PopupMenu *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+PopupMenuBase::PopupMenuBase(void) :
+    Inherited(),
+    _sfSubMenuDelay           (Real32(0.5)),
+    _sfInvoker                (NULL),
+    _sfDefaultSeparator       (NULL),
+    _sfSelectionModel         (NULL)
+{
+    _Producer.setType(&_producerType);
+}
+
+PopupMenuBase::PopupMenuBase(const PopupMenuBase &source) :
+    Inherited(source),
+    _sfSubMenuDelay           (source._sfSubMenuDelay           ),
+    _sfInvoker                (NULL),
+    _sfDefaultSeparator       (NULL),
+    _sfSelectionModel         (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+PopupMenuBase::~PopupMenuBase(void)
+{
+}
+
+void PopupMenuBase::onCreate(const PopupMenu *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        PopupMenu *pThis = static_cast<PopupMenu *>(this);
+
+        pThis->setInvoker(source->getInvoker());
+
+        pThis->setDefaultSeparator(source->getDefaultSeparator());
+
+        pThis->setSelectionModel(source->getSelectionModel());
+    }
+}
+
+GetFieldHandlePtr PopupMenuBase::getHandleSubMenuDelay    (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfSubMenuDelay,
+             this->getType().getFieldDesc(SubMenuDelayFieldId),
+             const_cast<PopupMenuBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr PopupMenuBase::editHandleSubMenuDelay   (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfSubMenuDelay,
+             this->getType().getFieldDesc(SubMenuDelayFieldId),
+             this));
+
+
+    editSField(SubMenuDelayFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr PopupMenuBase::getHandleInvoker         (void) const
+{
+    SFUnrecComponentPtr::GetHandlePtr returnValue(
+        new  SFUnrecComponentPtr::GetHandle(
+             &_sfInvoker,
+             this->getType().getFieldDesc(InvokerFieldId),
+             const_cast<PopupMenuBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr PopupMenuBase::editHandleInvoker        (void)
+{
+    SFUnrecComponentPtr::EditHandlePtr returnValue(
+        new  SFUnrecComponentPtr::EditHandle(
+             &_sfInvoker,
+             this->getType().getFieldDesc(InvokerFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&PopupMenu::setInvoker,
+                    static_cast<PopupMenu *>(this), _1));
+
+    editSField(InvokerFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr PopupMenuBase::getHandleDefaultSeparator (void) const
+{
+    SFUnrecSeparatorPtr::GetHandlePtr returnValue(
+        new  SFUnrecSeparatorPtr::GetHandle(
+             &_sfDefaultSeparator,
+             this->getType().getFieldDesc(DefaultSeparatorFieldId),
+             const_cast<PopupMenuBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr PopupMenuBase::editHandleDefaultSeparator(void)
+{
+    SFUnrecSeparatorPtr::EditHandlePtr returnValue(
+        new  SFUnrecSeparatorPtr::EditHandle(
+             &_sfDefaultSeparator,
+             this->getType().getFieldDesc(DefaultSeparatorFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&PopupMenu::setDefaultSeparator,
+                    static_cast<PopupMenu *>(this), _1));
+
+    editSField(DefaultSeparatorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr PopupMenuBase::getHandleSelectionModel  (void) const
+{
+    SFUnrecSingleSelectionModelPtr::GetHandlePtr returnValue(
+        new  SFUnrecSingleSelectionModelPtr::GetHandle(
+             &_sfSelectionModel,
+             this->getType().getFieldDesc(SelectionModelFieldId),
+             const_cast<PopupMenuBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr PopupMenuBase::editHandleSelectionModel (void)
+{
+    SFUnrecSingleSelectionModelPtr::EditHandlePtr returnValue(
+        new  SFUnrecSingleSelectionModelPtr::EditHandle(
+             &_sfSelectionModel,
+             this->getType().getFieldDesc(SelectionModelFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&PopupMenu::setSelectionModel,
+                    static_cast<PopupMenu *>(this), _1));
+
+    editSField(SelectionModelFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void PopupMenuBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    PopupMenu *pThis = static_cast<PopupMenu *>(this);
+
+    pThis->execSync(static_cast<PopupMenu *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *PopupMenuBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    PopupMenu *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const PopupMenu *>(pRefAspect),
+                  dynamic_cast<const PopupMenu *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<PopupMenuPtr>::_type("PopupMenuPtr", "ContainerPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(PopupMenuPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(PopupMenuPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void PopupMenuBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<PopupMenu *>(this)->setInvoker(NULL);
+
+    static_cast<PopupMenu *>(this)->setDefaultSeparator(NULL);
+
+    static_cast<PopupMenu *>(this)->setSelectionModel(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-

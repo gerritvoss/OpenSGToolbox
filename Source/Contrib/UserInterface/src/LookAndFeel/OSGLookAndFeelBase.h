@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,74 +58,84 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include <OpenSG/OSGFieldContainer.h> // Parent
+#include "OSGFieldContainer.h" // Parent
 
-#include "Component/OSGComponent.h" // Prototypes type
-#include <OpenSG/OSGTimeFields.h> // TextCaretRate type
-#include <OpenSG/OSGTimeFields.h> // ToolTipPopupTime type
-#include <OpenSG/OSGTimeFields.h> // SubMenuPopupTime type
-#include <OpenSG/OSGTimeFields.h> // KeyAcceleratorMenuFlashTime type
+#include "OSGFieldContainerFields.h"    // Prototypes type
+#include "OSGBaseFields.h"              // TextCaretRate type
 
 #include "OSGLookAndFeelFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class LookAndFeel;
-class BinaryDataHandler;
 
 //! \brief LookAndFeel Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeelBase : public FieldContainer
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING LookAndFeelBase : public FieldContainer
 {
-  private:
-
-    typedef FieldContainer    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef LookAndFeelPtr  Ptr;
+    typedef FieldContainer Inherited;
+    typedef FieldContainer ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(LookAndFeel);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        PrototypesFieldId                  = Inherited::NextFieldId,
-        TextCaretRateFieldId               = PrototypesFieldId                  + 1,
-        ToolTipPopupTimeFieldId            = TextCaretRateFieldId               + 1,
-        SubMenuPopupTimeFieldId            = ToolTipPopupTimeFieldId            + 1,
-        KeyAcceleratorMenuFlashTimeFieldId = SubMenuPopupTimeFieldId            + 1,
-        NextFieldId                        = KeyAcceleratorMenuFlashTimeFieldId + 1
+        PrototypesFieldId = Inherited::NextFieldId,
+        TextCaretRateFieldId = PrototypesFieldId + 1,
+        ToolTipPopupTimeFieldId = TextCaretRateFieldId + 1,
+        SubMenuPopupTimeFieldId = ToolTipPopupTimeFieldId + 1,
+        KeyAcceleratorMenuFlashTimeFieldId = SubMenuPopupTimeFieldId + 1,
+        NextFieldId = KeyAcceleratorMenuFlashTimeFieldId + 1
     };
 
-    static const OSG::BitVector PrototypesFieldMask;
-    static const OSG::BitVector TextCaretRateFieldMask;
-    static const OSG::BitVector ToolTipPopupTimeFieldMask;
-    static const OSG::BitVector SubMenuPopupTimeFieldMask;
-    static const OSG::BitVector KeyAcceleratorMenuFlashTimeFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector PrototypesFieldMask =
+        (TypeTraits<BitVector>::One << PrototypesFieldId);
+    static const OSG::BitVector TextCaretRateFieldMask =
+        (TypeTraits<BitVector>::One << TextCaretRateFieldId);
+    static const OSG::BitVector ToolTipPopupTimeFieldMask =
+        (TypeTraits<BitVector>::One << ToolTipPopupTimeFieldId);
+    static const OSG::BitVector SubMenuPopupTimeFieldMask =
+        (TypeTraits<BitVector>::One << SubMenuPopupTimeFieldId);
+    static const OSG::BitVector KeyAcceleratorMenuFlashTimeFieldMask =
+        (TypeTraits<BitVector>::One << KeyAcceleratorMenuFlashTimeFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef MFUnrecFieldContainerPtr MFPrototypesType;
+    typedef SFTime            SFTextCaretRateType;
+    typedef SFTime            SFToolTipPopupTimeType;
+    typedef SFTime            SFSubMenuPopupTimeType;
+    typedef SFTime            SFKeyAcceleratorMenuFlashTimeType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -134,33 +144,50 @@ class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeelBase : public FieldContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFTime              *getSFTextCaretRate  (void);
-           SFTime              *getSFToolTipPopupTime(void);
-           SFTime              *getSFSubMenuPopupTime(void);
-           SFTime              *getSFKeyAcceleratorMenuFlashTime(void);
 
-           Time                &getTextCaretRate  (void);
-     const Time                &getTextCaretRate  (void) const;
-           Time                &getToolTipPopupTime(void);
-     const Time                &getToolTipPopupTime(void) const;
-           Time                &getSubMenuPopupTime(void);
-     const Time                &getSubMenuPopupTime(void) const;
-           Time                &getKeyAcceleratorMenuFlashTime(void);
-     const Time                &getKeyAcceleratorMenuFlashTime(void) const;
+                  SFTime              *editSFTextCaretRate  (void);
+            const SFTime              *getSFTextCaretRate   (void) const;
+
+                  SFTime              *editSFToolTipPopupTime(void);
+            const SFTime              *getSFToolTipPopupTime (void) const;
+
+                  SFTime              *editSFSubMenuPopupTime(void);
+            const SFTime              *getSFSubMenuPopupTime (void) const;
+
+                  SFTime              *editSFKeyAcceleratorMenuFlashTime(void);
+            const SFTime              *getSFKeyAcceleratorMenuFlashTime (void) const;
+
+
+                  Time                &editTextCaretRate  (void);
+            const Time                &getTextCaretRate   (void) const;
+
+                  Time                &editToolTipPopupTime(void);
+            const Time                &getToolTipPopupTime (void) const;
+
+                  Time                &editSubMenuPopupTime(void);
+            const Time                &getSubMenuPopupTime (void) const;
+
+                  Time                &editKeyAcceleratorMenuFlashTime(void);
+            const Time                &getKeyAcceleratorMenuFlashTime (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setTextCaretRate  ( const Time &value );
-     void setToolTipPopupTime( const Time &value );
-     void setSubMenuPopupTime( const Time &value );
-     void setKeyAcceleratorMenuFlashTime( const Time &value );
+            void setTextCaretRate  (const Time &value);
+            void setToolTipPopupTime(const Time &value);
+            void setSubMenuPopupTime(const Time &value);
+            void setKeyAcceleratorMenuFlashTime(const Time &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -168,26 +195,32 @@ class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeelBase : public FieldContainer
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    MFFieldContainerPtr   _mfPrototypes;
-    SFTime              _sfTextCaretRate;
-    SFTime              _sfToolTipPopupTime;
-    SFTime              _sfSubMenuPopupTime;
-    SFTime              _sfKeyAcceleratorMenuFlashTime;
+    MFUnrecFieldContainerPtr _mfPrototypes;
+    SFTime            _sfTextCaretRate;
+    SFTime            _sfToolTipPopupTime;
+    SFTime            _sfSubMenuPopupTime;
+    SFTime            _sfKeyAcceleratorMenuFlashTime;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -202,18 +235,41 @@ class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeelBase : public FieldContainer
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~LookAndFeelBase(void); 
+    virtual ~LookAndFeelBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const LookAndFeel *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandlePrototypes      (void) const;
+    EditFieldHandlePtr editHandlePrototypes     (void);
+    GetFieldHandlePtr  getHandleTextCaretRate   (void) const;
+    EditFieldHandlePtr editHandleTextCaretRate  (void);
+    GetFieldHandlePtr  getHandleToolTipPopupTime (void) const;
+    EditFieldHandlePtr editHandleToolTipPopupTime(void);
+    GetFieldHandlePtr  getHandleSubMenuPopupTime (void) const;
+    EditFieldHandlePtr editHandleSubMenuPopupTime(void);
+    GetFieldHandlePtr  getHandleKeyAcceleratorMenuFlashTime (void) const;
+    EditFieldHandlePtr editHandleKeyAcceleratorMenuFlashTime(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFFieldContainerPtr *getMFPrototypes     (void);
+            const MFUnrecFieldContainerPtr *getMFPrototypes      (void) const;
+                  MFUnrecFieldContainerPtr *editMFPrototypes     (void);
 
-           FieldContainerPtr   &getPrototypes     (UInt32 index);
-           MFFieldContainerPtr &getPrototypes     (void);
-     const MFFieldContainerPtr &getPrototypes     (void) const;
+
+                  FieldContainer * getPrototypes     (const UInt32 index) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -223,65 +279,67 @@ class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeelBase : public FieldContainer
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    void pushToPrototypes           (FieldContainer * const value   );
+    void assignPrototypes           (const MFUnrecFieldContainerPtr &value);
+    void removeFromPrototypes (UInt32                uiIndex );
+    void removeObjFromPrototypes(FieldContainer * const value   );
+    void clearPrototypes            (void                          );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      LookAndFeelBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      LookAndFeelBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      LookAndFeelBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const LookAndFeelBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef LookAndFeelBase *LookAndFeelBaseP;
 
-typedef osgIF<LookAndFeelBase::isNodeCore,
-              CoredNodePtr<LookAndFeel>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet LookAndFeelNodePtr;
-
-typedef RefPtr<LookAndFeelPtr> LookAndFeelRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGLOOKANDFEELBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGLOOKANDFEELBASE_H_ */

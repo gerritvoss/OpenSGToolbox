@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGBorderFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class CompoundBorder;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! CompoundBorderPtr
+OSG_GEN_CONTAINERPTR(CompoundBorder);
 
-typedef FCPtr<BorderPtr, CompoundBorder> CompoundBorderPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<CompoundBorderPtr> : 
-    public FieldTraitsRecurseMapper<CompoundBorderPtr, true>
+struct FieldTraits<CompoundBorder *> :
+    public FieldTraitsFCPtrBase<CompoundBorder *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFCompoundBorderPtr"; }
-    static const char *getMName(void) { return "MFCompoundBorderPtr"; }
+    typedef FieldTraits<CompoundBorder *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFCompoundBorderPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFCompoundBorderPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<CompoundBorderPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<CompoundBorder *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecCompoundBorderPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<CompoundBorder *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecCompoundBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CompoundBorder *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakCompoundBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CompoundBorder *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdCompoundBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CompoundBorder *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecCompoundBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CompoundBorder *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecCompoundBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CompoundBorder *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakCompoundBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CompoundBorder *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdCompoundBorderPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<CompoundBorder *,
+                      RecordedRefCountPolicy  > SFRecCompoundBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<CompoundBorder *,
+                      UnrecordedRefCountPolicy> SFUnrecCompoundBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<CompoundBorder *,
+                      WeakRefCountPolicy      > SFWeakCompoundBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<CompoundBorder *,
+                      NoRefCountPolicy        > SFUncountedCompoundBorderPtr;
 
-typedef SField<CompoundBorderPtr> SFCompoundBorderPtr;
-#endif
 
-#ifndef OSG_COMPILECOMPOUNDBORDERINST
-OSG_DLLEXPORT_DECL1(SField, CompoundBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<CompoundBorder *,
+                      RecordedRefCountPolicy  > MFRecCompoundBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<CompoundBorder *,
+                      UnrecordedRefCountPolicy> MFUnrecCompoundBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<CompoundBorder *,
+                      WeakRefCountPolicy      > MFWeakCompoundBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<CompoundBorder *,
+                      NoRefCountPolicy        > MFUncountedCompoundBorderPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<CompoundBorderPtr> MFCompoundBorderPtr;
-#endif
 
-#ifndef OSG_COMPILECOMPOUNDBORDERINST
-OSG_DLLEXPORT_DECL1(MField, CompoundBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecCompoundBorderPtr : 
+    public PointerSField<CompoundBorder *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecCompoundBorderPtr : 
+    public PointerSField<CompoundBorder *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakCompoundBorderPtr :
+    public PointerSField<CompoundBorder *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedCompoundBorderPtr :
+    public PointerSField<CompoundBorder *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecCompoundBorderPtr :
+    public PointerMField<CompoundBorder *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecCompoundBorderPtr :
+    public PointerMField<CompoundBorder *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakCompoundBorderPtr :
+    public PointerMField<CompoundBorder *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedCompoundBorderPtr :
+    public PointerMField<CompoundBorder *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGCOMPOUNDBORDERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGCOMPOUNDBORDERFIELDS_H_ */

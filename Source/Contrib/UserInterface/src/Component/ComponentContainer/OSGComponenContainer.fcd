@@ -1,38 +1,42 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="Container"
+	name="ComponentContainer"
 	parent="Component"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="abstract"
-	systemcomponent="false"
-	parentsystemcomponent="false"
+    systemcomponent="true"
+    parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="true"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI Container.
 	<Field
 		name="Children"
-		type="ComponentPtr"
+		type="Component"
+		category="pointer"
 		cardinality="multi"
 		visibility="external"
-		header="Component/OSGComponent.h"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="Layout"
-		type="LayoutPtr"
+		type="Layout"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Layout/OSGLayout.h"
 		access="public"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="Inset"
 		type="Vec4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"

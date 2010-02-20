@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGSumLayoutSpring.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::SumLayoutSpring
-A UI Sum LayoutSpring. 
-*/
+// Documentation for this class is emitted in the
+// OSGSumLayoutSpringBase.cpp file.
+// To modify it, please change the .fcd file (OSGSumLayoutSpring.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,20 +62,23 @@ A UI Sum LayoutSpring.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void SumLayoutSpring::initMethod (void)
+void SumLayoutSpring::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-SumLayoutSpringPtr SumLayoutSpring::create(LayoutSpringPtr TheSpring1, LayoutSpringPtr TheSpring2)
+SumLayoutSpringTransitPtr SumLayoutSpring::create(LayoutSpringRefPtr TheSpring1, LayoutSpringRefPtr TheSpring2)
 {
-    SumLayoutSpringPtr NewSpring = createEmpty();
+    SumLayoutSpring* NewSpring = createEmpty();
 
-    beginEditCP(NewSpring, Spring1FieldMask | Spring2FieldMask);
         NewSpring->setSpring1(TheSpring1);
         NewSpring->setSpring2(TheSpring2);
-    endEditCP(NewSpring, Spring1FieldMask | Spring2FieldMask);
 
-    return NewSpring;
+    return SumLayoutSpringTransitPtr(NewSpring);
 }
 
 /***************************************************************************\
@@ -123,41 +121,17 @@ SumLayoutSpring::~SumLayoutSpring(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void SumLayoutSpring::changed(BitVector whichField, UInt32 origin)
+void SumLayoutSpring::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void SumLayoutSpring::dump(      UInt32    , 
+void SumLayoutSpring::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump SumLayoutSpring NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGSUMLAYOUTSPRINGBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSUMLAYOUTSPRINGBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSUMLAYOUTSPRINGFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

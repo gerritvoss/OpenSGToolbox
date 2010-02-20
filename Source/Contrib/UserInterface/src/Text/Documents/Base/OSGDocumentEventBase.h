@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,67 +58,76 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h> // Parent
+#include "OSGEvent.h" // Parent
 
-#include "Text/Documents/Base/OSGDocumentFields.h" // Document type
-#include <OpenSG/OSGInt32Fields.h> // Offset type
-#include <OpenSG/OSGUInt32Fields.h> // Length type
+#include "OSGDocumentFields.h"          // Document type
+#include "OSGSysFields.h"               // Offset type
 
 #include "OSGDocumentEventFields.h"
+
 OSG_BEGIN_NAMESPACE
 
 class DocumentEvent;
-class BinaryDataHandler;
 
 //! \brief DocumentEvent Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING DocumentEventBase : public Event
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DocumentEventBase : public Event
 {
-  private:
-
-    typedef Event    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef DocumentEventPtr  Ptr;
+    typedef Event Inherited;
+    typedef Event ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(DocumentEvent);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
         DocumentFieldId = Inherited::NextFieldId,
-        OffsetFieldId   = DocumentFieldId + 1,
-        LengthFieldId   = OffsetFieldId   + 1,
-        NextFieldId     = LengthFieldId   + 1
+        OffsetFieldId = DocumentFieldId + 1,
+        LengthFieldId = OffsetFieldId + 1,
+        NextFieldId = LengthFieldId + 1
     };
 
-    static const OSG::BitVector DocumentFieldMask;
-    static const OSG::BitVector OffsetFieldMask;
-    static const OSG::BitVector LengthFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector DocumentFieldMask =
+        (TypeTraits<BitVector>::One << DocumentFieldId);
+    static const OSG::BitVector OffsetFieldMask =
+        (TypeTraits<BitVector>::One << OffsetFieldId);
+    static const OSG::BitVector LengthFieldMask =
+        (TypeTraits<BitVector>::One << LengthFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecDocumentPtr SFDocumentType;
+    typedef SFInt32           SFOffsetType;
+    typedef SFUInt32          SFLengthType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -127,16 +136,18 @@ class OSG_USERINTERFACELIB_DLLMAPPING DocumentEventBase : public Event
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-     const SFDocumentPtr       *getSFDocument       (void) const;
-     const SFInt32             *getSFOffset         (void) const;
-     const SFUInt32            *getSFLength         (void) const;
+            const SFUnrecDocumentPtr  *getSFDocument       (void) const;
+
+            const SFInt32             *getSFOffset          (void) const;
+
+            const SFUInt32            *getSFLength          (void) const;
 
 
-     const DocumentPtr         &getDocument       (void) const;
+                  Document * getDocument       (void) const;
 
-     const Int32               &getOffset         (void) const;
+                  Int32                getOffset          (void) const;
 
-     const UInt32              &getLength         (void) const;
+                  UInt32               getLength          (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -146,7 +157,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING DocumentEventBase : public Event
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -154,11 +170,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING DocumentEventBase : public Event
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -166,28 +182,45 @@ class OSG_USERINTERFACELIB_DLLMAPPING DocumentEventBase : public Event
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  DocumentEventPtr      create          (void); 
-    static  DocumentEventPtr      createEmpty     (void); 
+    static  DocumentEventTransitPtr  create          (void);
+    static  DocumentEvent           *createEmpty     (void);
+
+    static  DocumentEventTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  DocumentEvent            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  DocumentEventTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFDocumentPtr       _sfDocument;
-    SFInt32             _sfOffset;
-    SFUInt32            _sfLength;
+    SFUnrecDocumentPtr _sfDocument;
+    SFInt32           _sfOffset;
+    SFUInt32          _sfLength;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -202,88 +235,114 @@ class OSG_USERINTERFACELIB_DLLMAPPING DocumentEventBase : public Event
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DocumentEventBase(void); 
+    virtual ~DocumentEventBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const DocumentEvent *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleDocument        (void) const;
+    EditFieldHandlePtr editHandleDocument       (void);
+    GetFieldHandlePtr  getHandleOffset          (void) const;
+    EditFieldHandlePtr editHandleOffset         (void);
+    GetFieldHandlePtr  getHandleLength          (void) const;
+    EditFieldHandlePtr editHandleLength         (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFDocumentPtr       *editSFDocument       (void);
-           SFInt32             *editSFOffset         (void);
-           SFUInt32            *editSFLength         (void);
+                  SFUnrecDocumentPtr  *editSFDocument       (void);
 
-           DocumentPtr         &editDocument       (void);
-           Int32               &editOffset         (void);
-           UInt32              &editLength         (void);
+                  SFInt32             *editSFOffset         (void);
+
+                  SFUInt32            *editSFLength         (void);
+
+
+
+                  Int32               &editOffset         (void);
+
+                  UInt32              &editLength         (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setDocument       (const DocumentPtr &value);
-     void setOffset         (const Int32 &value);
-     void setLength         (const UInt32 &value);
+            void setDocument       (Document * const value);
+            void setOffset         (const Int32 value);
+            void setLength         (const UInt32 value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      DocumentEventBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      DocumentEventBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      DocumentEventBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const DocumentEventBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef DocumentEventBase *DocumentEventBaseP;
-
-typedef osgIF<DocumentEventBase::isNodeCore,
-              CoredNodePtr<DocumentEvent>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet DocumentEventNodePtr;
-
-typedef RefPtr<DocumentEventPtr> DocumentEventRefPtr;
 
 OSG_END_NAMESPACE
 

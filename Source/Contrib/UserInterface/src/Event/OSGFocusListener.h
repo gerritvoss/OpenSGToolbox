@@ -31,21 +31,21 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGEventListener.h>
+#include "OSGEventListener.h"
 #include "OSGFocusEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING FocusListener : public EventListener
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FocusListener : public EventListener
 {
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void focusGained(const FocusEventPtr e) = 0;
-   virtual void focusLost(const FocusEventPtr e) = 0;
+   virtual void focusGained(const FocusEventUnrecPtr e) = 0;
+   virtual void focusLost(const FocusEventUnrecPtr e) = 0;
 };
 
 typedef FocusListener* FocusListenerPtr;

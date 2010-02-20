@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,104 +55,92 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &ScaleLayoutSpringBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ScaleLayoutSpringBase::getClassTypeId(void) 
+OSG::UInt32 ScaleLayoutSpringBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-ScaleLayoutSpringPtr ScaleLayoutSpringBase::create(void) 
-{
-    ScaleLayoutSpringPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = ScaleLayoutSpringPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-ScaleLayoutSpringPtr ScaleLayoutSpringBase::createEmpty(void) 
-{ 
-    ScaleLayoutSpringPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 ScaleLayoutSpringBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ScaleLayoutSpring::_sfSpring field.
-inline
-SFLayoutSpringPtr *ScaleLayoutSpringBase::getSFSpring(void)
-{
-    return &_sfSpring;
-}
-
-//! Get the ScaleLayoutSpring::_sfFactor field.
-inline
-SFReal32 *ScaleLayoutSpringBase::getSFFactor(void)
-{
-    return &_sfFactor;
-}
-
 
 //! Get the value of the ScaleLayoutSpring::_sfSpring field.
 inline
-LayoutSpringPtr &ScaleLayoutSpringBase::getSpring(void)
-{
-    return _sfSpring.getValue();
-}
-
-//! Get the value of the ScaleLayoutSpring::_sfSpring field.
-inline
-const LayoutSpringPtr &ScaleLayoutSpringBase::getSpring(void) const
+LayoutSpring * ScaleLayoutSpringBase::getSpring(void) const
 {
     return _sfSpring.getValue();
 }
 
 //! Set the value of the ScaleLayoutSpring::_sfSpring field.
 inline
-void ScaleLayoutSpringBase::setSpring(const LayoutSpringPtr &value)
+void ScaleLayoutSpringBase::setSpring(LayoutSpring * const value)
 {
+    editSField(SpringFieldMask);
+
     _sfSpring.setValue(value);
 }
-
 //! Get the value of the ScaleLayoutSpring::_sfFactor field.
+
 inline
-Real32 &ScaleLayoutSpringBase::getFactor(void)
+Real32 &ScaleLayoutSpringBase::editFactor(void)
 {
+    editSField(FactorFieldMask);
+
     return _sfFactor.getValue();
 }
 
 //! Get the value of the ScaleLayoutSpring::_sfFactor field.
 inline
-const Real32 &ScaleLayoutSpringBase::getFactor(void) const
+      Real32  ScaleLayoutSpringBase::getFactor(void) const
 {
     return _sfFactor.getValue();
 }
 
 //! Set the value of the ScaleLayoutSpring::_sfFactor field.
 inline
-void ScaleLayoutSpringBase::setFactor(const Real32 &value)
+void ScaleLayoutSpringBase::setFactor(const Real32 value)
 {
+    editSField(FactorFieldMask);
+
     _sfFactor.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void ScaleLayoutSpringBase::execSync (      ScaleLayoutSpringBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGSCALELAYOUTSPRINGBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (SpringFieldMask & whichField))
+        _sfSpring.syncWith(pFrom->_sfSpring);
+
+    if(FieldBits::NoField != (FactorFieldMask & whichField))
+        _sfFactor.syncWith(pFrom->_sfFactor);
+}
+#endif
+
+
+inline
+const Char8 *ScaleLayoutSpringBase::getClassname(void)
+{
+    return "ScaleLayoutSpring";
+}
+OSG_GEN_CONTAINERPTR(ScaleLayoutSpring);
+
+OSG_END_NAMESPACE
 

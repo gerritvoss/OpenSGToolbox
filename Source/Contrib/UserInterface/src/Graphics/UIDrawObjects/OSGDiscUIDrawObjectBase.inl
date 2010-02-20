@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,113 +55,31 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &DiscUIDrawObjectBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 DiscUIDrawObjectBase::getClassTypeId(void) 
+OSG::UInt32 DiscUIDrawObjectBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-DiscUIDrawObjectPtr DiscUIDrawObjectBase::create(void) 
-{
-    DiscUIDrawObjectPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = DiscUIDrawObjectPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-DiscUIDrawObjectPtr DiscUIDrawObjectBase::createEmpty(void) 
-{ 
-    DiscUIDrawObjectPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 DiscUIDrawObjectBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the DiscUIDrawObject::_sfCenter field.
-inline
-SFPnt2f *DiscUIDrawObjectBase::getSFCenter(void)
-{
-    return &_sfCenter;
-}
-
-//! Get the DiscUIDrawObject::_sfWidth field.
-inline
-SFReal32 *DiscUIDrawObjectBase::getSFWidth(void)
-{
-    return &_sfWidth;
-}
-
-//! Get the DiscUIDrawObject::_sfHeight field.
-inline
-SFReal32 *DiscUIDrawObjectBase::getSFHeight(void)
-{
-    return &_sfHeight;
-}
-
-//! Get the DiscUIDrawObject::_sfStartAngleRad field.
-inline
-SFReal32 *DiscUIDrawObjectBase::getSFStartAngleRad(void)
-{
-    return &_sfStartAngleRad;
-}
-
-//! Get the DiscUIDrawObject::_sfEndAngleRad field.
-inline
-SFReal32 *DiscUIDrawObjectBase::getSFEndAngleRad(void)
-{
-    return &_sfEndAngleRad;
-}
-
-//! Get the DiscUIDrawObject::_sfSubDivisions field.
-inline
-SFUInt16 *DiscUIDrawObjectBase::getSFSubDivisions(void)
-{
-    return &_sfSubDivisions;
-}
-
-//! Get the DiscUIDrawObject::_sfCenterColor field.
-inline
-SFColor4f *DiscUIDrawObjectBase::getSFCenterColor(void)
-{
-    return &_sfCenterColor;
-}
-
-//! Get the DiscUIDrawObject::_sfOuterColor field.
-inline
-SFColor4f *DiscUIDrawObjectBase::getSFOuterColor(void)
-{
-    return &_sfOuterColor;
-}
-
-//! Get the DiscUIDrawObject::_sfOpacity field.
-inline
-SFReal32 *DiscUIDrawObjectBase::getSFOpacity(void)
-{
-    return &_sfOpacity;
-}
-
-
 //! Get the value of the DiscUIDrawObject::_sfCenter field.
+
 inline
-Pnt2f &DiscUIDrawObjectBase::getCenter(void)
+Pnt2f &DiscUIDrawObjectBase::editCenter(void)
 {
+    editSField(CenterFieldMask);
+
     return _sfCenter.getValue();
 }
 
@@ -178,118 +94,142 @@ const Pnt2f &DiscUIDrawObjectBase::getCenter(void) const
 inline
 void DiscUIDrawObjectBase::setCenter(const Pnt2f &value)
 {
+    editSField(CenterFieldMask);
+
     _sfCenter.setValue(value);
 }
-
 //! Get the value of the DiscUIDrawObject::_sfWidth field.
+
 inline
-Real32 &DiscUIDrawObjectBase::getWidth(void)
+Real32 &DiscUIDrawObjectBase::editWidth(void)
 {
+    editSField(WidthFieldMask);
+
     return _sfWidth.getValue();
 }
 
 //! Get the value of the DiscUIDrawObject::_sfWidth field.
 inline
-const Real32 &DiscUIDrawObjectBase::getWidth(void) const
+      Real32  DiscUIDrawObjectBase::getWidth(void) const
 {
     return _sfWidth.getValue();
 }
 
 //! Set the value of the DiscUIDrawObject::_sfWidth field.
 inline
-void DiscUIDrawObjectBase::setWidth(const Real32 &value)
+void DiscUIDrawObjectBase::setWidth(const Real32 value)
 {
+    editSField(WidthFieldMask);
+
     _sfWidth.setValue(value);
 }
-
 //! Get the value of the DiscUIDrawObject::_sfHeight field.
+
 inline
-Real32 &DiscUIDrawObjectBase::getHeight(void)
+Real32 &DiscUIDrawObjectBase::editHeight(void)
 {
+    editSField(HeightFieldMask);
+
     return _sfHeight.getValue();
 }
 
 //! Get the value of the DiscUIDrawObject::_sfHeight field.
 inline
-const Real32 &DiscUIDrawObjectBase::getHeight(void) const
+      Real32  DiscUIDrawObjectBase::getHeight(void) const
 {
     return _sfHeight.getValue();
 }
 
 //! Set the value of the DiscUIDrawObject::_sfHeight field.
 inline
-void DiscUIDrawObjectBase::setHeight(const Real32 &value)
+void DiscUIDrawObjectBase::setHeight(const Real32 value)
 {
+    editSField(HeightFieldMask);
+
     _sfHeight.setValue(value);
 }
-
 //! Get the value of the DiscUIDrawObject::_sfStartAngleRad field.
+
 inline
-Real32 &DiscUIDrawObjectBase::getStartAngleRad(void)
+Real32 &DiscUIDrawObjectBase::editStartAngleRad(void)
 {
+    editSField(StartAngleRadFieldMask);
+
     return _sfStartAngleRad.getValue();
 }
 
 //! Get the value of the DiscUIDrawObject::_sfStartAngleRad field.
 inline
-const Real32 &DiscUIDrawObjectBase::getStartAngleRad(void) const
+      Real32  DiscUIDrawObjectBase::getStartAngleRad(void) const
 {
     return _sfStartAngleRad.getValue();
 }
 
 //! Set the value of the DiscUIDrawObject::_sfStartAngleRad field.
 inline
-void DiscUIDrawObjectBase::setStartAngleRad(const Real32 &value)
+void DiscUIDrawObjectBase::setStartAngleRad(const Real32 value)
 {
+    editSField(StartAngleRadFieldMask);
+
     _sfStartAngleRad.setValue(value);
 }
-
 //! Get the value of the DiscUIDrawObject::_sfEndAngleRad field.
+
 inline
-Real32 &DiscUIDrawObjectBase::getEndAngleRad(void)
+Real32 &DiscUIDrawObjectBase::editEndAngleRad(void)
 {
+    editSField(EndAngleRadFieldMask);
+
     return _sfEndAngleRad.getValue();
 }
 
 //! Get the value of the DiscUIDrawObject::_sfEndAngleRad field.
 inline
-const Real32 &DiscUIDrawObjectBase::getEndAngleRad(void) const
+      Real32  DiscUIDrawObjectBase::getEndAngleRad(void) const
 {
     return _sfEndAngleRad.getValue();
 }
 
 //! Set the value of the DiscUIDrawObject::_sfEndAngleRad field.
 inline
-void DiscUIDrawObjectBase::setEndAngleRad(const Real32 &value)
+void DiscUIDrawObjectBase::setEndAngleRad(const Real32 value)
 {
+    editSField(EndAngleRadFieldMask);
+
     _sfEndAngleRad.setValue(value);
 }
-
 //! Get the value of the DiscUIDrawObject::_sfSubDivisions field.
+
 inline
-UInt16 &DiscUIDrawObjectBase::getSubDivisions(void)
+UInt16 &DiscUIDrawObjectBase::editSubDivisions(void)
 {
+    editSField(SubDivisionsFieldMask);
+
     return _sfSubDivisions.getValue();
 }
 
 //! Get the value of the DiscUIDrawObject::_sfSubDivisions field.
 inline
-const UInt16 &DiscUIDrawObjectBase::getSubDivisions(void) const
+      UInt16  DiscUIDrawObjectBase::getSubDivisions(void) const
 {
     return _sfSubDivisions.getValue();
 }
 
 //! Set the value of the DiscUIDrawObject::_sfSubDivisions field.
 inline
-void DiscUIDrawObjectBase::setSubDivisions(const UInt16 &value)
+void DiscUIDrawObjectBase::setSubDivisions(const UInt16 value)
 {
+    editSField(SubDivisionsFieldMask);
+
     _sfSubDivisions.setValue(value);
 }
-
 //! Get the value of the DiscUIDrawObject::_sfCenterColor field.
+
 inline
-Color4f &DiscUIDrawObjectBase::getCenterColor(void)
+Color4f &DiscUIDrawObjectBase::editCenterColor(void)
 {
+    editSField(CenterColorFieldMask);
+
     return _sfCenterColor.getValue();
 }
 
@@ -304,13 +244,17 @@ const Color4f &DiscUIDrawObjectBase::getCenterColor(void) const
 inline
 void DiscUIDrawObjectBase::setCenterColor(const Color4f &value)
 {
+    editSField(CenterColorFieldMask);
+
     _sfCenterColor.setValue(value);
 }
-
 //! Get the value of the DiscUIDrawObject::_sfOuterColor field.
+
 inline
-Color4f &DiscUIDrawObjectBase::getOuterColor(void)
+Color4f &DiscUIDrawObjectBase::editOuterColor(void)
 {
+    editSField(OuterColorFieldMask);
+
     return _sfOuterColor.getValue();
 }
 
@@ -325,32 +269,83 @@ const Color4f &DiscUIDrawObjectBase::getOuterColor(void) const
 inline
 void DiscUIDrawObjectBase::setOuterColor(const Color4f &value)
 {
+    editSField(OuterColorFieldMask);
+
     _sfOuterColor.setValue(value);
 }
-
 //! Get the value of the DiscUIDrawObject::_sfOpacity field.
+
 inline
-Real32 &DiscUIDrawObjectBase::getOpacity(void)
+Real32 &DiscUIDrawObjectBase::editOpacity(void)
 {
+    editSField(OpacityFieldMask);
+
     return _sfOpacity.getValue();
 }
 
 //! Get the value of the DiscUIDrawObject::_sfOpacity field.
 inline
-const Real32 &DiscUIDrawObjectBase::getOpacity(void) const
+      Real32  DiscUIDrawObjectBase::getOpacity(void) const
 {
     return _sfOpacity.getValue();
 }
 
 //! Set the value of the DiscUIDrawObject::_sfOpacity field.
 inline
-void DiscUIDrawObjectBase::setOpacity(const Real32 &value)
+void DiscUIDrawObjectBase::setOpacity(const Real32 value)
 {
+    editSField(OpacityFieldMask);
+
     _sfOpacity.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void DiscUIDrawObjectBase::execSync (      DiscUIDrawObjectBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGDISCUIDRAWOBJECTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (CenterFieldMask & whichField))
+        _sfCenter.syncWith(pFrom->_sfCenter);
+
+    if(FieldBits::NoField != (WidthFieldMask & whichField))
+        _sfWidth.syncWith(pFrom->_sfWidth);
+
+    if(FieldBits::NoField != (HeightFieldMask & whichField))
+        _sfHeight.syncWith(pFrom->_sfHeight);
+
+    if(FieldBits::NoField != (StartAngleRadFieldMask & whichField))
+        _sfStartAngleRad.syncWith(pFrom->_sfStartAngleRad);
+
+    if(FieldBits::NoField != (EndAngleRadFieldMask & whichField))
+        _sfEndAngleRad.syncWith(pFrom->_sfEndAngleRad);
+
+    if(FieldBits::NoField != (SubDivisionsFieldMask & whichField))
+        _sfSubDivisions.syncWith(pFrom->_sfSubDivisions);
+
+    if(FieldBits::NoField != (CenterColorFieldMask & whichField))
+        _sfCenterColor.syncWith(pFrom->_sfCenterColor);
+
+    if(FieldBits::NoField != (OuterColorFieldMask & whichField))
+        _sfOuterColor.syncWith(pFrom->_sfOuterColor);
+
+    if(FieldBits::NoField != (OpacityFieldMask & whichField))
+        _sfOpacity.syncWith(pFrom->_sfOpacity);
+}
+#endif
+
+
+inline
+const Char8 *DiscUIDrawObjectBase::getClassname(void)
+{
+    return "DiscUIDrawObject";
+}
+OSG_GEN_CONTAINERPTR(DiscUIDrawObject);
+
+OSG_END_NAMESPACE
 

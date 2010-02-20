@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,71 +58,79 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGBorder.h" // Parent
 
-#include <OpenSG/OSGReal32Fields.h> // LeftWidth type
-#include <OpenSG/OSGReal32Fields.h> // RightWidth type
-#include <OpenSG/OSGReal32Fields.h> // TopWidth type
-#include <OpenSG/OSGReal32Fields.h> // BottomWidth type
+#include "OSGSysFields.h"               // LeftWidth type
 
 #include "OSGEmptyBorderFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class EmptyBorder;
-class BinaryDataHandler;
 
 //! \brief EmptyBorder Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING EmptyBorderBase : public Border
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING EmptyBorderBase : public Border
 {
-  private:
-
-    typedef Border    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef EmptyBorderPtr  Ptr;
+    typedef Border Inherited;
+    typedef Border ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(EmptyBorder);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        LeftWidthFieldId   = Inherited::NextFieldId,
-        RightWidthFieldId  = LeftWidthFieldId   + 1,
-        TopWidthFieldId    = RightWidthFieldId  + 1,
-        BottomWidthFieldId = TopWidthFieldId    + 1,
-        NextFieldId        = BottomWidthFieldId + 1
+        LeftWidthFieldId = Inherited::NextFieldId,
+        RightWidthFieldId = LeftWidthFieldId + 1,
+        TopWidthFieldId = RightWidthFieldId + 1,
+        BottomWidthFieldId = TopWidthFieldId + 1,
+        NextFieldId = BottomWidthFieldId + 1
     };
 
-    static const OSG::BitVector LeftWidthFieldMask;
-    static const OSG::BitVector RightWidthFieldMask;
-    static const OSG::BitVector TopWidthFieldMask;
-    static const OSG::BitVector BottomWidthFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector LeftWidthFieldMask =
+        (TypeTraits<BitVector>::One << LeftWidthFieldId);
+    static const OSG::BitVector RightWidthFieldMask =
+        (TypeTraits<BitVector>::One << RightWidthFieldId);
+    static const OSG::BitVector TopWidthFieldMask =
+        (TypeTraits<BitVector>::One << TopWidthFieldId);
+    static const OSG::BitVector BottomWidthFieldMask =
+        (TypeTraits<BitVector>::One << BottomWidthFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFReal32          SFLeftWidthType;
+    typedef SFReal32          SFRightWidthType;
+    typedef SFReal32          SFTopWidthType;
+    typedef SFReal32          SFBottomWidthType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -131,33 +139,45 @@ class OSG_USERINTERFACELIB_DLLMAPPING EmptyBorderBase : public Border
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *getSFLeftWidth      (void);
-           SFReal32            *getSFRightWidth     (void);
-           SFReal32            *getSFTopWidth       (void);
-           SFReal32            *getSFBottomWidth    (void);
 
-           Real32              &getLeftWidth      (void);
-     const Real32              &getLeftWidth      (void) const;
-           Real32              &getRightWidth     (void);
-     const Real32              &getRightWidth     (void) const;
-           Real32              &getTopWidth       (void);
-     const Real32              &getTopWidth       (void) const;
-           Real32              &getBottomWidth    (void);
-     const Real32              &getBottomWidth    (void) const;
+                  SFReal32            *editSFLeftWidth      (void);
+            const SFReal32            *getSFLeftWidth       (void) const;
+
+                  SFReal32            *editSFRightWidth     (void);
+            const SFReal32            *getSFRightWidth      (void) const;
+
+                  SFReal32            *editSFTopWidth       (void);
+            const SFReal32            *getSFTopWidth        (void) const;
+
+                  SFReal32            *editSFBottomWidth    (void);
+            const SFReal32            *getSFBottomWidth     (void) const;
+
+
+                  Real32              &editLeftWidth      (void);
+                  Real32               getLeftWidth       (void) const;
+
+                  Real32              &editRightWidth     (void);
+                  Real32               getRightWidth      (void) const;
+
+                  Real32              &editTopWidth       (void);
+                  Real32               getTopWidth        (void) const;
+
+                  Real32              &editBottomWidth    (void);
+                  Real32               getBottomWidth     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setLeftWidth      ( const Real32 &value );
-     void setRightWidth     ( const Real32 &value );
-     void setTopWidth       ( const Real32 &value );
-     void setBottomWidth    ( const Real32 &value );
+            void setLeftWidth      (const Real32 value);
+            void setRightWidth     (const Real32 value);
+            void setTopWidth       (const Real32 value);
+            void setBottomWidth    (const Real32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -165,11 +185,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING EmptyBorderBase : public Border
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -177,29 +197,46 @@ class OSG_USERINTERFACELIB_DLLMAPPING EmptyBorderBase : public Border
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  EmptyBorderPtr      create          (void); 
-    static  EmptyBorderPtr      createEmpty     (void); 
+    static  EmptyBorderTransitPtr  create          (void);
+    static  EmptyBorder           *createEmpty     (void);
+
+    static  EmptyBorderTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  EmptyBorder            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  EmptyBorderTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFReal32            _sfLeftWidth;
-    SFReal32            _sfRightWidth;
-    SFReal32            _sfTopWidth;
-    SFReal32            _sfBottomWidth;
+    SFReal32          _sfLeftWidth;
+    SFReal32          _sfRightWidth;
+    SFReal32          _sfTopWidth;
+    SFReal32          _sfBottomWidth;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -214,69 +251,85 @@ class OSG_USERINTERFACELIB_DLLMAPPING EmptyBorderBase : public Border
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~EmptyBorderBase(void); 
+    virtual ~EmptyBorderBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleLeftWidth       (void) const;
+    EditFieldHandlePtr editHandleLeftWidth      (void);
+    GetFieldHandlePtr  getHandleRightWidth      (void) const;
+    EditFieldHandlePtr editHandleRightWidth     (void);
+    GetFieldHandlePtr  getHandleTopWidth        (void) const;
+    EditFieldHandlePtr editHandleTopWidth       (void);
+    GetFieldHandlePtr  getHandleBottomWidth     (void) const;
+    EditFieldHandlePtr editHandleBottomWidth    (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      EmptyBorderBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      EmptyBorderBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      EmptyBorderBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const EmptyBorderBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef EmptyBorderBase *EmptyBorderBaseP;
 
-typedef osgIF<EmptyBorderBase::isNodeCore,
-              CoredNodePtr<EmptyBorder>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet EmptyBorderNodePtr;
-
-typedef RefPtr<EmptyBorderPtr> EmptyBorderRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGEMPTYBORDERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGEMPTYBORDERBASE_H_ */

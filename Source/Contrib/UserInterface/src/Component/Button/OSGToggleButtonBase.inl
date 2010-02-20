@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,16 +55,15 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &ToggleButtonBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ToggleButtonBase::getClassTypeId(void) 
+OSG::UInt32 ToggleButtonBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
+    return _type.getId();
+}
 //! access the producer type of the class
 inline
 const EventProducerType &ToggleButtonBase::getProducerClassType(void)
@@ -81,70 +78,63 @@ UInt32 ToggleButtonBase::getProducerClassTypeId(void)
     return _producerType.getId();
 }
 
-//! create a new instance of the class
 inline
-ToggleButtonPtr ToggleButtonBase::create(void) 
+OSG::UInt16 ToggleButtonBase::getClassGroupId(void)
 {
-    ToggleButtonPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = ToggleButtonPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getGroupId();
 }
-
-//! create an empty new instance of the class, do not copy the prototype
-inline
-ToggleButtonPtr ToggleButtonBase::createEmpty(void) 
-{ 
-    ToggleButtonPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
-}
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ToggleButton::_sfSelected field.
-inline
-const SFBool *ToggleButtonBase::getSFSelected(void) const
-{
-    return &_sfSelected;
-}
-
-//! Get the ToggleButton::_sfSelected field.
-inline
-SFBool *ToggleButtonBase::editSFSelected(void)
-{
-    return &_sfSelected;
-}
-
-
 //! Get the value of the ToggleButton::_sfSelected field.
+
 inline
 bool &ToggleButtonBase::editSelected(void)
 {
+    editSField(SelectedFieldMask);
+
     return _sfSelected.getValue();
 }
 
 //! Get the value of the ToggleButton::_sfSelected field.
 inline
-const bool &ToggleButtonBase::getSelected(void) const
+      bool  ToggleButtonBase::getSelected(void) const
 {
     return _sfSelected.getValue();
 }
 
 //! Set the value of the ToggleButton::_sfSelected field.
 inline
-void ToggleButtonBase::setSelected(const bool &value)
+void ToggleButtonBase::setSelected(const bool value)
 {
+    editSField(SelectedFieldMask);
+
     _sfSelected.setValue(value);
 }
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void ToggleButtonBase::execSync (      ToggleButtonBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (SelectedFieldMask & whichField))
+        _sfSelected.syncWith(pFrom->_sfSelected);
+}
+#endif
+
+
+inline
+const Char8 *ToggleButtonBase::getClassname(void)
+{
+    return "ToggleButton";
+}
+OSG_GEN_CONTAINERPTR(ToggleButton);
+
 OSG_END_NAMESPACE
+

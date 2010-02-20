@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,195 +50,374 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEMENUINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGPopupMenu.h"               // InternalPopupMenu Class
+#include "OSGUIDrawObjectCanvas.h"      // ExpandDrawObject Class
+#include "OSGMenuItem.h"                // MenuItems Class
 
 #include "OSGMenuBase.h"
 #include "OSGMenu.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  MenuBase::InternalPopupMenuFieldMask = 
-    (TypeTraits<BitVector>::One << MenuBase::InternalPopupMenuFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  MenuBase::SubMenuDelayFieldMask = 
-    (TypeTraits<BitVector>::One << MenuBase::SubMenuDelayFieldId);
+/*! \class OSG::Menu
+    A UI Menu.
+ */
 
-const OSG::BitVector  MenuBase::TopLevelMenuFieldMask = 
-    (TypeTraits<BitVector>::One << MenuBase::TopLevelMenuFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  MenuBase::ExpandDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << MenuBase::ExpandDrawObjectFieldId);
-
-const OSG::BitVector  MenuBase::MenuItemsFieldMask = 
-    (TypeTraits<BitVector>::One << MenuBase::MenuItemsFieldId);
-
-const OSG::BitVector MenuBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var PopupMenuPtr    MenuBase::_sfInternalPopupMenu
+/*! \var PopupMenu *     MenuBase::_sfInternalPopupMenu
     
 */
+
 /*! \var Real32          MenuBase::_sfSubMenuDelay
     
 */
+
 /*! \var bool            MenuBase::_sfTopLevelMenu
     
 */
-/*! \var UIDrawObjectCanvasPtr MenuBase::_sfExpandDrawObject
-    
-*/
-/*! \var MenuItemPtr     MenuBase::_mfMenuItems
+
+/*! \var UIDrawObjectCanvas * MenuBase::_sfExpandDrawObject
     
 */
 
-//! Menu description
+/*! \var MenuItem *      MenuBase::_mfMenuItems
+    
+*/
 
-FieldDescription *MenuBase::_desc[] = 
+
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<Menu *>::_type("MenuPtr", "MenuItemPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(Menu *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           Menu *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           Menu *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void MenuBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFPopupMenuPtr::getClassType(), 
-                     "InternalPopupMenu", 
-                     InternalPopupMenuFieldId, InternalPopupMenuFieldMask,
-                     false,
-                     (FieldAccessMethod) &MenuBase::getSFInternalPopupMenu),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "SubMenuDelay", 
-                     SubMenuDelayFieldId, SubMenuDelayFieldMask,
-                     false,
-                     (FieldAccessMethod) &MenuBase::getSFSubMenuDelay),
-    new FieldDescription(SFBool::getClassType(), 
-                     "TopLevelMenu", 
-                     TopLevelMenuFieldId, TopLevelMenuFieldMask,
-                     false,
-                     (FieldAccessMethod) &MenuBase::getSFTopLevelMenu),
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "ExpandDrawObject", 
-                     ExpandDrawObjectFieldId, ExpandDrawObjectFieldMask,
-                     false,
-                     (FieldAccessMethod) &MenuBase::getSFExpandDrawObject),
-    new FieldDescription(MFMenuItemPtr::getClassType(), 
-                     "MenuItems", 
-                     MenuItemsFieldId, MenuItemsFieldMask,
-                     false,
-                     (FieldAccessMethod) &MenuBase::getMFMenuItems)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType MenuBase::_type(
-    "Menu",
-    "MenuItem",
-    NULL,
-    (PrototypeCreateF) &MenuBase::createEmpty,
+    pDesc = new SFUnrecPopupMenuPtr::Description(
+        SFUnrecPopupMenuPtr::getClassType(),
+        "InternalPopupMenu",
+        "",
+        InternalPopupMenuFieldId, InternalPopupMenuFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Menu::editHandleInternalPopupMenu),
+        static_cast<FieldGetMethodSig >(&Menu::getHandleInternalPopupMenu));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "SubMenuDelay",
+        "",
+        SubMenuDelayFieldId, SubMenuDelayFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Menu::editHandleSubMenuDelay),
+        static_cast<FieldGetMethodSig >(&Menu::getHandleSubMenuDelay));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "TopLevelMenu",
+        "",
+        TopLevelMenuFieldId, TopLevelMenuFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Menu::editHandleTopLevelMenu),
+        static_cast<FieldGetMethodSig >(&Menu::getHandleTopLevelMenu));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
+        SFUnrecUIDrawObjectCanvasPtr::getClassType(),
+        "ExpandDrawObject",
+        "",
+        ExpandDrawObjectFieldId, ExpandDrawObjectFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Menu::editHandleExpandDrawObject),
+        static_cast<FieldGetMethodSig >(&Menu::getHandleExpandDrawObject));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new MFUnrecMenuItemPtr::Description(
+        MFUnrecMenuItemPtr::getClassType(),
+        "MenuItems",
+        "",
+        MenuItemsFieldId, MenuItemsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Menu::editHandleMenuItems),
+        static_cast<FieldGetMethodSig >(&Menu::getHandleMenuItems));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+MenuBase::TypeObject MenuBase::_type(
+    MenuBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&MenuBase::createEmptyLocal),
     Menu::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(MenuBase, MenuPtr)
+    Menu::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&Menu::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"Menu\"\n"
+    "\tparent=\"MenuItem\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Menu.\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalPopupMenu\"\n"
+    "\t\ttype=\"PopupMenu\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SubMenuDelay\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.5\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TopLevelMenu\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ExpandDrawObject\"\n"
+    "\t\ttype=\"UIDrawObjectCanvas\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "    <Field\n"
+    "          name=\"MenuItems\"\n"
+    "          type=\"MenuItem\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "          cardinality=\"multi\"\n"
+    "          visibility=\"external\"\n"
+    "          access=\"protected\"\n"
+    "          >\n"
+    "    </Field>\n"
+    "</FieldContainer>\n",
+    "A UI Menu.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &MenuBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &MenuBase::getType(void) const 
+FieldContainerType &MenuBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr MenuBase::shallowCopy(void) const 
-{ 
-    MenuPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const Menu *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 MenuBase::getContainerSize(void) const 
-{ 
-    return sizeof(Menu); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void MenuBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &MenuBase::getType(void) const
 {
-    this->executeSyncImpl((MenuBase *) &other, whichField);
+    return _type;
 }
-#else
-void MenuBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 MenuBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((MenuBase *) &other, whichField, sInfo);
+    return sizeof(Menu);
 }
-void MenuBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the Menu::_sfInternalPopupMenu field.
+const SFUnrecPopupMenuPtr *MenuBase::getSFInternalPopupMenu(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfInternalPopupMenu;
 }
 
-void MenuBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecPopupMenuPtr *MenuBase::editSFInternalPopupMenu(void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(InternalPopupMenuFieldMask);
 
-    _mfMenuItems.terminateShare(uiAspect, this->getContainerSize());
+    return &_sfInternalPopupMenu;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-MenuBase::MenuBase(void) :
-    _sfInternalPopupMenu      (), 
-    _sfSubMenuDelay           (Real32(0.5)), 
-    _sfTopLevelMenu           (bool(false)), 
-    _sfExpandDrawObject       (), 
-    _mfMenuItems              (), 
-    Inherited() 
+SFReal32 *MenuBase::editSFSubMenuDelay(void)
 {
+    editSField(SubMenuDelayFieldMask);
+
+    return &_sfSubMenuDelay;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-MenuBase::MenuBase(const MenuBase &source) :
-    _sfInternalPopupMenu      (source._sfInternalPopupMenu      ), 
-    _sfSubMenuDelay           (source._sfSubMenuDelay           ), 
-    _sfTopLevelMenu           (source._sfTopLevelMenu           ), 
-    _sfExpandDrawObject       (source._sfExpandDrawObject       ), 
-    _mfMenuItems              (source._mfMenuItems              ), 
-    Inherited                 (source)
+const SFReal32 *MenuBase::getSFSubMenuDelay(void) const
 {
+    return &_sfSubMenuDelay;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-MenuBase::~MenuBase(void)
+SFBool *MenuBase::editSFTopLevelMenu(void)
 {
+    editSField(TopLevelMenuFieldMask);
+
+    return &_sfTopLevelMenu;
 }
+
+const SFBool *MenuBase::getSFTopLevelMenu(void) const
+{
+    return &_sfTopLevelMenu;
+}
+
+
+//! Get the Menu::_sfExpandDrawObject field.
+const SFUnrecUIDrawObjectCanvasPtr *MenuBase::getSFExpandDrawObject(void) const
+{
+    return &_sfExpandDrawObject;
+}
+
+SFUnrecUIDrawObjectCanvasPtr *MenuBase::editSFExpandDrawObject(void)
+{
+    editSField(ExpandDrawObjectFieldMask);
+
+    return &_sfExpandDrawObject;
+}
+
+//! Get the Menu::_mfMenuItems field.
+const MFUnrecMenuItemPtr *MenuBase::getMFMenuItems(void) const
+{
+    return &_mfMenuItems;
+}
+
+MFUnrecMenuItemPtr  *MenuBase::editMFMenuItems      (void)
+{
+    editMField(MenuItemsFieldMask, _mfMenuItems);
+
+    return &_mfMenuItems;
+}
+
+
+
+void MenuBase::pushToMenuItems(MenuItem * const value)
+{
+    editMField(MenuItemsFieldMask, _mfMenuItems);
+
+    _mfMenuItems.push_back(value);
+}
+
+void MenuBase::assignMenuItems(const MFUnrecMenuItemPtr &value)
+{
+    MFUnrecMenuItemPtr::const_iterator elemIt  =
+        value.begin();
+    MFUnrecMenuItemPtr::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<Menu *>(this)->clearMenuItems();
+
+    while(elemIt != elemEnd)
+    {
+        this->pushToMenuItems(*elemIt);
+
+        ++elemIt;
+    }
+}
+
+void MenuBase::removeFromMenuItems(UInt32 uiIndex)
+{
+    if(uiIndex < _mfMenuItems.size())
+    {
+        editMField(MenuItemsFieldMask, _mfMenuItems);
+
+        _mfMenuItems.erase(uiIndex);
+    }
+}
+
+void MenuBase::removeObjFromMenuItems(MenuItem * const value)
+{
+    Int32 iElemIdx = _mfMenuItems.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(MenuItemsFieldMask, _mfMenuItems);
+
+        _mfMenuItems.erase(iElemIdx);
+    }
+}
+void MenuBase::clearMenuItems(void)
+{
+    editMField(MenuItemsFieldMask, _mfMenuItems);
+
+
+    _mfMenuItems.clear();
+}
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 MenuBase::getBinSize(const BitVector &whichField)
+UInt32 MenuBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -246,33 +425,28 @@ UInt32 MenuBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfInternalPopupMenu.getBinSize();
     }
-
     if(FieldBits::NoField != (SubMenuDelayFieldMask & whichField))
     {
         returnValue += _sfSubMenuDelay.getBinSize();
     }
-
     if(FieldBits::NoField != (TopLevelMenuFieldMask & whichField))
     {
         returnValue += _sfTopLevelMenu.getBinSize();
     }
-
     if(FieldBits::NoField != (ExpandDrawObjectFieldMask & whichField))
     {
         returnValue += _sfExpandDrawObject.getBinSize();
     }
-
     if(FieldBits::NoField != (MenuItemsFieldMask & whichField))
     {
         returnValue += _mfMenuItems.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void MenuBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void MenuBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -280,32 +454,26 @@ void MenuBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfInternalPopupMenu.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SubMenuDelayFieldMask & whichField))
     {
         _sfSubMenuDelay.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TopLevelMenuFieldMask & whichField))
     {
         _sfTopLevelMenu.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ExpandDrawObjectFieldMask & whichField))
     {
         _sfExpandDrawObject.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MenuItemsFieldMask & whichField))
     {
         _mfMenuItems.copyToBin(pMem);
     }
-
-
 }
 
-void MenuBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void MenuBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -313,129 +481,386 @@ void MenuBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfInternalPopupMenu.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SubMenuDelayFieldMask & whichField))
     {
         _sfSubMenuDelay.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TopLevelMenuFieldMask & whichField))
     {
         _sfTopLevelMenu.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ExpandDrawObjectFieldMask & whichField))
     {
         _sfExpandDrawObject.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MenuItemsFieldMask & whichField))
     {
         _mfMenuItems.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void MenuBase::executeSyncImpl(      MenuBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+MenuTransitPtr MenuBase::createLocal(BitVector bFlags)
 {
+    MenuTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (InternalPopupMenuFieldMask & whichField))
-        _sfInternalPopupMenu.syncWith(pOther->_sfInternalPopupMenu);
+        fc = dynamic_pointer_cast<Menu>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (SubMenuDelayFieldMask & whichField))
-        _sfSubMenuDelay.syncWith(pOther->_sfSubMenuDelay);
-
-    if(FieldBits::NoField != (TopLevelMenuFieldMask & whichField))
-        _sfTopLevelMenu.syncWith(pOther->_sfTopLevelMenu);
-
-    if(FieldBits::NoField != (ExpandDrawObjectFieldMask & whichField))
-        _sfExpandDrawObject.syncWith(pOther->_sfExpandDrawObject);
-
-    if(FieldBits::NoField != (MenuItemsFieldMask & whichField))
-        _mfMenuItems.syncWith(pOther->_mfMenuItems);
-
-
-}
-#else
-void MenuBase::executeSyncImpl(      MenuBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (InternalPopupMenuFieldMask & whichField))
-        _sfInternalPopupMenu.syncWith(pOther->_sfInternalPopupMenu);
-
-    if(FieldBits::NoField != (SubMenuDelayFieldMask & whichField))
-        _sfSubMenuDelay.syncWith(pOther->_sfSubMenuDelay);
-
-    if(FieldBits::NoField != (TopLevelMenuFieldMask & whichField))
-        _sfTopLevelMenu.syncWith(pOther->_sfTopLevelMenu);
-
-    if(FieldBits::NoField != (ExpandDrawObjectFieldMask & whichField))
-        _sfExpandDrawObject.syncWith(pOther->_sfExpandDrawObject);
-
-
-    if(FieldBits::NoField != (MenuItemsFieldMask & whichField))
-        _mfMenuItems.syncWith(pOther->_mfMenuItems, sInfo);
-
-
+    return fc;
 }
 
-void MenuBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+MenuTransitPtr MenuBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    MenuTransitPtr fc;
 
-    if(FieldBits::NoField != (MenuItemsFieldMask & whichField))
-        _mfMenuItems.beginEdit(uiAspect, uiContainerSize);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
+        fc = dynamic_pointer_cast<Menu>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+MenuTransitPtr MenuBase::create(void)
+{
+    MenuTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<Menu>(tmpPtr);
+    }
+
+    return fc;
+}
+
+Menu *MenuBase::createEmptyLocal(BitVector bFlags)
+{
+    Menu *returnValue;
+
+    newPtr<Menu>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+Menu *MenuBase::createEmpty(void)
+{
+    Menu *returnValue;
+
+    newPtr<Menu>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr MenuBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    Menu *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Menu *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr MenuBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    Menu *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Menu *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr MenuBase::shallowCopy(void) const
+{
+    Menu *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const Menu *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+MenuBase::MenuBase(void) :
+    Inherited(),
+    _sfInternalPopupMenu      (NULL),
+    _sfSubMenuDelay           (Real32(0.5)),
+    _sfTopLevelMenu           (bool(false)),
+    _sfExpandDrawObject       (NULL),
+    _mfMenuItems              ()
+{
+}
+
+MenuBase::MenuBase(const MenuBase &source) :
+    Inherited(source),
+    _sfInternalPopupMenu      (NULL),
+    _sfSubMenuDelay           (source._sfSubMenuDelay           ),
+    _sfTopLevelMenu           (source._sfTopLevelMenu           ),
+    _sfExpandDrawObject       (NULL),
+    _mfMenuItems              ()
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+MenuBase::~MenuBase(void)
+{
+}
+
+void MenuBase::onCreate(const Menu *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        Menu *pThis = static_cast<Menu *>(this);
+
+        pThis->setInternalPopupMenu(source->getInternalPopupMenu());
+
+        pThis->setExpandDrawObject(source->getExpandDrawObject());
+
+        MFUnrecMenuItemPtr::const_iterator MenuItemsIt  =
+            source->_mfMenuItems.begin();
+        MFUnrecMenuItemPtr::const_iterator MenuItemsEnd =
+            source->_mfMenuItems.end  ();
+
+        while(MenuItemsIt != MenuItemsEnd)
+        {
+            pThis->pushToMenuItems(*MenuItemsIt);
+
+            ++MenuItemsIt;
+        }
+    }
+}
+
+GetFieldHandlePtr MenuBase::getHandleInternalPopupMenu (void) const
+{
+    SFUnrecPopupMenuPtr::GetHandlePtr returnValue(
+        new  SFUnrecPopupMenuPtr::GetHandle(
+             &_sfInternalPopupMenu,
+             this->getType().getFieldDesc(InternalPopupMenuFieldId),
+             const_cast<MenuBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MenuBase::editHandleInternalPopupMenu(void)
+{
+    SFUnrecPopupMenuPtr::EditHandlePtr returnValue(
+        new  SFUnrecPopupMenuPtr::EditHandle(
+             &_sfInternalPopupMenu,
+             this->getType().getFieldDesc(InternalPopupMenuFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Menu::setInternalPopupMenu,
+                    static_cast<Menu *>(this), _1));
+
+    editSField(InternalPopupMenuFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MenuBase::getHandleSubMenuDelay    (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfSubMenuDelay,
+             this->getType().getFieldDesc(SubMenuDelayFieldId),
+             const_cast<MenuBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MenuBase::editHandleSubMenuDelay   (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfSubMenuDelay,
+             this->getType().getFieldDesc(SubMenuDelayFieldId),
+             this));
+
+
+    editSField(SubMenuDelayFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MenuBase::getHandleTopLevelMenu    (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfTopLevelMenu,
+             this->getType().getFieldDesc(TopLevelMenuFieldId),
+             const_cast<MenuBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MenuBase::editHandleTopLevelMenu   (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfTopLevelMenu,
+             this->getType().getFieldDesc(TopLevelMenuFieldId),
+             this));
+
+
+    editSField(TopLevelMenuFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MenuBase::getHandleExpandDrawObject (void) const
+{
+    SFUnrecUIDrawObjectCanvasPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::GetHandle(
+             &_sfExpandDrawObject,
+             this->getType().getFieldDesc(ExpandDrawObjectFieldId),
+             const_cast<MenuBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MenuBase::editHandleExpandDrawObject(void)
+{
+    SFUnrecUIDrawObjectCanvasPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::EditHandle(
+             &_sfExpandDrawObject,
+             this->getType().getFieldDesc(ExpandDrawObjectFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Menu::setExpandDrawObject,
+                    static_cast<Menu *>(this), _1));
+
+    editSField(ExpandDrawObjectFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MenuBase::getHandleMenuItems       (void) const
+{
+    MFUnrecMenuItemPtr::GetHandlePtr returnValue(
+        new  MFUnrecMenuItemPtr::GetHandle(
+             &_mfMenuItems,
+             this->getType().getFieldDesc(MenuItemsFieldId),
+             const_cast<MenuBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MenuBase::editHandleMenuItems      (void)
+{
+    MFUnrecMenuItemPtr::EditHandlePtr returnValue(
+        new  MFUnrecMenuItemPtr::EditHandle(
+             &_mfMenuItems,
+             this->getType().getFieldDesc(MenuItemsFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&Menu::pushToMenuItems,
+                    static_cast<Menu *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&Menu::removeFromMenuItems,
+                    static_cast<Menu *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&Menu::removeObjFromMenuItems,
+                    static_cast<Menu *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&Menu::clearMenuItems,
+                    static_cast<Menu *>(this)));
+
+    editMField(MenuItemsFieldMask, _mfMenuItems);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void MenuBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Menu *pThis = static_cast<Menu *>(this);
+
+    pThis->execSync(static_cast<Menu *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *MenuBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    Menu *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const Menu *>(pRefAspect),
+                  dynamic_cast<const Menu *>(this));
+
+    return returnValue;
+}
+#endif
+
+void MenuBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<Menu *>(this)->setInternalPopupMenu(NULL);
+
+    static_cast<Menu *>(this)->setExpandDrawObject(NULL);
+
+    static_cast<Menu *>(this)->clearMenuItems();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<MenuPtr>::_type("MenuPtr", "MenuItemPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(MenuPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(MenuPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGMENUBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGMENUBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGMENUFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

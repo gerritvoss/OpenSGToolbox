@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "Component/OSGComponentFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class GLViewport;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! GLViewportPtr
+OSG_GEN_CONTAINERPTR(GLViewport);
 
-typedef FCPtr<ComponentPtr, GLViewport> GLViewportPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<GLViewportPtr> : 
-    public FieldTraitsRecurseMapper<GLViewportPtr, true>
+struct FieldTraits<GLViewport *> :
+    public FieldTraitsFCPtrBase<GLViewport *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFGLViewportPtr"; }
-    static const char *getMName(void) { return "MFGLViewportPtr"; }
+    typedef FieldTraits<GLViewport *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFGLViewportPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFGLViewportPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<GLViewportPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<GLViewport *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecGLViewportPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<GLViewport *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecGLViewportPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GLViewport *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakGLViewportPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GLViewport *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdGLViewportPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GLViewport *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecGLViewportPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GLViewport *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecGLViewportPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GLViewport *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakGLViewportPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GLViewport *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdGLViewportPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<GLViewport *,
+                      RecordedRefCountPolicy  > SFRecGLViewportPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<GLViewport *,
+                      UnrecordedRefCountPolicy> SFUnrecGLViewportPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<GLViewport *,
+                      WeakRefCountPolicy      > SFWeakGLViewportPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<GLViewport *,
+                      NoRefCountPolicy        > SFUncountedGLViewportPtr;
 
-typedef SField<GLViewportPtr> SFGLViewportPtr;
-#endif
 
-#ifndef OSG_COMPILEGLVIEWPORTINST
-OSG_DLLEXPORT_DECL1(SField, GLViewportPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<GLViewport *,
+                      RecordedRefCountPolicy  > MFRecGLViewportPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<GLViewport *,
+                      UnrecordedRefCountPolicy> MFUnrecGLViewportPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<GLViewport *,
+                      WeakRefCountPolicy      > MFWeakGLViewportPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<GLViewport *,
+                      NoRefCountPolicy        > MFUncountedGLViewportPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<GLViewportPtr> MFGLViewportPtr;
-#endif
 
-#ifndef OSG_COMPILEGLVIEWPORTINST
-OSG_DLLEXPORT_DECL1(MField, GLViewportPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecGLViewportPtr : 
+    public PointerSField<GLViewport *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecGLViewportPtr : 
+    public PointerSField<GLViewport *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakGLViewportPtr :
+    public PointerSField<GLViewport *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedGLViewportPtr :
+    public PointerSField<GLViewport *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecGLViewportPtr :
+    public PointerMField<GLViewport *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecGLViewportPtr :
+    public PointerMField<GLViewport *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakGLViewportPtr :
+    public PointerMField<GLViewport *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedGLViewportPtr :
+    public PointerMField<GLViewport *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGGLVIEWPORTFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGGLVIEWPORTFIELDS_H_ */

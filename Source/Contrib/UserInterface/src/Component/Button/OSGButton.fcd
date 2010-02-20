@@ -3,29 +3,31 @@
 <FieldContainer
 	name="Button"
 	parent="Component"
-	parentHeader="Component/OSGComponent"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
     parentProducer="Component"
 >
 A UI Button.
 	<Field
 		name="Font"
-		type="UIFontPtr"
+		type="UIFont"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Text/OSGUIFont.h"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="Text"
 		type="std::string"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -33,37 +35,38 @@ A UI Button.
 	</Field>
 	<Field
 		name="ActiveBorder"
-		type="BorderPtr"
+		type="Border"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Border/OSGBorder.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="ActiveBackground"
-		type="LayerPtr"
+		type="Layer"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Layer/OSGLayer.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="ActiveForeground"
-		type="LayerPtr"
+		type="Layer"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Layer/OSGLayer.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="ActiveTextColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -72,6 +75,7 @@ A UI Button.
 	<Field
 		name="FocusedTextColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -80,6 +84,7 @@ A UI Button.
 	<Field
 		name="RolloverTextColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -88,6 +93,7 @@ A UI Button.
 	<Field
 		name="DisabledTextColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -96,6 +102,7 @@ A UI Button.
 	<Field
 		name="TextColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -104,6 +111,7 @@ A UI Button.
 	<Field
 		name="Alignment"
 		type="Vec2f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.5,0.5"
@@ -113,6 +121,7 @@ A UI Button.
 	<Field
 		name="EnableActionOnMouseDownTime"
 		type="bool"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="false"
@@ -122,6 +131,7 @@ A UI Button.
 	<Field
 		name="ActionOnMouseDownRate"
 		type="Time"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.1"
@@ -131,6 +141,7 @@ A UI Button.
 	<Field
 		name="ActiveOffset"
 		type="Vec2f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -139,52 +150,53 @@ A UI Button.
 	</Field>
 	<Field
 		name="DrawObject"
-		type="UIDrawObjectCanvasPtr"
+		type="UIDrawObjectCanvas"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/Misc/OSGUIDrawObjectCanvas.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="ActiveDrawObject"
-		type="UIDrawObjectCanvasPtr"
+		type="UIDrawObjectCanvas"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/Misc/OSGUIDrawObjectCanvas.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="FocusedDrawObject"
-		type="UIDrawObjectCanvasPtr"
+		type="UIDrawObjectCanvas"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/Misc/OSGUIDrawObjectCanvas.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="RolloverDrawObject"
-		type="UIDrawObjectCanvasPtr"
+		type="UIDrawObjectCanvas"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/Misc/OSGUIDrawObjectCanvas.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="DisabledDrawObject"
-		type="UIDrawObjectCanvasPtr"
+		type="UIDrawObjectCanvas"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/Misc/OSGUIDrawObjectCanvas.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="DrawObjectToTextAlignment"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="Button::ALIGN_DRAW_OBJECT_LEFT_OF_TEXT"
@@ -194,6 +206,7 @@ A UI Button.
 	<Field
 		name="DrawObjectToTextPadding"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="2.0"
@@ -202,12 +215,12 @@ A UI Button.
 	</Field>
 	<ProducedMethod
 		name="ActionPerformed"
-		producedEventType="ActionEventPtr"
+		type="ActionEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="MousePressedActionPerformed"
-		producedEventType="ActionEventPtr"
+		type="ActionEventPtr"
 	>
 	</ProducedMethod>
 </FieldContainer>

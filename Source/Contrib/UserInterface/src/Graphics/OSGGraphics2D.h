@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,74 +42,45 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGGraphics2DBase.h"
-#include <OpenSG/OSGColorMaskChunk.h>
-#include <OpenSG/OSGStencilChunk.h>
+#include "OSGDepthChunk.h"
+#include "OSGColorMaskChunk.h"
+#include "OSGStencilChunk.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING Graphics2D : public Graphics2DBase
-{
-  private:
+/*! \brief Graphics2D class. See \ref
+           PageContribUserInterfaceGraphics2D for a description.
+*/
 
-    typedef Graphics2DBase Inherited;
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Graphics2D : public Graphics2DBase
+{
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef Graphics2DBase Inherited;
+    typedef Graphics2D     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	
-	virtual void preDraw();
-	virtual void postDraw();
-
-	virtual void drawRect(const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Color4f& Color, const Real32& Opacity) const;
-	
-	virtual void drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& p3, const Pnt2f& p4, 
-							const Color4f& c1, const Color4f& c2, const Color4f& c3, const Color4f& c4,
-							const Real32& Opacity) const;
-	
-	virtual void drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& p3, const Pnt2f& p4, 
-							const Vec2f& t1, const Vec2f& t2, const Vec2f& t3, const Vec2f& t4,
-							const Color4f& color, const TextureChunkPtr Texture,
-							const Real32& Opacity) const;
-	virtual void drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& p3, const Pnt2f& p4, 
-							const Vec2f& t1, const Vec2f& t2, const Vec2f& t3, const Vec2f& t4,
-							const MaterialPtr Material,
-							const Real32& Opacity) const;
-
-	virtual void drawLine(const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32& Width, const Color4f& Color, const Real32& Opacity) const;
-	
-	virtual void drawPolygon(const MFPnt2f Verticies, const Color4f& Color, const Real32& Opacity) const;
-	
-	virtual void drawDisc(const Pnt2f& Center, const Real32& Width, const Real32& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const UInt16& SubDivisions, const Color4f& CenterColor, const Color4f& OuterColor, const Real32& Opacity) const;
-	
-	virtual void drawComplexDisc(const Pnt2f& Center, const Real32& InnerRadius, const Real32& OuterRadius, const Real32& StartAngleRad, const Real32& EndAngleRad, const UInt16& SubDivisions, const Color4f& CenterColor, const Color4f& OuterColor, const Real32& Opacity) const;
-	
-	virtual void drawArc(const Pnt2f& Center, const Real32& Width, const Real32& Height, const Real32& StartAngleRad, const Real32& EndAngleRad, const Real32& LineWidth, const UInt16& SubDivisions, const Color4f& Color, const Real32& Opacity) const;
-	
-	virtual void drawText(const Pnt2f& Position, const std::string& Text, const UIFontPtr TheFont, const Color4f& Color, const Real32& Opacity) const;
-	virtual void drawTextUnderline(const Pnt2f& Position, const std::string& Text, const UIFontPtr TheFont, const Color4f& Color, const Real32& Opacity) const;
-   
-	virtual Real32 getClipPlaneOffset(void) const;
-
     virtual void incrDrawBounderiesNesting(void);
     virtual void decrDrawBounderiesNestring(void);
 
@@ -120,7 +91,106 @@ class OSG_USERINTERFACELIB_DLLMAPPING Graphics2D : public Graphics2DBase
     
     virtual void activateDrawBounderiesTest(void);
     virtual void deactivateDrawBounderiesTest(void);
+
+
+	
+    virtual void drawRect(const Pnt2f& TopLeft,
+                          const Pnt2f& BottomRight,
+                          const Color4f& Color,
+                          const Real32& Opacity) const;
+
+    virtual void drawQuad(const Pnt2f& p1,
+                          const Pnt2f& p2,
+                          const Pnt2f& p3,
+                          const Pnt2f& p4, 
+                          const Color4f& c1,
+                          const Color4f& c2,
+                          const Color4f& c3,
+                          const Color4f& c4,
+                          const Real32& Opacity) const;
+
+    virtual void drawQuad(const Pnt2f& p1,
+                          const Pnt2f& p2,
+                          const Pnt2f& p3,
+                          const Pnt2f& p4, 
+                          const Vec2f& t1,
+                          const Vec2f& t2,
+                          const Vec2f& t3,
+                          const Vec2f& t4,
+                          const Color4f& color,
+                          const TextureObjChunkUnrecPtr Texture,
+                          const Real32& Opacity) const;
+
+    virtual void drawQuad(const Pnt2f& p1,
+                          const Pnt2f& p2,
+                          const Pnt2f& p3,
+                          const Pnt2f& p4, 
+                          const Vec2f& t1,
+                          const Vec2f& t2,
+                          const Vec2f& t3,
+                          const Vec2f& t4,
+                          const MaterialUnrecPtr Material,
+                          const Real32& Opacity) const;
+
+    virtual void drawLine(const Pnt2f& TopLeft,
+                          const Pnt2f& BottomRight,
+                          const Real32& Width,
+                          const Color4f& Color,
+                          const Real32& Opacity) const;
+
+    virtual void drawPolygon(const MFPnt2f Verticies,
+                             const Color4f& Color,
+                             const Real32& Opacity) const;
+
+    virtual void drawDisc(const Pnt2f& Center,
+                          const Real32& Width,
+                          const Real32& Height,
+                          const Real32& StartAngleRad,
+                          const Real32& EndAngleRad,
+                          const UInt16& SubDivisions,
+                          const Color4f& CenterColor,
+                          const Color4f& OuterColor,
+                          const Real32& Opacity) const;
+
+    virtual void drawComplexDisc(const Pnt2f& Center,
+                                 const Real32& InnerRadius,
+                                 const Real32& OuterRadius,
+                                 const Real32& StartAngleRad,
+                                 const Real32& EndAngleRad,
+                                 const UInt16& SubDivisions,
+                                 const Color4f& CenterColor,
+                                 const Color4f& OuterColor,
+                                 const Real32& Opacity) const;
+
+    virtual void drawArc(const Pnt2f& Center,
+                         const Real32& Width,
+                         const Real32& Height,
+                         const Real32& StartAngleRad,
+                         const Real32& EndAngleRad,
+                         const Real32& LineWidth,
+                         const UInt16& SubDivisions,
+                         const Color4f& Color,
+                         const Real32& Opacity) const;
+
+    virtual void drawText(const Pnt2f& Position,
+                          const std::string& Text,
+                          const UIFontUnrecPtr TheFont,
+                          const Color4f& Color,
+                          const Real32& Opacity) const;
+
+    virtual void drawTextUnderline(const Pnt2f& Position,
+                                   const std::string& Text,
+                                   const UIFontUnrecPtr TheFont,
+                                   const Color4f& Color,
+                                   const Real32& Opacity) const;
+
+    virtual void preDraw(void);
+    virtual void postDraw(void);
+
+    virtual Real32 getClipPlaneOffset(void) const;
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in Graphics2DBase.
@@ -137,36 +207,40 @@ class OSG_USERINTERFACELIB_DLLMAPPING Graphics2D : public Graphics2DBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Graphics2D(void); 
+    virtual ~Graphics2D(void);
 
     /*! \}                                                                 */
-    
-    static ColorMaskChunkPtr createColorMask(void);
-    static StencilChunkPtr createStenciledAreaSetup(void);
-    static StencilChunkPtr createStenciledAreaCleanup(void);
-    static StencilChunkPtr createStenciledAreaTest(void);
-    
-    ColorMaskChunkPtr getColorMask(void);
-    StencilChunkPtr getStenciledAreaSetup(void);
-    StencilChunkPtr getStenciledAreaCleanup(void);
-    StencilChunkPtr getStenciledAreaTest(void);
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
 
-    ColorMaskChunkPtr _ColorMask;
-    StencilChunkPtr _StenciledAreaSetup;
-    StencilChunkPtr _StenciledAreaCleanup;
-    StencilChunkPtr _StenciledAreaTest;
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const Graphics2D *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
+    
+    static ColorMaskChunkUnrecPtr createColorMask(void);
+    static StencilChunkUnrecPtr createStenciledAreaSetup(void);
+    static StencilChunkUnrecPtr createStenciledAreaCleanup(void);
+    static StencilChunkUnrecPtr createStenciledAreaTest(void);
     
     UInt32 _StencilNesting;
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class Graphics2DBase;
 
-    static void initMethod(void);
+    void drawCharacters( const TextLayoutResult& layoutResult, const UIFontUnrecPtr TheFont) const;
 
     // prohibit default functions (move to 'public' if you need one)
-    void drawCharacters( const TextLayoutResult& layoutResult, const UIFontPtr TheFont) const;
     void operator =(const Graphics2D &source);
 };
 
@@ -176,7 +250,5 @@ OSG_END_NAMESPACE
 
 #include "OSGGraphics2DBase.inl"
 #include "OSGGraphics2D.inl"
-
-#define OSGGRAPHICS2D_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGGRAPHICS2D_H_ */

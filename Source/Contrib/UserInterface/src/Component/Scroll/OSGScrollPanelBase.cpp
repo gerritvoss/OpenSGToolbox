@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,278 +50,570 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILESCROLLPANELINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+#include "Component/Scroll/OSGScrollPanel.h"   // VerticalScrollBarDisplayPolicy default header
+#include "Component/Scroll/OSGScrollPanel.h"   // HorizontalScrollBarDisplayPolicy default header
+#include "Component/Scroll/OSGScrollPanel.h"   // VerticalResizePolicy default header
+#include "Component/Scroll/OSGScrollPanel.h"   // HorizontalResizePolicy default header
+#include "Component/Scroll/OSGScrollPanel.h"   // VerticalScrollBarAlignment default header
+#include "Component/Scroll/OSGScrollPanel.h"   // HorizontalScrollBarAlignment default header
+
+#include "OSGUIViewport.h"              // View Class
+#include "OSGScrollBar.h"               // InternalVerticalScrollBar Class
+#include "OSGDefaultBoundedRangeModel.h" // VerticalRangeModel Class
 
 #include "OSGScrollPanelBase.h"
 #include "OSGScrollPanel.h"
 
-#include <Component/Scroll/OSGScrollPanel.h>   // VerticalScrollBarDisplayPolicy default header
-#include <Component/Scroll/OSGScrollPanel.h>   // HorizontalScrollBarDisplayPolicy default header
-#include <Component/Scroll/OSGScrollPanel.h>   // VerticalResizePolicy default header
-#include <Component/Scroll/OSGScrollPanel.h>   // HorizontalResizePolicy default header
-#include <Component/Scroll/OSGScrollPanel.h>   // VerticalScrollBarAlignment default header
-#include <Component/Scroll/OSGScrollPanel.h>   // HorizontalScrollBarAlignment default header
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ScrollPanelBase::ViewFieldMask = 
-    (TypeTraits<BitVector>::One << ScrollPanelBase::ViewFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  ScrollPanelBase::InternalVerticalScrollBarFieldMask = 
-    (TypeTraits<BitVector>::One << ScrollPanelBase::InternalVerticalScrollBarFieldId);
+/*! \class OSG::ScrollPanel
+    A UI ScrollPanel
+ */
 
-const OSG::BitVector  ScrollPanelBase::InternalHorizontalScrollBarFieldMask = 
-    (TypeTraits<BitVector>::One << ScrollPanelBase::InternalHorizontalScrollBarFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  ScrollPanelBase::VerticalScrollBarDisplayPolicyFieldMask = 
-    (TypeTraits<BitVector>::One << ScrollPanelBase::VerticalScrollBarDisplayPolicyFieldId);
-
-const OSG::BitVector  ScrollPanelBase::HorizontalScrollBarDisplayPolicyFieldMask = 
-    (TypeTraits<BitVector>::One << ScrollPanelBase::HorizontalScrollBarDisplayPolicyFieldId);
-
-const OSG::BitVector  ScrollPanelBase::VerticalResizePolicyFieldMask = 
-    (TypeTraits<BitVector>::One << ScrollPanelBase::VerticalResizePolicyFieldId);
-
-const OSG::BitVector  ScrollPanelBase::HorizontalResizePolicyFieldMask = 
-    (TypeTraits<BitVector>::One << ScrollPanelBase::HorizontalResizePolicyFieldId);
-
-const OSG::BitVector  ScrollPanelBase::VerticalScrollBarAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << ScrollPanelBase::VerticalScrollBarAlignmentFieldId);
-
-const OSG::BitVector  ScrollPanelBase::HorizontalScrollBarAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << ScrollPanelBase::HorizontalScrollBarAlignmentFieldId);
-
-const OSG::BitVector  ScrollPanelBase::VerticalRangeModelFieldMask = 
-    (TypeTraits<BitVector>::One << ScrollPanelBase::VerticalRangeModelFieldId);
-
-const OSG::BitVector  ScrollPanelBase::HorizontalRangeModelFieldMask = 
-    (TypeTraits<BitVector>::One << ScrollPanelBase::HorizontalRangeModelFieldId);
-
-const OSG::BitVector ScrollPanelBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var UIViewportPtr   ScrollPanelBase::_sfView
+/*! \var UIViewport *    ScrollPanelBase::_sfView
     
 */
-/*! \var ScrollBarPtr    ScrollPanelBase::_sfInternalVerticalScrollBar
+
+/*! \var ScrollBar *     ScrollPanelBase::_sfInternalVerticalScrollBar
     
 */
-/*! \var ScrollBarPtr    ScrollPanelBase::_sfInternalHorizontalScrollBar
+
+/*! \var ScrollBar *     ScrollPanelBase::_sfInternalHorizontalScrollBar
     
 */
+
 /*! \var UInt32          ScrollPanelBase::_sfVerticalScrollBarDisplayPolicy
     
 */
+
 /*! \var UInt32          ScrollPanelBase::_sfHorizontalScrollBarDisplayPolicy
     
 */
+
 /*! \var UInt32          ScrollPanelBase::_sfVerticalResizePolicy
     
 */
+
 /*! \var UInt32          ScrollPanelBase::_sfHorizontalResizePolicy
     
 */
+
 /*! \var UInt32          ScrollPanelBase::_sfVerticalScrollBarAlignment
     
 */
+
 /*! \var UInt32          ScrollPanelBase::_sfHorizontalScrollBarAlignment
     
 */
-/*! \var DefaultBoundedRangeModelPtr ScrollPanelBase::_sfVerticalRangeModel
-    
-*/
-/*! \var DefaultBoundedRangeModelPtr ScrollPanelBase::_sfHorizontalRangeModel
+
+/*! \var DefaultBoundedRangeModel * ScrollPanelBase::_sfVerticalRangeModel
     
 */
 
-//! ScrollPanel description
+/*! \var DefaultBoundedRangeModel * ScrollPanelBase::_sfHorizontalRangeModel
+    
+*/
 
-FieldDescription *ScrollPanelBase::_desc[] = 
+
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ScrollPanel *>::_type("ScrollPanelPtr", "ComponentContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ScrollPanel *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ScrollPanel *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ScrollPanel *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ScrollPanelBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUIViewportPtr::getClassType(), 
-                     "View", 
-                     ViewFieldId, ViewFieldMask,
-                     false,
-                     (FieldAccessMethod) &ScrollPanelBase::getSFView),
-    new FieldDescription(SFScrollBarPtr::getClassType(), 
-                     "InternalVerticalScrollBar", 
-                     InternalVerticalScrollBarFieldId, InternalVerticalScrollBarFieldMask,
-                     false,
-                     (FieldAccessMethod) &ScrollPanelBase::getSFInternalVerticalScrollBar),
-    new FieldDescription(SFScrollBarPtr::getClassType(), 
-                     "InternalHorizontalScrollBar", 
-                     InternalHorizontalScrollBarFieldId, InternalHorizontalScrollBarFieldMask,
-                     false,
-                     (FieldAccessMethod) &ScrollPanelBase::getSFInternalHorizontalScrollBar),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "VerticalScrollBarDisplayPolicy", 
-                     VerticalScrollBarDisplayPolicyFieldId, VerticalScrollBarDisplayPolicyFieldMask,
-                     false,
-                     (FieldAccessMethod) &ScrollPanelBase::getSFVerticalScrollBarDisplayPolicy),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "HorizontalScrollBarDisplayPolicy", 
-                     HorizontalScrollBarDisplayPolicyFieldId, HorizontalScrollBarDisplayPolicyFieldMask,
-                     false,
-                     (FieldAccessMethod) &ScrollPanelBase::getSFHorizontalScrollBarDisplayPolicy),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "VerticalResizePolicy", 
-                     VerticalResizePolicyFieldId, VerticalResizePolicyFieldMask,
-                     false,
-                     (FieldAccessMethod) &ScrollPanelBase::getSFVerticalResizePolicy),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "HorizontalResizePolicy", 
-                     HorizontalResizePolicyFieldId, HorizontalResizePolicyFieldMask,
-                     false,
-                     (FieldAccessMethod) &ScrollPanelBase::getSFHorizontalResizePolicy),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "VerticalScrollBarAlignment", 
-                     VerticalScrollBarAlignmentFieldId, VerticalScrollBarAlignmentFieldMask,
-                     false,
-                     (FieldAccessMethod) &ScrollPanelBase::getSFVerticalScrollBarAlignment),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "HorizontalScrollBarAlignment", 
-                     HorizontalScrollBarAlignmentFieldId, HorizontalScrollBarAlignmentFieldMask,
-                     false,
-                     (FieldAccessMethod) &ScrollPanelBase::getSFHorizontalScrollBarAlignment),
-    new FieldDescription(SFDefaultBoundedRangeModelPtr::getClassType(), 
-                     "VerticalRangeModel", 
-                     VerticalRangeModelFieldId, VerticalRangeModelFieldMask,
-                     false,
-                     (FieldAccessMethod) &ScrollPanelBase::getSFVerticalRangeModel),
-    new FieldDescription(SFDefaultBoundedRangeModelPtr::getClassType(), 
-                     "HorizontalRangeModel", 
-                     HorizontalRangeModelFieldId, HorizontalRangeModelFieldMask,
-                     false,
-                     (FieldAccessMethod) &ScrollPanelBase::getSFHorizontalRangeModel)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType ScrollPanelBase::_type(
-    "ScrollPanel",
-    "Container",
-    NULL,
-    (PrototypeCreateF) &ScrollPanelBase::createEmpty,
+    pDesc = new SFUnrecUIViewportPtr::Description(
+        SFUnrecUIViewportPtr::getClassType(),
+        "View",
+        "",
+        ViewFieldId, ViewFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ScrollPanel::editHandleView),
+        static_cast<FieldGetMethodSig >(&ScrollPanel::getHandleView));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecScrollBarPtr::Description(
+        SFUnrecScrollBarPtr::getClassType(),
+        "InternalVerticalScrollBar",
+        "",
+        InternalVerticalScrollBarFieldId, InternalVerticalScrollBarFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ScrollPanel::editHandleInternalVerticalScrollBar),
+        static_cast<FieldGetMethodSig >(&ScrollPanel::getHandleInternalVerticalScrollBar));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecScrollBarPtr::Description(
+        SFUnrecScrollBarPtr::getClassType(),
+        "InternalHorizontalScrollBar",
+        "",
+        InternalHorizontalScrollBarFieldId, InternalHorizontalScrollBarFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ScrollPanel::editHandleInternalHorizontalScrollBar),
+        static_cast<FieldGetMethodSig >(&ScrollPanel::getHandleInternalHorizontalScrollBar));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "VerticalScrollBarDisplayPolicy",
+        "",
+        VerticalScrollBarDisplayPolicyFieldId, VerticalScrollBarDisplayPolicyFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ScrollPanel::editHandleVerticalScrollBarDisplayPolicy),
+        static_cast<FieldGetMethodSig >(&ScrollPanel::getHandleVerticalScrollBarDisplayPolicy));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "HorizontalScrollBarDisplayPolicy",
+        "",
+        HorizontalScrollBarDisplayPolicyFieldId, HorizontalScrollBarDisplayPolicyFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ScrollPanel::editHandleHorizontalScrollBarDisplayPolicy),
+        static_cast<FieldGetMethodSig >(&ScrollPanel::getHandleHorizontalScrollBarDisplayPolicy));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "VerticalResizePolicy",
+        "",
+        VerticalResizePolicyFieldId, VerticalResizePolicyFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ScrollPanel::editHandleVerticalResizePolicy),
+        static_cast<FieldGetMethodSig >(&ScrollPanel::getHandleVerticalResizePolicy));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "HorizontalResizePolicy",
+        "",
+        HorizontalResizePolicyFieldId, HorizontalResizePolicyFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ScrollPanel::editHandleHorizontalResizePolicy),
+        static_cast<FieldGetMethodSig >(&ScrollPanel::getHandleHorizontalResizePolicy));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "VerticalScrollBarAlignment",
+        "",
+        VerticalScrollBarAlignmentFieldId, VerticalScrollBarAlignmentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ScrollPanel::editHandleVerticalScrollBarAlignment),
+        static_cast<FieldGetMethodSig >(&ScrollPanel::getHandleVerticalScrollBarAlignment));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "HorizontalScrollBarAlignment",
+        "",
+        HorizontalScrollBarAlignmentFieldId, HorizontalScrollBarAlignmentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ScrollPanel::editHandleHorizontalScrollBarAlignment),
+        static_cast<FieldGetMethodSig >(&ScrollPanel::getHandleHorizontalScrollBarAlignment));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecDefaultBoundedRangeModelPtr::Description(
+        SFUnrecDefaultBoundedRangeModelPtr::getClassType(),
+        "VerticalRangeModel",
+        "",
+        VerticalRangeModelFieldId, VerticalRangeModelFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ScrollPanel::editHandleVerticalRangeModel),
+        static_cast<FieldGetMethodSig >(&ScrollPanel::getHandleVerticalRangeModel));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecDefaultBoundedRangeModelPtr::Description(
+        SFUnrecDefaultBoundedRangeModelPtr::getClassType(),
+        "HorizontalRangeModel",
+        "",
+        HorizontalRangeModelFieldId, HorizontalRangeModelFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ScrollPanel::editHandleHorizontalRangeModel),
+        static_cast<FieldGetMethodSig >(&ScrollPanel::getHandleHorizontalRangeModel));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+ScrollPanelBase::TypeObject ScrollPanelBase::_type(
+    ScrollPanelBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ScrollPanelBase::createEmptyLocal),
     ScrollPanel::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(ScrollPanelBase, ScrollPanelPtr)
+    ScrollPanel::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ScrollPanel::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ScrollPanel\"\n"
+    "\tparent=\"ComponentContainer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "\tdecoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI ScrollPanel\n"
+    "\t<Field\n"
+    "\t\tname=\"View\"\n"
+    "\t\ttype=\"UIViewport\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalVerticalScrollBar\"\n"
+    "\t\ttype=\"ScrollBar\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalHorizontalScrollBar\"\n"
+    "\t\ttype=\"ScrollBar\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"VerticalScrollBarDisplayPolicy\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultHeader=\"Component/Scroll/OSGScrollPanel.h\"\n"
+    "\t\tdefaultValue=\"ScrollPanel::SCROLLBAR_AS_NEEDED\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"HorizontalScrollBarDisplayPolicy\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultHeader=\"Component/Scroll/OSGScrollPanel.h\"\n"
+    "\t\tdefaultValue=\"ScrollPanel::SCROLLBAR_AS_NEEDED\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"VerticalResizePolicy\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultHeader=\"Component/Scroll/OSGScrollPanel.h\"\n"
+    "\t\tdefaultValue=\"ScrollPanel::NO_RESIZE\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"HorizontalResizePolicy\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultHeader=\"Component/Scroll/OSGScrollPanel.h\"\n"
+    "\t\tdefaultValue=\"ScrollPanel::NO_RESIZE\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"VerticalScrollBarAlignment\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultHeader=\"Component/Scroll/OSGScrollPanel.h\"\n"
+    "\t\tdefaultValue=\"ScrollPanel::SCROLLBAR_ALIGN_RIGHT\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"HorizontalScrollBarAlignment\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultHeader=\"Component/Scroll/OSGScrollPanel.h\"\n"
+    "\t\tdefaultValue=\"ScrollPanel::SCROLLBAR_ALIGN_BOTTOM\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"VerticalRangeModel\"\n"
+    "\t\ttype=\"DefaultBoundedRangeModel\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"HorizontalRangeModel\"\n"
+    "\t\ttype=\"DefaultBoundedRangeModel\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI ScrollPanel\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ScrollPanelBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ScrollPanelBase::getType(void) const 
+FieldContainerType &ScrollPanelBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr ScrollPanelBase::shallowCopy(void) const 
-{ 
-    ScrollPanelPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const ScrollPanel *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 ScrollPanelBase::getContainerSize(void) const 
-{ 
-    return sizeof(ScrollPanel); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ScrollPanelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &ScrollPanelBase::getType(void) const
 {
-    this->executeSyncImpl((ScrollPanelBase *) &other, whichField);
+    return _type;
 }
-#else
-void ScrollPanelBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 ScrollPanelBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((ScrollPanelBase *) &other, whichField, sInfo);
+    return sizeof(ScrollPanel);
 }
-void ScrollPanelBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the ScrollPanel::_sfView field.
+const SFUnrecUIViewportPtr *ScrollPanelBase::getSFView(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfView;
 }
 
-void ScrollPanelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecUIViewportPtr *ScrollPanelBase::editSFView           (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(ViewFieldMask);
 
+    return &_sfView;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-ScrollPanelBase::ScrollPanelBase(void) :
-    _sfView                   (UIViewportPtr(NullFC)), 
-    _sfInternalVerticalScrollBar(ScrollBarPtr(NullFC)), 
-    _sfInternalHorizontalScrollBar(ScrollBarPtr(NullFC)), 
-    _sfVerticalScrollBarDisplayPolicy(UInt32(ScrollPanel::SCROLLBAR_AS_NEEDED)), 
-    _sfHorizontalScrollBarDisplayPolicy(UInt32(ScrollPanel::SCROLLBAR_AS_NEEDED)), 
-    _sfVerticalResizePolicy   (UInt32(ScrollPanel::NO_RESIZE)), 
-    _sfHorizontalResizePolicy (UInt32(ScrollPanel::NO_RESIZE)), 
-    _sfVerticalScrollBarAlignment(UInt32(ScrollPanel::SCROLLBAR_ALIGN_RIGHT)), 
-    _sfHorizontalScrollBarAlignment(UInt32(ScrollPanel::SCROLLBAR_ALIGN_BOTTOM)), 
-    _sfVerticalRangeModel     (DefaultBoundedRangeModelPtr(DefaultBoundedRangeModel::create())), 
-    _sfHorizontalRangeModel   (DefaultBoundedRangeModelPtr(DefaultBoundedRangeModel::create())), 
-    Inherited() 
+//! Get the ScrollPanel::_sfInternalVerticalScrollBar field.
+const SFUnrecScrollBarPtr *ScrollPanelBase::getSFInternalVerticalScrollBar(void) const
 {
+    return &_sfInternalVerticalScrollBar;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-ScrollPanelBase::ScrollPanelBase(const ScrollPanelBase &source) :
-    _sfView                   (source._sfView                   ), 
-    _sfInternalVerticalScrollBar(source._sfInternalVerticalScrollBar), 
-    _sfInternalHorizontalScrollBar(source._sfInternalHorizontalScrollBar), 
-    _sfVerticalScrollBarDisplayPolicy(source._sfVerticalScrollBarDisplayPolicy), 
-    _sfHorizontalScrollBarDisplayPolicy(source._sfHorizontalScrollBarDisplayPolicy), 
-    _sfVerticalResizePolicy   (source._sfVerticalResizePolicy   ), 
-    _sfHorizontalResizePolicy (source._sfHorizontalResizePolicy ), 
-    _sfVerticalScrollBarAlignment(source._sfVerticalScrollBarAlignment), 
-    _sfHorizontalScrollBarAlignment(source._sfHorizontalScrollBarAlignment), 
-    _sfVerticalRangeModel     (source._sfVerticalRangeModel     ), 
-    _sfHorizontalRangeModel   (source._sfHorizontalRangeModel   ), 
-    Inherited                 (source)
+SFUnrecScrollBarPtr *ScrollPanelBase::editSFInternalVerticalScrollBar(void)
 {
+    editSField(InternalVerticalScrollBarFieldMask);
+
+    return &_sfInternalVerticalScrollBar;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-ScrollPanelBase::~ScrollPanelBase(void)
+//! Get the ScrollPanel::_sfInternalHorizontalScrollBar field.
+const SFUnrecScrollBarPtr *ScrollPanelBase::getSFInternalHorizontalScrollBar(void) const
 {
+    return &_sfInternalHorizontalScrollBar;
 }
+
+SFUnrecScrollBarPtr *ScrollPanelBase::editSFInternalHorizontalScrollBar(void)
+{
+    editSField(InternalHorizontalScrollBarFieldMask);
+
+    return &_sfInternalHorizontalScrollBar;
+}
+
+SFUInt32 *ScrollPanelBase::editSFVerticalScrollBarDisplayPolicy(void)
+{
+    editSField(VerticalScrollBarDisplayPolicyFieldMask);
+
+    return &_sfVerticalScrollBarDisplayPolicy;
+}
+
+const SFUInt32 *ScrollPanelBase::getSFVerticalScrollBarDisplayPolicy(void) const
+{
+    return &_sfVerticalScrollBarDisplayPolicy;
+}
+
+
+SFUInt32 *ScrollPanelBase::editSFHorizontalScrollBarDisplayPolicy(void)
+{
+    editSField(HorizontalScrollBarDisplayPolicyFieldMask);
+
+    return &_sfHorizontalScrollBarDisplayPolicy;
+}
+
+const SFUInt32 *ScrollPanelBase::getSFHorizontalScrollBarDisplayPolicy(void) const
+{
+    return &_sfHorizontalScrollBarDisplayPolicy;
+}
+
+
+SFUInt32 *ScrollPanelBase::editSFVerticalResizePolicy(void)
+{
+    editSField(VerticalResizePolicyFieldMask);
+
+    return &_sfVerticalResizePolicy;
+}
+
+const SFUInt32 *ScrollPanelBase::getSFVerticalResizePolicy(void) const
+{
+    return &_sfVerticalResizePolicy;
+}
+
+
+SFUInt32 *ScrollPanelBase::editSFHorizontalResizePolicy(void)
+{
+    editSField(HorizontalResizePolicyFieldMask);
+
+    return &_sfHorizontalResizePolicy;
+}
+
+const SFUInt32 *ScrollPanelBase::getSFHorizontalResizePolicy(void) const
+{
+    return &_sfHorizontalResizePolicy;
+}
+
+
+SFUInt32 *ScrollPanelBase::editSFVerticalScrollBarAlignment(void)
+{
+    editSField(VerticalScrollBarAlignmentFieldMask);
+
+    return &_sfVerticalScrollBarAlignment;
+}
+
+const SFUInt32 *ScrollPanelBase::getSFVerticalScrollBarAlignment(void) const
+{
+    return &_sfVerticalScrollBarAlignment;
+}
+
+
+SFUInt32 *ScrollPanelBase::editSFHorizontalScrollBarAlignment(void)
+{
+    editSField(HorizontalScrollBarAlignmentFieldMask);
+
+    return &_sfHorizontalScrollBarAlignment;
+}
+
+const SFUInt32 *ScrollPanelBase::getSFHorizontalScrollBarAlignment(void) const
+{
+    return &_sfHorizontalScrollBarAlignment;
+}
+
+
+//! Get the ScrollPanel::_sfVerticalRangeModel field.
+const SFUnrecDefaultBoundedRangeModelPtr *ScrollPanelBase::getSFVerticalRangeModel(void) const
+{
+    return &_sfVerticalRangeModel;
+}
+
+SFUnrecDefaultBoundedRangeModelPtr *ScrollPanelBase::editSFVerticalRangeModel(void)
+{
+    editSField(VerticalRangeModelFieldMask);
+
+    return &_sfVerticalRangeModel;
+}
+
+//! Get the ScrollPanel::_sfHorizontalRangeModel field.
+const SFUnrecDefaultBoundedRangeModelPtr *ScrollPanelBase::getSFHorizontalRangeModel(void) const
+{
+    return &_sfHorizontalRangeModel;
+}
+
+SFUnrecDefaultBoundedRangeModelPtr *ScrollPanelBase::editSFHorizontalRangeModel(void)
+{
+    editSField(HorizontalRangeModelFieldMask);
+
+    return &_sfHorizontalRangeModel;
+}
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ScrollPanelBase::getBinSize(const BitVector &whichField)
+UInt32 ScrollPanelBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -329,63 +621,52 @@ UInt32 ScrollPanelBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfView.getBinSize();
     }
-
     if(FieldBits::NoField != (InternalVerticalScrollBarFieldMask & whichField))
     {
         returnValue += _sfInternalVerticalScrollBar.getBinSize();
     }
-
     if(FieldBits::NoField != (InternalHorizontalScrollBarFieldMask & whichField))
     {
         returnValue += _sfInternalHorizontalScrollBar.getBinSize();
     }
-
     if(FieldBits::NoField != (VerticalScrollBarDisplayPolicyFieldMask & whichField))
     {
         returnValue += _sfVerticalScrollBarDisplayPolicy.getBinSize();
     }
-
     if(FieldBits::NoField != (HorizontalScrollBarDisplayPolicyFieldMask & whichField))
     {
         returnValue += _sfHorizontalScrollBarDisplayPolicy.getBinSize();
     }
-
     if(FieldBits::NoField != (VerticalResizePolicyFieldMask & whichField))
     {
         returnValue += _sfVerticalResizePolicy.getBinSize();
     }
-
     if(FieldBits::NoField != (HorizontalResizePolicyFieldMask & whichField))
     {
         returnValue += _sfHorizontalResizePolicy.getBinSize();
     }
-
     if(FieldBits::NoField != (VerticalScrollBarAlignmentFieldMask & whichField))
     {
         returnValue += _sfVerticalScrollBarAlignment.getBinSize();
     }
-
     if(FieldBits::NoField != (HorizontalScrollBarAlignmentFieldMask & whichField))
     {
         returnValue += _sfHorizontalScrollBarAlignment.getBinSize();
     }
-
     if(FieldBits::NoField != (VerticalRangeModelFieldMask & whichField))
     {
         returnValue += _sfVerticalRangeModel.getBinSize();
     }
-
     if(FieldBits::NoField != (HorizontalRangeModelFieldMask & whichField))
     {
         returnValue += _sfHorizontalRangeModel.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ScrollPanelBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ScrollPanelBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -393,62 +674,50 @@ void ScrollPanelBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfView.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalVerticalScrollBarFieldMask & whichField))
     {
         _sfInternalVerticalScrollBar.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalHorizontalScrollBarFieldMask & whichField))
     {
         _sfInternalHorizontalScrollBar.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (VerticalScrollBarDisplayPolicyFieldMask & whichField))
     {
         _sfVerticalScrollBarDisplayPolicy.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (HorizontalScrollBarDisplayPolicyFieldMask & whichField))
     {
         _sfHorizontalScrollBarDisplayPolicy.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (VerticalResizePolicyFieldMask & whichField))
     {
         _sfVerticalResizePolicy.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (HorizontalResizePolicyFieldMask & whichField))
     {
         _sfHorizontalResizePolicy.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (VerticalScrollBarAlignmentFieldMask & whichField))
     {
         _sfVerticalScrollBarAlignment.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (HorizontalScrollBarAlignmentFieldMask & whichField))
     {
         _sfHorizontalScrollBarAlignment.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (VerticalRangeModelFieldMask & whichField))
     {
         _sfVerticalRangeModel.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (HorizontalRangeModelFieldMask & whichField))
     {
         _sfHorizontalRangeModel.copyToBin(pMem);
     }
-
-
 }
 
-void ScrollPanelBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ScrollPanelBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -456,192 +725,567 @@ void ScrollPanelBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfView.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalVerticalScrollBarFieldMask & whichField))
     {
         _sfInternalVerticalScrollBar.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalHorizontalScrollBarFieldMask & whichField))
     {
         _sfInternalHorizontalScrollBar.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (VerticalScrollBarDisplayPolicyFieldMask & whichField))
     {
         _sfVerticalScrollBarDisplayPolicy.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (HorizontalScrollBarDisplayPolicyFieldMask & whichField))
     {
         _sfHorizontalScrollBarDisplayPolicy.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (VerticalResizePolicyFieldMask & whichField))
     {
         _sfVerticalResizePolicy.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (HorizontalResizePolicyFieldMask & whichField))
     {
         _sfHorizontalResizePolicy.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (VerticalScrollBarAlignmentFieldMask & whichField))
     {
         _sfVerticalScrollBarAlignment.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (HorizontalScrollBarAlignmentFieldMask & whichField))
     {
         _sfHorizontalScrollBarAlignment.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (VerticalRangeModelFieldMask & whichField))
     {
         _sfVerticalRangeModel.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (HorizontalRangeModelFieldMask & whichField))
     {
         _sfHorizontalRangeModel.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ScrollPanelBase::executeSyncImpl(      ScrollPanelBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ScrollPanelTransitPtr ScrollPanelBase::createLocal(BitVector bFlags)
 {
+    ScrollPanelTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (ViewFieldMask & whichField))
-        _sfView.syncWith(pOther->_sfView);
+        fc = dynamic_pointer_cast<ScrollPanel>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (InternalVerticalScrollBarFieldMask & whichField))
-        _sfInternalVerticalScrollBar.syncWith(pOther->_sfInternalVerticalScrollBar);
-
-    if(FieldBits::NoField != (InternalHorizontalScrollBarFieldMask & whichField))
-        _sfInternalHorizontalScrollBar.syncWith(pOther->_sfInternalHorizontalScrollBar);
-
-    if(FieldBits::NoField != (VerticalScrollBarDisplayPolicyFieldMask & whichField))
-        _sfVerticalScrollBarDisplayPolicy.syncWith(pOther->_sfVerticalScrollBarDisplayPolicy);
-
-    if(FieldBits::NoField != (HorizontalScrollBarDisplayPolicyFieldMask & whichField))
-        _sfHorizontalScrollBarDisplayPolicy.syncWith(pOther->_sfHorizontalScrollBarDisplayPolicy);
-
-    if(FieldBits::NoField != (VerticalResizePolicyFieldMask & whichField))
-        _sfVerticalResizePolicy.syncWith(pOther->_sfVerticalResizePolicy);
-
-    if(FieldBits::NoField != (HorizontalResizePolicyFieldMask & whichField))
-        _sfHorizontalResizePolicy.syncWith(pOther->_sfHorizontalResizePolicy);
-
-    if(FieldBits::NoField != (VerticalScrollBarAlignmentFieldMask & whichField))
-        _sfVerticalScrollBarAlignment.syncWith(pOther->_sfVerticalScrollBarAlignment);
-
-    if(FieldBits::NoField != (HorizontalScrollBarAlignmentFieldMask & whichField))
-        _sfHorizontalScrollBarAlignment.syncWith(pOther->_sfHorizontalScrollBarAlignment);
-
-    if(FieldBits::NoField != (VerticalRangeModelFieldMask & whichField))
-        _sfVerticalRangeModel.syncWith(pOther->_sfVerticalRangeModel);
-
-    if(FieldBits::NoField != (HorizontalRangeModelFieldMask & whichField))
-        _sfHorizontalRangeModel.syncWith(pOther->_sfHorizontalRangeModel);
-
-
-}
-#else
-void ScrollPanelBase::executeSyncImpl(      ScrollPanelBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ViewFieldMask & whichField))
-        _sfView.syncWith(pOther->_sfView);
-
-    if(FieldBits::NoField != (InternalVerticalScrollBarFieldMask & whichField))
-        _sfInternalVerticalScrollBar.syncWith(pOther->_sfInternalVerticalScrollBar);
-
-    if(FieldBits::NoField != (InternalHorizontalScrollBarFieldMask & whichField))
-        _sfInternalHorizontalScrollBar.syncWith(pOther->_sfInternalHorizontalScrollBar);
-
-    if(FieldBits::NoField != (VerticalScrollBarDisplayPolicyFieldMask & whichField))
-        _sfVerticalScrollBarDisplayPolicy.syncWith(pOther->_sfVerticalScrollBarDisplayPolicy);
-
-    if(FieldBits::NoField != (HorizontalScrollBarDisplayPolicyFieldMask & whichField))
-        _sfHorizontalScrollBarDisplayPolicy.syncWith(pOther->_sfHorizontalScrollBarDisplayPolicy);
-
-    if(FieldBits::NoField != (VerticalResizePolicyFieldMask & whichField))
-        _sfVerticalResizePolicy.syncWith(pOther->_sfVerticalResizePolicy);
-
-    if(FieldBits::NoField != (HorizontalResizePolicyFieldMask & whichField))
-        _sfHorizontalResizePolicy.syncWith(pOther->_sfHorizontalResizePolicy);
-
-    if(FieldBits::NoField != (VerticalScrollBarAlignmentFieldMask & whichField))
-        _sfVerticalScrollBarAlignment.syncWith(pOther->_sfVerticalScrollBarAlignment);
-
-    if(FieldBits::NoField != (HorizontalScrollBarAlignmentFieldMask & whichField))
-        _sfHorizontalScrollBarAlignment.syncWith(pOther->_sfHorizontalScrollBarAlignment);
-
-    if(FieldBits::NoField != (VerticalRangeModelFieldMask & whichField))
-        _sfVerticalRangeModel.syncWith(pOther->_sfVerticalRangeModel);
-
-    if(FieldBits::NoField != (HorizontalRangeModelFieldMask & whichField))
-        _sfHorizontalRangeModel.syncWith(pOther->_sfHorizontalRangeModel);
-
-
-
+    return fc;
 }
 
-void ScrollPanelBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ScrollPanelTransitPtr ScrollPanelBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ScrollPanelTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<ScrollPanel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ScrollPanelTransitPtr ScrollPanelBase::create(void)
+{
+    ScrollPanelTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<ScrollPanel>(tmpPtr);
+    }
+
+    return fc;
+}
+
+ScrollPanel *ScrollPanelBase::createEmptyLocal(BitVector bFlags)
+{
+    ScrollPanel *returnValue;
+
+    newPtr<ScrollPanel>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+ScrollPanel *ScrollPanelBase::createEmpty(void)
+{
+    ScrollPanel *returnValue;
+
+    newPtr<ScrollPanel>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ScrollPanelBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    ScrollPanel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ScrollPanel *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ScrollPanelBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    ScrollPanel *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ScrollPanel *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ScrollPanelBase::shallowCopy(void) const
+{
+    ScrollPanel *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const ScrollPanel *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ScrollPanelBase::ScrollPanelBase(void) :
+    Inherited(),
+    _sfView                   (NULL),
+    _sfInternalVerticalScrollBar(NULL),
+    _sfInternalHorizontalScrollBar(NULL),
+    _sfVerticalScrollBarDisplayPolicy(UInt32(ScrollPanel::SCROLLBAR_AS_NEEDED)),
+    _sfHorizontalScrollBarDisplayPolicy(UInt32(ScrollPanel::SCROLLBAR_AS_NEEDED)),
+    _sfVerticalResizePolicy   (UInt32(ScrollPanel::NO_RESIZE)),
+    _sfHorizontalResizePolicy (UInt32(ScrollPanel::NO_RESIZE)),
+    _sfVerticalScrollBarAlignment(UInt32(ScrollPanel::SCROLLBAR_ALIGN_RIGHT)),
+    _sfHorizontalScrollBarAlignment(UInt32(ScrollPanel::SCROLLBAR_ALIGN_BOTTOM)),
+    _sfVerticalRangeModel     (NULL),
+    _sfHorizontalRangeModel   (NULL)
+{
+}
+
+ScrollPanelBase::ScrollPanelBase(const ScrollPanelBase &source) :
+    Inherited(source),
+    _sfView                   (NULL),
+    _sfInternalVerticalScrollBar(NULL),
+    _sfInternalHorizontalScrollBar(NULL),
+    _sfVerticalScrollBarDisplayPolicy(source._sfVerticalScrollBarDisplayPolicy),
+    _sfHorizontalScrollBarDisplayPolicy(source._sfHorizontalScrollBarDisplayPolicy),
+    _sfVerticalResizePolicy   (source._sfVerticalResizePolicy   ),
+    _sfHorizontalResizePolicy (source._sfHorizontalResizePolicy ),
+    _sfVerticalScrollBarAlignment(source._sfVerticalScrollBarAlignment),
+    _sfHorizontalScrollBarAlignment(source._sfHorizontalScrollBarAlignment),
+    _sfVerticalRangeModel     (NULL),
+    _sfHorizontalRangeModel   (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ScrollPanelBase::~ScrollPanelBase(void)
+{
+}
+
+void ScrollPanelBase::onCreate(const ScrollPanel *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        ScrollPanel *pThis = static_cast<ScrollPanel *>(this);
+
+        pThis->setView(source->getView());
+
+        pThis->setInternalVerticalScrollBar(source->getInternalVerticalScrollBar());
+
+        pThis->setInternalHorizontalScrollBar(source->getInternalHorizontalScrollBar());
+
+        pThis->setVerticalRangeModel(source->getVerticalRangeModel());
+
+        pThis->setHorizontalRangeModel(source->getHorizontalRangeModel());
+    }
+}
+
+GetFieldHandlePtr ScrollPanelBase::getHandleView            (void) const
+{
+    SFUnrecUIViewportPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIViewportPtr::GetHandle(
+             &_sfView,
+             this->getType().getFieldDesc(ViewFieldId),
+             const_cast<ScrollPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ScrollPanelBase::editHandleView           (void)
+{
+    SFUnrecUIViewportPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIViewportPtr::EditHandle(
+             &_sfView,
+             this->getType().getFieldDesc(ViewFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ScrollPanel::setView,
+                    static_cast<ScrollPanel *>(this), _1));
+
+    editSField(ViewFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ScrollPanelBase::getHandleInternalVerticalScrollBar (void) const
+{
+    SFUnrecScrollBarPtr::GetHandlePtr returnValue(
+        new  SFUnrecScrollBarPtr::GetHandle(
+             &_sfInternalVerticalScrollBar,
+             this->getType().getFieldDesc(InternalVerticalScrollBarFieldId),
+             const_cast<ScrollPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ScrollPanelBase::editHandleInternalVerticalScrollBar(void)
+{
+    SFUnrecScrollBarPtr::EditHandlePtr returnValue(
+        new  SFUnrecScrollBarPtr::EditHandle(
+             &_sfInternalVerticalScrollBar,
+             this->getType().getFieldDesc(InternalVerticalScrollBarFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ScrollPanel::setInternalVerticalScrollBar,
+                    static_cast<ScrollPanel *>(this), _1));
+
+    editSField(InternalVerticalScrollBarFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ScrollPanelBase::getHandleInternalHorizontalScrollBar (void) const
+{
+    SFUnrecScrollBarPtr::GetHandlePtr returnValue(
+        new  SFUnrecScrollBarPtr::GetHandle(
+             &_sfInternalHorizontalScrollBar,
+             this->getType().getFieldDesc(InternalHorizontalScrollBarFieldId),
+             const_cast<ScrollPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ScrollPanelBase::editHandleInternalHorizontalScrollBar(void)
+{
+    SFUnrecScrollBarPtr::EditHandlePtr returnValue(
+        new  SFUnrecScrollBarPtr::EditHandle(
+             &_sfInternalHorizontalScrollBar,
+             this->getType().getFieldDesc(InternalHorizontalScrollBarFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ScrollPanel::setInternalHorizontalScrollBar,
+                    static_cast<ScrollPanel *>(this), _1));
+
+    editSField(InternalHorizontalScrollBarFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ScrollPanelBase::getHandleVerticalScrollBarDisplayPolicy (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfVerticalScrollBarDisplayPolicy,
+             this->getType().getFieldDesc(VerticalScrollBarDisplayPolicyFieldId),
+             const_cast<ScrollPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ScrollPanelBase::editHandleVerticalScrollBarDisplayPolicy(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfVerticalScrollBarDisplayPolicy,
+             this->getType().getFieldDesc(VerticalScrollBarDisplayPolicyFieldId),
+             this));
+
+
+    editSField(VerticalScrollBarDisplayPolicyFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ScrollPanelBase::getHandleHorizontalScrollBarDisplayPolicy (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfHorizontalScrollBarDisplayPolicy,
+             this->getType().getFieldDesc(HorizontalScrollBarDisplayPolicyFieldId),
+             const_cast<ScrollPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ScrollPanelBase::editHandleHorizontalScrollBarDisplayPolicy(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfHorizontalScrollBarDisplayPolicy,
+             this->getType().getFieldDesc(HorizontalScrollBarDisplayPolicyFieldId),
+             this));
+
+
+    editSField(HorizontalScrollBarDisplayPolicyFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ScrollPanelBase::getHandleVerticalResizePolicy (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfVerticalResizePolicy,
+             this->getType().getFieldDesc(VerticalResizePolicyFieldId),
+             const_cast<ScrollPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ScrollPanelBase::editHandleVerticalResizePolicy(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfVerticalResizePolicy,
+             this->getType().getFieldDesc(VerticalResizePolicyFieldId),
+             this));
+
+
+    editSField(VerticalResizePolicyFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ScrollPanelBase::getHandleHorizontalResizePolicy (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfHorizontalResizePolicy,
+             this->getType().getFieldDesc(HorizontalResizePolicyFieldId),
+             const_cast<ScrollPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ScrollPanelBase::editHandleHorizontalResizePolicy(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfHorizontalResizePolicy,
+             this->getType().getFieldDesc(HorizontalResizePolicyFieldId),
+             this));
+
+
+    editSField(HorizontalResizePolicyFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ScrollPanelBase::getHandleVerticalScrollBarAlignment (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfVerticalScrollBarAlignment,
+             this->getType().getFieldDesc(VerticalScrollBarAlignmentFieldId),
+             const_cast<ScrollPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ScrollPanelBase::editHandleVerticalScrollBarAlignment(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfVerticalScrollBarAlignment,
+             this->getType().getFieldDesc(VerticalScrollBarAlignmentFieldId),
+             this));
+
+
+    editSField(VerticalScrollBarAlignmentFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ScrollPanelBase::getHandleHorizontalScrollBarAlignment (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfHorizontalScrollBarAlignment,
+             this->getType().getFieldDesc(HorizontalScrollBarAlignmentFieldId),
+             const_cast<ScrollPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ScrollPanelBase::editHandleHorizontalScrollBarAlignment(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfHorizontalScrollBarAlignment,
+             this->getType().getFieldDesc(HorizontalScrollBarAlignmentFieldId),
+             this));
+
+
+    editSField(HorizontalScrollBarAlignmentFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ScrollPanelBase::getHandleVerticalRangeModel (void) const
+{
+    SFUnrecDefaultBoundedRangeModelPtr::GetHandlePtr returnValue(
+        new  SFUnrecDefaultBoundedRangeModelPtr::GetHandle(
+             &_sfVerticalRangeModel,
+             this->getType().getFieldDesc(VerticalRangeModelFieldId),
+             const_cast<ScrollPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ScrollPanelBase::editHandleVerticalRangeModel(void)
+{
+    SFUnrecDefaultBoundedRangeModelPtr::EditHandlePtr returnValue(
+        new  SFUnrecDefaultBoundedRangeModelPtr::EditHandle(
+             &_sfVerticalRangeModel,
+             this->getType().getFieldDesc(VerticalRangeModelFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ScrollPanel::setVerticalRangeModel,
+                    static_cast<ScrollPanel *>(this), _1));
+
+    editSField(VerticalRangeModelFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ScrollPanelBase::getHandleHorizontalRangeModel (void) const
+{
+    SFUnrecDefaultBoundedRangeModelPtr::GetHandlePtr returnValue(
+        new  SFUnrecDefaultBoundedRangeModelPtr::GetHandle(
+             &_sfHorizontalRangeModel,
+             this->getType().getFieldDesc(HorizontalRangeModelFieldId),
+             const_cast<ScrollPanelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ScrollPanelBase::editHandleHorizontalRangeModel(void)
+{
+    SFUnrecDefaultBoundedRangeModelPtr::EditHandlePtr returnValue(
+        new  SFUnrecDefaultBoundedRangeModelPtr::EditHandle(
+             &_sfHorizontalRangeModel,
+             this->getType().getFieldDesc(HorizontalRangeModelFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ScrollPanel::setHorizontalRangeModel,
+                    static_cast<ScrollPanel *>(this), _1));
+
+    editSField(HorizontalRangeModelFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ScrollPanelBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ScrollPanel *pThis = static_cast<ScrollPanel *>(this);
+
+    pThis->execSync(static_cast<ScrollPanel *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ScrollPanelBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    ScrollPanel *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const ScrollPanel *>(pRefAspect),
+                  dynamic_cast<const ScrollPanel *>(this));
+
+    return returnValue;
+}
+#endif
+
+void ScrollPanelBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<ScrollPanel *>(this)->setView(NULL);
+
+    static_cast<ScrollPanel *>(this)->setInternalVerticalScrollBar(NULL);
+
+    static_cast<ScrollPanel *>(this)->setInternalHorizontalScrollBar(NULL);
+
+    static_cast<ScrollPanel *>(this)->setVerticalRangeModel(NULL);
+
+    static_cast<ScrollPanel *>(this)->setHorizontalRangeModel(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ScrollPanelPtr>::_type("ScrollPanelPtr", "ContainerPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(ScrollPanelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ScrollPanelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGSCROLLPANELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSCROLLPANELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSCROLLPANELFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,68 +58,76 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include "Component/Container/OSGContainer.h" // Parent
+#include "OSGComponentContainer.h" // Parent
 
-#include <OpenSG/OSGReal32Fields.h> // Angle type
-#include "Component/OSGComponentFields.h" // InternalComponent type
-#include <OpenSG/OSGUInt32Fields.h> // ResizePolicy type
+#include "OSGSysFields.h"               // Angle type
+#include "OSGComponentFields.h"         // InternalComponent type
 
 #include "OSGRotatedComponentFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class RotatedComponent;
-class BinaryDataHandler;
 
 //! \brief RotatedComponent Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Container
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING RotatedComponentBase : public ComponentContainer
 {
-  private:
-
-    typedef Container    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef RotatedComponentPtr  Ptr;
+    typedef ComponentContainer Inherited;
+    typedef ComponentContainer ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(RotatedComponent);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        AngleFieldId             = Inherited::NextFieldId,
-        InternalComponentFieldId = AngleFieldId             + 1,
-        ResizePolicyFieldId      = InternalComponentFieldId + 1,
-        NextFieldId              = ResizePolicyFieldId      + 1
+        AngleFieldId = Inherited::NextFieldId,
+        InternalComponentFieldId = AngleFieldId + 1,
+        ResizePolicyFieldId = InternalComponentFieldId + 1,
+        NextFieldId = ResizePolicyFieldId + 1
     };
 
-    static const OSG::BitVector AngleFieldMask;
-    static const OSG::BitVector InternalComponentFieldMask;
-    static const OSG::BitVector ResizePolicyFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector AngleFieldMask =
+        (TypeTraits<BitVector>::One << AngleFieldId);
+    static const OSG::BitVector InternalComponentFieldMask =
+        (TypeTraits<BitVector>::One << InternalComponentFieldId);
+    static const OSG::BitVector ResizePolicyFieldMask =
+        (TypeTraits<BitVector>::One << ResizePolicyFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFReal32          SFAngleType;
+    typedef SFUnrecComponentPtr SFInternalComponentType;
+    typedef SFUInt32          SFResizePolicyType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -129,55 +137,40 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Container
     /*! \{                                                                 */
 
 
-           SFReal32            *editSFAngle          (void);
-     const SFReal32            *getSFAngle          (void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFAngle          (void);
-#endif
+                  SFReal32            *editSFAngle          (void);
+            const SFReal32            *getSFAngle           (void) const;
+            const SFUnrecComponentPtr *getSFInternalComponent(void) const;
+                  SFUnrecComponentPtr *editSFInternalComponent(void);
 
-           SFComponentPtr      *editSFInternalComponent(void);
-     const SFComponentPtr      *getSFInternalComponent(void) const;
-#ifndef OSG_2_PREP
-           SFComponentPtr      *getSFInternalComponent(void);
-#endif
-
-           SFUInt32            *editSFResizePolicy   (void);
-     const SFUInt32            *getSFResizePolicy   (void) const;
-#ifndef OSG_2_PREP
-           SFUInt32            *getSFResizePolicy   (void);
-#endif
+                  SFUInt32            *editSFResizePolicy   (void);
+            const SFUInt32            *getSFResizePolicy    (void) const;
 
 
-           Real32              &editAngle          (void);
-     const Real32              &getAngle          (void) const;
-#ifndef OSG_2_PREP
-           Real32              &getAngle          (void);
-#endif
+                  Real32              &editAngle          (void);
+                  Real32               getAngle           (void) const;
 
-           ComponentPtr        &editInternalComponent(void);
-     const ComponentPtr        &getInternalComponent(void) const;
-#ifndef OSG_2_PREP
-           ComponentPtr        &getInternalComponent(void);
-#endif
+                  Component * getInternalComponent(void) const;
 
-           UInt32              &editResizePolicy   (void);
-     const UInt32              &getResizePolicy   (void) const;
-#ifndef OSG_2_PREP
-           UInt32              &getResizePolicy   (void);
-#endif
+                  UInt32              &editResizePolicy   (void);
+                  UInt32               getResizePolicy    (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setAngle          ( const Real32 &value );
-     void setInternalComponent( const ComponentPtr &value );
-     void setResizePolicy   ( const UInt32 &value );
+            void setAngle          (const Real32 value);
+            void setInternalComponent(Component * const value);
+            void setResizePolicy   (const UInt32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -185,11 +178,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Container
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -197,28 +190,45 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Container
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  RotatedComponentPtr      create          (void); 
-    static  RotatedComponentPtr      createEmpty     (void); 
+    static  RotatedComponentTransitPtr  create          (void);
+    static  RotatedComponent           *createEmpty     (void);
+
+    static  RotatedComponentTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  RotatedComponent            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  RotatedComponentTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFReal32            _sfAngle;
-    SFComponentPtr      _sfInternalComponent;
-    SFUInt32            _sfResizePolicy;
+    SFReal32          _sfAngle;
+    SFUnrecComponentPtr _sfInternalComponent;
+    SFUInt32          _sfResizePolicy;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -233,66 +243,83 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Container
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~RotatedComponentBase(void); 
+    virtual ~RotatedComponentBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const RotatedComponent *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleAngle           (void) const;
+    EditFieldHandlePtr editHandleAngle          (void);
+    GetFieldHandlePtr  getHandleInternalComponent (void) const;
+    EditFieldHandlePtr editHandleInternalComponent(void);
+    GetFieldHandlePtr  getHandleResizePolicy    (void) const;
+    EditFieldHandlePtr editHandleResizePolicy   (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      RotatedComponentBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      RotatedComponentBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      RotatedComponentBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const RotatedComponentBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef RotatedComponentBase *RotatedComponentBaseP;
-
-typedef osgIF<RotatedComponentBase::isNodeCore,
-              CoredNodePtr<RotatedComponent>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet RotatedComponentNodePtr;
-
-typedef RefPtr<RotatedComponentPtr> RotatedComponentRefPtr;
 
 OSG_END_NAMESPACE
 

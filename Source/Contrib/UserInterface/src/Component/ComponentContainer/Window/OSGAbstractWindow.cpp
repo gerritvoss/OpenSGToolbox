@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,29 +40,26 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGAbstractWindow.h"
 
-#include "UIDrawingSurface/OSGUIDrawingSurface.h"
-#include "Util/OSGUIDrawUtils.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGUIDrawUtils.h"
+#include "OSGBorder.h"
+#include "OSGLayer.h"
 
 #include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::AbstractWindow
-A UI Abstract Window. 	
-*/
+// Documentation for this class is emitted in the
+// OSGAbstractWindowBase.cpp file.
+// To modify it, please change the .fcd file (OSGAbstractWindow.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -72,8 +69,13 @@ A UI Abstract Window.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void AbstractWindow::initMethod (void)
+void AbstractWindow::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -91,7 +93,7 @@ EventConnection AbstractWindow::addWindowListener(WindowListenerPtr Listener)
 
 void AbstractWindow::updateContainerLayout(void)
 {
-    if(getParentContainer() != NullFC)
+    if(getParentContainer() != NULL)
     {
 		Inherited::updateContainerLayout();
     }
@@ -99,16 +101,14 @@ void AbstractWindow::updateContainerLayout(void)
 	{
 		Vec2f Size(osgMax(osgMin(getPreferredSize().x(), getMaxSize().x()), getMinSize().x()),
 			       osgMax(osgMin(getPreferredSize().y(), getMaxSize().y()), getMinSize().y()));
-		beginEditCP(ComponentPtr(this), SizeFieldMask);
 			setSize(Size);
-		endEditCP(ComponentPtr(this), SizeFieldMask);
 	}
 }
 
 void AbstractWindow::updateClipBounds(void)
 {
 	Pnt2f TopLeft, BottomRight;
-	if( getDrawingSurface() == NullFC )
+	if( getDrawingSurface() == NULL )
 	{
 		//If I have no parent container use my bounds
 		getBounds(TopLeft, BottomRight);
@@ -137,13 +137,11 @@ void AbstractWindow::updateClipBounds(void)
 	}
 	//The Clip Bounds calculated are in my Parent Containers coordinate space
 	//Translate these bounds into my own coordinate space
-	beginEditCP(ComponentPtr(this), Component::ClipBoundsFieldMask);
 		setClipTopLeft(TopLeft);
 		setClipBottomRight(BottomRight);
-	endEditCP(ComponentPtr(this), Component::ClipBoundsFieldMask);
 }
 
-BorderPtr AbstractWindow::getDrawnBorder(void) const
+BorderRefPtr AbstractWindow::getDrawnBorder(void) const
 {
 	if(getDrawDecorations())
 	{
@@ -151,11 +149,11 @@ BorderPtr AbstractWindow::getDrawnBorder(void) const
 	}
 	else
 	{
-		return NullFC;
+		return NULL;
 	}
 }
 
-LayerPtr AbstractWindow::getDrawnBackground(void) const
+LayerRefPtr AbstractWindow::getDrawnBackground(void) const
 {
 	if(getDrawDecorations())
 	{
@@ -163,11 +161,11 @@ LayerPtr AbstractWindow::getDrawnBackground(void) const
 	}
 	else
 	{
-		return NullFC;
+		return NULL;
 	}
 }
 
-LayerPtr AbstractWindow::getDrawnForeground(void) const
+LayerRefPtr AbstractWindow::getDrawnForeground(void) const
 {
 	if(getDrawDecorations())
 	{
@@ -175,14 +173,14 @@ LayerPtr AbstractWindow::getDrawnForeground(void) const
 	}
 	else
 	{
-		return NullFC;
+		return NULL;
 	}
 }
 
 
 void AbstractWindow::produceWindowOpened(void)
 {
-   const WindowEventPtr TheEvent = WindowEvent::create( AbstractWindowPtr(this), getSystemTime() );
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create( AbstractWindowRefPtr(this), getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowOpened(TheEvent);
@@ -192,7 +190,7 @@ void AbstractWindow::produceWindowOpened(void)
 
 void AbstractWindow::produceWindowClosing(void)
 {
-   const WindowEventPtr TheEvent = WindowEvent::create( AbstractWindowPtr(this), getSystemTime() );
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create( AbstractWindowRefPtr(this), getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowClosing(TheEvent);
@@ -202,7 +200,7 @@ void AbstractWindow::produceWindowClosing(void)
 
 void AbstractWindow::produceWindowClosed(void)
 {
-   const WindowEventPtr TheEvent = WindowEvent::create( AbstractWindowPtr(this), getSystemTime() );
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create( AbstractWindowRefPtr(this), getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowClosed(TheEvent);
@@ -212,7 +210,7 @@ void AbstractWindow::produceWindowClosed(void)
 
 void AbstractWindow::produceWindowIconified(void)
 {
-   const WindowEventPtr TheEvent = WindowEvent::create( AbstractWindowPtr(this), getSystemTime() );
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create( AbstractWindowRefPtr(this), getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowIconified(TheEvent);
@@ -222,7 +220,7 @@ void AbstractWindow::produceWindowIconified(void)
 
 void AbstractWindow::produceWindowDeiconified(void)
 {
-   const WindowEventPtr TheEvent = WindowEvent::create( AbstractWindowPtr(this), getSystemTime() );
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create( AbstractWindowRefPtr(this), getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowDeiconified(TheEvent);
@@ -232,7 +230,7 @@ void AbstractWindow::produceWindowDeiconified(void)
 
 void AbstractWindow::produceWindowActivated(void)
 {
-   const WindowEventPtr TheEvent = WindowEvent::create( AbstractWindowPtr(this), getSystemTime() );
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create( AbstractWindowRefPtr(this), getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowActivated(TheEvent);
@@ -242,7 +240,7 @@ void AbstractWindow::produceWindowActivated(void)
 
 void AbstractWindow::produceWindowDeactivated(void)
 {
-   const WindowEventPtr TheEvent = WindowEvent::create( AbstractWindowPtr(this), getSystemTime() );
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create( AbstractWindowRefPtr(this), getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowDeactivated(TheEvent);
@@ -252,7 +250,7 @@ void AbstractWindow::produceWindowDeactivated(void)
 
 void AbstractWindow::produceWindowEntered(void)
 {
-   const WindowEventPtr TheEvent = WindowEvent::create( AbstractWindowPtr(this), getSystemTime() );
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create( AbstractWindowRefPtr(this), getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowEntered(TheEvent);
@@ -262,7 +260,7 @@ void AbstractWindow::produceWindowEntered(void)
 
 void AbstractWindow::produceWindowExited(void)
 {
-   const WindowEventPtr TheEvent = WindowEvent::create( AbstractWindowPtr(this), getSystemTime() );
+   const WindowEventUnrecPtr TheEvent = WindowEvent::create( AbstractWindowRefPtr(this), getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowExited(TheEvent);
@@ -279,25 +277,25 @@ void AbstractWindow::removeWindowListener(WindowListenerPtr Listener)
    }
 }
 
-void AbstractWindow::focusGained(const FocusEventPtr e)
+void AbstractWindow::focusGained(const FocusEventUnrecPtr e)
 {
 	Inherited::focusGained(e);
 	produceWindowActivated();
 }
 
-void AbstractWindow::focusLost(const FocusEventPtr e)
+void AbstractWindow::focusLost(const FocusEventUnrecPtr e)
 {
 	Inherited::focusLost(e);
 	produceWindowDeactivated();
 }
 
-void AbstractWindow::mouseEntered(const MouseEventPtr e)
+void AbstractWindow::mouseEntered(const MouseEventUnrecPtr e)
 {
 	Inherited::mouseEntered(e);
 	produceWindowEntered();
 }
 
-void AbstractWindow::mouseExited(const MouseEventPtr e)
+void AbstractWindow::mouseExited(const MouseEventUnrecPtr e)
 {
 	Inherited::mouseExited(e);
 	produceWindowExited();
@@ -327,16 +325,17 @@ AbstractWindow::~AbstractWindow(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void AbstractWindow::changed(BitVector whichField, UInt32 origin)
+void AbstractWindow::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void AbstractWindow::dump(      UInt32    , 
+void AbstractWindow::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump AbstractWindow NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

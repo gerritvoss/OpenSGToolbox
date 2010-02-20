@@ -31,21 +31,21 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGEventListener.h>
+#include "OSGEventListener.h"
 #include "OSGButtonSelectedEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING ButtonSelectedListener : public EventListener
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ButtonSelectedListener : public EventListener
 {
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEventPtr e) = 0;
-   virtual void buttonDeselected(const ButtonSelectedEventPtr e) = 0;
+   virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e) = 0;
+   virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e) = 0;
 };
 
 typedef ButtonSelectedListener* ButtonSelectedListenerPtr;

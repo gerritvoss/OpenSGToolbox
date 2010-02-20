@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGCompoundLayoutSpring.h"
-#include "Layout/OSGSpringLayout.h"
+#include "OSGSpringLayout.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::CompoundLayoutSpring
-A UI Compound LayoutSpring. Use the instance variables of the StaticSpring superclass to cache values that have already been calculated. 	
-*/
+// Documentation for this class is emitted in the
+// OSGCompoundLayoutSpringBase.cpp file.
+// To modify it, please change the .fcd file (OSGCompoundLayoutSpring.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -68,8 +63,13 @@ A UI Compound LayoutSpring. Use the instance variables of the StaticSpring super
  *                           Class methods                                 *
 \***************************************************************************/
 
-void CompoundLayoutSpring::initMethod (void)
+void CompoundLayoutSpring::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -81,9 +81,7 @@ Real32 CompoundLayoutSpring::getMinimumValue(void) const
 {
     if (getMinimum() == LayoutSpring::VALUE_NOT_SET)
     {
-        beginEditCP(CompoundLayoutSpringPtr(this), MinimumFieldMask);
-            const_cast<CompoundLayoutSpring*>(this)->setMinimum( operation(getSpring1()->getMinimumValue(), getSpring1()->getMinimumValue() ) );
-        endEditCP(CompoundLayoutSpringPtr(this), MinimumFieldMask);
+        const_cast<CompoundLayoutSpring*>(this)->setMinimum( operation(getSpring1()->getMinimumValue(), getSpring1()->getMinimumValue() ) );
     }
     return getMinimum();
 }
@@ -92,9 +90,7 @@ Real32 CompoundLayoutSpring::getPreferredValue(void) const
 {
     if (getPreferred() == LayoutSpring::VALUE_NOT_SET)
     {
-        beginEditCP(CompoundLayoutSpringPtr(this), PreferredFieldMask);
-            const_cast<CompoundLayoutSpring*>(this)->setPreferred( operation(getSpring1()->getPreferredValue(), getSpring1()->getPreferredValue() ) );
-        endEditCP(CompoundLayoutSpringPtr(this), PreferredFieldMask);
+        const_cast<CompoundLayoutSpring*>(this)->setPreferred( operation(getSpring1()->getPreferredValue(), getSpring1()->getPreferredValue() ) );
     }
     return getPreferred();
 }
@@ -103,23 +99,19 @@ Real32 CompoundLayoutSpring::getMaximumValue(void) const
 {
     if (getMaximum() == LayoutSpring::VALUE_NOT_SET)
     {
-        beginEditCP(CompoundLayoutSpringPtr(this), MaximumFieldMask);
-            const_cast<CompoundLayoutSpring*>(this)->setMaximum( operation(getSpring1()->getMaximumValue(), getSpring1()->getMaximumValue() ) );
-        endEditCP(CompoundLayoutSpringPtr(this), MaximumFieldMask);
+        const_cast<CompoundLayoutSpring*>(this)->setMaximum( operation(getSpring1()->getMaximumValue(), getSpring1()->getMaximumValue() ) );
     }
     return getMaximum();
 }
 
 Real32 CompoundLayoutSpring::getValue(void) const
 {
-    beginEditCP(CompoundLayoutSpringPtr(this), SizeFieldMask);
-        const_cast<CompoundLayoutSpring*>(this)->setSize( operation(getSpring1()->getValue(), getSpring2()->getValue() ) );
-    endEditCP(CompoundLayoutSpringPtr(this), SizeFieldMask);
+    const_cast<CompoundLayoutSpring*>(this)->setSize( operation(getSpring1()->getValue(), getSpring2()->getValue() ) );
 
     return getSize();
 }
 
-bool CompoundLayoutSpring::isCyclic(SpringLayoutPtr l) const
+bool CompoundLayoutSpring::isCyclic(const SpringLayout* l) const
 {
     return l->isCyclic(getSpring1()) || l->isCyclic(getSpring2());
 }
@@ -128,12 +120,10 @@ void CompoundLayoutSpring::clear(void)
 {
     Inherited::clear();
 
-    beginEditCP(CompoundLayoutSpringPtr(this), MinimumFieldMask | PreferredFieldMask | MaximumFieldMask);
-        setMinimum(LayoutSpring::VALUE_NOT_SET);
-        setPreferred(LayoutSpring::VALUE_NOT_SET);
-        setMaximum(LayoutSpring::VALUE_NOT_SET);
-    endEditCP(CompoundLayoutSpringPtr(this), MinimumFieldMask | PreferredFieldMask | MaximumFieldMask);
-    
+    setMinimum(LayoutSpring::VALUE_NOT_SET);
+    setPreferred(LayoutSpring::VALUE_NOT_SET);
+    setMaximum(LayoutSpring::VALUE_NOT_SET);
+
     getSpring1()->setValue(LayoutSpring::VALUE_NOT_SET);
 
     getSpring2()->setValue(LayoutSpring::VALUE_NOT_SET);
@@ -161,41 +151,17 @@ CompoundLayoutSpring::~CompoundLayoutSpring(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void CompoundLayoutSpring::changed(BitVector whichField, UInt32 origin)
+void CompoundLayoutSpring::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void CompoundLayoutSpring::dump(      UInt32    , 
+void CompoundLayoutSpring::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump CompoundLayoutSpring NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGCOMPOUNDLAYOUTSPRINGBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCOMPOUNDLAYOUTSPRINGBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCOMPOUNDLAYOUTSPRINGFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

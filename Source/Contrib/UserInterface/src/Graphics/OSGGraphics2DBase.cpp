@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,142 +50,324 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEGRAPHICS2DINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGDepthChunk.h"              // UIDepth Class
+#include "OSGColorMaskChunk.h"          // ColorMask Class
+#include "OSGStencilChunk.h"            // StenciledAreaSetup Class
 
 #include "OSGGraphics2DBase.h"
 #include "OSGGraphics2D.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  Graphics2DBase::UIDepthFieldMask = 
-    (TypeTraits<BitVector>::One << Graphics2DBase::UIDepthFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector Graphics2DBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::Graphics2D
+    A Concrete 2D UI Graphics.
+ */
 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-// Field descriptions
-
-/*! \var DepthChunkPtr   Graphics2DBase::_sfUIDepth
+/*! \var DepthChunk *    Graphics2DBase::_sfUIDepth
     
 */
 
-//! Graphics2D description
+/*! \var ColorMaskChunk * Graphics2DBase::_sfColorMask
+    
+*/
 
-FieldDescription *Graphics2DBase::_desc[] = 
+/*! \var StencilChunk *  Graphics2DBase::_sfStenciledAreaSetup
+    
+*/
+
+/*! \var StencilChunk *  Graphics2DBase::_sfStenciledAreaCleanup
+    
+*/
+
+/*! \var StencilChunk *  Graphics2DBase::_sfStenciledAreaTest
+    
+*/
+
+
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<Graphics2D *>::_type("Graphics2DPtr", "GraphicsPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(Graphics2D *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           Graphics2D *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           Graphics2D *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void Graphics2DBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFDepthChunkPtr::getClassType(), 
-                     "UIDepth", 
-                     UIDepthFieldId, UIDepthFieldMask,
-                     true,
-                     (FieldAccessMethod) &Graphics2DBase::getSFUIDepth)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType Graphics2DBase::_type(
-    "Graphics2D",
-    "Graphics",
-    NULL,
-    (PrototypeCreateF) &Graphics2DBase::createEmpty,
+    pDesc = new SFUnrecDepthChunkPtr::Description(
+        SFUnrecDepthChunkPtr::getClassType(),
+        "UIDepth",
+        "",
+        UIDepthFieldId, UIDepthFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Graphics2D::editHandleUIDepth),
+        static_cast<FieldGetMethodSig >(&Graphics2D::getHandleUIDepth));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecColorMaskChunkPtr::Description(
+        SFUnrecColorMaskChunkPtr::getClassType(),
+        "ColorMask",
+        "",
+        ColorMaskFieldId, ColorMaskFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Graphics2D::editHandleColorMask),
+        static_cast<FieldGetMethodSig >(&Graphics2D::getHandleColorMask));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecStencilChunkPtr::Description(
+        SFUnrecStencilChunkPtr::getClassType(),
+        "StenciledAreaSetup",
+        "",
+        StenciledAreaSetupFieldId, StenciledAreaSetupFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Graphics2D::editHandleStenciledAreaSetup),
+        static_cast<FieldGetMethodSig >(&Graphics2D::getHandleStenciledAreaSetup));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecStencilChunkPtr::Description(
+        SFUnrecStencilChunkPtr::getClassType(),
+        "StenciledAreaCleanup",
+        "",
+        StenciledAreaCleanupFieldId, StenciledAreaCleanupFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Graphics2D::editHandleStenciledAreaCleanup),
+        static_cast<FieldGetMethodSig >(&Graphics2D::getHandleStenciledAreaCleanup));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecStencilChunkPtr::Description(
+        SFUnrecStencilChunkPtr::getClassType(),
+        "StenciledAreaTest",
+        "",
+        StenciledAreaTestFieldId, StenciledAreaTestFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Graphics2D::editHandleStenciledAreaTest),
+        static_cast<FieldGetMethodSig >(&Graphics2D::getHandleStenciledAreaTest));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+Graphics2DBase::TypeObject Graphics2DBase::_type(
+    Graphics2DBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&Graphics2DBase::createEmptyLocal),
     Graphics2D::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(Graphics2DBase, Graphics2DPtr)
+    Graphics2D::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&Graphics2D::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"Graphics2D\"\n"
+    "\tparent=\"Graphics\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A Concrete 2D UI Graphics.\n"
+    "\t<Field\n"
+    "\t\tname=\"UIDepth\"\n"
+    "\t\ttype=\"DepthChunk\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ColorMask\"\n"
+    "\t\ttype=\"ColorMaskChunk\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"StenciledAreaSetup\"\n"
+    "\t\ttype=\"StencilChunk\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"StenciledAreaCleanup\"\n"
+    "\t\ttype=\"StencilChunk\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"StenciledAreaTest\"\n"
+    "\t\ttype=\"StencilChunk\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A Concrete 2D UI Graphics.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &Graphics2DBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &Graphics2DBase::getType(void) const 
+FieldContainerType &Graphics2DBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr Graphics2DBase::shallowCopy(void) const 
-{ 
-    Graphics2DPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const Graphics2D *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 Graphics2DBase::getContainerSize(void) const 
-{ 
-    return sizeof(Graphics2D); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void Graphics2DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &Graphics2DBase::getType(void) const
 {
-    this->executeSyncImpl((Graphics2DBase *) &other, whichField);
+    return _type;
 }
-#else
-void Graphics2DBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 Graphics2DBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((Graphics2DBase *) &other, whichField, sInfo);
+    return sizeof(Graphics2D);
 }
-void Graphics2DBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the Graphics2D::_sfUIDepth field.
+const SFUnrecDepthChunkPtr *Graphics2DBase::getSFUIDepth(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfUIDepth;
 }
 
-void Graphics2DBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecDepthChunkPtr *Graphics2DBase::editSFUIDepth        (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(UIDepthFieldMask);
 
+    return &_sfUIDepth;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-Graphics2DBase::Graphics2DBase(void) :
-    _sfUIDepth                (DepthChunkPtr(NullFC)), 
-    Inherited() 
+//! Get the Graphics2D::_sfColorMask field.
+const SFUnrecColorMaskChunkPtr *Graphics2DBase::getSFColorMask(void) const
 {
+    return &_sfColorMask;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-Graphics2DBase::Graphics2DBase(const Graphics2DBase &source) :
-    _sfUIDepth                (source._sfUIDepth                ), 
-    Inherited                 (source)
+SFUnrecColorMaskChunkPtr *Graphics2DBase::editSFColorMask      (void)
 {
+    editSField(ColorMaskFieldMask);
+
+    return &_sfColorMask;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-Graphics2DBase::~Graphics2DBase(void)
+//! Get the Graphics2D::_sfStenciledAreaSetup field.
+const SFUnrecStencilChunkPtr *Graphics2DBase::getSFStenciledAreaSetup(void) const
 {
+    return &_sfStenciledAreaSetup;
 }
+
+SFUnrecStencilChunkPtr *Graphics2DBase::editSFStenciledAreaSetup(void)
+{
+    editSField(StenciledAreaSetupFieldMask);
+
+    return &_sfStenciledAreaSetup;
+}
+
+//! Get the Graphics2D::_sfStenciledAreaCleanup field.
+const SFUnrecStencilChunkPtr *Graphics2DBase::getSFStenciledAreaCleanup(void) const
+{
+    return &_sfStenciledAreaCleanup;
+}
+
+SFUnrecStencilChunkPtr *Graphics2DBase::editSFStenciledAreaCleanup(void)
+{
+    editSField(StenciledAreaCleanupFieldMask);
+
+    return &_sfStenciledAreaCleanup;
+}
+
+//! Get the Graphics2D::_sfStenciledAreaTest field.
+const SFUnrecStencilChunkPtr *Graphics2DBase::getSFStenciledAreaTest(void) const
+{
+    return &_sfStenciledAreaTest;
+}
+
+SFUnrecStencilChunkPtr *Graphics2DBase::editSFStenciledAreaTest(void)
+{
+    editSField(StenciledAreaTestFieldMask);
+
+    return &_sfStenciledAreaTest;
+}
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 Graphics2DBase::getBinSize(const BitVector &whichField)
+UInt32 Graphics2DBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -193,13 +375,28 @@ UInt32 Graphics2DBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfUIDepth.getBinSize();
     }
-
+    if(FieldBits::NoField != (ColorMaskFieldMask & whichField))
+    {
+        returnValue += _sfColorMask.getBinSize();
+    }
+    if(FieldBits::NoField != (StenciledAreaSetupFieldMask & whichField))
+    {
+        returnValue += _sfStenciledAreaSetup.getBinSize();
+    }
+    if(FieldBits::NoField != (StenciledAreaCleanupFieldMask & whichField))
+    {
+        returnValue += _sfStenciledAreaCleanup.getBinSize();
+    }
+    if(FieldBits::NoField != (StenciledAreaTestFieldMask & whichField))
+    {
+        returnValue += _sfStenciledAreaTest.getBinSize();
+    }
 
     return returnValue;
 }
 
-void Graphics2DBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void Graphics2DBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -207,12 +404,26 @@ void Graphics2DBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfUIDepth.copyToBin(pMem);
     }
-
-
+    if(FieldBits::NoField != (ColorMaskFieldMask & whichField))
+    {
+        _sfColorMask.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (StenciledAreaSetupFieldMask & whichField))
+    {
+        _sfStenciledAreaSetup.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (StenciledAreaCleanupFieldMask & whichField))
+    {
+        _sfStenciledAreaCleanup.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (StenciledAreaTestFieldMask & whichField))
+    {
+        _sfStenciledAreaTest.copyToBin(pMem);
+    }
 }
 
-void Graphics2DBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void Graphics2DBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -220,82 +431,381 @@ void Graphics2DBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfUIDepth.copyFromBin(pMem);
     }
-
-
+    if(FieldBits::NoField != (ColorMaskFieldMask & whichField))
+    {
+        _sfColorMask.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (StenciledAreaSetupFieldMask & whichField))
+    {
+        _sfStenciledAreaSetup.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (StenciledAreaCleanupFieldMask & whichField))
+    {
+        _sfStenciledAreaCleanup.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (StenciledAreaTestFieldMask & whichField))
+    {
+        _sfStenciledAreaTest.copyFromBin(pMem);
+    }
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void Graphics2DBase::executeSyncImpl(      Graphics2DBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+Graphics2DTransitPtr Graphics2DBase::createLocal(BitVector bFlags)
 {
+    Graphics2DTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (UIDepthFieldMask & whichField))
-        _sfUIDepth.syncWith(pOther->_sfUIDepth);
+        fc = dynamic_pointer_cast<Graphics2D>(tmpPtr);
+    }
 
-
-}
-#else
-void Graphics2DBase::executeSyncImpl(      Graphics2DBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (UIDepthFieldMask & whichField))
-        _sfUIDepth.syncWith(pOther->_sfUIDepth);
-
-
-
+    return fc;
 }
 
-void Graphics2DBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+Graphics2DTransitPtr Graphics2DBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    Graphics2DTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<Graphics2D>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+Graphics2DTransitPtr Graphics2DBase::create(void)
+{
+    Graphics2DTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<Graphics2D>(tmpPtr);
+    }
+
+    return fc;
+}
+
+Graphics2D *Graphics2DBase::createEmptyLocal(BitVector bFlags)
+{
+    Graphics2D *returnValue;
+
+    newPtr<Graphics2D>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+Graphics2D *Graphics2DBase::createEmpty(void)
+{
+    Graphics2D *returnValue;
+
+    newPtr<Graphics2D>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr Graphics2DBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    Graphics2D *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Graphics2D *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr Graphics2DBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    Graphics2D *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Graphics2D *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr Graphics2DBase::shallowCopy(void) const
+{
+    Graphics2D *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const Graphics2D *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+Graphics2DBase::Graphics2DBase(void) :
+    Inherited(),
+    _sfUIDepth                (NULL),
+    _sfColorMask              (NULL),
+    _sfStenciledAreaSetup     (NULL),
+    _sfStenciledAreaCleanup   (NULL),
+    _sfStenciledAreaTest      (NULL)
+{
+}
+
+Graphics2DBase::Graphics2DBase(const Graphics2DBase &source) :
+    Inherited(source),
+    _sfUIDepth                (NULL),
+    _sfColorMask              (NULL),
+    _sfStenciledAreaSetup     (NULL),
+    _sfStenciledAreaCleanup   (NULL),
+    _sfStenciledAreaTest      (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+Graphics2DBase::~Graphics2DBase(void)
+{
+}
+
+void Graphics2DBase::onCreate(const Graphics2D *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        Graphics2D *pThis = static_cast<Graphics2D *>(this);
+
+        pThis->setUIDepth(source->getUIDepth());
+
+        pThis->setColorMask(source->getColorMask());
+
+        pThis->setStenciledAreaSetup(source->getStenciledAreaSetup());
+
+        pThis->setStenciledAreaCleanup(source->getStenciledAreaCleanup());
+
+        pThis->setStenciledAreaTest(source->getStenciledAreaTest());
+    }
+}
+
+GetFieldHandlePtr Graphics2DBase::getHandleUIDepth         (void) const
+{
+    SFUnrecDepthChunkPtr::GetHandlePtr returnValue(
+        new  SFUnrecDepthChunkPtr::GetHandle(
+             &_sfUIDepth,
+             this->getType().getFieldDesc(UIDepthFieldId),
+             const_cast<Graphics2DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr Graphics2DBase::editHandleUIDepth        (void)
+{
+    SFUnrecDepthChunkPtr::EditHandlePtr returnValue(
+        new  SFUnrecDepthChunkPtr::EditHandle(
+             &_sfUIDepth,
+             this->getType().getFieldDesc(UIDepthFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Graphics2D::setUIDepth,
+                    static_cast<Graphics2D *>(this), _1));
+
+    editSField(UIDepthFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr Graphics2DBase::getHandleColorMask       (void) const
+{
+    SFUnrecColorMaskChunkPtr::GetHandlePtr returnValue(
+        new  SFUnrecColorMaskChunkPtr::GetHandle(
+             &_sfColorMask,
+             this->getType().getFieldDesc(ColorMaskFieldId),
+             const_cast<Graphics2DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr Graphics2DBase::editHandleColorMask      (void)
+{
+    SFUnrecColorMaskChunkPtr::EditHandlePtr returnValue(
+        new  SFUnrecColorMaskChunkPtr::EditHandle(
+             &_sfColorMask,
+             this->getType().getFieldDesc(ColorMaskFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Graphics2D::setColorMask,
+                    static_cast<Graphics2D *>(this), _1));
+
+    editSField(ColorMaskFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr Graphics2DBase::getHandleStenciledAreaSetup (void) const
+{
+    SFUnrecStencilChunkPtr::GetHandlePtr returnValue(
+        new  SFUnrecStencilChunkPtr::GetHandle(
+             &_sfStenciledAreaSetup,
+             this->getType().getFieldDesc(StenciledAreaSetupFieldId),
+             const_cast<Graphics2DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr Graphics2DBase::editHandleStenciledAreaSetup(void)
+{
+    SFUnrecStencilChunkPtr::EditHandlePtr returnValue(
+        new  SFUnrecStencilChunkPtr::EditHandle(
+             &_sfStenciledAreaSetup,
+             this->getType().getFieldDesc(StenciledAreaSetupFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Graphics2D::setStenciledAreaSetup,
+                    static_cast<Graphics2D *>(this), _1));
+
+    editSField(StenciledAreaSetupFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr Graphics2DBase::getHandleStenciledAreaCleanup (void) const
+{
+    SFUnrecStencilChunkPtr::GetHandlePtr returnValue(
+        new  SFUnrecStencilChunkPtr::GetHandle(
+             &_sfStenciledAreaCleanup,
+             this->getType().getFieldDesc(StenciledAreaCleanupFieldId),
+             const_cast<Graphics2DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr Graphics2DBase::editHandleStenciledAreaCleanup(void)
+{
+    SFUnrecStencilChunkPtr::EditHandlePtr returnValue(
+        new  SFUnrecStencilChunkPtr::EditHandle(
+             &_sfStenciledAreaCleanup,
+             this->getType().getFieldDesc(StenciledAreaCleanupFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Graphics2D::setStenciledAreaCleanup,
+                    static_cast<Graphics2D *>(this), _1));
+
+    editSField(StenciledAreaCleanupFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr Graphics2DBase::getHandleStenciledAreaTest (void) const
+{
+    SFUnrecStencilChunkPtr::GetHandlePtr returnValue(
+        new  SFUnrecStencilChunkPtr::GetHandle(
+             &_sfStenciledAreaTest,
+             this->getType().getFieldDesc(StenciledAreaTestFieldId),
+             const_cast<Graphics2DBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr Graphics2DBase::editHandleStenciledAreaTest(void)
+{
+    SFUnrecStencilChunkPtr::EditHandlePtr returnValue(
+        new  SFUnrecStencilChunkPtr::EditHandle(
+             &_sfStenciledAreaTest,
+             this->getType().getFieldDesc(StenciledAreaTestFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Graphics2D::setStenciledAreaTest,
+                    static_cast<Graphics2D *>(this), _1));
+
+    editSField(StenciledAreaTestFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void Graphics2DBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Graphics2D *pThis = static_cast<Graphics2D *>(this);
+
+    pThis->execSync(static_cast<Graphics2D *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *Graphics2DBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    Graphics2D *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const Graphics2D *>(pRefAspect),
+                  dynamic_cast<const Graphics2D *>(this));
+
+    return returnValue;
+}
+#endif
+
+void Graphics2DBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<Graphics2D *>(this)->setUIDepth(NULL);
+
+    static_cast<Graphics2D *>(this)->setColorMask(NULL);
+
+    static_cast<Graphics2D *>(this)->setStenciledAreaSetup(NULL);
+
+    static_cast<Graphics2D *>(this)->setStenciledAreaCleanup(NULL);
+
+    static_cast<Graphics2D *>(this)->setStenciledAreaTest(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<Graphics2DPtr>::_type("Graphics2DPtr", "GraphicsPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(Graphics2DPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(Graphics2DPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGGRAPHICS2DBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGGRAPHICS2DBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGGRAPHICS2DFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

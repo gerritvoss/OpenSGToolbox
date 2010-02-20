@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,136 +58,167 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include "Component/OSGComponent.h" // Parent
+#include "OSGComponent.h" // Parent
 
-#include "Text/OSGUIFont.h" // Font type
-#include <OpenSG/OSGStringFields.h> // Text type
-#include "Border/OSGBorder.h" // ActiveBorder type
-#include "Layer/OSGLayer.h" // ActiveBackground type
-#include "Layer/OSGLayer.h" // ActiveForeground type
-#include <OpenSG/OSGColor4fFields.h> // ActiveTextColor type
-#include <OpenSG/OSGColor4fFields.h> // FocusedTextColor type
-#include <OpenSG/OSGColor4fFields.h> // RolloverTextColor type
-#include <OpenSG/OSGColor4fFields.h> // DisabledTextColor type
-#include <OpenSG/OSGColor4fFields.h> // TextColor type
-#include <OpenSG/OSGVec2fFields.h> // Alignment type
-#include <OpenSG/OSGBoolFields.h> // EnableActionOnMouseDownTime type
-#include <OpenSG/OSGTimeFields.h> // ActionOnMouseDownRate type
-#include <OpenSG/OSGVec2fFields.h> // ActiveOffset type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // DrawObject type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // ActiveDrawObject type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // FocusedDrawObject type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // RolloverDrawObject type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // DisabledDrawObject type
-#include <OpenSG/OSGUInt32Fields.h> // DrawObjectToTextAlignment type
-#include <OpenSG/OSGReal32Fields.h> // DrawObjectToTextPadding type
+#include "OSGUIFontFields.h"            // Font type
+#include "OSGBaseFields.h"              // Text type
+#include "OSGBorderFields.h"            // ActiveBorder type
+#include "OSGLayerFields.h"             // ActiveBackground type
+#include "OSGVecFields.h"               // Alignment type
+#include "OSGSysFields.h"               // EnableActionOnMouseDownTime type
+#include "OSGUIDrawObjectCanvasFields.h" // DrawObject type
 
 #include "OSGButtonFields.h"
-#include <OpenSG/Toolbox/OSGEventProducer.h>
-#include <OpenSG/Toolbox/OSGEventProducerType.h>
-#include <OpenSG/Toolbox/OSGMethodDescription.h>
+
+//Event Producer Headers
+#include "OSGEventProducer.h"
+#include "OSGEventProducerType.h"
+#include "OSGMethodDescription.h"
 
 OSG_BEGIN_NAMESPACE
 
 class Button;
-class BinaryDataHandler;
 
 //! \brief Button Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ButtonBase : public Component
 {
-  private:
-
-    typedef Component    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ButtonPtr  Ptr;
+    typedef Component Inherited;
+    typedef Component ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(Button);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        FontFieldId                        = Inherited::NextFieldId,
-        TextFieldId                        = FontFieldId                        + 1,
-        ActiveBorderFieldId                = TextFieldId                        + 1,
-        ActiveBackgroundFieldId            = ActiveBorderFieldId                + 1,
-        ActiveForegroundFieldId            = ActiveBackgroundFieldId            + 1,
-        ActiveTextColorFieldId             = ActiveForegroundFieldId            + 1,
-        FocusedTextColorFieldId            = ActiveTextColorFieldId             + 1,
-        RolloverTextColorFieldId           = FocusedTextColorFieldId            + 1,
-        DisabledTextColorFieldId           = RolloverTextColorFieldId           + 1,
-        TextColorFieldId                   = DisabledTextColorFieldId           + 1,
-        AlignmentFieldId                   = TextColorFieldId                   + 1,
-        EnableActionOnMouseDownTimeFieldId = AlignmentFieldId                   + 1,
-        ActionOnMouseDownRateFieldId       = EnableActionOnMouseDownTimeFieldId + 1,
-        ActiveOffsetFieldId                = ActionOnMouseDownRateFieldId       + 1,
-        DrawObjectFieldId                  = ActiveOffsetFieldId                + 1,
-        ActiveDrawObjectFieldId            = DrawObjectFieldId                  + 1,
-        FocusedDrawObjectFieldId           = ActiveDrawObjectFieldId            + 1,
-        RolloverDrawObjectFieldId          = FocusedDrawObjectFieldId           + 1,
-        DisabledDrawObjectFieldId          = RolloverDrawObjectFieldId          + 1,
-        DrawObjectToTextAlignmentFieldId   = DisabledDrawObjectFieldId          + 1,
-        DrawObjectToTextPaddingFieldId     = DrawObjectToTextAlignmentFieldId   + 1,
-        NextFieldId                        = DrawObjectToTextPaddingFieldId     + 1
+        FontFieldId = Inherited::NextFieldId,
+        TextFieldId = FontFieldId + 1,
+        ActiveBorderFieldId = TextFieldId + 1,
+        ActiveBackgroundFieldId = ActiveBorderFieldId + 1,
+        ActiveForegroundFieldId = ActiveBackgroundFieldId + 1,
+        ActiveTextColorFieldId = ActiveForegroundFieldId + 1,
+        FocusedTextColorFieldId = ActiveTextColorFieldId + 1,
+        RolloverTextColorFieldId = FocusedTextColorFieldId + 1,
+        DisabledTextColorFieldId = RolloverTextColorFieldId + 1,
+        TextColorFieldId = DisabledTextColorFieldId + 1,
+        AlignmentFieldId = TextColorFieldId + 1,
+        EnableActionOnMouseDownTimeFieldId = AlignmentFieldId + 1,
+        ActionOnMouseDownRateFieldId = EnableActionOnMouseDownTimeFieldId + 1,
+        ActiveOffsetFieldId = ActionOnMouseDownRateFieldId + 1,
+        DrawObjectFieldId = ActiveOffsetFieldId + 1,
+        ActiveDrawObjectFieldId = DrawObjectFieldId + 1,
+        FocusedDrawObjectFieldId = ActiveDrawObjectFieldId + 1,
+        RolloverDrawObjectFieldId = FocusedDrawObjectFieldId + 1,
+        DisabledDrawObjectFieldId = RolloverDrawObjectFieldId + 1,
+        DrawObjectToTextAlignmentFieldId = DisabledDrawObjectFieldId + 1,
+        DrawObjectToTextPaddingFieldId = DrawObjectToTextAlignmentFieldId + 1,
+        NextFieldId = DrawObjectToTextPaddingFieldId + 1
     };
 
-    static const OSG::BitVector FontFieldMask;
-    static const OSG::BitVector TextFieldMask;
-    static const OSG::BitVector ActiveBorderFieldMask;
-    static const OSG::BitVector ActiveBackgroundFieldMask;
-    static const OSG::BitVector ActiveForegroundFieldMask;
-    static const OSG::BitVector ActiveTextColorFieldMask;
-    static const OSG::BitVector FocusedTextColorFieldMask;
-    static const OSG::BitVector RolloverTextColorFieldMask;
-    static const OSG::BitVector DisabledTextColorFieldMask;
-    static const OSG::BitVector TextColorFieldMask;
-    static const OSG::BitVector AlignmentFieldMask;
-    static const OSG::BitVector EnableActionOnMouseDownTimeFieldMask;
-    static const OSG::BitVector ActionOnMouseDownRateFieldMask;
-    static const OSG::BitVector ActiveOffsetFieldMask;
-    static const OSG::BitVector DrawObjectFieldMask;
-    static const OSG::BitVector ActiveDrawObjectFieldMask;
-    static const OSG::BitVector FocusedDrawObjectFieldMask;
-    static const OSG::BitVector RolloverDrawObjectFieldMask;
-    static const OSG::BitVector DisabledDrawObjectFieldMask;
-    static const OSG::BitVector DrawObjectToTextAlignmentFieldMask;
-    static const OSG::BitVector DrawObjectToTextPaddingFieldMask;
-
+    static const OSG::BitVector FontFieldMask =
+        (TypeTraits<BitVector>::One << FontFieldId);
+    static const OSG::BitVector TextFieldMask =
+        (TypeTraits<BitVector>::One << TextFieldId);
+    static const OSG::BitVector ActiveBorderFieldMask =
+        (TypeTraits<BitVector>::One << ActiveBorderFieldId);
+    static const OSG::BitVector ActiveBackgroundFieldMask =
+        (TypeTraits<BitVector>::One << ActiveBackgroundFieldId);
+    static const OSG::BitVector ActiveForegroundFieldMask =
+        (TypeTraits<BitVector>::One << ActiveForegroundFieldId);
+    static const OSG::BitVector ActiveTextColorFieldMask =
+        (TypeTraits<BitVector>::One << ActiveTextColorFieldId);
+    static const OSG::BitVector FocusedTextColorFieldMask =
+        (TypeTraits<BitVector>::One << FocusedTextColorFieldId);
+    static const OSG::BitVector RolloverTextColorFieldMask =
+        (TypeTraits<BitVector>::One << RolloverTextColorFieldId);
+    static const OSG::BitVector DisabledTextColorFieldMask =
+        (TypeTraits<BitVector>::One << DisabledTextColorFieldId);
+    static const OSG::BitVector TextColorFieldMask =
+        (TypeTraits<BitVector>::One << TextColorFieldId);
+    static const OSG::BitVector AlignmentFieldMask =
+        (TypeTraits<BitVector>::One << AlignmentFieldId);
+    static const OSG::BitVector EnableActionOnMouseDownTimeFieldMask =
+        (TypeTraits<BitVector>::One << EnableActionOnMouseDownTimeFieldId);
+    static const OSG::BitVector ActionOnMouseDownRateFieldMask =
+        (TypeTraits<BitVector>::One << ActionOnMouseDownRateFieldId);
+    static const OSG::BitVector ActiveOffsetFieldMask =
+        (TypeTraits<BitVector>::One << ActiveOffsetFieldId);
+    static const OSG::BitVector DrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << DrawObjectFieldId);
+    static const OSG::BitVector ActiveDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << ActiveDrawObjectFieldId);
+    static const OSG::BitVector FocusedDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << FocusedDrawObjectFieldId);
+    static const OSG::BitVector RolloverDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << RolloverDrawObjectFieldId);
+    static const OSG::BitVector DisabledDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << DisabledDrawObjectFieldId);
+    static const OSG::BitVector DrawObjectToTextAlignmentFieldMask =
+        (TypeTraits<BitVector>::One << DrawObjectToTextAlignmentFieldId);
+    static const OSG::BitVector DrawObjectToTextPaddingFieldMask =
+        (TypeTraits<BitVector>::One << DrawObjectToTextPaddingFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecUIFontPtr  SFFontType;
+    typedef SFString          SFTextType;
+    typedef SFUnrecBorderPtr  SFActiveBorderType;
+    typedef SFUnrecLayerPtr   SFActiveBackgroundType;
+    typedef SFUnrecLayerPtr   SFActiveForegroundType;
+    typedef SFColor4f         SFActiveTextColorType;
+    typedef SFColor4f         SFFocusedTextColorType;
+    typedef SFColor4f         SFRolloverTextColorType;
+    typedef SFColor4f         SFDisabledTextColorType;
+    typedef SFColor4f         SFTextColorType;
+    typedef SFVec2f           SFAlignmentType;
+    typedef SFBool            SFEnableActionOnMouseDownTimeType;
+    typedef SFTime            SFActionOnMouseDownRateType;
+    typedef SFVec2f           SFActiveOffsetType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFDrawObjectType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFActiveDrawObjectType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFFocusedDrawObjectType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFRolloverDrawObjectType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFDisabledDrawObjectType;
+    typedef SFUInt32          SFDrawObjectToTextAlignmentType;
+    typedef SFReal32          SFDrawObjectToTextPaddingType;
 
     enum
     {
-        ActionPerformedMethodId             = Inherited::NextMethodId,
-        MousePressedActionPerformedMethodId = ActionPerformedMethodId             + 1,
-        NextMethodId                        = MousePressedActionPerformedMethodId + 1
+        ActionPerformedMethodId = Inherited::NextProducedMethodId,
+        MousePressedActionPerformedMethodId = ActionPerformedMethodId + 1,
+        NextProducedMethodId = MousePressedActionPerformedMethodId + 1
     };
-
-
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
-    static const  EventProducerType  &getProducerClassType  (void); 
-    static        UInt32              getProducerClassTypeId(void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
+    static const  EventProducerType  &getProducerClassType  (void);
+    static        UInt32              getProducerClassTypeId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -196,160 +227,164 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+            const SFUnrecUIFontPtr    *getSFFont           (void) const;
+                  SFUnrecUIFontPtr    *editSFFont           (void);
 
-           SFUIFontPtr         *editSFFont           (void);
-     const SFUIFontPtr         *getSFFont           (void) const;
+                  SFString            *editSFText           (void);
+            const SFString            *getSFText            (void) const;
+            const SFUnrecBorderPtr    *getSFActiveBorder   (void) const;
+                  SFUnrecBorderPtr    *editSFActiveBorder   (void);
+            const SFUnrecLayerPtr     *getSFActiveBackground(void) const;
+                  SFUnrecLayerPtr     *editSFActiveBackground(void);
+            const SFUnrecLayerPtr     *getSFActiveForeground(void) const;
+                  SFUnrecLayerPtr     *editSFActiveForeground(void);
 
-           SFString            *editSFText           (void);
-     const SFString            *getSFText           (void) const;
+                  SFColor4f           *editSFActiveTextColor(void);
+            const SFColor4f           *getSFActiveTextColor (void) const;
 
-           SFBorderPtr         *editSFActiveBorder   (void);
-     const SFBorderPtr         *getSFActiveBorder   (void) const;
+                  SFColor4f           *editSFFocusedTextColor(void);
+            const SFColor4f           *getSFFocusedTextColor (void) const;
 
-           SFLayerPtr          *editSFActiveBackground(void);
-     const SFLayerPtr          *getSFActiveBackground(void) const;
+                  SFColor4f           *editSFRolloverTextColor(void);
+            const SFColor4f           *getSFRolloverTextColor (void) const;
 
-           SFLayerPtr          *editSFActiveForeground(void);
-     const SFLayerPtr          *getSFActiveForeground(void) const;
+                  SFColor4f           *editSFDisabledTextColor(void);
+            const SFColor4f           *getSFDisabledTextColor (void) const;
 
-           SFColor4f           *editSFActiveTextColor(void);
-     const SFColor4f           *getSFActiveTextColor(void) const;
+                  SFColor4f           *editSFTextColor      (void);
+            const SFColor4f           *getSFTextColor       (void) const;
 
-           SFColor4f           *editSFFocusedTextColor(void);
-     const SFColor4f           *getSFFocusedTextColor(void) const;
+                  SFVec2f             *editSFAlignment      (void);
+            const SFVec2f             *getSFAlignment       (void) const;
 
-           SFColor4f           *editSFRolloverTextColor(void);
-     const SFColor4f           *getSFRolloverTextColor(void) const;
+                  SFBool              *editSFEnableActionOnMouseDownTime(void);
+            const SFBool              *getSFEnableActionOnMouseDownTime (void) const;
 
-           SFColor4f           *editSFDisabledTextColor(void);
-     const SFColor4f           *getSFDisabledTextColor(void) const;
+                  SFTime              *editSFActionOnMouseDownRate(void);
+            const SFTime              *getSFActionOnMouseDownRate (void) const;
 
-           SFColor4f           *editSFTextColor      (void);
-     const SFColor4f           *getSFTextColor      (void) const;
+                  SFVec2f             *editSFActiveOffset   (void);
+            const SFVec2f             *getSFActiveOffset    (void) const;
+            const SFUnrecUIDrawObjectCanvasPtr *getSFDrawObject     (void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFDrawObject     (void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFActiveDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFActiveDrawObject(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFFocusedDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFFocusedDrawObject(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFRolloverDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFRolloverDrawObject(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFDisabledDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFDisabledDrawObject(void);
 
-           SFVec2f             *editSFAlignment      (void);
-     const SFVec2f             *getSFAlignment      (void) const;
+                  SFUInt32            *editSFDrawObjectToTextAlignment(void);
+            const SFUInt32            *getSFDrawObjectToTextAlignment (void) const;
 
-           SFBool              *editSFEnableActionOnMouseDownTime(void);
-     const SFBool              *getSFEnableActionOnMouseDownTime(void) const;
-
-           SFTime              *editSFActionOnMouseDownRate(void);
-     const SFTime              *getSFActionOnMouseDownRate(void) const;
-
-           SFVec2f             *editSFActiveOffset   (void);
-     const SFVec2f             *getSFActiveOffset   (void) const;
-
-           SFUIDrawObjectCanvasPtr *editSFDrawObject     (void);
-     const SFUIDrawObjectCanvasPtr *getSFDrawObject     (void) const;
-
-           SFUIDrawObjectCanvasPtr *editSFActiveDrawObject(void);
-     const SFUIDrawObjectCanvasPtr *getSFActiveDrawObject(void) const;
-
-           SFUIDrawObjectCanvasPtr *editSFFocusedDrawObject(void);
-     const SFUIDrawObjectCanvasPtr *getSFFocusedDrawObject(void) const;
-
-           SFUIDrawObjectCanvasPtr *editSFRolloverDrawObject(void);
-     const SFUIDrawObjectCanvasPtr *getSFRolloverDrawObject(void) const;
-
-           SFUIDrawObjectCanvasPtr *editSFDisabledDrawObject(void);
-     const SFUIDrawObjectCanvasPtr *getSFDisabledDrawObject(void) const;
-
-           SFUInt32            *editSFDrawObjectToTextAlignment(void);
-     const SFUInt32            *getSFDrawObjectToTextAlignment(void) const;
-
-           SFReal32            *editSFDrawObjectToTextPadding(void);
-     const SFReal32            *getSFDrawObjectToTextPadding(void) const;
+                  SFReal32            *editSFDrawObjectToTextPadding(void);
+            const SFReal32            *getSFDrawObjectToTextPadding (void) const;
 
 
-           UIFontPtr           &editFont           (void);
-     const UIFontPtr           &getFont           (void) const;
+                  UIFont * getFont           (void) const;
 
-           std::string         &editText           (void);
-     const std::string         &getText           (void) const;
+                  std::string         &editText           (void);
+            const std::string         &getText            (void) const;
 
-           BorderPtr           &editActiveBorder   (void);
-     const BorderPtr           &getActiveBorder   (void) const;
+                  Border * getActiveBorder   (void) const;
 
-           LayerPtr            &editActiveBackground(void);
-     const LayerPtr            &getActiveBackground(void) const;
+                  Layer * getActiveBackground(void) const;
 
-           LayerPtr            &editActiveForeground(void);
-     const LayerPtr            &getActiveForeground(void) const;
+                  Layer * getActiveForeground(void) const;
 
-           Color4f             &editActiveTextColor(void);
-     const Color4f             &getActiveTextColor(void) const;
+                  Color4f             &editActiveTextColor(void);
+            const Color4f             &getActiveTextColor (void) const;
 
-           Color4f             &editFocusedTextColor(void);
-     const Color4f             &getFocusedTextColor(void) const;
+                  Color4f             &editFocusedTextColor(void);
+            const Color4f             &getFocusedTextColor (void) const;
 
-           Color4f             &editRolloverTextColor(void);
-     const Color4f             &getRolloverTextColor(void) const;
+                  Color4f             &editRolloverTextColor(void);
+            const Color4f             &getRolloverTextColor (void) const;
 
-           Color4f             &editDisabledTextColor(void);
-     const Color4f             &getDisabledTextColor(void) const;
+                  Color4f             &editDisabledTextColor(void);
+            const Color4f             &getDisabledTextColor (void) const;
 
-           Color4f             &editTextColor      (void);
-     const Color4f             &getTextColor      (void) const;
+                  Color4f             &editTextColor      (void);
+            const Color4f             &getTextColor       (void) const;
 
-           Vec2f               &editAlignment      (void);
-     const Vec2f               &getAlignment      (void) const;
+                  Vec2f               &editAlignment      (void);
+            const Vec2f               &getAlignment       (void) const;
 
-           bool                &editEnableActionOnMouseDownTime(void);
-     const bool                &getEnableActionOnMouseDownTime(void) const;
+                  bool                &editEnableActionOnMouseDownTime(void);
+                  bool                 getEnableActionOnMouseDownTime (void) const;
 
-           Time                &editActionOnMouseDownRate(void);
-     const Time                &getActionOnMouseDownRate(void) const;
+                  Time                &editActionOnMouseDownRate(void);
+            const Time                &getActionOnMouseDownRate (void) const;
 
-           Vec2f               &editActiveOffset   (void);
-     const Vec2f               &getActiveOffset   (void) const;
+                  Vec2f               &editActiveOffset   (void);
+            const Vec2f               &getActiveOffset    (void) const;
 
-           UIDrawObjectCanvasPtr &editDrawObject     (void);
-     const UIDrawObjectCanvasPtr &getDrawObject     (void) const;
+                  UIDrawObjectCanvas * getDrawObject     (void) const;
 
-           UIDrawObjectCanvasPtr &editActiveDrawObject(void);
-     const UIDrawObjectCanvasPtr &getActiveDrawObject(void) const;
+                  UIDrawObjectCanvas * getActiveDrawObject(void) const;
 
-           UIDrawObjectCanvasPtr &editFocusedDrawObject(void);
-     const UIDrawObjectCanvasPtr &getFocusedDrawObject(void) const;
+                  UIDrawObjectCanvas * getFocusedDrawObject(void) const;
 
-           UIDrawObjectCanvasPtr &editRolloverDrawObject(void);
-     const UIDrawObjectCanvasPtr &getRolloverDrawObject(void) const;
+                  UIDrawObjectCanvas * getRolloverDrawObject(void) const;
 
-           UIDrawObjectCanvasPtr &editDisabledDrawObject(void);
-     const UIDrawObjectCanvasPtr &getDisabledDrawObject(void) const;
+                  UIDrawObjectCanvas * getDisabledDrawObject(void) const;
 
-           UInt32              &editDrawObjectToTextAlignment(void);
-     const UInt32              &getDrawObjectToTextAlignment(void) const;
+                  UInt32              &editDrawObjectToTextAlignment(void);
+                  UInt32               getDrawObjectToTextAlignment (void) const;
 
-           Real32              &editDrawObjectToTextPadding(void);
-     const Real32              &getDrawObjectToTextPadding(void) const;
+                  Real32              &editDrawObjectToTextPadding(void);
+                  Real32               getDrawObjectToTextPadding (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setFont           ( const UIFontPtr &value );
-     void setText           ( const std::string &value );
-     void setActiveBorder   ( const BorderPtr &value );
-     void setActiveBackground( const LayerPtr &value );
-     void setActiveForeground( const LayerPtr &value );
-     void setActiveTextColor( const Color4f &value );
-     void setFocusedTextColor( const Color4f &value );
-     void setRolloverTextColor( const Color4f &value );
-     void setDisabledTextColor( const Color4f &value );
-     void setTextColor      ( const Color4f &value );
-     void setAlignment      ( const Vec2f &value );
-     void setEnableActionOnMouseDownTime( const bool &value );
-     void setActionOnMouseDownRate( const Time &value );
-     void setActiveOffset   ( const Vec2f &value );
-     void setDrawObject     ( const UIDrawObjectCanvasPtr &value );
-     void setActiveDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setFocusedDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setRolloverDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setDisabledDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setDrawObjectToTextAlignment( const UInt32 &value );
-     void setDrawObjectToTextPadding( const Real32 &value );
+            void setFont           (UIFont * const value);
+            void setText           (const std::string &value);
+            void setActiveBorder   (Border * const value);
+            void setActiveBackground(Layer * const value);
+            void setActiveForeground(Layer * const value);
+            void setActiveTextColor(const Color4f &value);
+            void setFocusedTextColor(const Color4f &value);
+            void setRolloverTextColor(const Color4f &value);
+            void setDisabledTextColor(const Color4f &value);
+            void setTextColor      (const Color4f &value);
+            void setAlignment      (const Vec2f &value);
+            void setEnableActionOnMouseDownTime(const bool value);
+            void setActionOnMouseDownRate(const Time &value);
+            void setActiveOffset   (const Vec2f &value);
+            void setDrawObject     (UIDrawObjectCanvas * const value);
+            void setActiveDrawObject(UIDrawObjectCanvas * const value);
+            void setFocusedDrawObject(UIDrawObjectCanvas * const value);
+            void setRolloverDrawObject(UIDrawObjectCanvas * const value);
+            void setDisabledDrawObject(UIDrawObjectCanvas * const value);
+            void setDrawObjectToTextAlignment(const UInt32 value);
+            void setDrawObjectToTextPadding(const Real32 value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Binary Access                              */
+    /*! \{                                                                 */
+
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -358,68 +393,69 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
 
     virtual const EventProducerType &getProducerType(void) const; 
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
-    /*! \{                                                                 */
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Binary Access                              */
-    /*! \{                                                                 */
-
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  ButtonPtr      create          (void); 
-    static  ButtonPtr      createEmpty     (void); 
+    static  ButtonTransitPtr  create          (void);
+    static  Button           *createEmpty     (void);
+
+    static  ButtonTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  Button            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  ButtonTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUIFontPtr         _sfFont;
-    SFString            _sfText;
-    SFBorderPtr         _sfActiveBorder;
-    SFLayerPtr          _sfActiveBackground;
-    SFLayerPtr          _sfActiveForeground;
-    SFColor4f           _sfActiveTextColor;
-    SFColor4f           _sfFocusedTextColor;
-    SFColor4f           _sfRolloverTextColor;
-    SFColor4f           _sfDisabledTextColor;
-    SFColor4f           _sfTextColor;
-    SFVec2f             _sfAlignment;
-    SFBool              _sfEnableActionOnMouseDownTime;
-    SFTime              _sfActionOnMouseDownRate;
-    SFVec2f             _sfActiveOffset;
-    SFUIDrawObjectCanvasPtr   _sfDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfActiveDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfFocusedDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfRolloverDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfDisabledDrawObject;
-    SFUInt32            _sfDrawObjectToTextAlignment;
-    SFReal32            _sfDrawObjectToTextPadding;
+    SFUnrecUIFontPtr  _sfFont;
+    SFString          _sfText;
+    SFUnrecBorderPtr  _sfActiveBorder;
+    SFUnrecLayerPtr   _sfActiveBackground;
+    SFUnrecLayerPtr   _sfActiveForeground;
+    SFColor4f         _sfActiveTextColor;
+    SFColor4f         _sfFocusedTextColor;
+    SFColor4f         _sfRolloverTextColor;
+    SFColor4f         _sfDisabledTextColor;
+    SFColor4f         _sfTextColor;
+    SFVec2f           _sfAlignment;
+    SFBool            _sfEnableActionOnMouseDownTime;
+    SFTime            _sfActionOnMouseDownRate;
+    SFVec2f           _sfActiveOffset;
+    SFUnrecUIDrawObjectCanvasPtr _sfDrawObject;
+    SFUnrecUIDrawObjectCanvasPtr _sfActiveDrawObject;
+    SFUnrecUIDrawObjectCanvasPtr _sfFocusedDrawObject;
+    SFUnrecUIDrawObjectCanvasPtr _sfRolloverDrawObject;
+    SFUnrecUIDrawObjectCanvasPtr _sfDisabledDrawObject;
+    SFUInt32          _sfDrawObjectToTextAlignment;
+    SFReal32          _sfDrawObjectToTextPadding;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -434,69 +470,122 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ButtonBase(void); 
+    virtual ~ButtonBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const Button *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleFont            (void) const;
+    EditFieldHandlePtr editHandleFont           (void);
+    GetFieldHandlePtr  getHandleText            (void) const;
+    EditFieldHandlePtr editHandleText           (void);
+    GetFieldHandlePtr  getHandleActiveBorder    (void) const;
+    EditFieldHandlePtr editHandleActiveBorder   (void);
+    GetFieldHandlePtr  getHandleActiveBackground (void) const;
+    EditFieldHandlePtr editHandleActiveBackground(void);
+    GetFieldHandlePtr  getHandleActiveForeground (void) const;
+    EditFieldHandlePtr editHandleActiveForeground(void);
+    GetFieldHandlePtr  getHandleActiveTextColor (void) const;
+    EditFieldHandlePtr editHandleActiveTextColor(void);
+    GetFieldHandlePtr  getHandleFocusedTextColor (void) const;
+    EditFieldHandlePtr editHandleFocusedTextColor(void);
+    GetFieldHandlePtr  getHandleRolloverTextColor (void) const;
+    EditFieldHandlePtr editHandleRolloverTextColor(void);
+    GetFieldHandlePtr  getHandleDisabledTextColor (void) const;
+    EditFieldHandlePtr editHandleDisabledTextColor(void);
+    GetFieldHandlePtr  getHandleTextColor       (void) const;
+    EditFieldHandlePtr editHandleTextColor      (void);
+    GetFieldHandlePtr  getHandleAlignment       (void) const;
+    EditFieldHandlePtr editHandleAlignment      (void);
+    GetFieldHandlePtr  getHandleEnableActionOnMouseDownTime (void) const;
+    EditFieldHandlePtr editHandleEnableActionOnMouseDownTime(void);
+    GetFieldHandlePtr  getHandleActionOnMouseDownRate (void) const;
+    EditFieldHandlePtr editHandleActionOnMouseDownRate(void);
+    GetFieldHandlePtr  getHandleActiveOffset    (void) const;
+    EditFieldHandlePtr editHandleActiveOffset   (void);
+    GetFieldHandlePtr  getHandleDrawObject      (void) const;
+    EditFieldHandlePtr editHandleDrawObject     (void);
+    GetFieldHandlePtr  getHandleActiveDrawObject (void) const;
+    EditFieldHandlePtr editHandleActiveDrawObject(void);
+    GetFieldHandlePtr  getHandleFocusedDrawObject (void) const;
+    EditFieldHandlePtr editHandleFocusedDrawObject(void);
+    GetFieldHandlePtr  getHandleRolloverDrawObject (void) const;
+    EditFieldHandlePtr editHandleRolloverDrawObject(void);
+    GetFieldHandlePtr  getHandleDisabledDrawObject (void) const;
+    EditFieldHandlePtr editHandleDisabledDrawObject(void);
+    GetFieldHandlePtr  getHandleDrawObjectToTextAlignment (void) const;
+    EditFieldHandlePtr editHandleDrawObjectToTextAlignment(void);
+    GetFieldHandlePtr  getHandleDrawObjectToTextPadding (void) const;
+    EditFieldHandlePtr editHandleDrawObjectToTextPadding(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ButtonBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      ButtonBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      ButtonBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
+    /*---------------------------------------------------------------------*/
     static MethodDescription   *_methodDesc[];
     static EventProducerType _producerType;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const ButtonBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef ButtonBase *ButtonBaseP;
-
-typedef osgIF<ButtonBase::isNodeCore,
-              CoredNodePtr<Button>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ButtonNodePtr;
-
-typedef RefPtr<ButtonPtr> ButtonRefPtr;
 
 OSG_END_NAMESPACE
 

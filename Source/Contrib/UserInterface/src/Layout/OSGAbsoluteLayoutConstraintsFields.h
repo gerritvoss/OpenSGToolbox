@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGLayoutConstraintsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class AbsoluteLayoutConstraints;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! AbsoluteLayoutConstraintsPtr
+OSG_GEN_CONTAINERPTR(AbsoluteLayoutConstraints);
 
-typedef FCPtr<LayoutConstraintsPtr, AbsoluteLayoutConstraints> AbsoluteLayoutConstraintsPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<AbsoluteLayoutConstraintsPtr> : 
-    public FieldTraitsRecurseMapper<AbsoluteLayoutConstraintsPtr, true>
+struct FieldTraits<AbsoluteLayoutConstraints *> :
+    public FieldTraitsFCPtrBase<AbsoluteLayoutConstraints *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFAbsoluteLayoutConstraintsPtr"; }
-    static const char *getMName(void) { return "MFAbsoluteLayoutConstraintsPtr"; }
+    typedef FieldTraits<AbsoluteLayoutConstraints *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFAbsoluteLayoutConstraintsPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFAbsoluteLayoutConstraintsPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<AbsoluteLayoutConstraintsPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<AbsoluteLayoutConstraints *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecAbsoluteLayoutConstraintsPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<AbsoluteLayoutConstraints *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecAbsoluteLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbsoluteLayoutConstraints *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakAbsoluteLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbsoluteLayoutConstraints *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdAbsoluteLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbsoluteLayoutConstraints *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecAbsoluteLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbsoluteLayoutConstraints *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecAbsoluteLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbsoluteLayoutConstraints *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakAbsoluteLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbsoluteLayoutConstraints *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdAbsoluteLayoutConstraintsPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<AbsoluteLayoutConstraints *,
+                      RecordedRefCountPolicy  > SFRecAbsoluteLayoutConstraintsPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<AbsoluteLayoutConstraints *,
+                      UnrecordedRefCountPolicy> SFUnrecAbsoluteLayoutConstraintsPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<AbsoluteLayoutConstraints *,
+                      WeakRefCountPolicy      > SFWeakAbsoluteLayoutConstraintsPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<AbsoluteLayoutConstraints *,
+                      NoRefCountPolicy        > SFUncountedAbsoluteLayoutConstraintsPtr;
 
-typedef SField<AbsoluteLayoutConstraintsPtr> SFAbsoluteLayoutConstraintsPtr;
-#endif
 
-#ifndef OSG_COMPILEABSOLUTELAYOUTCONSTRAINTSINST
-OSG_DLLEXPORT_DECL1(SField, AbsoluteLayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<AbsoluteLayoutConstraints *,
+                      RecordedRefCountPolicy  > MFRecAbsoluteLayoutConstraintsPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<AbsoluteLayoutConstraints *,
+                      UnrecordedRefCountPolicy> MFUnrecAbsoluteLayoutConstraintsPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<AbsoluteLayoutConstraints *,
+                      WeakRefCountPolicy      > MFWeakAbsoluteLayoutConstraintsPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<AbsoluteLayoutConstraints *,
+                      NoRefCountPolicy        > MFUncountedAbsoluteLayoutConstraintsPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<AbsoluteLayoutConstraintsPtr> MFAbsoluteLayoutConstraintsPtr;
-#endif
 
-#ifndef OSG_COMPILEABSOLUTELAYOUTCONSTRAINTSINST
-OSG_DLLEXPORT_DECL1(MField, AbsoluteLayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecAbsoluteLayoutConstraintsPtr : 
+    public PointerSField<AbsoluteLayoutConstraints *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecAbsoluteLayoutConstraintsPtr : 
+    public PointerSField<AbsoluteLayoutConstraints *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakAbsoluteLayoutConstraintsPtr :
+    public PointerSField<AbsoluteLayoutConstraints *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedAbsoluteLayoutConstraintsPtr :
+    public PointerSField<AbsoluteLayoutConstraints *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecAbsoluteLayoutConstraintsPtr :
+    public PointerMField<AbsoluteLayoutConstraints *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecAbsoluteLayoutConstraintsPtr :
+    public PointerMField<AbsoluteLayoutConstraints *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakAbsoluteLayoutConstraintsPtr :
+    public PointerMField<AbsoluteLayoutConstraints *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedAbsoluteLayoutConstraintsPtr :
+    public PointerMField<AbsoluteLayoutConstraints *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGABSOLUTELAYOUTCONSTRAINTSFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGABSOLUTELAYOUTCONSTRAINTSFIELDS_H_ */

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,28 +40,23 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGTitlebar.h"
-#include "Component/Container/Window/OSGInternalWindow.h"
-#include "Component/Button/OSGButton.h"
-#include "Component/Text/OSGLabel.h"
-#include "Util//OSGUIDrawUtils.h"
+#include "OSGInternalWindow.h"
+#include "OSGButton.h"
+#include "OSGLabel.h"
+#include "OSGUIDrawUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::Titlebar
-A UI Titlebar.         
-*/
+// Documentation for this class is emitted in the
+// OSGTitlebarBase.cpp file.
+// To modify it, please change the .fcd file (OSGTitlebar.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -71,8 +66,13 @@ A UI Titlebar.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void Titlebar::initMethod (void)
+void Titlebar::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -82,141 +82,128 @@ void Titlebar::initMethod (void)
 
 void Titlebar::setTitle(const std::string& Title)
 {
-	if(getTitleLabel() != NullFC)
-	{
-		beginEditCP(getTitleLabel(), Label::TextFieldMask);
-			getTitleLabel()->setText(Title);
-		endEditCP(getTitleLabel(), Label::TextFieldMask);
-	}
+    if(getTitleLabel() != NULL)
+    {
+        getTitleLabel()->setText(Title);
+    }
 }
 
 std::string Titlebar::getTitle(void) const
 {
-	if(getTitleLabel() != NullFC)
-	{
-		return getTitleLabel()->getText();
-	}
-	else
-	{
-		return std::string("");
-	}
+    if(getTitleLabel() != NULL)
+    {
+        return getTitleLabel()->getText();
+    }
+    else
+    {
+        return std::string("");
+    }
 }
 
 void Titlebar::updateLayout(void)
 {
-	Pnt2f InsetsTopLeft, InsetsBottomRight;
-	getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
-	Vec2f InsetsSize(InsetsBottomRight - InsetsTopLeft);
+    Pnt2f InsetsTopLeft, InsetsBottomRight;
+    getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
+    Vec2f InsetsSize(InsetsBottomRight - InsetsTopLeft);
 
-	Pnt2f FrameIconPos(InsetsTopLeft);
-	Vec2f FrameIconSize(0.0f,0.0f);
-	if(getFrameIcon() != NullFC)
-	{
-		FrameIconSize.setValues( getFrameIcon()->getPreferredSize().x(), InsetsSize.y() );
-		beginEditCP(getFrameIcon(), Component::PositionFieldMask | Component::SizeFieldMask);
-			getFrameIcon()->setPosition(FrameIconPos);
-			getFrameIcon()->setSize(FrameIconSize);
-		endEditCP(getFrameIcon(), Component::PositionFieldMask | Component::SizeFieldMask);
-	}
-	Pnt2f CloseButtonPos(InsetsBottomRight.x(), InsetsTopLeft.y()+1);
-	Vec2f CloseButtonSize;
-	if(getDrawClose() && getCloseButton() != NullFC)
-	{
-		CloseButtonSize.setValues(getCloseButton()->getPreferredSize().x(), InsetsSize.y()-2);
-		CloseButtonPos -= Vec2f(CloseButtonSize.x(),0) + Vec2f(3,0);
-		beginEditCP(getCloseButton(), Component::PositionFieldMask | Component::SizeFieldMask);
-			getCloseButton()->setPosition(CloseButtonPos);
-			getCloseButton()->setSize(CloseButtonSize);
-		endEditCP(getCloseButton(), Component::PositionFieldMask | Component::SizeFieldMask);
-	}
-	Pnt2f MaximizeButtonPos(CloseButtonPos);
-	Vec2f MaximizeButtonSize;
-	if(getDrawMaximize() && getMaximizeButton() != NullFC)
-	{
-		MaximizeButtonSize.setValues(getMaximizeButton()->getPreferredSize().x(), InsetsSize.y()-2);
-		MaximizeButtonPos -= Vec2f(MaximizeButtonSize.x(),0) + Vec2f(3,0);
-		beginEditCP(getMaximizeButton(), Component::PositionFieldMask | Component::SizeFieldMask);
-			getMaximizeButton()->setPosition(MaximizeButtonPos);
-			getMaximizeButton()->setSize(MaximizeButtonSize);
-		endEditCP(getMaximizeButton(), Component::PositionFieldMask | Component::SizeFieldMask);
-	}
-	Pnt2f IconifyButtonPos(MaximizeButtonPos);
-	Vec2f IconifyButtonSize;
-	if(getDrawIconify() && getIconifyButton() != NullFC)
-	{
-		IconifyButtonSize.setValues(getIconifyButton()->getPreferredSize().x(), InsetsSize.y()-2);
-		IconifyButtonPos -= Vec2f(IconifyButtonSize.x(),0) + Vec2f(3,0);
-		beginEditCP(getIconifyButton(), Component::PositionFieldMask | Component::SizeFieldMask);
-			getIconifyButton()->setPosition(IconifyButtonPos);
-			getIconifyButton()->setSize(IconifyButtonSize);
-		endEditCP(getIconifyButton(), Component::PositionFieldMask | Component::SizeFieldMask);
-	}
-	Pnt2f TitleLabelPos(FrameIconPos + FrameIconSize);
-	Vec2f TitleLabelSize;
-	if(getTitleLabel() != NullFC)
-	{
-		TitleLabelSize.setValues(IconifyButtonPos.x()-1-FrameIconPos.x()-FrameIconSize.x(), InsetsSize.y());
-		beginEditCP(getTitleLabel(), Component::PositionFieldMask | Component::SizeFieldMask);
-			getTitleLabel()->setPosition(TitleLabelPos);
-			getTitleLabel()->setSize(TitleLabelSize);
-		endEditCP(getTitleLabel(), Component::PositionFieldMask | Component::SizeFieldMask);
-	}
+    Pnt2f FrameIconPos(InsetsTopLeft);
+    Vec2f FrameIconSize(0.0f,0.0f);
+    if(getFrameIcon() != NULL)
+    {
+        FrameIconSize.setValues( getFrameIcon()->getPreferredSize().x(), InsetsSize.y() );
+        getFrameIcon()->setPosition(FrameIconPos);
+        getFrameIcon()->setSize(FrameIconSize);
+    }
+    Pnt2f CloseButtonPos(InsetsBottomRight.x(), InsetsTopLeft.y()+1);
+    Vec2f CloseButtonSize;
+    if(getDrawClose() && getCloseButton() != NULL)
+    {
+        CloseButtonSize.setValues(getCloseButton()->getPreferredSize().x(), InsetsSize.y()-2);
+        CloseButtonPos -= Vec2f(CloseButtonSize.x(),0) + Vec2f(3,0);
+        getCloseButton()->setPosition(CloseButtonPos);
+        getCloseButton()->setSize(CloseButtonSize);
+    }
+    Pnt2f MaximizeButtonPos(CloseButtonPos);
+    Vec2f MaximizeButtonSize;
+    if(getDrawMaximize() && getMaximizeButton() != NULL)
+    {
+        MaximizeButtonSize.setValues(getMaximizeButton()->getPreferredSize().x(), InsetsSize.y()-2);
+        MaximizeButtonPos -= Vec2f(MaximizeButtonSize.x(),0) + Vec2f(3,0);
+        getMaximizeButton()->setPosition(MaximizeButtonPos);
+        getMaximizeButton()->setSize(MaximizeButtonSize);
+    }
+    Pnt2f IconifyButtonPos(MaximizeButtonPos);
+    Vec2f IconifyButtonSize;
+    if(getDrawIconify() && getIconifyButton() != NULL)
+    {
+        IconifyButtonSize.setValues(getIconifyButton()->getPreferredSize().x(), InsetsSize.y()-2);
+        IconifyButtonPos -= Vec2f(IconifyButtonSize.x(),0) + Vec2f(3,0);
+        getIconifyButton()->setPosition(IconifyButtonPos);
+        getIconifyButton()->setSize(IconifyButtonSize);
+    }
+    Pnt2f TitleLabelPos(FrameIconPos + FrameIconSize);
+    Vec2f TitleLabelSize;
+    if(getTitleLabel() != NULL)
+    {
+        TitleLabelSize.setValues(IconifyButtonPos.x()-1-FrameIconPos.x()-FrameIconSize.x(), InsetsSize.y());
+        getTitleLabel()->setPosition(TitleLabelPos);
+        getTitleLabel()->setSize(TitleLabelSize);
+    }
 }
 
 void Titlebar::updateClipBounds(void)
 {
-	Pnt2f TopLeft, BottomRight;
-	if(getParentContainer() == NullFC)
-	{
-		//If I have no parent container use my bounds
-		getBounds(TopLeft, BottomRight);
-	}
-	else
-	{
-		//Get the intersection of:
-		     //My Bounds
-		     //My Parent Containers Clip Bounds
-		     //My Parent Containers Inset Bounds
+    Pnt2f TopLeft, BottomRight;
+    if(getParentContainer() == NULL)
+    {
+        //If I have no parent container use my bounds
+        getBounds(TopLeft, BottomRight);
+    }
+    else
+    {
+        //Get the intersection of:
+        //My Bounds
+        //My Parent Containers Clip Bounds
+        //My Parent Containers Inset Bounds
         Pnt2f MyTopLeft,MyBottomRight;
         getBounds(MyTopLeft,MyBottomRight);
 
-		//Update my Parent Container's Clip Bounds
-		//Container::Ptr::dcast(getParentContainer())->updateClipBounds();
+        //Update my Parent Container's Clip Bounds
+        //dynamic_pointer_cast<Container>(getParentContainer())->updateClipBounds();
 
-		//Get Parent Container's Clip Bounds
-		Pnt2f ContainerClipTopLeft, ContainerClipBottomRight;
-		InternalWindow::Ptr::dcast(getParentWindow())->getClipBounds(ContainerClipTopLeft,ContainerClipBottomRight);
-		
+        //Get Parent Container's Clip Bounds
+        Pnt2f ContainerClipTopLeft, ContainerClipBottomRight;
+        dynamic_cast<InternalWindow*>(getParentWindow())->getClipBounds(ContainerClipTopLeft,ContainerClipBottomRight);
+
         //Parent Container's Clip Bounds are in the Parent Container's Coordinate space
         //We need to convert them to this Components Coordinate space
         ContainerClipTopLeft -= Vec2f(getPosition());
-		ContainerClipBottomRight -= Vec2f(getPosition());
+        ContainerClipBottomRight -= Vec2f(getPosition());
 
-		//Get Parent Container's Titlebar Bounds
-		Pnt2f ContainerInsetTopLeft, ContainerInsetBottomRight;
-		InternalWindow::Ptr::dcast(getParentWindow())->getTitlebarBounds(ContainerInsetTopLeft, ContainerInsetBottomRight);
-		
+        //Get Parent Container's Titlebar Bounds
+        Pnt2f ContainerInsetTopLeft, ContainerInsetBottomRight;
+        dynamic_cast<InternalWindow*>(getParentWindow())->getTitlebarBounds(ContainerInsetTopLeft, ContainerInsetBottomRight);
+
         //Parent Container's Inset Bounds are in the Parent Container's Coordinate space
         //We need to convert them to this Components Coordinate space
         ContainerInsetTopLeft -= Vec2f(getPosition());
-		ContainerInsetBottomRight -= Vec2f(getPosition());
+        ContainerInsetBottomRight -= Vec2f(getPosition());
 
-		//Get the intersection of my bounds with my parent containers clip bounds
-		quadIntersection(MyTopLeft,MyBottomRight,
-			ContainerClipTopLeft,ContainerClipBottomRight,
-			TopLeft, BottomRight);
+        //Get the intersection of my bounds with my parent containers clip bounds
+        quadIntersection(MyTopLeft,MyBottomRight,
+                         ContainerClipTopLeft,ContainerClipBottomRight,
+                         TopLeft, BottomRight);
 
-		quadIntersection(TopLeft,BottomRight,
-			ContainerInsetTopLeft,ContainerInsetBottomRight,
-			TopLeft, BottomRight);
-	}
-	//The Clip Bounds calculated are in my Parent Containers coordinate space
-	//Translate these bounds into my own coordinate space
-	beginEditCP(ComponentPtr(this), Component::ClipBoundsFieldMask);
-		setClipTopLeft(TopLeft);
-		setClipBottomRight(BottomRight);
-	endEditCP(ComponentPtr(this), Component::ClipBoundsFieldMask);
+        quadIntersection(TopLeft,BottomRight,
+                         ContainerInsetTopLeft,ContainerInsetBottomRight,
+                         TopLeft, BottomRight);
+    }
+    //The Clip Bounds calculated are in my Parent Containers coordinate space
+    //Translate these bounds into my own coordinate space
+    setClipTopLeft(TopLeft);
+    setClipBottomRight(BottomRight);
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -231,29 +218,25 @@ Titlebar::Titlebar(void) :
 Titlebar::Titlebar(const Titlebar &source) :
     Inherited(source)
 {
-    if(getIconifyButton() != NullFC)
+    if(getIconifyButton() != NULL)
     {
-        beginEditCP(TitlebarPtr(this), IconifyButtonFieldMask);
-			setIconifyButton(Button::Ptr::dcast(getIconifyButton()->shallowCopy()));
-        endEditCP(TitlebarPtr(this), IconifyButtonFieldMask);
+        FieldContainerUnrecPtr FCCopy(getIconifyButton()->shallowCopy());
+        setIconifyButton(dynamic_pointer_cast<Button>(FCCopy));
     }
-    if(getMaximizeButton() != NullFC)
+    if(getMaximizeButton() != NULL)
     {
-        beginEditCP(TitlebarPtr(this), MaximizeButtonFieldMask);
-			setMaximizeButton(Button::Ptr::dcast(getMaximizeButton()->shallowCopy()));
-        endEditCP(TitlebarPtr(this), MaximizeButtonFieldMask);
+        FieldContainerUnrecPtr FCCopy(getMaximizeButton()->shallowCopy());
+        setMaximizeButton(dynamic_pointer_cast<Button>(FCCopy));
     }
-    if(getCloseButton() != NullFC)
+    if(getCloseButton() != NULL)
     {
-        beginEditCP(TitlebarPtr(this), CloseButtonFieldMask);
-			setCloseButton(Button::Ptr::dcast(getCloseButton()->shallowCopy()));
-        endEditCP(TitlebarPtr(this), CloseButtonFieldMask);
+        FieldContainerUnrecPtr FCCopy(getCloseButton()->shallowCopy());
+        setCloseButton(dynamic_pointer_cast<Button>(FCCopy));
     }
-    if(getTitleLabel() != NullFC)
+    if(getTitleLabel() != NULL)
     {
-        beginEditCP(TitlebarPtr(this), TitleLabelFieldMask);
-			setTitleLabel(Label::Ptr::dcast(getTitleLabel()->shallowCopy()));
-        endEditCP(TitlebarPtr(this), TitleLabelFieldMask);
+        FieldContainerUnrecPtr FCCopy(getTitleLabel()->shallowCopy());
+        setTitleLabel(dynamic_pointer_cast<Label>(FCCopy));
     }
 }
 
@@ -263,111 +246,77 @@ Titlebar::~Titlebar(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void Titlebar::changed(BitVector whichField, UInt32 origin)
+void Titlebar::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
-	
-	
+    Inherited::changed(whichField, origin, details);
 
-	if( (whichField & FrameIconFieldMask) ||
-		(whichField & IconifyButtonFieldMask) ||
-		(whichField & MaximizeButtonFieldMask) ||
-		(whichField & CloseButtonFieldMask) ||
-		(whichField & TitleLabelFieldMask) ||
-		(whichField & DrawCloseFieldMask) ||
-		(whichField & DrawMaximizeFieldMask) ||
-		(whichField & DrawIconifyFieldMask)
-		)
-	{
-		beginEditCP(TitlebarPtr(this), Titlebar::ChildrenFieldMask);
-			getChildren().clear();
-			if(getFrameIcon() != NullFC)
-			{
-				getChildren().push_back(getFrameIcon());
-			}
-			if(getTitleLabel() != NullFC)
-			{
-				getChildren().push_back(getTitleLabel());
-			}
-			if(getDrawIconify() && getIconifyButton() != NullFC)
-			{
-				getChildren().push_back(getIconifyButton());
-			}
-			if(getDrawMaximize() && getMaximizeButton() != NullFC)
-			{
-				getChildren().push_back(getMaximizeButton());
-			}
-			if(getDrawClose() && getCloseButton() != NullFC)
-			{
-				getChildren().push_back(getCloseButton());
-			}
-		endEditCP(TitlebarPtr(this), Titlebar::ChildrenFieldMask);
-	}
+    if( (whichField & FrameIconFieldMask) ||
+        (whichField & IconifyButtonFieldMask) ||
+        (whichField & MaximizeButtonFieldMask) ||
+        (whichField & CloseButtonFieldMask) ||
+        (whichField & TitleLabelFieldMask) ||
+        (whichField & DrawCloseFieldMask) ||
+        (whichField & DrawMaximizeFieldMask) ||
+        (whichField & DrawIconifyFieldMask)
+      )
+    {
+        clearChildren();
+        if(getFrameIcon() != NULL)
+        {
+            pushToChildren(getFrameIcon());
+        }
+        if(getTitleLabel() != NULL)
+        {
+            pushToChildren(getTitleLabel());
+        }
+        if(getDrawIconify() && getIconifyButton() != NULL)
+        {
+            pushToChildren(getIconifyButton());
+        }
+        if(getDrawMaximize() && getMaximizeButton() != NULL)
+        {
+            pushToChildren(getMaximizeButton());
+        }
+        if(getDrawClose() && getCloseButton() != NULL)
+        {
+            pushToChildren(getCloseButton());
+        }
+    }
 
-	if(((whichField & IconifyButtonFieldMask) ||
-		(whichField & ParentWindowFieldMask)) &&
-		getParentWindow() != NullFC &&
-		getIconifyButton() != NullFC &&
-		getParentWindow()->getIconable() != getIconifyButton()->getEnabled())
-	{
-		beginEditCP(getIconifyButton(), Button::EnabledFieldMask);
-			getIconifyButton()->setEnabled(getParentWindow()->getIconable());
-		endEditCP(getIconifyButton(), Button::EnabledFieldMask);
-	}
-	
-	if(((whichField & MaximizeButtonFieldMask) ||
-		(whichField & ParentWindowFieldMask)) &&
-		getParentWindow() != NullFC &&
-		getMaximizeButton() != NullFC &&
-		getParentWindow()->getMaximizable() != getMaximizeButton()->getEnabled())
-	{
-		beginEditCP(getMaximizeButton(), Button::EnabledFieldMask);
-			getMaximizeButton()->setEnabled(getParentWindow()->getMaximizable());
-		endEditCP(getMaximizeButton(), Button::EnabledFieldMask);
-	}
-	
-	if(((whichField & CloseButtonFieldMask) ||
-		(whichField & ParentWindowFieldMask)) &&
-		getParentWindow() != NullFC &&
-		getCloseButton() != NullFC &&
-		getParentWindow()->getClosable() != getCloseButton()->getEnabled())
-	{
-		beginEditCP(getCloseButton(), Button::EnabledFieldMask);
-			getCloseButton()->setEnabled(getParentWindow()->getClosable());
-		endEditCP(getCloseButton(), Button::EnabledFieldMask);
-	}
+    if(((whichField & IconifyButtonFieldMask) ||
+        (whichField & ParentWindowFieldMask)) &&
+       getParentWindow() != NULL &&
+       getIconifyButton() != NULL &&
+       getParentWindow()->getIconable() != getIconifyButton()->getEnabled())
+    {
+        getIconifyButton()->setEnabled(getParentWindow()->getIconable());
+    }
+
+    if(((whichField & MaximizeButtonFieldMask) ||
+        (whichField & ParentWindowFieldMask)) &&
+       getParentWindow() != NULL &&
+       getMaximizeButton() != NULL &&
+       getParentWindow()->getMaximizable() != getMaximizeButton()->getEnabled())
+    {
+        getMaximizeButton()->setEnabled(getParentWindow()->getMaximizable());
+    }
+
+    if(((whichField & CloseButtonFieldMask) ||
+        (whichField & ParentWindowFieldMask)) &&
+       getParentWindow() != NULL &&
+       getCloseButton() != NULL &&
+       getParentWindow()->getClosable() != getCloseButton()->getEnabled())
+    {
+        getCloseButton()->setEnabled(getParentWindow()->getClosable());
+    }
 }
 
-void Titlebar::dump(      UInt32    , 
+void Titlebar::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump Titlebar NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGTITLEBARBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTITLEBARBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTITLEBARFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

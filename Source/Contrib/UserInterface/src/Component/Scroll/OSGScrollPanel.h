@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,56 +42,80 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
-#include "Event/OSGChangeListener.h"
-#include "Event/OSGAdjustmentListener.h"
 #include "OSGScrollPanelBase.h"
+#include "OSGAdjustmentListener.h"
+#include "OSGChangeListener.h"
+#include "OSGScrollPanelBase.h"
+#include "OSGButton.h"
+#include "OSGDefaultBoundedRangeModel.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ScrollPanel class. See \ref 
-           PageUserInterfaceScrollPanel for a description.
+/*! \brief ScrollPanel class. See \ref
+           PageContribUserInterfaceScrollPanel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanel : public ScrollPanelBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ScrollPanel : public ScrollPanelBase
 {
-  private:
-
-    typedef ScrollPanelBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
-      enum ScrollBarDisplayPolicy{SCROLLBAR_AS_NEEDED=0,SCROLLBAR_AS_ALWAYS,SCROLLBAR_AS_NEVER};
-      enum ResizePolicy{NO_RESIZE=0,RESIZE_TO_VIEW};
-      enum HorizontalAlign{SCROLLBAR_ALIGN_TOP=0,SCROLLBAR_ALIGN_BOTTOM};
-      enum VerticalAlign{SCROLLBAR_ALIGN_LEFT=0,SCROLLBAR_ALIGN_RIGHT};
+    enum ScrollBarDisplayPolicy
+    {
+        SCROLLBAR_AS_NEEDED = 0,
+        SCROLLBAR_AS_ALWAYS = 1,
+        SCROLLBAR_AS_NEVER  = 2
+    };
+
+    enum ResizePolicy
+    {
+        NO_RESIZE      = 0,
+        RESIZE_TO_VIEW = 1
+    };
+
+    enum HorizontalAlign
+    {
+        SCROLLBAR_ALIGN_TOP    = 0,
+        SCROLLBAR_ALIGN_BOTTOM = 1
+    };
+
+    enum VerticalAlign
+    {
+        SCROLLBAR_ALIGN_LEFT  = 0,
+        SCROLLBAR_ALIGN_RIGHT = 1
+    };
+
+    typedef ScrollPanelBase Inherited;
+    typedef ScrollPanel     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
     
     virtual void updateLayout(void);
 
-    void setViewComponent(ComponentPtr TheComponent);
+    void setViewComponent(ComponentRefPtr TheComponent);
     
 	//Mouse Wheel Events
-    virtual void mouseWheelMoved(const MouseWheelEventPtr e);
+    virtual void mouseWheelMoved(const MouseWheelEventUnrecPtr e);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ScrollPanelBase.
@@ -108,53 +132,65 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanel : public ScrollPanelBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ScrollPanel(void); 
+    virtual ~ScrollPanel(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const ScrollPanel *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
+
     //Listener for getting change updates of the UIViewport
-	class ViewportChangeListener : public ChangeListener
-	{
-	public:
-		ViewportChangeListener(ScrollPanelPtr TheScrollPanel);
-        virtual void stateChanged(const ChangeEventPtr e);
-	private:
-		ScrollPanelPtr _ScrollPanel;
-	};
+    class ViewportChangeListener : public ChangeListener
+    {
+      public:
+        ViewportChangeListener(ScrollPanelRefPtr TheScrollPanel);
+        virtual void stateChanged(const ChangeEventUnrecPtr e);
+      private:
+        ScrollPanelRefPtr _ScrollPanel;
+    };
 
-	friend class ViewportChangeListener;
+    friend class ViewportChangeListener;
 
-	ViewportChangeListener _ViewportChangeListener;
-    
+    ViewportChangeListener _ViewportChangeListener;
+
     //Listener for getting change updates of the UIViewport Range Model
-	class ViewportRangeModelChangeListener : public ChangeListener
-	{
-	public:
-		ViewportRangeModelChangeListener(ScrollPanelPtr TheScrollPanel);
-        virtual void stateChanged(const ChangeEventPtr e);
-	private:
-		ScrollPanelPtr _ScrollPanel;
-	};
+    class ViewportRangeModelChangeListener : public ChangeListener
+    {
+      public:
+        ViewportRangeModelChangeListener(ScrollPanelRefPtr TheScrollPanel);
+        virtual void stateChanged(const ChangeEventUnrecPtr e);
+      private:
+        ScrollPanelRefPtr _ScrollPanel;
+    };
 
-	friend class ViewportRangeModelChangeListener;
+    friend class ViewportRangeModelChangeListener;
 
-	ViewportRangeModelChangeListener _ViewportRangeModelChangeListener;
+    ViewportRangeModelChangeListener _ViewportRangeModelChangeListener;
 
     void updateRangeModels(void);
 
-    ScrollBarPtr getVerticalScrollBar(void);
+    ScrollBarRefPtr getVerticalScrollBar(void);
 
-    ScrollBarPtr getHorizontalScrollBar(void);
+    ScrollBarRefPtr getHorizontalScrollBar(void);
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ScrollPanelBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ScrollPanel &source);
 };
 
@@ -162,9 +198,10 @@ typedef ScrollPanel *ScrollPanelP;
 
 OSG_END_NAMESPACE
 
+#include "OSGUIViewport.h"
+#include "OSGScrollBar.h"
+
 #include "OSGScrollPanelBase.inl"
 #include "OSGScrollPanel.inl"
-
-#define OSGSCROLLPANEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGSCROLLPANEL_H_ */

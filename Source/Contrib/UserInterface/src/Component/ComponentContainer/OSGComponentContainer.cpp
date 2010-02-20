@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,22 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
-#include "OSGContainer.h"
-#include "Util/OSGUIDrawUtils.h"
+#include "OSGComponentContainer.h"
+#include "OSGUIDrawUtils.h"
 
-#include <OpenSG/Input/OSGMouseEvent.h>
+#include "OSGMouseEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::Container
-A UI Container. 
-*/
+// Documentation for this class is emitted in the
+// OSGComponentContainerBase.cpp file.
+// To modify it, please change the .fcd file (OSGComponentContainer.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -68,8 +65,13 @@ A UI Container.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void Container::initMethod (void)
+void ComponentContainer::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -77,9 +79,9 @@ void Container::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-Int32 Container::getChildIndex(ComponentPtr Child)
+Int32 ComponentContainer::getChildIndex(ComponentRefPtr Child)
 {
-    for(Int32 i(0) ; i<getChildren().size() ; ++i)
+    for(Int32 i(0) ; i<getMFChildren()->size() ; ++i)
     {
         if(getChildren(i) == Child)
         {
@@ -89,295 +91,293 @@ Int32 Container::getChildIndex(ComponentPtr Child)
     return -1;
 }
 
-Vec2f Container::getContentRequestedSize(void) const
+Vec2f ComponentContainer::getContentRequestedSize(void) const
 {
-    if(getLayout() == NullFC)
+    if(getLayout() == NULL)
     {
-	    Pnt2f Minimum(0.0f,0.0f), Maximum(0.0f,0.0f);
+        Pnt2f Minimum(0.0f,0.0f), Maximum(0.0f,0.0f);
 
-	    if(getChildren().size() > 0)
-	    {
-		    Pnt2f ChildTopLeft, ChildBottomRight, ChildPosition;
+        if(getMFChildren()->size() > 0)
+        {
+            Pnt2f ChildTopLeft, ChildBottomRight, ChildPosition;
 
-		    getChildren()[0]->getBounds(ChildTopLeft, ChildBottomRight);
-            ChildPosition = getChildren()[0]->getPosition();
+            getChildren(0)->getBounds(ChildTopLeft, ChildBottomRight);
+            ChildPosition = getChildren(0)->getPosition();
             //These bounds are in the Components coordinate space,
             //we need to convert them to this containers coordinate space
-            ChildTopLeft += Vec3f(ChildPosition);
-            ChildBottomRight += Vec3f(ChildPosition);
+            ChildTopLeft += Vec2f(ChildPosition);
+            ChildBottomRight += Vec2f(ChildPosition);
 
-		    Minimum[0] = osgMin(ChildTopLeft.x(), ChildBottomRight.x());
-		    Minimum[1] = osgMin(ChildTopLeft.y(), ChildBottomRight.y());
-		    Maximum[0] = osgMax(ChildTopLeft.x(), ChildBottomRight.x());
-		    Maximum[1] = osgMax(ChildTopLeft.y(), ChildBottomRight.y());
+            Minimum[0] = osgMin(ChildTopLeft.x(), ChildBottomRight.x());
+            Minimum[1] = osgMin(ChildTopLeft.y(), ChildBottomRight.y());
+            Maximum[0] = osgMax(ChildTopLeft.x(), ChildBottomRight.x());
+            Maximum[1] = osgMax(ChildTopLeft.y(), ChildBottomRight.y());
 
-		    for(UInt32 i(1) ; i<getChildren().size() ; ++i)
-		    {
-			    getChildren()[i]->getBounds(ChildTopLeft, ChildBottomRight);
-                ChildPosition = getChildren()[i]->getPosition();
+            for(UInt32 i(1) ; i<getMFChildren()->size() ; ++i)
+            {
+                getChildren(i)->getBounds(ChildTopLeft, ChildBottomRight);
+                ChildPosition = getChildren(i)->getPosition();
                 //These bounds are in the Components coordinate space,
                 //we need to convert them to this containers coordinate space
-                ChildTopLeft += Vec3f(ChildPosition);
-                ChildBottomRight += Vec3f(ChildPosition);
-    			
-			    Minimum[0] = osgMin(osgMin(ChildTopLeft.x(), ChildBottomRight.x()), Minimum.x());
-			    Minimum[1] = osgMin(osgMin(ChildTopLeft.y(), ChildBottomRight.y()), Minimum.y());
-			    Maximum[0] = osgMax(osgMax(ChildTopLeft.x(), ChildBottomRight.x()), Maximum.x());
-			    Maximum[1] = osgMax(osgMax(ChildTopLeft.y(), ChildBottomRight.y()), Maximum.y());
-		    }
-	    }
+                ChildTopLeft += Vec2f(ChildPosition);
+                ChildBottomRight += Vec2f(ChildPosition);
 
-	    return Maximum - Minimum;
+                Minimum[0] = osgMin(osgMin(ChildTopLeft.x(), ChildBottomRight.x()), Minimum.x());
+                Minimum[1] = osgMin(osgMin(ChildTopLeft.y(), ChildBottomRight.y()), Minimum.y());
+                Maximum[0] = osgMax(osgMax(ChildTopLeft.x(), ChildBottomRight.x()), Maximum.x());
+                Maximum[1] = osgMax(osgMax(ChildTopLeft.y(), ChildBottomRight.y()), Maximum.y());
+            }
+        }
+
+        return Maximum - Minimum;
     }
     else
     {
-        return getLayout()->requestedContentsLayoutSize(getChildren(), ComponentPtr(this));
+        return getLayout()->requestedContentsLayoutSize(getMFChildren(), this);
     }
 }
 
-void Container::detachFromEventProducer(void)
+void ComponentContainer::detachFromEventProducer(void)
 {
     Inherited::detachFromEventProducer();
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
     {
-        getChildren()[i]->detachFromEventProducer();
+        getChildren(i)->detachFromEventProducer();
     }
 }
 
-Vec2f Container::getBorderingLength(void) const
+Vec2f ComponentContainer::getBorderingLength(void) const
 {
-	Pnt2f BoundsTopLeft, BoundsBottomRight;
-	Pnt2f InsideInsetsTopLeft, InsideInsetsBottomRight;
-	
-	getBounds(BoundsTopLeft, BoundsBottomRight);
-	getInsideBorderBounds(InsideInsetsTopLeft, InsideInsetsBottomRight);
-	
-	return (BoundsBottomRight - BoundsTopLeft) - (InsideInsetsBottomRight - InsideInsetsTopLeft);
+    Pnt2f BoundsTopLeft, BoundsBottomRight;
+    Pnt2f InsideInsetsTopLeft, InsideInsetsBottomRight;
+
+    getBounds(BoundsTopLeft, BoundsBottomRight);
+    getInsideBorderBounds(InsideInsetsTopLeft, InsideInsetsBottomRight);
+
+    return (BoundsBottomRight - BoundsTopLeft) - (InsideInsetsBottomRight - InsideInsetsTopLeft);
 }
 
-void Container::getInsideInsetsBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
+void ComponentContainer::getInsideInsetsBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
-   getInsideBorderBounds(TopLeft, BottomRight);
+    getInsideBorderBounds(TopLeft, BottomRight);
 
-   TopLeft[0] += getLeftInset();
-   TopLeft[1] += getTopInset();
-   BottomRight[0] -= getRightInset();
-   BottomRight[1] -= getBottomInset();
+    TopLeft[0] += getLeftInset();
+    TopLeft[1] += getTopInset();
+    BottomRight[0] -= getRightInset();
+    BottomRight[1] -= getBottomInset();
 }
 
-void Container::setAllInsets(Real32 Inset)
+void ComponentContainer::setAllInsets(Real32 Inset)
 {
-	beginEditCP(ContainerPtr(this), Container::InsetFieldMask);
-		setInset(Vec4f(Inset,Inset,Inset,Inset));
-	endEditCP(ContainerPtr(this), Container::InsetFieldMask);
+    setInset(Vec4f(Inset,Inset,Inset,Inset));
 }
 
-void Container::setLeftInset ( const Real32 &value )
+void ComponentContainer::setLeftInset ( const Real32 &value )
 {
-	setInset(Vec4f(value, getInset()[1],getInset()[2], getInset()[3]));
+    setInset(Vec4f(value, getInset()[1],getInset()[2], getInset()[3]));
 }
 
-void Container::setRightInset ( const Real32 &value )
+void ComponentContainer::setRightInset ( const Real32 &value )
 {
-	setInset(Vec4f(getInset()[0], value,getInset()[2], getInset()[3]));
+    setInset(Vec4f(getInset()[0], value,getInset()[2], getInset()[3]));
 }
 
-void Container::setTopInset ( const Real32 &value )
+void ComponentContainer::setTopInset ( const Real32 &value )
 {
-	setInset(Vec4f(getInset()[0], getInset()[1],value, getInset()[3]));
+    setInset(Vec4f(getInset()[0], getInset()[1],value, getInset()[3]));
 }
 
-void Container::setBottomInset ( const Real32 &value )
+void ComponentContainer::setBottomInset ( const Real32 &value )
 {
-	setInset(Vec4f(getInset()[0], getInset()[1],getInset()[2], value));
+    setInset(Vec4f(getInset()[0], getInset()[1],getInset()[2], value));
 }
 
 
-void Container::drawInternal(const GraphicsPtr TheGraphics, Real32 Opacity) const
+void ComponentContainer::drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opacity) const
 {
     //Render all of my Child Components
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
     {
-        getChildren()[i]->draw(TheGraphics, Opacity*getOpacity());
+        getChildren(i)->draw(TheGraphics, Opacity*getOpacity());
     }
 }
-void Container::mouseClicked(const MouseEventPtr e)
+void ComponentContainer::mouseClicked(const MouseEventUnrecPtr e)
 {
-	bool isContained;
-    for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
+    bool isContained;
+    for(Int32 i(getMFChildren()->size()-1) ; i>=0 ; --i)
     {
-        isContained = getChildren()[i]->isContained(e->getLocation(), true);
-		checkMouseEnterExit(e,e->getLocation(),getChildren()[i],isContained,e->getViewport());
-		if(isContained)
-		{
-			getChildren()[i]->mouseClicked(e);
-			break;
-		}
-    }
-	Component::mouseClicked(e);
-}
-
-void Container::mouseEntered(const MouseEventPtr e)
-{
-	bool isContained;
-    for(Int32 i(0) ; i<getChildren().size() ; ++i)
-    {
-        isContained = getChildren()[i]->isContained(e->getLocation(), true);
-		checkMouseEnterExit(e,e->getLocation(),getChildren()[i],isContained,e->getViewport());
-    }
-	Component::mouseEntered(e);
-}
-
-void Container::mouseExited(const MouseEventPtr e)
-{
-	bool isContained;
-    for(Int32 i(0) ; i<getChildren().size() ; ++i)
-    {
-        isContained = getChildren()[i]->isContained(e->getLocation(), true);
-		checkMouseEnterExit(e,e->getLocation(),getChildren()[i],isContained,e->getViewport());
-    }
-	Component::mouseExited(e);
-}
-
-void Container::mousePressed(const MouseEventPtr e)
-{
-	bool isContained(false);
-    for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
-    {
-        isContained = getChildren()[i]->isContained(e->getLocation(), true);
-		checkMouseEnterExit(e,e->getLocation(),getChildren()[i],isContained,e->getViewport());
-		if(isContained)
-		{
-			//Give myself temporary focus
-			takeFocus(true);
-			if(!getChildren()[i]->getType().isDerivedFrom(Container::getClassType()))
-			{
-				getChildren()[i]->takeFocus();
-			}
-			getChildren()[i]->mousePressed(e);
-			break;
-		}
-    }
-	if(isContained)
-	{
-		//Remove my temporary focus
-		giveFocus(NullFC, false);
-	}
-	else
-	{
-		//Give myself permenant focus
-		takeFocus();
-	}
-	Component::mousePressed(e);
-}
-
-void Container::mouseReleased(const MouseEventPtr e)
-{
-	bool isContained;
-    for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
-    {
-        isContained = getChildren()[i]->isContained(e->getLocation(), true);
-		checkMouseEnterExit(e,e->getLocation(),getChildren()[i],isContained,e->getViewport());
-		if(isContained)
-		{
-			getChildren()[i]->mouseReleased(e);
-			break;
-		}
-    }
-	Component::mouseReleased(e);
-}
-
-
-void Container::mouseMoved(const MouseEventPtr e)
-{
-	Component::mouseMoved(e);
-
-	bool isContained;
-	bool isContainedAbove(false);
-    for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
-    {
-        isContained = getChildren()[i]->isContained(e->getLocation(), true);
-		checkMouseEnterExit(e,e->getLocation(),getChildren()[i],isContained && !isContainedAbove,e->getViewport());
-		if(isContained && !isContainedAbove)
-		{
-			isContainedAbove = true;
-			getChildren()[i]->mouseMoved(e);
-		}
-    }
-}
-
-void Container::mouseDragged(const MouseEventPtr e)
-{
-	bool isContained;
-	bool isContainedAbove(false);
-    for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
-    {
-        isContained = getChildren()[i]->isContained(e->getLocation(), true);
-		checkMouseEnterExit(e,e->getLocation(),getChildren()[i],isContained && !isContainedAbove,e->getViewport());
-		if(isContained && !isContainedAbove)
-		{
-			isContainedAbove = true;
-			getChildren()[i]->mouseDragged(e);
-		}
-    }
-	Component::mouseDragged(e);
-}
-
-void Container::mouseWheelMoved(const MouseWheelEventPtr e)
-{
-	bool isContained;
-    for(Int32 i(0) ; i<getChildren().size() ; ++i)
-    {
-        isContained = getChildren()[i]->isContained(e->getLocation(), true);
-		checkMouseEnterExit(e,e->getLocation(),getChildren()[i],isContained,e->getViewport());
-		if(isContained)
-		{
-			getChildren()[i]->mouseWheelMoved(e);
+        isContained = getChildren(i)->isContained(e->getLocation(), true);
+        checkMouseEnterExit(e,e->getLocation(),getChildren(i),isContained,e->getViewport());
+        if(isContained)
+        {
+            getChildren(i)->mouseClicked(e);
+            break;
         }
     }
-	Component::mouseWheelMoved(e);
+    Component::mouseClicked(e);
 }
 
-void Container::produceMouseExitOnComponent(const MouseEventPtr e, ComponentPtr Comp)
+void ComponentContainer::mouseEntered(const MouseEventUnrecPtr e)
 {
-	Comp->mouseExited(e);
-}
-
-void Container::produceMouseEnterOnComponent(const MouseEventPtr e, ComponentPtr Comp)
-{
-	Comp->mouseEntered(e);
-}
-
-void Container::checkMouseEnterExit(const InputEventPtr e, const Pnt2f& MouseLocation, ComponentPtr Comp, bool isMouseContained, ViewportPtr TheViewport)
-{
-	//Check if mouse is inside of this component
-	if(!isMouseContained)
-	{
-		if(Comp->getMouseContained())
-		{
-		    //Mouse has exited the component
-			const MouseEventPtr ExitedEvent = MouseEvent::create(e->getSource(), e->getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation,TheViewport);
-			produceMouseExitOnComponent(ExitedEvent, Comp);
-		}
-		Comp->setMouseContained(false);
-	}
-	else
-	{
-		if(!Comp->getMouseContained())
-		{
-			//Mouse has exited the frame
-			const MouseEventPtr EnteredEvent = MouseEvent::create(e->getSource(), e->getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation,TheViewport);
-			produceMouseEnterOnComponent(EnteredEvent, Comp);
-		}
-		Comp->setMouseContained(true);
-	}
-}
-
-void Container::removeMousePresenceOnComponents(void)
-{
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    bool isContained;
+    for(Int32 i(0) ; i<getMFChildren()->size() ; ++i)
     {
-        getChildren()[i]->setMouseContained(false);
+        isContained = getChildren(i)->isContained(e->getLocation(), true);
+        checkMouseEnterExit(e,e->getLocation(),getChildren(i),isContained,e->getViewport());
+    }
+    Component::mouseEntered(e);
+}
+
+void ComponentContainer::mouseExited(const MouseEventUnrecPtr e)
+{
+    bool isContained;
+    for(Int32 i(0) ; i<getMFChildren()->size() ; ++i)
+    {
+        isContained = getChildren(i)->isContained(e->getLocation(), true);
+        checkMouseEnterExit(e,e->getLocation(),getChildren(i),isContained,e->getViewport());
+    }
+    Component::mouseExited(e);
+}
+
+void ComponentContainer::mousePressed(const MouseEventUnrecPtr e)
+{
+    bool isContained(false);
+    for(Int32 i(getMFChildren()->size()-1) ; i>=0 ; --i)
+    {
+        isContained = getChildren(i)->isContained(e->getLocation(), true);
+        checkMouseEnterExit(e,e->getLocation(),getChildren(i),isContained,e->getViewport());
+        if(isContained)
+        {
+            //Give myself temporary focus
+            takeFocus(true);
+            if(!getChildren(i)->getType().isDerivedFrom(ComponentContainer::getClassType()))
+            {
+                getChildren(i)->takeFocus();
+            }
+            getChildren(i)->mousePressed(e);
+            break;
+        }
+    }
+    if(isContained)
+    {
+        //Remove my temporary focus
+        giveFocus(NULL, false);
+    }
+    else
+    {
+        //Give myself permenant focus
+        takeFocus();
+    }
+    Component::mousePressed(e);
+}
+
+void ComponentContainer::mouseReleased(const MouseEventUnrecPtr e)
+{
+    bool isContained;
+    for(Int32 i(getMFChildren()->size()-1) ; i>=0 ; --i)
+    {
+        isContained = getChildren(i)->isContained(e->getLocation(), true);
+        checkMouseEnterExit(e,e->getLocation(),getChildren(i),isContained,e->getViewport());
+        if(isContained)
+        {
+            getChildren(i)->mouseReleased(e);
+            break;
+        }
+    }
+    Component::mouseReleased(e);
+}
+
+
+void ComponentContainer::mouseMoved(const MouseEventUnrecPtr e)
+{
+    Component::mouseMoved(e);
+
+    bool isContained;
+    bool isContainedAbove(false);
+    for(Int32 i(getMFChildren()->size()-1) ; i>=0 ; --i)
+    {
+        isContained = getChildren(i)->isContained(e->getLocation(), true);
+        checkMouseEnterExit(e,e->getLocation(),getChildren(i),isContained && !isContainedAbove,e->getViewport());
+        if(isContained && !isContainedAbove)
+        {
+            isContainedAbove = true;
+            getChildren(i)->mouseMoved(e);
+        }
+    }
+}
+
+void ComponentContainer::mouseDragged(const MouseEventUnrecPtr e)
+{
+    bool isContained;
+    bool isContainedAbove(false);
+    for(Int32 i(getMFChildren()->size()-1) ; i>=0 ; --i)
+    {
+        isContained = getChildren(i)->isContained(e->getLocation(), true);
+        checkMouseEnterExit(e,e->getLocation(),getChildren(i),isContained && !isContainedAbove,e->getViewport());
+        if(isContained && !isContainedAbove)
+        {
+            isContainedAbove = true;
+            getChildren(i)->mouseDragged(e);
+        }
+    }
+    Component::mouseDragged(e);
+}
+
+void ComponentContainer::mouseWheelMoved(const MouseWheelEventUnrecPtr e)
+{
+    bool isContained;
+    for(Int32 i(0) ; i<getMFChildren()->size() ; ++i)
+    {
+        isContained = getChildren(i)->isContained(e->getLocation(), true);
+        checkMouseEnterExit(e,e->getLocation(),getChildren(i),isContained,e->getViewport());
+        if(isContained)
+        {
+            getChildren(i)->mouseWheelMoved(e);
+        }
+    }
+    Component::mouseWheelMoved(e);
+}
+
+void ComponentContainer::produceMouseExitOnComponent(const MouseEventUnrecPtr e, ComponentRefPtr Comp)
+{
+    Comp->mouseExited(e);
+}
+
+void ComponentContainer::produceMouseEnterOnComponent(const MouseEventUnrecPtr e, ComponentRefPtr Comp)
+{
+    Comp->mouseEntered(e);
+}
+
+void ComponentContainer::checkMouseEnterExit(const InputEventUnrecPtr e, const Pnt2f& MouseLocation, ComponentRefPtr Comp, bool isMouseContained, ViewportRefPtr TheViewport)
+{
+    //Check if mouse is inside of this component
+    if(!isMouseContained)
+    {
+        if(Comp->getMouseContained())
+        {
+            //Mouse has exited the component
+            const MouseEventUnrecPtr ExitedEvent = MouseEvent::create(e->getSource(), e->getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation,TheViewport);
+            produceMouseExitOnComponent(ExitedEvent, Comp);
+        }
+        Comp->setMouseContained(false);
+    }
+    else
+    {
+        if(!Comp->getMouseContained())
+        {
+            //Mouse has exited the frame
+            const MouseEventUnrecPtr EnteredEvent = MouseEvent::create(e->getSource(), e->getTimeStamp(), MouseEvent::NO_BUTTON,0,MouseLocation,TheViewport);
+            produceMouseEnterOnComponent(EnteredEvent, Comp);
+        }
+        Comp->setMouseContained(true);
+    }
+}
+
+void ComponentContainer::removeMousePresenceOnComponents(void)
+{
+    for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
+    {
+        getChildren(i)->setMouseContained(false);
     }
 }
 
@@ -385,117 +385,89 @@ void Container::removeMousePresenceOnComponents(void)
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+void ComponentContainer::updateLayout(void)
+{
+    //Update Layout
+    if(getLayout() != NULL)
+    {
+        getLayout()->updateLayout(getMFChildren(), this);
+    }
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
-Container::Container(void) :
+ComponentContainer::ComponentContainer(void) :
     Inherited()
 {
 }
 
-Container::Container(const Container &source) :
+ComponentContainer::ComponentContainer(const ComponentContainer &source) :
     Inherited(source)
 {
 }
 
-Container::~Container(void)
+ComponentContainer::~ComponentContainer(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void Container::changed(BitVector whichField, UInt32 origin)
+void ComponentContainer::changed(ConstFieldMaskArg whichField, 
+                                 UInt32            origin,
+                                 BitVector         details)
 {
-
     if( (whichField & ChildrenFieldMask) ||
         (whichField & ParentWindowFieldMask))
     {
         //Set All of my children's parent to me
-        for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+        for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
         {
-            beginEditCP(getChildren()[i], ParentContainerFieldMask | ParentWindowFieldMask);
-               getChildren()[i]->setParentContainer(ContainerPtr(this));
-               getChildren()[i]->setParentWindow(getParentWindow());
-            endEditCP(getChildren()[i], ParentContainerFieldMask | ParentWindowFieldMask);
+            getChildren(i)->setParentContainer(this);
+            getChildren(i)->setParentWindow(getParentWindow());
         }
     }
     if( (whichField & LayoutFieldMask) &&
-        getLayout() != NullFC)
+        getLayout() != NULL)
     {
-        beginEditCP(getLayout(), Layout::ParentContainerFieldMask);
-            getLayout()->setParentContainer(ContainerPtr(this));
-        endEditCP(getLayout(), Layout::ParentContainerFieldMask);
+        getLayout()->setParentContainer(this);
     }
-    
+
     if( whichField & ClipBoundsFieldMask )
-	{
+    {
         //Set All of my children's parent to me
-        for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+        for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
         {
-			getChildren()[i]->updateClipBounds();
+            getChildren(i)->updateClipBounds();
         }
-	}
+    }
 
     if( (whichField & LayoutFieldMask) ||
         (whichField & InsetFieldMask) ||
         (whichField & ChildrenFieldMask) ||
         (whichField & SizeFieldMask) ||
-        (whichField & BorderFieldMask))
+        (whichField & BorderFieldMask) ||
+        (whichField & DisabledBorderFieldMask) ||
+        (whichField & FocusedBorderFieldMask) ||
+        (whichField & RolloverBorderFieldMask))
     {
         //Layout needs to be recalculated
         updateLayout();
     }
-	
+
     if(whichField & EnabledFieldMask)
     {
-        for(UInt32 i(0) ; i< getChildren().size() ; ++i)
+        for(UInt32 i(0) ; i< getMFChildren()->size() ; ++i)
         {
-            beginEditCP(getChildren()[i], EnabledFieldMask);
-                getChildren()[i]->setEnabled(getEnabled());
-            endEditCP(getChildren()[i], EnabledFieldMask);
+            getChildren(i)->setEnabled(getEnabled());
         }
     }
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void Container::updateLayout(void)
-{
-    //Update Layout
-    if(getLayout() != NullFC)
-    {
-        getLayout()->updateLayout(getChildren(), ContainerPtr(this));
-    }
-}
-
-void Container::dump(      UInt32    , 
+void ComponentContainer::dump(      UInt32    ,
                          const BitVector ) const
 {
-    SLOG << "Dump Container NI" << std::endl;
+    SLOG << "Dump ComponentContainer NI" << std::endl;
 }
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGCONTAINERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCONTAINERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCONTAINERFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
-

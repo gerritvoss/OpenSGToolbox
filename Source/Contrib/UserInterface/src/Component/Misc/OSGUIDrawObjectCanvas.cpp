@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,22 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include <OSGConfig.h>
+
 #include "OSGUIDrawObjectCanvas.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::UIDrawObjectCanvas
-A UI UIDrawObjectCanvas. 	
-*/
+// Documentation for this class is emitted in the
+// OSGUIDrawObjectCanvasBase.cpp file.
+// To modify it, please change the .fcd file (OSGUIDrawObjectCanvas.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -65,20 +62,30 @@ A UI UIDrawObjectCanvas.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void UIDrawObjectCanvas::initMethod (void)
+void UIDrawObjectCanvas::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
+
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
 
 void UIDrawObjectCanvas::getDrawObjectBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
-	if(getDrawObjects().size() > 0)
+	if(getMFDrawObjects()->size() > 0)
 	{
 		Pnt2f TempTopLeft, TempBottomRight;
-		getDrawObjects()[0]->getBounds(TopLeft, BottomRight);
+		getDrawObjects(0)->getBounds(TopLeft, BottomRight);
 		//Determine Top Left And Bottom Right
-		for(UInt32 i(0) ; i<getDrawObjects().size(); ++i)
+		for(UInt32 i(0) ; i<getMFDrawObjects()->size(); ++i)
 		{
-			getDrawObjects()[i]->getBounds(TempTopLeft, TempBottomRight);
+			getDrawObjects(i)->getBounds(TempTopLeft, TempBottomRight);
 		    TopLeft.setValues( osgMin(TopLeft.x(), TempTopLeft.x()),
 				               osgMin(TopLeft.y(), TempTopLeft.y()) );
 
@@ -106,21 +113,18 @@ Vec2f UIDrawObjectCanvas::getContentRequestedSize(void) const
     getDrawObjectBounds(TopLeft, BottomRight);
     return Vec2f(BottomRight - TopLeft);
 }
-/***************************************************************************\
- *                           Instance methods                              *
-\***************************************************************************/
-
-void UIDrawObjectCanvas::drawInternal(const GraphicsPtr Graphics, Real32 Opacity) const
-{
-	for(UInt32 i(0) ; i<getDrawObjects().size(); ++i)
-	{
-		getDrawObjects()[i]->draw(Graphics, getOpacity()*Opacity);
-	}
-}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
+
+void UIDrawObjectCanvas::drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity) const
+{
+	for(UInt32 i(0) ; i<getMFDrawObjects()->size(); ++i)
+	{
+		getDrawObjects(i)->draw(Graphics, getOpacity()*Opacity);
+	}
+}
 
 /*----------------------- constructors & destructors ----------------------*/
 
@@ -142,48 +146,22 @@ UIDrawObjectCanvas::~UIDrawObjectCanvas(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void UIDrawObjectCanvas::changed(BitVector whichField, UInt32 origin)
+void UIDrawObjectCanvas::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 	
-	if( (whichField & DrawObjectsFieldMask) )
+    if( (whichField & DrawObjectsFieldMask) )
     {
-		beginEditCP(UIDrawObjectCanvasPtr(this), PreferredSizeFieldMask);
-			setPreferredSize(getRequestedSize());
-		endEditCP(UIDrawObjectCanvasPtr(this), PreferredSizeFieldMask);
+        setPreferredSize(getRequestedSize());
     }
 }
 
-void UIDrawObjectCanvas::dump(      UInt32    , 
+void UIDrawObjectCanvas::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump UIDrawObjectCanvas NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGUIDRAWOBJECTCANVASBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGUIDRAWOBJECTCANVASBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGUIDRAWOBJECTCANVASFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

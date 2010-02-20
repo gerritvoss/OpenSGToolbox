@@ -2,61 +2,66 @@
 
 <FieldContainer
 	name="List"
-	parent="Container"
-	library="UserInterface"
+	parent="ComponentContainer"
+	library="ContribUserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
+	systemcomponent="true"
+	parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="true"
->
-A UI List.
+	useLocalIncludes="false"
+	isNodeCore="false"
+	authors="David Kabala (djkabala@gmail.com)                             "
+	>
+	A UI List.
 	<Field
 		name="Orientation"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="List::VERTICAL_ORIENTATION"
 		access="public"
-	>
+		>
 	</Field>
 	<Field
 		name="CellMajorAxisLength"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
 		defaultValue="50"
-	>
+		>
 	</Field>
 	<Field
 		name="Model"
-		type="ListModelPtr"
+		type="ListModel"
+		category="pointer"
 		cardinality="single"
-                visibility="external"
-                header="Models/OSGListModelFields.h"
-		defaultValue="NullFC"
+		visibility="external"
+		defaultValue="NULL"
 		access="public"
-	>
-        </Field>
+		>
+	</Field>
 	<Field
 		name="CellGenerator"
-		type="ComponentGeneratorPtr"
+		type="ComponentGenerator"
+		category="pointer"
 		cardinality="single"
-                visibility="external"
-                header="ComponentGenerators/OSGComponentGeneratorFields.h"
-		defaultValue="NullFC"
+		visibility="external"
+		defaultValue="NULL"
 		access="public"
-	>
-        </Field>
+		>
+	</Field>
 	<Field
 		name="AutoScrollToFocused"
 		type="bool"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
 		defaultValue="true"
-	>
+		>
 	</Field>
 </FieldContainer>

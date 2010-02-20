@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,24 +42,25 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGToggleButtonBase.h"
-#include "Event/OSGButtonSelectedListener.h"
+#include "OSGButtonSelectedListener.h"
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING ToggleButton : public ToggleButtonBase
-{
-  private:
+/*! \brief ToggleButton class. See \ref
+           PageContribUserInterfaceToggleButton for a description.
+*/
 
-    typedef ToggleButtonBase Inherited;
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ToggleButton : public ToggleButtonBase
+{
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
     enum
     {
         SelectedBorderFieldId                = Inherited::ActiveBorderFieldId,
@@ -73,19 +74,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToggleButton : public ToggleButtonBase
     static const OSG::BitVector SelectedTextColorFieldMask;
     static const OSG::BitVector SelectedDrawObjectFieldMask;
 
+    typedef ToggleButtonBase Inherited;
+    typedef ToggleButton     Self;
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -94,24 +99,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToggleButton : public ToggleButtonBase
 	bool isButtonSelectedListenerAttached(ButtonSelectedListenerPtr Listener) const;
     void removeButtonSelectedListener(ButtonSelectedListenerPtr Listener);
 
-    void setSelectedBorder   ( const BorderPtr &value );
-    void setSelectedBackground( const LayerPtr &value );
+    void setSelectedBorder   ( const BorderRefPtr &value );
+    void setSelectedBackground( const LayerRefPtr &value );
     void setSelectedTextColor( const Color4f &value );
-    void setSelectedDrawObject( const UIDrawObjectCanvasPtr &value );
-    void setSelectedImage(ImagePtr TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
-    void setSelectedTexture(TextureChunkPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setSelectedDrawObject( const UIDrawObjectCanvasRefPtr &value );
+    void setSelectedImage(ImageRefPtr TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setSelectedTexture(TextureObjChunkRefPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
     void setSelectedImage(const std::string& Path, Vec2f Size = Vec2f(-1.0f,-1.0f));
-    
-           BorderPtr           &editSelectedBorder   (void);
-     const BorderPtr           &getSelectedBorder   (void) const;
-           LayerPtr     &editSelectedBackground(void);
-     const LayerPtr     &getSelectedBackground(void) const;
-           Color4f             &editSelectedTextColor(void);
-     const Color4f             &getSelectedTextColor(void) const;
-           UIDrawObjectCanvasPtr &editSelectedDrawObject(void);
-     const UIDrawObjectCanvasPtr &getSelectedDrawObject(void) const;
+
+    Border * getSelectedBorder   (void) const;
+    Layer * getSelectedBackground(void) const;
+    Layer * getSelectedForeground(void) const;
+    UIDrawObjectCanvas * getSelectedDrawObject     (void) const;
+
+    Color4f             &editSelectedTextColor(void);
+    const Color4f             &getSelectedTextColor(void) const;
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ToggleButtonBase.
@@ -128,35 +133,40 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToggleButton : public ToggleButtonBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ToggleButton(void); 
+    virtual ~ToggleButton(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
     
-    virtual void actionPreformed(const ActionEventPtr e);
+    virtual void actionPreformed(const ActionEventUnrecPtr e);
 
 	typedef std::set<ButtonSelectedListenerPtr> ButtonSelectedListenerSet;
     typedef ButtonSelectedListenerSet::iterator ButtonSelectedListenerSetItor;
     typedef ButtonSelectedListenerSet::const_iterator ButtonSelectedListenerSetConstItor;
 	
     ButtonSelectedListenerSet       _ButtonSelectedListeners;
-    void produceButtonSelected(const ButtonSelectedEventPtr e);
-    void produceButtonDeselected(const ButtonSelectedEventPtr e);
+    void produceButtonSelected(const ButtonSelectedEventUnrecPtr e);
+    void produceButtonDeselected(const ButtonSelectedEventUnrecPtr e);
     
-    virtual BorderPtr getDrawnBorder(void) const;
-    virtual LayerPtr getDrawnBackground(void) const;
-    virtual LayerPtr getDrawnForeground(void) const;
+    virtual BorderRefPtr getDrawnBorder(void) const;
+    virtual LayerRefPtr getDrawnBackground(void) const;
+    virtual LayerRefPtr getDrawnForeground(void) const;
     virtual Color4f getDrawnTextColor(void) const;
     virtual Vec2f getDrawnOffset(void) const;
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ToggleButtonBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ToggleButton &source);
 };
 

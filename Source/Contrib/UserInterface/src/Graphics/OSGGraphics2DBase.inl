@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,76 +55,140 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &Graphics2DBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 Graphics2DBase::getClassTypeId(void) 
+OSG::UInt32 Graphics2DBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-Graphics2DPtr Graphics2DBase::create(void) 
-{
-    Graphics2DPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = Graphics2DPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-Graphics2DPtr Graphics2DBase::createEmpty(void) 
-{ 
-    Graphics2DPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 Graphics2DBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Graphics2D::_sfUIDepth field.
-inline
-SFDepthChunkPtr *Graphics2DBase::getSFUIDepth(void)
-{
-    return &_sfUIDepth;
-}
-
 
 //! Get the value of the Graphics2D::_sfUIDepth field.
 inline
-DepthChunkPtr &Graphics2DBase::getUIDepth(void)
-{
-    return _sfUIDepth.getValue();
-}
-
-//! Get the value of the Graphics2D::_sfUIDepth field.
-inline
-const DepthChunkPtr &Graphics2DBase::getUIDepth(void) const
+DepthChunk * Graphics2DBase::getUIDepth(void) const
 {
     return _sfUIDepth.getValue();
 }
 
 //! Set the value of the Graphics2D::_sfUIDepth field.
 inline
-void Graphics2DBase::setUIDepth(const DepthChunkPtr &value)
+void Graphics2DBase::setUIDepth(DepthChunk * const value)
 {
+    editSField(UIDepthFieldMask);
+
     _sfUIDepth.setValue(value);
 }
 
+//! Get the value of the Graphics2D::_sfColorMask field.
+inline
+ColorMaskChunk * Graphics2DBase::getColorMask(void) const
+{
+    return _sfColorMask.getValue();
+}
+
+//! Set the value of the Graphics2D::_sfColorMask field.
+inline
+void Graphics2DBase::setColorMask(ColorMaskChunk * const value)
+{
+    editSField(ColorMaskFieldMask);
+
+    _sfColorMask.setValue(value);
+}
+
+//! Get the value of the Graphics2D::_sfStenciledAreaSetup field.
+inline
+StencilChunk * Graphics2DBase::getStenciledAreaSetup(void) const
+{
+    return _sfStenciledAreaSetup.getValue();
+}
+
+//! Set the value of the Graphics2D::_sfStenciledAreaSetup field.
+inline
+void Graphics2DBase::setStenciledAreaSetup(StencilChunk * const value)
+{
+    editSField(StenciledAreaSetupFieldMask);
+
+    _sfStenciledAreaSetup.setValue(value);
+}
+
+//! Get the value of the Graphics2D::_sfStenciledAreaCleanup field.
+inline
+StencilChunk * Graphics2DBase::getStenciledAreaCleanup(void) const
+{
+    return _sfStenciledAreaCleanup.getValue();
+}
+
+//! Set the value of the Graphics2D::_sfStenciledAreaCleanup field.
+inline
+void Graphics2DBase::setStenciledAreaCleanup(StencilChunk * const value)
+{
+    editSField(StenciledAreaCleanupFieldMask);
+
+    _sfStenciledAreaCleanup.setValue(value);
+}
+
+//! Get the value of the Graphics2D::_sfStenciledAreaTest field.
+inline
+StencilChunk * Graphics2DBase::getStenciledAreaTest(void) const
+{
+    return _sfStenciledAreaTest.getValue();
+}
+
+//! Set the value of the Graphics2D::_sfStenciledAreaTest field.
+inline
+void Graphics2DBase::setStenciledAreaTest(StencilChunk * const value)
+{
+    editSField(StenciledAreaTestFieldMask);
+
+    _sfStenciledAreaTest.setValue(value);
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void Graphics2DBase::execSync (      Graphics2DBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (UIDepthFieldMask & whichField))
+        _sfUIDepth.syncWith(pFrom->_sfUIDepth);
+
+    if(FieldBits::NoField != (ColorMaskFieldMask & whichField))
+        _sfColorMask.syncWith(pFrom->_sfColorMask);
+
+    if(FieldBits::NoField != (StenciledAreaSetupFieldMask & whichField))
+        _sfStenciledAreaSetup.syncWith(pFrom->_sfStenciledAreaSetup);
+
+    if(FieldBits::NoField != (StenciledAreaCleanupFieldMask & whichField))
+        _sfStenciledAreaCleanup.syncWith(pFrom->_sfStenciledAreaCleanup);
+
+    if(FieldBits::NoField != (StenciledAreaTestFieldMask & whichField))
+        _sfStenciledAreaTest.syncWith(pFrom->_sfStenciledAreaTest);
+}
+#endif
+
+
+inline
+const Char8 *Graphics2DBase::getClassname(void)
+{
+    return "Graphics2D";
+}
+OSG_GEN_CONTAINERPTR(Graphics2D);
 
 OSG_END_NAMESPACE
-
-#define OSGGRAPHICS2DBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

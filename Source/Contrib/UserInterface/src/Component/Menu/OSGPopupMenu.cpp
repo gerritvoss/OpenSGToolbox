@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,31 +40,29 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
+#include <OSGConfig.h>
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGPopupMenu.h"
 #include <deque>
 
 #include "OSGPopupMenu.h"
-#include "Component/Container/OSGContainer.h"
-#include "Models/SelectionModels/OSGDefaultSingleSelectionModel.h"
-#include "Component/Misc/OSGSeparator.h"
-#include "Models/SelectionModels/OSGSingleSelectionModel.h"
+#include "OSGComponentContainer.h"
+#include "OSGDefaultSingleSelectionModel.h"
+#include "OSGSeparator.h"
+#include "OSGSingleSelectionModel.h"
+#include "OSGMenuItem.h"
 
 #include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::PopupMenu
-A UI Menu. 	
-*/
+// Documentation for this class is emitted in the
+// OSGPopupMenuBase.cpp file.
+// To modify it, please change the .fcd file (OSGPopupMenu.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -74,9 +72,16 @@ A UI Menu.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void PopupMenu::initMethod (void)
+void PopupMenu::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
+
+
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
@@ -91,47 +96,44 @@ EventConnection PopupMenu::addPopupMenuListener(PopupMenuListenerPtr Listener)
 
 void PopupMenu::updateLayout(void)
 {
-	//Determine the Max Preferred Width of my MenuItems
-	Real32 MaxWidth(0);
-	Real32 TotalHeight(0);
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    //Determine the Max Preferred Width of my MenuItems
+    Real32 MaxWidth(0);
+    Real32 TotalHeight(0);
+    for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
     {
-        if(MaxWidth < getChildren()[i]->getRequestedSize().x())
+        if(MaxWidth < getChildren(i)->getRequestedSize().x())
         {
-            MaxWidth = getChildren()[i]->getRequestedSize().x();
-	    }
-	    TotalHeight += getChildren()[i]->getRequestedSize().y();
-		if(i!=0)
-		{
-			TotalHeight += 1.0f;
-		}
-	}
+            MaxWidth = getChildren(i)->getRequestedSize().x();
+        }
+        TotalHeight += getChildren(i)->getRequestedSize().y();
+        if(i!=0)
+        {
+            TotalHeight += 1.0f;
+        }
+    }
 
     //Set My preferred Size
-	Pnt2f TopLeft, BottomRight;
-	Pnt2f InsetsTopLeft, InsetsBottomRight;
-	getBounds(TopLeft, BottomRight);
-	getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
+    Pnt2f TopLeft, BottomRight;
+    Pnt2f InsetsTopLeft, InsetsBottomRight;
+    getBounds(TopLeft, BottomRight);
+    getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
 
-	Vec2f InsetSize( (BottomRight-TopLeft) - (InsetsBottomRight-InsetsTopLeft) );
-    beginEditCP(PopupMenuPtr(this), PreferredSizeFieldMask);
-        setPreferredSize(Vec2f(MaxWidth+InsetSize.x(), TotalHeight+InsetSize.y()));
-        //Sneakily set my size
-        setSize(getPreferredSize());
-    endEditCP(PopupMenuPtr(this), PreferredSizeFieldMask);
-    
-	getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
-	
-	//Now position and size the Items
-	Real32 TopOffset(InsetsTopLeft.y());
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    Vec2f InsetSize( (BottomRight-TopLeft) - (InsetsBottomRight-InsetsTopLeft) );
+    setPreferredSize(Vec2f(MaxWidth+InsetSize.x(), TotalHeight+InsetSize.y()));
+
+    //Sneakily set my size
+    _sfSize.setValue(getPreferredSize());
+
+    getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
+
+    //Now position and size the Items
+    Real32 TopOffset(InsetsTopLeft.y());
+    for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
     {
-        beginEditCP(getChildren()[i], SizeFieldMask | PositionFieldMask);
-            getChildren()[i]->setSize(Vec2f(MaxWidth, getChildren()[i]->getRequestedSize().y()));
-            getChildren()[i]->setPosition(Pnt2f(InsetsTopLeft.x(), TopOffset));
-        endEditCP(getChildren()[i], SizeFieldMask | PositionFieldMask);
+        getChildren(i)->setSize(Vec2f(MaxWidth, getChildren(i)->getRequestedSize().y()));
+        getChildren(i)->setPosition(Pnt2f(InsetsTopLeft.x(), TopOffset));
 
-        TopOffset += getChildren()[i]->getRequestedSize().y() +1;
+        TopOffset += getChildren(i)->getRequestedSize().y() +1;
     }
 }
 
@@ -144,29 +146,25 @@ void PopupMenu::updateClipBounds(void)
 
 	//The Clip Bounds calculated are in my Parent Containers coordinate space
 	//Translate these bounds into my own coordinate space
-	beginEditCP(ComponentPtr(this), Component::ClipBoundsFieldMask);
 		setClipTopLeft(TopLeft);
 		setClipBottomRight(BottomRight);
-	endEditCP(ComponentPtr(this), Component::ClipBoundsFieldMask);
 }
 
-void PopupMenu::addItem(MenuItemPtr Item)
+void PopupMenu::addItem(MenuItemRefPtr Item)
 {
-    beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);
-        getChildren().push_back(Item);
-    endEditCP(PopupMenuPtr(this), ChildrenFieldMask);
-	producePopupMenuContentsChanged(PopupMenuEvent::create(PopupMenuPtr(this), getSystemTime()));
+    pushToChildren(Item);
+	producePopupMenuContentsChanged(PopupMenuEvent::create(PopupMenuRefPtr(this), getSystemTime()));
 }
 
-void PopupMenu::addItem(MenuItemPtr Item, const UInt32& Index)
+void PopupMenu::addItem(MenuItemRefPtr Item, const UInt32& Index)
 {
-    if(Index < getChildren().size())
+    if(Index < getMFChildren()->size())
     {
-        MFComponentPtr::iterator InsertItor(getChildren().begin());
+        MFChildrenType::iterator InsertItor(editMFChildren()->begin());
         UInt32 ItemCount(0);
-        for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+        for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
         {
-            if(getChildren()[i]->getType() != Separator::getClassType())
+            if(getChildren(i)->getType() != Separator::getClassType())
             {
                 ++ItemCount;
             }
@@ -177,37 +175,33 @@ void PopupMenu::addItem(MenuItemPtr Item, const UInt32& Index)
             ++InsertItor;
         }
 
-        if(InsertItor != getChildren().end())
+        if(InsertItor != editMFChildren()->end())
         {
-            beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);
-                getChildren().insert(InsertItor, Item);
-            endEditCP(PopupMenuPtr(this), ChildrenFieldMask);
-	        producePopupMenuContentsChanged(PopupMenuEvent::create(PopupMenuPtr(this), getSystemTime()));
+                editMFChildren()->insert(InsertItor, Item);
+	        producePopupMenuContentsChanged(PopupMenuEvent::create(PopupMenuRefPtr(this), getSystemTime()));
         }
     }
 }
 
-void PopupMenu::removeItem(MenuItemPtr Item)
+void PopupMenu::removeItem(MenuItemRefPtr Item)
 {
-    MFComponentPtr::iterator FindResult = getChildren().find(Item);
-    if(FindResult != getChildren().end())
+    MFChildrenType::iterator FindResult = editMFChildren()->find(Item);
+    if(FindResult != editMFChildren()->end())
     {
-        beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);
-            getChildren().erase(FindResult);
-        endEditCP(PopupMenuPtr(this), ChildrenFieldMask);
-	    producePopupMenuContentsChanged(PopupMenuEvent::create(PopupMenuPtr(this), getSystemTime()));
+            editMFChildren()->erase(FindResult);
+	    producePopupMenuContentsChanged(PopupMenuEvent::create(PopupMenuRefPtr(this), getSystemTime()));
     }
 }
 
 void PopupMenu::removeItem(const UInt32& Index)
 {
-    if(Index < getChildren().size())
+    if(Index < getMFChildren()->size())
     {
-        MFComponentPtr::iterator RemoveItor(getChildren().begin());
+        MFChildrenType::iterator RemoveItor(editMFChildren()->begin());
         UInt32 ItemCount(0);
-        for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+        for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
         {
-            if(getChildren()[i]->getType() != Separator::getClassType())
+            if(getChildren(i)->getType() != Separator::getClassType())
             {
                 ++ItemCount;
             }
@@ -217,12 +211,10 @@ void PopupMenu::removeItem(const UInt32& Index)
             }
             ++RemoveItor;
         }
-        if(RemoveItor != getChildren().end())
+        if(RemoveItor != editMFChildren()->end())
         {
-            beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);
-                getChildren().erase(RemoveItor);
-            endEditCP(PopupMenuPtr(this), ChildrenFieldMask);
-	        producePopupMenuContentsChanged(PopupMenuEvent::create(PopupMenuPtr(this), getSystemTime()));
+                editMFChildren()->erase(RemoveItor);
+	        producePopupMenuContentsChanged(PopupMenuEvent::create(PopupMenuRefPtr(this), getSystemTime()));
         }
     }
 }
@@ -230,9 +222,9 @@ void PopupMenu::removeItem(const UInt32& Index)
 void PopupMenu::removeAllItems(void)
 {
     std::deque<UInt32> RemoveIndecies;
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
     {
-        if(getChildren()[i]->getType() != Separator::getClassType())
+        if(getChildren(i)->getType() != Separator::getClassType())
         {
             RemoveIndecies.push_front(i);
         }
@@ -246,44 +238,37 @@ void PopupMenu::removeAllItems(void)
 
 void PopupMenu::addSeparator(void)
 {
-    SeparatorPtr TheSeparator;
-    if(getDefaultSeparator() != NullFC)
+    SeparatorRefPtr TheSeparator;
+    if(getDefaultSeparator() != NULL)
     {
-        TheSeparator = Separator::Ptr::dcast(getDefaultSeparator()->shallowCopy());
+        FieldContainerUnrecPtr TheSeperator(getDefaultSeparator()->shallowCopy());
+        TheSeparator = dynamic_pointer_cast<Separator>(TheSeperator);
     }
     else
     {
         TheSeparator = Separator::create();
     }
-    beginEditCP(TheSeparator, Separator::OrientationFieldMask);
         TheSeparator->setOrientation(Separator::HORIZONTAL_ORIENTATION);
-    endEditCP(TheSeparator, Separator::OrientationFieldMask);
 
-    beginEditCP(PopupMenuPtr(this), PopupMenu::ChildrenFieldMask);
-        getChildren().push_back(TheSeparator);
-    endEditCP(PopupMenuPtr(this), PopupMenu::ChildrenFieldMask);
+        pushToChildren(TheSeparator);
 }
 
-void PopupMenu::addSeparator(SeparatorPtr TheSeparator)
+void PopupMenu::addSeparator(SeparatorRefPtr TheSeparator)
 {
-    beginEditCP(TheSeparator, Separator::OrientationFieldMask);
         TheSeparator->setOrientation(Separator::HORIZONTAL_ORIENTATION);
-    endEditCP(TheSeparator, Separator::OrientationFieldMask);
 
-    beginEditCP(PopupMenuPtr(this), PopupMenu::ChildrenFieldMask);
-        getChildren().push_back(TheSeparator);
-    endEditCP(PopupMenuPtr(this), PopupMenu::ChildrenFieldMask);
+        pushToChildren(TheSeparator);
 }
 
 void PopupMenu::removeSeparator(const UInt32&  Index)
 {
     if(Index < getNumSeparators())
     {
-        MFComponentPtr::iterator RemoveItor(getChildren().begin());
+        MFChildrenType::iterator RemoveItor(editMFChildren()->begin());
         UInt32 SeparatorCount(0);
-        for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+        for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
         {
-            if(getChildren()[i]->getType() == Separator::getClassType())
+            if(getChildren(i)->getType() == Separator::getClassType())
             {
                 ++SeparatorCount;
             }
@@ -294,29 +279,25 @@ void PopupMenu::removeSeparator(const UInt32&  Index)
             ++RemoveItor;
         }
 
-        beginEditCP(PopupMenuPtr(this), PopupMenu::ChildrenFieldMask);
-            getChildren().erase(RemoveItor);
-        endEditCP(PopupMenuPtr(this), PopupMenu::ChildrenFieldMask);
+            editMFChildren()->erase(RemoveItor);
     }
 }
 
-void PopupMenu::removeSeparator(SeparatorPtr TheSeparator)
+void PopupMenu::removeSeparator(SeparatorRefPtr TheSeparator)
 {
-    MFComponentPtr::iterator RemoveItor(getChildren().find(TheSeparator));
-    if(RemoveItor != getChildren().end())
+    MFChildrenType::iterator RemoveItor(editMFChildren()->find(TheSeparator));
+    if(RemoveItor != editMFChildren()->end())
     {
-        beginEditCP(PopupMenuPtr(this), PopupMenu::ChildrenFieldMask);
-            getChildren().erase(RemoveItor);
-        endEditCP(PopupMenuPtr(this), PopupMenu::ChildrenFieldMask);
+            editMFChildren()->erase(RemoveItor);
     }
 }
 
 void PopupMenu::removeAllSeparators(void)
 {
     std::deque<UInt32> RemoveIndecies;
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
     {
-        if(getChildren()[i]->getType() == Separator::getClassType())
+        if(getChildren(i)->getType() == Separator::getClassType())
         {
             RemoveIndecies.push_front(i);
         }
@@ -330,9 +311,9 @@ void PopupMenu::removeAllSeparators(void)
 UInt32 PopupMenu::getNumSeparators(void) const
 {
     UInt32 NumSeparators(0);
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
     {
-        if(getChildren()[i]->getType() == Separator::getClassType())
+        if(getChildren(i)->getType() == Separator::getClassType())
         {
             ++NumSeparators;
         }
@@ -346,25 +327,25 @@ void PopupMenu::updateSeparatorSizes(void)
     getInsideInsetsBounds(InsideInsetsTopLeft, InsideInsetsBottomRight);
     Vec2f InsideInsetsSize(InsideInsetsBottomRight - InsideInsetsTopLeft);
 
-    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
     {
-        if(getChildren()[i]->getType() == Separator::getClassType())
+        Vec2f NewSize(Vec2f(InsideInsetsSize.x(), getChildren(i)->getRequestedSize().y()));
+        if(getChildren(i)->getType() == Separator::getClassType() &&
+           dynamic_cast<Separator*>(getChildren(i))->getPreferredSize() != NewSize)
         {
-            beginEditCP(getChildren()[i], Separator::PreferredSizeFieldMask);
-                Separator::Ptr::dcast(getChildren()[i])->setPreferredSize(Vec2f(InsideInsetsSize.x(), getChildren()[i]->getRequestedSize().y()));
-            endEditCP(getChildren()[i], Separator::PreferredSizeFieldMask);
+            dynamic_cast<Separator*>(getChildren(i))->setPreferredSize(NewSize);
         }
     }
 }
-void PopupMenu::mouseMoved(const MouseEventPtr e)
+void PopupMenu::mouseMoved(const MouseEventUnrecPtr e)
 {
     UInt32 i(0);
-    while (i<getChildren().size() && !getChildren()[i]->isContained(e->getLocation(), true))
+    while (i<getMFChildren()->size() && !getChildren(i)->isContained(e->getLocation(), true))
     {
         ++i;
     }
 	
-	if(i<getChildren().size() && getSelectionModel()->getSelectedIndex() != i)
+	if(i<getMFChildren()->size() && getSelectionModel()->getSelectedIndex() != i)
 	{
         if(getSelectionModel()->getSelectedIndex() != i)
         {
@@ -372,22 +353,22 @@ void PopupMenu::mouseMoved(const MouseEventPtr e)
         }
 	}
 
-    Container::mouseMoved(e);
+    ComponentContainer::mouseMoved(e);
 }
 
-void PopupMenu::mouseDragged(const MouseEventPtr e)
+void PopupMenu::mouseDragged(const MouseEventUnrecPtr e)
 {
     UInt32 i(0);
-    while (i<getChildren().size() && !getChildren()[i]->isContained(e->getLocation(), true))
+    while (i<getMFChildren()->size() && !getChildren(i)->isContained(e->getLocation(), true))
     {
         ++i;
     }
 	
-	if(i<getChildren().size() && getSelectionModel()->getSelectedIndex() != i)
+	if(i<getMFChildren()->size() && getSelectionModel()->getSelectedIndex() != i)
 	{
 		getSelectionModel()->setSelectedIndex(i);
 	}
-    Container::mouseDragged(e);
+    ComponentContainer::mouseDragged(e);
 }
 
 void PopupMenu::removePopupMenuListener(PopupMenuListenerPtr Listener)
@@ -404,16 +385,14 @@ void PopupMenu::cancel(void)
     if(getVisible())
     {
         clearSelection();
-        beginEditCP(PopupMenuPtr(this), VisibleFieldMask);
             setVisible(false);
-        endEditCP(PopupMenuPtr(this), VisibleFieldMask);
-        producePopupMenuCanceled(PopupMenuEvent::create(PopupMenuPtr(this), getSystemTime()));
+        producePopupMenuCanceled(PopupMenuEvent::create(PopupMenuRefPtr(this), getSystemTime()));
     }
 }
 
 void PopupMenu::clearSelection(void)
 {
-    if(getSelectionModel() != NullFC)
+    if(getSelectionModel() != NULL)
     {
         getSelectionModel()->clearSelection();
     }
@@ -423,7 +402,7 @@ void PopupMenu::setSelection(const Int32& Index)
 {
 	if(Index >= 0 && Index < getNumItems())
 	{
-        if(getSelectionModel() != NullFC)
+        if(getSelectionModel() != NULL)
         {
 		    getSelectionModel()->setSelectedIndex(Index);
         }
@@ -435,15 +414,14 @@ void PopupMenu::setSelection(const Int32& Index)
 }
 
 
-MenuItemPtr PopupMenu::getItem(const UInt32& Index)
+MenuItem* PopupMenu::getItem(const UInt32& Index)
 {
-    if(Index < getChildren().size())
+    if(Index < getMFChildren()->size())
     {
-        MFComponentPtr::iterator FindItor(getChildren().begin());
         UInt32 ItemCount(0);
-        for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+        for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
         {
-            if(getChildren()[i]->getType() != Separator::getClassType())
+            if(getChildren(i)->getType() != Separator::getClassType())
             {
                 if(ItemCount == Index)
                 {
@@ -451,49 +429,25 @@ MenuItemPtr PopupMenu::getItem(const UInt32& Index)
                 }
                 ++ItemCount;
             }
-            ++FindItor;
         }
-        if(FindItor != getChildren().end())
+        if(ItemCount < getMFChildren()->size())
         {
-            return MenuItem::Ptr::dcast(*FindItor);
+            return dynamic_cast<MenuItem*>(getChildren(ItemCount));
         }
     }
-    return NullFC;
+    return NULL;
 }
 
 UInt32 PopupMenu::getNumItems(void) const
 {
-    return getChildren().size() - getNumSeparators();
+    return getMFChildren()->size() - getNumSeparators();
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
-/*----------------------- constructors & destructors ----------------------*/
-
-PopupMenu::PopupMenu(void) :
-    Inherited(),
-    _MenuSelectionListener(PopupMenuPtr(this))
-{
-}
-
-PopupMenu::PopupMenu(const PopupMenu &source) :
-    Inherited(source),
-    _MenuSelectionListener(PopupMenuPtr(this))
-{
-    if(getSelectionModel() != NullFC)
-    {
-        beginEditCP(PopupMenuPtr(this), PopupMenu::SelectionModelFieldMask);
-            setSelectionModel(SingleSelectionModel::Ptr::dcast(getSelectionModel()->shallowCopy()));
-        endEditCP(PopupMenuPtr(this), PopupMenu::SelectionModelFieldMask);
-    }
-}
-
-PopupMenu::~PopupMenu(void)
-{
-}
-
-void  PopupMenu::producePopupMenuWillBecomeVisible(const PopupMenuEventPtr e)
+void  PopupMenu::producePopupMenuWillBecomeVisible(const PopupMenuEventUnrecPtr e)
 {
 	PopupMenuListenerSet ListenerSet(_PopupMenuListeners);
     for(PopupMenuListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
@@ -503,7 +457,7 @@ void  PopupMenu::producePopupMenuWillBecomeVisible(const PopupMenuEventPtr e)
     _Producer.produceEvent(PopupMenuWillBecomeVisibleMethodId,e);
 }
 
-void  PopupMenu::producePopupMenuWillBecomeInvisible(const PopupMenuEventPtr e)
+void  PopupMenu::producePopupMenuWillBecomeInvisible(const PopupMenuEventUnrecPtr e)
 {
 	PopupMenuListenerSet ListenerSet(_PopupMenuListeners);
     for(PopupMenuListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
@@ -513,7 +467,7 @@ void  PopupMenu::producePopupMenuWillBecomeInvisible(const PopupMenuEventPtr e)
     _Producer.produceEvent(PopupMenuWillBecomeInvisibleMethodId,e);
 }
 
-void  PopupMenu::producePopupMenuCanceled(const PopupMenuEventPtr e)
+void  PopupMenu::producePopupMenuCanceled(const PopupMenuEventUnrecPtr e)
 {
 	PopupMenuListenerSet ListenerSet(_PopupMenuListeners);
     for(PopupMenuListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
@@ -523,7 +477,7 @@ void  PopupMenu::producePopupMenuCanceled(const PopupMenuEventPtr e)
     _Producer.produceEvent(PopupMenuCanceledMethodId,e);
 }
     
-void PopupMenu::producePopupMenuContentsChanged(const PopupMenuEventPtr e)
+void PopupMenu::producePopupMenuContentsChanged(const PopupMenuEventUnrecPtr e)
 {
 	PopupMenuListenerSet ListenerSet(_PopupMenuListeners);
     for(PopupMenuListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
@@ -532,22 +486,53 @@ void PopupMenu::producePopupMenuContentsChanged(const PopupMenuEventPtr e)
     }
     _Producer.produceEvent(PopupMenuContentsChangedMethodId,e);
 }
+
+void PopupMenu::onCreate(const PopupMenu * Id)
+{
+    DefaultSingleSelectionModelUnrecPtr TheModel(DefaultSingleSelectionModel::create());
+    setSelectionModel(TheModel);
+}
+
+void PopupMenu::onDestroy()
+{
+}
+
+/*----------------------- constructors & destructors ----------------------*/
+
+PopupMenu::PopupMenu(void) :
+    Inherited(),
+    _MenuSelectionListener(this)
+{
+}
+
+PopupMenu::PopupMenu(const PopupMenu &source) :
+    Inherited(source),
+    _MenuSelectionListener(this)
+{
+}
+
+PopupMenu::~PopupMenu(void)
+{
+}
+
 /*----------------------------- class specific ----------------------------*/
 
-void PopupMenu::changed(BitVector whichField, UInt32 origin)
+void PopupMenu::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 
     if(whichField & VisibleFieldMask)
     {
         if(getVisible())
         {
-            producePopupMenuWillBecomeVisible(PopupMenuEvent::create(PopupMenuPtr(this), getSystemTime()));
+            producePopupMenuWillBecomeVisible(PopupMenuEvent::create(PopupMenuRefPtr(this), getSystemTime()));
         }
         else
         {
-            producePopupMenuWillBecomeInvisible(PopupMenuEvent::create(PopupMenuPtr(this), getSystemTime()));
-            if(getSelectionModel() != NullFC)
+            producePopupMenuWillBecomeInvisible(PopupMenuEvent::create(PopupMenuRefPtr(this), getSystemTime()));
+            if(getSelectionModel() != NULL)
             {
                 getSelectionModel()->clearSelection();
             }
@@ -560,42 +545,37 @@ void PopupMenu::changed(BitVector whichField, UInt32 origin)
         updateSeparatorSizes();
     }
 
-    if(whichField & SelectionModelFieldMask && getSelectionModel() != NullFC)
+    if(whichField & SelectionModelFieldMask && getSelectionModel() != NULL)
     {
         getSelectionModel()->addSelectionListener(&_MenuSelectionListener);
     }
 }
 
-void PopupMenu::dump(      UInt32    , 
+void PopupMenu::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump PopupMenu NI" << std::endl;
 }
 
-void PopupMenu::MenuSelectionListener::selectionChanged(const SelectionEventPtr e)
+void PopupMenu::MenuSelectionListener::selectionChanged(const SelectionEventUnrecPtr e)
 {
     for(UInt32 i(0) ; i<e->getMFPreviouslySelected()->size() ; ++i)
     {
-        if(_PopupMenu->getChildren()[e->getPreviouslySelected(i)]->getType().isDerivedFrom(MenuItem::getClassType()) &&
-           MenuItem::Ptr::dcast(_PopupMenu->getChildren()[e->getPreviouslySelected(i)])->getSelected())
+        if(_PopupMenu->getChildren(e->getPreviouslySelected(i))->getType().isDerivedFrom(MenuItem::getClassType()) &&
+           dynamic_cast<MenuItem*>(_PopupMenu->getChildren(e->getPreviouslySelected(i)))->getSelected())
         {
-            beginEditCP(_PopupMenu->getChildren()[e->getPreviouslySelected(i)], MenuItem::SelectedFieldMask);
-                MenuItem::Ptr::dcast(_PopupMenu->getChildren()[e->getPreviouslySelected(i)])->setSelected(false);
-            endEditCP(_PopupMenu->getChildren()[e->getPreviouslySelected(i)], MenuItem::SelectedFieldMask);
+                dynamic_cast<MenuItem*>(_PopupMenu->getChildren(e->getPreviouslySelected(i)))->setSelected(false);
         }
     }
 
     for(UInt32 i(0) ; i<e->getMFSelected()->size() ; ++i)
     {
-        if(_PopupMenu->getChildren()[e->getSelected(i)]->getType().isDerivedFrom(MenuItem::getClassType()) &&
-           !MenuItem::Ptr::dcast(_PopupMenu->getChildren()[e->getSelected(i)])->getSelected())
+        if(_PopupMenu->getChildren(e->getSelected(i))->getType().isDerivedFrom(MenuItem::getClassType()) &&
+           !dynamic_cast<MenuItem*>(_PopupMenu->getChildren(e->getSelected(i)))->getSelected())
         {
-            beginEditCP(_PopupMenu->getChildren()[e->getSelected(i)], MenuItem::SelectedFieldMask);
-                MenuItem::Ptr::dcast(_PopupMenu->getChildren()[e->getSelected(i)])->setSelected(true);
-            endEditCP(_PopupMenu->getChildren()[e->getSelected(i)], MenuItem::SelectedFieldMask);
+                dynamic_cast<MenuItem*>(_PopupMenu->getChildren(e->getSelected(i)))->setSelected(true);
         }
     }
 }
 
 OSG_END_NAMESPACE
-

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,65 +58,71 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGStaticLayoutSpring.h" // Parent
 
-#include "Layout/Spring/OSGLayoutSpringFields.h" // Spring1 type
-#include "Layout/Spring/OSGLayoutSpringFields.h" // Spring2 type
+#include "OSGLayoutSpringFields.h"      // Spring1 type
 
 #include "OSGCompoundLayoutSpringFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class CompoundLayoutSpring;
-class BinaryDataHandler;
 
 //! \brief CompoundLayoutSpring Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING CompoundLayoutSpringBase : public StaticLayoutSpring
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING CompoundLayoutSpringBase : public StaticLayoutSpring
 {
-  private:
-
-    typedef StaticLayoutSpring    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef CompoundLayoutSpringPtr  Ptr;
+    typedef StaticLayoutSpring Inherited;
+    typedef StaticLayoutSpring ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(CompoundLayoutSpring);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
         Spring1FieldId = Inherited::NextFieldId,
         Spring2FieldId = Spring1FieldId + 1,
-        NextFieldId    = Spring2FieldId + 1
+        NextFieldId = Spring2FieldId + 1
     };
 
-    static const OSG::BitVector Spring1FieldMask;
-    static const OSG::BitVector Spring2FieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector Spring1FieldMask =
+        (TypeTraits<BitVector>::One << Spring1FieldId);
+    static const OSG::BitVector Spring2FieldMask =
+        (TypeTraits<BitVector>::One << Spring2FieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecLayoutSpringPtr SFSpring1Type;
+    typedef SFUnrecLayoutSpringPtr SFSpring2Type;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -125,25 +131,32 @@ class OSG_USERINTERFACELIB_DLLMAPPING CompoundLayoutSpringBase : public StaticLa
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFLayoutSpringPtr   *getSFSpring1        (void);
-           SFLayoutSpringPtr   *getSFSpring2        (void);
+            const SFUnrecLayoutSpringPtr *getSFSpring1        (void) const;
+                  SFUnrecLayoutSpringPtr *editSFSpring1        (void);
+            const SFUnrecLayoutSpringPtr *getSFSpring2        (void) const;
+                  SFUnrecLayoutSpringPtr *editSFSpring2        (void);
 
-           LayoutSpringPtr     &getSpring1        (void);
-     const LayoutSpringPtr     &getSpring1        (void) const;
-           LayoutSpringPtr     &getSpring2        (void);
-     const LayoutSpringPtr     &getSpring2        (void) const;
+
+                  LayoutSpring * getSpring1        (void) const;
+
+                  LayoutSpring * getSpring2        (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setSpring1        ( const LayoutSpringPtr &value );
-     void setSpring2        ( const LayoutSpringPtr &value );
+            void setSpring1        (LayoutSpring * const value);
+            void setSpring2        (LayoutSpring * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -151,23 +164,29 @@ class OSG_USERINTERFACELIB_DLLMAPPING CompoundLayoutSpringBase : public StaticLa
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFLayoutSpringPtr   _sfSpring1;
-    SFLayoutSpringPtr   _sfSpring2;
+    SFUnrecLayoutSpringPtr _sfSpring1;
+    SFUnrecLayoutSpringPtr _sfSpring2;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -182,69 +201,77 @@ class OSG_USERINTERFACELIB_DLLMAPPING CompoundLayoutSpringBase : public StaticLa
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~CompoundLayoutSpringBase(void); 
+    virtual ~CompoundLayoutSpringBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const CompoundLayoutSpring *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleSpring1         (void) const;
+    EditFieldHandlePtr editHandleSpring1        (void);
+    GetFieldHandlePtr  getHandleSpring2         (void) const;
+    EditFieldHandlePtr editHandleSpring2        (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      CompoundLayoutSpringBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      CompoundLayoutSpringBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      CompoundLayoutSpringBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const CompoundLayoutSpringBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef CompoundLayoutSpringBase *CompoundLayoutSpringBaseP;
 
-typedef osgIF<CompoundLayoutSpringBase::isNodeCore,
-              CoredNodePtr<CompoundLayoutSpring>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet CompoundLayoutSpringNodePtr;
-
-typedef RefPtr<CompoundLayoutSpringPtr> CompoundLayoutSpringRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGCOMPOUNDLAYOUTSPRINGBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGCOMPOUNDLAYOUTSPRINGBASE_H_ */

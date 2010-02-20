@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGComponentWidthLayoutSpring.h"
-#include "Component/OSGComponent.h"
+#include "OSGComponent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::ComponentWidthLayoutSpring
-A UI ComponentWidth LayoutSpring. 	
-*/
+// Documentation for this class is emitted in the
+// OSGComponentWidthLayoutSpringBase.cpp file.
+// To modify it, please change the .fcd file (OSGComponentWidthLayoutSpring.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -68,20 +63,23 @@ A UI ComponentWidth LayoutSpring.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ComponentWidthLayoutSpring::initMethod (void)
+void ComponentWidthLayoutSpring::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-ComponentWidthLayoutSpringPtr ComponentWidthLayoutSpring::create (ComponentPtr TheComponent, UInt32 SizeField)
+ComponentWidthLayoutSpringTransitPtr ComponentWidthLayoutSpring::create (ComponentRefPtr TheComponent, UInt32 SizeField)
 {
-    ComponentWidthLayoutSpringPtr NewSpring = createEmpty();
+    ComponentWidthLayoutSpring* NewSpring = createEmpty();
 
-    beginEditCP(NewSpring, ComponentFieldMask | SizeFieldFieldMask);
-        NewSpring->setComponent(TheComponent);
-        NewSpring->setSizeField(SizeField);
-    endEditCP(NewSpring, ComponentFieldMask | SizeFieldFieldMask);
+    NewSpring->setComponent(TheComponent);
+    NewSpring->setSizeField(SizeField);
 
-    return NewSpring;
+    return ComponentWidthLayoutSpringTransitPtr(NewSpring);
 }
 
 /***************************************************************************\
@@ -121,7 +119,6 @@ Real32 ComponentWidthLayoutSpring::getMaximumValue(void) const
     return osgMin<Real32>(TypeTraits< Real32 >::getMax(), getComponent()->getMaxSize().x());
 }
 
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -144,41 +141,17 @@ ComponentWidthLayoutSpring::~ComponentWidthLayoutSpring(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void ComponentWidthLayoutSpring::changed(BitVector whichField, UInt32 origin)
+void ComponentWidthLayoutSpring::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void ComponentWidthLayoutSpring::dump(      UInt32    , 
+void ComponentWidthLayoutSpring::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump ComponentWidthLayoutSpring NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGCOMPONENTWIDTHLAYOUTSPRINGBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCOMPONENTWIDTHLAYOUTSPRINGBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCOMPONENTWIDTHLAYOUTSPRINGFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

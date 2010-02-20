@@ -3,18 +3,21 @@
 <FieldContainer
 	name="ShadowBorder"
 	parent="Border"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 UI Shadow Border.
 	<Field
 		name="TopOffset"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0"
@@ -24,6 +27,7 @@ UI Shadow Border.
 	<Field
 		name="BottomOffset"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="5"
@@ -33,6 +37,7 @@ UI Shadow Border.
 	<Field
 		name="LeftOffset"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0"
@@ -42,6 +47,7 @@ UI Shadow Border.
 	<Field
 		name="RightOffset"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="5"
@@ -51,6 +57,7 @@ UI Shadow Border.
 	<Field
 		name="InternalColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,0.0,0.0,1.0"
@@ -60,6 +67,7 @@ UI Shadow Border.
 	<Field
 		name="EdgeColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,0.0,0.0,1.0"
@@ -68,17 +76,18 @@ UI Shadow Border.
 	</Field>
 	<Field
 		name="InsideBorder"
-		type="BorderPtr"
+		type="Border"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="OSGBorder.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="CornerRadius"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="3"
@@ -88,6 +97,7 @@ UI Shadow Border.
 	<Field
 		name="InternalToEdgeColorLength"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="3"

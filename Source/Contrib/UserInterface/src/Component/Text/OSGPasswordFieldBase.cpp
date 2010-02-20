@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,155 +50,207 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEPASSWORDFIELDINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGPasswordFieldBase.h"
 #include "OSGPasswordField.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  PasswordFieldBase::EchoCharFieldMask = 
-    (TypeTraits<BitVector>::One << PasswordFieldBase::EchoCharFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  PasswordFieldBase::EchoFieldMask = 
-    (TypeTraits<BitVector>::One << PasswordFieldBase::EchoFieldId);
+/*! \class OSG::PasswordField
+    A UI Password Field
+ */
 
-const OSG::BitVector PasswordFieldBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var std::string     PasswordFieldBase::_sfEchoChar
     
 */
+
 /*! \var std::string     PasswordFieldBase::_sfEcho
     
 */
 
-//! PasswordField description
 
-FieldDescription *PasswordFieldBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<PasswordField *>::_type("PasswordFieldPtr", "TextFieldPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(PasswordField *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           PasswordField *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           PasswordField *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void PasswordFieldBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFString::getClassType(), 
-                     "EchoChar", 
-                     EchoCharFieldId, EchoCharFieldMask,
-                     false,
-                     (FieldAccessMethod) &PasswordFieldBase::getSFEchoChar),
-    new FieldDescription(SFString::getClassType(), 
-                     "Echo", 
-                     EchoFieldId, EchoFieldMask,
-                     false,
-                     (FieldAccessMethod) &PasswordFieldBase::getSFEcho)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType PasswordFieldBase::_type(
-    "PasswordField",
-    "TextField",
-    NULL,
-    (PrototypeCreateF) &PasswordFieldBase::createEmpty,
+    pDesc = new SFString::Description(
+        SFString::getClassType(),
+        "EchoChar",
+        "",
+        EchoCharFieldId, EchoCharFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&PasswordField::editHandleEchoChar),
+        static_cast<FieldGetMethodSig >(&PasswordField::getHandleEchoChar));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFString::Description(
+        SFString::getClassType(),
+        "Echo",
+        "",
+        EchoFieldId, EchoFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&PasswordField::editHandleEcho),
+        static_cast<FieldGetMethodSig >(&PasswordField::getHandleEcho));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+PasswordFieldBase::TypeObject PasswordFieldBase::_type(
+    PasswordFieldBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&PasswordFieldBase::createEmptyLocal),
     PasswordField::initMethod,
-    _desc,
-    sizeof(_desc));
+    PasswordField::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&PasswordField::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"PasswordField\"\n"
+    "\tparent=\"TextField\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Password Field\n"
+    "\t<Field\n"
+    "\t\tname=\"EchoChar\"\n"
+    "\t\ttype=\"std::string\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue='\"*\"'\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Echo\"\n"
+    "\t\ttype=\"std::string\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI Password Field\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(PasswordFieldBase, PasswordFieldPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &PasswordFieldBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &PasswordFieldBase::getType(void) const 
+FieldContainerType &PasswordFieldBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr PasswordFieldBase::shallowCopy(void) const 
-{ 
-    PasswordFieldPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const PasswordField *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 PasswordFieldBase::getContainerSize(void) const 
-{ 
-    return sizeof(PasswordField); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void PasswordFieldBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &PasswordFieldBase::getType(void) const
 {
-    this->executeSyncImpl((PasswordFieldBase *) &other, whichField);
+    return _type;
 }
-#else
-void PasswordFieldBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 PasswordFieldBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((PasswordFieldBase *) &other, whichField, sInfo);
+    return sizeof(PasswordField);
 }
-void PasswordFieldBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFString *PasswordFieldBase::editSFEchoChar(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(EchoCharFieldMask);
+
+    return &_sfEchoChar;
 }
 
-void PasswordFieldBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFString *PasswordFieldBase::getSFEchoChar(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfEchoChar;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-PasswordFieldBase::PasswordFieldBase(void) :
-    _sfEchoChar               (std::string("*")), 
-    _sfEcho                   (), 
-    Inherited() 
+SFString *PasswordFieldBase::editSFEcho(void)
 {
+    editSField(EchoFieldMask);
+
+    return &_sfEcho;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-PasswordFieldBase::PasswordFieldBase(const PasswordFieldBase &source) :
-    _sfEchoChar               (source._sfEchoChar               ), 
-    _sfEcho                   (source._sfEcho                   ), 
-    Inherited                 (source)
+const SFString *PasswordFieldBase::getSFEcho(void) const
 {
+    return &_sfEcho;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-PasswordFieldBase::~PasswordFieldBase(void)
-{
-}
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 PasswordFieldBase::getBinSize(const BitVector &whichField)
+UInt32 PasswordFieldBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -206,18 +258,16 @@ UInt32 PasswordFieldBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfEchoChar.getBinSize();
     }
-
     if(FieldBits::NoField != (EchoFieldMask & whichField))
     {
         returnValue += _sfEcho.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void PasswordFieldBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void PasswordFieldBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -225,17 +275,14 @@ void PasswordFieldBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfEchoChar.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EchoFieldMask & whichField))
     {
         _sfEcho.copyToBin(pMem);
     }
-
-
 }
 
-void PasswordFieldBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void PasswordFieldBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -243,93 +290,244 @@ void PasswordFieldBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfEchoChar.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EchoFieldMask & whichField))
     {
         _sfEcho.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void PasswordFieldBase::executeSyncImpl(      PasswordFieldBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+PasswordFieldTransitPtr PasswordFieldBase::createLocal(BitVector bFlags)
 {
+    PasswordFieldTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (EchoCharFieldMask & whichField))
-        _sfEchoChar.syncWith(pOther->_sfEchoChar);
+        fc = dynamic_pointer_cast<PasswordField>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (EchoFieldMask & whichField))
-        _sfEcho.syncWith(pOther->_sfEcho);
-
-
-}
-#else
-void PasswordFieldBase::executeSyncImpl(      PasswordFieldBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (EchoCharFieldMask & whichField))
-        _sfEchoChar.syncWith(pOther->_sfEchoChar);
-
-    if(FieldBits::NoField != (EchoFieldMask & whichField))
-        _sfEcho.syncWith(pOther->_sfEcho);
-
-
-
+    return fc;
 }
 
-void PasswordFieldBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+PasswordFieldTransitPtr PasswordFieldBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    PasswordFieldTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<PasswordField>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+PasswordFieldTransitPtr PasswordFieldBase::create(void)
+{
+    PasswordFieldTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<PasswordField>(tmpPtr);
+    }
+
+    return fc;
+}
+
+PasswordField *PasswordFieldBase::createEmptyLocal(BitVector bFlags)
+{
+    PasswordField *returnValue;
+
+    newPtr<PasswordField>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+PasswordField *PasswordFieldBase::createEmpty(void)
+{
+    PasswordField *returnValue;
+
+    newPtr<PasswordField>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr PasswordFieldBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    PasswordField *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const PasswordField *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr PasswordFieldBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    PasswordField *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const PasswordField *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr PasswordFieldBase::shallowCopy(void) const
+{
+    PasswordField *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const PasswordField *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+PasswordFieldBase::PasswordFieldBase(void) :
+    Inherited(),
+    _sfEchoChar               (std::string("*")),
+    _sfEcho                   ()
+{
+}
+
+PasswordFieldBase::PasswordFieldBase(const PasswordFieldBase &source) :
+    Inherited(source),
+    _sfEchoChar               (source._sfEchoChar               ),
+    _sfEcho                   (source._sfEcho                   )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+PasswordFieldBase::~PasswordFieldBase(void)
+{
+}
+
+
+GetFieldHandlePtr PasswordFieldBase::getHandleEchoChar        (void) const
+{
+    SFString::GetHandlePtr returnValue(
+        new  SFString::GetHandle(
+             &_sfEchoChar,
+             this->getType().getFieldDesc(EchoCharFieldId),
+             const_cast<PasswordFieldBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr PasswordFieldBase::editHandleEchoChar       (void)
+{
+    SFString::EditHandlePtr returnValue(
+        new  SFString::EditHandle(
+             &_sfEchoChar,
+             this->getType().getFieldDesc(EchoCharFieldId),
+             this));
+
+
+    editSField(EchoCharFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr PasswordFieldBase::getHandleEcho            (void) const
+{
+    SFString::GetHandlePtr returnValue(
+        new  SFString::GetHandle(
+             &_sfEcho,
+             this->getType().getFieldDesc(EchoFieldId),
+             const_cast<PasswordFieldBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr PasswordFieldBase::editHandleEcho           (void)
+{
+    SFString::EditHandlePtr returnValue(
+        new  SFString::EditHandle(
+             &_sfEcho,
+             this->getType().getFieldDesc(EchoFieldId),
+             this));
+
+
+    editSField(EchoFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void PasswordFieldBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    PasswordField *pThis = static_cast<PasswordField *>(this);
+
+    pThis->execSync(static_cast<PasswordField *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *PasswordFieldBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    PasswordField *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const PasswordField *>(pRefAspect),
+                  dynamic_cast<const PasswordField *>(this));
+
+    return returnValue;
+}
+#endif
+
+void PasswordFieldBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<PasswordFieldPtr>::_type("PasswordFieldPtr", "TextFieldPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(PasswordFieldPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(PasswordFieldPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGPASSWORDFIELDBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPASSWORDFIELDBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGPASSWORDFIELDFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

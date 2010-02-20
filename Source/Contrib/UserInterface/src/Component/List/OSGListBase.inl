@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,188 +55,167 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &ListBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ListBase::getClassTypeId(void) 
+OSG::UInt32 ListBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-ListPtr ListBase::create(void) 
-{
-    ListPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = ListPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-ListPtr ListBase::createEmpty(void) 
-{ 
-    ListPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 ListBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the List::_sfOrientation field.
-inline
-SFUInt32 *ListBase::getSFOrientation(void)
-{
-    return &_sfOrientation;
-}
-
-//! Get the List::_sfCellMajorAxisLength field.
-inline
-SFUInt32 *ListBase::getSFCellMajorAxisLength(void)
-{
-    return &_sfCellMajorAxisLength;
-}
-
-//! Get the List::_sfModel field.
-inline
-SFListModelPtr *ListBase::getSFModel(void)
-{
-    return &_sfModel;
-}
-
-//! Get the List::_sfCellGenerator field.
-inline
-SFComponentGeneratorPtr *ListBase::getSFCellGenerator(void)
-{
-    return &_sfCellGenerator;
-}
-
-//! Get the List::_sfAutoScrollToFocused field.
-inline
-SFBool *ListBase::getSFAutoScrollToFocused(void)
-{
-    return &_sfAutoScrollToFocused;
-}
-
-
 //! Get the value of the List::_sfOrientation field.
+
 inline
-UInt32 &ListBase::getOrientation(void)
+UInt32 &ListBase::editOrientation(void)
 {
+    editSField(OrientationFieldMask);
+
     return _sfOrientation.getValue();
 }
 
 //! Get the value of the List::_sfOrientation field.
 inline
-const UInt32 &ListBase::getOrientation(void) const
+      UInt32  ListBase::getOrientation(void) const
 {
     return _sfOrientation.getValue();
 }
 
 //! Set the value of the List::_sfOrientation field.
 inline
-void ListBase::setOrientation(const UInt32 &value)
+void ListBase::setOrientation(const UInt32 value)
 {
+    editSField(OrientationFieldMask);
+
     _sfOrientation.setValue(value);
 }
-
 //! Get the value of the List::_sfCellMajorAxisLength field.
+
 inline
-UInt32 &ListBase::getCellMajorAxisLength(void)
+UInt32 &ListBase::editCellMajorAxisLength(void)
 {
+    editSField(CellMajorAxisLengthFieldMask);
+
     return _sfCellMajorAxisLength.getValue();
 }
 
 //! Get the value of the List::_sfCellMajorAxisLength field.
 inline
-const UInt32 &ListBase::getCellMajorAxisLength(void) const
+      UInt32  ListBase::getCellMajorAxisLength(void) const
 {
     return _sfCellMajorAxisLength.getValue();
 }
 
 //! Set the value of the List::_sfCellMajorAxisLength field.
 inline
-void ListBase::setCellMajorAxisLength(const UInt32 &value)
+void ListBase::setCellMajorAxisLength(const UInt32 value)
 {
+    editSField(CellMajorAxisLengthFieldMask);
+
     _sfCellMajorAxisLength.setValue(value);
 }
 
 //! Get the value of the List::_sfModel field.
 inline
-ListModelPtr &ListBase::getModel(void)
-{
-    return _sfModel.getValue();
-}
-
-//! Get the value of the List::_sfModel field.
-inline
-const ListModelPtr &ListBase::getModel(void) const
+ListModel * ListBase::getModel(void) const
 {
     return _sfModel.getValue();
 }
 
 //! Set the value of the List::_sfModel field.
 inline
-void ListBase::setModel(const ListModelPtr &value)
+void ListBase::setModel(ListModel * const value)
 {
+    editSField(ModelFieldMask);
+
     _sfModel.setValue(value);
 }
 
 //! Get the value of the List::_sfCellGenerator field.
 inline
-ComponentGeneratorPtr &ListBase::getCellGenerator(void)
-{
-    return _sfCellGenerator.getValue();
-}
-
-//! Get the value of the List::_sfCellGenerator field.
-inline
-const ComponentGeneratorPtr &ListBase::getCellGenerator(void) const
+ComponentGenerator * ListBase::getCellGenerator(void) const
 {
     return _sfCellGenerator.getValue();
 }
 
 //! Set the value of the List::_sfCellGenerator field.
 inline
-void ListBase::setCellGenerator(const ComponentGeneratorPtr &value)
+void ListBase::setCellGenerator(ComponentGenerator * const value)
 {
+    editSField(CellGeneratorFieldMask);
+
     _sfCellGenerator.setValue(value);
 }
-
 //! Get the value of the List::_sfAutoScrollToFocused field.
+
 inline
-bool &ListBase::getAutoScrollToFocused(void)
+bool &ListBase::editAutoScrollToFocused(void)
 {
+    editSField(AutoScrollToFocusedFieldMask);
+
     return _sfAutoScrollToFocused.getValue();
 }
 
 //! Get the value of the List::_sfAutoScrollToFocused field.
 inline
-const bool &ListBase::getAutoScrollToFocused(void) const
+      bool  ListBase::getAutoScrollToFocused(void) const
 {
     return _sfAutoScrollToFocused.getValue();
 }
 
 //! Set the value of the List::_sfAutoScrollToFocused field.
 inline
-void ListBase::setAutoScrollToFocused(const bool &value)
+void ListBase::setAutoScrollToFocused(const bool value)
 {
+    editSField(AutoScrollToFocusedFieldMask);
+
     _sfAutoScrollToFocused.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void ListBase::execSync (      ListBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGLISTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
+        _sfOrientation.syncWith(pFrom->_sfOrientation);
+
+    if(FieldBits::NoField != (CellMajorAxisLengthFieldMask & whichField))
+        _sfCellMajorAxisLength.syncWith(pFrom->_sfCellMajorAxisLength);
+
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
+        _sfModel.syncWith(pFrom->_sfModel);
+
+    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
+        _sfCellGenerator.syncWith(pFrom->_sfCellGenerator);
+
+    if(FieldBits::NoField != (AutoScrollToFocusedFieldMask & whichField))
+        _sfAutoScrollToFocused.syncWith(pFrom->_sfAutoScrollToFocused);
+}
+#endif
+
+
+inline
+const Char8 *ListBase::getClassname(void)
+{
+    return "List";
+}
+OSG_GEN_CONTAINERPTR(List);
+
+OSG_END_NAMESPACE
 

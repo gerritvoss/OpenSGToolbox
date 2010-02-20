@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,89 +42,93 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 #include "OSGUIDrawingSurfaceBase.h"
+#include "OSGWindowEventProducer.h"
+#include "OSGGraphics.h"
+#include "OSGUIDrawingSurfaceMouseTransformFunctor.h"
 
-
-#include <OpenSG/Input/OSGKeyListener.h>
-#include <OpenSG/Input/OSGMouseListener.h>
-#include <OpenSG/Input/OSGMouseWheelListener.h>
-#include <OpenSG/Input/OSGMouseMotionListener.h>
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGKeyListener.h"
+#include "OSGMouseListener.h"
+#include "OSGMouseWheelListener.h"
+#include "OSGMouseMotionListener.h"
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief UIDrawingSurface class. See \ref 
-           PageUserInterfaceUIDrawingSurface for a description.
+/*! \brief UIDrawingSurface class. See \ref
+           PageContribUserInterfaceUIDrawingSurface for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurface : public UIDrawingSurfaceBase,
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIDrawingSurface : public UIDrawingSurfaceBase,
 	public MouseListener,
 	public KeyListener,
 	public MouseWheelListener,
 	public MouseMotionListener
-{
-  private:
 
-    typedef UIDrawingSurfaceBase Inherited;
+{
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef UIDrawingSurfaceBase Inherited;
+    typedef UIDrawingSurface     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
-
     void detachFromEventProducer(void);
 
 	//Mouse Events
-    virtual void mouseClicked(const MouseEventPtr e);
-    virtual void mouseEntered(const MouseEventPtr e);
-    virtual void mouseExited(const MouseEventPtr e);
-    virtual void mousePressed(const MouseEventPtr e);
-    virtual void mouseReleased(const MouseEventPtr e);
+    virtual void mouseClicked(const MouseEventUnrecPtr e);
+    virtual void mouseEntered(const MouseEventUnrecPtr e);
+    virtual void mouseExited(const MouseEventUnrecPtr e);
+    virtual void mousePressed(const MouseEventUnrecPtr e);
+    virtual void mouseReleased(const MouseEventUnrecPtr e);
 
 	//Mouse Motion Events
-    virtual void mouseMoved(const MouseEventPtr e);
-    virtual void mouseDragged(const MouseEventPtr e);
+    virtual void mouseMoved(const MouseEventUnrecPtr e);
+    virtual void mouseDragged(const MouseEventUnrecPtr e);
 
 	//Mouse Wheel Events
-    virtual void mouseWheelMoved(const MouseWheelEventPtr e);
+    virtual void mouseWheelMoved(const MouseWheelEventUnrecPtr e);
 
 	//Key Events
-	virtual void keyPressed(const KeyEventPtr e);
-	virtual void keyReleased(const KeyEventPtr e);
-	virtual void keyTyped(const KeyEventPtr e);
+	virtual void keyPressed(const KeyEventUnrecPtr e);
+	virtual void keyReleased(const KeyEventUnrecPtr e);
+	virtual void keyTyped(const KeyEventUnrecPtr e);
 
     virtual Pnt2f getMousePosition(void) const;
 
 	virtual UInt32 getNumWindowLayers(void) const;
-	virtual Int32 getWindowLayer(InternalWindowPtr TheWindow) const;
-	virtual InternalWindowPtr getWindowAtLayer(const UInt32& Layer) const;
-	virtual void setWindowToLayer(InternalWindowPtr TheWindow, const UInt32& Layer);
-	virtual void moveWindowUp(InternalWindowPtr TheWindow);
-	virtual void moveWindowDown(InternalWindowPtr TheWindow);
-	virtual void moveWindowToTop(InternalWindowPtr TheWindow);
-	virtual void moveWindowToBottom(InternalWindowPtr TheWindow);
+	virtual Int32 getWindowLayer(InternalWindowRefPtr TheWindow) const;
+	virtual InternalWindowRefPtr getWindowAtLayer(const UInt32& Layer) const;
+	virtual void setWindowToLayer(InternalWindowRefPtr TheWindow, const UInt32& Layer);
+	virtual void moveWindowUp(InternalWindowRefPtr TheWindow);
+	virtual void moveWindowDown(InternalWindowRefPtr TheWindow);
+	virtual void moveWindowToTop(InternalWindowRefPtr TheWindow);
+	virtual void moveWindowToBottom(InternalWindowRefPtr TheWindow);
 
-	virtual void openWindow(InternalWindowPtr TheWindow, const Int32 Layer = -1);
-	virtual void closeWindow(InternalWindowPtr TheWindow);
+	virtual void openWindow(InternalWindowRefPtr TheWindow, const Int32 Layer = -1);
+	virtual void closeWindow(InternalWindowRefPtr TheWindow);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in UIDrawingSurfaceBase.
@@ -141,7 +145,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurface : public UIDrawingSurface
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~UIDrawingSurface(void); 
+    virtual ~UIDrawingSurface(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
 
@@ -150,29 +161,26 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurface : public UIDrawingSurface
                       _MouseWheelEventConnection,
                       _KeyEventConnection;
 
+	void checkMouseEnterExit(const InputEventUnrecPtr e, const Pnt2f& MouseLocation, ViewportRefPtr TheViewport);
+
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class UIDrawingSurfaceBase;
 
-    static void initMethod(void);
-
-	void checkMouseEnterExit(const InputEventPtr e, const Pnt2f& MouseLocation, ViewportPtr TheViewport);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const UIDrawingSurface &source);
-	
 };
 
 typedef UIDrawingSurface *UIDrawingSurfaceP;
 
 OSG_END_NAMESPACE
 
+//#include "OSGInternalWindow.h"
+
 #include "OSGUIDrawingSurfaceBase.inl"
 #include "OSGUIDrawingSurface.inl"
-
-#define OSGUIDRAWINGSURFACE_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGUIDRAWINGSURFACE_H_ */

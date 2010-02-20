@@ -31,20 +31,20 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGEventListener.h>
+#include "OSGEventListener.h"
 #include "OSGActionEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING ActionListener : public EventListener
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ActionListener : public EventListener
 {
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void actionPerformed(const ActionEventPtr e) = 0;
+   virtual void actionPerformed(const ActionEventUnrecPtr e) = 0;
 };
 
 typedef ActionListener* ActionListenerPtr;

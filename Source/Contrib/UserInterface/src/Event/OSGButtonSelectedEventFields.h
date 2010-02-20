@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,64 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/Toolbox/OSGEventFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class ButtonSelectedEvent;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! ButtonSelectedEventPtr
+OSG_GEN_CONTAINERPTR(ButtonSelectedEvent);
 
-typedef FCPtr<EventPtr, ButtonSelectedEvent> ButtonSelectedEventPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<ButtonSelectedEventPtr> : 
-    public FieldTraitsRecurseMapper<ButtonSelectedEventPtr, true>
+struct FieldTraits<ButtonSelectedEvent *> :
+    public FieldTraitsFCPtrBase<ButtonSelectedEvent *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFButtonSelectedEventPtr"; }
+    typedef FieldTraits<ButtonSelectedEvent *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFButtonSelectedEventPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFButtonSelectedEventPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<ButtonSelectedEventPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<ButtonSelectedEvent *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecButtonSelectedEventPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<ButtonSelectedEvent *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecButtonSelectedEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ButtonSelectedEvent *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakButtonSelectedEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ButtonSelectedEvent *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdButtonSelectedEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ButtonSelectedEvent *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecButtonSelectedEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ButtonSelectedEvent *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecButtonSelectedEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ButtonSelectedEvent *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakButtonSelectedEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ButtonSelectedEvent *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdButtonSelectedEventPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ButtonSelectedEvent *,
+                      RecordedRefCountPolicy  > SFRecButtonSelectedEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ButtonSelectedEvent *,
+                      UnrecordedRefCountPolicy> SFUnrecButtonSelectedEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ButtonSelectedEvent *,
+                      WeakRefCountPolicy      > SFWeakButtonSelectedEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ButtonSelectedEvent *,
+                      NoRefCountPolicy        > SFUncountedButtonSelectedEventPtr;
 
-typedef SField<ButtonSelectedEventPtr> SFButtonSelectedEventPtr;
-#endif
 
-#ifndef OSG_COMPILEBUTTONSELECTEDEVENTINST
-OSG_DLLEXPORT_DECL1(SField, ButtonSelectedEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ButtonSelectedEvent *,
+                      RecordedRefCountPolicy  > MFRecButtonSelectedEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ButtonSelectedEvent *,
+                      UnrecordedRefCountPolicy> MFUnrecButtonSelectedEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ButtonSelectedEvent *,
+                      WeakRefCountPolicy      > MFWeakButtonSelectedEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ButtonSelectedEvent *,
+                      NoRefCountPolicy        > MFUncountedButtonSelectedEventPtr;
+
+
+
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecButtonSelectedEventPtr : 
+    public PointerSField<ButtonSelectedEvent *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecButtonSelectedEventPtr : 
+    public PointerSField<ButtonSelectedEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakButtonSelectedEventPtr :
+    public PointerSField<ButtonSelectedEvent *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedButtonSelectedEventPtr :
+    public PointerSField<ButtonSelectedEvent *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecButtonSelectedEventPtr :
+    public PointerMField<ButtonSelectedEvent *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecButtonSelectedEventPtr :
+    public PointerMField<ButtonSelectedEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakButtonSelectedEventPtr :
+    public PointerMField<ButtonSelectedEvent *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedButtonSelectedEventPtr :
+    public PointerMField<ButtonSelectedEvent *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

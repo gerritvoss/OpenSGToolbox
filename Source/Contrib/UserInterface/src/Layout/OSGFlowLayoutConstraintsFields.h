@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include "OSGLayoutConstraintsFields.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
+
 
 OSG_BEGIN_NAMESPACE
 
 class FlowLayoutConstraints;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! FlowLayoutConstraintsPtr
+OSG_GEN_CONTAINERPTR(FlowLayoutConstraints);
 
-typedef FCPtr<LayoutConstraintsPtr, FlowLayoutConstraints> FlowLayoutConstraintsPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<FlowLayoutConstraintsPtr> : 
-    public FieldTraitsRecurseMapper<FlowLayoutConstraintsPtr, true>
+struct FieldTraits<FlowLayoutConstraints *> :
+    public FieldTraitsFCPtrBase<FlowLayoutConstraints *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFFlowLayoutConstraintsPtr"; }
-    static const char *getMName(void) { return "MFFlowLayoutConstraintsPtr"; }
+    typedef FieldTraits<FlowLayoutConstraints *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFFlowLayoutConstraintsPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFFlowLayoutConstraintsPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<FlowLayoutConstraintsPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<FlowLayoutConstraints *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecFlowLayoutConstraintsPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<FlowLayoutConstraints *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecFlowLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<FlowLayoutConstraints *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakFlowLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<FlowLayoutConstraints *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdFlowLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<FlowLayoutConstraints *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecFlowLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<FlowLayoutConstraints *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecFlowLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<FlowLayoutConstraints *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakFlowLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<FlowLayoutConstraints *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdFlowLayoutConstraintsPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<FlowLayoutConstraints *,
+                      RecordedRefCountPolicy  > SFRecFlowLayoutConstraintsPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<FlowLayoutConstraints *,
+                      UnrecordedRefCountPolicy> SFUnrecFlowLayoutConstraintsPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<FlowLayoutConstraints *,
+                      WeakRefCountPolicy      > SFWeakFlowLayoutConstraintsPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<FlowLayoutConstraints *,
+                      NoRefCountPolicy        > SFUncountedFlowLayoutConstraintsPtr;
 
-typedef SField<FlowLayoutConstraintsPtr> SFFlowLayoutConstraintsPtr;
-#endif
 
-#ifndef OSG_COMPILEFLOWLAYOUTCONSTRAINTSINST
-OSG_DLLEXPORT_DECL1(SField, FlowLayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<FlowLayoutConstraints *,
+                      RecordedRefCountPolicy  > MFRecFlowLayoutConstraintsPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<FlowLayoutConstraints *,
+                      UnrecordedRefCountPolicy> MFUnrecFlowLayoutConstraintsPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<FlowLayoutConstraints *,
+                      WeakRefCountPolicy      > MFWeakFlowLayoutConstraintsPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<FlowLayoutConstraints *,
+                      NoRefCountPolicy        > MFUncountedFlowLayoutConstraintsPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<FlowLayoutConstraintsPtr> MFFlowLayoutConstraintsPtr;
-#endif
 
-#ifndef OSG_COMPILEFLOWLAYOUTCONSTRAINTSINST
-OSG_DLLEXPORT_DECL1(MField, FlowLayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecFlowLayoutConstraintsPtr : 
+    public PointerSField<FlowLayoutConstraints *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecFlowLayoutConstraintsPtr : 
+    public PointerSField<FlowLayoutConstraints *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakFlowLayoutConstraintsPtr :
+    public PointerSField<FlowLayoutConstraints *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedFlowLayoutConstraintsPtr :
+    public PointerSField<FlowLayoutConstraints *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecFlowLayoutConstraintsPtr :
+    public PointerMField<FlowLayoutConstraints *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecFlowLayoutConstraintsPtr :
+    public PointerMField<FlowLayoutConstraints *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakFlowLayoutConstraintsPtr :
+    public PointerMField<FlowLayoutConstraints *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedFlowLayoutConstraintsPtr :
+    public PointerMField<FlowLayoutConstraints *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGFLOWLAYOUTCONSTRAINTSFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGFLOWLAYOUTCONSTRAINTSFIELDS_H_ */

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGEditableTextComponentFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class TextArea;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! TextAreaPtr
+OSG_GEN_CONTAINERPTR(TextArea);
 
-typedef FCPtr<EditableTextComponentPtr, TextArea> TextAreaPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<TextAreaPtr> : 
-    public FieldTraitsRecurseMapper<TextAreaPtr, true>
+struct FieldTraits<TextArea *> :
+    public FieldTraitsFCPtrBase<TextArea *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFTextAreaPtr"; }
-    static const char *getMName(void) { return "MFTextAreaPtr"; }
+    typedef FieldTraits<TextArea *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFTextAreaPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFTextAreaPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<TextAreaPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<TextArea *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecTextAreaPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<TextArea *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecTextAreaPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TextArea *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakTextAreaPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TextArea *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdTextAreaPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TextArea *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecTextAreaPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TextArea *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecTextAreaPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TextArea *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakTextAreaPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<TextArea *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdTextAreaPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TextArea *,
+                      RecordedRefCountPolicy  > SFRecTextAreaPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TextArea *,
+                      UnrecordedRefCountPolicy> SFUnrecTextAreaPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TextArea *,
+                      WeakRefCountPolicy      > SFWeakTextAreaPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<TextArea *,
+                      NoRefCountPolicy        > SFUncountedTextAreaPtr;
 
-typedef SField<TextAreaPtr> SFTextAreaPtr;
-#endif
 
-#ifndef OSG_COMPILETEXTAREAINST
-OSG_DLLEXPORT_DECL1(SField, TextAreaPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TextArea *,
+                      RecordedRefCountPolicy  > MFRecTextAreaPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TextArea *,
+                      UnrecordedRefCountPolicy> MFUnrecTextAreaPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TextArea *,
+                      WeakRefCountPolicy      > MFWeakTextAreaPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<TextArea *,
+                      NoRefCountPolicy        > MFUncountedTextAreaPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<TextAreaPtr> MFTextAreaPtr;
-#endif
 
-#ifndef OSG_COMPILETEXTAREAINST
-OSG_DLLEXPORT_DECL1(MField, TextAreaPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecTextAreaPtr : 
+    public PointerSField<TextArea *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecTextAreaPtr : 
+    public PointerSField<TextArea *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakTextAreaPtr :
+    public PointerSField<TextArea *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedTextAreaPtr :
+    public PointerSField<TextArea *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecTextAreaPtr :
+    public PointerMField<TextArea *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecTextAreaPtr :
+    public PointerMField<TextArea *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakTextAreaPtr :
+    public PointerMField<TextArea *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedTextAreaPtr :
+    public PointerMField<TextArea *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGTEXTAREAFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGTEXTAREAFIELDS_H_ */

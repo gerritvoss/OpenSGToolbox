@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,64 +58,72 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h> // Parent
+#include "OSGEvent.h" // Parent
 
-#include <OpenSG/OSGUInt8Fields.h> // Option type
-#include <OpenSG/OSGStringFields.h> // Input type
+#include "OSGSysFields.h"               // Option type
+#include "OSGBaseFields.h"              // Input type
 
 #include "OSGDialogWindowEventFields.h"
+
 OSG_BEGIN_NAMESPACE
 
 class DialogWindowEvent;
-class BinaryDataHandler;
 
 //! \brief DialogWindowEvent Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowEventBase : public Event
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindowEventBase : public Event
 {
-  private:
-
-    typedef Event    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef DialogWindowEventPtr  Ptr;
+    typedef Event Inherited;
+    typedef Event ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(DialogWindowEvent);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
         OptionFieldId = Inherited::NextFieldId,
-        InputFieldId  = OptionFieldId + 1,
-        NextFieldId   = InputFieldId  + 1
+        InputFieldId = OptionFieldId + 1,
+        NextFieldId = InputFieldId + 1
     };
 
-    static const OSG::BitVector OptionFieldMask;
-    static const OSG::BitVector InputFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector OptionFieldMask =
+        (TypeTraits<BitVector>::One << OptionFieldId);
+    static const OSG::BitVector InputFieldMask =
+        (TypeTraits<BitVector>::One << InputFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUInt8           SFOptionType;
+    typedef SFString          SFInputType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -124,13 +132,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowEventBase : public Event
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-     const SFUInt8             *getSFOption         (void) const;
-     const SFString            *getSFInput          (void) const;
+
+            const SFUInt8             *getSFOption          (void) const;
+
+            const SFString            *getSFInput           (void) const;
 
 
-     const UInt8               &getOption         (void) const;
+                  UInt8                getOption          (void) const;
 
-     const std::string         &getInput          (void) const;
+            const std::string         &getInput           (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -140,7 +150,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowEventBase : public Event
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -148,11 +158,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowEventBase : public Event
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -160,27 +170,44 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowEventBase : public Event
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  DialogWindowEventPtr      create          (void); 
-    static  DialogWindowEventPtr      createEmpty     (void); 
+    static  DialogWindowEventTransitPtr  create          (void);
+    static  DialogWindowEvent           *createEmpty     (void);
+
+    static  DialogWindowEventTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  DialogWindowEvent            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  DialogWindowEventTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUInt8             _sfOption;
-    SFString            _sfInput;
+    SFUInt8           _sfOption;
+    SFString          _sfInput;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -195,85 +222,108 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowEventBase : public Event
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DialogWindowEventBase(void); 
+    virtual ~DialogWindowEventBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleOption          (void) const;
+    EditFieldHandlePtr editHandleOption         (void);
+    GetFieldHandlePtr  getHandleInput           (void) const;
+    EditFieldHandlePtr editHandleInput          (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUInt8             *editSFOption         (void);
-           SFString            *editSFInput          (void);
 
-           UInt8               &editOption         (void);
-           std::string         &editInput          (void);
+                  SFUInt8             *editSFOption         (void);
+
+                  SFString            *editSFInput          (void);
+
+
+                  UInt8               &editOption         (void);
+
+                  std::string         &editInput          (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setOption         (const UInt8 &value);
-     void setInput          (const std::string &value);
+            void setOption         (const UInt8 value);
+            void setInput          (const std::string &value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      DialogWindowEventBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      DialogWindowEventBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      DialogWindowEventBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const DialogWindowEventBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef DialogWindowEventBase *DialogWindowEventBaseP;
-
-typedef osgIF<DialogWindowEventBase::isNodeCore,
-              CoredNodePtr<DialogWindowEvent>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet DialogWindowEventNodePtr;
-
-typedef RefPtr<DialogWindowEventPtr> DialogWindowEventRefPtr;
 
 OSG_END_NAMESPACE
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGFocusEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::FocusEvent
-
-*/
+// Documentation for this class is emitted in the
+// OSGFocusEventBase.cpp file.
+// To modify it, please change the .fcd file (OSGFocusEvent.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,23 +62,28 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void FocusEvent::initMethod (void)
+void FocusEvent::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-FocusEventPtr FocusEvent::create(  FieldContainerPtr Source,
-                                     Time TimeStamp,
-                                     bool Temporary,
-                                     ComponentPtr Opposite)
+FocusEventTransitPtr FocusEvent::create(  FieldContainerRefPtr Source,
+                                          Time TimeStamp,
+                                          bool Temporary,
+                                          ComponentRefPtr Opposite)
 {
-    FocusEventPtr TheEvent = FocusEvent::createEmpty();
+    FocusEvent* TheEvent = FocusEvent::createEmpty();
 
     TheEvent->setSource(Source);
     TheEvent->setTimeStamp(TimeStamp);
     TheEvent->setIsTemporary(Temporary);
     TheEvent->setOppositeComponent(Opposite);
 
-    return TheEvent;
+    return FocusEventTransitPtr(TheEvent);
 }
 
 /***************************************************************************\
@@ -112,17 +112,17 @@ FocusEvent::~FocusEvent(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void FocusEvent::changed(BitVector whichField, UInt32 origin)
+void FocusEvent::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void FocusEvent::dump(      UInt32    , 
+void FocusEvent::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump FocusEvent NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

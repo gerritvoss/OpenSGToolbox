@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,45 +42,49 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGMultiColoredQuadUIDrawObjectBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief MultiColoredQuadUIDrawObject class. See \ref 
-           PageUserInterfaceMultiColoredQuadUIDrawObject for a description.
+/*! \brief MultiColoredQuadUIDrawObject class. See \ref
+           PageContribUserInterfaceMultiColoredQuadUIDrawObject for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING MultiColoredQuadUIDrawObject : public MultiColoredQuadUIDrawObjectBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MultiColoredQuadUIDrawObject : public MultiColoredQuadUIDrawObjectBase
 {
-  private:
-
-    typedef MultiColoredQuadUIDrawObjectBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef MultiColoredQuadUIDrawObjectBase Inherited;
+    typedef MultiColoredQuadUIDrawObject     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
-	virtual void draw(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
-    virtual void getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
 
     /*! \}                                                                 */
+
+	virtual void draw(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
+
+    virtual void getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in MultiColoredQuadUIDrawObjectBase.
@@ -97,20 +101,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING MultiColoredQuadUIDrawObject : public Mult
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~MultiColoredQuadUIDrawObject(void); 
+    virtual ~MultiColoredQuadUIDrawObject(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class MultiColoredQuadUIDrawObjectBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const MultiColoredQuadUIDrawObject &source);
 };
 
@@ -120,7 +128,5 @@ OSG_END_NAMESPACE
 
 #include "OSGMultiColoredQuadUIDrawObjectBase.inl"
 #include "OSGMultiColoredQuadUIDrawObject.inl"
-
-#define OSGMULTICOLOREDQUADUIDRAWOBJECT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGMULTICOLOREDQUADUIDRAWOBJECT_H_ */

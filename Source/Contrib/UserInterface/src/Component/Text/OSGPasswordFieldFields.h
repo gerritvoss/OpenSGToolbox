@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGTextFieldFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class PasswordField;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! PasswordFieldPtr
+OSG_GEN_CONTAINERPTR(PasswordField);
 
-typedef FCPtr<TextFieldPtr, PasswordField> PasswordFieldPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<PasswordFieldPtr> : 
-    public FieldTraitsRecurseMapper<PasswordFieldPtr, true>
+struct FieldTraits<PasswordField *> :
+    public FieldTraitsFCPtrBase<PasswordField *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFPasswordFieldPtr"; }
-    static const char *getMName(void) { return "MFPasswordFieldPtr"; }
+    typedef FieldTraits<PasswordField *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFPasswordFieldPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFPasswordFieldPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<PasswordFieldPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<PasswordField *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecPasswordFieldPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<PasswordField *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecPasswordFieldPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PasswordField *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakPasswordFieldPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PasswordField *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdPasswordFieldPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PasswordField *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecPasswordFieldPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PasswordField *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecPasswordFieldPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PasswordField *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakPasswordFieldPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<PasswordField *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdPasswordFieldPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<PasswordField *,
+                      RecordedRefCountPolicy  > SFRecPasswordFieldPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<PasswordField *,
+                      UnrecordedRefCountPolicy> SFUnrecPasswordFieldPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<PasswordField *,
+                      WeakRefCountPolicy      > SFWeakPasswordFieldPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<PasswordField *,
+                      NoRefCountPolicy        > SFUncountedPasswordFieldPtr;
 
-typedef SField<PasswordFieldPtr> SFPasswordFieldPtr;
-#endif
 
-#ifndef OSG_COMPILEPASSWORDFIELDINST
-OSG_DLLEXPORT_DECL1(SField, PasswordFieldPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<PasswordField *,
+                      RecordedRefCountPolicy  > MFRecPasswordFieldPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<PasswordField *,
+                      UnrecordedRefCountPolicy> MFUnrecPasswordFieldPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<PasswordField *,
+                      WeakRefCountPolicy      > MFWeakPasswordFieldPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<PasswordField *,
+                      NoRefCountPolicy        > MFUncountedPasswordFieldPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<PasswordFieldPtr> MFPasswordFieldPtr;
-#endif
 
-#ifndef OSG_COMPILEPASSWORDFIELDINST
-OSG_DLLEXPORT_DECL1(MField, PasswordFieldPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecPasswordFieldPtr : 
+    public PointerSField<PasswordField *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecPasswordFieldPtr : 
+    public PointerSField<PasswordField *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakPasswordFieldPtr :
+    public PointerSField<PasswordField *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedPasswordFieldPtr :
+    public PointerSField<PasswordField *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecPasswordFieldPtr :
+    public PointerMField<PasswordField *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecPasswordFieldPtr :
+    public PointerMField<PasswordField *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakPasswordFieldPtr :
+    public PointerMField<PasswordField *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedPasswordFieldPtr :
+    public PointerMField<PasswordField *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGPASSWORDFIELDFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGPASSWORDFIELDFIELDS_H_ */

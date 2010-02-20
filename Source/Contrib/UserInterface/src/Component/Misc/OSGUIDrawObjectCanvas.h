@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,45 +42,50 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 #include "OSGUIDrawObjectCanvasBase.h"
+#include "OSGUIDrawObject.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief UIDrawObjectCanvas class. See \ref 
-           PageUserInterfaceUIDrawObjectCanvas for a description.
+/*! \brief UIDrawObjectCanvas class. See \ref
+           PageContribUserInterfaceUIDrawObjectCanvas for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING UIDrawObjectCanvas : public UIDrawObjectCanvasBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIDrawObjectCanvas : public UIDrawObjectCanvasBase
 {
-  private:
-
-    typedef UIDrawObjectCanvasBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef UIDrawObjectCanvasBase Inherited;
+    typedef UIDrawObjectCanvas     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
 	virtual void getDrawObjectBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
 	virtual Vec2f getContentRequestedSize(void) const;
 	virtual Vec2f getRequestedSize(void) const;
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in UIDrawObjectCanvasBase.
@@ -97,21 +102,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawObjectCanvas : public UIDrawObjectCa
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~UIDrawObjectCanvas(void); 
+    virtual ~UIDrawObjectCanvas(void);
 
     /*! \}                                                                 */
-	virtual void drawInternal(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+
+	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
     
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class UIDrawObjectCanvasBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const UIDrawObjectCanvas &source);
 };
 
@@ -121,7 +132,5 @@ OSG_END_NAMESPACE
 
 #include "OSGUIDrawObjectCanvasBase.inl"
 #include "OSGUIDrawObjectCanvas.inl"
-
-#define OSGUIDRAWOBJECTCANVAS_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGUIDRAWOBJECTCANVAS_H_ */

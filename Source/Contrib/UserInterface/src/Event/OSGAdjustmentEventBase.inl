@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,116 +55,101 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &AdjustmentEventBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 AdjustmentEventBase::getClassTypeId(void) 
+OSG::UInt32 AdjustmentEventBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-AdjustmentEventPtr AdjustmentEventBase::create(void) 
-{
-    AdjustmentEventPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = AdjustmentEventPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-AdjustmentEventPtr AdjustmentEventBase::createEmpty(void) 
-{ 
-    AdjustmentEventPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 AdjustmentEventBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the AdjustmentEvent::_sfValue field.
-inline
-const SFUInt32 *AdjustmentEventBase::getSFValue(void) const
-{
-    return &_sfValue;
-}
-
-//! Get the AdjustmentEvent::_sfValue field.
-inline
-SFUInt32 *AdjustmentEventBase::editSFValue(void)
-{
-    return &_sfValue;
-}
-
-//! Get the AdjustmentEvent::_sfValueIsAdjusting field.
-inline
-const SFBool *AdjustmentEventBase::getSFValueIsAdjusting(void) const
-{
-    return &_sfValueIsAdjusting;
-}
-
-//! Get the AdjustmentEvent::_sfValueIsAdjusting field.
-inline
-SFBool *AdjustmentEventBase::editSFValueIsAdjusting(void)
-{
-    return &_sfValueIsAdjusting;
-}
-
-
 //! Get the value of the AdjustmentEvent::_sfValue field.
+
 inline
 UInt32 &AdjustmentEventBase::editValue(void)
 {
+    editSField(ValueFieldMask);
+
     return _sfValue.getValue();
 }
 
 //! Get the value of the AdjustmentEvent::_sfValue field.
 inline
-const UInt32 &AdjustmentEventBase::getValue(void) const
+      UInt32  AdjustmentEventBase::getValue(void) const
 {
     return _sfValue.getValue();
 }
 
 //! Set the value of the AdjustmentEvent::_sfValue field.
 inline
-void AdjustmentEventBase::setValue(const UInt32 &value)
+void AdjustmentEventBase::setValue(const UInt32 value)
 {
+    editSField(ValueFieldMask);
+
     _sfValue.setValue(value);
 }
-
 //! Get the value of the AdjustmentEvent::_sfValueIsAdjusting field.
+
 inline
 bool &AdjustmentEventBase::editValueIsAdjusting(void)
 {
+    editSField(ValueIsAdjustingFieldMask);
+
     return _sfValueIsAdjusting.getValue();
 }
 
 //! Get the value of the AdjustmentEvent::_sfValueIsAdjusting field.
 inline
-const bool &AdjustmentEventBase::getValueIsAdjusting(void) const
+      bool  AdjustmentEventBase::getValueIsAdjusting(void) const
 {
     return _sfValueIsAdjusting.getValue();
 }
 
 //! Set the value of the AdjustmentEvent::_sfValueIsAdjusting field.
 inline
-void AdjustmentEventBase::setValueIsAdjusting(const bool &value)
+void AdjustmentEventBase::setValueIsAdjusting(const bool value)
 {
+    editSField(ValueIsAdjustingFieldMask);
+
     _sfValueIsAdjusting.setValue(value);
 }
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void AdjustmentEventBase::execSync (      AdjustmentEventBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (ValueFieldMask & whichField))
+        _sfValue.syncWith(pFrom->_sfValue);
+
+    if(FieldBits::NoField != (ValueIsAdjustingFieldMask & whichField))
+        _sfValueIsAdjusting.syncWith(pFrom->_sfValueIsAdjusting);
+}
+#endif
+
+
+inline
+const Char8 *AdjustmentEventBase::getClassname(void)
+{
+    return "AdjustmentEvent";
+}
+OSG_GEN_CONTAINERPTR(AdjustmentEvent);
 
 OSG_END_NAMESPACE
 

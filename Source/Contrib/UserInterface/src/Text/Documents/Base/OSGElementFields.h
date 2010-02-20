@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,75 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/OSGFieldContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class Element;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! ElementPtr
+OSG_GEN_CONTAINERPTR(Element);
 
-typedef FCPtr<FieldContainerPtr, Element> ElementPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<ElementPtr> : 
-    public FieldTraitsRecurseMapper<ElementPtr, true>
+struct FieldTraits<Element *> :
+    public FieldTraitsFCPtrBase<Element *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFElementPtr"; }
-    static const char *getMName(void) { return "MFElementPtr"; }
+    typedef FieldTraits<Element *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFElementPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFElementPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<ElementPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<Element *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecElementPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<Element *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecElementPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Element *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakElementPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Element *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdElementPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Element *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecElementPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Element *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecElementPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Element *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakElementPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Element *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdElementPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Element *,
+                      RecordedRefCountPolicy  > SFRecElementPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Element *,
+                      UnrecordedRefCountPolicy> SFUnrecElementPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Element *,
+                      WeakRefCountPolicy      > SFWeakElementPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Element *,
+                      NoRefCountPolicy        > SFUncountedElementPtr;
 
-typedef SField<ElementPtr> SFElementPtr;
-#endif
 
-#ifndef OSG_COMPILEELEMENTINST
-OSG_DLLEXPORT_DECL1(SField, ElementPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Element *,
+                      RecordedRefCountPolicy  > MFRecElementPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Element *,
+                      UnrecordedRefCountPolicy> MFUnrecElementPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Element *,
+                      WeakRefCountPolicy      > MFWeakElementPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Element *,
+                      NoRefCountPolicy        > MFUncountedElementPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<ElementPtr> MFElementPtr;
-#endif
 
-#ifndef OSG_COMPILEELEMENTINST
-OSG_DLLEXPORT_DECL1(MField, ElementPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecElementPtr : 
+    public PointerSField<Element *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecElementPtr : 
+    public PointerSField<Element *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakElementPtr :
+    public PointerSField<Element *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedElementPtr :
+    public PointerSField<Element *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecElementPtr :
+    public PointerMField<Element *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecElementPtr :
+    public PointerMField<Element *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakElementPtr :
+    public PointerMField<Element *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedElementPtr :
+    public PointerMField<Element *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

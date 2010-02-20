@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,68 +42,72 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGMenuBase.h"
-#include <OpenSG/Input/OSGUpdateListener.h>
-#include "Component/Misc/OSGSeparatorFields.h"
+#include "OSGUpdateListener.h"
+#include "OSGSeparatorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Menu class. See \ref 
-           PageUserInterfaceMenu for a description.
+/*! \brief Menu class. See \ref
+           PageContribUserInterfaceMenu for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING Menu : public MenuBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Menu : public MenuBase
 {
-  private:
-
-    typedef MenuBase Inherited;
+  protected:
     friend class MenuBar;
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef MenuBase Inherited;
+    typedef Menu     Self;
+
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
-    void addItem(MenuItemPtr Item);
-    void addItem(MenuItemPtr Item, const UInt32& Index);
-    void removeItem(MenuItemPtr Item);
+    /*! \}                                                                 */
+
+    void addItem(MenuItemRefPtr Item);
+    void addItem(MenuItemRefPtr Item, const UInt32& Index);
+    void removeItem(MenuItemRefPtr Item);
     void removeItem(const UInt32& Index);
     void removeAllItems(void);
-    MenuItemPtr getItem(const UInt32& Index);
+    MenuItemRefPtr getItem(const UInt32& Index);
     UInt32 getNumItems(void) const;
 
     void addSeparator(void);
-    void addSeparator(SeparatorPtr TheSeparator);
+    void addSeparator(SeparatorRefPtr TheSeparator);
     void removeSeparator(const UInt32&  Index);
-    void removeSeparator(SeparatorPtr TheSeparator);
+    void removeSeparator(SeparatorRefPtr TheSeparator);
     void removeAllSeparators(void);
     UInt32 getNumSeparators(void) const;
 
-    //virtual void mouseEntered(const MouseEventPtr e);
-    //virtual void mouseExited(const MouseEventPtr e);
-    virtual void mouseReleased(const MouseEventPtr e);
+    //virtual void mouseEntered(const MouseEventUnrecPtr e);
+    //virtual void mouseExited(const MouseEventUnrecPtr e);
+    virtual void mouseReleased(const MouseEventUnrecPtr e);
 
     virtual void activate(void);
 
     virtual void detachFromEventProducer(void);
-    /*! \}                                                                 */
+    
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in MenuBase.
@@ -120,11 +124,25 @@ class OSG_USERINTERFACELIB_DLLMAPPING Menu : public MenuBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Menu(void); 
+    virtual ~Menu(void);
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
 
-	virtual void drawInternal(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const Menu *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
+
+	virtual void drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity = 1.0f) const;
 	
     void setPopupVisible(bool Visible);
     
@@ -133,11 +151,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING Menu : public MenuBase
 	class PopupUpdateListener : public UpdateListener
 	{
 	public:
-		PopupUpdateListener(MenuPtr TheMenu);
-        virtual void update(const UpdateEventPtr e);
+		PopupUpdateListener(MenuRefPtr TheMenu);
+        virtual void update(const UpdateEventUnrecPtr e);
         void reset(void);
 	private:
-		MenuPtr _Menu;
+		MenuRefPtr _Menu;
 	    Time _PopupElps;
 	};
 
@@ -146,16 +164,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING Menu : public MenuBase
 	PopupUpdateListener _PopupUpdateListener;
 
     EventConnection _PopupUpdateEventConnection;
+
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class MenuBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const Menu &source);
 };
 
@@ -163,9 +180,9 @@ typedef Menu *MenuP;
 
 OSG_END_NAMESPACE
 
+#include "OSGPopupMenu.h"
+
 #include "OSGMenuBase.inl"
 #include "OSGMenu.inl"
-
-#define OSGMENU_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGMENU_H_ */

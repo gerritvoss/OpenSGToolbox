@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,155 +50,208 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILESCALELAYOUTSPRINGINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGLayoutSpring.h"            // Spring Class
 
 #include "OSGScaleLayoutSpringBase.h"
 #include "OSGScaleLayoutSpring.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ScaleLayoutSpringBase::SpringFieldMask = 
-    (TypeTraits<BitVector>::One << ScaleLayoutSpringBase::SpringFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  ScaleLayoutSpringBase::FactorFieldMask = 
-    (TypeTraits<BitVector>::One << ScaleLayoutSpringBase::FactorFieldId);
+/*! \class OSG::ScaleLayoutSpring
+    A UI Scale LayoutSpring.
+ */
 
-const OSG::BitVector ScaleLayoutSpringBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-
-// Field descriptions
-
-/*! \var LayoutSpringPtr ScaleLayoutSpringBase::_sfSpring
+/*! \var LayoutSpring *  ScaleLayoutSpringBase::_sfSpring
     
 */
+
 /*! \var Real32          ScaleLayoutSpringBase::_sfFactor
     
 */
 
-//! ScaleLayoutSpring description
 
-FieldDescription *ScaleLayoutSpringBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ScaleLayoutSpring *>::_type("ScaleLayoutSpringPtr", "LayoutSpringPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ScaleLayoutSpring *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ScaleLayoutSpring *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ScaleLayoutSpring *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ScaleLayoutSpringBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFLayoutSpringPtr::getClassType(), 
-                     "Spring", 
-                     SpringFieldId, SpringFieldMask,
-                     false,
-                     (FieldAccessMethod) &ScaleLayoutSpringBase::getSFSpring),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Factor", 
-                     FactorFieldId, FactorFieldMask,
-                     false,
-                     (FieldAccessMethod) &ScaleLayoutSpringBase::getSFFactor)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType ScaleLayoutSpringBase::_type(
-    "ScaleLayoutSpring",
-    "LayoutSpring",
-    NULL,
-    (PrototypeCreateF) &ScaleLayoutSpringBase::createEmpty,
+    pDesc = new SFUnrecLayoutSpringPtr::Description(
+        SFUnrecLayoutSpringPtr::getClassType(),
+        "Spring",
+        "",
+        SpringFieldId, SpringFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ScaleLayoutSpring::editHandleSpring),
+        static_cast<FieldGetMethodSig >(&ScaleLayoutSpring::getHandleSpring));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Factor",
+        "",
+        FactorFieldId, FactorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ScaleLayoutSpring::editHandleFactor),
+        static_cast<FieldGetMethodSig >(&ScaleLayoutSpring::getHandleFactor));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+ScaleLayoutSpringBase::TypeObject ScaleLayoutSpringBase::_type(
+    ScaleLayoutSpringBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ScaleLayoutSpringBase::createEmptyLocal),
     ScaleLayoutSpring::initMethod,
-    _desc,
-    sizeof(_desc));
+    ScaleLayoutSpring::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ScaleLayoutSpring::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ScaleLayoutSpring\"\n"
+    "\tparent=\"LayoutSpring\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Scale LayoutSpring.\n"
+    "\t<Field\n"
+    "\t\tname=\"Spring\"\n"
+    "\t\ttype=\"LayoutSpring\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "      visibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Factor\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "      visibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "</FieldContainer>\n",
+    "A UI Scale LayoutSpring.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(ScaleLayoutSpringBase, ScaleLayoutSpringPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ScaleLayoutSpringBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ScaleLayoutSpringBase::getType(void) const 
+FieldContainerType &ScaleLayoutSpringBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr ScaleLayoutSpringBase::shallowCopy(void) const 
-{ 
-    ScaleLayoutSpringPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const ScaleLayoutSpring *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 ScaleLayoutSpringBase::getContainerSize(void) const 
-{ 
-    return sizeof(ScaleLayoutSpring); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ScaleLayoutSpringBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &ScaleLayoutSpringBase::getType(void) const
 {
-    this->executeSyncImpl((ScaleLayoutSpringBase *) &other, whichField);
+    return _type;
 }
-#else
-void ScaleLayoutSpringBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 ScaleLayoutSpringBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((ScaleLayoutSpringBase *) &other, whichField, sInfo);
+    return sizeof(ScaleLayoutSpring);
 }
-void ScaleLayoutSpringBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the ScaleLayoutSpring::_sfSpring field.
+const SFUnrecLayoutSpringPtr *ScaleLayoutSpringBase::getSFSpring(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfSpring;
 }
 
-void ScaleLayoutSpringBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecLayoutSpringPtr *ScaleLayoutSpringBase::editSFSpring         (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(SpringFieldMask);
 
+    return &_sfSpring;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-ScaleLayoutSpringBase::ScaleLayoutSpringBase(void) :
-    _sfSpring                 (LayoutSpringPtr(NullFC)), 
-    _sfFactor                 (Real32(0.0)), 
-    Inherited() 
+SFReal32 *ScaleLayoutSpringBase::editSFFactor(void)
 {
+    editSField(FactorFieldMask);
+
+    return &_sfFactor;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-ScaleLayoutSpringBase::ScaleLayoutSpringBase(const ScaleLayoutSpringBase &source) :
-    _sfSpring                 (source._sfSpring                 ), 
-    _sfFactor                 (source._sfFactor                 ), 
-    Inherited                 (source)
+const SFReal32 *ScaleLayoutSpringBase::getSFFactor(void) const
 {
+    return &_sfFactor;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-ScaleLayoutSpringBase::~ScaleLayoutSpringBase(void)
-{
-}
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ScaleLayoutSpringBase::getBinSize(const BitVector &whichField)
+UInt32 ScaleLayoutSpringBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -206,18 +259,16 @@ UInt32 ScaleLayoutSpringBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfSpring.getBinSize();
     }
-
     if(FieldBits::NoField != (FactorFieldMask & whichField))
     {
         returnValue += _sfFactor.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ScaleLayoutSpringBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ScaleLayoutSpringBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -225,17 +276,14 @@ void ScaleLayoutSpringBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfSpring.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FactorFieldMask & whichField))
     {
         _sfFactor.copyToBin(pMem);
     }
-
-
 }
 
-void ScaleLayoutSpringBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ScaleLayoutSpringBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -243,93 +291,260 @@ void ScaleLayoutSpringBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfSpring.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FactorFieldMask & whichField))
     {
         _sfFactor.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ScaleLayoutSpringBase::executeSyncImpl(      ScaleLayoutSpringBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ScaleLayoutSpringTransitPtr ScaleLayoutSpringBase::createLocal(BitVector bFlags)
 {
+    ScaleLayoutSpringTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (SpringFieldMask & whichField))
-        _sfSpring.syncWith(pOther->_sfSpring);
+        fc = dynamic_pointer_cast<ScaleLayoutSpring>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (FactorFieldMask & whichField))
-        _sfFactor.syncWith(pOther->_sfFactor);
-
-
-}
-#else
-void ScaleLayoutSpringBase::executeSyncImpl(      ScaleLayoutSpringBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (SpringFieldMask & whichField))
-        _sfSpring.syncWith(pOther->_sfSpring);
-
-    if(FieldBits::NoField != (FactorFieldMask & whichField))
-        _sfFactor.syncWith(pOther->_sfFactor);
-
-
-
+    return fc;
 }
 
-void ScaleLayoutSpringBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ScaleLayoutSpringTransitPtr ScaleLayoutSpringBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ScaleLayoutSpringTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<ScaleLayoutSpring>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ScaleLayoutSpringTransitPtr ScaleLayoutSpringBase::create(void)
+{
+    ScaleLayoutSpringTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<ScaleLayoutSpring>(tmpPtr);
+    }
+
+    return fc;
+}
+
+ScaleLayoutSpring *ScaleLayoutSpringBase::createEmptyLocal(BitVector bFlags)
+{
+    ScaleLayoutSpring *returnValue;
+
+    newPtr<ScaleLayoutSpring>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+ScaleLayoutSpring *ScaleLayoutSpringBase::createEmpty(void)
+{
+    ScaleLayoutSpring *returnValue;
+
+    newPtr<ScaleLayoutSpring>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ScaleLayoutSpringBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    ScaleLayoutSpring *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ScaleLayoutSpring *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ScaleLayoutSpringBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    ScaleLayoutSpring *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ScaleLayoutSpring *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ScaleLayoutSpringBase::shallowCopy(void) const
+{
+    ScaleLayoutSpring *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const ScaleLayoutSpring *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ScaleLayoutSpringBase::ScaleLayoutSpringBase(void) :
+    Inherited(),
+    _sfSpring                 (NULL),
+    _sfFactor                 (Real32(0.0))
+{
+}
+
+ScaleLayoutSpringBase::ScaleLayoutSpringBase(const ScaleLayoutSpringBase &source) :
+    Inherited(source),
+    _sfSpring                 (NULL),
+    _sfFactor                 (source._sfFactor                 )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ScaleLayoutSpringBase::~ScaleLayoutSpringBase(void)
+{
+}
+
+void ScaleLayoutSpringBase::onCreate(const ScaleLayoutSpring *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        ScaleLayoutSpring *pThis = static_cast<ScaleLayoutSpring *>(this);
+
+        pThis->setSpring(source->getSpring());
+    }
+}
+
+GetFieldHandlePtr ScaleLayoutSpringBase::getHandleSpring          (void) const
+{
+    SFUnrecLayoutSpringPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayoutSpringPtr::GetHandle(
+             &_sfSpring,
+             this->getType().getFieldDesc(SpringFieldId),
+             const_cast<ScaleLayoutSpringBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ScaleLayoutSpringBase::editHandleSpring         (void)
+{
+    SFUnrecLayoutSpringPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayoutSpringPtr::EditHandle(
+             &_sfSpring,
+             this->getType().getFieldDesc(SpringFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ScaleLayoutSpring::setSpring,
+                    static_cast<ScaleLayoutSpring *>(this), _1));
+
+    editSField(SpringFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ScaleLayoutSpringBase::getHandleFactor          (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfFactor,
+             this->getType().getFieldDesc(FactorFieldId),
+             const_cast<ScaleLayoutSpringBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ScaleLayoutSpringBase::editHandleFactor         (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfFactor,
+             this->getType().getFieldDesc(FactorFieldId),
+             this));
+
+
+    editSField(FactorFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ScaleLayoutSpringBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ScaleLayoutSpring *pThis = static_cast<ScaleLayoutSpring *>(this);
+
+    pThis->execSync(static_cast<ScaleLayoutSpring *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ScaleLayoutSpringBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    ScaleLayoutSpring *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const ScaleLayoutSpring *>(pRefAspect),
+                  dynamic_cast<const ScaleLayoutSpring *>(this));
+
+    return returnValue;
+}
+#endif
+
+void ScaleLayoutSpringBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<ScaleLayoutSpring *>(this)->setSpring(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ScaleLayoutSpringPtr>::_type("ScaleLayoutSpringPtr", "LayoutSpringPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(ScaleLayoutSpringPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ScaleLayoutSpringPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGSCALELAYOUTSPRINGBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSCALELAYOUTSPRINGBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSCALELAYOUTSPRINGFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

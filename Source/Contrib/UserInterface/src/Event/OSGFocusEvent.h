@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,48 +42,50 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGFocusEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief FocusEvent class. See \ref 
-           PageUserInterfaceFocusEvent for a description.
+/*! \brief FocusEvent class. See \ref
+           PageContribUserInterfaceFocusEvent for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING FocusEvent : public FocusEventBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FocusEvent : public FocusEventBase
 {
-  private:
-
-    typedef FocusEventBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef FocusEventBase Inherited;
+    typedef FocusEvent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
-    static  FocusEventPtr      create(  FieldContainerPtr Source,
-                                        Time TimeStamp,
-                                        bool Temporary,
-                                        ComponentPtr Opposite); 
+    static  FocusEventTransitPtr      create(  FieldContainerRefPtr Source,
+                                               Time TimeStamp,
+                                               bool Temporary,
+                                               ComponentRefPtr Opposite); 
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in FocusEventBase.
@@ -100,26 +102,32 @@ class OSG_USERINTERFACELIB_DLLMAPPING FocusEvent : public FocusEventBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~FocusEvent(void); 
+    virtual ~FocusEvent(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class FocusEventBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const FocusEvent &source);
 };
 
 typedef FocusEvent *FocusEventP;
 
 OSG_END_NAMESPACE
+
+#include "OSGComponent.h"
 
 #include "OSGFocusEventBase.inl"
 #include "OSGFocusEvent.inl"

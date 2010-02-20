@@ -3,23 +3,25 @@
 <FieldContainer
 	name="CellEditor"
 	parent="FieldContainer"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="abstract"
-	systemcomponent="false"
-	parentsystemcomponent="true"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI Cell Editor.
 	<ProducedMethod
 		name="EditingCanceled"
-		producedEventType="ChangeEventPtr"
+		type="ChangeEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="EditingStopped"
-		producedEventType="ChangeEventPtr"
+		type="ChangeEventPtr"
 	>
 	</ProducedMethod>
 </FieldContainer>

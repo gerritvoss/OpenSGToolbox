@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,246 +50,487 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEARCUIDRAWOBJECTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGArcUIDrawObjectBase.h"
 #include "OSGArcUIDrawObject.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ArcUIDrawObjectBase::CenterFieldMask = 
-    (TypeTraits<BitVector>::One << ArcUIDrawObjectBase::CenterFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  ArcUIDrawObjectBase::WidthFieldMask = 
-    (TypeTraits<BitVector>::One << ArcUIDrawObjectBase::WidthFieldId);
+/*! \class OSG::ArcUIDrawObject
+    A UI ArcUIDrawObject.
+ */
 
-const OSG::BitVector  ArcUIDrawObjectBase::HeightFieldMask = 
-    (TypeTraits<BitVector>::One << ArcUIDrawObjectBase::HeightFieldId);
-
-const OSG::BitVector  ArcUIDrawObjectBase::StartAngleRadFieldMask = 
-    (TypeTraits<BitVector>::One << ArcUIDrawObjectBase::StartAngleRadFieldId);
-
-const OSG::BitVector  ArcUIDrawObjectBase::EndAngleRadFieldMask = 
-    (TypeTraits<BitVector>::One << ArcUIDrawObjectBase::EndAngleRadFieldId);
-
-const OSG::BitVector  ArcUIDrawObjectBase::SubDivisionsFieldMask = 
-    (TypeTraits<BitVector>::One << ArcUIDrawObjectBase::SubDivisionsFieldId);
-
-const OSG::BitVector  ArcUIDrawObjectBase::ColorFieldMask = 
-    (TypeTraits<BitVector>::One << ArcUIDrawObjectBase::ColorFieldId);
-
-const OSG::BitVector  ArcUIDrawObjectBase::LineWidthFieldMask = 
-    (TypeTraits<BitVector>::One << ArcUIDrawObjectBase::LineWidthFieldId);
-
-const OSG::BitVector  ArcUIDrawObjectBase::OpacityFieldMask = 
-    (TypeTraits<BitVector>::One << ArcUIDrawObjectBase::OpacityFieldId);
-
-const OSG::BitVector ArcUIDrawObjectBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Pnt2f           ArcUIDrawObjectBase::_sfCenter
     
 */
+
 /*! \var Real32          ArcUIDrawObjectBase::_sfWidth
     
 */
+
 /*! \var Real32          ArcUIDrawObjectBase::_sfHeight
     
 */
+
 /*! \var Real32          ArcUIDrawObjectBase::_sfStartAngleRad
     
 */
+
 /*! \var Real32          ArcUIDrawObjectBase::_sfEndAngleRad
     
 */
+
 /*! \var UInt16          ArcUIDrawObjectBase::_sfSubDivisions
     
 */
+
 /*! \var Color4f         ArcUIDrawObjectBase::_sfColor
     
 */
+
 /*! \var Real32          ArcUIDrawObjectBase::_sfLineWidth
     
 */
+
 /*! \var Real32          ArcUIDrawObjectBase::_sfOpacity
     
 */
 
-//! ArcUIDrawObject description
 
-FieldDescription *ArcUIDrawObjectBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ArcUIDrawObject *>::_type("ArcUIDrawObjectPtr", "UIDrawObjectPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ArcUIDrawObject *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ArcUIDrawObject *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ArcUIDrawObject *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ArcUIDrawObjectBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFPnt2f::getClassType(), 
-                     "Center", 
-                     CenterFieldId, CenterFieldMask,
-                     false,
-                     (FieldAccessMethod) &ArcUIDrawObjectBase::getSFCenter),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Width", 
-                     WidthFieldId, WidthFieldMask,
-                     false,
-                     (FieldAccessMethod) &ArcUIDrawObjectBase::getSFWidth),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Height", 
-                     HeightFieldId, HeightFieldMask,
-                     false,
-                     (FieldAccessMethod) &ArcUIDrawObjectBase::getSFHeight),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "StartAngleRad", 
-                     StartAngleRadFieldId, StartAngleRadFieldMask,
-                     false,
-                     (FieldAccessMethod) &ArcUIDrawObjectBase::getSFStartAngleRad),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "EndAngleRad", 
-                     EndAngleRadFieldId, EndAngleRadFieldMask,
-                     false,
-                     (FieldAccessMethod) &ArcUIDrawObjectBase::getSFEndAngleRad),
-    new FieldDescription(SFUInt16::getClassType(), 
-                     "SubDivisions", 
-                     SubDivisionsFieldId, SubDivisionsFieldMask,
-                     false,
-                     (FieldAccessMethod) &ArcUIDrawObjectBase::getSFSubDivisions),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "Color", 
-                     ColorFieldId, ColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &ArcUIDrawObjectBase::getSFColor),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "LineWidth", 
-                     LineWidthFieldId, LineWidthFieldMask,
-                     false,
-                     (FieldAccessMethod) &ArcUIDrawObjectBase::getSFLineWidth),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Opacity", 
-                     OpacityFieldId, OpacityFieldMask,
-                     false,
-                     (FieldAccessMethod) &ArcUIDrawObjectBase::getSFOpacity)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType ArcUIDrawObjectBase::_type(
-    "ArcUIDrawObject",
-    "UIDrawObject",
-    NULL,
-    (PrototypeCreateF) &ArcUIDrawObjectBase::createEmpty,
+    pDesc = new SFPnt2f::Description(
+        SFPnt2f::getClassType(),
+        "Center",
+        "",
+        CenterFieldId, CenterFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ArcUIDrawObject::editHandleCenter),
+        static_cast<FieldGetMethodSig >(&ArcUIDrawObject::getHandleCenter));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Width",
+        "",
+        WidthFieldId, WidthFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ArcUIDrawObject::editHandleWidth),
+        static_cast<FieldGetMethodSig >(&ArcUIDrawObject::getHandleWidth));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Height",
+        "",
+        HeightFieldId, HeightFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ArcUIDrawObject::editHandleHeight),
+        static_cast<FieldGetMethodSig >(&ArcUIDrawObject::getHandleHeight));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "StartAngleRad",
+        "",
+        StartAngleRadFieldId, StartAngleRadFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ArcUIDrawObject::editHandleStartAngleRad),
+        static_cast<FieldGetMethodSig >(&ArcUIDrawObject::getHandleStartAngleRad));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "EndAngleRad",
+        "",
+        EndAngleRadFieldId, EndAngleRadFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ArcUIDrawObject::editHandleEndAngleRad),
+        static_cast<FieldGetMethodSig >(&ArcUIDrawObject::getHandleEndAngleRad));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt16::Description(
+        SFUInt16::getClassType(),
+        "SubDivisions",
+        "",
+        SubDivisionsFieldId, SubDivisionsFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ArcUIDrawObject::editHandleSubDivisions),
+        static_cast<FieldGetMethodSig >(&ArcUIDrawObject::getHandleSubDivisions));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "Color",
+        "",
+        ColorFieldId, ColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ArcUIDrawObject::editHandleColor),
+        static_cast<FieldGetMethodSig >(&ArcUIDrawObject::getHandleColor));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "LineWidth",
+        "",
+        LineWidthFieldId, LineWidthFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ArcUIDrawObject::editHandleLineWidth),
+        static_cast<FieldGetMethodSig >(&ArcUIDrawObject::getHandleLineWidth));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Opacity",
+        "",
+        OpacityFieldId, OpacityFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ArcUIDrawObject::editHandleOpacity),
+        static_cast<FieldGetMethodSig >(&ArcUIDrawObject::getHandleOpacity));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+ArcUIDrawObjectBase::TypeObject ArcUIDrawObjectBase::_type(
+    ArcUIDrawObjectBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ArcUIDrawObjectBase::createEmptyLocal),
     ArcUIDrawObject::initMethod,
-    _desc,
-    sizeof(_desc));
+    ArcUIDrawObject::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ArcUIDrawObject::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ArcUIDrawObject\"\n"
+    "\tparent=\"UIDrawObject\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI ArcUIDrawObject.\n"
+    "\t<Field\n"
+    "\t\tname=\"Center\"\n"
+    "\t\ttype=\"Pnt2f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0,0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Width\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Height\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"StartAngleRad\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"EndAngleRad\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"6.283185307\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SubDivisions\"\n"
+    "\t\ttype=\"UInt16\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"24\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Color\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0,1.0,1.0,1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"LineWidth\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Opacity\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI ArcUIDrawObject.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(ArcUIDrawObjectBase, ArcUIDrawObjectPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ArcUIDrawObjectBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ArcUIDrawObjectBase::getType(void) const 
+FieldContainerType &ArcUIDrawObjectBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr ArcUIDrawObjectBase::shallowCopy(void) const 
-{ 
-    ArcUIDrawObjectPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const ArcUIDrawObject *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 ArcUIDrawObjectBase::getContainerSize(void) const 
-{ 
-    return sizeof(ArcUIDrawObject); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ArcUIDrawObjectBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &ArcUIDrawObjectBase::getType(void) const
 {
-    this->executeSyncImpl((ArcUIDrawObjectBase *) &other, whichField);
+    return _type;
 }
-#else
-void ArcUIDrawObjectBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 ArcUIDrawObjectBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((ArcUIDrawObjectBase *) &other, whichField, sInfo);
+    return sizeof(ArcUIDrawObject);
 }
-void ArcUIDrawObjectBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFPnt2f *ArcUIDrawObjectBase::editSFCenter(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(CenterFieldMask);
+
+    return &_sfCenter;
 }
 
-void ArcUIDrawObjectBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFPnt2f *ArcUIDrawObjectBase::getSFCenter(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfCenter;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-ArcUIDrawObjectBase::ArcUIDrawObjectBase(void) :
-    _sfCenter                 (Pnt2f(0,0)), 
-    _sfWidth                  (Real32(1)), 
-    _sfHeight                 (Real32(1)), 
-    _sfStartAngleRad          (Real32(0.0)), 
-    _sfEndAngleRad            (Real32(6.283185307)), 
-    _sfSubDivisions           (UInt16(24)), 
-    _sfColor                  (Color4f(1.0,1.0,1.0,1.0)), 
-    _sfLineWidth              (Real32(1.0)), 
-    _sfOpacity                (Real32(1.0)), 
-    Inherited() 
+SFReal32 *ArcUIDrawObjectBase::editSFWidth(void)
 {
+    editSField(WidthFieldMask);
+
+    return &_sfWidth;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-ArcUIDrawObjectBase::ArcUIDrawObjectBase(const ArcUIDrawObjectBase &source) :
-    _sfCenter                 (source._sfCenter                 ), 
-    _sfWidth                  (source._sfWidth                  ), 
-    _sfHeight                 (source._sfHeight                 ), 
-    _sfStartAngleRad          (source._sfStartAngleRad          ), 
-    _sfEndAngleRad            (source._sfEndAngleRad            ), 
-    _sfSubDivisions           (source._sfSubDivisions           ), 
-    _sfColor                  (source._sfColor                  ), 
-    _sfLineWidth              (source._sfLineWidth              ), 
-    _sfOpacity                (source._sfOpacity                ), 
-    Inherited                 (source)
+const SFReal32 *ArcUIDrawObjectBase::getSFWidth(void) const
 {
+    return &_sfWidth;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-ArcUIDrawObjectBase::~ArcUIDrawObjectBase(void)
+SFReal32 *ArcUIDrawObjectBase::editSFHeight(void)
 {
+    editSField(HeightFieldMask);
+
+    return &_sfHeight;
 }
+
+const SFReal32 *ArcUIDrawObjectBase::getSFHeight(void) const
+{
+    return &_sfHeight;
+}
+
+
+SFReal32 *ArcUIDrawObjectBase::editSFStartAngleRad(void)
+{
+    editSField(StartAngleRadFieldMask);
+
+    return &_sfStartAngleRad;
+}
+
+const SFReal32 *ArcUIDrawObjectBase::getSFStartAngleRad(void) const
+{
+    return &_sfStartAngleRad;
+}
+
+
+SFReal32 *ArcUIDrawObjectBase::editSFEndAngleRad(void)
+{
+    editSField(EndAngleRadFieldMask);
+
+    return &_sfEndAngleRad;
+}
+
+const SFReal32 *ArcUIDrawObjectBase::getSFEndAngleRad(void) const
+{
+    return &_sfEndAngleRad;
+}
+
+
+SFUInt16 *ArcUIDrawObjectBase::editSFSubDivisions(void)
+{
+    editSField(SubDivisionsFieldMask);
+
+    return &_sfSubDivisions;
+}
+
+const SFUInt16 *ArcUIDrawObjectBase::getSFSubDivisions(void) const
+{
+    return &_sfSubDivisions;
+}
+
+
+SFColor4f *ArcUIDrawObjectBase::editSFColor(void)
+{
+    editSField(ColorFieldMask);
+
+    return &_sfColor;
+}
+
+const SFColor4f *ArcUIDrawObjectBase::getSFColor(void) const
+{
+    return &_sfColor;
+}
+
+
+SFReal32 *ArcUIDrawObjectBase::editSFLineWidth(void)
+{
+    editSField(LineWidthFieldMask);
+
+    return &_sfLineWidth;
+}
+
+const SFReal32 *ArcUIDrawObjectBase::getSFLineWidth(void) const
+{
+    return &_sfLineWidth;
+}
+
+
+SFReal32 *ArcUIDrawObjectBase::editSFOpacity(void)
+{
+    editSField(OpacityFieldMask);
+
+    return &_sfOpacity;
+}
+
+const SFReal32 *ArcUIDrawObjectBase::getSFOpacity(void) const
+{
+    return &_sfOpacity;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ArcUIDrawObjectBase::getBinSize(const BitVector &whichField)
+UInt32 ArcUIDrawObjectBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -297,53 +538,44 @@ UInt32 ArcUIDrawObjectBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfCenter.getBinSize();
     }
-
     if(FieldBits::NoField != (WidthFieldMask & whichField))
     {
         returnValue += _sfWidth.getBinSize();
     }
-
     if(FieldBits::NoField != (HeightFieldMask & whichField))
     {
         returnValue += _sfHeight.getBinSize();
     }
-
     if(FieldBits::NoField != (StartAngleRadFieldMask & whichField))
     {
         returnValue += _sfStartAngleRad.getBinSize();
     }
-
     if(FieldBits::NoField != (EndAngleRadFieldMask & whichField))
     {
         returnValue += _sfEndAngleRad.getBinSize();
     }
-
     if(FieldBits::NoField != (SubDivisionsFieldMask & whichField))
     {
         returnValue += _sfSubDivisions.getBinSize();
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         returnValue += _sfColor.getBinSize();
     }
-
     if(FieldBits::NoField != (LineWidthFieldMask & whichField))
     {
         returnValue += _sfLineWidth.getBinSize();
     }
-
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
     {
         returnValue += _sfOpacity.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ArcUIDrawObjectBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ArcUIDrawObjectBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -351,52 +583,42 @@ void ArcUIDrawObjectBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfCenter.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (WidthFieldMask & whichField))
     {
         _sfWidth.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (HeightFieldMask & whichField))
     {
         _sfHeight.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (StartAngleRadFieldMask & whichField))
     {
         _sfStartAngleRad.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EndAngleRadFieldMask & whichField))
     {
         _sfEndAngleRad.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SubDivisionsFieldMask & whichField))
     {
         _sfSubDivisions.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         _sfColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (LineWidthFieldMask & whichField))
     {
         _sfLineWidth.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
     {
         _sfOpacity.copyToBin(pMem);
     }
-
-
 }
 
-void ArcUIDrawObjectBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ArcUIDrawObjectBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -404,170 +626,461 @@ void ArcUIDrawObjectBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfCenter.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (WidthFieldMask & whichField))
     {
         _sfWidth.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (HeightFieldMask & whichField))
     {
         _sfHeight.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (StartAngleRadFieldMask & whichField))
     {
         _sfStartAngleRad.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EndAngleRadFieldMask & whichField))
     {
         _sfEndAngleRad.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SubDivisionsFieldMask & whichField))
     {
         _sfSubDivisions.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         _sfColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (LineWidthFieldMask & whichField))
     {
         _sfLineWidth.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
     {
         _sfOpacity.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ArcUIDrawObjectBase::executeSyncImpl(      ArcUIDrawObjectBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ArcUIDrawObjectTransitPtr ArcUIDrawObjectBase::createLocal(BitVector bFlags)
 {
+    ArcUIDrawObjectTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (CenterFieldMask & whichField))
-        _sfCenter.syncWith(pOther->_sfCenter);
+        fc = dynamic_pointer_cast<ArcUIDrawObject>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (WidthFieldMask & whichField))
-        _sfWidth.syncWith(pOther->_sfWidth);
-
-    if(FieldBits::NoField != (HeightFieldMask & whichField))
-        _sfHeight.syncWith(pOther->_sfHeight);
-
-    if(FieldBits::NoField != (StartAngleRadFieldMask & whichField))
-        _sfStartAngleRad.syncWith(pOther->_sfStartAngleRad);
-
-    if(FieldBits::NoField != (EndAngleRadFieldMask & whichField))
-        _sfEndAngleRad.syncWith(pOther->_sfEndAngleRad);
-
-    if(FieldBits::NoField != (SubDivisionsFieldMask & whichField))
-        _sfSubDivisions.syncWith(pOther->_sfSubDivisions);
-
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
-
-    if(FieldBits::NoField != (LineWidthFieldMask & whichField))
-        _sfLineWidth.syncWith(pOther->_sfLineWidth);
-
-    if(FieldBits::NoField != (OpacityFieldMask & whichField))
-        _sfOpacity.syncWith(pOther->_sfOpacity);
-
-
-}
-#else
-void ArcUIDrawObjectBase::executeSyncImpl(      ArcUIDrawObjectBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (CenterFieldMask & whichField))
-        _sfCenter.syncWith(pOther->_sfCenter);
-
-    if(FieldBits::NoField != (WidthFieldMask & whichField))
-        _sfWidth.syncWith(pOther->_sfWidth);
-
-    if(FieldBits::NoField != (HeightFieldMask & whichField))
-        _sfHeight.syncWith(pOther->_sfHeight);
-
-    if(FieldBits::NoField != (StartAngleRadFieldMask & whichField))
-        _sfStartAngleRad.syncWith(pOther->_sfStartAngleRad);
-
-    if(FieldBits::NoField != (EndAngleRadFieldMask & whichField))
-        _sfEndAngleRad.syncWith(pOther->_sfEndAngleRad);
-
-    if(FieldBits::NoField != (SubDivisionsFieldMask & whichField))
-        _sfSubDivisions.syncWith(pOther->_sfSubDivisions);
-
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
-
-    if(FieldBits::NoField != (LineWidthFieldMask & whichField))
-        _sfLineWidth.syncWith(pOther->_sfLineWidth);
-
-    if(FieldBits::NoField != (OpacityFieldMask & whichField))
-        _sfOpacity.syncWith(pOther->_sfOpacity);
-
-
-
+    return fc;
 }
 
-void ArcUIDrawObjectBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ArcUIDrawObjectTransitPtr ArcUIDrawObjectBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ArcUIDrawObjectTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<ArcUIDrawObject>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ArcUIDrawObjectTransitPtr ArcUIDrawObjectBase::create(void)
+{
+    ArcUIDrawObjectTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<ArcUIDrawObject>(tmpPtr);
+    }
+
+    return fc;
+}
+
+ArcUIDrawObject *ArcUIDrawObjectBase::createEmptyLocal(BitVector bFlags)
+{
+    ArcUIDrawObject *returnValue;
+
+    newPtr<ArcUIDrawObject>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+ArcUIDrawObject *ArcUIDrawObjectBase::createEmpty(void)
+{
+    ArcUIDrawObject *returnValue;
+
+    newPtr<ArcUIDrawObject>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ArcUIDrawObjectBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    ArcUIDrawObject *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ArcUIDrawObject *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ArcUIDrawObjectBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    ArcUIDrawObject *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ArcUIDrawObject *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ArcUIDrawObjectBase::shallowCopy(void) const
+{
+    ArcUIDrawObject *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const ArcUIDrawObject *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ArcUIDrawObjectBase::ArcUIDrawObjectBase(void) :
+    Inherited(),
+    _sfCenter                 (Pnt2f(0,0)),
+    _sfWidth                  (Real32(1)),
+    _sfHeight                 (Real32(1)),
+    _sfStartAngleRad          (Real32(0.0)),
+    _sfEndAngleRad            (Real32(6.283185307)),
+    _sfSubDivisions           (UInt16(24)),
+    _sfColor                  (Color4f(1.0,1.0,1.0,1.0)),
+    _sfLineWidth              (Real32(1.0)),
+    _sfOpacity                (Real32(1.0))
+{
+}
+
+ArcUIDrawObjectBase::ArcUIDrawObjectBase(const ArcUIDrawObjectBase &source) :
+    Inherited(source),
+    _sfCenter                 (source._sfCenter                 ),
+    _sfWidth                  (source._sfWidth                  ),
+    _sfHeight                 (source._sfHeight                 ),
+    _sfStartAngleRad          (source._sfStartAngleRad          ),
+    _sfEndAngleRad            (source._sfEndAngleRad            ),
+    _sfSubDivisions           (source._sfSubDivisions           ),
+    _sfColor                  (source._sfColor                  ),
+    _sfLineWidth              (source._sfLineWidth              ),
+    _sfOpacity                (source._sfOpacity                )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ArcUIDrawObjectBase::~ArcUIDrawObjectBase(void)
+{
+}
+
+
+GetFieldHandlePtr ArcUIDrawObjectBase::getHandleCenter          (void) const
+{
+    SFPnt2f::GetHandlePtr returnValue(
+        new  SFPnt2f::GetHandle(
+             &_sfCenter,
+             this->getType().getFieldDesc(CenterFieldId),
+             const_cast<ArcUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ArcUIDrawObjectBase::editHandleCenter         (void)
+{
+    SFPnt2f::EditHandlePtr returnValue(
+        new  SFPnt2f::EditHandle(
+             &_sfCenter,
+             this->getType().getFieldDesc(CenterFieldId),
+             this));
+
+
+    editSField(CenterFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ArcUIDrawObjectBase::getHandleWidth           (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfWidth,
+             this->getType().getFieldDesc(WidthFieldId),
+             const_cast<ArcUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ArcUIDrawObjectBase::editHandleWidth          (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfWidth,
+             this->getType().getFieldDesc(WidthFieldId),
+             this));
+
+
+    editSField(WidthFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ArcUIDrawObjectBase::getHandleHeight          (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfHeight,
+             this->getType().getFieldDesc(HeightFieldId),
+             const_cast<ArcUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ArcUIDrawObjectBase::editHandleHeight         (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfHeight,
+             this->getType().getFieldDesc(HeightFieldId),
+             this));
+
+
+    editSField(HeightFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ArcUIDrawObjectBase::getHandleStartAngleRad   (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfStartAngleRad,
+             this->getType().getFieldDesc(StartAngleRadFieldId),
+             const_cast<ArcUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ArcUIDrawObjectBase::editHandleStartAngleRad  (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfStartAngleRad,
+             this->getType().getFieldDesc(StartAngleRadFieldId),
+             this));
+
+
+    editSField(StartAngleRadFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ArcUIDrawObjectBase::getHandleEndAngleRad     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfEndAngleRad,
+             this->getType().getFieldDesc(EndAngleRadFieldId),
+             const_cast<ArcUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ArcUIDrawObjectBase::editHandleEndAngleRad    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfEndAngleRad,
+             this->getType().getFieldDesc(EndAngleRadFieldId),
+             this));
+
+
+    editSField(EndAngleRadFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ArcUIDrawObjectBase::getHandleSubDivisions    (void) const
+{
+    SFUInt16::GetHandlePtr returnValue(
+        new  SFUInt16::GetHandle(
+             &_sfSubDivisions,
+             this->getType().getFieldDesc(SubDivisionsFieldId),
+             const_cast<ArcUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ArcUIDrawObjectBase::editHandleSubDivisions   (void)
+{
+    SFUInt16::EditHandlePtr returnValue(
+        new  SFUInt16::EditHandle(
+             &_sfSubDivisions,
+             this->getType().getFieldDesc(SubDivisionsFieldId),
+             this));
+
+
+    editSField(SubDivisionsFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ArcUIDrawObjectBase::getHandleColor           (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfColor,
+             this->getType().getFieldDesc(ColorFieldId),
+             const_cast<ArcUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ArcUIDrawObjectBase::editHandleColor          (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfColor,
+             this->getType().getFieldDesc(ColorFieldId),
+             this));
+
+
+    editSField(ColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ArcUIDrawObjectBase::getHandleLineWidth       (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfLineWidth,
+             this->getType().getFieldDesc(LineWidthFieldId),
+             const_cast<ArcUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ArcUIDrawObjectBase::editHandleLineWidth      (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfLineWidth,
+             this->getType().getFieldDesc(LineWidthFieldId),
+             this));
+
+
+    editSField(LineWidthFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ArcUIDrawObjectBase::getHandleOpacity         (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfOpacity,
+             this->getType().getFieldDesc(OpacityFieldId),
+             const_cast<ArcUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ArcUIDrawObjectBase::editHandleOpacity        (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfOpacity,
+             this->getType().getFieldDesc(OpacityFieldId),
+             this));
+
+
+    editSField(OpacityFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ArcUIDrawObjectBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ArcUIDrawObject *pThis = static_cast<ArcUIDrawObject *>(this);
+
+    pThis->execSync(static_cast<ArcUIDrawObject *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ArcUIDrawObjectBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    ArcUIDrawObject *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const ArcUIDrawObject *>(pRefAspect),
+                  dynamic_cast<const ArcUIDrawObject *>(this));
+
+    return returnValue;
+}
+#endif
+
+void ArcUIDrawObjectBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ArcUIDrawObjectPtr>::_type("ArcUIDrawObjectPtr", "UIDrawObjectPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(ArcUIDrawObjectPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ArcUIDrawObjectPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGARCUIDRAWOBJECTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGARCUIDRAWOBJECTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGARCUIDRAWOBJECTFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

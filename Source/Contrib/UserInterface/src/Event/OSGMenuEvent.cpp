@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGMenuEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::MenuEvent
-
-*/
+// Documentation for this class is emitted in the
+// OSGMenuEventBase.cpp file.
+// To modify it, please change the .fcd file (OSGMenuEvent.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,19 +62,24 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void MenuEvent::initMethod (void)
+void MenuEvent::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-MenuEventPtr MenuEvent::create(  FieldContainerPtr Source,
-                                 Time TimeStamp)
+MenuEventTransitPtr MenuEvent::create(  FieldContainerRefPtr Source,
+                                        Time TimeStamp)
 {
-    MenuEventPtr TheEvent = MenuEvent::createEmpty();
+    MenuEvent* TheEvent = MenuEvent::createEmpty();
 
     TheEvent->setSource(Source);
     TheEvent->setTimeStamp(TimeStamp);
 
-    return TheEvent;
+    return MenuEventTransitPtr(TheEvent);
 }
 
 /***************************************************************************\
@@ -108,17 +108,17 @@ MenuEvent::~MenuEvent(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void MenuEvent::changed(BitVector whichField, UInt32 origin)
+void MenuEvent::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void MenuEvent::dump(      UInt32    , 
+void MenuEvent::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump MenuEvent NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

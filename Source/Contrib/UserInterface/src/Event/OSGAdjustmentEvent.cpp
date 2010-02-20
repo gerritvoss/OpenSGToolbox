@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGAdjustmentEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::AdjustmentEvent
-
-*/
+// Documentation for this class is emitted in the
+// OSGAdjustmentEventBase.cpp file.
+// To modify it, please change the .fcd file (OSGAdjustmentEvent.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,23 +62,28 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void AdjustmentEvent::initMethod (void)
+void AdjustmentEvent::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-AdjustmentEventPtr AdjustmentEvent::create(  FieldContainerPtr Source,
-                                     Time TimeStamp,
-                                     UInt32 Value,
-                                     bool ValueIsAdjusting) 
+AdjustmentEventTransitPtr AdjustmentEvent::create(  FieldContainerRefPtr Source,
+                                                    Time TimeStamp,
+                                                    UInt32 Value,
+                                                    bool ValueIsAdjusting) 
 {
-    AdjustmentEventPtr TheEvent = AdjustmentEvent::createEmpty();
+    AdjustmentEvent* TheEvent = AdjustmentEvent::createEmpty();
 
     TheEvent->setSource(Source);
     TheEvent->setTimeStamp(TimeStamp);
     TheEvent->setValue(Value);
     TheEvent->setValueIsAdjusting(ValueIsAdjusting);
 
-    return TheEvent;
+    return AdjustmentEventTransitPtr(TheEvent);
 }
 
 /***************************************************************************\
@@ -112,17 +112,17 @@ AdjustmentEvent::~AdjustmentEvent(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void AdjustmentEvent::changed(BitVector whichField, UInt32 origin)
+void AdjustmentEvent::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void AdjustmentEvent::dump(      UInt32    , 
+void AdjustmentEvent::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump AdjustmentEvent NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

@@ -3,18 +3,21 @@
 <FieldContainer
 	name="EtchedBorder"
 	parent="Border"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 UI Etched Border.
 	<Field
 		name="Highlight"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -23,6 +26,7 @@ UI Etched Border.
 	<Field
 		name="Shadow"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -31,6 +35,7 @@ UI Etched Border.
 	<Field
 		name="Raised"
 		type="bool"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="true"
@@ -40,6 +45,7 @@ UI Etched Border.
 	<Field
 		name="Width"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1"

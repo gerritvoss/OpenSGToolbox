@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,23 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGGridLayout.h"
-#include "Component/Container/OSGContainer.h"
+#include "OSGComponentContainer.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::GridLayout
-A UI GridLayout. 	
-*/
+// Documentation for this class is emitted in the
+// OSGGridLayoutBase.cpp file.
+// To modify it, please change the .fcd file (OSGGridLayout.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -66,8 +63,13 @@ A UI GridLayout.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void GridLayout::initMethod (void)
+void GridLayout::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -75,10 +77,10 @@ void GridLayout::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void GridLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+void GridLayout::updateLayout(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
 {
 	Pnt2f borderTopLeft, borderBottomRight;
-	Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(borderTopLeft, borderBottomRight);
+	dynamic_cast<const ComponentContainer*>(ParentComponent)->getInsideInsetsBounds(borderTopLeft, borderBottomRight);
 	Vec2f borderSize(borderBottomRight-borderTopLeft);
 
 	Real32 Xpos = 0;
@@ -86,47 +88,43 @@ void GridLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 	Real32 maxSizeX = 0;
 	Real32 maxSizeY = 0;
 	Real32 debug = 10;
-	Int32 numComp = Components.getSize();
+	Int32 numComp = Components->getSize();
 	Real32 buttonXSize, buttonYSize;
 
 	//set the size to the perfered sizes for the buttons
-	for(UInt16 i = 0; i<Components.size(); i++){
-		if (Components[i] != NullFC) 
+	for(UInt16 i = 0; i<Components->size(); i++){
+		if ((*Components)[i] != NULL) 
 		{
-			if(Components[i]->getPreferredSize().x()>maxSizeX)
-				maxSizeX = Components[i]->getPreferredSize().x();
-			if(Components[i]->getPreferredSize().y()>maxSizeY)
-				maxSizeY = Components[i]->getPreferredSize().y();
+			if((*Components)[i]->getPreferredSize().x()>maxSizeX)
+				maxSizeX = (*Components)[i]->getPreferredSize().x();
+			if((*Components)[i]->getPreferredSize().y()>maxSizeY)
+				maxSizeY = (*Components)[i]->getPreferredSize().y();
 		}
 	}
 	//set the  size of the button
-	for(UInt16 i = 0; i < Components.size(); i++){
-		if (Components[i] != NullFC) 
+	for(UInt16 i = 0; i < Components->size(); i++){
+		if ((*Components)[i] != NULL) 
 		{
-			if(maxSizeX < Components[i]->getMaxSize().x())
+			if(maxSizeX < (*Components)[i]->getMaxSize().x())
 				buttonXSize = maxSizeX;
 			else
-				buttonXSize = Components[i]->getMaxSize().x();
-			if(maxSizeY<Components[i]->getMaxSize().y())
+				buttonXSize = (*Components)[i]->getMaxSize().x();
+			if(maxSizeY<(*Components)[i]->getMaxSize().y())
 				buttonYSize = maxSizeY;
 			else
-				buttonYSize = Components[i]->getMaxSize().y();
-			beginEditCP(Components[i], Component::SizeFieldMask);
-			   Components[i]->setSize(Vec2f(buttonXSize, buttonYSize));
-			endEditCP(Components[i], Component::SizeFieldMask);
+				buttonYSize = (*Components)[i]->getMaxSize().y();
+			   (*Components)[i]->setSize(Vec2f(buttonXSize, buttonYSize));
 		}
 	}
 
 
 	//position each button
 	for(UInt16 i = 0; i <= getRows()&& numComp>=0; i++){
-		if (Components[i] != NullFC) 
+		if ((*Components)[i] != NULL) 
 		{
 			for(UInt16 j = 0; j < getColumns()&& numComp>0; j++){
 				debug = i*getColumns()+j;
-			    beginEditCP(Components[i], Component::PositionFieldMask);
-                   Components[i*getColumns()+j]->setPosition(borderTopLeft + Vec2f(Xpos, Ypos));
-			    endEditCP(Components[i], Component::PositionFieldMask);
+                   (*Components)[i*getColumns()+j]->setPosition(borderTopLeft + Vec2f(Xpos, Ypos));
 				numComp--;
 				Xpos = Xpos + (maxSizeX+getHorizontalGap());
 			}
@@ -137,17 +135,17 @@ void GridLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr
 }
 
 
-Vec2f GridLayout::layoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent, SizeType TheSizeType) const
+Vec2f GridLayout::layoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent, SizeType TheSizeType) const
 {
 	Real32 maxSizeX = 0.0f;
 	Real32 maxSizeY = 0.0f;
 
     Vec2f ComponentSize;
 	//set the size to the perfered sizes for the buttons
-	for(UInt16 i = 0; i<Components.size(); i++){
-		if (Components[i] != NullFC) 
+	for(UInt16 i = 0; i<Components->size(); i++){
+		if ((*Components)[i] != NULL) 
 		{
-            ComponentSize = getComponentSize(Components[i],TheSizeType);
+            ComponentSize = getComponentSize((*Components)[i],TheSizeType);
 			if(ComponentSize.x()>maxSizeX)
 				maxSizeX = ComponentSize.x();
 			if(ComponentSize.y()>maxSizeY)
@@ -159,25 +157,26 @@ Vec2f GridLayout::layoutSize(const MFComponentPtr Components,const ComponentPtr 
                  maxSizeY * static_cast<Real32>(getColumns()));
 }
 
-Vec2f GridLayout::minimumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+Vec2f GridLayout::minimumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, MIN_SIZE);
 }
 
-Vec2f GridLayout::requestedContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+Vec2f GridLayout::requestedContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, REQUESTED_SIZE);
 }
 
-Vec2f GridLayout::preferredContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+Vec2f GridLayout::preferredContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, PREFERRED_SIZE);
 }
 
-Vec2f GridLayout::maximumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+Vec2f GridLayout::maximumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, MAX_SIZE);
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -200,41 +199,17 @@ GridLayout::~GridLayout(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void GridLayout::changed(BitVector whichField, UInt32 origin)
+void GridLayout::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void GridLayout::dump(      UInt32    , 
+void GridLayout::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump GridLayout NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGGRIDLAYOUTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGGRIDLAYOUTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGGRIDLAYOUTFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

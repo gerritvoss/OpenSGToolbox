@@ -3,32 +3,34 @@
 <FieldContainer
 	name="CompoundLayoutSpring"
 	parent="StaticLayoutSpring"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="abstract"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI Compound LayoutSpring. Use the instance variables of the StaticSpring superclass to cache values that have already been calculated.
 	<Field
 		name="Spring1"
-		type="LayoutSpringPtr"
+		type="LayoutSpring"
+        category="pointer"
 		cardinality="single"
       visibility="external"
-		defaultValue="NullFC"
-		header="Layout/Spring/OSGLayoutSpringFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
    </Field>
 	<Field
 		name="Spring2"
-		type="LayoutSpringPtr"
+		type="LayoutSpring"
+        category="pointer"
 		cardinality="single"
       visibility="external"
-		defaultValue="NullFC"
-		header="Layout/Spring/OSGLayoutSpringFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
    </Field>

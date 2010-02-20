@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,121 +50,124 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILECHANGEEVENTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGChangeEventBase.h"
 #include "OSGChangeEvent.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector ChangeEventBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::ChangeEvent
+    
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
 
-FieldContainerType ChangeEventBase::_type(
-    "ChangeEvent",
-    "Event",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&ChangeEventBase::createEmpty),
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ChangeEvent *>::_type("ChangeEventPtr", "EventPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ChangeEvent *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ChangeEvent *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ChangeEvent *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ChangeEventBase::classDescInserter(TypeObject &oType)
+{
+}
+
+
+ChangeEventBase::TypeObject ChangeEventBase::_type(
+    ChangeEventBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ChangeEventBase::createEmptyLocal),
     ChangeEvent::initMethod,
-    NULL,
-    0);
+    ChangeEvent::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ChangeEvent::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ChangeEvent\"\n"
+    "\tparent=\"Event\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(ChangeEventBase, ChangeEventPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ChangeEventBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ChangeEventBase::getType(void) const 
+FieldContainerType &ChangeEventBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr ChangeEventBase::shallowCopy(void) const 
-{ 
-    ChangeEventPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const ChangeEvent *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 ChangeEventBase::getContainerSize(void) const 
-{ 
-    return sizeof(ChangeEvent); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ChangeEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &ChangeEventBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<ChangeEventBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void ChangeEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 ChangeEventBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((ChangeEventBase *) &other, whichField, sInfo);
-}
-void ChangeEventBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(ChangeEvent);
 }
 
-void ChangeEventBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-ChangeEventBase::ChangeEventBase(void) :
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-ChangeEventBase::ChangeEventBase(const ChangeEventBase &source) :
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-ChangeEventBase::~ChangeEventBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ChangeEventBase::getBinSize(const BitVector &whichField)
+UInt32 ChangeEventBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -172,66 +175,198 @@ UInt32 ChangeEventBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void ChangeEventBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ChangeEventBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-
 }
 
-void ChangeEventBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ChangeEventBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ChangeEventBase::executeSyncImpl(      ChangeEventBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ChangeEventTransitPtr ChangeEventBase::createLocal(BitVector bFlags)
 {
+    ChangeEventTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
+        fc = dynamic_pointer_cast<ChangeEvent>(tmpPtr);
+    }
 
-}
-#else
-void ChangeEventBase::executeSyncImpl(      ChangeEventBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
+    return fc;
 }
 
-void ChangeEventBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ChangeEventTransitPtr ChangeEventBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ChangeEventTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<ChangeEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ChangeEventTransitPtr ChangeEventBase::create(void)
+{
+    ChangeEventTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<ChangeEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+ChangeEvent *ChangeEventBase::createEmptyLocal(BitVector bFlags)
+{
+    ChangeEvent *returnValue;
+
+    newPtr<ChangeEvent>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+ChangeEvent *ChangeEventBase::createEmpty(void)
+{
+    ChangeEvent *returnValue;
+
+    newPtr<ChangeEvent>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ChangeEventBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    ChangeEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ChangeEvent *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ChangeEventBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    ChangeEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ChangeEvent *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ChangeEventBase::shallowCopy(void) const
+{
+    ChangeEvent *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const ChangeEvent *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ChangeEventBase::ChangeEventBase(void) :
+    Inherited()
+{
+}
+
+ChangeEventBase::ChangeEventBase(const ChangeEventBase &source) :
+    Inherited(source)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ChangeEventBase::~ChangeEventBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ChangeEventBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ChangeEvent *pThis = static_cast<ChangeEvent *>(this);
+
+    pThis->execSync(static_cast<ChangeEvent *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ChangeEventBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    ChangeEvent *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const ChangeEvent *>(pRefAspect),
+                  dynamic_cast<const ChangeEvent *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ChangeEventPtr>::_type("ChangeEventPtr", "EventPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(ChangeEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void ChangeEventBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

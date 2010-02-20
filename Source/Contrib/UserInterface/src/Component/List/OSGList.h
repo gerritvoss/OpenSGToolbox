@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,57 +42,67 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGListBase.h"
-#include "Event/OSGFocusListener.h"
+#include "OSGFocusListener.h"
 #include "OSGListDataListener.h"
 #include "OSGListSelectionListener.h"
 #include "OSGListSelectionModel.h"
+#include "OSGComponentGenerator.h"
 #include <boost/any.hpp>
 
 #include <deque>
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelectionListener, public ListDataListener, public FocusListener
-{
-  private:
+/*! \brief List class. See \ref
+           PageContribUserInterfaceList for a description.
+*/
 
-    typedef ListBase Inherited;
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING List : public ListBase, public ListSelectionListener, public ListDataListener, public FocusListener
+{
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
-      enum Orientation{VERTICAL_ORIENTATION=0, HORIZONTAL_ORIENTATION};
+    enum Orientation
+    {
+        VERTICAL_ORIENTATION   = 0,
+        HORIZONTAL_ORIENTATION = 1
+    };
 
-	//Focus Events
-	virtual void focusGained(const FocusEventPtr e);
-	virtual void focusLost(const FocusEventPtr e);
+    typedef ListBase Inherited;
+    typedef List     Self;
 
-    //Selection Event
-	virtual void selectionChanged(const ListSelectionEventPtr e);
-
-	//List Data Events
-	virtual void contentsChanged(const ListDataEventPtr e);
-	virtual void intervalAdded(const ListDataEventPtr e);
-	virtual void intervalRemoved(const ListDataEventPtr e);
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
+	//Focus Events
+	virtual void focusGained(const FocusEventUnrecPtr e);
+	virtual void focusLost(const FocusEventUnrecPtr e);
+
+    //Selection Event
+	virtual void selectionChanged(const ListSelectionEventUnrecPtr e);
+
+	//List Data Events
+	virtual void contentsChanged(const ListDataEventUnrecPtr e);
+	virtual void intervalAdded(const ListDataEventUnrecPtr e);
+	virtual void intervalRemoved(const ListDataEventUnrecPtr e);
    
     virtual void updateLayout(void);
 
@@ -100,11 +110,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
 
     ListSelectionModelPtr getSelectionModel(void) const;
 	
-    virtual void mousePressed(const MouseEventPtr e);
-	virtual void keyTyped(const KeyEventPtr e);
+    virtual void mousePressed(const MouseEventUnrecPtr e);
+	virtual void keyTyped(const KeyEventUnrecPtr e);
 
-    ComponentPtr getComponentAtPoint(const MouseEventPtr e);
-    boost::any getValueAtPoint(const MouseEventPtr e);
+    ComponentRefPtr getComponentAtPoint(const MouseEventUnrecPtr e);
+    boost::any getValueAtPoint(const MouseEventUnrecPtr e);
 
     //Returns the row for the specified location.
 	//The Location should be in Component space
@@ -113,7 +123,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
 	
     Int32 getIndexClosestToLocation(const Pnt2f& Location) const;
 
-    ComponentPtr getComponentAtIndex(const UInt32& Index);
+    ComponentRefPtr getComponentAtIndex(const UInt32& Index);
     boost::any getValueAtIndex(const UInt32& Index);
     
 	
@@ -144,7 +154,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
 	void scrollToFocused(void);
 
 	void scrollToSelection(void);
-	/*=========================  PROTECTED  ===============================*/
+    /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ListBase.
@@ -161,7 +172,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~List(void); 
+    virtual ~List(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
 
@@ -187,7 +205,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
 	void focusIndex(const Int32& Index);
 	
 	//Creates the component for the given Index
-    ComponentPtr createIndexComponent(const UInt32& Index);
+    ComponentRefPtr createIndexComponent(const UInt32& Index);
 
 	
 	void updateItem(const UInt32& Index);
@@ -200,18 +218,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
           _BottomDrawnIndex;
 	Int32 _FocusedIndex;
 
-    std::deque<ComponentPtr> _DrawnIndices;
+    std::deque<ComponentRefPtr> _DrawnIndices;
 
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ListBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const List &source);
 };
 
@@ -219,9 +235,9 @@ typedef List *ListP;
 
 OSG_END_NAMESPACE
 
+#include "OSGListModel.h"
+
 #include "OSGListBase.inl"
 #include "OSGList.inl"
-
-#define OSGLIST_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGLIST_H_ */

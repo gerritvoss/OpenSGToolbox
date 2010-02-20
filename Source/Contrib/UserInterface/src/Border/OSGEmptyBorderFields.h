@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGBorderFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class EmptyBorder;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! EmptyBorderPtr
+OSG_GEN_CONTAINERPTR(EmptyBorder);
 
-typedef FCPtr<BorderPtr, EmptyBorder> EmptyBorderPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<EmptyBorderPtr> : 
-    public FieldTraitsRecurseMapper<EmptyBorderPtr, true>
+struct FieldTraits<EmptyBorder *> :
+    public FieldTraitsFCPtrBase<EmptyBorder *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFEmptyBorderPtr"; }
-    static const char *getMName(void) { return "MFEmptyBorderPtr"; }
+    typedef FieldTraits<EmptyBorder *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFEmptyBorderPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFEmptyBorderPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<EmptyBorderPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<EmptyBorder *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecEmptyBorderPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<EmptyBorder *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecEmptyBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<EmptyBorder *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakEmptyBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<EmptyBorder *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdEmptyBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<EmptyBorder *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecEmptyBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<EmptyBorder *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecEmptyBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<EmptyBorder *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakEmptyBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<EmptyBorder *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdEmptyBorderPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<EmptyBorder *,
+                      RecordedRefCountPolicy  > SFRecEmptyBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<EmptyBorder *,
+                      UnrecordedRefCountPolicy> SFUnrecEmptyBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<EmptyBorder *,
+                      WeakRefCountPolicy      > SFWeakEmptyBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<EmptyBorder *,
+                      NoRefCountPolicy        > SFUncountedEmptyBorderPtr;
 
-typedef SField<EmptyBorderPtr> SFEmptyBorderPtr;
-#endif
 
-#ifndef OSG_COMPILEEMPTYBORDERINST
-OSG_DLLEXPORT_DECL1(SField, EmptyBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<EmptyBorder *,
+                      RecordedRefCountPolicy  > MFRecEmptyBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<EmptyBorder *,
+                      UnrecordedRefCountPolicy> MFUnrecEmptyBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<EmptyBorder *,
+                      WeakRefCountPolicy      > MFWeakEmptyBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<EmptyBorder *,
+                      NoRefCountPolicy        > MFUncountedEmptyBorderPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<EmptyBorderPtr> MFEmptyBorderPtr;
-#endif
 
-#ifndef OSG_COMPILEEMPTYBORDERINST
-OSG_DLLEXPORT_DECL1(MField, EmptyBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecEmptyBorderPtr : 
+    public PointerSField<EmptyBorder *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecEmptyBorderPtr : 
+    public PointerSField<EmptyBorder *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakEmptyBorderPtr :
+    public PointerSField<EmptyBorder *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedEmptyBorderPtr :
+    public PointerSField<EmptyBorder *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecEmptyBorderPtr :
+    public PointerMField<EmptyBorder *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecEmptyBorderPtr :
+    public PointerMField<EmptyBorder *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakEmptyBorderPtr :
+    public PointerMField<EmptyBorder *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedEmptyBorderPtr :
+    public PointerMField<EmptyBorder *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGEMPTYBORDERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGEMPTYBORDERFIELDS_H_ */

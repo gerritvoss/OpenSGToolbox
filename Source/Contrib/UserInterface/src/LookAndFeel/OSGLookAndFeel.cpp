@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,21 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGFieldContainerFactory.h>
-#include <OpenSG/Toolbox/OSGFieldContainerUtils.h>
+#include <OSGConfig.h>
 
 #include "OSGLookAndFeel.h"
+#include "OSGFieldContainerFactory.h"
+#include "OSGContainerUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::LookAndFeel
-UI LookAndFeel Interface. 
-*/
+// Documentation for this class is emitted in the
+// OSGLookAndFeelBase.cpp file.
+// To modify it, please change the .fcd file (OSGLookAndFeel.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,8 +64,13 @@ UI LookAndFeel Interface.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void LookAndFeel::initMethod (void)
+void LookAndFeel::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -79,10 +81,10 @@ void LookAndFeel::initMethod (void)
 void LookAndFeel::initPrototypes(void)
 {
     //Loop through all of my prototypes
-    for(UInt32 i(0) ; i<getPrototypes().size(); ++i)
+    for(UInt32 i(0) ; i<getMFPrototypes()->size(); ++i)
     {
         //Set them as their class prototypes
-	    getPrototypes()[i]->getType().setPrototype(getPrototypes()[i]);
+        getPrototypes(i)->getType().setPrototype(getPrototypes(i));
     }
 }
 
@@ -92,11 +94,11 @@ void LookAndFeel::initUndefinedPrototypes(void)
     UInt32 NumFCTypes(FieldContainerFactory::the()->getNumTypes());
     const FieldContainerType* UndefinedPrototypeType(NULL);
     const FieldContainerType* ClosestAncestorType(NULL);
-    FieldContainerPtr UndefinedPrototype(NullFC);
-    FieldContainerPtr ClosestAncestorPrototype(NullFC);
+    FieldContainerRefPtr UndefinedPrototype(NULL);
+    FieldContainerRefPtr ClosestAncestorPrototype(NULL);
 
-    const FieldDescription* UndefinedPrototypeDesc(NULL);
-    const FieldDescription* ClosestAncestorDesc(NULL);
+    const FieldDescriptionBase* UndefinedPrototypeDesc(NULL);
+    const FieldDescriptionBase* ClosestAncestorDesc(NULL);
     UInt32 NumTypesFound(0);
     for (UInt32 i(0); NumTypesFound < NumFCTypes ; ++i)
     {
@@ -110,14 +112,16 @@ void LookAndFeel::initUndefinedPrototypes(void)
             ++NumTypesFound;
         }
 
-        ClosestAncestorType = getClosestAncestor(UndefinedPrototypeType, getPrototypes().getValues());
+        ClosestAncestorType = getClosestAncestor(UndefinedPrototypeType,
+                                                 getMFPrototypes()->begin(),
+                                                 getMFPrototypes()->end());
         if(ClosestAncestorType != NULL &&
-          *ClosestAncestorType != *UndefinedPrototypeType &&
-          !UndefinedPrototypeType->isAbstract())
+           *ClosestAncestorType != *UndefinedPrototypeType &&
+           !UndefinedPrototypeType->isAbstract())
         {
             SLOG << "UserInterface: LookAndFeel: Initializing undefined prototype for a derived user interface type" << std::endl
-                 << "    Undefined Prototype Type: "   << UndefinedPrototypeType->getCName() << std::endl
-                 << "    Closest Ancestor: "         << ClosestAncestorType->getCName() << std::endl;
+                << "    Undefined Prototype Type: "   << UndefinedPrototypeType->getCName() << std::endl
+                << "    Closest Ancestor: "         << ClosestAncestorType->getCName() << std::endl;
             //For all of these types set the prototype values of all of the 
             //inherited fields to the same as the closest ancestor
             BitVector TheBitMask(0);
@@ -127,16 +131,30 @@ void LookAndFeel::initUndefinedPrototypes(void)
             }
             UndefinedPrototype = UndefinedPrototypeType->getPrototype();
             ClosestAncestorPrototype = ClosestAncestorType->getPrototype();
-            beginEditCP(UndefinedPrototype, TheBitMask);
-                for(UInt32 j(1); j<=ClosestAncestorType->getNumFieldDescs() ; ++j)
-                {
-                    ClosestAncestorDesc = ClosestAncestorType->getFieldDescription(j);
-                    UndefinedPrototypeDesc = ClosestAncestorType->findFieldDescription(ClosestAncestorDesc->getCName());
+            for(UInt32 j(1); j<=ClosestAncestorType->getNumFieldDescs() ; ++j)
+            {
+                ClosestAncestorDesc = ClosestAncestorType->getFieldDesc(j);
+                UndefinedPrototypeDesc = ClosestAncestorType->getFieldDesc(ClosestAncestorDesc->getCName());
 
-                    //Set the field to the same as this closest ancestor
-                    UndefinedPrototype->getField(UndefinedPrototypeDesc->getFieldId())->setAbstrValue(*(ClosestAncestorPrototype->getField(ClosestAncestorDesc->getFieldId())));
+                //Set the field to the same as this closest ancestor
+                //Get the Undefined Field
+                EditFieldHandlePtr UndefinedField =
+                    UndefinedPrototype->editField(UndefinedPrototypeDesc->getFieldId());
+                GetFieldHandlePtr ClosestAncestorField =
+                    ClosestAncestorPrototype->getField(ClosestAncestorDesc->getFieldId());
+                //Get the Closest Ancestor Field
+                if(UndefinedField != NULL && ClosestAncestorField != NULL)
+                {
+                    if(UndefinedField->isPointerField())
+                    {
+                        UndefinedField->cloneValues(ClosestAncestorField);
+                    }
+                    else
+                    {
+                        UndefinedField->copyValues(ClosestAncestorField);
+                    }
                 }
-            endEditCP(UndefinedPrototype, TheBitMask);
+            }
         }
     }
 }
@@ -163,41 +181,17 @@ LookAndFeel::~LookAndFeel(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void LookAndFeel::changed(BitVector whichField, UInt32 origin)
+void LookAndFeel::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void LookAndFeel::dump(      UInt32    , 
+void LookAndFeel::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump LookAndFeel NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGLOOKANDFEELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGLOOKANDFEELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGLOOKANDFEELFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

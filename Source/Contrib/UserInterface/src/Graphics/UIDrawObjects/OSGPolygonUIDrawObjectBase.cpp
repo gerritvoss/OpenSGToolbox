@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,169 +50,246 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEPOLYGONUIDRAWOBJECTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGPolygonUIDrawObjectBase.h"
 #include "OSGPolygonUIDrawObject.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  PolygonUIDrawObjectBase::VerticiesFieldMask = 
-    (TypeTraits<BitVector>::One << PolygonUIDrawObjectBase::VerticiesFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  PolygonUIDrawObjectBase::ColorFieldMask = 
-    (TypeTraits<BitVector>::One << PolygonUIDrawObjectBase::ColorFieldId);
+/*! \class OSG::PolygonUIDrawObject
+    A UI PolygonUIDrawObject.
+ */
 
-const OSG::BitVector  PolygonUIDrawObjectBase::OpacityFieldMask = 
-    (TypeTraits<BitVector>::One << PolygonUIDrawObjectBase::OpacityFieldId);
-
-const OSG::BitVector PolygonUIDrawObjectBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Pnt2f           PolygonUIDrawObjectBase::_mfVerticies
     
 */
+
 /*! \var Color4f         PolygonUIDrawObjectBase::_sfColor
     
 */
+
 /*! \var Real32          PolygonUIDrawObjectBase::_sfOpacity
     
 */
 
-//! PolygonUIDrawObject description
 
-FieldDescription *PolygonUIDrawObjectBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<PolygonUIDrawObject *>::_type("PolygonUIDrawObjectPtr", "UIDrawObjectPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(PolygonUIDrawObject *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           PolygonUIDrawObject *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           PolygonUIDrawObject *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void PolygonUIDrawObjectBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(MFPnt2f::getClassType(), 
-                     "Verticies", 
-                     VerticiesFieldId, VerticiesFieldMask,
-                     false,
-                     (FieldAccessMethod) &PolygonUIDrawObjectBase::getMFVerticies),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "Color", 
-                     ColorFieldId, ColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &PolygonUIDrawObjectBase::getSFColor),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Opacity", 
-                     OpacityFieldId, OpacityFieldMask,
-                     false,
-                     (FieldAccessMethod) &PolygonUIDrawObjectBase::getSFOpacity)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType PolygonUIDrawObjectBase::_type(
-    "PolygonUIDrawObject",
-    "UIDrawObject",
-    NULL,
-    (PrototypeCreateF) &PolygonUIDrawObjectBase::createEmpty,
+    pDesc = new MFPnt2f::Description(
+        MFPnt2f::getClassType(),
+        "Verticies",
+        "",
+        VerticiesFieldId, VerticiesFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&PolygonUIDrawObject::editHandleVerticies),
+        static_cast<FieldGetMethodSig >(&PolygonUIDrawObject::getHandleVerticies));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "Color",
+        "",
+        ColorFieldId, ColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&PolygonUIDrawObject::editHandleColor),
+        static_cast<FieldGetMethodSig >(&PolygonUIDrawObject::getHandleColor));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Opacity",
+        "",
+        OpacityFieldId, OpacityFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&PolygonUIDrawObject::editHandleOpacity),
+        static_cast<FieldGetMethodSig >(&PolygonUIDrawObject::getHandleOpacity));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+PolygonUIDrawObjectBase::TypeObject PolygonUIDrawObjectBase::_type(
+    PolygonUIDrawObjectBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&PolygonUIDrawObjectBase::createEmptyLocal),
     PolygonUIDrawObject::initMethod,
-    _desc,
-    sizeof(_desc));
+    PolygonUIDrawObject::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&PolygonUIDrawObject::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"PolygonUIDrawObject\"\n"
+    "\tparent=\"UIDrawObject\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI PolygonUIDrawObject.\n"
+    "\t<Field\n"
+    "\t\tname=\"Verticies\"\n"
+    "\t\ttype=\"Pnt2f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Color\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0,1.0,1.0,1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Opacity\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI PolygonUIDrawObject.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(PolygonUIDrawObjectBase, PolygonUIDrawObjectPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &PolygonUIDrawObjectBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &PolygonUIDrawObjectBase::getType(void) const 
+FieldContainerType &PolygonUIDrawObjectBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr PolygonUIDrawObjectBase::shallowCopy(void) const 
-{ 
-    PolygonUIDrawObjectPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const PolygonUIDrawObject *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 PolygonUIDrawObjectBase::getContainerSize(void) const 
-{ 
-    return sizeof(PolygonUIDrawObject); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void PolygonUIDrawObjectBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &PolygonUIDrawObjectBase::getType(void) const
 {
-    this->executeSyncImpl((PolygonUIDrawObjectBase *) &other, whichField);
+    return _type;
 }
-#else
-void PolygonUIDrawObjectBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 PolygonUIDrawObjectBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((PolygonUIDrawObjectBase *) &other, whichField, sInfo);
+    return sizeof(PolygonUIDrawObject);
 }
-void PolygonUIDrawObjectBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+MFPnt2f *PolygonUIDrawObjectBase::editMFVerticies(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editMField(VerticiesFieldMask, _mfVerticies);
+
+    return &_mfVerticies;
 }
 
-void PolygonUIDrawObjectBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const MFPnt2f *PolygonUIDrawObjectBase::getMFVerticies(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
-    _mfVerticies.terminateShare(uiAspect, this->getContainerSize());
+    return &_mfVerticies;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-PolygonUIDrawObjectBase::PolygonUIDrawObjectBase(void) :
-    _mfVerticies              (), 
-    _sfColor                  (Color4f(1.0,1.0,1.0,1.0)), 
-    _sfOpacity                (Real32(1.0)), 
-    Inherited() 
+SFColor4f *PolygonUIDrawObjectBase::editSFColor(void)
 {
+    editSField(ColorFieldMask);
+
+    return &_sfColor;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-PolygonUIDrawObjectBase::PolygonUIDrawObjectBase(const PolygonUIDrawObjectBase &source) :
-    _mfVerticies              (source._mfVerticies              ), 
-    _sfColor                  (source._sfColor                  ), 
-    _sfOpacity                (source._sfOpacity                ), 
-    Inherited                 (source)
+const SFColor4f *PolygonUIDrawObjectBase::getSFColor(void) const
 {
+    return &_sfColor;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-PolygonUIDrawObjectBase::~PolygonUIDrawObjectBase(void)
+SFReal32 *PolygonUIDrawObjectBase::editSFOpacity(void)
 {
+    editSField(OpacityFieldMask);
+
+    return &_sfOpacity;
 }
+
+const SFReal32 *PolygonUIDrawObjectBase::getSFOpacity(void) const
+{
+    return &_sfOpacity;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 PolygonUIDrawObjectBase::getBinSize(const BitVector &whichField)
+UInt32 PolygonUIDrawObjectBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -220,23 +297,20 @@ UInt32 PolygonUIDrawObjectBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _mfVerticies.getBinSize();
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         returnValue += _sfColor.getBinSize();
     }
-
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
     {
         returnValue += _sfOpacity.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void PolygonUIDrawObjectBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void PolygonUIDrawObjectBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -244,22 +318,18 @@ void PolygonUIDrawObjectBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _mfVerticies.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         _sfColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
     {
         _sfOpacity.copyToBin(pMem);
     }
-
-
 }
 
-void PolygonUIDrawObjectBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void PolygonUIDrawObjectBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -267,107 +337,284 @@ void PolygonUIDrawObjectBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _mfVerticies.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         _sfColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
     {
         _sfOpacity.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void PolygonUIDrawObjectBase::executeSyncImpl(      PolygonUIDrawObjectBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+PolygonUIDrawObjectTransitPtr PolygonUIDrawObjectBase::createLocal(BitVector bFlags)
 {
+    PolygonUIDrawObjectTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (VerticiesFieldMask & whichField))
-        _mfVerticies.syncWith(pOther->_mfVerticies);
+        fc = dynamic_pointer_cast<PolygonUIDrawObject>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
-
-    if(FieldBits::NoField != (OpacityFieldMask & whichField))
-        _sfOpacity.syncWith(pOther->_sfOpacity);
-
-
-}
-#else
-void PolygonUIDrawObjectBase::executeSyncImpl(      PolygonUIDrawObjectBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
-
-    if(FieldBits::NoField != (OpacityFieldMask & whichField))
-        _sfOpacity.syncWith(pOther->_sfOpacity);
-
-
-    if(FieldBits::NoField != (VerticiesFieldMask & whichField))
-        _mfVerticies.syncWith(pOther->_mfVerticies, sInfo);
-
-
+    return fc;
 }
 
-void PolygonUIDrawObjectBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+PolygonUIDrawObjectTransitPtr PolygonUIDrawObjectBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    PolygonUIDrawObjectTransitPtr fc;
 
-    if(FieldBits::NoField != (VerticiesFieldMask & whichField))
-        _mfVerticies.beginEdit(uiAspect, uiContainerSize);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
+        fc = dynamic_pointer_cast<PolygonUIDrawObject>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+PolygonUIDrawObjectTransitPtr PolygonUIDrawObjectBase::create(void)
+{
+    PolygonUIDrawObjectTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<PolygonUIDrawObject>(tmpPtr);
+    }
+
+    return fc;
+}
+
+PolygonUIDrawObject *PolygonUIDrawObjectBase::createEmptyLocal(BitVector bFlags)
+{
+    PolygonUIDrawObject *returnValue;
+
+    newPtr<PolygonUIDrawObject>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+PolygonUIDrawObject *PolygonUIDrawObjectBase::createEmpty(void)
+{
+    PolygonUIDrawObject *returnValue;
+
+    newPtr<PolygonUIDrawObject>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr PolygonUIDrawObjectBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    PolygonUIDrawObject *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const PolygonUIDrawObject *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr PolygonUIDrawObjectBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    PolygonUIDrawObject *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const PolygonUIDrawObject *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr PolygonUIDrawObjectBase::shallowCopy(void) const
+{
+    PolygonUIDrawObject *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const PolygonUIDrawObject *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+PolygonUIDrawObjectBase::PolygonUIDrawObjectBase(void) :
+    Inherited(),
+    _mfVerticies              (),
+    _sfColor                  (Color4f(1.0,1.0,1.0,1.0)),
+    _sfOpacity                (Real32(1.0))
+{
+}
+
+PolygonUIDrawObjectBase::PolygonUIDrawObjectBase(const PolygonUIDrawObjectBase &source) :
+    Inherited(source),
+    _mfVerticies              (source._mfVerticies              ),
+    _sfColor                  (source._sfColor                  ),
+    _sfOpacity                (source._sfOpacity                )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+PolygonUIDrawObjectBase::~PolygonUIDrawObjectBase(void)
+{
+}
+
+
+GetFieldHandlePtr PolygonUIDrawObjectBase::getHandleVerticies       (void) const
+{
+    MFPnt2f::GetHandlePtr returnValue(
+        new  MFPnt2f::GetHandle(
+             &_mfVerticies,
+             this->getType().getFieldDesc(VerticiesFieldId),
+             const_cast<PolygonUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr PolygonUIDrawObjectBase::editHandleVerticies      (void)
+{
+    MFPnt2f::EditHandlePtr returnValue(
+        new  MFPnt2f::EditHandle(
+             &_mfVerticies,
+             this->getType().getFieldDesc(VerticiesFieldId),
+             this));
+
+
+    editMField(VerticiesFieldMask, _mfVerticies);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr PolygonUIDrawObjectBase::getHandleColor           (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfColor,
+             this->getType().getFieldDesc(ColorFieldId),
+             const_cast<PolygonUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr PolygonUIDrawObjectBase::editHandleColor          (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfColor,
+             this->getType().getFieldDesc(ColorFieldId),
+             this));
+
+
+    editSField(ColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr PolygonUIDrawObjectBase::getHandleOpacity         (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfOpacity,
+             this->getType().getFieldDesc(OpacityFieldId),
+             const_cast<PolygonUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr PolygonUIDrawObjectBase::editHandleOpacity        (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfOpacity,
+             this->getType().getFieldDesc(OpacityFieldId),
+             this));
+
+
+    editSField(OpacityFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void PolygonUIDrawObjectBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    PolygonUIDrawObject *pThis = static_cast<PolygonUIDrawObject *>(this);
+
+    pThis->execSync(static_cast<PolygonUIDrawObject *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *PolygonUIDrawObjectBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    PolygonUIDrawObject *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const PolygonUIDrawObject *>(pRefAspect),
+                  dynamic_cast<const PolygonUIDrawObject *>(this));
+
+    return returnValue;
+}
+#endif
+
+void PolygonUIDrawObjectBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+#ifdef OSG_MT_CPTR_ASPECT
+    AspectOffsetStore oOffsets;
+
+    _pAspectStore->fillOffsetArray(oOffsets, this);
+#endif
+
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfVerticies.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<PolygonUIDrawObjectPtr>::_type("PolygonUIDrawObjectPtr", "UIDrawObjectPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(PolygonUIDrawObjectPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(PolygonUIDrawObjectPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGPOLYGONUIDRAWOBJECTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPOLYGONUIDRAWOBJECTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGPOLYGONUIDRAWOBJECTFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

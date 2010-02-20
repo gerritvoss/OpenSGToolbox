@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,45 +42,42 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGListModelBase.h"
-
 #include <boost/any.hpp>
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
+#include "OSGListDataListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ListModel class. See \ref 
-           PageUserInterfaceListModel for a description.
+/*! \brief ListModel class. See \ref
+           PageContribUserInterfaceListModel for a description.
 */
 
-class ListDataListener;
-typedef ListDataListener* ListDataListenerPtr;
-
-class OSG_USERINTERFACELIB_DLLMAPPING ListModel : public ListModelBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ListModel : public ListModelBase
 {
-  private:
-
-    typedef ListModelBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef ListModelBase Inherited;
+    typedef ListModel     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -91,6 +88,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListModel : public ListModelBase
 	virtual bool isListDataListenerAttached(ListDataListenerPtr l) const = 0;
 	virtual void removeListDataListener(ListDataListenerPtr l) = 0;
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ListModelBase.
@@ -107,20 +105,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListModel : public ListModelBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ListModel(void); 
+    virtual ~ListModel(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ListModelBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ListModel &source);
 };
 

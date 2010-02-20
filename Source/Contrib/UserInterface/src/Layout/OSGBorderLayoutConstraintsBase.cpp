@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,143 +50,165 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEBORDERLAYOUTCONSTRAINTSINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGBorderLayoutConstraintsBase.h"
 #include "OSGBorderLayoutConstraints.h"
 
-#include <Layout/OSGBorderLayoutConstraints.h>   // Region default header
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  BorderLayoutConstraintsBase::RegionFieldMask = 
-    (TypeTraits<BitVector>::One << BorderLayoutConstraintsBase::RegionFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector BorderLayoutConstraintsBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::BorderLayoutConstraints
+    A UI BorderLayoutConstraints.
+ */
 
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var UInt32          BorderLayoutConstraintsBase::_sfRegion
     
 */
 
-//! BorderLayoutConstraints description
 
-FieldDescription *BorderLayoutConstraintsBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<BorderLayoutConstraints *>::_type("BorderLayoutConstraintsPtr", "LayoutConstraintsPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(BorderLayoutConstraints *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           BorderLayoutConstraints *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           BorderLayoutConstraints *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void BorderLayoutConstraintsBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "Region", 
-                     RegionFieldId, RegionFieldMask,
-                     false,
-                     (FieldAccessMethod) &BorderLayoutConstraintsBase::getSFRegion)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType BorderLayoutConstraintsBase::_type(
-    "BorderLayoutConstraints",
-    "LayoutConstraints",
-    NULL,
-    (PrototypeCreateF) &BorderLayoutConstraintsBase::createEmpty,
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "Region",
+        "",
+        RegionFieldId, RegionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&BorderLayoutConstraints::editHandleRegion),
+        static_cast<FieldGetMethodSig >(&BorderLayoutConstraints::getHandleRegion));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+BorderLayoutConstraintsBase::TypeObject BorderLayoutConstraintsBase::_type(
+    BorderLayoutConstraintsBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&BorderLayoutConstraintsBase::createEmptyLocal),
     BorderLayoutConstraints::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(BorderLayoutConstraintsBase, BorderLayoutConstraintsPtr)
+    BorderLayoutConstraints::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&BorderLayoutConstraints::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"BorderLayoutConstraints\"\n"
+    "\tparent=\"LayoutConstraints\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI BorderLayoutConstraints.\n"
+    "\t<Field\n"
+    "\t\tname=\"Region\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"BorderLayoutConstraints::BORDER_CENTER\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI BorderLayoutConstraints.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &BorderLayoutConstraintsBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &BorderLayoutConstraintsBase::getType(void) const 
+FieldContainerType &BorderLayoutConstraintsBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr BorderLayoutConstraintsBase::shallowCopy(void) const 
-{ 
-    BorderLayoutConstraintsPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const BorderLayoutConstraints *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 BorderLayoutConstraintsBase::getContainerSize(void) const 
-{ 
-    return sizeof(BorderLayoutConstraints); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void BorderLayoutConstraintsBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &BorderLayoutConstraintsBase::getType(void) const
 {
-    this->executeSyncImpl((BorderLayoutConstraintsBase *) &other, whichField);
+    return _type;
 }
-#else
-void BorderLayoutConstraintsBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 BorderLayoutConstraintsBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((BorderLayoutConstraintsBase *) &other, whichField, sInfo);
+    return sizeof(BorderLayoutConstraints);
 }
-void BorderLayoutConstraintsBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFUInt32 *BorderLayoutConstraintsBase::editSFRegion(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(RegionFieldMask);
+
+    return &_sfRegion;
 }
 
-void BorderLayoutConstraintsBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFUInt32 *BorderLayoutConstraintsBase::getSFRegion(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-BorderLayoutConstraintsBase::BorderLayoutConstraintsBase(void) :
-    _sfRegion                 (UInt32(BorderLayoutConstraints::BORDER_CENTER)), 
-    Inherited() 
-{
+    return &_sfRegion;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-BorderLayoutConstraintsBase::BorderLayoutConstraintsBase(const BorderLayoutConstraintsBase &source) :
-    _sfRegion                 (source._sfRegion                 ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-BorderLayoutConstraintsBase::~BorderLayoutConstraintsBase(void)
-{
-}
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 BorderLayoutConstraintsBase::getBinSize(const BitVector &whichField)
+UInt32 BorderLayoutConstraintsBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -195,12 +217,11 @@ UInt32 BorderLayoutConstraintsBase::getBinSize(const BitVector &whichField)
         returnValue += _sfRegion.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void BorderLayoutConstraintsBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void BorderLayoutConstraintsBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -208,12 +229,10 @@ void BorderLayoutConstraintsBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfRegion.copyToBin(pMem);
     }
-
-
 }
 
-void BorderLayoutConstraintsBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void BorderLayoutConstraintsBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -221,82 +240,213 @@ void BorderLayoutConstraintsBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfRegion.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void BorderLayoutConstraintsBase::executeSyncImpl(      BorderLayoutConstraintsBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+BorderLayoutConstraintsTransitPtr BorderLayoutConstraintsBase::createLocal(BitVector bFlags)
 {
+    BorderLayoutConstraintsTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (RegionFieldMask & whichField))
-        _sfRegion.syncWith(pOther->_sfRegion);
+        fc = dynamic_pointer_cast<BorderLayoutConstraints>(tmpPtr);
+    }
 
-
-}
-#else
-void BorderLayoutConstraintsBase::executeSyncImpl(      BorderLayoutConstraintsBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (RegionFieldMask & whichField))
-        _sfRegion.syncWith(pOther->_sfRegion);
-
-
-
+    return fc;
 }
 
-void BorderLayoutConstraintsBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+BorderLayoutConstraintsTransitPtr BorderLayoutConstraintsBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    BorderLayoutConstraintsTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<BorderLayoutConstraints>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+BorderLayoutConstraintsTransitPtr BorderLayoutConstraintsBase::create(void)
+{
+    BorderLayoutConstraintsTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<BorderLayoutConstraints>(tmpPtr);
+    }
+
+    return fc;
+}
+
+BorderLayoutConstraints *BorderLayoutConstraintsBase::createEmptyLocal(BitVector bFlags)
+{
+    BorderLayoutConstraints *returnValue;
+
+    newPtr<BorderLayoutConstraints>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+BorderLayoutConstraints *BorderLayoutConstraintsBase::createEmpty(void)
+{
+    BorderLayoutConstraints *returnValue;
+
+    newPtr<BorderLayoutConstraints>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr BorderLayoutConstraintsBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    BorderLayoutConstraints *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const BorderLayoutConstraints *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr BorderLayoutConstraintsBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    BorderLayoutConstraints *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const BorderLayoutConstraints *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr BorderLayoutConstraintsBase::shallowCopy(void) const
+{
+    BorderLayoutConstraints *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const BorderLayoutConstraints *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+BorderLayoutConstraintsBase::BorderLayoutConstraintsBase(void) :
+    Inherited(),
+    _sfRegion                 (UInt32(BorderLayoutConstraints::BORDER_CENTER))
+{
+}
+
+BorderLayoutConstraintsBase::BorderLayoutConstraintsBase(const BorderLayoutConstraintsBase &source) :
+    Inherited(source),
+    _sfRegion                 (source._sfRegion                 )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+BorderLayoutConstraintsBase::~BorderLayoutConstraintsBase(void)
+{
+}
+
+
+GetFieldHandlePtr BorderLayoutConstraintsBase::getHandleRegion          (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfRegion,
+             this->getType().getFieldDesc(RegionFieldId),
+             const_cast<BorderLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr BorderLayoutConstraintsBase::editHandleRegion         (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfRegion,
+             this->getType().getFieldDesc(RegionFieldId),
+             this));
+
+
+    editSField(RegionFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void BorderLayoutConstraintsBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    BorderLayoutConstraints *pThis = static_cast<BorderLayoutConstraints *>(this);
+
+    pThis->execSync(static_cast<BorderLayoutConstraints *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *BorderLayoutConstraintsBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    BorderLayoutConstraints *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const BorderLayoutConstraints *>(pRefAspect),
+                  dynamic_cast<const BorderLayoutConstraints *>(this));
+
+    return returnValue;
+}
+#endif
+
+void BorderLayoutConstraintsBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<BorderLayoutConstraintsPtr>::_type("BorderLayoutConstraintsPtr", "LayoutConstraintsPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(BorderLayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(BorderLayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGBORDERLAYOUTCONSTRAINTSBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGBORDERLAYOUTCONSTRAINTSBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGBORDERLAYOUTCONSTRAINTSFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

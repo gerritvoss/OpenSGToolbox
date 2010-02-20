@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,104 +55,83 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &CompoundBorderBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 CompoundBorderBase::getClassTypeId(void) 
+OSG::UInt32 CompoundBorderBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-CompoundBorderPtr CompoundBorderBase::create(void) 
-{
-    CompoundBorderPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = CompoundBorderPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-CompoundBorderPtr CompoundBorderBase::createEmpty(void) 
-{ 
-    CompoundBorderPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 CompoundBorderBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the CompoundBorder::_sfInnerBorder field.
-inline
-SFBorderPtr *CompoundBorderBase::getSFInnerBorder(void)
-{
-    return &_sfInnerBorder;
-}
-
-//! Get the CompoundBorder::_sfOuterBorder field.
-inline
-SFBorderPtr *CompoundBorderBase::getSFOuterBorder(void)
-{
-    return &_sfOuterBorder;
-}
-
 
 //! Get the value of the CompoundBorder::_sfInnerBorder field.
 inline
-BorderPtr &CompoundBorderBase::getInnerBorder(void)
-{
-    return _sfInnerBorder.getValue();
-}
-
-//! Get the value of the CompoundBorder::_sfInnerBorder field.
-inline
-const BorderPtr &CompoundBorderBase::getInnerBorder(void) const
+Border * CompoundBorderBase::getInnerBorder(void) const
 {
     return _sfInnerBorder.getValue();
 }
 
 //! Set the value of the CompoundBorder::_sfInnerBorder field.
 inline
-void CompoundBorderBase::setInnerBorder(const BorderPtr &value)
+void CompoundBorderBase::setInnerBorder(Border * const value)
 {
+    editSField(InnerBorderFieldMask);
+
     _sfInnerBorder.setValue(value);
 }
 
 //! Get the value of the CompoundBorder::_sfOuterBorder field.
 inline
-BorderPtr &CompoundBorderBase::getOuterBorder(void)
-{
-    return _sfOuterBorder.getValue();
-}
-
-//! Get the value of the CompoundBorder::_sfOuterBorder field.
-inline
-const BorderPtr &CompoundBorderBase::getOuterBorder(void) const
+Border * CompoundBorderBase::getOuterBorder(void) const
 {
     return _sfOuterBorder.getValue();
 }
 
 //! Set the value of the CompoundBorder::_sfOuterBorder field.
 inline
-void CompoundBorderBase::setOuterBorder(const BorderPtr &value)
+void CompoundBorderBase::setOuterBorder(Border * const value)
 {
+    editSField(OuterBorderFieldMask);
+
     _sfOuterBorder.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void CompoundBorderBase::execSync (      CompoundBorderBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGCOMPOUNDBORDERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (InnerBorderFieldMask & whichField))
+        _sfInnerBorder.syncWith(pFrom->_sfInnerBorder);
+
+    if(FieldBits::NoField != (OuterBorderFieldMask & whichField))
+        _sfOuterBorder.syncWith(pFrom->_sfOuterBorder);
+}
+#endif
+
+
+inline
+const Char8 *CompoundBorderBase::getClassname(void)
+{
+    return "CompoundBorder";
+}
+OSG_GEN_CONTAINERPTR(CompoundBorder);
+
+OSG_END_NAMESPACE
 

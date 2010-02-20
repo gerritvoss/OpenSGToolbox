@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGMenuItemFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class Menu;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! MenuPtr
+OSG_GEN_CONTAINERPTR(Menu);
 
-typedef FCPtr<MenuItemPtr, Menu> MenuPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<MenuPtr> : 
-    public FieldTraitsRecurseMapper<MenuPtr, true>
+struct FieldTraits<Menu *> :
+    public FieldTraitsFCPtrBase<Menu *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFMenuPtr"; }
-    static const char *getMName(void) { return "MFMenuPtr"; }
+    typedef FieldTraits<Menu *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFMenuPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFMenuPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<MenuPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<Menu *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecMenuPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<Menu *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecMenuPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Menu *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakMenuPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Menu *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdMenuPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Menu *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecMenuPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Menu *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecMenuPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Menu *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakMenuPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Menu *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdMenuPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Menu *,
+                      RecordedRefCountPolicy  > SFRecMenuPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Menu *,
+                      UnrecordedRefCountPolicy> SFUnrecMenuPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Menu *,
+                      WeakRefCountPolicy      > SFWeakMenuPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Menu *,
+                      NoRefCountPolicy        > SFUncountedMenuPtr;
 
-typedef SField<MenuPtr> SFMenuPtr;
-#endif
 
-#ifndef OSG_COMPILEMENUINST
-OSG_DLLEXPORT_DECL1(SField, MenuPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Menu *,
+                      RecordedRefCountPolicy  > MFRecMenuPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Menu *,
+                      UnrecordedRefCountPolicy> MFUnrecMenuPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Menu *,
+                      WeakRefCountPolicy      > MFWeakMenuPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Menu *,
+                      NoRefCountPolicy        > MFUncountedMenuPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<MenuPtr> MFMenuPtr;
-#endif
 
-#ifndef OSG_COMPILEMENUINST
-OSG_DLLEXPORT_DECL1(MField, MenuPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecMenuPtr : 
+    public PointerSField<Menu *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecMenuPtr : 
+    public PointerSField<Menu *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakMenuPtr :
+    public PointerSField<Menu *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedMenuPtr :
+    public PointerSField<Menu *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecMenuPtr :
+    public PointerMField<Menu *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecMenuPtr :
+    public PointerMField<Menu *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakMenuPtr :
+    public PointerMField<Menu *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedMenuPtr :
+    public PointerMField<Menu *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGMENUFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGMENUFIELDS_H_ */

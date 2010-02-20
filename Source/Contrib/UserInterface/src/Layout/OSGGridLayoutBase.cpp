@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,181 +50,287 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEGRIDLAYOUTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGGridLayoutBase.h"
 #include "OSGGridLayout.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  GridLayoutBase::RowsFieldMask = 
-    (TypeTraits<BitVector>::One << GridLayoutBase::RowsFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  GridLayoutBase::ColumnsFieldMask = 
-    (TypeTraits<BitVector>::One << GridLayoutBase::ColumnsFieldId);
+/*! \class OSG::GridLayout
+    A UI GridLayout.
+ */
 
-const OSG::BitVector  GridLayoutBase::HorizontalGapFieldMask = 
-    (TypeTraits<BitVector>::One << GridLayoutBase::HorizontalGapFieldId);
-
-const OSG::BitVector  GridLayoutBase::VerticalGapFieldMask = 
-    (TypeTraits<BitVector>::One << GridLayoutBase::VerticalGapFieldId);
-
-const OSG::BitVector GridLayoutBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var UInt32          GridLayoutBase::_sfRows
     
 */
+
 /*! \var UInt32          GridLayoutBase::_sfColumns
     
 */
+
 /*! \var Real32          GridLayoutBase::_sfHorizontalGap
     
 */
+
 /*! \var Real32          GridLayoutBase::_sfVerticalGap
     
 */
 
-//! GridLayout description
 
-FieldDescription *GridLayoutBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<GridLayout *>::_type("GridLayoutPtr", "LayoutPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(GridLayout *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           GridLayout *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           GridLayout *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void GridLayoutBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "Rows", 
-                     RowsFieldId, RowsFieldMask,
-                     false,
-                     (FieldAccessMethod) &GridLayoutBase::getSFRows),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "Columns", 
-                     ColumnsFieldId, ColumnsFieldMask,
-                     false,
-                     (FieldAccessMethod) &GridLayoutBase::getSFColumns),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "HorizontalGap", 
-                     HorizontalGapFieldId, HorizontalGapFieldMask,
-                     false,
-                     (FieldAccessMethod) &GridLayoutBase::getSFHorizontalGap),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "VerticalGap", 
-                     VerticalGapFieldId, VerticalGapFieldMask,
-                     false,
-                     (FieldAccessMethod) &GridLayoutBase::getSFVerticalGap)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType GridLayoutBase::_type(
-    "GridLayout",
-    "Layout",
-    NULL,
-    (PrototypeCreateF) &GridLayoutBase::createEmpty,
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "Rows",
+        "",
+        RowsFieldId, RowsFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GridLayout::editHandleRows),
+        static_cast<FieldGetMethodSig >(&GridLayout::getHandleRows));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "Columns",
+        "",
+        ColumnsFieldId, ColumnsFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GridLayout::editHandleColumns),
+        static_cast<FieldGetMethodSig >(&GridLayout::getHandleColumns));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "HorizontalGap",
+        "",
+        HorizontalGapFieldId, HorizontalGapFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GridLayout::editHandleHorizontalGap),
+        static_cast<FieldGetMethodSig >(&GridLayout::getHandleHorizontalGap));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "VerticalGap",
+        "",
+        VerticalGapFieldId, VerticalGapFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GridLayout::editHandleVerticalGap),
+        static_cast<FieldGetMethodSig >(&GridLayout::getHandleVerticalGap));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+GridLayoutBase::TypeObject GridLayoutBase::_type(
+    GridLayoutBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&GridLayoutBase::createEmptyLocal),
     GridLayout::initMethod,
-    _desc,
-    sizeof(_desc));
+    GridLayout::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&GridLayout::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"GridLayout\"\n"
+    "\tparent=\"Layout\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI GridLayout.\n"
+    "\t<Field\n"
+    "\t\tname=\"Rows\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"2\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Columns\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"2\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"HorizontalGap\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"10\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"VerticalGap\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"10\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI GridLayout.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(GridLayoutBase, GridLayoutPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &GridLayoutBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &GridLayoutBase::getType(void) const 
+FieldContainerType &GridLayoutBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr GridLayoutBase::shallowCopy(void) const 
-{ 
-    GridLayoutPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const GridLayout *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 GridLayoutBase::getContainerSize(void) const 
-{ 
-    return sizeof(GridLayout); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void GridLayoutBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &GridLayoutBase::getType(void) const
 {
-    this->executeSyncImpl((GridLayoutBase *) &other, whichField);
+    return _type;
 }
-#else
-void GridLayoutBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 GridLayoutBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((GridLayoutBase *) &other, whichField, sInfo);
+    return sizeof(GridLayout);
 }
-void GridLayoutBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFUInt32 *GridLayoutBase::editSFRows(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(RowsFieldMask);
+
+    return &_sfRows;
 }
 
-void GridLayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFUInt32 *GridLayoutBase::getSFRows(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfRows;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-GridLayoutBase::GridLayoutBase(void) :
-    _sfRows                   (UInt32(2)), 
-    _sfColumns                (UInt32(2)), 
-    _sfHorizontalGap          (Real32(10)), 
-    _sfVerticalGap            (Real32(10)), 
-    Inherited() 
+SFUInt32 *GridLayoutBase::editSFColumns(void)
 {
+    editSField(ColumnsFieldMask);
+
+    return &_sfColumns;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-GridLayoutBase::GridLayoutBase(const GridLayoutBase &source) :
-    _sfRows                   (source._sfRows                   ), 
-    _sfColumns                (source._sfColumns                ), 
-    _sfHorizontalGap          (source._sfHorizontalGap          ), 
-    _sfVerticalGap            (source._sfVerticalGap            ), 
-    Inherited                 (source)
+const SFUInt32 *GridLayoutBase::getSFColumns(void) const
 {
+    return &_sfColumns;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-GridLayoutBase::~GridLayoutBase(void)
+SFReal32 *GridLayoutBase::editSFHorizontalGap(void)
 {
+    editSField(HorizontalGapFieldMask);
+
+    return &_sfHorizontalGap;
 }
+
+const SFReal32 *GridLayoutBase::getSFHorizontalGap(void) const
+{
+    return &_sfHorizontalGap;
+}
+
+
+SFReal32 *GridLayoutBase::editSFVerticalGap(void)
+{
+    editSField(VerticalGapFieldMask);
+
+    return &_sfVerticalGap;
+}
+
+const SFReal32 *GridLayoutBase::getSFVerticalGap(void) const
+{
+    return &_sfVerticalGap;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 GridLayoutBase::getBinSize(const BitVector &whichField)
+UInt32 GridLayoutBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -232,28 +338,24 @@ UInt32 GridLayoutBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfRows.getBinSize();
     }
-
     if(FieldBits::NoField != (ColumnsFieldMask & whichField))
     {
         returnValue += _sfColumns.getBinSize();
     }
-
     if(FieldBits::NoField != (HorizontalGapFieldMask & whichField))
     {
         returnValue += _sfHorizontalGap.getBinSize();
     }
-
     if(FieldBits::NoField != (VerticalGapFieldMask & whichField))
     {
         returnValue += _sfVerticalGap.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void GridLayoutBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void GridLayoutBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -261,27 +363,22 @@ void GridLayoutBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfRows.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ColumnsFieldMask & whichField))
     {
         _sfColumns.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (HorizontalGapFieldMask & whichField))
     {
         _sfHorizontalGap.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (VerticalGapFieldMask & whichField))
     {
         _sfVerticalGap.copyToBin(pMem);
     }
-
-
 }
 
-void GridLayoutBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void GridLayoutBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -289,115 +386,306 @@ void GridLayoutBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfRows.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ColumnsFieldMask & whichField))
     {
         _sfColumns.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (HorizontalGapFieldMask & whichField))
     {
         _sfHorizontalGap.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (VerticalGapFieldMask & whichField))
     {
         _sfVerticalGap.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void GridLayoutBase::executeSyncImpl(      GridLayoutBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+GridLayoutTransitPtr GridLayoutBase::createLocal(BitVector bFlags)
 {
+    GridLayoutTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (RowsFieldMask & whichField))
-        _sfRows.syncWith(pOther->_sfRows);
+        fc = dynamic_pointer_cast<GridLayout>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (ColumnsFieldMask & whichField))
-        _sfColumns.syncWith(pOther->_sfColumns);
-
-    if(FieldBits::NoField != (HorizontalGapFieldMask & whichField))
-        _sfHorizontalGap.syncWith(pOther->_sfHorizontalGap);
-
-    if(FieldBits::NoField != (VerticalGapFieldMask & whichField))
-        _sfVerticalGap.syncWith(pOther->_sfVerticalGap);
-
-
-}
-#else
-void GridLayoutBase::executeSyncImpl(      GridLayoutBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (RowsFieldMask & whichField))
-        _sfRows.syncWith(pOther->_sfRows);
-
-    if(FieldBits::NoField != (ColumnsFieldMask & whichField))
-        _sfColumns.syncWith(pOther->_sfColumns);
-
-    if(FieldBits::NoField != (HorizontalGapFieldMask & whichField))
-        _sfHorizontalGap.syncWith(pOther->_sfHorizontalGap);
-
-    if(FieldBits::NoField != (VerticalGapFieldMask & whichField))
-        _sfVerticalGap.syncWith(pOther->_sfVerticalGap);
-
-
-
+    return fc;
 }
 
-void GridLayoutBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+GridLayoutTransitPtr GridLayoutBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    GridLayoutTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<GridLayout>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+GridLayoutTransitPtr GridLayoutBase::create(void)
+{
+    GridLayoutTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<GridLayout>(tmpPtr);
+    }
+
+    return fc;
+}
+
+GridLayout *GridLayoutBase::createEmptyLocal(BitVector bFlags)
+{
+    GridLayout *returnValue;
+
+    newPtr<GridLayout>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+GridLayout *GridLayoutBase::createEmpty(void)
+{
+    GridLayout *returnValue;
+
+    newPtr<GridLayout>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr GridLayoutBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    GridLayout *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const GridLayout *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr GridLayoutBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    GridLayout *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const GridLayout *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr GridLayoutBase::shallowCopy(void) const
+{
+    GridLayout *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const GridLayout *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+GridLayoutBase::GridLayoutBase(void) :
+    Inherited(),
+    _sfRows                   (UInt32(2)),
+    _sfColumns                (UInt32(2)),
+    _sfHorizontalGap          (Real32(10)),
+    _sfVerticalGap            (Real32(10))
+{
+}
+
+GridLayoutBase::GridLayoutBase(const GridLayoutBase &source) :
+    Inherited(source),
+    _sfRows                   (source._sfRows                   ),
+    _sfColumns                (source._sfColumns                ),
+    _sfHorizontalGap          (source._sfHorizontalGap          ),
+    _sfVerticalGap            (source._sfVerticalGap            )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+GridLayoutBase::~GridLayoutBase(void)
+{
+}
+
+
+GetFieldHandlePtr GridLayoutBase::getHandleRows            (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfRows,
+             this->getType().getFieldDesc(RowsFieldId),
+             const_cast<GridLayoutBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GridLayoutBase::editHandleRows           (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfRows,
+             this->getType().getFieldDesc(RowsFieldId),
+             this));
+
+
+    editSField(RowsFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr GridLayoutBase::getHandleColumns         (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfColumns,
+             this->getType().getFieldDesc(ColumnsFieldId),
+             const_cast<GridLayoutBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GridLayoutBase::editHandleColumns        (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfColumns,
+             this->getType().getFieldDesc(ColumnsFieldId),
+             this));
+
+
+    editSField(ColumnsFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr GridLayoutBase::getHandleHorizontalGap   (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfHorizontalGap,
+             this->getType().getFieldDesc(HorizontalGapFieldId),
+             const_cast<GridLayoutBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GridLayoutBase::editHandleHorizontalGap  (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfHorizontalGap,
+             this->getType().getFieldDesc(HorizontalGapFieldId),
+             this));
+
+
+    editSField(HorizontalGapFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr GridLayoutBase::getHandleVerticalGap     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfVerticalGap,
+             this->getType().getFieldDesc(VerticalGapFieldId),
+             const_cast<GridLayoutBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GridLayoutBase::editHandleVerticalGap    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfVerticalGap,
+             this->getType().getFieldDesc(VerticalGapFieldId),
+             this));
+
+
+    editSField(VerticalGapFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void GridLayoutBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    GridLayout *pThis = static_cast<GridLayout *>(this);
+
+    pThis->execSync(static_cast<GridLayout *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *GridLayoutBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    GridLayout *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const GridLayout *>(pRefAspect),
+                  dynamic_cast<const GridLayout *>(this));
+
+    return returnValue;
+}
+#endif
+
+void GridLayoutBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<GridLayoutPtr>::_type("GridLayoutPtr", "LayoutPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(GridLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(GridLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGGRIDLAYOUTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGGRIDLAYOUTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGGRIDLAYOUTFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

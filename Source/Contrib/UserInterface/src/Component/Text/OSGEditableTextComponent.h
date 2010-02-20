@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,45 +42,46 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGEditableTextComponentBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief EditableTextComponent class. See \ref 
-           PageUserInterfaceEditableTextComponent for a description.
+/*! \brief EditableTextComponent class. See \ref
+           PageContribUserInterfaceEditableTextComponent for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING EditableTextComponent : public EditableTextComponentBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING EditableTextComponent : public EditableTextComponentBase
 {
-  private:
-
-    typedef EditableTextComponentBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef EditableTextComponentBase Inherited;
+    typedef EditableTextComponent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void keyPressed(const KeyEventPtr e);
-	virtual void keyReleased(const KeyEventPtr e);
-	virtual void keyTyped(const KeyEventPtr e);
+
+	virtual void keyPressed(const KeyEventUnrecPtr e);
+	virtual void keyReleased(const KeyEventUnrecPtr e);
+	virtual void keyTyped(const KeyEventUnrecPtr e);
 
     void write(const std::string& Text);
     void overwriteSelection(const std::string& Text);
@@ -89,6 +90,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING EditableTextComponent : public EditableTex
     void paste(void);
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in EditableTextComponentBase.
@@ -105,25 +107,31 @@ class OSG_USERINTERFACELIB_DLLMAPPING EditableTextComponent : public EditableTex
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~EditableTextComponent(void); 
+    virtual ~EditableTextComponent(void);
 
     /*! \}                                                                 */
-    virtual LayerPtr getDrawnBackground(void) const;
-    virtual LayerPtr getDrawnForeground(void) const;
-    virtual BorderPtr getDrawnBorder(void) const;
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+
+    virtual LayerRefPtr getDrawnBackground(void) const;
+    virtual LayerRefPtr getDrawnForeground(void) const;
+    virtual BorderRefPtr getDrawnBorder(void) const;
 
     void setupCursor(void);
     
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class EditableTextComponentBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const EditableTextComponent &source);
 };
 
@@ -133,7 +141,5 @@ OSG_END_NAMESPACE
 
 #include "OSGEditableTextComponentBase.inl"
 #include "OSGEditableTextComponent.inl"
-
-#define OSGEDITABLETEXTCOMPONENT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGEDITABLETEXTCOMPONENT_H_ */

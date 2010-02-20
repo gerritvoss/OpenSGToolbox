@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGLayoutFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class GridLayout;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! GridLayoutPtr
+OSG_GEN_CONTAINERPTR(GridLayout);
 
-typedef FCPtr<LayoutPtr, GridLayout> GridLayoutPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<GridLayoutPtr> : 
-    public FieldTraitsRecurseMapper<GridLayoutPtr, true>
+struct FieldTraits<GridLayout *> :
+    public FieldTraitsFCPtrBase<GridLayout *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFGridLayoutPtr"; }
-    static const char *getMName(void) { return "MFGridLayoutPtr"; }
+    typedef FieldTraits<GridLayout *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFGridLayoutPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFGridLayoutPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<GridLayoutPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<GridLayout *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecGridLayoutPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<GridLayout *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecGridLayoutPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GridLayout *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakGridLayoutPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GridLayout *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdGridLayoutPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GridLayout *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecGridLayoutPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GridLayout *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecGridLayoutPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GridLayout *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakGridLayoutPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GridLayout *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdGridLayoutPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<GridLayout *,
+                      RecordedRefCountPolicy  > SFRecGridLayoutPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<GridLayout *,
+                      UnrecordedRefCountPolicy> SFUnrecGridLayoutPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<GridLayout *,
+                      WeakRefCountPolicy      > SFWeakGridLayoutPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<GridLayout *,
+                      NoRefCountPolicy        > SFUncountedGridLayoutPtr;
 
-typedef SField<GridLayoutPtr> SFGridLayoutPtr;
-#endif
 
-#ifndef OSG_COMPILEGRIDLAYOUTINST
-OSG_DLLEXPORT_DECL1(SField, GridLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<GridLayout *,
+                      RecordedRefCountPolicy  > MFRecGridLayoutPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<GridLayout *,
+                      UnrecordedRefCountPolicy> MFUnrecGridLayoutPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<GridLayout *,
+                      WeakRefCountPolicy      > MFWeakGridLayoutPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<GridLayout *,
+                      NoRefCountPolicy        > MFUncountedGridLayoutPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<GridLayoutPtr> MFGridLayoutPtr;
-#endif
 
-#ifndef OSG_COMPILEGRIDLAYOUTINST
-OSG_DLLEXPORT_DECL1(MField, GridLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecGridLayoutPtr : 
+    public PointerSField<GridLayout *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecGridLayoutPtr : 
+    public PointerSField<GridLayout *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakGridLayoutPtr :
+    public PointerSField<GridLayout *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedGridLayoutPtr :
+    public PointerSField<GridLayout *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecGridLayoutPtr :
+    public PointerMField<GridLayout *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecGridLayoutPtr :
+    public PointerMField<GridLayout *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakGridLayoutPtr :
+    public PointerMField<GridLayout *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedGridLayoutPtr :
+    public PointerMField<GridLayout *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGGRIDLAYOUTFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGGRIDLAYOUTFIELDS_H_ */

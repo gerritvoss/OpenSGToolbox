@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,171 +50,247 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILESTATICLAYOUTSPRINGINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGStaticLayoutSpringBase.h"
 #include "OSGStaticLayoutSpring.h"
 
-#include <Layout/Spring/OSGLayoutSpring.h>   // Minimum default header
-#include <Layout/Spring/OSGLayoutSpring.h>   // Maximum default header
-#include <Layout/Spring/OSGLayoutSpring.h>   // Preferred default header
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  StaticLayoutSpringBase::MinimumFieldMask = 
-    (TypeTraits<BitVector>::One << StaticLayoutSpringBase::MinimumFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  StaticLayoutSpringBase::MaximumFieldMask = 
-    (TypeTraits<BitVector>::One << StaticLayoutSpringBase::MaximumFieldId);
+/*! \class OSG::StaticLayoutSpring
+    A UI Static LayoutSpring.
+ */
 
-const OSG::BitVector  StaticLayoutSpringBase::PreferredFieldMask = 
-    (TypeTraits<BitVector>::One << StaticLayoutSpringBase::PreferredFieldId);
-
-const OSG::BitVector StaticLayoutSpringBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Real32          StaticLayoutSpringBase::_sfMinimum
     
 */
+
 /*! \var Real32          StaticLayoutSpringBase::_sfMaximum
     
 */
+
 /*! \var Real32          StaticLayoutSpringBase::_sfPreferred
     
 */
 
-//! StaticLayoutSpring description
 
-FieldDescription *StaticLayoutSpringBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<StaticLayoutSpring *>::_type("StaticLayoutSpringPtr", "AbstractLayoutSpringPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(StaticLayoutSpring *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           StaticLayoutSpring *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           StaticLayoutSpring *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void StaticLayoutSpringBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Minimum", 
-                     MinimumFieldId, MinimumFieldMask,
-                     false,
-                     (FieldAccessMethod) &StaticLayoutSpringBase::getSFMinimum),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Maximum", 
-                     MaximumFieldId, MaximumFieldMask,
-                     false,
-                     (FieldAccessMethod) &StaticLayoutSpringBase::getSFMaximum),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Preferred", 
-                     PreferredFieldId, PreferredFieldMask,
-                     false,
-                     (FieldAccessMethod) &StaticLayoutSpringBase::getSFPreferred)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType StaticLayoutSpringBase::_type(
-    "StaticLayoutSpring",
-    "AbstractLayoutSpring",
-    NULL,
-    (PrototypeCreateF) &StaticLayoutSpringBase::createEmpty,
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Minimum",
+        "",
+        MinimumFieldId, MinimumFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&StaticLayoutSpring::editHandleMinimum),
+        static_cast<FieldGetMethodSig >(&StaticLayoutSpring::getHandleMinimum));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Maximum",
+        "",
+        MaximumFieldId, MaximumFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&StaticLayoutSpring::editHandleMaximum),
+        static_cast<FieldGetMethodSig >(&StaticLayoutSpring::getHandleMaximum));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Preferred",
+        "",
+        PreferredFieldId, PreferredFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&StaticLayoutSpring::editHandlePreferred),
+        static_cast<FieldGetMethodSig >(&StaticLayoutSpring::getHandlePreferred));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+StaticLayoutSpringBase::TypeObject StaticLayoutSpringBase::_type(
+    StaticLayoutSpringBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&StaticLayoutSpringBase::createEmptyLocal),
     StaticLayoutSpring::initMethod,
-    _desc,
-    sizeof(_desc));
+    StaticLayoutSpring::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&StaticLayoutSpring::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"StaticLayoutSpring\"\n"
+    "\tparent=\"AbstractLayoutSpring\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Static LayoutSpring.\n"
+    "\t<Field\n"
+    "\t\tname=\"Minimum\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "      visibility=\"external\"\n"
+    "\t\tdefaultValue=\"LayoutSpring::VALUE_NOT_SET\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Maximum\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "      visibility=\"external\"\n"
+    "\t\tdefaultValue=\"LayoutSpring::VALUE_NOT_SET\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Preferred\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "      visibility=\"external\"\n"
+    "\t\tdefaultValue=\"LayoutSpring::VALUE_NOT_SET\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "</FieldContainer>\n",
+    "A UI Static LayoutSpring.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(StaticLayoutSpringBase, StaticLayoutSpringPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &StaticLayoutSpringBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &StaticLayoutSpringBase::getType(void) const 
+FieldContainerType &StaticLayoutSpringBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr StaticLayoutSpringBase::shallowCopy(void) const 
-{ 
-    StaticLayoutSpringPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const StaticLayoutSpring *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 StaticLayoutSpringBase::getContainerSize(void) const 
-{ 
-    return sizeof(StaticLayoutSpring); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void StaticLayoutSpringBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &StaticLayoutSpringBase::getType(void) const
 {
-    this->executeSyncImpl((StaticLayoutSpringBase *) &other, whichField);
+    return _type;
 }
-#else
-void StaticLayoutSpringBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 StaticLayoutSpringBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((StaticLayoutSpringBase *) &other, whichField, sInfo);
+    return sizeof(StaticLayoutSpring);
 }
-void StaticLayoutSpringBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFReal32 *StaticLayoutSpringBase::editSFMinimum(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(MinimumFieldMask);
+
+    return &_sfMinimum;
 }
 
-void StaticLayoutSpringBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFReal32 *StaticLayoutSpringBase::getSFMinimum(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfMinimum;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-StaticLayoutSpringBase::StaticLayoutSpringBase(void) :
-    _sfMinimum                (Real32(LayoutSpring::VALUE_NOT_SET)), 
-    _sfMaximum                (Real32(LayoutSpring::VALUE_NOT_SET)), 
-    _sfPreferred              (Real32(LayoutSpring::VALUE_NOT_SET)), 
-    Inherited() 
+SFReal32 *StaticLayoutSpringBase::editSFMaximum(void)
 {
+    editSField(MaximumFieldMask);
+
+    return &_sfMaximum;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-StaticLayoutSpringBase::StaticLayoutSpringBase(const StaticLayoutSpringBase &source) :
-    _sfMinimum                (source._sfMinimum                ), 
-    _sfMaximum                (source._sfMaximum                ), 
-    _sfPreferred              (source._sfPreferred              ), 
-    Inherited                 (source)
+const SFReal32 *StaticLayoutSpringBase::getSFMaximum(void) const
 {
+    return &_sfMaximum;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-StaticLayoutSpringBase::~StaticLayoutSpringBase(void)
+SFReal32 *StaticLayoutSpringBase::editSFPreferred(void)
 {
+    editSField(PreferredFieldMask);
+
+    return &_sfPreferred;
 }
+
+const SFReal32 *StaticLayoutSpringBase::getSFPreferred(void) const
+{
+    return &_sfPreferred;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 StaticLayoutSpringBase::getBinSize(const BitVector &whichField)
+UInt32 StaticLayoutSpringBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -222,23 +298,20 @@ UInt32 StaticLayoutSpringBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfMinimum.getBinSize();
     }
-
     if(FieldBits::NoField != (MaximumFieldMask & whichField))
     {
         returnValue += _sfMaximum.getBinSize();
     }
-
     if(FieldBits::NoField != (PreferredFieldMask & whichField))
     {
         returnValue += _sfPreferred.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void StaticLayoutSpringBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void StaticLayoutSpringBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -246,22 +319,18 @@ void StaticLayoutSpringBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfMinimum.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MaximumFieldMask & whichField))
     {
         _sfMaximum.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (PreferredFieldMask & whichField))
     {
         _sfPreferred.copyToBin(pMem);
     }
-
-
 }
 
-void StaticLayoutSpringBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void StaticLayoutSpringBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -269,104 +338,275 @@ void StaticLayoutSpringBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfMinimum.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MaximumFieldMask & whichField))
     {
         _sfMaximum.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (PreferredFieldMask & whichField))
     {
         _sfPreferred.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void StaticLayoutSpringBase::executeSyncImpl(      StaticLayoutSpringBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+StaticLayoutSpringTransitPtr StaticLayoutSpringBase::createLocal(BitVector bFlags)
 {
+    StaticLayoutSpringTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (MinimumFieldMask & whichField))
-        _sfMinimum.syncWith(pOther->_sfMinimum);
+        fc = dynamic_pointer_cast<StaticLayoutSpring>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (MaximumFieldMask & whichField))
-        _sfMaximum.syncWith(pOther->_sfMaximum);
-
-    if(FieldBits::NoField != (PreferredFieldMask & whichField))
-        _sfPreferred.syncWith(pOther->_sfPreferred);
-
-
-}
-#else
-void StaticLayoutSpringBase::executeSyncImpl(      StaticLayoutSpringBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (MinimumFieldMask & whichField))
-        _sfMinimum.syncWith(pOther->_sfMinimum);
-
-    if(FieldBits::NoField != (MaximumFieldMask & whichField))
-        _sfMaximum.syncWith(pOther->_sfMaximum);
-
-    if(FieldBits::NoField != (PreferredFieldMask & whichField))
-        _sfPreferred.syncWith(pOther->_sfPreferred);
-
-
-
+    return fc;
 }
 
-void StaticLayoutSpringBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+StaticLayoutSpringTransitPtr StaticLayoutSpringBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    StaticLayoutSpringTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<StaticLayoutSpring>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+StaticLayoutSpringTransitPtr StaticLayoutSpringBase::create(void)
+{
+    StaticLayoutSpringTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<StaticLayoutSpring>(tmpPtr);
+    }
+
+    return fc;
+}
+
+StaticLayoutSpring *StaticLayoutSpringBase::createEmptyLocal(BitVector bFlags)
+{
+    StaticLayoutSpring *returnValue;
+
+    newPtr<StaticLayoutSpring>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+StaticLayoutSpring *StaticLayoutSpringBase::createEmpty(void)
+{
+    StaticLayoutSpring *returnValue;
+
+    newPtr<StaticLayoutSpring>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr StaticLayoutSpringBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    StaticLayoutSpring *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const StaticLayoutSpring *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr StaticLayoutSpringBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    StaticLayoutSpring *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const StaticLayoutSpring *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr StaticLayoutSpringBase::shallowCopy(void) const
+{
+    StaticLayoutSpring *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const StaticLayoutSpring *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+StaticLayoutSpringBase::StaticLayoutSpringBase(void) :
+    Inherited(),
+    _sfMinimum                (Real32(LayoutSpring::VALUE_NOT_SET)),
+    _sfMaximum                (Real32(LayoutSpring::VALUE_NOT_SET)),
+    _sfPreferred              (Real32(LayoutSpring::VALUE_NOT_SET))
+{
+}
+
+StaticLayoutSpringBase::StaticLayoutSpringBase(const StaticLayoutSpringBase &source) :
+    Inherited(source),
+    _sfMinimum                (source._sfMinimum                ),
+    _sfMaximum                (source._sfMaximum                ),
+    _sfPreferred              (source._sfPreferred              )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+StaticLayoutSpringBase::~StaticLayoutSpringBase(void)
+{
+}
+
+
+GetFieldHandlePtr StaticLayoutSpringBase::getHandleMinimum         (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMinimum,
+             this->getType().getFieldDesc(MinimumFieldId),
+             const_cast<StaticLayoutSpringBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr StaticLayoutSpringBase::editHandleMinimum        (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMinimum,
+             this->getType().getFieldDesc(MinimumFieldId),
+             this));
+
+
+    editSField(MinimumFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr StaticLayoutSpringBase::getHandleMaximum         (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMaximum,
+             this->getType().getFieldDesc(MaximumFieldId),
+             const_cast<StaticLayoutSpringBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr StaticLayoutSpringBase::editHandleMaximum        (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMaximum,
+             this->getType().getFieldDesc(MaximumFieldId),
+             this));
+
+
+    editSField(MaximumFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr StaticLayoutSpringBase::getHandlePreferred       (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfPreferred,
+             this->getType().getFieldDesc(PreferredFieldId),
+             const_cast<StaticLayoutSpringBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr StaticLayoutSpringBase::editHandlePreferred      (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfPreferred,
+             this->getType().getFieldDesc(PreferredFieldId),
+             this));
+
+
+    editSField(PreferredFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void StaticLayoutSpringBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    StaticLayoutSpring *pThis = static_cast<StaticLayoutSpring *>(this);
+
+    pThis->execSync(static_cast<StaticLayoutSpring *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *StaticLayoutSpringBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    StaticLayoutSpring *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const StaticLayoutSpring *>(pRefAspect),
+                  dynamic_cast<const StaticLayoutSpring *>(this));
+
+    return returnValue;
+}
+#endif
+
+void StaticLayoutSpringBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<StaticLayoutSpringPtr>::_type("StaticLayoutSpringPtr", "AbstractLayoutSpringPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(StaticLayoutSpringPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(StaticLayoutSpringPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGSTATICLAYOUTSPRINGBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSTATICLAYOUTSPRINGBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSTATICLAYOUTSPRINGFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,59 +55,31 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &LookAndFeelBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 LookAndFeelBase::getClassTypeId(void) 
+OSG::UInt32 LookAndFeelBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
+    return _type.getId();
+}
 
+inline
+OSG::UInt16 LookAndFeelBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
+}
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the LookAndFeel::_mfPrototypes field.
-inline
-MFFieldContainerPtr *LookAndFeelBase::getMFPrototypes(void)
-{
-    return &_mfPrototypes;
-}
-
-//! Get the LookAndFeel::_sfTextCaretRate field.
-inline
-SFTime *LookAndFeelBase::getSFTextCaretRate(void)
-{
-    return &_sfTextCaretRate;
-}
-
-//! Get the LookAndFeel::_sfToolTipPopupTime field.
-inline
-SFTime *LookAndFeelBase::getSFToolTipPopupTime(void)
-{
-    return &_sfToolTipPopupTime;
-}
-
-//! Get the LookAndFeel::_sfSubMenuPopupTime field.
-inline
-SFTime *LookAndFeelBase::getSFSubMenuPopupTime(void)
-{
-    return &_sfSubMenuPopupTime;
-}
-
-//! Get the LookAndFeel::_sfKeyAcceleratorMenuFlashTime field.
-inline
-SFTime *LookAndFeelBase::getSFKeyAcceleratorMenuFlashTime(void)
-{
-    return &_sfKeyAcceleratorMenuFlashTime;
-}
-
-
 //! Get the value of the LookAndFeel::_sfTextCaretRate field.
+
 inline
-Time &LookAndFeelBase::getTextCaretRate(void)
+Time &LookAndFeelBase::editTextCaretRate(void)
 {
+    editSField(TextCaretRateFieldMask);
+
     return _sfTextCaretRate.getValue();
 }
 
@@ -124,13 +94,17 @@ const Time &LookAndFeelBase::getTextCaretRate(void) const
 inline
 void LookAndFeelBase::setTextCaretRate(const Time &value)
 {
+    editSField(TextCaretRateFieldMask);
+
     _sfTextCaretRate.setValue(value);
 }
-
 //! Get the value of the LookAndFeel::_sfToolTipPopupTime field.
+
 inline
-Time &LookAndFeelBase::getToolTipPopupTime(void)
+Time &LookAndFeelBase::editToolTipPopupTime(void)
 {
+    editSField(ToolTipPopupTimeFieldMask);
+
     return _sfToolTipPopupTime.getValue();
 }
 
@@ -145,13 +119,17 @@ const Time &LookAndFeelBase::getToolTipPopupTime(void) const
 inline
 void LookAndFeelBase::setToolTipPopupTime(const Time &value)
 {
+    editSField(ToolTipPopupTimeFieldMask);
+
     _sfToolTipPopupTime.setValue(value);
 }
-
 //! Get the value of the LookAndFeel::_sfSubMenuPopupTime field.
+
 inline
-Time &LookAndFeelBase::getSubMenuPopupTime(void)
+Time &LookAndFeelBase::editSubMenuPopupTime(void)
 {
+    editSField(SubMenuPopupTimeFieldMask);
+
     return _sfSubMenuPopupTime.getValue();
 }
 
@@ -166,13 +144,17 @@ const Time &LookAndFeelBase::getSubMenuPopupTime(void) const
 inline
 void LookAndFeelBase::setSubMenuPopupTime(const Time &value)
 {
+    editSField(SubMenuPopupTimeFieldMask);
+
     _sfSubMenuPopupTime.setValue(value);
 }
-
 //! Get the value of the LookAndFeel::_sfKeyAcceleratorMenuFlashTime field.
+
 inline
-Time &LookAndFeelBase::getKeyAcceleratorMenuFlashTime(void)
+Time &LookAndFeelBase::editKeyAcceleratorMenuFlashTime(void)
 {
+    editSField(KeyAcceleratorMenuFlashTimeFieldMask);
+
     return _sfKeyAcceleratorMenuFlashTime.getValue();
 }
 
@@ -187,32 +169,56 @@ const Time &LookAndFeelBase::getKeyAcceleratorMenuFlashTime(void) const
 inline
 void LookAndFeelBase::setKeyAcceleratorMenuFlashTime(const Time &value)
 {
+    editSField(KeyAcceleratorMenuFlashTimeFieldMask);
+
     _sfKeyAcceleratorMenuFlashTime.setValue(value);
 }
 
-
 //! Get the value of the \a index element the LookAndFeel::_mfPrototypes field.
 inline
-FieldContainerPtr &LookAndFeelBase::getPrototypes(const UInt32 index)
+FieldContainer * LookAndFeelBase::getPrototypes(const UInt32 index) const
 {
     return _mfPrototypes[index];
 }
 
-//! Get the LookAndFeel::_mfPrototypes field.
-inline
-MFFieldContainerPtr &LookAndFeelBase::getPrototypes(void)
-{
-    return _mfPrototypes;
-}
 
-//! Get the LookAndFeel::_mfPrototypes field.
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-const MFFieldContainerPtr &LookAndFeelBase::getPrototypes(void) const
+void LookAndFeelBase::execSync (      LookAndFeelBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfPrototypes;
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (PrototypesFieldMask & whichField))
+        _mfPrototypes.syncWith(pFrom->_mfPrototypes,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (TextCaretRateFieldMask & whichField))
+        _sfTextCaretRate.syncWith(pFrom->_sfTextCaretRate);
+
+    if(FieldBits::NoField != (ToolTipPopupTimeFieldMask & whichField))
+        _sfToolTipPopupTime.syncWith(pFrom->_sfToolTipPopupTime);
+
+    if(FieldBits::NoField != (SubMenuPopupTimeFieldMask & whichField))
+        _sfSubMenuPopupTime.syncWith(pFrom->_sfSubMenuPopupTime);
+
+    if(FieldBits::NoField != (KeyAcceleratorMenuFlashTimeFieldMask & whichField))
+        _sfKeyAcceleratorMenuFlashTime.syncWith(pFrom->_sfKeyAcceleratorMenuFlashTime);
 }
+#endif
+
+
+inline
+const Char8 *LookAndFeelBase::getClassname(void)
+{
+    return "LookAndFeel";
+}
+OSG_GEN_CONTAINERPTR(LookAndFeel);
 
 OSG_END_NAMESPACE
-
-#define OSGLOOKANDFEELBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -37,10 +37,6 @@
 //---------------------------------------------------------------------------
 //  Includes
 //---------------------------------------------------------------------------
-
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-#include "Component/Scroll/OSGBoundedRangeModel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -127,37 +123,37 @@ void ScrollBar::removeAdjustmentListener(AdjustmentListenerPtr Listener)
 }
 
 inline
-ScrollBar::BoundedRangeModelChangeListener::BoundedRangeModelChangeListener(ScrollBarPtr TheScrollBar) :
+ScrollBar::BoundedRangeModelChangeListener::BoundedRangeModelChangeListener(ScrollBarRefPtr TheScrollBar) :
    _ScrollBar(TheScrollBar)
 {
 }
 
 inline
-ScrollBar::MinButtonActionListener::MinButtonActionListener(ScrollBarPtr TheScrollBar) :
+ScrollBar::MinButtonActionListener::MinButtonActionListener(ScrollBarRefPtr TheScrollBar) :
    _ScrollBar(TheScrollBar)
 {
 }
 
 inline
-ScrollBar::MaxButtonActionListener::MaxButtonActionListener(ScrollBarPtr TheScrollBar) :
+ScrollBar::MaxButtonActionListener::MaxButtonActionListener(ScrollBarRefPtr TheScrollBar) :
    _ScrollBar(TheScrollBar)
 {
 }
 
 inline
-ScrollBar::ScrollBarListener::ScrollBarListener(ScrollBarPtr TheScrollBar) :
+ScrollBar::ScrollBarListener::ScrollBarListener(ScrollBarRefPtr TheScrollBar) :
    _ScrollBar(TheScrollBar)
 {
 }
 
 inline
-ScrollBar::ScrollBarDraggedListener::ScrollBarDraggedListener(ScrollBarPtr TheScrollBar) :
+ScrollBar::ScrollBarDraggedListener::ScrollBarDraggedListener(ScrollBarRefPtr TheScrollBar) :
    _ScrollBar(TheScrollBar)
 {
 }
 
 inline
-ScrollBar::ScrollFieldListener::ScrollFieldListener(ScrollBarPtr TheScrollBar) :
+ScrollBar::ScrollFieldListener::ScrollFieldListener(ScrollBarRefPtr TheScrollBar) :
    _ScrollBar(TheScrollBar)
 {
 }
@@ -174,6 +170,4 @@ void ScrollBar::ScrollBarDraggedListener::setInitialScrollBarPosition(const Pnt2
     _InitialScrollBarPosition = Pos;
 }
 
-
 OSG_END_NAMESPACE
-

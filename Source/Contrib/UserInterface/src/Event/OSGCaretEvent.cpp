@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGCaretEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::CaretEvent
-
-*/
+// Documentation for this class is emitted in the
+// OSGCaretEventBase.cpp file.
+// To modify it, please change the .fcd file (OSGCaretEvent.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,21 +62,26 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void CaretEvent::initMethod (void)
+void CaretEvent::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-CaretEventPtr CaretEvent::create(  FieldContainerPtr Source,
-                                     Time TimeStamp,
-                                     UInt32 ThePos)
+CaretEventTransitPtr CaretEvent::create(  FieldContainerRefPtr Source,
+                                          Time TimeStamp,
+                                          UInt32 ThePos)
 {
-    CaretEventPtr TheEvent = CaretEvent::createEmpty();
+    CaretEvent* TheEvent = CaretEvent::createEmpty();
 
     TheEvent->setSource(Source);
     TheEvent->setTimeStamp(TimeStamp);
     TheEvent->setPosition(ThePos);
 
-    return TheEvent;
+    return CaretEventTransitPtr(TheEvent);
 }
 
 /***************************************************************************\
@@ -110,17 +110,17 @@ CaretEvent::~CaretEvent(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void CaretEvent::changed(BitVector whichField, UInt32 origin)
+void CaretEvent::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void CaretEvent::dump(      UInt32    , 
+void CaretEvent::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump CaretEvent NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

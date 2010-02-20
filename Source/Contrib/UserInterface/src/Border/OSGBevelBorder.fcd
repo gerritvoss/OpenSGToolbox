@@ -3,18 +3,21 @@
 <FieldContainer
 	name="BevelBorder"
 	parent="Border"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 UI Bevel Border.
 	<Field
 		name="HighlightInner"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -23,6 +26,7 @@ UI Bevel Border.
 	<Field
 		name="Width"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1"
@@ -32,6 +36,7 @@ UI Bevel Border.
 	<Field
 		name="HighlightOuter"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -40,6 +45,7 @@ UI Bevel Border.
 	<Field
 		name="ShadowInner"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -48,6 +54,7 @@ UI Bevel Border.
 	<Field
 		name="ShadowOuter"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -56,6 +63,7 @@ UI Bevel Border.
 	<Field
 		name="Raised"
 		type="bool"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="true"

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,157 +50,257 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILERADIOBUTTONGROUPINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGRadioButton.h"             // SelectedButton Class
 
 #include "OSGRadioButtonGroupBase.h"
 #include "OSGRadioButtonGroup.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  RadioButtonGroupBase::SelectedButtonFieldMask = 
-    (TypeTraits<BitVector>::One << RadioButtonGroupBase::SelectedButtonFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  RadioButtonGroupBase::GroupButtonsFieldMask = 
-    (TypeTraits<BitVector>::One << RadioButtonGroupBase::GroupButtonsFieldId);
+/*! \class OSG::RadioButtonGroup
+    A UI Radio Button Group.
+ */
 
-const OSG::BitVector RadioButtonGroupBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-
-// Field descriptions
-
-/*! \var RadioButtonPtr  RadioButtonGroupBase::_sfSelectedButton
-    
-*/
-/*! \var RadioButtonPtr  RadioButtonGroupBase::_mfGroupButtons
+/*! \var RadioButton *   RadioButtonGroupBase::_sfSelectedButton
     
 */
 
-//! RadioButtonGroup description
+/*! \var RadioButton *   RadioButtonGroupBase::_mfGroupButtons
+    
+*/
 
-FieldDescription *RadioButtonGroupBase::_desc[] = 
+
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<RadioButtonGroup *>::_type("RadioButtonGroupPtr", "FieldContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(RadioButtonGroup *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           RadioButtonGroup *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           RadioButtonGroup *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void RadioButtonGroupBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFRadioButtonPtr::getClassType(), 
-                     "SelectedButton", 
-                     SelectedButtonFieldId, SelectedButtonFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&RadioButtonGroupBase::editSFSelectedButton)),
-    new FieldDescription(MFRadioButtonPtr::getClassType(), 
-                     "GroupButtons", 
-                     GroupButtonsFieldId, GroupButtonsFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&RadioButtonGroupBase::editMFGroupButtons))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType RadioButtonGroupBase::_type(
-    "RadioButtonGroup",
-    "FieldContainer",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&RadioButtonGroupBase::createEmpty),
+    pDesc = new SFUnrecRadioButtonPtr::Description(
+        SFUnrecRadioButtonPtr::getClassType(),
+        "SelectedButton",
+        "",
+        SelectedButtonFieldId, SelectedButtonFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&RadioButtonGroup::editHandleSelectedButton),
+        static_cast<FieldGetMethodSig >(&RadioButtonGroup::getHandleSelectedButton));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new MFUnrecRadioButtonPtr::Description(
+        MFUnrecRadioButtonPtr::getClassType(),
+        "GroupButtons",
+        "",
+        GroupButtonsFieldId, GroupButtonsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&RadioButtonGroup::editHandleGroupButtons),
+        static_cast<FieldGetMethodSig >(&RadioButtonGroup::getHandleGroupButtons));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+RadioButtonGroupBase::TypeObject RadioButtonGroupBase::_type(
+    RadioButtonGroupBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&RadioButtonGroupBase::createEmptyLocal),
     RadioButtonGroup::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(RadioButtonGroupBase, RadioButtonGroupPtr)
+    RadioButtonGroup::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&RadioButtonGroup::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"RadioButtonGroup\"\n"
+    "\tparent=\"FieldContainer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Radio Button Group.\n"
+    "\t<Field\n"
+    "\t\tname=\"SelectedButton\"\n"
+    "\t\ttype=\"RadioButton\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"GroupButtons\"\n"
+    "\t\ttype=\"RadioButton\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI Radio Button Group.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &RadioButtonGroupBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &RadioButtonGroupBase::getType(void) const 
+FieldContainerType &RadioButtonGroupBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr RadioButtonGroupBase::shallowCopy(void) const 
-{ 
-    RadioButtonGroupPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const RadioButtonGroup *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 RadioButtonGroupBase::getContainerSize(void) const 
-{ 
-    return sizeof(RadioButtonGroup); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void RadioButtonGroupBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &RadioButtonGroupBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<RadioButtonGroupBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void RadioButtonGroupBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 RadioButtonGroupBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((RadioButtonGroupBase *) &other, whichField, sInfo);
+    return sizeof(RadioButtonGroup);
 }
-void RadioButtonGroupBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the RadioButtonGroup::_sfSelectedButton field.
+const SFUnrecRadioButtonPtr *RadioButtonGroupBase::getSFSelectedButton(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfSelectedButton;
 }
 
-void RadioButtonGroupBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecRadioButtonPtr *RadioButtonGroupBase::editSFSelectedButton (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(SelectedButtonFieldMask);
 
-    _mfGroupButtons.terminateShare(uiAspect, this->getContainerSize());
+    return &_sfSelectedButton;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-RadioButtonGroupBase::RadioButtonGroupBase(void) :
-    _sfSelectedButton         (RadioButtonPtr(NullFC)), 
-    _mfGroupButtons           (), 
-    Inherited() 
+//! Get the RadioButtonGroup::_mfGroupButtons field.
+const MFUnrecRadioButtonPtr *RadioButtonGroupBase::getMFGroupButtons(void) const
 {
+    return &_mfGroupButtons;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-RadioButtonGroupBase::RadioButtonGroupBase(const RadioButtonGroupBase &source) :
-    _sfSelectedButton         (source._sfSelectedButton         ), 
-    _mfGroupButtons           (source._mfGroupButtons           ), 
-    Inherited                 (source)
+MFUnrecRadioButtonPtr *RadioButtonGroupBase::editMFGroupButtons   (void)
 {
+    editMField(GroupButtonsFieldMask, _mfGroupButtons);
+
+    return &_mfGroupButtons;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-RadioButtonGroupBase::~RadioButtonGroupBase(void)
+
+void RadioButtonGroupBase::pushToGroupButtons(RadioButton * const value)
 {
+    editMField(GroupButtonsFieldMask, _mfGroupButtons);
+
+    _mfGroupButtons.push_back(value);
 }
+
+void RadioButtonGroupBase::assignGroupButtons(const MFUnrecRadioButtonPtr &value)
+{
+    MFUnrecRadioButtonPtr::const_iterator elemIt  =
+        value.begin();
+    MFUnrecRadioButtonPtr::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<RadioButtonGroup *>(this)->clearGroupButtons();
+
+    while(elemIt != elemEnd)
+    {
+        this->pushToGroupButtons(*elemIt);
+
+        ++elemIt;
+    }
+}
+
+void RadioButtonGroupBase::removeFromGroupButtons(UInt32 uiIndex)
+{
+    if(uiIndex < _mfGroupButtons.size())
+    {
+        editMField(GroupButtonsFieldMask, _mfGroupButtons);
+
+        _mfGroupButtons.erase(uiIndex);
+    }
+}
+
+void RadioButtonGroupBase::removeObjFromGroupButtons(RadioButton * const value)
+{
+    Int32 iElemIdx = _mfGroupButtons.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(GroupButtonsFieldMask, _mfGroupButtons);
+
+        _mfGroupButtons.erase(iElemIdx);
+    }
+}
+void RadioButtonGroupBase::clearGroupButtons(void)
+{
+    editMField(GroupButtonsFieldMask, _mfGroupButtons);
+
+
+    _mfGroupButtons.clear();
+}
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 RadioButtonGroupBase::getBinSize(const BitVector &whichField)
+UInt32 RadioButtonGroupBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -208,18 +308,16 @@ UInt32 RadioButtonGroupBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfSelectedButton.getBinSize();
     }
-
     if(FieldBits::NoField != (GroupButtonsFieldMask & whichField))
     {
         returnValue += _mfGroupButtons.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void RadioButtonGroupBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void RadioButtonGroupBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -227,17 +325,14 @@ void RadioButtonGroupBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfSelectedButton.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (GroupButtonsFieldMask & whichField))
     {
         _mfGroupButtons.copyToBin(pMem);
     }
-
-
 }
 
-void RadioButtonGroupBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void RadioButtonGroupBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -245,76 +340,286 @@ void RadioButtonGroupBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfSelectedButton.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (GroupButtonsFieldMask & whichField))
     {
         _mfGroupButtons.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void RadioButtonGroupBase::executeSyncImpl(      RadioButtonGroupBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+RadioButtonGroupTransitPtr RadioButtonGroupBase::createLocal(BitVector bFlags)
 {
+    RadioButtonGroupTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (SelectedButtonFieldMask & whichField))
-        _sfSelectedButton.syncWith(pOther->_sfSelectedButton);
+        fc = dynamic_pointer_cast<RadioButtonGroup>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (GroupButtonsFieldMask & whichField))
-        _mfGroupButtons.syncWith(pOther->_mfGroupButtons);
-
-
-}
-#else
-void RadioButtonGroupBase::executeSyncImpl(      RadioButtonGroupBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (SelectedButtonFieldMask & whichField))
-        _sfSelectedButton.syncWith(pOther->_sfSelectedButton);
-
-
-    if(FieldBits::NoField != (GroupButtonsFieldMask & whichField))
-        _mfGroupButtons.syncWith(pOther->_mfGroupButtons, sInfo);
-
-
+    return fc;
 }
 
-void RadioButtonGroupBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+RadioButtonGroupTransitPtr RadioButtonGroupBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    RadioButtonGroupTransitPtr fc;
 
-    if(FieldBits::NoField != (GroupButtonsFieldMask & whichField))
-        _mfGroupButtons.beginEdit(uiAspect, uiContainerSize);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
+        fc = dynamic_pointer_cast<RadioButtonGroup>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+RadioButtonGroupTransitPtr RadioButtonGroupBase::create(void)
+{
+    RadioButtonGroupTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<RadioButtonGroup>(tmpPtr);
+    }
+
+    return fc;
+}
+
+RadioButtonGroup *RadioButtonGroupBase::createEmptyLocal(BitVector bFlags)
+{
+    RadioButtonGroup *returnValue;
+
+    newPtr<RadioButtonGroup>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+RadioButtonGroup *RadioButtonGroupBase::createEmpty(void)
+{
+    RadioButtonGroup *returnValue;
+
+    newPtr<RadioButtonGroup>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr RadioButtonGroupBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    RadioButtonGroup *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const RadioButtonGroup *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr RadioButtonGroupBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    RadioButtonGroup *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const RadioButtonGroup *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr RadioButtonGroupBase::shallowCopy(void) const
+{
+    RadioButtonGroup *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const RadioButtonGroup *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+RadioButtonGroupBase::RadioButtonGroupBase(void) :
+    Inherited(),
+    _sfSelectedButton         (NULL),
+    _mfGroupButtons           ()
+{
+}
+
+RadioButtonGroupBase::RadioButtonGroupBase(const RadioButtonGroupBase &source) :
+    Inherited(source),
+    _sfSelectedButton         (NULL),
+    _mfGroupButtons           ()
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+RadioButtonGroupBase::~RadioButtonGroupBase(void)
+{
+}
+
+void RadioButtonGroupBase::onCreate(const RadioButtonGroup *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        RadioButtonGroup *pThis = static_cast<RadioButtonGroup *>(this);
+
+        pThis->setSelectedButton(source->getSelectedButton());
+
+        MFUnrecRadioButtonPtr::const_iterator GroupButtonsIt  =
+            source->_mfGroupButtons.begin();
+        MFUnrecRadioButtonPtr::const_iterator GroupButtonsEnd =
+            source->_mfGroupButtons.end  ();
+
+        while(GroupButtonsIt != GroupButtonsEnd)
+        {
+            pThis->pushToGroupButtons(*GroupButtonsIt);
+
+            ++GroupButtonsIt;
+        }
+    }
+}
+
+GetFieldHandlePtr RadioButtonGroupBase::getHandleSelectedButton  (void) const
+{
+    SFUnrecRadioButtonPtr::GetHandlePtr returnValue(
+        new  SFUnrecRadioButtonPtr::GetHandle(
+             &_sfSelectedButton,
+             this->getType().getFieldDesc(SelectedButtonFieldId),
+             const_cast<RadioButtonGroupBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr RadioButtonGroupBase::editHandleSelectedButton (void)
+{
+    SFUnrecRadioButtonPtr::EditHandlePtr returnValue(
+        new  SFUnrecRadioButtonPtr::EditHandle(
+             &_sfSelectedButton,
+             this->getType().getFieldDesc(SelectedButtonFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&RadioButtonGroup::setSelectedButton,
+                    static_cast<RadioButtonGroup *>(this), _1));
+
+    editSField(SelectedButtonFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr RadioButtonGroupBase::getHandleGroupButtons    (void) const
+{
+    MFUnrecRadioButtonPtr::GetHandlePtr returnValue(
+        new  MFUnrecRadioButtonPtr::GetHandle(
+             &_mfGroupButtons,
+             this->getType().getFieldDesc(GroupButtonsFieldId),
+             const_cast<RadioButtonGroupBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr RadioButtonGroupBase::editHandleGroupButtons   (void)
+{
+    MFUnrecRadioButtonPtr::EditHandlePtr returnValue(
+        new  MFUnrecRadioButtonPtr::EditHandle(
+             &_mfGroupButtons,
+             this->getType().getFieldDesc(GroupButtonsFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&RadioButtonGroup::pushToGroupButtons,
+                    static_cast<RadioButtonGroup *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&RadioButtonGroup::removeFromGroupButtons,
+                    static_cast<RadioButtonGroup *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&RadioButtonGroup::removeObjFromGroupButtons,
+                    static_cast<RadioButtonGroup *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&RadioButtonGroup::clearGroupButtons,
+                    static_cast<RadioButtonGroup *>(this)));
+
+    editMField(GroupButtonsFieldMask, _mfGroupButtons);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void RadioButtonGroupBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    RadioButtonGroup *pThis = static_cast<RadioButtonGroup *>(this);
+
+    pThis->execSync(static_cast<RadioButtonGroup *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *RadioButtonGroupBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    RadioButtonGroup *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const RadioButtonGroup *>(pRefAspect),
+                  dynamic_cast<const RadioButtonGroup *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<RadioButtonGroupPtr>::_type("RadioButtonGroupPtr", "FieldContainerPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(RadioButtonGroupPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(RadioButtonGroupPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void RadioButtonGroupBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<RadioButtonGroup *>(this)->setSelectedButton(NULL);
+
+    static_cast<RadioButtonGroup *>(this)->clearGroupButtons();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,67 +42,64 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGNegativeLayoutSpringBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief NegativeLayoutSpring class. See \ref 
-           PageUserInterfaceNegativeLayoutSpring for a description.
+/*! \brief NegativeLayoutSpring class. See \ref
+           PageContribUserInterfaceNegativeLayoutSpring for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING NegativeLayoutSpring : public NegativeLayoutSpringBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING NegativeLayoutSpring : public NegativeLayoutSpringBase
 {
-  private:
-
-    typedef NegativeLayoutSpringBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef NegativeLayoutSpringBase Inherited;
+    typedef NegativeLayoutSpring     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Construction                               */
-    /*! \{                                                                 */
 
-    static  NegativeLayoutSpringPtr      create          (LayoutSpringPtr TheSpring); 
+    static  NegativeLayoutSpringTransitPtr      create          (LayoutSpringRefPtr TheSpring); 
     
-    /*! \}                                                                 */
-    //Returns the maximum value of this LayoutSpringPtr.
+    //Returns the maximum value of this LayoutSpringRefPtr.
     virtual Real32 getMinimumValue(void) const;
 
-    //Returns the Preferred value of this LayoutSpringPtr.
+    //Returns the Preferred value of this LayoutSpringRefPtr.
     virtual Real32 getPreferredValue(void) const;
 
-    //Returns the minimum value of this LayoutSpringPtr.
+    //Returns the minimum value of this LayoutSpringRefPtr.
     virtual Real32 getMaximumValue(void) const;
 
-    //Returns the current value of this LayoutSpringPtr.
+    //Returns the current value of this LayoutSpringRefPtr.
     virtual Real32 getValue(void) const;
 
-    //Sets the current value of this LayoutSpringPtr.
+    //Sets the current value of this LayoutSpringRefPtr.
     virtual void setValue(const Real32& value);
     
-    virtual bool isCyclic(SpringLayoutPtr l) const;
+    virtual bool isCyclic(const SpringLayout* l) const;
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in NegativeLayoutSpringBase.
@@ -119,20 +116,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING NegativeLayoutSpring : public NegativeLayo
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~NegativeLayoutSpring(void); 
+    virtual ~NegativeLayoutSpring(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class NegativeLayoutSpringBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const NegativeLayoutSpring &source);
 };
 
@@ -142,7 +143,5 @@ OSG_END_NAMESPACE
 
 #include "OSGNegativeLayoutSpringBase.inl"
 #include "OSGNegativeLayoutSpring.inl"
-
-#define OSGNEGATIVELAYOUTSPRING_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGNEGATIVELAYOUTSPRING_H_ */

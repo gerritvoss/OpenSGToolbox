@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,430 +50,979 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEBUTTONINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGUIFont.h"                  // Font Class
+#include "OSGBorder.h"                  // ActiveBorder Class
+#include "OSGLayer.h"                   // ActiveBackground Class
+#include "OSGUIDrawObjectCanvas.h"      // DrawObject Class
 
 #include "OSGButtonBase.h"
 #include "OSGButton.h"
 
+#include <boost/bind.hpp>
+
+#include "OSGEvent.h"
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ButtonBase::FontFieldMask = 
-    (TypeTraits<BitVector>::One << ButtonBase::FontFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  ButtonBase::TextFieldMask = 
-    (TypeTraits<BitVector>::One << ButtonBase::TextFieldId);
+/*! \class OSG::Button
+    A UI Button.
+ */
 
-const OSG::BitVector  ButtonBase::ActiveBorderFieldMask = 
-    (TypeTraits<BitVector>::One << ButtonBase::ActiveBorderFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  ButtonBase::ActiveBackgroundFieldMask = 
-    (TypeTraits<BitVector>::One << ButtonBase::ActiveBackgroundFieldId);
-
-const OSG::BitVector  ButtonBase::ActiveForegroundFieldMask = 
-    (TypeTraits<BitVector>::One << ButtonBase::ActiveForegroundFieldId);
-
-const OSG::BitVector  ButtonBase::ActiveTextColorFieldMask = 
-    (TypeTraits<BitVector>::One << ButtonBase::ActiveTextColorFieldId);
-
-const OSG::BitVector  ButtonBase::FocusedTextColorFieldMask = 
-    (TypeTraits<BitVector>::One << ButtonBase::FocusedTextColorFieldId);
-
-const OSG::BitVector  ButtonBase::RolloverTextColorFieldMask = 
-    (TypeTraits<BitVector>::One << ButtonBase::RolloverTextColorFieldId);
-
-const OSG::BitVector  ButtonBase::DisabledTextColorFieldMask = 
-    (TypeTraits<BitVector>::One << ButtonBase::DisabledTextColorFieldId);
-
-const OSG::BitVector  ButtonBase::TextColorFieldMask = 
-    (TypeTraits<BitVector>::One << ButtonBase::TextColorFieldId);
-
-const OSG::BitVector  ButtonBase::AlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << ButtonBase::AlignmentFieldId);
-
-const OSG::BitVector  ButtonBase::EnableActionOnMouseDownTimeFieldMask = 
-    (TypeTraits<BitVector>::One << ButtonBase::EnableActionOnMouseDownTimeFieldId);
-
-const OSG::BitVector  ButtonBase::ActionOnMouseDownRateFieldMask = 
-    (TypeTraits<BitVector>::One << ButtonBase::ActionOnMouseDownRateFieldId);
-
-const OSG::BitVector  ButtonBase::ActiveOffsetFieldMask = 
-    (TypeTraits<BitVector>::One << ButtonBase::ActiveOffsetFieldId);
-
-const OSG::BitVector  ButtonBase::DrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << ButtonBase::DrawObjectFieldId);
-
-const OSG::BitVector  ButtonBase::ActiveDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << ButtonBase::ActiveDrawObjectFieldId);
-
-const OSG::BitVector  ButtonBase::FocusedDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << ButtonBase::FocusedDrawObjectFieldId);
-
-const OSG::BitVector  ButtonBase::RolloverDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << ButtonBase::RolloverDrawObjectFieldId);
-
-const OSG::BitVector  ButtonBase::DisabledDrawObjectFieldMask = 
-    (TypeTraits<BitVector>::One << ButtonBase::DisabledDrawObjectFieldId);
-
-const OSG::BitVector  ButtonBase::DrawObjectToTextAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << ButtonBase::DrawObjectToTextAlignmentFieldId);
-
-const OSG::BitVector  ButtonBase::DrawObjectToTextPaddingFieldMask = 
-    (TypeTraits<BitVector>::One << ButtonBase::DrawObjectToTextPaddingFieldId);
-
-const OSG::BitVector ButtonBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var UIFontPtr       ButtonBase::_sfFont
+/*! \var UIFont *        ButtonBase::_sfFont
     
 */
+
 /*! \var std::string     ButtonBase::_sfText
     
 */
-/*! \var BorderPtr       ButtonBase::_sfActiveBorder
+
+/*! \var Border *        ButtonBase::_sfActiveBorder
     
 */
-/*! \var LayerPtr        ButtonBase::_sfActiveBackground
+
+/*! \var Layer *         ButtonBase::_sfActiveBackground
     
 */
-/*! \var LayerPtr        ButtonBase::_sfActiveForeground
+
+/*! \var Layer *         ButtonBase::_sfActiveForeground
     
 */
+
 /*! \var Color4f         ButtonBase::_sfActiveTextColor
     
 */
+
 /*! \var Color4f         ButtonBase::_sfFocusedTextColor
     
 */
+
 /*! \var Color4f         ButtonBase::_sfRolloverTextColor
     
 */
+
 /*! \var Color4f         ButtonBase::_sfDisabledTextColor
     
 */
+
 /*! \var Color4f         ButtonBase::_sfTextColor
     
 */
+
 /*! \var Vec2f           ButtonBase::_sfAlignment
     
 */
+
 /*! \var bool            ButtonBase::_sfEnableActionOnMouseDownTime
     
 */
+
 /*! \var Time            ButtonBase::_sfActionOnMouseDownRate
     
 */
+
 /*! \var Vec2f           ButtonBase::_sfActiveOffset
     
 */
-/*! \var UIDrawObjectCanvasPtr ButtonBase::_sfDrawObject
+
+/*! \var UIDrawObjectCanvas * ButtonBase::_sfDrawObject
     
 */
-/*! \var UIDrawObjectCanvasPtr ButtonBase::_sfActiveDrawObject
+
+/*! \var UIDrawObjectCanvas * ButtonBase::_sfActiveDrawObject
     
 */
-/*! \var UIDrawObjectCanvasPtr ButtonBase::_sfFocusedDrawObject
+
+/*! \var UIDrawObjectCanvas * ButtonBase::_sfFocusedDrawObject
     
 */
-/*! \var UIDrawObjectCanvasPtr ButtonBase::_sfRolloverDrawObject
+
+/*! \var UIDrawObjectCanvas * ButtonBase::_sfRolloverDrawObject
     
 */
-/*! \var UIDrawObjectCanvasPtr ButtonBase::_sfDisabledDrawObject
+
+/*! \var UIDrawObjectCanvas * ButtonBase::_sfDisabledDrawObject
     
 */
+
 /*! \var UInt32          ButtonBase::_sfDrawObjectToTextAlignment
     
 */
+
 /*! \var Real32          ButtonBase::_sfDrawObjectToTextPadding
     
 */
 
-//! Button description
 
-FieldDescription *ButtonBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<Button *>::_type("ButtonPtr", "ComponentPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(Button *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           Button *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           Button *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ButtonBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUIFontPtr::getClassType(), 
-                     "Font", 
-                     FontFieldId, FontFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFFont)),
-    new FieldDescription(SFString::getClassType(), 
-                     "Text", 
-                     TextFieldId, TextFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFText)),
-    new FieldDescription(SFBorderPtr::getClassType(), 
-                     "ActiveBorder", 
-                     ActiveBorderFieldId, ActiveBorderFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFActiveBorder)),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "ActiveBackground", 
-                     ActiveBackgroundFieldId, ActiveBackgroundFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFActiveBackground)),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "ActiveForeground", 
-                     ActiveForegroundFieldId, ActiveForegroundFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFActiveForeground)),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "ActiveTextColor", 
-                     ActiveTextColorFieldId, ActiveTextColorFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFActiveTextColor)),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "FocusedTextColor", 
-                     FocusedTextColorFieldId, FocusedTextColorFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFFocusedTextColor)),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "RolloverTextColor", 
-                     RolloverTextColorFieldId, RolloverTextColorFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFRolloverTextColor)),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "DisabledTextColor", 
-                     DisabledTextColorFieldId, DisabledTextColorFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFDisabledTextColor)),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "TextColor", 
-                     TextColorFieldId, TextColorFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFTextColor)),
-    new FieldDescription(SFVec2f::getClassType(), 
-                     "Alignment", 
-                     AlignmentFieldId, AlignmentFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFAlignment)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "EnableActionOnMouseDownTime", 
-                     EnableActionOnMouseDownTimeFieldId, EnableActionOnMouseDownTimeFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFEnableActionOnMouseDownTime)),
-    new FieldDescription(SFTime::getClassType(), 
-                     "ActionOnMouseDownRate", 
-                     ActionOnMouseDownRateFieldId, ActionOnMouseDownRateFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFActionOnMouseDownRate)),
-    new FieldDescription(SFVec2f::getClassType(), 
-                     "ActiveOffset", 
-                     ActiveOffsetFieldId, ActiveOffsetFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFActiveOffset)),
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "DrawObject", 
-                     DrawObjectFieldId, DrawObjectFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFDrawObject)),
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "ActiveDrawObject", 
-                     ActiveDrawObjectFieldId, ActiveDrawObjectFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFActiveDrawObject)),
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "FocusedDrawObject", 
-                     FocusedDrawObjectFieldId, FocusedDrawObjectFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFFocusedDrawObject)),
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "RolloverDrawObject", 
-                     RolloverDrawObjectFieldId, RolloverDrawObjectFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFRolloverDrawObject)),
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "DisabledDrawObject", 
-                     DisabledDrawObjectFieldId, DisabledDrawObjectFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFDisabledDrawObject)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "DrawObjectToTextAlignment", 
-                     DrawObjectToTextAlignmentFieldId, DrawObjectToTextAlignmentFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFDrawObjectToTextAlignment)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "DrawObjectToTextPadding", 
-                     DrawObjectToTextPaddingFieldId, DrawObjectToTextPaddingFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFDrawObjectToTextPadding))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType ButtonBase::_type(
-    "Button",
-    "Component",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&ButtonBase::createEmpty),
+    pDesc = new SFUnrecUIFontPtr::Description(
+        SFUnrecUIFontPtr::getClassType(),
+        "Font",
+        "",
+        FontFieldId, FontFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Button::editHandleFont),
+        static_cast<FieldGetMethodSig >(&Button::getHandleFont));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFString::Description(
+        SFString::getClassType(),
+        "Text",
+        "",
+        TextFieldId, TextFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Button::editHandleText),
+        static_cast<FieldGetMethodSig >(&Button::getHandleText));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecBorderPtr::Description(
+        SFUnrecBorderPtr::getClassType(),
+        "ActiveBorder",
+        "",
+        ActiveBorderFieldId, ActiveBorderFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Button::editHandleActiveBorder),
+        static_cast<FieldGetMethodSig >(&Button::getHandleActiveBorder));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "ActiveBackground",
+        "",
+        ActiveBackgroundFieldId, ActiveBackgroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Button::editHandleActiveBackground),
+        static_cast<FieldGetMethodSig >(&Button::getHandleActiveBackground));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "ActiveForeground",
+        "",
+        ActiveForegroundFieldId, ActiveForegroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Button::editHandleActiveForeground),
+        static_cast<FieldGetMethodSig >(&Button::getHandleActiveForeground));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "ActiveTextColor",
+        "",
+        ActiveTextColorFieldId, ActiveTextColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Button::editHandleActiveTextColor),
+        static_cast<FieldGetMethodSig >(&Button::getHandleActiveTextColor));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "FocusedTextColor",
+        "",
+        FocusedTextColorFieldId, FocusedTextColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Button::editHandleFocusedTextColor),
+        static_cast<FieldGetMethodSig >(&Button::getHandleFocusedTextColor));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "RolloverTextColor",
+        "",
+        RolloverTextColorFieldId, RolloverTextColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Button::editHandleRolloverTextColor),
+        static_cast<FieldGetMethodSig >(&Button::getHandleRolloverTextColor));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "DisabledTextColor",
+        "",
+        DisabledTextColorFieldId, DisabledTextColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Button::editHandleDisabledTextColor),
+        static_cast<FieldGetMethodSig >(&Button::getHandleDisabledTextColor));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "TextColor",
+        "",
+        TextColorFieldId, TextColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Button::editHandleTextColor),
+        static_cast<FieldGetMethodSig >(&Button::getHandleTextColor));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFVec2f::Description(
+        SFVec2f::getClassType(),
+        "Alignment",
+        "",
+        AlignmentFieldId, AlignmentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Button::editHandleAlignment),
+        static_cast<FieldGetMethodSig >(&Button::getHandleAlignment));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "EnableActionOnMouseDownTime",
+        "",
+        EnableActionOnMouseDownTimeFieldId, EnableActionOnMouseDownTimeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Button::editHandleEnableActionOnMouseDownTime),
+        static_cast<FieldGetMethodSig >(&Button::getHandleEnableActionOnMouseDownTime));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFTime::Description(
+        SFTime::getClassType(),
+        "ActionOnMouseDownRate",
+        "",
+        ActionOnMouseDownRateFieldId, ActionOnMouseDownRateFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Button::editHandleActionOnMouseDownRate),
+        static_cast<FieldGetMethodSig >(&Button::getHandleActionOnMouseDownRate));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFVec2f::Description(
+        SFVec2f::getClassType(),
+        "ActiveOffset",
+        "",
+        ActiveOffsetFieldId, ActiveOffsetFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Button::editHandleActiveOffset),
+        static_cast<FieldGetMethodSig >(&Button::getHandleActiveOffset));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
+        SFUnrecUIDrawObjectCanvasPtr::getClassType(),
+        "DrawObject",
+        "",
+        DrawObjectFieldId, DrawObjectFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Button::editHandleDrawObject),
+        static_cast<FieldGetMethodSig >(&Button::getHandleDrawObject));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
+        SFUnrecUIDrawObjectCanvasPtr::getClassType(),
+        "ActiveDrawObject",
+        "",
+        ActiveDrawObjectFieldId, ActiveDrawObjectFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Button::editHandleActiveDrawObject),
+        static_cast<FieldGetMethodSig >(&Button::getHandleActiveDrawObject));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
+        SFUnrecUIDrawObjectCanvasPtr::getClassType(),
+        "FocusedDrawObject",
+        "",
+        FocusedDrawObjectFieldId, FocusedDrawObjectFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Button::editHandleFocusedDrawObject),
+        static_cast<FieldGetMethodSig >(&Button::getHandleFocusedDrawObject));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
+        SFUnrecUIDrawObjectCanvasPtr::getClassType(),
+        "RolloverDrawObject",
+        "",
+        RolloverDrawObjectFieldId, RolloverDrawObjectFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Button::editHandleRolloverDrawObject),
+        static_cast<FieldGetMethodSig >(&Button::getHandleRolloverDrawObject));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
+        SFUnrecUIDrawObjectCanvasPtr::getClassType(),
+        "DisabledDrawObject",
+        "",
+        DisabledDrawObjectFieldId, DisabledDrawObjectFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Button::editHandleDisabledDrawObject),
+        static_cast<FieldGetMethodSig >(&Button::getHandleDisabledDrawObject));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "DrawObjectToTextAlignment",
+        "",
+        DrawObjectToTextAlignmentFieldId, DrawObjectToTextAlignmentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Button::editHandleDrawObjectToTextAlignment),
+        static_cast<FieldGetMethodSig >(&Button::getHandleDrawObjectToTextAlignment));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "DrawObjectToTextPadding",
+        "",
+        DrawObjectToTextPaddingFieldId, DrawObjectToTextPaddingFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Button::editHandleDrawObjectToTextPadding),
+        static_cast<FieldGetMethodSig >(&Button::getHandleDrawObjectToTextPadding));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+ButtonBase::TypeObject ButtonBase::_type(
+    ButtonBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ButtonBase::createEmptyLocal),
     Button::initMethod,
-    _desc,
-    sizeof(_desc));
+    Button::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&Button::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"Button\"\n"
+    "\tparent=\"Component\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    parentProducer=\"Component\"\n"
+    ">\n"
+    "A UI Button.\n"
+    "\t<Field\n"
+    "\t\tname=\"Font\"\n"
+    "\t\ttype=\"UIFont\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Text\"\n"
+    "\t\ttype=\"std::string\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ActiveBorder\"\n"
+    "\t\ttype=\"Border\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ActiveBackground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ActiveForeground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ActiveTextColor\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FocusedTextColor\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"RolloverTextColor\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"DisabledTextColor\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TextColor\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Alignment\"\n"
+    "\t\ttype=\"Vec2f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.5,0.5\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"EnableActionOnMouseDownTime\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ActionOnMouseDownRate\"\n"
+    "\t\ttype=\"Time\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.1\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ActiveOffset\"\n"
+    "\t\ttype=\"Vec2f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0,0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"DrawObject\"\n"
+    "\t\ttype=\"UIDrawObjectCanvas\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ActiveDrawObject\"\n"
+    "\t\ttype=\"UIDrawObjectCanvas\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FocusedDrawObject\"\n"
+    "\t\ttype=\"UIDrawObjectCanvas\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"RolloverDrawObject\"\n"
+    "\t\ttype=\"UIDrawObjectCanvas\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"DisabledDrawObject\"\n"
+    "\t\ttype=\"UIDrawObjectCanvas\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"DrawObjectToTextAlignment\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"Button::ALIGN_DRAW_OBJECT_LEFT_OF_TEXT\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"DrawObjectToTextPadding\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"2.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"ActionPerformed\"\n"
+    "\t\ttype=\"ActionEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"MousePressedActionPerformed\"\n"
+    "\t\ttype=\"ActionEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "</FieldContainer>\n",
+    "A UI Button.\n"
+    );
 
 //! Button Produced Methods
 
 MethodDescription *ButtonBase::_methodDesc[] =
 {
     new MethodDescription("ActionPerformed", 
+                    "",
                      ActionPerformedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("MousePressedActionPerformed", 
+                    "",
                      MousePressedActionPerformedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod())
 };
 
 EventProducerType ButtonBase::_producerType(
     "ButtonProducerType",
     "ComponentProducerType",
-    NULL,
+    "",
     InitEventProducerFunctor(),
     _methodDesc,
     sizeof(_methodDesc));
-//OSG_FIELD_CONTAINER_DEF(ButtonBase, ButtonPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ButtonBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ButtonBase::getType(void) const 
+FieldContainerType &ButtonBase::getType(void)
 {
     return _type;
-} 
+}
+
+const FieldContainerType &ButtonBase::getType(void) const
+{
+    return _type;
+}
 
 const EventProducerType &ButtonBase::getProducerType(void) const
 {
     return _producerType;
 }
 
-
-FieldContainerPtr ButtonBase::shallowCopy(void) const 
-{ 
-    ButtonPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const Button *>(this)); 
-
-    return returnValue; 
-}
-
-UInt32 ButtonBase::getContainerSize(void) const 
-{ 
-    return sizeof(Button); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ButtonBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+UInt32 ButtonBase::getContainerSize(void) const
 {
-    this->executeSyncImpl(static_cast<ButtonBase *>(&other),
-                          whichField);
+    return sizeof(Button);
 }
-#else
-void ButtonBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the Button::_sfFont field.
+const SFUnrecUIFontPtr *ButtonBase::getSFFont(void) const
 {
-    this->executeSyncImpl((ButtonBase *) &other, whichField, sInfo);
+    return &_sfFont;
 }
-void ButtonBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+SFUnrecUIFontPtr    *ButtonBase::editSFFont           (void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(FontFieldMask);
+
+    return &_sfFont;
 }
 
-void ButtonBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFString *ButtonBase::editSFText(void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(TextFieldMask);
 
+    return &_sfText;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-ButtonBase::ButtonBase(void) :
-    _sfFont                   (), 
-    _sfText                   (), 
-    _sfActiveBorder           (BorderPtr(NullFC)), 
-    _sfActiveBackground       (LayerPtr(NullFC)), 
-    _sfActiveForeground       (LayerPtr(NullFC)), 
-    _sfActiveTextColor        (), 
-    _sfFocusedTextColor       (), 
-    _sfRolloverTextColor      (), 
-    _sfDisabledTextColor      (), 
-    _sfTextColor              (), 
-    _sfAlignment              (Vec2f(0.5,0.5)), 
-    _sfEnableActionOnMouseDownTime(bool(false)), 
-    _sfActionOnMouseDownRate  (Time(0.1)), 
-    _sfActiveOffset           (Vec2f(0,0)), 
-    _sfDrawObject             (UIDrawObjectCanvasPtr(NullFC)), 
-    _sfActiveDrawObject       (UIDrawObjectCanvasPtr(NullFC)), 
-    _sfFocusedDrawObject      (UIDrawObjectCanvasPtr(NullFC)), 
-    _sfRolloverDrawObject     (UIDrawObjectCanvasPtr(NullFC)), 
-    _sfDisabledDrawObject     (UIDrawObjectCanvasPtr(NullFC)), 
-    _sfDrawObjectToTextAlignment(UInt32(Button::ALIGN_DRAW_OBJECT_LEFT_OF_TEXT)), 
-    _sfDrawObjectToTextPadding(Real32(2.0)), 
-    Inherited() 
+const SFString *ButtonBase::getSFText(void) const
 {
-    _Producer.setType(&_producerType);
+    return &_sfText;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-ButtonBase::ButtonBase(const ButtonBase &source) :
-    _sfFont                   (source._sfFont                   ), 
-    _sfText                   (source._sfText                   ), 
-    _sfActiveBorder           (source._sfActiveBorder           ), 
-    _sfActiveBackground       (source._sfActiveBackground       ), 
-    _sfActiveForeground       (source._sfActiveForeground       ), 
-    _sfActiveTextColor        (source._sfActiveTextColor        ), 
-    _sfFocusedTextColor       (source._sfFocusedTextColor       ), 
-    _sfRolloverTextColor      (source._sfRolloverTextColor      ), 
-    _sfDisabledTextColor      (source._sfDisabledTextColor      ), 
-    _sfTextColor              (source._sfTextColor              ), 
-    _sfAlignment              (source._sfAlignment              ), 
-    _sfEnableActionOnMouseDownTime(source._sfEnableActionOnMouseDownTime), 
-    _sfActionOnMouseDownRate  (source._sfActionOnMouseDownRate  ), 
-    _sfActiveOffset           (source._sfActiveOffset           ), 
-    _sfDrawObject             (source._sfDrawObject             ), 
-    _sfActiveDrawObject       (source._sfActiveDrawObject       ), 
-    _sfFocusedDrawObject      (source._sfFocusedDrawObject      ), 
-    _sfRolloverDrawObject     (source._sfRolloverDrawObject     ), 
-    _sfDisabledDrawObject     (source._sfDisabledDrawObject     ), 
-    _sfDrawObjectToTextAlignment(source._sfDrawObjectToTextAlignment), 
-    _sfDrawObjectToTextPadding(source._sfDrawObjectToTextPadding), 
-    Inherited                 (source)
+//! Get the Button::_sfActiveBorder field.
+const SFUnrecBorderPtr *ButtonBase::getSFActiveBorder(void) const
 {
+    return &_sfActiveBorder;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-ButtonBase::~ButtonBase(void)
+SFUnrecBorderPtr    *ButtonBase::editSFActiveBorder   (void)
 {
+    editSField(ActiveBorderFieldMask);
+
+    return &_sfActiveBorder;
 }
+
+//! Get the Button::_sfActiveBackground field.
+const SFUnrecLayerPtr *ButtonBase::getSFActiveBackground(void) const
+{
+    return &_sfActiveBackground;
+}
+
+SFUnrecLayerPtr     *ButtonBase::editSFActiveBackground(void)
+{
+    editSField(ActiveBackgroundFieldMask);
+
+    return &_sfActiveBackground;
+}
+
+//! Get the Button::_sfActiveForeground field.
+const SFUnrecLayerPtr *ButtonBase::getSFActiveForeground(void) const
+{
+    return &_sfActiveForeground;
+}
+
+SFUnrecLayerPtr     *ButtonBase::editSFActiveForeground(void)
+{
+    editSField(ActiveForegroundFieldMask);
+
+    return &_sfActiveForeground;
+}
+
+SFColor4f *ButtonBase::editSFActiveTextColor(void)
+{
+    editSField(ActiveTextColorFieldMask);
+
+    return &_sfActiveTextColor;
+}
+
+const SFColor4f *ButtonBase::getSFActiveTextColor(void) const
+{
+    return &_sfActiveTextColor;
+}
+
+
+SFColor4f *ButtonBase::editSFFocusedTextColor(void)
+{
+    editSField(FocusedTextColorFieldMask);
+
+    return &_sfFocusedTextColor;
+}
+
+const SFColor4f *ButtonBase::getSFFocusedTextColor(void) const
+{
+    return &_sfFocusedTextColor;
+}
+
+
+SFColor4f *ButtonBase::editSFRolloverTextColor(void)
+{
+    editSField(RolloverTextColorFieldMask);
+
+    return &_sfRolloverTextColor;
+}
+
+const SFColor4f *ButtonBase::getSFRolloverTextColor(void) const
+{
+    return &_sfRolloverTextColor;
+}
+
+
+SFColor4f *ButtonBase::editSFDisabledTextColor(void)
+{
+    editSField(DisabledTextColorFieldMask);
+
+    return &_sfDisabledTextColor;
+}
+
+const SFColor4f *ButtonBase::getSFDisabledTextColor(void) const
+{
+    return &_sfDisabledTextColor;
+}
+
+
+SFColor4f *ButtonBase::editSFTextColor(void)
+{
+    editSField(TextColorFieldMask);
+
+    return &_sfTextColor;
+}
+
+const SFColor4f *ButtonBase::getSFTextColor(void) const
+{
+    return &_sfTextColor;
+}
+
+
+SFVec2f *ButtonBase::editSFAlignment(void)
+{
+    editSField(AlignmentFieldMask);
+
+    return &_sfAlignment;
+}
+
+const SFVec2f *ButtonBase::getSFAlignment(void) const
+{
+    return &_sfAlignment;
+}
+
+
+SFBool *ButtonBase::editSFEnableActionOnMouseDownTime(void)
+{
+    editSField(EnableActionOnMouseDownTimeFieldMask);
+
+    return &_sfEnableActionOnMouseDownTime;
+}
+
+const SFBool *ButtonBase::getSFEnableActionOnMouseDownTime(void) const
+{
+    return &_sfEnableActionOnMouseDownTime;
+}
+
+
+SFTime *ButtonBase::editSFActionOnMouseDownRate(void)
+{
+    editSField(ActionOnMouseDownRateFieldMask);
+
+    return &_sfActionOnMouseDownRate;
+}
+
+const SFTime *ButtonBase::getSFActionOnMouseDownRate(void) const
+{
+    return &_sfActionOnMouseDownRate;
+}
+
+
+SFVec2f *ButtonBase::editSFActiveOffset(void)
+{
+    editSField(ActiveOffsetFieldMask);
+
+    return &_sfActiveOffset;
+}
+
+const SFVec2f *ButtonBase::getSFActiveOffset(void) const
+{
+    return &_sfActiveOffset;
+}
+
+
+//! Get the Button::_sfDrawObject field.
+const SFUnrecUIDrawObjectCanvasPtr *ButtonBase::getSFDrawObject(void) const
+{
+    return &_sfDrawObject;
+}
+
+SFUnrecUIDrawObjectCanvasPtr *ButtonBase::editSFDrawObject     (void)
+{
+    editSField(DrawObjectFieldMask);
+
+    return &_sfDrawObject;
+}
+
+//! Get the Button::_sfActiveDrawObject field.
+const SFUnrecUIDrawObjectCanvasPtr *ButtonBase::getSFActiveDrawObject(void) const
+{
+    return &_sfActiveDrawObject;
+}
+
+SFUnrecUIDrawObjectCanvasPtr *ButtonBase::editSFActiveDrawObject(void)
+{
+    editSField(ActiveDrawObjectFieldMask);
+
+    return &_sfActiveDrawObject;
+}
+
+//! Get the Button::_sfFocusedDrawObject field.
+const SFUnrecUIDrawObjectCanvasPtr *ButtonBase::getSFFocusedDrawObject(void) const
+{
+    return &_sfFocusedDrawObject;
+}
+
+SFUnrecUIDrawObjectCanvasPtr *ButtonBase::editSFFocusedDrawObject(void)
+{
+    editSField(FocusedDrawObjectFieldMask);
+
+    return &_sfFocusedDrawObject;
+}
+
+//! Get the Button::_sfRolloverDrawObject field.
+const SFUnrecUIDrawObjectCanvasPtr *ButtonBase::getSFRolloverDrawObject(void) const
+{
+    return &_sfRolloverDrawObject;
+}
+
+SFUnrecUIDrawObjectCanvasPtr *ButtonBase::editSFRolloverDrawObject(void)
+{
+    editSField(RolloverDrawObjectFieldMask);
+
+    return &_sfRolloverDrawObject;
+}
+
+//! Get the Button::_sfDisabledDrawObject field.
+const SFUnrecUIDrawObjectCanvasPtr *ButtonBase::getSFDisabledDrawObject(void) const
+{
+    return &_sfDisabledDrawObject;
+}
+
+SFUnrecUIDrawObjectCanvasPtr *ButtonBase::editSFDisabledDrawObject(void)
+{
+    editSField(DisabledDrawObjectFieldMask);
+
+    return &_sfDisabledDrawObject;
+}
+
+SFUInt32 *ButtonBase::editSFDrawObjectToTextAlignment(void)
+{
+    editSField(DrawObjectToTextAlignmentFieldMask);
+
+    return &_sfDrawObjectToTextAlignment;
+}
+
+const SFUInt32 *ButtonBase::getSFDrawObjectToTextAlignment(void) const
+{
+    return &_sfDrawObjectToTextAlignment;
+}
+
+
+SFReal32 *ButtonBase::editSFDrawObjectToTextPadding(void)
+{
+    editSField(DrawObjectToTextPaddingFieldMask);
+
+    return &_sfDrawObjectToTextPadding;
+}
+
+const SFReal32 *ButtonBase::getSFDrawObjectToTextPadding(void) const
+{
+    return &_sfDrawObjectToTextPadding;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ButtonBase::getBinSize(const BitVector &whichField)
+UInt32 ButtonBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -481,113 +1030,92 @@ UInt32 ButtonBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfFont.getBinSize();
     }
-
     if(FieldBits::NoField != (TextFieldMask & whichField))
     {
         returnValue += _sfText.getBinSize();
     }
-
     if(FieldBits::NoField != (ActiveBorderFieldMask & whichField))
     {
         returnValue += _sfActiveBorder.getBinSize();
     }
-
     if(FieldBits::NoField != (ActiveBackgroundFieldMask & whichField))
     {
         returnValue += _sfActiveBackground.getBinSize();
     }
-
     if(FieldBits::NoField != (ActiveForegroundFieldMask & whichField))
     {
         returnValue += _sfActiveForeground.getBinSize();
     }
-
     if(FieldBits::NoField != (ActiveTextColorFieldMask & whichField))
     {
         returnValue += _sfActiveTextColor.getBinSize();
     }
-
     if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
     {
         returnValue += _sfFocusedTextColor.getBinSize();
     }
-
     if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
     {
         returnValue += _sfRolloverTextColor.getBinSize();
     }
-
     if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
     {
         returnValue += _sfDisabledTextColor.getBinSize();
     }
-
     if(FieldBits::NoField != (TextColorFieldMask & whichField))
     {
         returnValue += _sfTextColor.getBinSize();
     }
-
     if(FieldBits::NoField != (AlignmentFieldMask & whichField))
     {
         returnValue += _sfAlignment.getBinSize();
     }
-
     if(FieldBits::NoField != (EnableActionOnMouseDownTimeFieldMask & whichField))
     {
         returnValue += _sfEnableActionOnMouseDownTime.getBinSize();
     }
-
     if(FieldBits::NoField != (ActionOnMouseDownRateFieldMask & whichField))
     {
         returnValue += _sfActionOnMouseDownRate.getBinSize();
     }
-
     if(FieldBits::NoField != (ActiveOffsetFieldMask & whichField))
     {
         returnValue += _sfActiveOffset.getBinSize();
     }
-
     if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
     {
         returnValue += _sfDrawObject.getBinSize();
     }
-
     if(FieldBits::NoField != (ActiveDrawObjectFieldMask & whichField))
     {
         returnValue += _sfActiveDrawObject.getBinSize();
     }
-
     if(FieldBits::NoField != (FocusedDrawObjectFieldMask & whichField))
     {
         returnValue += _sfFocusedDrawObject.getBinSize();
     }
-
     if(FieldBits::NoField != (RolloverDrawObjectFieldMask & whichField))
     {
         returnValue += _sfRolloverDrawObject.getBinSize();
     }
-
     if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
     {
         returnValue += _sfDisabledDrawObject.getBinSize();
     }
-
     if(FieldBits::NoField != (DrawObjectToTextAlignmentFieldMask & whichField))
     {
         returnValue += _sfDrawObjectToTextAlignment.getBinSize();
     }
-
     if(FieldBits::NoField != (DrawObjectToTextPaddingFieldMask & whichField))
     {
         returnValue += _sfDrawObjectToTextPadding.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ButtonBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ButtonBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -595,112 +1123,90 @@ void ButtonBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfFont.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TextFieldMask & whichField))
     {
         _sfText.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ActiveBorderFieldMask & whichField))
     {
         _sfActiveBorder.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ActiveBackgroundFieldMask & whichField))
     {
         _sfActiveBackground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ActiveForegroundFieldMask & whichField))
     {
         _sfActiveForeground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ActiveTextColorFieldMask & whichField))
     {
         _sfActiveTextColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
     {
         _sfFocusedTextColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
     {
         _sfRolloverTextColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
     {
         _sfDisabledTextColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TextColorFieldMask & whichField))
     {
         _sfTextColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (AlignmentFieldMask & whichField))
     {
         _sfAlignment.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EnableActionOnMouseDownTimeFieldMask & whichField))
     {
         _sfEnableActionOnMouseDownTime.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ActionOnMouseDownRateFieldMask & whichField))
     {
         _sfActionOnMouseDownRate.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ActiveOffsetFieldMask & whichField))
     {
         _sfActiveOffset.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
     {
         _sfDrawObject.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ActiveDrawObjectFieldMask & whichField))
     {
         _sfActiveDrawObject.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedDrawObjectFieldMask & whichField))
     {
         _sfFocusedDrawObject.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (RolloverDrawObjectFieldMask & whichField))
     {
         _sfRolloverDrawObject.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
     {
         _sfDisabledDrawObject.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawObjectToTextAlignmentFieldMask & whichField))
     {
         _sfDrawObjectToTextAlignment.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawObjectToTextPaddingFieldMask & whichField))
     {
         _sfDrawObjectToTextPadding.copyToBin(pMem);
     }
-
-
 }
 
-void ButtonBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ButtonBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -708,282 +1214,906 @@ void ButtonBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfFont.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TextFieldMask & whichField))
     {
         _sfText.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ActiveBorderFieldMask & whichField))
     {
         _sfActiveBorder.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ActiveBackgroundFieldMask & whichField))
     {
         _sfActiveBackground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ActiveForegroundFieldMask & whichField))
     {
         _sfActiveForeground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ActiveTextColorFieldMask & whichField))
     {
         _sfActiveTextColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
     {
         _sfFocusedTextColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
     {
         _sfRolloverTextColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
     {
         _sfDisabledTextColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TextColorFieldMask & whichField))
     {
         _sfTextColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (AlignmentFieldMask & whichField))
     {
         _sfAlignment.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EnableActionOnMouseDownTimeFieldMask & whichField))
     {
         _sfEnableActionOnMouseDownTime.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ActionOnMouseDownRateFieldMask & whichField))
     {
         _sfActionOnMouseDownRate.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ActiveOffsetFieldMask & whichField))
     {
         _sfActiveOffset.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
     {
         _sfDrawObject.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ActiveDrawObjectFieldMask & whichField))
     {
         _sfActiveDrawObject.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedDrawObjectFieldMask & whichField))
     {
         _sfFocusedDrawObject.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (RolloverDrawObjectFieldMask & whichField))
     {
         _sfRolloverDrawObject.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
     {
         _sfDisabledDrawObject.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawObjectToTextAlignmentFieldMask & whichField))
     {
         _sfDrawObjectToTextAlignment.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawObjectToTextPaddingFieldMask & whichField))
     {
         _sfDrawObjectToTextPadding.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ButtonBase::executeSyncImpl(      ButtonBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ButtonTransitPtr ButtonBase::createLocal(BitVector bFlags)
 {
+    ButtonTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (FontFieldMask & whichField))
-        _sfFont.syncWith(pOther->_sfFont);
+        fc = dynamic_pointer_cast<Button>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (TextFieldMask & whichField))
-        _sfText.syncWith(pOther->_sfText);
-
-    if(FieldBits::NoField != (ActiveBorderFieldMask & whichField))
-        _sfActiveBorder.syncWith(pOther->_sfActiveBorder);
-
-    if(FieldBits::NoField != (ActiveBackgroundFieldMask & whichField))
-        _sfActiveBackground.syncWith(pOther->_sfActiveBackground);
-
-    if(FieldBits::NoField != (ActiveForegroundFieldMask & whichField))
-        _sfActiveForeground.syncWith(pOther->_sfActiveForeground);
-
-    if(FieldBits::NoField != (ActiveTextColorFieldMask & whichField))
-        _sfActiveTextColor.syncWith(pOther->_sfActiveTextColor);
-
-    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
-        _sfFocusedTextColor.syncWith(pOther->_sfFocusedTextColor);
-
-    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
-        _sfRolloverTextColor.syncWith(pOther->_sfRolloverTextColor);
-
-    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
-        _sfDisabledTextColor.syncWith(pOther->_sfDisabledTextColor);
-
-    if(FieldBits::NoField != (TextColorFieldMask & whichField))
-        _sfTextColor.syncWith(pOther->_sfTextColor);
-
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
-        _sfAlignment.syncWith(pOther->_sfAlignment);
-
-    if(FieldBits::NoField != (EnableActionOnMouseDownTimeFieldMask & whichField))
-        _sfEnableActionOnMouseDownTime.syncWith(pOther->_sfEnableActionOnMouseDownTime);
-
-    if(FieldBits::NoField != (ActionOnMouseDownRateFieldMask & whichField))
-        _sfActionOnMouseDownRate.syncWith(pOther->_sfActionOnMouseDownRate);
-
-    if(FieldBits::NoField != (ActiveOffsetFieldMask & whichField))
-        _sfActiveOffset.syncWith(pOther->_sfActiveOffset);
-
-    if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
-        _sfDrawObject.syncWith(pOther->_sfDrawObject);
-
-    if(FieldBits::NoField != (ActiveDrawObjectFieldMask & whichField))
-        _sfActiveDrawObject.syncWith(pOther->_sfActiveDrawObject);
-
-    if(FieldBits::NoField != (FocusedDrawObjectFieldMask & whichField))
-        _sfFocusedDrawObject.syncWith(pOther->_sfFocusedDrawObject);
-
-    if(FieldBits::NoField != (RolloverDrawObjectFieldMask & whichField))
-        _sfRolloverDrawObject.syncWith(pOther->_sfRolloverDrawObject);
-
-    if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
-        _sfDisabledDrawObject.syncWith(pOther->_sfDisabledDrawObject);
-
-    if(FieldBits::NoField != (DrawObjectToTextAlignmentFieldMask & whichField))
-        _sfDrawObjectToTextAlignment.syncWith(pOther->_sfDrawObjectToTextAlignment);
-
-    if(FieldBits::NoField != (DrawObjectToTextPaddingFieldMask & whichField))
-        _sfDrawObjectToTextPadding.syncWith(pOther->_sfDrawObjectToTextPadding);
-
-
-}
-#else
-void ButtonBase::executeSyncImpl(      ButtonBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (FontFieldMask & whichField))
-        _sfFont.syncWith(pOther->_sfFont);
-
-    if(FieldBits::NoField != (TextFieldMask & whichField))
-        _sfText.syncWith(pOther->_sfText);
-
-    if(FieldBits::NoField != (ActiveBorderFieldMask & whichField))
-        _sfActiveBorder.syncWith(pOther->_sfActiveBorder);
-
-    if(FieldBits::NoField != (ActiveBackgroundFieldMask & whichField))
-        _sfActiveBackground.syncWith(pOther->_sfActiveBackground);
-
-    if(FieldBits::NoField != (ActiveForegroundFieldMask & whichField))
-        _sfActiveForeground.syncWith(pOther->_sfActiveForeground);
-
-    if(FieldBits::NoField != (ActiveTextColorFieldMask & whichField))
-        _sfActiveTextColor.syncWith(pOther->_sfActiveTextColor);
-
-    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
-        _sfFocusedTextColor.syncWith(pOther->_sfFocusedTextColor);
-
-    if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
-        _sfRolloverTextColor.syncWith(pOther->_sfRolloverTextColor);
-
-    if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
-        _sfDisabledTextColor.syncWith(pOther->_sfDisabledTextColor);
-
-    if(FieldBits::NoField != (TextColorFieldMask & whichField))
-        _sfTextColor.syncWith(pOther->_sfTextColor);
-
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
-        _sfAlignment.syncWith(pOther->_sfAlignment);
-
-    if(FieldBits::NoField != (EnableActionOnMouseDownTimeFieldMask & whichField))
-        _sfEnableActionOnMouseDownTime.syncWith(pOther->_sfEnableActionOnMouseDownTime);
-
-    if(FieldBits::NoField != (ActionOnMouseDownRateFieldMask & whichField))
-        _sfActionOnMouseDownRate.syncWith(pOther->_sfActionOnMouseDownRate);
-
-    if(FieldBits::NoField != (ActiveOffsetFieldMask & whichField))
-        _sfActiveOffset.syncWith(pOther->_sfActiveOffset);
-
-    if(FieldBits::NoField != (DrawObjectFieldMask & whichField))
-        _sfDrawObject.syncWith(pOther->_sfDrawObject);
-
-    if(FieldBits::NoField != (ActiveDrawObjectFieldMask & whichField))
-        _sfActiveDrawObject.syncWith(pOther->_sfActiveDrawObject);
-
-    if(FieldBits::NoField != (FocusedDrawObjectFieldMask & whichField))
-        _sfFocusedDrawObject.syncWith(pOther->_sfFocusedDrawObject);
-
-    if(FieldBits::NoField != (RolloverDrawObjectFieldMask & whichField))
-        _sfRolloverDrawObject.syncWith(pOther->_sfRolloverDrawObject);
-
-    if(FieldBits::NoField != (DisabledDrawObjectFieldMask & whichField))
-        _sfDisabledDrawObject.syncWith(pOther->_sfDisabledDrawObject);
-
-    if(FieldBits::NoField != (DrawObjectToTextAlignmentFieldMask & whichField))
-        _sfDrawObjectToTextAlignment.syncWith(pOther->_sfDrawObjectToTextAlignment);
-
-    if(FieldBits::NoField != (DrawObjectToTextPaddingFieldMask & whichField))
-        _sfDrawObjectToTextPadding.syncWith(pOther->_sfDrawObjectToTextPadding);
-
-
-
+    return fc;
 }
 
-void ButtonBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ButtonTransitPtr ButtonBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ButtonTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<Button>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ButtonTransitPtr ButtonBase::create(void)
+{
+    ButtonTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<Button>(tmpPtr);
+    }
+
+    return fc;
+}
+
+Button *ButtonBase::createEmptyLocal(BitVector bFlags)
+{
+    Button *returnValue;
+
+    newPtr<Button>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+Button *ButtonBase::createEmpty(void)
+{
+    Button *returnValue;
+
+    newPtr<Button>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ButtonBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    Button *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Button *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ButtonBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    Button *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Button *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ButtonBase::shallowCopy(void) const
+{
+    Button *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const Button *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ButtonBase::ButtonBase(void) :
+    Inherited(),
+    _sfFont                   (NULL),
+    _sfText                   (),
+    _sfActiveBorder           (NULL),
+    _sfActiveBackground       (NULL),
+    _sfActiveForeground       (NULL),
+    _sfActiveTextColor        (),
+    _sfFocusedTextColor       (),
+    _sfRolloverTextColor      (),
+    _sfDisabledTextColor      (),
+    _sfTextColor              (),
+    _sfAlignment              (Vec2f(0.5,0.5)),
+    _sfEnableActionOnMouseDownTime(bool(false)),
+    _sfActionOnMouseDownRate  (Time(0.1)),
+    _sfActiveOffset           (Vec2f(0,0)),
+    _sfDrawObject             (NULL),
+    _sfActiveDrawObject       (NULL),
+    _sfFocusedDrawObject      (NULL),
+    _sfRolloverDrawObject     (NULL),
+    _sfDisabledDrawObject     (NULL),
+    _sfDrawObjectToTextAlignment(UInt32(Button::ALIGN_DRAW_OBJECT_LEFT_OF_TEXT)),
+    _sfDrawObjectToTextPadding(Real32(2.0))
+{
+    _Producer.setType(&_producerType);
+}
+
+ButtonBase::ButtonBase(const ButtonBase &source) :
+    Inherited(source),
+    _sfFont                   (NULL),
+    _sfText                   (source._sfText                   ),
+    _sfActiveBorder           (NULL),
+    _sfActiveBackground       (NULL),
+    _sfActiveForeground       (NULL),
+    _sfActiveTextColor        (source._sfActiveTextColor        ),
+    _sfFocusedTextColor       (source._sfFocusedTextColor       ),
+    _sfRolloverTextColor      (source._sfRolloverTextColor      ),
+    _sfDisabledTextColor      (source._sfDisabledTextColor      ),
+    _sfTextColor              (source._sfTextColor              ),
+    _sfAlignment              (source._sfAlignment              ),
+    _sfEnableActionOnMouseDownTime(source._sfEnableActionOnMouseDownTime),
+    _sfActionOnMouseDownRate  (source._sfActionOnMouseDownRate  ),
+    _sfActiveOffset           (source._sfActiveOffset           ),
+    _sfDrawObject             (NULL),
+    _sfActiveDrawObject       (NULL),
+    _sfFocusedDrawObject      (NULL),
+    _sfRolloverDrawObject     (NULL),
+    _sfDisabledDrawObject     (NULL),
+    _sfDrawObjectToTextAlignment(source._sfDrawObjectToTextAlignment),
+    _sfDrawObjectToTextPadding(source._sfDrawObjectToTextPadding)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ButtonBase::~ButtonBase(void)
+{
+}
+
+void ButtonBase::onCreate(const Button *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        Button *pThis = static_cast<Button *>(this);
+
+        pThis->setFont(source->getFont());
+
+        pThis->setActiveBorder(source->getActiveBorder());
+
+        pThis->setActiveBackground(source->getActiveBackground());
+
+        pThis->setActiveForeground(source->getActiveForeground());
+
+        pThis->setDrawObject(source->getDrawObject());
+
+        pThis->setActiveDrawObject(source->getActiveDrawObject());
+
+        pThis->setFocusedDrawObject(source->getFocusedDrawObject());
+
+        pThis->setRolloverDrawObject(source->getRolloverDrawObject());
+
+        pThis->setDisabledDrawObject(source->getDisabledDrawObject());
+    }
+}
+
+GetFieldHandlePtr ButtonBase::getHandleFont            (void) const
+{
+    SFUnrecUIFontPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIFontPtr::GetHandle(
+             &_sfFont,
+             this->getType().getFieldDesc(FontFieldId),
+             const_cast<ButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ButtonBase::editHandleFont           (void)
+{
+    SFUnrecUIFontPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIFontPtr::EditHandle(
+             &_sfFont,
+             this->getType().getFieldDesc(FontFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Button::setFont,
+                    static_cast<Button *>(this), _1));
+
+    editSField(FontFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ButtonBase::getHandleText            (void) const
+{
+    SFString::GetHandlePtr returnValue(
+        new  SFString::GetHandle(
+             &_sfText,
+             this->getType().getFieldDesc(TextFieldId),
+             const_cast<ButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ButtonBase::editHandleText           (void)
+{
+    SFString::EditHandlePtr returnValue(
+        new  SFString::EditHandle(
+             &_sfText,
+             this->getType().getFieldDesc(TextFieldId),
+             this));
+
+
+    editSField(TextFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ButtonBase::getHandleActiveBorder    (void) const
+{
+    SFUnrecBorderPtr::GetHandlePtr returnValue(
+        new  SFUnrecBorderPtr::GetHandle(
+             &_sfActiveBorder,
+             this->getType().getFieldDesc(ActiveBorderFieldId),
+             const_cast<ButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ButtonBase::editHandleActiveBorder   (void)
+{
+    SFUnrecBorderPtr::EditHandlePtr returnValue(
+        new  SFUnrecBorderPtr::EditHandle(
+             &_sfActiveBorder,
+             this->getType().getFieldDesc(ActiveBorderFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Button::setActiveBorder,
+                    static_cast<Button *>(this), _1));
+
+    editSField(ActiveBorderFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ButtonBase::getHandleActiveBackground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfActiveBackground,
+             this->getType().getFieldDesc(ActiveBackgroundFieldId),
+             const_cast<ButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ButtonBase::editHandleActiveBackground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfActiveBackground,
+             this->getType().getFieldDesc(ActiveBackgroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Button::setActiveBackground,
+                    static_cast<Button *>(this), _1));
+
+    editSField(ActiveBackgroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ButtonBase::getHandleActiveForeground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfActiveForeground,
+             this->getType().getFieldDesc(ActiveForegroundFieldId),
+             const_cast<ButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ButtonBase::editHandleActiveForeground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfActiveForeground,
+             this->getType().getFieldDesc(ActiveForegroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Button::setActiveForeground,
+                    static_cast<Button *>(this), _1));
+
+    editSField(ActiveForegroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ButtonBase::getHandleActiveTextColor (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfActiveTextColor,
+             this->getType().getFieldDesc(ActiveTextColorFieldId),
+             const_cast<ButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ButtonBase::editHandleActiveTextColor(void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfActiveTextColor,
+             this->getType().getFieldDesc(ActiveTextColorFieldId),
+             this));
+
+
+    editSField(ActiveTextColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ButtonBase::getHandleFocusedTextColor (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfFocusedTextColor,
+             this->getType().getFieldDesc(FocusedTextColorFieldId),
+             const_cast<ButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ButtonBase::editHandleFocusedTextColor(void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfFocusedTextColor,
+             this->getType().getFieldDesc(FocusedTextColorFieldId),
+             this));
+
+
+    editSField(FocusedTextColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ButtonBase::getHandleRolloverTextColor (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfRolloverTextColor,
+             this->getType().getFieldDesc(RolloverTextColorFieldId),
+             const_cast<ButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ButtonBase::editHandleRolloverTextColor(void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfRolloverTextColor,
+             this->getType().getFieldDesc(RolloverTextColorFieldId),
+             this));
+
+
+    editSField(RolloverTextColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ButtonBase::getHandleDisabledTextColor (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfDisabledTextColor,
+             this->getType().getFieldDesc(DisabledTextColorFieldId),
+             const_cast<ButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ButtonBase::editHandleDisabledTextColor(void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfDisabledTextColor,
+             this->getType().getFieldDesc(DisabledTextColorFieldId),
+             this));
+
+
+    editSField(DisabledTextColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ButtonBase::getHandleTextColor       (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfTextColor,
+             this->getType().getFieldDesc(TextColorFieldId),
+             const_cast<ButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ButtonBase::editHandleTextColor      (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfTextColor,
+             this->getType().getFieldDesc(TextColorFieldId),
+             this));
+
+
+    editSField(TextColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ButtonBase::getHandleAlignment       (void) const
+{
+    SFVec2f::GetHandlePtr returnValue(
+        new  SFVec2f::GetHandle(
+             &_sfAlignment,
+             this->getType().getFieldDesc(AlignmentFieldId),
+             const_cast<ButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ButtonBase::editHandleAlignment      (void)
+{
+    SFVec2f::EditHandlePtr returnValue(
+        new  SFVec2f::EditHandle(
+             &_sfAlignment,
+             this->getType().getFieldDesc(AlignmentFieldId),
+             this));
+
+
+    editSField(AlignmentFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ButtonBase::getHandleEnableActionOnMouseDownTime (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfEnableActionOnMouseDownTime,
+             this->getType().getFieldDesc(EnableActionOnMouseDownTimeFieldId),
+             const_cast<ButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ButtonBase::editHandleEnableActionOnMouseDownTime(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfEnableActionOnMouseDownTime,
+             this->getType().getFieldDesc(EnableActionOnMouseDownTimeFieldId),
+             this));
+
+
+    editSField(EnableActionOnMouseDownTimeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ButtonBase::getHandleActionOnMouseDownRate (void) const
+{
+    SFTime::GetHandlePtr returnValue(
+        new  SFTime::GetHandle(
+             &_sfActionOnMouseDownRate,
+             this->getType().getFieldDesc(ActionOnMouseDownRateFieldId),
+             const_cast<ButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ButtonBase::editHandleActionOnMouseDownRate(void)
+{
+    SFTime::EditHandlePtr returnValue(
+        new  SFTime::EditHandle(
+             &_sfActionOnMouseDownRate,
+             this->getType().getFieldDesc(ActionOnMouseDownRateFieldId),
+             this));
+
+
+    editSField(ActionOnMouseDownRateFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ButtonBase::getHandleActiveOffset    (void) const
+{
+    SFVec2f::GetHandlePtr returnValue(
+        new  SFVec2f::GetHandle(
+             &_sfActiveOffset,
+             this->getType().getFieldDesc(ActiveOffsetFieldId),
+             const_cast<ButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ButtonBase::editHandleActiveOffset   (void)
+{
+    SFVec2f::EditHandlePtr returnValue(
+        new  SFVec2f::EditHandle(
+             &_sfActiveOffset,
+             this->getType().getFieldDesc(ActiveOffsetFieldId),
+             this));
+
+
+    editSField(ActiveOffsetFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ButtonBase::getHandleDrawObject      (void) const
+{
+    SFUnrecUIDrawObjectCanvasPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::GetHandle(
+             &_sfDrawObject,
+             this->getType().getFieldDesc(DrawObjectFieldId),
+             const_cast<ButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ButtonBase::editHandleDrawObject     (void)
+{
+    SFUnrecUIDrawObjectCanvasPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::EditHandle(
+             &_sfDrawObject,
+             this->getType().getFieldDesc(DrawObjectFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Button::setDrawObject,
+                    static_cast<Button *>(this), _1));
+
+    editSField(DrawObjectFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ButtonBase::getHandleActiveDrawObject (void) const
+{
+    SFUnrecUIDrawObjectCanvasPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::GetHandle(
+             &_sfActiveDrawObject,
+             this->getType().getFieldDesc(ActiveDrawObjectFieldId),
+             const_cast<ButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ButtonBase::editHandleActiveDrawObject(void)
+{
+    SFUnrecUIDrawObjectCanvasPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::EditHandle(
+             &_sfActiveDrawObject,
+             this->getType().getFieldDesc(ActiveDrawObjectFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Button::setActiveDrawObject,
+                    static_cast<Button *>(this), _1));
+
+    editSField(ActiveDrawObjectFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ButtonBase::getHandleFocusedDrawObject (void) const
+{
+    SFUnrecUIDrawObjectCanvasPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::GetHandle(
+             &_sfFocusedDrawObject,
+             this->getType().getFieldDesc(FocusedDrawObjectFieldId),
+             const_cast<ButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ButtonBase::editHandleFocusedDrawObject(void)
+{
+    SFUnrecUIDrawObjectCanvasPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::EditHandle(
+             &_sfFocusedDrawObject,
+             this->getType().getFieldDesc(FocusedDrawObjectFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Button::setFocusedDrawObject,
+                    static_cast<Button *>(this), _1));
+
+    editSField(FocusedDrawObjectFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ButtonBase::getHandleRolloverDrawObject (void) const
+{
+    SFUnrecUIDrawObjectCanvasPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::GetHandle(
+             &_sfRolloverDrawObject,
+             this->getType().getFieldDesc(RolloverDrawObjectFieldId),
+             const_cast<ButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ButtonBase::editHandleRolloverDrawObject(void)
+{
+    SFUnrecUIDrawObjectCanvasPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::EditHandle(
+             &_sfRolloverDrawObject,
+             this->getType().getFieldDesc(RolloverDrawObjectFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Button::setRolloverDrawObject,
+                    static_cast<Button *>(this), _1));
+
+    editSField(RolloverDrawObjectFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ButtonBase::getHandleDisabledDrawObject (void) const
+{
+    SFUnrecUIDrawObjectCanvasPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::GetHandle(
+             &_sfDisabledDrawObject,
+             this->getType().getFieldDesc(DisabledDrawObjectFieldId),
+             const_cast<ButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ButtonBase::editHandleDisabledDrawObject(void)
+{
+    SFUnrecUIDrawObjectCanvasPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::EditHandle(
+             &_sfDisabledDrawObject,
+             this->getType().getFieldDesc(DisabledDrawObjectFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Button::setDisabledDrawObject,
+                    static_cast<Button *>(this), _1));
+
+    editSField(DisabledDrawObjectFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ButtonBase::getHandleDrawObjectToTextAlignment (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfDrawObjectToTextAlignment,
+             this->getType().getFieldDesc(DrawObjectToTextAlignmentFieldId),
+             const_cast<ButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ButtonBase::editHandleDrawObjectToTextAlignment(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfDrawObjectToTextAlignment,
+             this->getType().getFieldDesc(DrawObjectToTextAlignmentFieldId),
+             this));
+
+
+    editSField(DrawObjectToTextAlignmentFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ButtonBase::getHandleDrawObjectToTextPadding (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfDrawObjectToTextPadding,
+             this->getType().getFieldDesc(DrawObjectToTextPaddingFieldId),
+             const_cast<ButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ButtonBase::editHandleDrawObjectToTextPadding(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfDrawObjectToTextPadding,
+             this->getType().getFieldDesc(DrawObjectToTextPaddingFieldId),
+             this));
+
+
+    editSField(DrawObjectToTextPaddingFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ButtonBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Button *pThis = static_cast<Button *>(this);
+
+    pThis->execSync(static_cast<Button *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ButtonBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    Button *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const Button *>(pRefAspect),
+                  dynamic_cast<const Button *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ButtonPtr>::_type("ButtonPtr", "ComponentPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(ButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void ButtonBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<Button *>(this)->setFont(NULL);
+
+    static_cast<Button *>(this)->setActiveBorder(NULL);
+
+    static_cast<Button *>(this)->setActiveBackground(NULL);
+
+    static_cast<Button *>(this)->setActiveForeground(NULL);
+
+    static_cast<Button *>(this)->setDrawObject(NULL);
+
+    static_cast<Button *>(this)->setActiveDrawObject(NULL);
+
+    static_cast<Button *>(this)->setFocusedDrawObject(NULL);
+
+    static_cast<Button *>(this)->setRolloverDrawObject(NULL);
+
+    static_cast<Button *>(this)->setDisabledDrawObject(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-

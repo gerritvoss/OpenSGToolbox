@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,272 +55,224 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &TitlebarBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 TitlebarBase::getClassTypeId(void) 
+OSG::UInt32 TitlebarBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-TitlebarPtr TitlebarBase::create(void) 
-{
-    TitlebarPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = TitlebarPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-TitlebarPtr TitlebarBase::createEmpty(void) 
-{ 
-    TitlebarPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 TitlebarBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Titlebar::_sfIconifyButton field.
-inline
-SFButtonPtr *TitlebarBase::getSFIconifyButton(void)
-{
-    return &_sfIconifyButton;
-}
-
-//! Get the Titlebar::_sfMaximizeButton field.
-inline
-SFButtonPtr *TitlebarBase::getSFMaximizeButton(void)
-{
-    return &_sfMaximizeButton;
-}
-
-//! Get the Titlebar::_sfCloseButton field.
-inline
-SFButtonPtr *TitlebarBase::getSFCloseButton(void)
-{
-    return &_sfCloseButton;
-}
-
-//! Get the Titlebar::_sfTitleLabel field.
-inline
-SFLabelPtr *TitlebarBase::getSFTitleLabel(void)
-{
-    return &_sfTitleLabel;
-}
-
-//! Get the Titlebar::_sfFrameIcon field.
-inline
-SFUIDrawObjectCanvasPtr *TitlebarBase::getSFFrameIcon(void)
-{
-    return &_sfFrameIcon;
-}
-
-//! Get the Titlebar::_sfDrawClose field.
-inline
-SFBool *TitlebarBase::getSFDrawClose(void)
-{
-    return &_sfDrawClose;
-}
-
-//! Get the Titlebar::_sfDrawMaximize field.
-inline
-SFBool *TitlebarBase::getSFDrawMaximize(void)
-{
-    return &_sfDrawMaximize;
-}
-
-//! Get the Titlebar::_sfDrawIconify field.
-inline
-SFBool *TitlebarBase::getSFDrawIconify(void)
-{
-    return &_sfDrawIconify;
-}
-
 
 //! Get the value of the Titlebar::_sfIconifyButton field.
 inline
-ButtonPtr &TitlebarBase::getIconifyButton(void)
-{
-    return _sfIconifyButton.getValue();
-}
-
-//! Get the value of the Titlebar::_sfIconifyButton field.
-inline
-const ButtonPtr &TitlebarBase::getIconifyButton(void) const
+Button * TitlebarBase::getIconifyButton(void) const
 {
     return _sfIconifyButton.getValue();
 }
 
 //! Set the value of the Titlebar::_sfIconifyButton field.
 inline
-void TitlebarBase::setIconifyButton(const ButtonPtr &value)
+void TitlebarBase::setIconifyButton(Button * const value)
 {
+    editSField(IconifyButtonFieldMask);
+
     _sfIconifyButton.setValue(value);
 }
 
 //! Get the value of the Titlebar::_sfMaximizeButton field.
 inline
-ButtonPtr &TitlebarBase::getMaximizeButton(void)
-{
-    return _sfMaximizeButton.getValue();
-}
-
-//! Get the value of the Titlebar::_sfMaximizeButton field.
-inline
-const ButtonPtr &TitlebarBase::getMaximizeButton(void) const
+Button * TitlebarBase::getMaximizeButton(void) const
 {
     return _sfMaximizeButton.getValue();
 }
 
 //! Set the value of the Titlebar::_sfMaximizeButton field.
 inline
-void TitlebarBase::setMaximizeButton(const ButtonPtr &value)
+void TitlebarBase::setMaximizeButton(Button * const value)
 {
+    editSField(MaximizeButtonFieldMask);
+
     _sfMaximizeButton.setValue(value);
 }
 
 //! Get the value of the Titlebar::_sfCloseButton field.
 inline
-ButtonPtr &TitlebarBase::getCloseButton(void)
-{
-    return _sfCloseButton.getValue();
-}
-
-//! Get the value of the Titlebar::_sfCloseButton field.
-inline
-const ButtonPtr &TitlebarBase::getCloseButton(void) const
+Button * TitlebarBase::getCloseButton(void) const
 {
     return _sfCloseButton.getValue();
 }
 
 //! Set the value of the Titlebar::_sfCloseButton field.
 inline
-void TitlebarBase::setCloseButton(const ButtonPtr &value)
+void TitlebarBase::setCloseButton(Button * const value)
 {
+    editSField(CloseButtonFieldMask);
+
     _sfCloseButton.setValue(value);
 }
 
 //! Get the value of the Titlebar::_sfTitleLabel field.
 inline
-LabelPtr &TitlebarBase::getTitleLabel(void)
-{
-    return _sfTitleLabel.getValue();
-}
-
-//! Get the value of the Titlebar::_sfTitleLabel field.
-inline
-const LabelPtr &TitlebarBase::getTitleLabel(void) const
+Label * TitlebarBase::getTitleLabel(void) const
 {
     return _sfTitleLabel.getValue();
 }
 
 //! Set the value of the Titlebar::_sfTitleLabel field.
 inline
-void TitlebarBase::setTitleLabel(const LabelPtr &value)
+void TitlebarBase::setTitleLabel(Label * const value)
 {
+    editSField(TitleLabelFieldMask);
+
     _sfTitleLabel.setValue(value);
 }
 
 //! Get the value of the Titlebar::_sfFrameIcon field.
 inline
-UIDrawObjectCanvasPtr &TitlebarBase::getFrameIcon(void)
-{
-    return _sfFrameIcon.getValue();
-}
-
-//! Get the value of the Titlebar::_sfFrameIcon field.
-inline
-const UIDrawObjectCanvasPtr &TitlebarBase::getFrameIcon(void) const
+UIDrawObjectCanvas * TitlebarBase::getFrameIcon(void) const
 {
     return _sfFrameIcon.getValue();
 }
 
 //! Set the value of the Titlebar::_sfFrameIcon field.
 inline
-void TitlebarBase::setFrameIcon(const UIDrawObjectCanvasPtr &value)
+void TitlebarBase::setFrameIcon(UIDrawObjectCanvas * const value)
 {
+    editSField(FrameIconFieldMask);
+
     _sfFrameIcon.setValue(value);
 }
-
 //! Get the value of the Titlebar::_sfDrawClose field.
+
 inline
-bool &TitlebarBase::getDrawClose(void)
+bool &TitlebarBase::editDrawClose(void)
 {
+    editSField(DrawCloseFieldMask);
+
     return _sfDrawClose.getValue();
 }
 
 //! Get the value of the Titlebar::_sfDrawClose field.
 inline
-const bool &TitlebarBase::getDrawClose(void) const
+      bool  TitlebarBase::getDrawClose(void) const
 {
     return _sfDrawClose.getValue();
 }
 
 //! Set the value of the Titlebar::_sfDrawClose field.
 inline
-void TitlebarBase::setDrawClose(const bool &value)
+void TitlebarBase::setDrawClose(const bool value)
 {
+    editSField(DrawCloseFieldMask);
+
     _sfDrawClose.setValue(value);
 }
-
 //! Get the value of the Titlebar::_sfDrawMaximize field.
+
 inline
-bool &TitlebarBase::getDrawMaximize(void)
+bool &TitlebarBase::editDrawMaximize(void)
 {
+    editSField(DrawMaximizeFieldMask);
+
     return _sfDrawMaximize.getValue();
 }
 
 //! Get the value of the Titlebar::_sfDrawMaximize field.
 inline
-const bool &TitlebarBase::getDrawMaximize(void) const
+      bool  TitlebarBase::getDrawMaximize(void) const
 {
     return _sfDrawMaximize.getValue();
 }
 
 //! Set the value of the Titlebar::_sfDrawMaximize field.
 inline
-void TitlebarBase::setDrawMaximize(const bool &value)
+void TitlebarBase::setDrawMaximize(const bool value)
 {
+    editSField(DrawMaximizeFieldMask);
+
     _sfDrawMaximize.setValue(value);
 }
-
 //! Get the value of the Titlebar::_sfDrawIconify field.
+
 inline
-bool &TitlebarBase::getDrawIconify(void)
+bool &TitlebarBase::editDrawIconify(void)
 {
+    editSField(DrawIconifyFieldMask);
+
     return _sfDrawIconify.getValue();
 }
 
 //! Get the value of the Titlebar::_sfDrawIconify field.
 inline
-const bool &TitlebarBase::getDrawIconify(void) const
+      bool  TitlebarBase::getDrawIconify(void) const
 {
     return _sfDrawIconify.getValue();
 }
 
 //! Set the value of the Titlebar::_sfDrawIconify field.
 inline
-void TitlebarBase::setDrawIconify(const bool &value)
+void TitlebarBase::setDrawIconify(const bool value)
 {
+    editSField(DrawIconifyFieldMask);
+
     _sfDrawIconify.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void TitlebarBase::execSync (      TitlebarBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGTITLEBARBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (IconifyButtonFieldMask & whichField))
+        _sfIconifyButton.syncWith(pFrom->_sfIconifyButton);
+
+    if(FieldBits::NoField != (MaximizeButtonFieldMask & whichField))
+        _sfMaximizeButton.syncWith(pFrom->_sfMaximizeButton);
+
+    if(FieldBits::NoField != (CloseButtonFieldMask & whichField))
+        _sfCloseButton.syncWith(pFrom->_sfCloseButton);
+
+    if(FieldBits::NoField != (TitleLabelFieldMask & whichField))
+        _sfTitleLabel.syncWith(pFrom->_sfTitleLabel);
+
+    if(FieldBits::NoField != (FrameIconFieldMask & whichField))
+        _sfFrameIcon.syncWith(pFrom->_sfFrameIcon);
+
+    if(FieldBits::NoField != (DrawCloseFieldMask & whichField))
+        _sfDrawClose.syncWith(pFrom->_sfDrawClose);
+
+    if(FieldBits::NoField != (DrawMaximizeFieldMask & whichField))
+        _sfDrawMaximize.syncWith(pFrom->_sfDrawMaximize);
+
+    if(FieldBits::NoField != (DrawIconifyFieldMask & whichField))
+        _sfDrawIconify.syncWith(pFrom->_sfDrawIconify);
+}
+#endif
+
+
+inline
+const Char8 *TitlebarBase::getClassname(void)
+{
+    return "Titlebar";
+}
+OSG_GEN_CONTAINERPTR(Titlebar);
+
+OSG_END_NAMESPACE
 

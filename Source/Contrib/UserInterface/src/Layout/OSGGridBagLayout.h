@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,45 +42,50 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGGridBagLayoutBase.h"
 #include "OSGGridBagLayoutConstraints.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayout : public GridBagLayoutBase
-{
-  private:
+/*! \brief GridBagLayout class. See \ref
+           PageContribUserInterfaceGridBagLayout for a description.
+*/
 
-    typedef GridBagLayoutBase Inherited;
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING GridBagLayout : public GridBagLayoutBase
+{
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef GridBagLayoutBase Inherited;
+    typedef GridBagLayout     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual void updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
-    virtual Vec2f minimumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
-	virtual Vec2f requestedContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
-	virtual Vec2f preferredContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
-	virtual Vec2f maximumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
+    virtual void updateLayout(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const;
+    virtual Vec2f minimumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const;
+	virtual Vec2f requestedContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const;
+	virtual Vec2f preferredContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const;
+	virtual Vec2f maximumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const;
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in GridBagLayoutBase.
@@ -97,21 +102,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridBagLayout : public GridBagLayoutBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~GridBagLayout(void); 
+    virtual ~GridBagLayout(void);
 
     /*! \}                                                                 */
-    virtual Vec2f layoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent, SizeType TheSizeType) const;
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+
+    virtual Vec2f layoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent, SizeType TheSizeType) const;
     
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class GridBagLayoutBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const GridBagLayout &source);
 };
 
@@ -121,7 +132,5 @@ OSG_END_NAMESPACE
 
 #include "OSGGridBagLayoutBase.inl"
 #include "OSGGridBagLayout.inl"
-
-#define OSGGRIDBAGLAYOUT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGGRIDBAGLAYOUT_H_ */

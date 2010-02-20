@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,51 +42,49 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGMenuButtonBase.h"
-#include "Component/List/OSGListDataListener.h"
-#include "Event/OSGPopupMenuListener.h"
-#include "Event/OSGActionListener.h"
-#include "Component/Menu/OSGListGeneratedPopupMenu.h"
-
-#include <set>
-#include <boost/any.hpp>
-
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGListModel.h"
+#include "OSGComponentGenerator.h"
+#include "OSGListGeneratedPopupMenu.h"
+#include "OSGListDataListener.h"
+#include "OSGPopupMenuListener.h"
+#include "OSGActionListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief MenuButton class. See \ref 
-           PageUserInterfaceMenuButton for a description.
+/*! \brief MenuButton class. See \ref
+           PageContribUserInterfaceMenuButton for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING MenuButton : public MenuButtonBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuButton : public MenuButtonBase
 {
-  private:
-
-    typedef MenuButtonBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef MenuButtonBase Inherited;
+    typedef MenuButton     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
 	//Adds a PopupMenu listener which will listen to notification messages from the popup portion of the combo box.
 	EventConnection addPopupMenuListener(PopupMenuListenerPtr Listener);
 	bool isPopupMenuListenerAttached(PopupMenuListenerPtr Listener) const;
@@ -106,6 +104,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuButton : public MenuButtonBase
     Int32 getSelectionIndex(void) const;
     boost::any getSelectionValue(void) const;
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in MenuButtonBase.
@@ -122,9 +121,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuButton : public MenuButtonBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~MenuButton(void); 
+    virtual ~MenuButton(void);
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+
+	void onCreate(const MenuButton *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
 
 	void hidePopup(void);
 	void showPopup(void);
@@ -134,16 +148,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuButton : public MenuButtonBase
 	class MenuButtonEventsListener : public PopupMenuListener, public ActionListener
 	{
 	public:
-		MenuButtonEventsListener(MenuButtonPtr TheMenuButton);
+		MenuButtonEventsListener(MenuButtonRefPtr TheMenuButton);
 
-		virtual void popupMenuCanceled(const PopupMenuEventPtr e);
-		virtual void popupMenuWillBecomeInvisible(const PopupMenuEventPtr e);
-		virtual void popupMenuWillBecomeVisible(const PopupMenuEventPtr e);
-		virtual void popupMenuContentsChanged(const PopupMenuEventPtr e);
+		virtual void popupMenuCanceled(const PopupMenuEventUnrecPtr e);
+		virtual void popupMenuWillBecomeInvisible(const PopupMenuEventUnrecPtr e);
+		virtual void popupMenuWillBecomeVisible(const PopupMenuEventUnrecPtr e);
+		virtual void popupMenuContentsChanged(const PopupMenuEventUnrecPtr e);
         
-        virtual void actionPerformed(const ActionEventPtr e);
+        virtual void actionPerformed(const ActionEventUnrecPtr e);
 	private:
-		MenuButtonPtr _MenuButton;
+		MenuButtonRefPtr _MenuButton;
 	};
 
 	friend class MenuButtonEventsListener;
@@ -160,15 +174,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuButton : public MenuButtonBase
     virtual void produceMenuActionPerformed(void);
     
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class MenuButtonBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const MenuButton &source);
 };
 

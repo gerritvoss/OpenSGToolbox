@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,155 +50,208 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILECOMPOUNDBORDERINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGBorder.h"                  // InnerBorder Class
 
 #include "OSGCompoundBorderBase.h"
 #include "OSGCompoundBorder.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  CompoundBorderBase::InnerBorderFieldMask = 
-    (TypeTraits<BitVector>::One << CompoundBorderBase::InnerBorderFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  CompoundBorderBase::OuterBorderFieldMask = 
-    (TypeTraits<BitVector>::One << CompoundBorderBase::OuterBorderFieldId);
+/*! \class OSG::CompoundBorder
+    UI Compound Border. A Compound Border made up of an inner border and outer border of any type.
+ */
 
-const OSG::BitVector CompoundBorderBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-
-// Field descriptions
-
-/*! \var BorderPtr       CompoundBorderBase::_sfInnerBorder
-    
-*/
-/*! \var BorderPtr       CompoundBorderBase::_sfOuterBorder
+/*! \var Border *        CompoundBorderBase::_sfInnerBorder
     
 */
 
-//! CompoundBorder description
+/*! \var Border *        CompoundBorderBase::_sfOuterBorder
+    
+*/
 
-FieldDescription *CompoundBorderBase::_desc[] = 
+
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<CompoundBorder *>::_type("CompoundBorderPtr", "BorderPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(CompoundBorder *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           CompoundBorder *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           CompoundBorder *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void CompoundBorderBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFBorderPtr::getClassType(), 
-                     "InnerBorder", 
-                     InnerBorderFieldId, InnerBorderFieldMask,
-                     false,
-                     (FieldAccessMethod) &CompoundBorderBase::getSFInnerBorder),
-    new FieldDescription(SFBorderPtr::getClassType(), 
-                     "OuterBorder", 
-                     OuterBorderFieldId, OuterBorderFieldMask,
-                     false,
-                     (FieldAccessMethod) &CompoundBorderBase::getSFOuterBorder)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType CompoundBorderBase::_type(
-    "CompoundBorder",
-    "Border",
-    NULL,
-    (PrototypeCreateF) &CompoundBorderBase::createEmpty,
+    pDesc = new SFUnrecBorderPtr::Description(
+        SFUnrecBorderPtr::getClassType(),
+        "InnerBorder",
+        "",
+        InnerBorderFieldId, InnerBorderFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&CompoundBorder::editHandleInnerBorder),
+        static_cast<FieldGetMethodSig >(&CompoundBorder::getHandleInnerBorder));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecBorderPtr::Description(
+        SFUnrecBorderPtr::getClassType(),
+        "OuterBorder",
+        "",
+        OuterBorderFieldId, OuterBorderFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&CompoundBorder::editHandleOuterBorder),
+        static_cast<FieldGetMethodSig >(&CompoundBorder::getHandleOuterBorder));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+CompoundBorderBase::TypeObject CompoundBorderBase::_type(
+    CompoundBorderBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&CompoundBorderBase::createEmptyLocal),
     CompoundBorder::initMethod,
-    _desc,
-    sizeof(_desc));
+    CompoundBorder::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&CompoundBorder::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"CompoundBorder\"\n"
+    "\tparent=\"Border\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "UI Compound Border. A Compound Border made up of an inner border and outer border of any type.\n"
+    "\t<Field\n"
+    "\t\tname=\"InnerBorder\"\n"
+    "\t\ttype=\"Border\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"OuterBorder\"\n"
+    "\t\ttype=\"Border\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "UI Compound Border. A Compound Border made up of an inner border and outer border of any type.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(CompoundBorderBase, CompoundBorderPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &CompoundBorderBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &CompoundBorderBase::getType(void) const 
+FieldContainerType &CompoundBorderBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr CompoundBorderBase::shallowCopy(void) const 
-{ 
-    CompoundBorderPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const CompoundBorder *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 CompoundBorderBase::getContainerSize(void) const 
-{ 
-    return sizeof(CompoundBorder); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void CompoundBorderBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &CompoundBorderBase::getType(void) const
 {
-    this->executeSyncImpl((CompoundBorderBase *) &other, whichField);
+    return _type;
 }
-#else
-void CompoundBorderBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 CompoundBorderBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((CompoundBorderBase *) &other, whichField, sInfo);
+    return sizeof(CompoundBorder);
 }
-void CompoundBorderBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the CompoundBorder::_sfInnerBorder field.
+const SFUnrecBorderPtr *CompoundBorderBase::getSFInnerBorder(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfInnerBorder;
 }
 
-void CompoundBorderBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecBorderPtr    *CompoundBorderBase::editSFInnerBorder    (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(InnerBorderFieldMask);
 
+    return &_sfInnerBorder;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-CompoundBorderBase::CompoundBorderBase(void) :
-    _sfInnerBorder            (), 
-    _sfOuterBorder            (), 
-    Inherited() 
+//! Get the CompoundBorder::_sfOuterBorder field.
+const SFUnrecBorderPtr *CompoundBorderBase::getSFOuterBorder(void) const
 {
+    return &_sfOuterBorder;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-CompoundBorderBase::CompoundBorderBase(const CompoundBorderBase &source) :
-    _sfInnerBorder            (source._sfInnerBorder            ), 
-    _sfOuterBorder            (source._sfOuterBorder            ), 
-    Inherited                 (source)
+SFUnrecBorderPtr    *CompoundBorderBase::editSFOuterBorder    (void)
 {
+    editSField(OuterBorderFieldMask);
+
+    return &_sfOuterBorder;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-CompoundBorderBase::~CompoundBorderBase(void)
-{
-}
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 CompoundBorderBase::getBinSize(const BitVector &whichField)
+UInt32 CompoundBorderBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -206,18 +259,16 @@ UInt32 CompoundBorderBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfInnerBorder.getBinSize();
     }
-
     if(FieldBits::NoField != (OuterBorderFieldMask & whichField))
     {
         returnValue += _sfOuterBorder.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void CompoundBorderBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void CompoundBorderBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -225,17 +276,14 @@ void CompoundBorderBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfInnerBorder.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (OuterBorderFieldMask & whichField))
     {
         _sfOuterBorder.copyToBin(pMem);
     }
-
-
 }
 
-void CompoundBorderBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void CompoundBorderBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -243,93 +291,267 @@ void CompoundBorderBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfInnerBorder.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (OuterBorderFieldMask & whichField))
     {
         _sfOuterBorder.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void CompoundBorderBase::executeSyncImpl(      CompoundBorderBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+CompoundBorderTransitPtr CompoundBorderBase::createLocal(BitVector bFlags)
 {
+    CompoundBorderTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (InnerBorderFieldMask & whichField))
-        _sfInnerBorder.syncWith(pOther->_sfInnerBorder);
+        fc = dynamic_pointer_cast<CompoundBorder>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (OuterBorderFieldMask & whichField))
-        _sfOuterBorder.syncWith(pOther->_sfOuterBorder);
-
-
-}
-#else
-void CompoundBorderBase::executeSyncImpl(      CompoundBorderBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (InnerBorderFieldMask & whichField))
-        _sfInnerBorder.syncWith(pOther->_sfInnerBorder);
-
-    if(FieldBits::NoField != (OuterBorderFieldMask & whichField))
-        _sfOuterBorder.syncWith(pOther->_sfOuterBorder);
-
-
-
+    return fc;
 }
 
-void CompoundBorderBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+CompoundBorderTransitPtr CompoundBorderBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    CompoundBorderTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<CompoundBorder>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+CompoundBorderTransitPtr CompoundBorderBase::create(void)
+{
+    CompoundBorderTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<CompoundBorder>(tmpPtr);
+    }
+
+    return fc;
+}
+
+CompoundBorder *CompoundBorderBase::createEmptyLocal(BitVector bFlags)
+{
+    CompoundBorder *returnValue;
+
+    newPtr<CompoundBorder>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+CompoundBorder *CompoundBorderBase::createEmpty(void)
+{
+    CompoundBorder *returnValue;
+
+    newPtr<CompoundBorder>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr CompoundBorderBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    CompoundBorder *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const CompoundBorder *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr CompoundBorderBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    CompoundBorder *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const CompoundBorder *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr CompoundBorderBase::shallowCopy(void) const
+{
+    CompoundBorder *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const CompoundBorder *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+CompoundBorderBase::CompoundBorderBase(void) :
+    Inherited(),
+    _sfInnerBorder            (NULL),
+    _sfOuterBorder            (NULL)
+{
+}
+
+CompoundBorderBase::CompoundBorderBase(const CompoundBorderBase &source) :
+    Inherited(source),
+    _sfInnerBorder            (NULL),
+    _sfOuterBorder            (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+CompoundBorderBase::~CompoundBorderBase(void)
+{
+}
+
+void CompoundBorderBase::onCreate(const CompoundBorder *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        CompoundBorder *pThis = static_cast<CompoundBorder *>(this);
+
+        pThis->setInnerBorder(source->getInnerBorder());
+
+        pThis->setOuterBorder(source->getOuterBorder());
+    }
+}
+
+GetFieldHandlePtr CompoundBorderBase::getHandleInnerBorder     (void) const
+{
+    SFUnrecBorderPtr::GetHandlePtr returnValue(
+        new  SFUnrecBorderPtr::GetHandle(
+             &_sfInnerBorder,
+             this->getType().getFieldDesc(InnerBorderFieldId),
+             const_cast<CompoundBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr CompoundBorderBase::editHandleInnerBorder    (void)
+{
+    SFUnrecBorderPtr::EditHandlePtr returnValue(
+        new  SFUnrecBorderPtr::EditHandle(
+             &_sfInnerBorder,
+             this->getType().getFieldDesc(InnerBorderFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&CompoundBorder::setInnerBorder,
+                    static_cast<CompoundBorder *>(this), _1));
+
+    editSField(InnerBorderFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr CompoundBorderBase::getHandleOuterBorder     (void) const
+{
+    SFUnrecBorderPtr::GetHandlePtr returnValue(
+        new  SFUnrecBorderPtr::GetHandle(
+             &_sfOuterBorder,
+             this->getType().getFieldDesc(OuterBorderFieldId),
+             const_cast<CompoundBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr CompoundBorderBase::editHandleOuterBorder    (void)
+{
+    SFUnrecBorderPtr::EditHandlePtr returnValue(
+        new  SFUnrecBorderPtr::EditHandle(
+             &_sfOuterBorder,
+             this->getType().getFieldDesc(OuterBorderFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&CompoundBorder::setOuterBorder,
+                    static_cast<CompoundBorder *>(this), _1));
+
+    editSField(OuterBorderFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void CompoundBorderBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    CompoundBorder *pThis = static_cast<CompoundBorder *>(this);
+
+    pThis->execSync(static_cast<CompoundBorder *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *CompoundBorderBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    CompoundBorder *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const CompoundBorder *>(pRefAspect),
+                  dynamic_cast<const CompoundBorder *>(this));
+
+    return returnValue;
+}
+#endif
+
+void CompoundBorderBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<CompoundBorder *>(this)->setInnerBorder(NULL);
+
+    static_cast<CompoundBorder *>(this)->setOuterBorder(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<CompoundBorderPtr>::_type("CompoundBorderPtr", "BorderPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(CompoundBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(CompoundBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGCOMPOUNDBORDERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCOMPOUNDBORDERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCOMPOUNDBORDERFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

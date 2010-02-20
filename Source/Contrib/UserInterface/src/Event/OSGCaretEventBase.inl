@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,81 +55,73 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &CaretEventBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 CaretEventBase::getClassTypeId(void) 
+OSG::UInt32 CaretEventBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-CaretEventPtr CaretEventBase::create(void) 
-{
-    CaretEventPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = CaretEventPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-CaretEventPtr CaretEventBase::createEmpty(void) 
-{ 
-    CaretEventPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 CaretEventBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the CaretEvent::_sfPosition field.
-inline
-const SFUInt32 *CaretEventBase::getSFPosition(void) const
-{
-    return &_sfPosition;
-}
-
-//! Get the CaretEvent::_sfPosition field.
-inline
-SFUInt32 *CaretEventBase::editSFPosition(void)
-{
-    return &_sfPosition;
-}
-
-
 //! Get the value of the CaretEvent::_sfPosition field.
+
 inline
 UInt32 &CaretEventBase::editPosition(void)
 {
+    editSField(PositionFieldMask);
+
     return _sfPosition.getValue();
 }
 
 //! Get the value of the CaretEvent::_sfPosition field.
 inline
-const UInt32 &CaretEventBase::getPosition(void) const
+      UInt32  CaretEventBase::getPosition(void) const
 {
     return _sfPosition.getValue();
 }
 
 //! Set the value of the CaretEvent::_sfPosition field.
 inline
-void CaretEventBase::setPosition(const UInt32 &value)
+void CaretEventBase::setPosition(const UInt32 value)
 {
+    editSField(PositionFieldMask);
+
     _sfPosition.setValue(value);
 }
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void CaretEventBase::execSync (      CaretEventBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (PositionFieldMask & whichField))
+        _sfPosition.syncWith(pFrom->_sfPosition);
+}
+#endif
+
+
+inline
+const Char8 *CaretEventBase::getClassname(void)
+{
+    return "CaretEvent";
+}
+OSG_GEN_CONTAINERPTR(CaretEvent);
 
 OSG_END_NAMESPACE
 

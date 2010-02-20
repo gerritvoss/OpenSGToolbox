@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,83 +58,95 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGToggleButton.h" // Parent
 
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // CheckboxDrawObject type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // SelectedCheckboxDrawObject type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // ActiveCheckboxDrawObject type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // ActiveSelectedCheckboxDrawObject type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // RolloverCheckboxDrawObject type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // RolloverSelectedCheckboxDrawObject type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // DisabledCheckboxDrawObject type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // DisabledSelectedCheckboxDrawObject type
+#include "OSGUIDrawObjectCanvasFields.h" // CheckboxDrawObject type
 
 #include "OSGCheckboxButtonFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class CheckboxButton;
-class BinaryDataHandler;
 
 //! \brief CheckboxButton Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING CheckboxButtonBase : public ToggleButton
 {
-  private:
-
-    typedef ToggleButton    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef CheckboxButtonPtr  Ptr;
+    typedef ToggleButton Inherited;
+    typedef ToggleButton ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(CheckboxButton);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        CheckboxDrawObjectFieldId                 = Inherited::NextFieldId,
-        SelectedCheckboxDrawObjectFieldId         = CheckboxDrawObjectFieldId                 + 1,
-        ActiveCheckboxDrawObjectFieldId           = SelectedCheckboxDrawObjectFieldId         + 1,
-        ActiveSelectedCheckboxDrawObjectFieldId   = ActiveCheckboxDrawObjectFieldId           + 1,
-        RolloverCheckboxDrawObjectFieldId         = ActiveSelectedCheckboxDrawObjectFieldId   + 1,
-        RolloverSelectedCheckboxDrawObjectFieldId = RolloverCheckboxDrawObjectFieldId         + 1,
-        DisabledCheckboxDrawObjectFieldId         = RolloverSelectedCheckboxDrawObjectFieldId + 1,
-        DisabledSelectedCheckboxDrawObjectFieldId = DisabledCheckboxDrawObjectFieldId         + 1,
-        NextFieldId                               = DisabledSelectedCheckboxDrawObjectFieldId + 1
+        CheckboxDrawObjectFieldId = Inherited::NextFieldId,
+        SelectedCheckboxDrawObjectFieldId = CheckboxDrawObjectFieldId + 1,
+        ActiveCheckboxDrawObjectFieldId = SelectedCheckboxDrawObjectFieldId + 1,
+        ActiveSelectedCheckboxDrawObjectFieldId = ActiveCheckboxDrawObjectFieldId + 1,
+        RolloverCheckboxDrawObjectFieldId = ActiveSelectedCheckboxDrawObjectFieldId + 1,
+        RolloverSelectedCheckboxDrawObjectFieldId = RolloverCheckboxDrawObjectFieldId + 1,
+        DisabledCheckboxDrawObjectFieldId = RolloverSelectedCheckboxDrawObjectFieldId + 1,
+        DisabledSelectedCheckboxDrawObjectFieldId = DisabledCheckboxDrawObjectFieldId + 1,
+        NextFieldId = DisabledSelectedCheckboxDrawObjectFieldId + 1
     };
 
-    static const OSG::BitVector CheckboxDrawObjectFieldMask;
-    static const OSG::BitVector SelectedCheckboxDrawObjectFieldMask;
-    static const OSG::BitVector ActiveCheckboxDrawObjectFieldMask;
-    static const OSG::BitVector ActiveSelectedCheckboxDrawObjectFieldMask;
-    static const OSG::BitVector RolloverCheckboxDrawObjectFieldMask;
-    static const OSG::BitVector RolloverSelectedCheckboxDrawObjectFieldMask;
-    static const OSG::BitVector DisabledCheckboxDrawObjectFieldMask;
-    static const OSG::BitVector DisabledSelectedCheckboxDrawObjectFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector CheckboxDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << CheckboxDrawObjectFieldId);
+    static const OSG::BitVector SelectedCheckboxDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << SelectedCheckboxDrawObjectFieldId);
+    static const OSG::BitVector ActiveCheckboxDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << ActiveCheckboxDrawObjectFieldId);
+    static const OSG::BitVector ActiveSelectedCheckboxDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << ActiveSelectedCheckboxDrawObjectFieldId);
+    static const OSG::BitVector RolloverCheckboxDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << RolloverCheckboxDrawObjectFieldId);
+    static const OSG::BitVector RolloverSelectedCheckboxDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << RolloverSelectedCheckboxDrawObjectFieldId);
+    static const OSG::BitVector DisabledCheckboxDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << DisabledCheckboxDrawObjectFieldId);
+    static const OSG::BitVector DisabledSelectedCheckboxDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << DisabledSelectedCheckboxDrawObjectFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecUIDrawObjectCanvasPtr SFCheckboxDrawObjectType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFSelectedCheckboxDrawObjectType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFActiveCheckboxDrawObjectType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFActiveSelectedCheckboxDrawObjectType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFRolloverCheckboxDrawObjectType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFRolloverSelectedCheckboxDrawObjectType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFDisabledCheckboxDrawObjectType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFDisabledSelectedCheckboxDrawObjectType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -143,49 +155,62 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUIDrawObjectCanvasPtr *getSFCheckboxDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFSelectedCheckboxDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFActiveCheckboxDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFActiveSelectedCheckboxDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFRolloverCheckboxDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFRolloverSelectedCheckboxDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFDisabledCheckboxDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFDisabledSelectedCheckboxDrawObject(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFCheckboxDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFCheckboxDrawObject(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFSelectedCheckboxDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFSelectedCheckboxDrawObject(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFActiveCheckboxDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFActiveCheckboxDrawObject(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFActiveSelectedCheckboxDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFActiveSelectedCheckboxDrawObject(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFRolloverCheckboxDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFRolloverCheckboxDrawObject(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFRolloverSelectedCheckboxDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFRolloverSelectedCheckboxDrawObject(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFDisabledCheckboxDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFDisabledCheckboxDrawObject(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFDisabledSelectedCheckboxDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFDisabledSelectedCheckboxDrawObject(void);
 
-           UIDrawObjectCanvasPtr &getCheckboxDrawObject(void);
-     const UIDrawObjectCanvasPtr &getCheckboxDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getSelectedCheckboxDrawObject(void);
-     const UIDrawObjectCanvasPtr &getSelectedCheckboxDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getActiveCheckboxDrawObject(void);
-     const UIDrawObjectCanvasPtr &getActiveCheckboxDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getActiveSelectedCheckboxDrawObject(void);
-     const UIDrawObjectCanvasPtr &getActiveSelectedCheckboxDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getRolloverCheckboxDrawObject(void);
-     const UIDrawObjectCanvasPtr &getRolloverCheckboxDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getRolloverSelectedCheckboxDrawObject(void);
-     const UIDrawObjectCanvasPtr &getRolloverSelectedCheckboxDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getDisabledCheckboxDrawObject(void);
-     const UIDrawObjectCanvasPtr &getDisabledCheckboxDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getDisabledSelectedCheckboxDrawObject(void);
-     const UIDrawObjectCanvasPtr &getDisabledSelectedCheckboxDrawObject(void) const;
+
+                  UIDrawObjectCanvas * getCheckboxDrawObject(void) const;
+
+                  UIDrawObjectCanvas * getSelectedCheckboxDrawObject(void) const;
+
+                  UIDrawObjectCanvas * getActiveCheckboxDrawObject(void) const;
+
+                  UIDrawObjectCanvas * getActiveSelectedCheckboxDrawObject(void) const;
+
+                  UIDrawObjectCanvas * getRolloverCheckboxDrawObject(void) const;
+
+                  UIDrawObjectCanvas * getRolloverSelectedCheckboxDrawObject(void) const;
+
+                  UIDrawObjectCanvas * getDisabledCheckboxDrawObject(void) const;
+
+                  UIDrawObjectCanvas * getDisabledSelectedCheckboxDrawObject(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setCheckboxDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setSelectedCheckboxDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setActiveCheckboxDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setActiveSelectedCheckboxDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setRolloverCheckboxDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setRolloverSelectedCheckboxDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setDisabledCheckboxDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setDisabledSelectedCheckboxDrawObject( const UIDrawObjectCanvasPtr &value );
+            void setCheckboxDrawObject(UIDrawObjectCanvas * const value);
+            void setSelectedCheckboxDrawObject(UIDrawObjectCanvas * const value);
+            void setActiveCheckboxDrawObject(UIDrawObjectCanvas * const value);
+            void setActiveSelectedCheckboxDrawObject(UIDrawObjectCanvas * const value);
+            void setRolloverCheckboxDrawObject(UIDrawObjectCanvas * const value);
+            void setRolloverSelectedCheckboxDrawObject(UIDrawObjectCanvas * const value);
+            void setDisabledCheckboxDrawObject(UIDrawObjectCanvas * const value);
+            void setDisabledSelectedCheckboxDrawObject(UIDrawObjectCanvas * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -193,11 +218,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -205,33 +230,50 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  CheckboxButtonPtr      create          (void); 
-    static  CheckboxButtonPtr      createEmpty     (void); 
+    static  CheckboxButtonTransitPtr  create          (void);
+    static  CheckboxButton           *createEmpty     (void);
+
+    static  CheckboxButtonTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  CheckboxButton            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  CheckboxButtonTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUIDrawObjectCanvasPtr   _sfCheckboxDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfSelectedCheckboxDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfActiveCheckboxDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfActiveSelectedCheckboxDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfRolloverCheckboxDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfRolloverSelectedCheckboxDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfDisabledCheckboxDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfDisabledSelectedCheckboxDrawObject;
+    SFUnrecUIDrawObjectCanvasPtr _sfCheckboxDrawObject;
+    SFUnrecUIDrawObjectCanvasPtr _sfSelectedCheckboxDrawObject;
+    SFUnrecUIDrawObjectCanvasPtr _sfActiveCheckboxDrawObject;
+    SFUnrecUIDrawObjectCanvasPtr _sfActiveSelectedCheckboxDrawObject;
+    SFUnrecUIDrawObjectCanvasPtr _sfRolloverCheckboxDrawObject;
+    SFUnrecUIDrawObjectCanvasPtr _sfRolloverSelectedCheckboxDrawObject;
+    SFUnrecUIDrawObjectCanvasPtr _sfDisabledCheckboxDrawObject;
+    SFUnrecUIDrawObjectCanvasPtr _sfDisabledSelectedCheckboxDrawObject;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -246,69 +288,94 @@ class OSG_USERINTERFACELIB_DLLMAPPING CheckboxButtonBase : public ToggleButton
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~CheckboxButtonBase(void); 
+    virtual ~CheckboxButtonBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const CheckboxButton *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleCheckboxDrawObject (void) const;
+    EditFieldHandlePtr editHandleCheckboxDrawObject(void);
+    GetFieldHandlePtr  getHandleSelectedCheckboxDrawObject (void) const;
+    EditFieldHandlePtr editHandleSelectedCheckboxDrawObject(void);
+    GetFieldHandlePtr  getHandleActiveCheckboxDrawObject (void) const;
+    EditFieldHandlePtr editHandleActiveCheckboxDrawObject(void);
+    GetFieldHandlePtr  getHandleActiveSelectedCheckboxDrawObject (void) const;
+    EditFieldHandlePtr editHandleActiveSelectedCheckboxDrawObject(void);
+    GetFieldHandlePtr  getHandleRolloverCheckboxDrawObject (void) const;
+    EditFieldHandlePtr editHandleRolloverCheckboxDrawObject(void);
+    GetFieldHandlePtr  getHandleRolloverSelectedCheckboxDrawObject (void) const;
+    EditFieldHandlePtr editHandleRolloverSelectedCheckboxDrawObject(void);
+    GetFieldHandlePtr  getHandleDisabledCheckboxDrawObject (void) const;
+    EditFieldHandlePtr editHandleDisabledCheckboxDrawObject(void);
+    GetFieldHandlePtr  getHandleDisabledSelectedCheckboxDrawObject (void) const;
+    EditFieldHandlePtr editHandleDisabledSelectedCheckboxDrawObject(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      CheckboxButtonBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      CheckboxButtonBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      CheckboxButtonBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const CheckboxButtonBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef CheckboxButtonBase *CheckboxButtonBaseP;
 
-typedef osgIF<CheckboxButtonBase::isNodeCore,
-              CoredNodePtr<CheckboxButton>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet CheckboxButtonNodePtr;
-
-typedef RefPtr<CheckboxButtonPtr> CheckboxButtonRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGCHECKBOXBUTTONBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGCHECKBOXBUTTONBASE_H_ */

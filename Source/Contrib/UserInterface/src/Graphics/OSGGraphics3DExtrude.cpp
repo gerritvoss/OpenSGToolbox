@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,33 +40,29 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGGL.h>
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGTextLayoutParam.h>
-#include <OpenSG/OSGTextLayoutResult.h>
-#include <OpenSG/OSGTextureChunk.h>
-#include <OpenSG/OSGDepthChunk.h>
-
-
-#include <OpenSG/OSGChunkMaterial.h>
-#include <OpenSG/OSGMaterialChunk.h>
+#include <OSGConfig.h>
 
 #include "OSGGraphics3DExtrude.h"
+#include "OSGGL.h"
+#include "OSGTextLayoutParam.h"
+#include "OSGTextLayoutResult.h"
+#include "OSGTextureObjChunk.h"
+#include "OSGDepthChunk.h"
+
+
+#include "OSGChunkMaterial.h"
+#include "OSGMaterialChunk.h"
+#include "OSGPrimeMaterial.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::Graphics3DExtrude
-A Concrete 3D Extrution UI Graphics. 	
-*/
+// Documentation for this class is emitted in the
+// OSGGraphics3DExtrudeBase.cpp file.
+// To modify it, please change the .fcd file (OSGGraphics3DExtrude.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -76,15 +72,20 @@ A Concrete 3D Extrution UI Graphics.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void Graphics3DExtrude::initMethod (void)
+void Graphics3DExtrude::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-MaterialPtr Graphics3DExtrude::createDefaultMaterial(void)
-{
-	MaterialChunkPtr TheMaterialChunk = MaterialChunk::create();
 
-	beginEditCP(TheMaterialChunk, MaterialChunk::AmbientFieldMask | MaterialChunk::DiffuseFieldMask | MaterialChunk::SpecularFieldMask | MaterialChunk::EmissionFieldMask | MaterialChunk::ShininessFieldMask | MaterialChunk::LitFieldMask | MaterialChunk::ColorMaterialFieldMask);
+MaterialUnrecPtr Graphics3DExtrude::createDefaultMaterial(void)
+{
+	MaterialChunkUnrecPtr TheMaterialChunk = MaterialChunk::create();
+
 		TheMaterialChunk->setAmbient(Color4f(0.4,0.4,0.4,1.0));
 		TheMaterialChunk->setDiffuse(Color4f(0.8,0.8,0.8,1.0));
 		TheMaterialChunk->setSpecular(Color4f(0.85,0.85,0.85,1.0));
@@ -92,13 +93,10 @@ MaterialPtr Graphics3DExtrude::createDefaultMaterial(void)
 		TheMaterialChunk->setShininess(50.0);
 		TheMaterialChunk->setLit(true);
 		TheMaterialChunk->setColorMaterial(true);
-	endEditCP(TheMaterialChunk, MaterialChunk::AmbientFieldMask | MaterialChunk::DiffuseFieldMask | MaterialChunk::SpecularFieldMask | MaterialChunk::EmissionFieldMask | MaterialChunk::ShininessFieldMask | MaterialChunk::LitFieldMask | MaterialChunk::ColorMaterialFieldMask);
 	
-	ChunkMaterialPtr TheMaterial = ChunkMaterial::create();
+	ChunkMaterialUnrecPtr TheMaterial = ChunkMaterial::create();
 
-	beginEditCP(TheMaterial, ChunkMaterial::ChunksFieldMask);
-		TheMaterial->getChunks().push_back(TheMaterialChunk);
-	endEditCP(TheMaterial, ChunkMaterial::ChunksFieldMask);
+    TheMaterial->addChunk(TheMaterialChunk);
 
 	return TheMaterial;
 }
@@ -116,7 +114,7 @@ void Graphics3DExtrude::preDraw()
 {
    glPushAttrib(GL_LIGHTING_BIT | GL_POLYGON_BIT | GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_ENABLE_BIT);
    
-	//getUIDepth()->activate(getDrawAction());
+	//getUIDepth()->activate(getDrawEnv());
 
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
@@ -126,9 +124,9 @@ void Graphics3DExtrude::preDraw()
 
 	//glGetIntegerv(GL_POLYGON_MODE, _fill);
 	glEnable(GL_LIGHTING);
-	if(getMaterial() != NullFC)
+	if(getMaterial() != NULL)
 	{
-		getMaterial()->getState()->activate(getDrawAction());
+		getMaterial()->finalize(0x000000)->getState()->activate(getDrawEnv());
 	}
 
 	//_depth = glIsEnabled(GL_DEPTH_TEST);
@@ -169,11 +167,11 @@ void Graphics3DExtrude::postDraw()
 	glPolygonMode(GL_FRONT, _fill[0]);
 	glPolygonMode(GL_BACK , _fill[1]);*/
    
-	//getUIDepth()->deactivate(getDrawAction());
+	//getUIDepth()->deactivate(getDrawEnv());
 	
-	if(getMaterial() != NullFC)
+	if(getMaterial() != NULL)
 	{
-		getMaterial()->getState()->deactivate(getDrawAction());
+		getMaterial()->finalize(0x000000)->getState()->deactivate(getDrawEnv());
 	}
    glPopAttrib();
 }
@@ -328,7 +326,7 @@ void Graphics3DExtrude::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& 
 
 void Graphics3DExtrude::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& p3, const Pnt2f& p4, 
 						const Vec2f& t1, const Vec2f& t2, const Vec2f& t3, const Vec2f& t4,
-						const Color4f& color, const TextureChunkPtr Texture,
+						const Color4f& color, const TextureObjChunkUnrecPtr Texture,
 						const Real32& Opacity) const
 {
 	Real32 Alpha( Opacity * getOpacity() * color.alpha());
@@ -339,9 +337,9 @@ void Graphics3DExtrude::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& 
 		glEnable(GL_BLEND);
 	}
 
-	if(Texture != NullFC)
+	if(Texture != NULL)
 	{
-		Texture->activate(getDrawAction());
+		Texture->activate(getDrawEnv());
 	}
 	
 	glBegin(GL_QUADS);
@@ -356,9 +354,9 @@ void Graphics3DExtrude::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& 
 	   glVertex2fv(p4.getValues());
 	glEnd();
 	
-	if(Texture != NullFC)
+	if(Texture != NULL)
 	{
-		Texture->deactivate(getDrawAction());
+		Texture->deactivate(getDrawEnv());
 	}
 
 	if(Alpha < 1.0 || Texture->getImage()->hasAlphaChannel())
@@ -369,7 +367,7 @@ void Graphics3DExtrude::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& 
 
 void Graphics3DExtrude::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& p3, const Pnt2f& p4, 
 						const Vec2f& t1, const Vec2f& t2, const Vec2f& t3, const Vec2f& t4,
-						const MaterialPtr Material,
+						const MaterialUnrecPtr Material,
 						const Real32& Opacity) const
 {
 	Real32 Alpha( Opacity * getOpacity());
@@ -380,14 +378,14 @@ void Graphics3DExtrude::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& 
 		glEnable(GL_BLEND);
 	}
 
-   StatePtr state = NullFC;
-	if(Material != NullFC)
+   StateUnrecPtr state = NULL;
+	if(Material != NULL)
 	{
-      state = Material->makeState();
+        state =
+            Material->finalize(0x000000)->getState();
 
-      addRefCP(state);
 
-      state->activate(getDrawAction());
+      state->activate(getDrawEnv());
 	}
 	
 	glBegin(GL_QUADS);
@@ -402,10 +400,9 @@ void Graphics3DExtrude::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& 
 	   glVertex2fv(p4.getValues());
 	glEnd();
 	
-	if(state != NullFC)
+	if(state != NULL)
 	{
-		state->deactivate(getDrawAction());
-      subRefCP(state);
+		state->deactivate(getDrawEnv());
 	}
 
 	if(Alpha < 1.0 || Material->isTransparent())
@@ -484,7 +481,7 @@ void Graphics3DExtrude::drawDisc(const Pnt2f& Center, const Real32& Width, const
       glColor4f(OuterColor.red(), OuterColor.green(), OuterColor.blue(), OuterColor.alpha() * Opacity * getOpacity() );
       for(UInt16 i = 0 ; i<SubDivisions+1 ; ++i)
       {
-			glVertex2f(static_cast<Real32>(Center.x()) + static_cast<Real32>(Width)*osgcos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(Height)*osgsin(angleNow));
+			glVertex2f(static_cast<Real32>(Center.x()) + static_cast<Real32>(Width)*osgCos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(Height)*osgSin(angleNow));
 			angleNow -= angleDiff;
 		}
 	glEnd();
@@ -498,7 +495,7 @@ void Graphics3DExtrude::drawDisc(const Pnt2f& Center, const Real32& Width, const
       glColor4f(OuterColor.red(), OuterColor.green(), OuterColor.blue(), OuterColor.alpha() * Opacity * getOpacity() );
       for(UInt16 i = 0 ; i<SubDivisions+1 ; ++i)
       {
-			glVertex3f(static_cast<Real32>(Center.x()) + static_cast<Real32>(Width)*osgcos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(Height)*osgsin(angleNow), getExtrudeLength());
+			glVertex3f(static_cast<Real32>(Center.x()) + static_cast<Real32>(Width)*osgCos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(Height)*osgSin(angleNow), getExtrudeLength());
 			angleNow += angleDiff;
 		}
 	glEnd();
@@ -510,9 +507,9 @@ void Graphics3DExtrude::drawDisc(const Pnt2f& Center, const Real32& Width, const
 
       for(UInt16 i = 0 ; i<SubDivisions+1 ; ++i)
       {
-		glNormal3f(osgcos(angleNow),osgsin(angleNow),0.0);
-		glVertex3f(static_cast<Real32>(Center.x()) + static_cast<Real32>(Width)*osgcos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(Height)*osgsin(angleNow), 0);
-		glVertex3f(static_cast<Real32>(Center.x()) + static_cast<Real32>(Width)*osgcos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(Height)*osgsin(angleNow), getExtrudeLength());
+		glNormal3f(osgCos(angleNow),osgSin(angleNow),0.0);
+		glVertex3f(static_cast<Real32>(Center.x()) + static_cast<Real32>(Width)*osgCos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(Height)*osgSin(angleNow), 0);
+		glVertex3f(static_cast<Real32>(Center.x()) + static_cast<Real32>(Width)*osgCos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(Height)*osgSin(angleNow), getExtrudeLength());
 		angleNow -= angleDiff;
 	  }
 	glEnd();
@@ -542,9 +539,9 @@ void Graphics3DExtrude::drawComplexDisc(const Pnt2f& Center, const Real32& Inner
 		for(UInt16 i = 0 ; i<SubDivisions+1 ; ++i)
 		{
 			glColor4f(OuterColor.red(), OuterColor.green(), OuterColor.blue(), OuterColor.alpha());
-			glVertex3f(static_cast<Real32>(Center.x()) + static_cast<Real32>(OuterRadius)*osgcos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(OuterRadius)*osgsin(angleNow),0.0);
+			glVertex3f(static_cast<Real32>(Center.x()) + static_cast<Real32>(OuterRadius)*osgCos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(OuterRadius)*osgSin(angleNow),0.0);
 			glColor4f(CenterColor.red(), CenterColor.green(), CenterColor.blue(), CenterColor.alpha());
-			glVertex3f(static_cast<Real32>(Center.x()) + static_cast<Real32>(InnerRadius)*osgcos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(InnerRadius)*osgsin(angleNow), 0.0);
+			glVertex3f(static_cast<Real32>(Center.x()) + static_cast<Real32>(InnerRadius)*osgCos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(InnerRadius)*osgSin(angleNow), 0.0);
 			angleNow += angleDiff;
 		}
 	glEnd();
@@ -555,11 +552,11 @@ void Graphics3DExtrude::drawComplexDisc(const Pnt2f& Center, const Real32& Inner
 		glColor4f(OuterColor.red(), OuterColor.green(), OuterColor.blue(), OuterColor.alpha());
 		for(UInt16 i = 0 ; i<SubDivisions+1 ; ++i)
 		{
-			glNormal3f(osgcos(angleNow),osgsin(angleNow),0.0);
+			glNormal3f(osgCos(angleNow),osgSin(angleNow),0.0);
 
-			glVertex3f(static_cast<Real32>(Center.x()) + static_cast<Real32>(OuterRadius)*osgcos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(OuterRadius)*osgsin(angleNow),getExtrudeLength());
+			glVertex3f(static_cast<Real32>(Center.x()) + static_cast<Real32>(OuterRadius)*osgCos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(OuterRadius)*osgSin(angleNow),getExtrudeLength());
 			
-			glVertex3f(static_cast<Real32>(Center.x()) + static_cast<Real32>(OuterRadius)*osgcos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(OuterRadius)*osgsin(angleNow),0.0);
+			glVertex3f(static_cast<Real32>(Center.x()) + static_cast<Real32>(OuterRadius)*osgCos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(OuterRadius)*osgSin(angleNow),0.0);
 			
 			
 			angleNow += angleDiff;
@@ -572,11 +569,11 @@ void Graphics3DExtrude::drawComplexDisc(const Pnt2f& Center, const Real32& Inner
 		glColor4f(CenterColor.red(), CenterColor.green(), CenterColor.blue(), CenterColor.alpha());
 		for(UInt16 i = 0 ; i<SubDivisions+1 ; ++i)
 		{
-			glNormal3f(-osgcos(angleNow),-osgsin(angleNow),0.0);
+			glNormal3f(-osgCos(angleNow),-osgSin(angleNow),0.0);
 			
-			glVertex3f(static_cast<Real32>(Center.x()) + static_cast<Real32>(InnerRadius)*osgcos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(InnerRadius)*osgsin(angleNow),0.0);
+			glVertex3f(static_cast<Real32>(Center.x()) + static_cast<Real32>(InnerRadius)*osgCos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(InnerRadius)*osgSin(angleNow),0.0);
 			
-			glVertex3f(static_cast<Real32>(Center.x()) + static_cast<Real32>(InnerRadius)*osgcos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(InnerRadius)*osgsin(angleNow),getExtrudeLength());
+			glVertex3f(static_cast<Real32>(Center.x()) + static_cast<Real32>(InnerRadius)*osgCos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(InnerRadius)*osgSin(angleNow),getExtrudeLength());
 			
 			angleNow += angleDiff;
 		}
@@ -589,9 +586,9 @@ void Graphics3DExtrude::drawComplexDisc(const Pnt2f& Center, const Real32& Inner
 		for(UInt16 i = 0 ; i<SubDivisions+1 ; ++i)
 		{
 			glColor4f(CenterColor.red(), CenterColor.green(), CenterColor.blue(), CenterColor.alpha());
-			glVertex3f(static_cast<Real32>(Center.x()) + static_cast<Real32>(InnerRadius)*osgcos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(InnerRadius)*osgsin(angleNow), getExtrudeLength());
+			glVertex3f(static_cast<Real32>(Center.x()) + static_cast<Real32>(InnerRadius)*osgCos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(InnerRadius)*osgSin(angleNow), getExtrudeLength());
 			glColor4f(OuterColor.red(), OuterColor.green(), OuterColor.blue(), OuterColor.alpha());
-			glVertex3f(static_cast<Real32>(Center.x()) + static_cast<Real32>(OuterRadius)*osgcos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(OuterRadius)*osgsin(angleNow), getExtrudeLength());
+			glVertex3f(static_cast<Real32>(Center.x()) + static_cast<Real32>(OuterRadius)*osgCos(angleNow), static_cast<Real32>(Center.y()) + static_cast<Real32>(OuterRadius)*osgSin(angleNow), getExtrudeLength());
 			angleNow += angleDiff;
 		}
 	glEnd();
@@ -625,8 +622,8 @@ void Graphics3DExtrude::drawArc(const Pnt2f& Center, const Real32& Width, const 
 		//draw vertex lines
       for(UInt16 i = 0 ; i<SubDivisions+1 ; ++i)
       {
-			glVertex2f( static_cast<Real32>(Center.x()) + static_cast<Real32>(Width)*osgcos(angleNow ),static_cast<Real32>(Center.y()) +static_cast<Real32>(Height)*osgsin(angleNow));
-			//glVertex2f(Center.x() + Width*osgcos(angleNow + angleDiff), Center.y() + Height*osgsin(angleNow+angleDiff));
+			glVertex2f( static_cast<Real32>(Center.x()) + static_cast<Real32>(Width)*osgCos(angleNow ),static_cast<Real32>(Center.y()) +static_cast<Real32>(Height)*osgSin(angleNow));
+			//glVertex2f(Center.x() + Width*osgCos(angleNow + angleDiff), Center.y() + Height*osgSin(angleNow+angleDiff));
 			angleNow += angleDiff;
 		}
 	glEnd();
@@ -639,7 +636,7 @@ void Graphics3DExtrude::drawArc(const Pnt2f& Center, const Real32& Width, const 
    glLineWidth(previousLineWidth);
 }
 
-void Graphics3DExtrude::drawTextUnderline(const Pnt2f& Position, const std::string& Text, const UIFontPtr TheFont, const Color4f& Color, const Real32& Opacity) const
+void Graphics3DExtrude::drawTextUnderline(const Pnt2f& Position, const std::string& Text, const UIFontUnrecPtr TheFont, const Color4f& Color, const Real32& Opacity) const
 {
     Pnt2f TextTopLeft, TextBottomRight;
     TheFont->getBounds(Text, TextTopLeft, TextBottomRight);
@@ -655,7 +652,7 @@ void Graphics3DExtrude::drawTextUnderline(const Pnt2f& Position, const std::stri
     drawRect(LineStart, LineEnd, Color, Opacity);
 }
 
-void Graphics3DExtrude::drawText(const Pnt2f& Position, const std::string& Text, const UIFontPtr TheFont, const Color4f& Color, const Real32& Opacity) const
+void Graphics3DExtrude::drawText(const Pnt2f& Position, const std::string& Text, const UIFontUnrecPtr TheFont, const Color4f& Color, const Real32& Opacity) const
 {
    TextLayoutParam layoutParam;
    layoutParam.spacing = 1.1;
@@ -665,7 +662,7 @@ void Graphics3DExtrude::drawText(const Pnt2f& Position, const std::string& Text,
    TextLayoutResult layoutResult;
    TheFont->layout(Text, layoutParam, layoutResult);
 
-   TheFont->getTexture()->activate(getDrawAction());
+   TheFont->getTexture()->activate(getDrawEnv());
 
    Real32 Alpha(Color.alpha() * Opacity * getOpacity());
 	
@@ -681,13 +678,13 @@ void Graphics3DExtrude::drawText(const Pnt2f& Position, const std::string& Text,
    drawCharacters(layoutResult, TheFont);
    glPopMatrix();
 
-   TheFont->getTexture()->deactivate(getDrawAction());
+   TheFont->getTexture()->deactivate(getDrawEnv());
 
 	glDisable(GL_BLEND);
    glPopAttrib();
 }
 
-void Graphics3DExtrude::drawCharacters( const TextLayoutResult& layoutResult, const UIFontPtr TheFont) const
+void Graphics3DExtrude::drawCharacters( const TextLayoutResult& layoutResult, const UIFontUnrecPtr TheFont) const
 {
     glBegin(GL_QUADS);
 
@@ -778,73 +775,44 @@ void Graphics3DExtrude::deactivateDrawBounderiesTest(void)
 Graphics3DExtrude::Graphics3DExtrude(void) :
     Inherited()
 {
-	beginEditCP(Graphics3DExtrudePtr(this), UIDepthFieldMask | MaterialFieldMask);
-		setUIDepth(DepthChunk::create());
-		setMaterial(createDefaultMaterial());
-	endEditCP(Graphics3DExtrudePtr(this), UIDepthFieldMask | MaterialFieldMask);
-
-	beginEditCP(getUIDepth(), DepthChunk::ReadOnlyFieldMask);
-		getUIDepth()->setReadOnly(false);
-		getUIDepth()->setEnable(true);
-		getUIDepth()->setFunc(GL_LEQUAL);
-	endEditCP(getUIDepth(), DepthChunk::ReadOnlyFieldMask);
 }
 
 Graphics3DExtrude::Graphics3DExtrude(const Graphics3DExtrude &source) :
     Inherited(source)
 {
-	beginEditCP(Graphics3DExtrudePtr(this), UIDepthFieldMask);
-		setUIDepth(DepthChunk::create());
-	endEditCP(Graphics3DExtrudePtr(this), UIDepthFieldMask);
-
-	beginEditCP(getUIDepth(), DepthChunk::ReadOnlyFieldMask);
-		getUIDepth()->setReadOnly(false);
-		getUIDepth()->setEnable(true);
-		getUIDepth()->setFunc(GL_LEQUAL);
-	endEditCP(getUIDepth(), DepthChunk::ReadOnlyFieldMask);
 }
 
 Graphics3DExtrude::~Graphics3DExtrude(void)
 {
 }
+void Graphics3DExtrude::onCreate(const Graphics3DExtrude *Id)
+{
+    //Depth Chunk
+    DepthChunkUnrecPtr TheChunk(DepthChunk::create());
+    setUIDepth(TheChunk);
+    getUIDepth()->setReadOnly(false);
+    getUIDepth()->setEnable(true);
+    getUIDepth()->setFunc(GL_LEQUAL);
+}
+
+void Graphics3DExtrude::onDestroy()
+{
+}
+
 
 /*----------------------------- class specific ----------------------------*/
 
-void Graphics3DExtrude::changed(BitVector whichField, UInt32 origin)
+void Graphics3DExtrude::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void Graphics3DExtrude::dump(      UInt32    , 
+void Graphics3DExtrude::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump Graphics3DExtrude NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGGRAPHICS3DEXTRUDEBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGGRAPHICS3DEXTRUDEBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGGRAPHICS3DEXTRUDEFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

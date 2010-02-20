@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,43 +42,43 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGUIViewportBase.h"
-#include "Event/OSGChangeListener.h"
+#include "OSGChangeListener.h"
 #include <set>
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief UIViewport class. See \ref 
-           PageUserInterfaceUIViewport for a description.
+/*! \brief UIViewport class. See \ref
+           PageContribUserInterfaceUIViewport for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING UIViewport : public UIViewportBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIViewport : public UIViewportBase
 {
-  private:
-
-    typedef UIViewportBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef UIViewportBase Inherited;
+    typedef UIViewport     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -94,6 +94,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIViewport : public UIViewportBase
 	void maximizeVisibility(const Pnt2f& TopLeft, const Pnt2f& BottomRight);
 	void getViewBounds(Pnt2f& TopLeft, Pnt2f& BottomRight);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in UIViewportBase.
@@ -110,7 +111,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIViewport : public UIViewportBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~UIViewport(void); 
+    virtual ~UIViewport(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
     
@@ -119,18 +127,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIViewport : public UIViewportBase
     typedef ChangeListenerSet::const_iterator ChangeListenerSetConstItor;
 	
     ChangeListenerSet       _ChangeListeners;
-    void produceStateChanged(const ChangeEventPtr e);
+    void produceStateChanged(const ChangeEventUnrecPtr e);
 
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class UIViewportBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const UIViewport &source);
 };
 

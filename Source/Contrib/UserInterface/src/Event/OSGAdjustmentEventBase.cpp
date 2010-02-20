@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,156 +50,208 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEADJUSTMENTEVENTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGAdjustmentEventBase.h"
 #include "OSGAdjustmentEvent.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  AdjustmentEventBase::ValueFieldMask = 
-    (TypeTraits<BitVector>::One << AdjustmentEventBase::ValueFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  AdjustmentEventBase::ValueIsAdjustingFieldMask = 
-    (TypeTraits<BitVector>::One << AdjustmentEventBase::ValueIsAdjustingFieldId);
+/*! \class OSG::AdjustmentEvent
+    
+ */
 
-const OSG::BitVector AdjustmentEventBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var UInt32          AdjustmentEventBase::_sfValue
     
 */
+
 /*! \var bool            AdjustmentEventBase::_sfValueIsAdjusting
     
 */
 
-//! AdjustmentEvent description
 
-FieldDescription *AdjustmentEventBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<AdjustmentEvent *>::_type("AdjustmentEventPtr", "EventPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(AdjustmentEvent *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           AdjustmentEvent *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           AdjustmentEvent *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void AdjustmentEventBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "Value", 
-                     ValueFieldId, ValueFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AdjustmentEventBase::editSFValue)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "ValueIsAdjusting", 
-                     ValueIsAdjustingFieldId, ValueIsAdjustingFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AdjustmentEventBase::editSFValueIsAdjusting))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType AdjustmentEventBase::_type(
-    "AdjustmentEvent",
-    "Event",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&AdjustmentEventBase::createEmpty),
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "Value",
+        "",
+        ValueFieldId, ValueFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AdjustmentEvent::editHandleValue),
+        static_cast<FieldGetMethodSig >(&AdjustmentEvent::getHandleValue));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "ValueIsAdjusting",
+        "",
+        ValueIsAdjustingFieldId, ValueIsAdjustingFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AdjustmentEvent::editHandleValueIsAdjusting),
+        static_cast<FieldGetMethodSig >(&AdjustmentEvent::getHandleValueIsAdjusting));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+AdjustmentEventBase::TypeObject AdjustmentEventBase::_type(
+    AdjustmentEventBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&AdjustmentEventBase::createEmptyLocal),
     AdjustmentEvent::initMethod,
-    _desc,
-    sizeof(_desc));
+    AdjustmentEvent::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&AdjustmentEvent::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"AdjustmentEvent\"\n"
+    "\tparent=\"Event\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"Value\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"0\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ValueIsAdjusting\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(AdjustmentEventBase, AdjustmentEventPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &AdjustmentEventBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &AdjustmentEventBase::getType(void) const 
+FieldContainerType &AdjustmentEventBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr AdjustmentEventBase::shallowCopy(void) const 
-{ 
-    AdjustmentEventPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const AdjustmentEvent *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 AdjustmentEventBase::getContainerSize(void) const 
-{ 
-    return sizeof(AdjustmentEvent); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void AdjustmentEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &AdjustmentEventBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<AdjustmentEventBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void AdjustmentEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 AdjustmentEventBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((AdjustmentEventBase *) &other, whichField, sInfo);
+    return sizeof(AdjustmentEvent);
 }
-void AdjustmentEventBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFUInt32 *AdjustmentEventBase::editSFValue(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(ValueFieldMask);
+
+    return &_sfValue;
 }
 
-void AdjustmentEventBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFUInt32 *AdjustmentEventBase::getSFValue(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfValue;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-AdjustmentEventBase::AdjustmentEventBase(void) :
-    _sfValue                  (UInt32(0)), 
-    _sfValueIsAdjusting       (bool(false)), 
-    Inherited() 
+SFBool *AdjustmentEventBase::editSFValueIsAdjusting(void)
 {
+    editSField(ValueIsAdjustingFieldMask);
+
+    return &_sfValueIsAdjusting;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-AdjustmentEventBase::AdjustmentEventBase(const AdjustmentEventBase &source) :
-    _sfValue                  (source._sfValue                  ), 
-    _sfValueIsAdjusting       (source._sfValueIsAdjusting       ), 
-    Inherited                 (source)
+const SFBool *AdjustmentEventBase::getSFValueIsAdjusting(void) const
 {
+    return &_sfValueIsAdjusting;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-AdjustmentEventBase::~AdjustmentEventBase(void)
-{
-}
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 AdjustmentEventBase::getBinSize(const BitVector &whichField)
+UInt32 AdjustmentEventBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -207,18 +259,16 @@ UInt32 AdjustmentEventBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfValue.getBinSize();
     }
-
     if(FieldBits::NoField != (ValueIsAdjustingFieldMask & whichField))
     {
         returnValue += _sfValueIsAdjusting.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void AdjustmentEventBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void AdjustmentEventBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -226,17 +276,14 @@ void AdjustmentEventBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfValue.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ValueIsAdjustingFieldMask & whichField))
     {
         _sfValueIsAdjusting.copyToBin(pMem);
     }
-
-
 }
 
-void AdjustmentEventBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void AdjustmentEventBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -244,71 +291,244 @@ void AdjustmentEventBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfValue.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ValueIsAdjustingFieldMask & whichField))
     {
         _sfValueIsAdjusting.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void AdjustmentEventBase::executeSyncImpl(      AdjustmentEventBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+AdjustmentEventTransitPtr AdjustmentEventBase::createLocal(BitVector bFlags)
 {
+    AdjustmentEventTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (ValueFieldMask & whichField))
-        _sfValue.syncWith(pOther->_sfValue);
+        fc = dynamic_pointer_cast<AdjustmentEvent>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (ValueIsAdjustingFieldMask & whichField))
-        _sfValueIsAdjusting.syncWith(pOther->_sfValueIsAdjusting);
-
-
-}
-#else
-void AdjustmentEventBase::executeSyncImpl(      AdjustmentEventBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ValueFieldMask & whichField))
-        _sfValue.syncWith(pOther->_sfValue);
-
-    if(FieldBits::NoField != (ValueIsAdjustingFieldMask & whichField))
-        _sfValueIsAdjusting.syncWith(pOther->_sfValueIsAdjusting);
-
-
-
+    return fc;
 }
 
-void AdjustmentEventBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+AdjustmentEventTransitPtr AdjustmentEventBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    AdjustmentEventTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<AdjustmentEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+AdjustmentEventTransitPtr AdjustmentEventBase::create(void)
+{
+    AdjustmentEventTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<AdjustmentEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+AdjustmentEvent *AdjustmentEventBase::createEmptyLocal(BitVector bFlags)
+{
+    AdjustmentEvent *returnValue;
+
+    newPtr<AdjustmentEvent>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+AdjustmentEvent *AdjustmentEventBase::createEmpty(void)
+{
+    AdjustmentEvent *returnValue;
+
+    newPtr<AdjustmentEvent>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr AdjustmentEventBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    AdjustmentEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const AdjustmentEvent *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr AdjustmentEventBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    AdjustmentEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const AdjustmentEvent *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr AdjustmentEventBase::shallowCopy(void) const
+{
+    AdjustmentEvent *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const AdjustmentEvent *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+AdjustmentEventBase::AdjustmentEventBase(void) :
+    Inherited(),
+    _sfValue                  (UInt32(0)),
+    _sfValueIsAdjusting       (bool(false))
+{
+}
+
+AdjustmentEventBase::AdjustmentEventBase(const AdjustmentEventBase &source) :
+    Inherited(source),
+    _sfValue                  (source._sfValue                  ),
+    _sfValueIsAdjusting       (source._sfValueIsAdjusting       )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+AdjustmentEventBase::~AdjustmentEventBase(void)
+{
+}
+
+
+GetFieldHandlePtr AdjustmentEventBase::getHandleValue           (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfValue,
+             this->getType().getFieldDesc(ValueFieldId),
+             const_cast<AdjustmentEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AdjustmentEventBase::editHandleValue          (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfValue,
+             this->getType().getFieldDesc(ValueFieldId),
+             this));
+
+
+    editSField(ValueFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AdjustmentEventBase::getHandleValueIsAdjusting (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfValueIsAdjusting,
+             this->getType().getFieldDesc(ValueIsAdjustingFieldId),
+             const_cast<AdjustmentEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AdjustmentEventBase::editHandleValueIsAdjusting(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfValueIsAdjusting,
+             this->getType().getFieldDesc(ValueIsAdjustingFieldId),
+             this));
+
+
+    editSField(ValueIsAdjustingFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void AdjustmentEventBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    AdjustmentEvent *pThis = static_cast<AdjustmentEvent *>(this);
+
+    pThis->execSync(static_cast<AdjustmentEvent *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *AdjustmentEventBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    AdjustmentEvent *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const AdjustmentEvent *>(pRefAspect),
+                  dynamic_cast<const AdjustmentEvent *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<AdjustmentEventPtr>::_type("AdjustmentEventPtr", "EventPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(AdjustmentEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void AdjustmentEventBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

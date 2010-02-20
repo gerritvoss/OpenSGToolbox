@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGTextEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::TextEvent
-
-*/
+// Documentation for this class is emitted in the
+// OSGTextEventBase.cpp file.
+// To modify it, please change the .fcd file (OSGTextEvent.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,19 +62,24 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void TextEvent::initMethod (void)
+void TextEvent::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-TextEventPtr TextEvent::create(  FieldContainerPtr Source,
-                                 Time TimeStamp)
+TextEventTransitPtr TextEvent::create(  FieldContainerRefPtr Source,
+                                        Time TimeStamp)
 {
-    TextEventPtr TheEvent = TextEvent::createEmpty();
+    TextEvent* TheEvent = TextEvent::createEmpty();
 
     TheEvent->setSource(Source);
     TheEvent->setTimeStamp(TimeStamp);
 
-    return TheEvent;
+    return TextEventTransitPtr(TheEvent);
 }
 
 /***************************************************************************\
@@ -108,17 +108,17 @@ TextEvent::~TextEvent(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void TextEvent::changed(BitVector whichField, UInt32 origin)
+void TextEvent::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void TextEvent::dump(      UInt32    , 
+void TextEvent::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump TextEvent NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

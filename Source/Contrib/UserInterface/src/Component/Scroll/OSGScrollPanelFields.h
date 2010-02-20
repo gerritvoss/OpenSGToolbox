@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "Component/Container/OSGContainerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class ScrollPanel;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! ScrollPanelPtr
+OSG_GEN_CONTAINERPTR(ScrollPanel);
 
-typedef FCPtr<ContainerPtr, ScrollPanel> ScrollPanelPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<ScrollPanelPtr> : 
-    public FieldTraitsRecurseMapper<ScrollPanelPtr, true>
+struct FieldTraits<ScrollPanel *> :
+    public FieldTraitsFCPtrBase<ScrollPanel *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFScrollPanelPtr"; }
-    static const char *getMName(void) { return "MFScrollPanelPtr"; }
+    typedef FieldTraits<ScrollPanel *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFScrollPanelPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFScrollPanelPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<ScrollPanelPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<ScrollPanel *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecScrollPanelPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<ScrollPanel *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecScrollPanelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ScrollPanel *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakScrollPanelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ScrollPanel *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdScrollPanelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ScrollPanel *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecScrollPanelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ScrollPanel *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecScrollPanelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ScrollPanel *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakScrollPanelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ScrollPanel *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdScrollPanelPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ScrollPanel *,
+                      RecordedRefCountPolicy  > SFRecScrollPanelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ScrollPanel *,
+                      UnrecordedRefCountPolicy> SFUnrecScrollPanelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ScrollPanel *,
+                      WeakRefCountPolicy      > SFWeakScrollPanelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ScrollPanel *,
+                      NoRefCountPolicy        > SFUncountedScrollPanelPtr;
 
-typedef SField<ScrollPanelPtr> SFScrollPanelPtr;
-#endif
 
-#ifndef OSG_COMPILESCROLLPANELINST
-OSG_DLLEXPORT_DECL1(SField, ScrollPanelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ScrollPanel *,
+                      RecordedRefCountPolicy  > MFRecScrollPanelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ScrollPanel *,
+                      UnrecordedRefCountPolicy> MFUnrecScrollPanelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ScrollPanel *,
+                      WeakRefCountPolicy      > MFWeakScrollPanelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ScrollPanel *,
+                      NoRefCountPolicy        > MFUncountedScrollPanelPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<ScrollPanelPtr> MFScrollPanelPtr;
-#endif
 
-#ifndef OSG_COMPILESCROLLPANELINST
-OSG_DLLEXPORT_DECL1(MField, ScrollPanelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecScrollPanelPtr : 
+    public PointerSField<ScrollPanel *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecScrollPanelPtr : 
+    public PointerSField<ScrollPanel *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakScrollPanelPtr :
+    public PointerSField<ScrollPanel *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedScrollPanelPtr :
+    public PointerSField<ScrollPanel *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecScrollPanelPtr :
+    public PointerMField<ScrollPanel *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecScrollPanelPtr :
+    public PointerMField<ScrollPanel *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakScrollPanelPtr :
+    public PointerMField<ScrollPanel *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedScrollPanelPtr :
+    public PointerMField<ScrollPanel *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGSCROLLPANELFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGSCROLLPANELFIELDS_H_ */

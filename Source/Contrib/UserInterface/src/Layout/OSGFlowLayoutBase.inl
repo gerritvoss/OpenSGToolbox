@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,216 +55,213 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &FlowLayoutBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 FlowLayoutBase::getClassTypeId(void) 
+OSG::UInt32 FlowLayoutBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-FlowLayoutPtr FlowLayoutBase::create(void) 
-{
-    FlowLayoutPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = FlowLayoutPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-FlowLayoutPtr FlowLayoutBase::createEmpty(void) 
-{ 
-    FlowLayoutPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 FlowLayoutBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the FlowLayout::_sfOrientation field.
-inline
-SFUInt32 *FlowLayoutBase::getSFOrientation(void)
-{
-    return &_sfOrientation;
-}
-
-//! Get the FlowLayout::_sfHorizontalGap field.
-inline
-SFReal32 *FlowLayoutBase::getSFHorizontalGap(void)
-{
-    return &_sfHorizontalGap;
-}
-
-//! Get the FlowLayout::_sfVerticalGap field.
-inline
-SFReal32 *FlowLayoutBase::getSFVerticalGap(void)
-{
-    return &_sfVerticalGap;
-}
-
-//! Get the FlowLayout::_sfMajorAxisAlignment field.
-inline
-SFReal32 *FlowLayoutBase::getSFMajorAxisAlignment(void)
-{
-    return &_sfMajorAxisAlignment;
-}
-
-//! Get the FlowLayout::_sfMinorAxisAlignment field.
-inline
-SFReal32 *FlowLayoutBase::getSFMinorAxisAlignment(void)
-{
-    return &_sfMinorAxisAlignment;
-}
-
-//! Get the FlowLayout::_sfComponentAlignment field.
-inline
-SFReal32 *FlowLayoutBase::getSFComponentAlignment(void)
-{
-    return &_sfComponentAlignment;
-}
-
-
 //! Get the value of the FlowLayout::_sfOrientation field.
+
 inline
-UInt32 &FlowLayoutBase::getOrientation(void)
+UInt32 &FlowLayoutBase::editOrientation(void)
 {
+    editSField(OrientationFieldMask);
+
     return _sfOrientation.getValue();
 }
 
 //! Get the value of the FlowLayout::_sfOrientation field.
 inline
-const UInt32 &FlowLayoutBase::getOrientation(void) const
+      UInt32  FlowLayoutBase::getOrientation(void) const
 {
     return _sfOrientation.getValue();
 }
 
 //! Set the value of the FlowLayout::_sfOrientation field.
 inline
-void FlowLayoutBase::setOrientation(const UInt32 &value)
+void FlowLayoutBase::setOrientation(const UInt32 value)
 {
+    editSField(OrientationFieldMask);
+
     _sfOrientation.setValue(value);
 }
-
 //! Get the value of the FlowLayout::_sfHorizontalGap field.
+
 inline
-Real32 &FlowLayoutBase::getHorizontalGap(void)
+Real32 &FlowLayoutBase::editHorizontalGap(void)
 {
+    editSField(HorizontalGapFieldMask);
+
     return _sfHorizontalGap.getValue();
 }
 
 //! Get the value of the FlowLayout::_sfHorizontalGap field.
 inline
-const Real32 &FlowLayoutBase::getHorizontalGap(void) const
+      Real32  FlowLayoutBase::getHorizontalGap(void) const
 {
     return _sfHorizontalGap.getValue();
 }
 
 //! Set the value of the FlowLayout::_sfHorizontalGap field.
 inline
-void FlowLayoutBase::setHorizontalGap(const Real32 &value)
+void FlowLayoutBase::setHorizontalGap(const Real32 value)
 {
+    editSField(HorizontalGapFieldMask);
+
     _sfHorizontalGap.setValue(value);
 }
-
 //! Get the value of the FlowLayout::_sfVerticalGap field.
+
 inline
-Real32 &FlowLayoutBase::getVerticalGap(void)
+Real32 &FlowLayoutBase::editVerticalGap(void)
 {
+    editSField(VerticalGapFieldMask);
+
     return _sfVerticalGap.getValue();
 }
 
 //! Get the value of the FlowLayout::_sfVerticalGap field.
 inline
-const Real32 &FlowLayoutBase::getVerticalGap(void) const
+      Real32  FlowLayoutBase::getVerticalGap(void) const
 {
     return _sfVerticalGap.getValue();
 }
 
 //! Set the value of the FlowLayout::_sfVerticalGap field.
 inline
-void FlowLayoutBase::setVerticalGap(const Real32 &value)
+void FlowLayoutBase::setVerticalGap(const Real32 value)
 {
+    editSField(VerticalGapFieldMask);
+
     _sfVerticalGap.setValue(value);
 }
-
 //! Get the value of the FlowLayout::_sfMajorAxisAlignment field.
+
 inline
-Real32 &FlowLayoutBase::getMajorAxisAlignment(void)
+Real32 &FlowLayoutBase::editMajorAxisAlignment(void)
 {
+    editSField(MajorAxisAlignmentFieldMask);
+
     return _sfMajorAxisAlignment.getValue();
 }
 
 //! Get the value of the FlowLayout::_sfMajorAxisAlignment field.
 inline
-const Real32 &FlowLayoutBase::getMajorAxisAlignment(void) const
+      Real32  FlowLayoutBase::getMajorAxisAlignment(void) const
 {
     return _sfMajorAxisAlignment.getValue();
 }
 
 //! Set the value of the FlowLayout::_sfMajorAxisAlignment field.
 inline
-void FlowLayoutBase::setMajorAxisAlignment(const Real32 &value)
+void FlowLayoutBase::setMajorAxisAlignment(const Real32 value)
 {
+    editSField(MajorAxisAlignmentFieldMask);
+
     _sfMajorAxisAlignment.setValue(value);
 }
-
 //! Get the value of the FlowLayout::_sfMinorAxisAlignment field.
+
 inline
-Real32 &FlowLayoutBase::getMinorAxisAlignment(void)
+Real32 &FlowLayoutBase::editMinorAxisAlignment(void)
 {
+    editSField(MinorAxisAlignmentFieldMask);
+
     return _sfMinorAxisAlignment.getValue();
 }
 
 //! Get the value of the FlowLayout::_sfMinorAxisAlignment field.
 inline
-const Real32 &FlowLayoutBase::getMinorAxisAlignment(void) const
+      Real32  FlowLayoutBase::getMinorAxisAlignment(void) const
 {
     return _sfMinorAxisAlignment.getValue();
 }
 
 //! Set the value of the FlowLayout::_sfMinorAxisAlignment field.
 inline
-void FlowLayoutBase::setMinorAxisAlignment(const Real32 &value)
+void FlowLayoutBase::setMinorAxisAlignment(const Real32 value)
 {
+    editSField(MinorAxisAlignmentFieldMask);
+
     _sfMinorAxisAlignment.setValue(value);
 }
-
 //! Get the value of the FlowLayout::_sfComponentAlignment field.
+
 inline
-Real32 &FlowLayoutBase::getComponentAlignment(void)
+Real32 &FlowLayoutBase::editComponentAlignment(void)
 {
+    editSField(ComponentAlignmentFieldMask);
+
     return _sfComponentAlignment.getValue();
 }
 
 //! Get the value of the FlowLayout::_sfComponentAlignment field.
 inline
-const Real32 &FlowLayoutBase::getComponentAlignment(void) const
+      Real32  FlowLayoutBase::getComponentAlignment(void) const
 {
     return _sfComponentAlignment.getValue();
 }
 
 //! Set the value of the FlowLayout::_sfComponentAlignment field.
 inline
-void FlowLayoutBase::setComponentAlignment(const Real32 &value)
+void FlowLayoutBase::setComponentAlignment(const Real32 value)
 {
+    editSField(ComponentAlignmentFieldMask);
+
     _sfComponentAlignment.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void FlowLayoutBase::execSync (      FlowLayoutBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGFLOWLAYOUTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (OrientationFieldMask & whichField))
+        _sfOrientation.syncWith(pFrom->_sfOrientation);
+
+    if(FieldBits::NoField != (HorizontalGapFieldMask & whichField))
+        _sfHorizontalGap.syncWith(pFrom->_sfHorizontalGap);
+
+    if(FieldBits::NoField != (VerticalGapFieldMask & whichField))
+        _sfVerticalGap.syncWith(pFrom->_sfVerticalGap);
+
+    if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
+        _sfMajorAxisAlignment.syncWith(pFrom->_sfMajorAxisAlignment);
+
+    if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
+        _sfMinorAxisAlignment.syncWith(pFrom->_sfMinorAxisAlignment);
+
+    if(FieldBits::NoField != (ComponentAlignmentFieldMask & whichField))
+        _sfComponentAlignment.syncWith(pFrom->_sfComponentAlignment);
+}
+#endif
+
+
+inline
+const Char8 *FlowLayoutBase::getClassname(void)
+{
+    return "FlowLayout";
+}
+OSG_GEN_CONTAINERPTR(FlowLayout);
+
+OSG_END_NAMESPACE
 

@@ -3,27 +3,30 @@
 <FieldContainer
 	name="Menu"
 	parent="MenuItem"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI Menu.
 	<Field
 		name="InternalPopupMenu"
-		type="PopupMenuPtr"
+		type="PopupMenu"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/Menu/OSGPopupMenuFields.h"
 		access="protected"
 	>
 	</Field>
 	<Field
 		name="SubMenuDelay"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.5"
@@ -33,6 +36,7 @@ A UI Menu.
 	<Field
 		name="TopLevelMenu"
 		type="bool"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="false"
@@ -41,19 +45,19 @@ A UI Menu.
 	</Field>
 	<Field
 		name="ExpandDrawObject"
-		type="UIDrawObjectCanvasPtr"
+		type="UIDrawObjectCanvas"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/Misc/OSGUIDrawObjectCanvas.h"
 		access="public"
 	>
 	</Field>
     <Field
           name="MenuItems"
-          type="MenuItemPtr"
+          type="MenuItem"
+		category="pointer"
           cardinality="multi"
           visibility="external"
-		    header="Component/Menu/OSGMenuItemFields.h"
           access="protected"
           >
     </Field>

@@ -1,11 +1,10 @@
-
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -39,11 +38,6 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-#include "OSGMenuItem.h"
-#include "Models/SelectionModels/OSGSingleSelectionModel.h"
-
 OSG_BEGIN_NAMESPACE
 
 inline
@@ -59,9 +53,9 @@ Int32 PopupMenu::getSelectionIndex(void) const
 }
 
 inline
-PopupMenu::MenuSelectionListener::MenuSelectionListener(PopupMenuPtr ThePopupMenu) :
+PopupMenu::MenuSelectionListener::MenuSelectionListener(PopupMenuRefPtr ThePopupMenu) :
 									_PopupMenu(ThePopupMenu)
 {
 }
-OSG_END_NAMESPACE
 
+OSG_END_NAMESPACE

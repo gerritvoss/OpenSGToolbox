@@ -2,39 +2,42 @@
 
 <FieldContainer
 	name="SplitPanel"
-	parent="Container"
-	library="UserInterface"
-	pointerfieldtypes="both"
+	parent="ComponentContainer"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
+    systemcomponent="true"
+    parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="true"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI Split Panel.
 	<Field
 		name="MinComponent"
-		type="ComponentPtr"
+		type="Component"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/OSGComponent.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="MaxComponent"
-		type="ComponentPtr"
+		type="Component"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/OSGComponent.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="DividerSize"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="3"
@@ -44,6 +47,7 @@ A UI Split Panel.
 	<Field
 		name="DividerPosition"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -53,6 +57,7 @@ A UI Split Panel.
 	<Field
 		name="MinDividerPosition"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -62,6 +67,7 @@ A UI Split Panel.
 	<Field
 		name="MaxDividerPosition"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -70,17 +76,18 @@ A UI Split Panel.
 	</Field>
 	<Field
 		name="DividerDrawObject"
-		type="UIDrawObjectCanvasPtr"
+		type="UIDrawObjectCanvas"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Component/Misc/OSGUIDrawObjectCanvas.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="Expandable"
 		type="bool"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -90,6 +97,7 @@ A UI Split Panel.
 	<Field
 		name="Orientation"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"

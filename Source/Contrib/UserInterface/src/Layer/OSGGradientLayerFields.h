@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGLayerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class GradientLayer;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! GradientLayerPtr
+OSG_GEN_CONTAINERPTR(GradientLayer);
 
-typedef FCPtr<LayerPtr, GradientLayer> GradientLayerPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<GradientLayerPtr> : 
-    public FieldTraitsRecurseMapper<GradientLayerPtr, true>
+struct FieldTraits<GradientLayer *> :
+    public FieldTraitsFCPtrBase<GradientLayer *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFGradientLayerPtr"; }
-    static const char *getMName(void) { return "MFGradientLayerPtr"; }
+    typedef FieldTraits<GradientLayer *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFGradientLayerPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFGradientLayerPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<GradientLayerPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<GradientLayer *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecGradientLayerPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<GradientLayer *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecGradientLayerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GradientLayer *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakGradientLayerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GradientLayer *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdGradientLayerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GradientLayer *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecGradientLayerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GradientLayer *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecGradientLayerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GradientLayer *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakGradientLayerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GradientLayer *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdGradientLayerPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<GradientLayer *,
+                      RecordedRefCountPolicy  > SFRecGradientLayerPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<GradientLayer *,
+                      UnrecordedRefCountPolicy> SFUnrecGradientLayerPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<GradientLayer *,
+                      WeakRefCountPolicy      > SFWeakGradientLayerPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<GradientLayer *,
+                      NoRefCountPolicy        > SFUncountedGradientLayerPtr;
 
-typedef SField<GradientLayerPtr> SFGradientLayerPtr;
-#endif
 
-#ifndef OSG_COMPILEGRADIENTLAYERINST
-OSG_DLLEXPORT_DECL1(SField, GradientLayerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<GradientLayer *,
+                      RecordedRefCountPolicy  > MFRecGradientLayerPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<GradientLayer *,
+                      UnrecordedRefCountPolicy> MFUnrecGradientLayerPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<GradientLayer *,
+                      WeakRefCountPolicy      > MFWeakGradientLayerPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<GradientLayer *,
+                      NoRefCountPolicy        > MFUncountedGradientLayerPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<GradientLayerPtr> MFGradientLayerPtr;
-#endif
 
-#ifndef OSG_COMPILEGRADIENTLAYERINST
-OSG_DLLEXPORT_DECL1(MField, GradientLayerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecGradientLayerPtr : 
+    public PointerSField<GradientLayer *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecGradientLayerPtr : 
+    public PointerSField<GradientLayer *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakGradientLayerPtr :
+    public PointerSField<GradientLayer *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedGradientLayerPtr :
+    public PointerSField<GradientLayer *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecGradientLayerPtr :
+    public PointerMField<GradientLayer *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecGradientLayerPtr :
+    public PointerMField<GradientLayer *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakGradientLayerPtr :
+    public PointerMField<GradientLayer *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedGradientLayerPtr :
+    public PointerMField<GradientLayer *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGGRADIENTLAYERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGGRADIENTLAYERFIELDS_H_ */

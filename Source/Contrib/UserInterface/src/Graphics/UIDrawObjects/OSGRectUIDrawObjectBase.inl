@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,78 +55,31 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &RectUIDrawObjectBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 RectUIDrawObjectBase::getClassTypeId(void) 
+OSG::UInt32 RectUIDrawObjectBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-RectUIDrawObjectPtr RectUIDrawObjectBase::create(void) 
-{
-    RectUIDrawObjectPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = RectUIDrawObjectPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-RectUIDrawObjectPtr RectUIDrawObjectBase::createEmpty(void) 
-{ 
-    RectUIDrawObjectPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 RectUIDrawObjectBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the RectUIDrawObject::_sfTopLeft field.
-inline
-SFPnt2f *RectUIDrawObjectBase::getSFTopLeft(void)
-{
-    return &_sfTopLeft;
-}
-
-//! Get the RectUIDrawObject::_sfBottomRight field.
-inline
-SFPnt2f *RectUIDrawObjectBase::getSFBottomRight(void)
-{
-    return &_sfBottomRight;
-}
-
-//! Get the RectUIDrawObject::_sfColor field.
-inline
-SFColor4f *RectUIDrawObjectBase::getSFColor(void)
-{
-    return &_sfColor;
-}
-
-//! Get the RectUIDrawObject::_sfOpacity field.
-inline
-SFReal32 *RectUIDrawObjectBase::getSFOpacity(void)
-{
-    return &_sfOpacity;
-}
-
-
 //! Get the value of the RectUIDrawObject::_sfTopLeft field.
+
 inline
-Pnt2f &RectUIDrawObjectBase::getTopLeft(void)
+Pnt2f &RectUIDrawObjectBase::editTopLeft(void)
 {
+    editSField(TopLeftFieldMask);
+
     return _sfTopLeft.getValue();
 }
 
@@ -143,13 +94,17 @@ const Pnt2f &RectUIDrawObjectBase::getTopLeft(void) const
 inline
 void RectUIDrawObjectBase::setTopLeft(const Pnt2f &value)
 {
+    editSField(TopLeftFieldMask);
+
     _sfTopLeft.setValue(value);
 }
-
 //! Get the value of the RectUIDrawObject::_sfBottomRight field.
+
 inline
-Pnt2f &RectUIDrawObjectBase::getBottomRight(void)
+Pnt2f &RectUIDrawObjectBase::editBottomRight(void)
 {
+    editSField(BottomRightFieldMask);
+
     return _sfBottomRight.getValue();
 }
 
@@ -164,13 +119,17 @@ const Pnt2f &RectUIDrawObjectBase::getBottomRight(void) const
 inline
 void RectUIDrawObjectBase::setBottomRight(const Pnt2f &value)
 {
+    editSField(BottomRightFieldMask);
+
     _sfBottomRight.setValue(value);
 }
-
 //! Get the value of the RectUIDrawObject::_sfColor field.
+
 inline
-Color4f &RectUIDrawObjectBase::getColor(void)
+Color4f &RectUIDrawObjectBase::editColor(void)
 {
+    editSField(ColorFieldMask);
+
     return _sfColor.getValue();
 }
 
@@ -185,32 +144,68 @@ const Color4f &RectUIDrawObjectBase::getColor(void) const
 inline
 void RectUIDrawObjectBase::setColor(const Color4f &value)
 {
+    editSField(ColorFieldMask);
+
     _sfColor.setValue(value);
 }
-
 //! Get the value of the RectUIDrawObject::_sfOpacity field.
+
 inline
-Real32 &RectUIDrawObjectBase::getOpacity(void)
+Real32 &RectUIDrawObjectBase::editOpacity(void)
 {
+    editSField(OpacityFieldMask);
+
     return _sfOpacity.getValue();
 }
 
 //! Get the value of the RectUIDrawObject::_sfOpacity field.
 inline
-const Real32 &RectUIDrawObjectBase::getOpacity(void) const
+      Real32  RectUIDrawObjectBase::getOpacity(void) const
 {
     return _sfOpacity.getValue();
 }
 
 //! Set the value of the RectUIDrawObject::_sfOpacity field.
 inline
-void RectUIDrawObjectBase::setOpacity(const Real32 &value)
+void RectUIDrawObjectBase::setOpacity(const Real32 value)
 {
+    editSField(OpacityFieldMask);
+
     _sfOpacity.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void RectUIDrawObjectBase::execSync (      RectUIDrawObjectBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGRECTUIDRAWOBJECTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (TopLeftFieldMask & whichField))
+        _sfTopLeft.syncWith(pFrom->_sfTopLeft);
+
+    if(FieldBits::NoField != (BottomRightFieldMask & whichField))
+        _sfBottomRight.syncWith(pFrom->_sfBottomRight);
+
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+        _sfColor.syncWith(pFrom->_sfColor);
+
+    if(FieldBits::NoField != (OpacityFieldMask & whichField))
+        _sfOpacity.syncWith(pFrom->_sfOpacity);
+}
+#endif
+
+
+inline
+const Char8 *RectUIDrawObjectBase::getClassname(void)
+{
+    return "RectUIDrawObject";
+}
+OSG_GEN_CONTAINERPTR(RectUIDrawObject);
+
+OSG_END_NAMESPACE
 

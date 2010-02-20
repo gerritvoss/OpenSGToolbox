@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,75 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/OSGAttachmentContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class Layer;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! LayerPtr
+OSG_GEN_CONTAINERPTR(Layer);
 
-typedef FCPtr<AttachmentContainerPtr, Layer> LayerPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<LayerPtr> : 
-    public FieldTraitsRecurseMapper<LayerPtr, true>
+struct FieldTraits<Layer *> :
+    public FieldTraitsFCPtrBase<Layer *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFLayerPtr"; }
-    static const char *getMName(void) { return "MFLayerPtr"; }
+    typedef FieldTraits<Layer *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFLayerPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFLayerPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<LayerPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<Layer *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecLayerPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<Layer *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecLayerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Layer *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakLayerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Layer *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdLayerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Layer *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecLayerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Layer *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecLayerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Layer *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakLayerPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Layer *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdLayerPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Layer *,
+                      RecordedRefCountPolicy  > SFRecLayerPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Layer *,
+                      UnrecordedRefCountPolicy> SFUnrecLayerPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Layer *,
+                      WeakRefCountPolicy      > SFWeakLayerPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<Layer *,
+                      NoRefCountPolicy        > SFUncountedLayerPtr;
 
-typedef SField<LayerPtr> SFLayerPtr;
-#endif
 
-#ifndef OSG_COMPILELAYERINST
-OSG_DLLEXPORT_DECL1(SField, LayerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Layer *,
+                      RecordedRefCountPolicy  > MFRecLayerPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Layer *,
+                      UnrecordedRefCountPolicy> MFUnrecLayerPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Layer *,
+                      WeakRefCountPolicy      > MFWeakLayerPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<Layer *,
+                      NoRefCountPolicy        > MFUncountedLayerPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<LayerPtr> MFLayerPtr;
-#endif
 
-#ifndef OSG_COMPILELAYERINST
-OSG_DLLEXPORT_DECL1(MField, LayerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecLayerPtr : 
+    public PointerSField<Layer *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecLayerPtr : 
+    public PointerSField<Layer *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakLayerPtr :
+    public PointerSField<Layer *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedLayerPtr :
+    public PointerSField<Layer *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecLayerPtr :
+    public PointerMField<Layer *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecLayerPtr :
+    public PointerMField<Layer *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakLayerPtr :
+    public PointerMField<Layer *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedLayerPtr :
+    public PointerMField<Layer *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

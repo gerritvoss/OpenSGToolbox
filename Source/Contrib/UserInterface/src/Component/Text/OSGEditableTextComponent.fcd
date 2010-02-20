@@ -3,18 +3,21 @@
 <FieldContainer
 	name="EditableTextComponent"
 	parent="TextComponent"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="abstract"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI Editable Text Component.
 	<Field
 		name="Editable"
 		type="bool"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="true"

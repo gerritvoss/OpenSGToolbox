@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,86 +58,101 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGUIDrawObject.h" // Parent
 
-#include <OpenSG/OSGPnt2fFields.h> // Point1 type
-#include <OpenSG/OSGPnt2fFields.h> // Point2 type
-#include <OpenSG/OSGPnt2fFields.h> // Point3 type
-#include <OpenSG/OSGPnt2fFields.h> // Point4 type
-#include <OpenSG/OSGColor4fFields.h> // Color1 type
-#include <OpenSG/OSGColor4fFields.h> // Color2 type
-#include <OpenSG/OSGColor4fFields.h> // Color3 type
-#include <OpenSG/OSGColor4fFields.h> // Color4 type
-#include <OpenSG/OSGReal32Fields.h> // Opacity type
+#include "OSGVecFields.h"               // Point1 type
+#include "OSGBaseFields.h"              // Color1 type
+#include "OSGSysFields.h"               // Opacity type
 
 #include "OSGMultiColoredQuadUIDrawObjectFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class MultiColoredQuadUIDrawObject;
-class BinaryDataHandler;
 
 //! \brief MultiColoredQuadUIDrawObject Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING MultiColoredQuadUIDrawObjectBase : public UIDrawObject
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MultiColoredQuadUIDrawObjectBase : public UIDrawObject
 {
-  private:
-
-    typedef UIDrawObject    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef MultiColoredQuadUIDrawObjectPtr  Ptr;
+    typedef UIDrawObject Inherited;
+    typedef UIDrawObject ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(MultiColoredQuadUIDrawObject);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        Point1FieldId  = Inherited::NextFieldId,
-        Point2FieldId  = Point1FieldId  + 1,
-        Point3FieldId  = Point2FieldId  + 1,
-        Point4FieldId  = Point3FieldId  + 1,
-        Color1FieldId  = Point4FieldId  + 1,
-        Color2FieldId  = Color1FieldId  + 1,
-        Color3FieldId  = Color2FieldId  + 1,
-        Color4FieldId  = Color3FieldId  + 1,
-        OpacityFieldId = Color4FieldId  + 1,
-        NextFieldId    = OpacityFieldId + 1
+        Point1FieldId = Inherited::NextFieldId,
+        Point2FieldId = Point1FieldId + 1,
+        Point3FieldId = Point2FieldId + 1,
+        Point4FieldId = Point3FieldId + 1,
+        Color1FieldId = Point4FieldId + 1,
+        Color2FieldId = Color1FieldId + 1,
+        Color3FieldId = Color2FieldId + 1,
+        Color4FieldId = Color3FieldId + 1,
+        OpacityFieldId = Color4FieldId + 1,
+        NextFieldId = OpacityFieldId + 1
     };
 
-    static const OSG::BitVector Point1FieldMask;
-    static const OSG::BitVector Point2FieldMask;
-    static const OSG::BitVector Point3FieldMask;
-    static const OSG::BitVector Point4FieldMask;
-    static const OSG::BitVector Color1FieldMask;
-    static const OSG::BitVector Color2FieldMask;
-    static const OSG::BitVector Color3FieldMask;
-    static const OSG::BitVector Color4FieldMask;
-    static const OSG::BitVector OpacityFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector Point1FieldMask =
+        (TypeTraits<BitVector>::One << Point1FieldId);
+    static const OSG::BitVector Point2FieldMask =
+        (TypeTraits<BitVector>::One << Point2FieldId);
+    static const OSG::BitVector Point3FieldMask =
+        (TypeTraits<BitVector>::One << Point3FieldId);
+    static const OSG::BitVector Point4FieldMask =
+        (TypeTraits<BitVector>::One << Point4FieldId);
+    static const OSG::BitVector Color1FieldMask =
+        (TypeTraits<BitVector>::One << Color1FieldId);
+    static const OSG::BitVector Color2FieldMask =
+        (TypeTraits<BitVector>::One << Color2FieldId);
+    static const OSG::BitVector Color3FieldMask =
+        (TypeTraits<BitVector>::One << Color3FieldId);
+    static const OSG::BitVector Color4FieldMask =
+        (TypeTraits<BitVector>::One << Color4FieldId);
+    static const OSG::BitVector OpacityFieldMask =
+        (TypeTraits<BitVector>::One << OpacityFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFPnt2f           SFPoint1Type;
+    typedef SFPnt2f           SFPoint2Type;
+    typedef SFPnt2f           SFPoint3Type;
+    typedef SFPnt2f           SFPoint4Type;
+    typedef SFColor4f         SFColor1Type;
+    typedef SFColor4f         SFColor2Type;
+    typedef SFColor4f         SFColor3Type;
+    typedef SFColor4f         SFColor4Type;
+    typedef SFReal32          SFOpacityType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -146,53 +161,80 @@ class OSG_USERINTERFACELIB_DLLMAPPING MultiColoredQuadUIDrawObjectBase : public 
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFPnt2f             *getSFPoint1         (void);
-           SFPnt2f             *getSFPoint2         (void);
-           SFPnt2f             *getSFPoint3         (void);
-           SFPnt2f             *getSFPoint4         (void);
-           SFColor4f           *getSFColor1         (void);
-           SFColor4f           *getSFColor2         (void);
-           SFColor4f           *getSFColor3         (void);
-           SFColor4f           *getSFColor4         (void);
-           SFReal32            *getSFOpacity        (void);
 
-           Pnt2f               &getPoint1         (void);
-     const Pnt2f               &getPoint1         (void) const;
-           Pnt2f               &getPoint2         (void);
-     const Pnt2f               &getPoint2         (void) const;
-           Pnt2f               &getPoint3         (void);
-     const Pnt2f               &getPoint3         (void) const;
-           Pnt2f               &getPoint4         (void);
-     const Pnt2f               &getPoint4         (void) const;
-           Color4f             &getColor1         (void);
-     const Color4f             &getColor1         (void) const;
-           Color4f             &getColor2         (void);
-     const Color4f             &getColor2         (void) const;
-           Color4f             &getColor3         (void);
-     const Color4f             &getColor3         (void) const;
-           Color4f             &getColor4         (void);
-     const Color4f             &getColor4         (void) const;
-           Real32              &getOpacity        (void);
-     const Real32              &getOpacity        (void) const;
+                  SFPnt2f             *editSFPoint1         (void);
+            const SFPnt2f             *getSFPoint1          (void) const;
+
+                  SFPnt2f             *editSFPoint2         (void);
+            const SFPnt2f             *getSFPoint2          (void) const;
+
+                  SFPnt2f             *editSFPoint3         (void);
+            const SFPnt2f             *getSFPoint3          (void) const;
+
+                  SFPnt2f             *editSFPoint4         (void);
+            const SFPnt2f             *getSFPoint4          (void) const;
+
+                  SFColor4f           *editSFColor1         (void);
+            const SFColor4f           *getSFColor1          (void) const;
+
+                  SFColor4f           *editSFColor2         (void);
+            const SFColor4f           *getSFColor2          (void) const;
+
+                  SFColor4f           *editSFColor3         (void);
+            const SFColor4f           *getSFColor3          (void) const;
+
+                  SFColor4f           *editSFColor4         (void);
+            const SFColor4f           *getSFColor4          (void) const;
+
+                  SFReal32            *editSFOpacity        (void);
+            const SFReal32            *getSFOpacity         (void) const;
+
+
+                  Pnt2f               &editPoint1         (void);
+            const Pnt2f               &getPoint1          (void) const;
+
+                  Pnt2f               &editPoint2         (void);
+            const Pnt2f               &getPoint2          (void) const;
+
+                  Pnt2f               &editPoint3         (void);
+            const Pnt2f               &getPoint3          (void) const;
+
+                  Pnt2f               &editPoint4         (void);
+            const Pnt2f               &getPoint4          (void) const;
+
+                  Color4f             &editColor1         (void);
+            const Color4f             &getColor1          (void) const;
+
+                  Color4f             &editColor2         (void);
+            const Color4f             &getColor2          (void) const;
+
+                  Color4f             &editColor3         (void);
+            const Color4f             &getColor3          (void) const;
+
+                  Color4f             &editColor4         (void);
+            const Color4f             &getColor4          (void) const;
+
+                  Real32              &editOpacity        (void);
+                  Real32               getOpacity         (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setPoint1         ( const Pnt2f &value );
-     void setPoint2         ( const Pnt2f &value );
-     void setPoint3         ( const Pnt2f &value );
-     void setPoint4         ( const Pnt2f &value );
-     void setColor1         ( const Color4f &value );
-     void setColor2         ( const Color4f &value );
-     void setColor3         ( const Color4f &value );
-     void setColor4         ( const Color4f &value );
-     void setOpacity        ( const Real32 &value );
+            void setPoint1         (const Pnt2f &value);
+            void setPoint2         (const Pnt2f &value);
+            void setPoint3         (const Pnt2f &value);
+            void setPoint4         (const Pnt2f &value);
+            void setColor1         (const Color4f &value);
+            void setColor2         (const Color4f &value);
+            void setColor3         (const Color4f &value);
+            void setColor4         (const Color4f &value);
+            void setOpacity        (const Real32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -200,11 +242,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING MultiColoredQuadUIDrawObjectBase : public 
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -212,34 +254,51 @@ class OSG_USERINTERFACELIB_DLLMAPPING MultiColoredQuadUIDrawObjectBase : public 
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  MultiColoredQuadUIDrawObjectPtr      create          (void); 
-    static  MultiColoredQuadUIDrawObjectPtr      createEmpty     (void); 
+    static  MultiColoredQuadUIDrawObjectTransitPtr  create          (void);
+    static  MultiColoredQuadUIDrawObject           *createEmpty     (void);
+
+    static  MultiColoredQuadUIDrawObjectTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  MultiColoredQuadUIDrawObject            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  MultiColoredQuadUIDrawObjectTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFPnt2f             _sfPoint1;
-    SFPnt2f             _sfPoint2;
-    SFPnt2f             _sfPoint3;
-    SFPnt2f             _sfPoint4;
-    SFColor4f           _sfColor1;
-    SFColor4f           _sfColor2;
-    SFColor4f           _sfColor3;
-    SFColor4f           _sfColor4;
-    SFReal32            _sfOpacity;
+    SFPnt2f           _sfPoint1;
+    SFPnt2f           _sfPoint2;
+    SFPnt2f           _sfPoint3;
+    SFPnt2f           _sfPoint4;
+    SFColor4f         _sfColor1;
+    SFColor4f         _sfColor2;
+    SFColor4f         _sfColor3;
+    SFColor4f         _sfColor4;
+    SFReal32          _sfOpacity;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -254,69 +313,95 @@ class OSG_USERINTERFACELIB_DLLMAPPING MultiColoredQuadUIDrawObjectBase : public 
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~MultiColoredQuadUIDrawObjectBase(void); 
+    virtual ~MultiColoredQuadUIDrawObjectBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandlePoint1          (void) const;
+    EditFieldHandlePtr editHandlePoint1         (void);
+    GetFieldHandlePtr  getHandlePoint2          (void) const;
+    EditFieldHandlePtr editHandlePoint2         (void);
+    GetFieldHandlePtr  getHandlePoint3          (void) const;
+    EditFieldHandlePtr editHandlePoint3         (void);
+    GetFieldHandlePtr  getHandlePoint4          (void) const;
+    EditFieldHandlePtr editHandlePoint4         (void);
+    GetFieldHandlePtr  getHandleColor1          (void) const;
+    EditFieldHandlePtr editHandleColor1         (void);
+    GetFieldHandlePtr  getHandleColor2          (void) const;
+    EditFieldHandlePtr editHandleColor2         (void);
+    GetFieldHandlePtr  getHandleColor3          (void) const;
+    EditFieldHandlePtr editHandleColor3         (void);
+    GetFieldHandlePtr  getHandleColor4          (void) const;
+    EditFieldHandlePtr editHandleColor4         (void);
+    GetFieldHandlePtr  getHandleOpacity         (void) const;
+    EditFieldHandlePtr editHandleOpacity        (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      MultiColoredQuadUIDrawObjectBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      MultiColoredQuadUIDrawObjectBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      MultiColoredQuadUIDrawObjectBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const MultiColoredQuadUIDrawObjectBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef MultiColoredQuadUIDrawObjectBase *MultiColoredQuadUIDrawObjectBaseP;
 
-typedef osgIF<MultiColoredQuadUIDrawObjectBase::isNodeCore,
-              CoredNodePtr<MultiColoredQuadUIDrawObject>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet MultiColoredQuadUIDrawObjectNodePtr;
-
-typedef RefPtr<MultiColoredQuadUIDrawObjectPtr> MultiColoredQuadUIDrawObjectRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGMULTICOLOREDQUADUIDRAWOBJECTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGMULTICOLOREDQUADUIDRAWOBJECTBASE_H_ */

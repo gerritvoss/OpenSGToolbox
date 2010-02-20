@@ -1,39 +1,3 @@
-#include "OSGDragGestureRecognizer.h"
-#include "Event/OSGDragGestureEvent.h"
-#include "Component/OSGComponent.h"
-
-#include <boost/bind.hpp>
-
-OSG_BEGIN_NAMESPACE
-
-EventConnection DragGestureRecognizer::addDragGestureListener(DragGestureListenerPtr Listener)
-{
-    _DragGestureListeners.insert(Listener);
-   return EventConnection(
-       boost::bind(&DragGestureRecognizer::isDragGestureListenerAttached, this, Listener),
-       boost::bind(&DragGestureRecognizer::removeDragGestureListener, this, Listener));
-}
-
-void DragGestureRecognizer::removeDragGestureListener(DragGestureListenerPtr Listener)
-{
-   DragGestureListenerSetItor EraseIter(_DragGestureListeners.find(Listener));
-   if(EraseIter != _DragGestureListeners.end())
-   {
-      _DragGestureListeners.erase(EraseIter);
-   }
-}
-
-void DragGestureRecognizer::produceDragGestureRecognized(ComponentPtr TheComponent, const Pnt2f &DragLocation) const
-{
-    const DragGestureEventPtr e = DragGestureEvent::create(TheComponent, getSystemTime(), DragLocation);
-	DragGestureListenerSet Listeners(_DragGestureListeners);
-    for(DragGestureListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
-    {
-	    (*SetItor)->draqGestureRecognized(e);
-    }
-}
-
-OSG_END_NAMESPACE
 /*---------------------------------------------------------------------------*\
  *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
@@ -62,3 +26,39 @@ OSG_END_NAMESPACE
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+#include "OSGDragGestureRecognizer.h"
+#include "OSGDragGestureEvent.h"
+#include "OSGComponent.h"
+
+#include <boost/bind.hpp>
+
+OSG_BEGIN_NAMESPACE
+
+EventConnection DragGestureRecognizer::addDragGestureListener(DragGestureListenerPtr Listener)
+{
+    _DragGestureListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&DragGestureRecognizer::isDragGestureListenerAttached, this, Listener),
+       boost::bind(&DragGestureRecognizer::removeDragGestureListener, this, Listener));
+}
+
+void DragGestureRecognizer::removeDragGestureListener(DragGestureListenerPtr Listener)
+{
+   DragGestureListenerSetItor EraseIter(_DragGestureListeners.find(Listener));
+   if(EraseIter != _DragGestureListeners.end())
+   {
+      _DragGestureListeners.erase(EraseIter);
+   }
+}
+
+void DragGestureRecognizer::produceDragGestureRecognized(ComponentRefPtr TheComponent, const Pnt2f &DragLocation) const
+{
+    const DragGestureEventUnrecPtr e = DragGestureEvent::create(TheComponent, getSystemTime(), DragLocation);
+	DragGestureListenerSet Listeners(_DragGestureListeners);
+    for(DragGestureListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->draqGestureRecognized(e);
+    }
+}
+
+OSG_END_NAMESPACE

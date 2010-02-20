@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,207 +50,368 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEMATTEBORDERINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGMaterial.h"                // Material Class
 
 #include "OSGMatteBorderBase.h"
 #include "OSGMatteBorder.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  MatteBorderBase::LeftWidthFieldMask = 
-    (TypeTraits<BitVector>::One << MatteBorderBase::LeftWidthFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  MatteBorderBase::RightWidthFieldMask = 
-    (TypeTraits<BitVector>::One << MatteBorderBase::RightWidthFieldId);
+/*! \class OSG::MatteBorder
+    UI Matte Border. Creates a matte-look border using a solid color or Material. (The difference between this border and a line border is that you can specify the individual border dimensions.)
+ */
 
-const OSG::BitVector  MatteBorderBase::TopWidthFieldMask = 
-    (TypeTraits<BitVector>::One << MatteBorderBase::TopWidthFieldId);
-
-const OSG::BitVector  MatteBorderBase::BottomWidthFieldMask = 
-    (TypeTraits<BitVector>::One << MatteBorderBase::BottomWidthFieldId);
-
-const OSG::BitVector  MatteBorderBase::ColorFieldMask = 
-    (TypeTraits<BitVector>::One << MatteBorderBase::ColorFieldId);
-
-const OSG::BitVector  MatteBorderBase::MaterialFieldMask = 
-    (TypeTraits<BitVector>::One << MatteBorderBase::MaterialFieldId);
-
-const OSG::BitVector MatteBorderBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Real32          MatteBorderBase::_sfLeftWidth
     
 */
+
 /*! \var Real32          MatteBorderBase::_sfRightWidth
     
 */
+
 /*! \var Real32          MatteBorderBase::_sfTopWidth
     
 */
+
 /*! \var Real32          MatteBorderBase::_sfBottomWidth
     
 */
+
 /*! \var Color4f         MatteBorderBase::_sfColor
     
 */
-/*! \var MaterialPtr     MatteBorderBase::_sfMaterial
+
+/*! \var Material *      MatteBorderBase::_sfMaterial
     
 */
 
-//! MatteBorder description
 
-FieldDescription *MatteBorderBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<MatteBorder *>::_type("MatteBorderPtr", "BorderPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(MatteBorder *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           MatteBorder *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           MatteBorder *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void MatteBorderBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "LeftWidth", 
-                     LeftWidthFieldId, LeftWidthFieldMask,
-                     false,
-                     (FieldAccessMethod) &MatteBorderBase::getSFLeftWidth),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "RightWidth", 
-                     RightWidthFieldId, RightWidthFieldMask,
-                     false,
-                     (FieldAccessMethod) &MatteBorderBase::getSFRightWidth),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "TopWidth", 
-                     TopWidthFieldId, TopWidthFieldMask,
-                     false,
-                     (FieldAccessMethod) &MatteBorderBase::getSFTopWidth),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "BottomWidth", 
-                     BottomWidthFieldId, BottomWidthFieldMask,
-                     false,
-                     (FieldAccessMethod) &MatteBorderBase::getSFBottomWidth),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "Color", 
-                     ColorFieldId, ColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &MatteBorderBase::getSFColor),
-    new FieldDescription(SFMaterialPtr::getClassType(), 
-                     "Material", 
-                     MaterialFieldId, MaterialFieldMask,
-                     false,
-                     (FieldAccessMethod) &MatteBorderBase::getSFMaterial)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType MatteBorderBase::_type(
-    "MatteBorder",
-    "Border",
-    NULL,
-    (PrototypeCreateF) &MatteBorderBase::createEmpty,
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "LeftWidth",
+        "",
+        LeftWidthFieldId, LeftWidthFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MatteBorder::editHandleLeftWidth),
+        static_cast<FieldGetMethodSig >(&MatteBorder::getHandleLeftWidth));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "RightWidth",
+        "",
+        RightWidthFieldId, RightWidthFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MatteBorder::editHandleRightWidth),
+        static_cast<FieldGetMethodSig >(&MatteBorder::getHandleRightWidth));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "TopWidth",
+        "",
+        TopWidthFieldId, TopWidthFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MatteBorder::editHandleTopWidth),
+        static_cast<FieldGetMethodSig >(&MatteBorder::getHandleTopWidth));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "BottomWidth",
+        "",
+        BottomWidthFieldId, BottomWidthFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MatteBorder::editHandleBottomWidth),
+        static_cast<FieldGetMethodSig >(&MatteBorder::getHandleBottomWidth));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "Color",
+        "",
+        ColorFieldId, ColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MatteBorder::editHandleColor),
+        static_cast<FieldGetMethodSig >(&MatteBorder::getHandleColor));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecMaterialPtr::Description(
+        SFUnrecMaterialPtr::getClassType(),
+        "Material",
+        "",
+        MaterialFieldId, MaterialFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MatteBorder::editHandleMaterial),
+        static_cast<FieldGetMethodSig >(&MatteBorder::getHandleMaterial));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+MatteBorderBase::TypeObject MatteBorderBase::_type(
+    MatteBorderBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&MatteBorderBase::createEmptyLocal),
     MatteBorder::initMethod,
-    _desc,
-    sizeof(_desc));
+    MatteBorder::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&MatteBorder::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"MatteBorder\"\n"
+    "\tparent=\"Border\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "UI Matte Border. Creates a matte-look border using a solid color or Material. (The difference between this border and a line border is that you can specify the individual border dimensions.)\n"
+    "\t<Field\n"
+    "\t\tname=\"LeftWidth\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"RightWidth\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TopWidth\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"BottomWidth\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Color\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Material\"\n"
+    "\t\ttype=\"Material\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "UI Matte Border. Creates a matte-look border using a solid color or Material. (The difference between this border and a line border is that you can specify the individual border dimensions.)\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(MatteBorderBase, MatteBorderPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &MatteBorderBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &MatteBorderBase::getType(void) const 
+FieldContainerType &MatteBorderBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr MatteBorderBase::shallowCopy(void) const 
-{ 
-    MatteBorderPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const MatteBorder *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 MatteBorderBase::getContainerSize(void) const 
-{ 
-    return sizeof(MatteBorder); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void MatteBorderBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &MatteBorderBase::getType(void) const
 {
-    this->executeSyncImpl((MatteBorderBase *) &other, whichField);
+    return _type;
 }
-#else
-void MatteBorderBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 MatteBorderBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((MatteBorderBase *) &other, whichField, sInfo);
+    return sizeof(MatteBorder);
 }
-void MatteBorderBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFReal32 *MatteBorderBase::editSFLeftWidth(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(LeftWidthFieldMask);
+
+    return &_sfLeftWidth;
 }
 
-void MatteBorderBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFReal32 *MatteBorderBase::getSFLeftWidth(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfLeftWidth;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-MatteBorderBase::MatteBorderBase(void) :
-    _sfLeftWidth              (Real32(1)), 
-    _sfRightWidth             (Real32(1)), 
-    _sfTopWidth               (Real32(1)), 
-    _sfBottomWidth            (Real32(1)), 
-    _sfColor                  (Color4f(0.0,0.0,0.0,1.0)), 
-    _sfMaterial               (), 
-    Inherited() 
+SFReal32 *MatteBorderBase::editSFRightWidth(void)
 {
+    editSField(RightWidthFieldMask);
+
+    return &_sfRightWidth;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-MatteBorderBase::MatteBorderBase(const MatteBorderBase &source) :
-    _sfLeftWidth              (source._sfLeftWidth              ), 
-    _sfRightWidth             (source._sfRightWidth             ), 
-    _sfTopWidth               (source._sfTopWidth               ), 
-    _sfBottomWidth            (source._sfBottomWidth            ), 
-    _sfColor                  (source._sfColor                  ), 
-    _sfMaterial               (source._sfMaterial               ), 
-    Inherited                 (source)
+const SFReal32 *MatteBorderBase::getSFRightWidth(void) const
 {
+    return &_sfRightWidth;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-MatteBorderBase::~MatteBorderBase(void)
+SFReal32 *MatteBorderBase::editSFTopWidth(void)
 {
+    editSField(TopWidthFieldMask);
+
+    return &_sfTopWidth;
 }
+
+const SFReal32 *MatteBorderBase::getSFTopWidth(void) const
+{
+    return &_sfTopWidth;
+}
+
+
+SFReal32 *MatteBorderBase::editSFBottomWidth(void)
+{
+    editSField(BottomWidthFieldMask);
+
+    return &_sfBottomWidth;
+}
+
+const SFReal32 *MatteBorderBase::getSFBottomWidth(void) const
+{
+    return &_sfBottomWidth;
+}
+
+
+SFColor4f *MatteBorderBase::editSFColor(void)
+{
+    editSField(ColorFieldMask);
+
+    return &_sfColor;
+}
+
+const SFColor4f *MatteBorderBase::getSFColor(void) const
+{
+    return &_sfColor;
+}
+
+
+//! Get the MatteBorder::_sfMaterial field.
+const SFUnrecMaterialPtr *MatteBorderBase::getSFMaterial(void) const
+{
+    return &_sfMaterial;
+}
+
+SFUnrecMaterialPtr  *MatteBorderBase::editSFMaterial       (void)
+{
+    editSField(MaterialFieldMask);
+
+    return &_sfMaterial;
+}
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 MatteBorderBase::getBinSize(const BitVector &whichField)
+UInt32 MatteBorderBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -258,38 +419,32 @@ UInt32 MatteBorderBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfLeftWidth.getBinSize();
     }
-
     if(FieldBits::NoField != (RightWidthFieldMask & whichField))
     {
         returnValue += _sfRightWidth.getBinSize();
     }
-
     if(FieldBits::NoField != (TopWidthFieldMask & whichField))
     {
         returnValue += _sfTopWidth.getBinSize();
     }
-
     if(FieldBits::NoField != (BottomWidthFieldMask & whichField))
     {
         returnValue += _sfBottomWidth.getBinSize();
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         returnValue += _sfColor.getBinSize();
     }
-
     if(FieldBits::NoField != (MaterialFieldMask & whichField))
     {
         returnValue += _sfMaterial.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void MatteBorderBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void MatteBorderBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -297,37 +452,30 @@ void MatteBorderBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfLeftWidth.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (RightWidthFieldMask & whichField))
     {
         _sfRightWidth.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TopWidthFieldMask & whichField))
     {
         _sfTopWidth.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (BottomWidthFieldMask & whichField))
     {
         _sfBottomWidth.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         _sfColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MaterialFieldMask & whichField))
     {
         _sfMaterial.copyToBin(pMem);
     }
-
-
 }
 
-void MatteBorderBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void MatteBorderBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -335,137 +483,384 @@ void MatteBorderBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfLeftWidth.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (RightWidthFieldMask & whichField))
     {
         _sfRightWidth.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TopWidthFieldMask & whichField))
     {
         _sfTopWidth.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (BottomWidthFieldMask & whichField))
     {
         _sfBottomWidth.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         _sfColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MaterialFieldMask & whichField))
     {
         _sfMaterial.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void MatteBorderBase::executeSyncImpl(      MatteBorderBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+MatteBorderTransitPtr MatteBorderBase::createLocal(BitVector bFlags)
 {
+    MatteBorderTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (LeftWidthFieldMask & whichField))
-        _sfLeftWidth.syncWith(pOther->_sfLeftWidth);
+        fc = dynamic_pointer_cast<MatteBorder>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (RightWidthFieldMask & whichField))
-        _sfRightWidth.syncWith(pOther->_sfRightWidth);
-
-    if(FieldBits::NoField != (TopWidthFieldMask & whichField))
-        _sfTopWidth.syncWith(pOther->_sfTopWidth);
-
-    if(FieldBits::NoField != (BottomWidthFieldMask & whichField))
-        _sfBottomWidth.syncWith(pOther->_sfBottomWidth);
-
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
-
-    if(FieldBits::NoField != (MaterialFieldMask & whichField))
-        _sfMaterial.syncWith(pOther->_sfMaterial);
-
-
-}
-#else
-void MatteBorderBase::executeSyncImpl(      MatteBorderBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (LeftWidthFieldMask & whichField))
-        _sfLeftWidth.syncWith(pOther->_sfLeftWidth);
-
-    if(FieldBits::NoField != (RightWidthFieldMask & whichField))
-        _sfRightWidth.syncWith(pOther->_sfRightWidth);
-
-    if(FieldBits::NoField != (TopWidthFieldMask & whichField))
-        _sfTopWidth.syncWith(pOther->_sfTopWidth);
-
-    if(FieldBits::NoField != (BottomWidthFieldMask & whichField))
-        _sfBottomWidth.syncWith(pOther->_sfBottomWidth);
-
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
-
-    if(FieldBits::NoField != (MaterialFieldMask & whichField))
-        _sfMaterial.syncWith(pOther->_sfMaterial);
-
-
-
+    return fc;
 }
 
-void MatteBorderBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+MatteBorderTransitPtr MatteBorderBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    MatteBorderTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<MatteBorder>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+MatteBorderTransitPtr MatteBorderBase::create(void)
+{
+    MatteBorderTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<MatteBorder>(tmpPtr);
+    }
+
+    return fc;
+}
+
+MatteBorder *MatteBorderBase::createEmptyLocal(BitVector bFlags)
+{
+    MatteBorder *returnValue;
+
+    newPtr<MatteBorder>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+MatteBorder *MatteBorderBase::createEmpty(void)
+{
+    MatteBorder *returnValue;
+
+    newPtr<MatteBorder>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr MatteBorderBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    MatteBorder *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const MatteBorder *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr MatteBorderBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    MatteBorder *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const MatteBorder *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr MatteBorderBase::shallowCopy(void) const
+{
+    MatteBorder *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const MatteBorder *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+MatteBorderBase::MatteBorderBase(void) :
+    Inherited(),
+    _sfLeftWidth              (Real32(1)),
+    _sfRightWidth             (Real32(1)),
+    _sfTopWidth               (Real32(1)),
+    _sfBottomWidth            (Real32(1)),
+    _sfColor                  (Color4f(0.0,0.0,0.0,1.0)),
+    _sfMaterial               (NULL)
+{
+}
+
+MatteBorderBase::MatteBorderBase(const MatteBorderBase &source) :
+    Inherited(source),
+    _sfLeftWidth              (source._sfLeftWidth              ),
+    _sfRightWidth             (source._sfRightWidth             ),
+    _sfTopWidth               (source._sfTopWidth               ),
+    _sfBottomWidth            (source._sfBottomWidth            ),
+    _sfColor                  (source._sfColor                  ),
+    _sfMaterial               (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+MatteBorderBase::~MatteBorderBase(void)
+{
+}
+
+void MatteBorderBase::onCreate(const MatteBorder *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        MatteBorder *pThis = static_cast<MatteBorder *>(this);
+
+        pThis->setMaterial(source->getMaterial());
+    }
+}
+
+GetFieldHandlePtr MatteBorderBase::getHandleLeftWidth       (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfLeftWidth,
+             this->getType().getFieldDesc(LeftWidthFieldId),
+             const_cast<MatteBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MatteBorderBase::editHandleLeftWidth      (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfLeftWidth,
+             this->getType().getFieldDesc(LeftWidthFieldId),
+             this));
+
+
+    editSField(LeftWidthFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MatteBorderBase::getHandleRightWidth      (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfRightWidth,
+             this->getType().getFieldDesc(RightWidthFieldId),
+             const_cast<MatteBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MatteBorderBase::editHandleRightWidth     (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfRightWidth,
+             this->getType().getFieldDesc(RightWidthFieldId),
+             this));
+
+
+    editSField(RightWidthFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MatteBorderBase::getHandleTopWidth        (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfTopWidth,
+             this->getType().getFieldDesc(TopWidthFieldId),
+             const_cast<MatteBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MatteBorderBase::editHandleTopWidth       (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfTopWidth,
+             this->getType().getFieldDesc(TopWidthFieldId),
+             this));
+
+
+    editSField(TopWidthFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MatteBorderBase::getHandleBottomWidth     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfBottomWidth,
+             this->getType().getFieldDesc(BottomWidthFieldId),
+             const_cast<MatteBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MatteBorderBase::editHandleBottomWidth    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfBottomWidth,
+             this->getType().getFieldDesc(BottomWidthFieldId),
+             this));
+
+
+    editSField(BottomWidthFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MatteBorderBase::getHandleColor           (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfColor,
+             this->getType().getFieldDesc(ColorFieldId),
+             const_cast<MatteBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MatteBorderBase::editHandleColor          (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfColor,
+             this->getType().getFieldDesc(ColorFieldId),
+             this));
+
+
+    editSField(ColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MatteBorderBase::getHandleMaterial        (void) const
+{
+    SFUnrecMaterialPtr::GetHandlePtr returnValue(
+        new  SFUnrecMaterialPtr::GetHandle(
+             &_sfMaterial,
+             this->getType().getFieldDesc(MaterialFieldId),
+             const_cast<MatteBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MatteBorderBase::editHandleMaterial       (void)
+{
+    SFUnrecMaterialPtr::EditHandlePtr returnValue(
+        new  SFUnrecMaterialPtr::EditHandle(
+             &_sfMaterial,
+             this->getType().getFieldDesc(MaterialFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&MatteBorder::setMaterial,
+                    static_cast<MatteBorder *>(this), _1));
+
+    editSField(MaterialFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void MatteBorderBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    MatteBorder *pThis = static_cast<MatteBorder *>(this);
+
+    pThis->execSync(static_cast<MatteBorder *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *MatteBorderBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    MatteBorder *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const MatteBorder *>(pRefAspect),
+                  dynamic_cast<const MatteBorder *>(this));
+
+    return returnValue;
+}
+#endif
+
+void MatteBorderBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<MatteBorder *>(this)->setMaterial(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<MatteBorderPtr>::_type("MatteBorderPtr", "BorderPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(MatteBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(MatteBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGMATTEBORDERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGMATTEBORDERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGMATTEBORDERFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

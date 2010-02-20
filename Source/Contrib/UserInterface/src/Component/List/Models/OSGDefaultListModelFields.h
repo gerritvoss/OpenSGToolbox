@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGAbstractListModelFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class DefaultListModel;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! DefaultListModelPtr
+OSG_GEN_CONTAINERPTR(DefaultListModel);
 
-typedef FCPtr<AbstractListModelPtr, DefaultListModel> DefaultListModelPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<DefaultListModelPtr> : 
-    public FieldTraitsRecurseMapper<DefaultListModelPtr, true>
+struct FieldTraits<DefaultListModel *> :
+    public FieldTraitsFCPtrBase<DefaultListModel *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFDefaultListModelPtr"; }
-    static const char *getMName(void) { return "MFDefaultListModelPtr"; }
+    typedef FieldTraits<DefaultListModel *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFDefaultListModelPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFDefaultListModelPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<DefaultListModelPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<DefaultListModel *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecDefaultListModelPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<DefaultListModel *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecDefaultListModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DefaultListModel *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakDefaultListModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DefaultListModel *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdDefaultListModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DefaultListModel *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecDefaultListModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DefaultListModel *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecDefaultListModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DefaultListModel *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakDefaultListModelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<DefaultListModel *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdDefaultListModelPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<DefaultListModel *,
+                      RecordedRefCountPolicy  > SFRecDefaultListModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<DefaultListModel *,
+                      UnrecordedRefCountPolicy> SFUnrecDefaultListModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<DefaultListModel *,
+                      WeakRefCountPolicy      > SFWeakDefaultListModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<DefaultListModel *,
+                      NoRefCountPolicy        > SFUncountedDefaultListModelPtr;
 
-typedef SField<DefaultListModelPtr> SFDefaultListModelPtr;
-#endif
 
-#ifndef OSG_COMPILEDEFAULTLISTMODELINST
-OSG_DLLEXPORT_DECL1(SField, DefaultListModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<DefaultListModel *,
+                      RecordedRefCountPolicy  > MFRecDefaultListModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<DefaultListModel *,
+                      UnrecordedRefCountPolicy> MFUnrecDefaultListModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<DefaultListModel *,
+                      WeakRefCountPolicy      > MFWeakDefaultListModelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<DefaultListModel *,
+                      NoRefCountPolicy        > MFUncountedDefaultListModelPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<DefaultListModelPtr> MFDefaultListModelPtr;
-#endif
 
-#ifndef OSG_COMPILEDEFAULTLISTMODELINST
-OSG_DLLEXPORT_DECL1(MField, DefaultListModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecDefaultListModelPtr : 
+    public PointerSField<DefaultListModel *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecDefaultListModelPtr : 
+    public PointerSField<DefaultListModel *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakDefaultListModelPtr :
+    public PointerSField<DefaultListModel *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedDefaultListModelPtr :
+    public PointerSField<DefaultListModel *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecDefaultListModelPtr :
+    public PointerMField<DefaultListModel *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecDefaultListModelPtr :
+    public PointerMField<DefaultListModel *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakDefaultListModelPtr :
+    public PointerMField<DefaultListModel *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedDefaultListModelPtr :
+    public PointerMField<DefaultListModel *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGDEFAULTLISTMODELFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGDEFAULTLISTMODELFIELDS_H_ */

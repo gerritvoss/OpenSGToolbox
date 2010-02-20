@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,47 +42,49 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGCaretEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief CaretEvent class. See \ref 
-           PageUserInterfaceCaretEvent for a description.
+/*! \brief CaretEvent class. See \ref
+           PageContribUserInterfaceCaretEvent for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING CaretEvent : public CaretEventBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING CaretEvent : public CaretEventBase
 {
-  private:
-
-    typedef CaretEventBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef CaretEventBase Inherited;
+    typedef CaretEvent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
-    static  CaretEventPtr      create(  FieldContainerPtr Source,
-                                        Time TimeStamp,
-                                        UInt32 ThePos); 
+    static  CaretEventTransitPtr      create(  FieldContainerRefPtr Source,
+                                               Time TimeStamp,
+                                               UInt32 ThePos); 
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in CaretEventBase.
@@ -99,20 +101,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING CaretEvent : public CaretEventBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~CaretEvent(void); 
+    virtual ~CaretEvent(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class CaretEventBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const CaretEvent &source);
 };
 

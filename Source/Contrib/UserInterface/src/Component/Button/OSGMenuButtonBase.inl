@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,16 +55,15 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &MenuButtonBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 MenuButtonBase::getClassTypeId(void) 
+OSG::UInt32 MenuButtonBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
+    return _type.getId();
+}
 //! access the producer type of the class
 inline
 const EventProducerType &MenuButtonBase::getProducerClassType(void)
@@ -81,140 +78,92 @@ UInt32 MenuButtonBase::getProducerClassTypeId(void)
     return _producerType.getId();
 }
 
-//! create a new instance of the class
 inline
-MenuButtonPtr MenuButtonBase::create(void) 
+OSG::UInt16 MenuButtonBase::getClassGroupId(void)
 {
-    MenuButtonPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = MenuButtonPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getGroupId();
 }
-
-//! create an empty new instance of the class, do not copy the prototype
-inline
-MenuButtonPtr MenuButtonBase::createEmpty(void) 
-{ 
-    MenuButtonPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
-}
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the MenuButton::_sfModel field.
-inline
-const SFListModelPtr *MenuButtonBase::getSFModel(void) const
-{
-    return &_sfModel;
-}
-
-//! Get the MenuButton::_sfModel field.
-inline
-SFListModelPtr *MenuButtonBase::editSFModel(void)
-{
-    return &_sfModel;
-}
-
-//! Get the MenuButton::_sfCellGenerator field.
-inline
-const SFComponentGeneratorPtr *MenuButtonBase::getSFCellGenerator(void) const
-{
-    return &_sfCellGenerator;
-}
-
-//! Get the MenuButton::_sfCellGenerator field.
-inline
-SFComponentGeneratorPtr *MenuButtonBase::editSFCellGenerator(void)
-{
-    return &_sfCellGenerator;
-}
-
-//! Get the MenuButton::_sfMenuButtonPopupMenu field.
-inline
-const SFListGeneratedPopupMenuPtr *MenuButtonBase::getSFMenuButtonPopupMenu(void) const
-{
-    return &_sfMenuButtonPopupMenu;
-}
-
-//! Get the MenuButton::_sfMenuButtonPopupMenu field.
-inline
-SFListGeneratedPopupMenuPtr *MenuButtonBase::editSFMenuButtonPopupMenu(void)
-{
-    return &_sfMenuButtonPopupMenu;
-}
-
 
 //! Get the value of the MenuButton::_sfModel field.
 inline
-ListModelPtr &MenuButtonBase::editModel(void)
-{
-    return _sfModel.getValue();
-}
-
-//! Get the value of the MenuButton::_sfModel field.
-inline
-const ListModelPtr &MenuButtonBase::getModel(void) const
+ListModel * MenuButtonBase::getModel(void) const
 {
     return _sfModel.getValue();
 }
 
 //! Set the value of the MenuButton::_sfModel field.
 inline
-void MenuButtonBase::setModel(const ListModelPtr &value)
+void MenuButtonBase::setModel(ListModel * const value)
 {
+    editSField(ModelFieldMask);
+
     _sfModel.setValue(value);
 }
 
 //! Get the value of the MenuButton::_sfCellGenerator field.
 inline
-ComponentGeneratorPtr &MenuButtonBase::editCellGenerator(void)
-{
-    return _sfCellGenerator.getValue();
-}
-
-//! Get the value of the MenuButton::_sfCellGenerator field.
-inline
-const ComponentGeneratorPtr &MenuButtonBase::getCellGenerator(void) const
+ComponentGenerator * MenuButtonBase::getCellGenerator(void) const
 {
     return _sfCellGenerator.getValue();
 }
 
 //! Set the value of the MenuButton::_sfCellGenerator field.
 inline
-void MenuButtonBase::setCellGenerator(const ComponentGeneratorPtr &value)
+void MenuButtonBase::setCellGenerator(ComponentGenerator * const value)
 {
+    editSField(CellGeneratorFieldMask);
+
     _sfCellGenerator.setValue(value);
 }
 
 //! Get the value of the MenuButton::_sfMenuButtonPopupMenu field.
 inline
-ListGeneratedPopupMenuPtr &MenuButtonBase::editMenuButtonPopupMenu(void)
-{
-    return _sfMenuButtonPopupMenu.getValue();
-}
-
-//! Get the value of the MenuButton::_sfMenuButtonPopupMenu field.
-inline
-const ListGeneratedPopupMenuPtr &MenuButtonBase::getMenuButtonPopupMenu(void) const
+ListGeneratedPopupMenu * MenuButtonBase::getMenuButtonPopupMenu(void) const
 {
     return _sfMenuButtonPopupMenu.getValue();
 }
 
 //! Set the value of the MenuButton::_sfMenuButtonPopupMenu field.
 inline
-void MenuButtonBase::setMenuButtonPopupMenu(const ListGeneratedPopupMenuPtr &value)
+void MenuButtonBase::setMenuButtonPopupMenu(ListGeneratedPopupMenu * const value)
 {
+    editSField(MenuButtonPopupMenuFieldMask);
+
     _sfMenuButtonPopupMenu.setValue(value);
 }
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void MenuButtonBase::execSync (      MenuButtonBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
+        _sfModel.syncWith(pFrom->_sfModel);
+
+    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
+        _sfCellGenerator.syncWith(pFrom->_sfCellGenerator);
+
+    if(FieldBits::NoField != (MenuButtonPopupMenuFieldMask & whichField))
+        _sfMenuButtonPopupMenu.syncWith(pFrom->_sfMenuButtonPopupMenu);
+}
+#endif
+
+
+inline
+const Char8 *MenuButtonBase::getClassname(void)
+{
+    return "MenuButton";
+}
+OSG_GEN_CONTAINERPTR(MenuButton);
+
 OSG_END_NAMESPACE
+

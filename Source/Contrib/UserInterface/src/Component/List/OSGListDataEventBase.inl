@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,116 +55,101 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &ListDataEventBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ListDataEventBase::getClassTypeId(void) 
+OSG::UInt32 ListDataEventBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-ListDataEventPtr ListDataEventBase::create(void) 
-{
-    ListDataEventPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = ListDataEventPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-ListDataEventPtr ListDataEventBase::createEmpty(void) 
-{ 
-    ListDataEventPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 ListDataEventBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ListDataEvent::_sfIndex0 field.
-inline
-const SFInt32 *ListDataEventBase::getSFIndex0(void) const
-{
-    return &_sfIndex0;
-}
-
-//! Get the ListDataEvent::_sfIndex0 field.
-inline
-SFInt32 *ListDataEventBase::editSFIndex0(void)
-{
-    return &_sfIndex0;
-}
-
-//! Get the ListDataEvent::_sfIndex1 field.
-inline
-const SFInt32 *ListDataEventBase::getSFIndex1(void) const
-{
-    return &_sfIndex1;
-}
-
-//! Get the ListDataEvent::_sfIndex1 field.
-inline
-SFInt32 *ListDataEventBase::editSFIndex1(void)
-{
-    return &_sfIndex1;
-}
-
-
 //! Get the value of the ListDataEvent::_sfIndex0 field.
+
 inline
 Int32 &ListDataEventBase::editIndex0(void)
 {
+    editSField(Index0FieldMask);
+
     return _sfIndex0.getValue();
 }
 
 //! Get the value of the ListDataEvent::_sfIndex0 field.
 inline
-const Int32 &ListDataEventBase::getIndex0(void) const
+      Int32  ListDataEventBase::getIndex0(void) const
 {
     return _sfIndex0.getValue();
 }
 
 //! Set the value of the ListDataEvent::_sfIndex0 field.
 inline
-void ListDataEventBase::setIndex0(const Int32 &value)
+void ListDataEventBase::setIndex0(const Int32 value)
 {
+    editSField(Index0FieldMask);
+
     _sfIndex0.setValue(value);
 }
-
 //! Get the value of the ListDataEvent::_sfIndex1 field.
+
 inline
 Int32 &ListDataEventBase::editIndex1(void)
 {
+    editSField(Index1FieldMask);
+
     return _sfIndex1.getValue();
 }
 
 //! Get the value of the ListDataEvent::_sfIndex1 field.
 inline
-const Int32 &ListDataEventBase::getIndex1(void) const
+      Int32  ListDataEventBase::getIndex1(void) const
 {
     return _sfIndex1.getValue();
 }
 
 //! Set the value of the ListDataEvent::_sfIndex1 field.
 inline
-void ListDataEventBase::setIndex1(const Int32 &value)
+void ListDataEventBase::setIndex1(const Int32 value)
 {
+    editSField(Index1FieldMask);
+
     _sfIndex1.setValue(value);
 }
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void ListDataEventBase::execSync (      ListDataEventBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (Index0FieldMask & whichField))
+        _sfIndex0.syncWith(pFrom->_sfIndex0);
+
+    if(FieldBits::NoField != (Index1FieldMask & whichField))
+        _sfIndex1.syncWith(pFrom->_sfIndex1);
+}
+#endif
+
+
+inline
+const Char8 *ListDataEventBase::getClassname(void)
+{
+    return "ListDataEvent";
+}
+OSG_GEN_CONTAINERPTR(ListDataEvent);
 
 OSG_END_NAMESPACE
 

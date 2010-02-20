@@ -3,18 +3,21 @@
 <FieldContainer
 	name="Component"
 	parent="AttachmentContainer"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="abstract"
-	systemcomponent="false"
-	parentsystemcomponent="true"
-	decoratable="true"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="true"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI Component Interface.
 	<Field
 		name="Position"
 		type="Pnt2f"
+		category="data"
 		cardinality="single"
 		visibility="internal"
 		defaultValue="0,0"
@@ -24,6 +27,7 @@ A UI Component Interface.
 	<Field
 		name="ClipBounds"
 		type="Pnt4f"
+		category="data"
 		cardinality="single"
 		visibility="internal"
 		defaultValue="0.0f,0.0f,0.0f,0.0f"
@@ -33,6 +37,7 @@ A UI Component Interface.
 	<Field
 		name="MinSize"
 		type="Vec2f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0,0"
@@ -42,6 +47,7 @@ A UI Component Interface.
 	<Field
 		name="MaxSize"
 		type="Vec2f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="32767,32767"
@@ -51,6 +57,7 @@ A UI Component Interface.
 	<Field
 		name="PreferredSize"
 		type="Vec2f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -60,6 +67,7 @@ A UI Component Interface.
 	<Field
 		name="Size"
 		type="Vec2f"
+		category="data"
 		cardinality="single"
 		visibility="internal"
 		access="public"
@@ -68,6 +76,7 @@ A UI Component Interface.
 	<Field
 		name="Visible"
 		type="bool"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="true"
@@ -77,6 +86,7 @@ A UI Component Interface.
 	<Field
 		name="Enabled"
 		type="bool"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="true"
@@ -86,6 +96,7 @@ A UI Component Interface.
 	<Field
 		name="Focused"
 		type="bool"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="false"
@@ -94,56 +105,58 @@ A UI Component Interface.
 	</Field>
 	<Field
 		name="Constraints"
-		type="LayoutConstraintsPtr"
+		type="LayoutConstraints"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Layout/OSGLayoutConstraints.h"
 		access="public"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="Border"
-		type="BorderPtr"
+		type="Border"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Border/OSGBorder.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="Background"
-		type="LayerPtr"
+		type="Layer"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Layer/OSGLayer.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="DisabledBorder"
-		type="BorderPtr"
+		type="Border"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Border/OSGBorder.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="DisabledBackground"
-		type="LayerPtr"
+		type="Layer"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Layer/OSGLayer.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="DragEnabled"
 		type="bool"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="false"
@@ -152,57 +165,58 @@ A UI Component Interface.
 	</Field>
 	<Field
 		name="TransferHandler"
-		type="TransferHandlerPtr"
+		type="TransferHandler"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="DragAndDrop/OSGTransferHandlerFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="FocusedBorder"
-		type="BorderPtr"
+		type="Border"
 		cardinality="single"
+		category="pointer"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Border/OSGBorder.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="FocusedBackground"
-		type="LayerPtr"
+		type="Layer"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Layer/OSGLayer.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="RolloverBorder"
-		type="BorderPtr"
+		type="Border"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Border/OSGBorder.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="RolloverBackground"
-		type="LayerPtr"
+		type="Layer"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Layer/OSGLayer.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="ToolTipText"
 		type="std::string"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -211,6 +225,7 @@ A UI Component Interface.
 	<Field
 		name="Opacity"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1.0"
@@ -219,27 +234,28 @@ A UI Component Interface.
 	</Field>
 	<Field
 		name="ParentContainer"
-		type="ContainerPtr"
+		type="ComponentContainer"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Component/Container/OSGContainerFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="ParentWindow"
-		type="InternalWindowPtr"
+		type="InternalWindow"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Component/Container/Window/OSGInternalWindowFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="Clipping"
 		type="bool"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="true"
@@ -248,157 +264,158 @@ A UI Component Interface.
 	</Field>
 	<Field
 		name="PopupMenu"
-		type="PopupMenuPtr"
+		type="PopupMenu"
+		category="pointer"
 		cardinality="single"
 		visibility="internal"
-		header="Component/Menu/OSGPopupMenuFields.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
    <Field
 		name="FocusedForeground"
-		type="LayerPtr"
+		type="Layer"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Layer/OSGLayer.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="RolloverForeground"
-		type="LayerPtr"
+		type="Layer"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Layer/OSGLayer.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="DisabledForeground"
-		type="LayerPtr"
+		type="Layer"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Layer/OSGLayer.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="Foreground"
-		type="LayerPtr"
+		type="Layer"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Layer/OSGLayer.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="Cursor"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="WindowEventProducer::CURSOR_POINTER"
-		defaultHeader="OpenSG/Input/OSGWindowEventProducer.h"
+		defaultHeader="OSGWindowEventProducer.h"
 		access="public"
 	>
 	</Field>
 	<ProducedMethod
 		name="MouseMoved"
-		producedEventType="MouseEventPtr"
+		type="MouseEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="MouseDragged"
-		producedEventType="MouseEventPtr"
+		type="MouseEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="MouseClicked"
-		producedEventType="MouseEventPtr"
+		type="MouseEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="MouseEntered"
-		producedEventType="MouseEventPtr"
+		type="MouseEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="MouseExited"
-		producedEventType="MouseEventPtr"
+		type="MouseEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="MousePressed"
-		producedEventType="MouseEventPtr"
+		type="MouseEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="MouseReleased"
-		producedEventType="MouseEventPtr"
+		type="MouseEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="MouseWheelMoved"
-		producedEventType="MouseWheelEventPtr"
+		type="MouseWheelEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="KeyPressed"
-		producedEventType="KeyEventPtr"
+		type="KeyEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="KeyReleased"
-		producedEventType="KeyEventPtr"
+		type="KeyEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="KeyTyped"
-		producedEventType="KeyEventPtr"
+		type="KeyEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="FocusGained"
-		producedEventType="FocusEventPtr"
+		type="FocusEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="FocusLost"
-		producedEventType="FocusEventPtr"
+		type="FocusEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="ComponentHidden"
-		producedEventType="ComponentEventPtr"
+		type="ComponentEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="ComponentVisible"
-		producedEventType="ComponentEventPtr"
+		type="ComponentEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="ComponentMoved"
-		producedEventType="ComponentEventPtr"
+		type="ComponentEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="ComponentResized"
-		producedEventType="ComponentEventPtr"
+		type="ComponentEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="ComponentEnabled"
-		producedEventType="ComponentEventPtr"
+		type="ComponentEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="ComponentDisabled"
-		producedEventType="ComponentEventPtr"
+		type="ComponentEventPtr"
 	>
 	</ProducedMethod>
 </FieldContainer>

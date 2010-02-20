@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,207 +50,367 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEBOXLAYOUTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGBoxLayoutBase.h"
 #include "OSGBoxLayout.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  BoxLayoutBase::OrientationFieldMask = 
-    (TypeTraits<BitVector>::One << BoxLayoutBase::OrientationFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  BoxLayoutBase::MajorAxisAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << BoxLayoutBase::MajorAxisAlignmentFieldId);
+/*! \class OSG::BoxLayout
+    A UI BoxLayout.
+ */
 
-const OSG::BitVector  BoxLayoutBase::MinorAxisAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << BoxLayoutBase::MinorAxisAlignmentFieldId);
-
-const OSG::BitVector  BoxLayoutBase::ComponentAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << BoxLayoutBase::ComponentAlignmentFieldId);
-
-const OSG::BitVector  BoxLayoutBase::MajorAxisMinimumGapFieldMask = 
-    (TypeTraits<BitVector>::One << BoxLayoutBase::MajorAxisMinimumGapFieldId);
-
-const OSG::BitVector  BoxLayoutBase::MajorAxisMaximumGapFieldMask = 
-    (TypeTraits<BitVector>::One << BoxLayoutBase::MajorAxisMaximumGapFieldId);
-
-const OSG::BitVector BoxLayoutBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var UInt32          BoxLayoutBase::_sfOrientation
     
 */
+
 /*! \var Real32          BoxLayoutBase::_sfMajorAxisAlignment
     
 */
+
 /*! \var Real32          BoxLayoutBase::_sfMinorAxisAlignment
     
 */
+
 /*! \var Real32          BoxLayoutBase::_sfComponentAlignment
     
 */
+
 /*! \var Real32          BoxLayoutBase::_sfMajorAxisMinimumGap
     
 */
+
 /*! \var Real32          BoxLayoutBase::_sfMajorAxisMaximumGap
     
 */
 
-//! BoxLayout description
 
-FieldDescription *BoxLayoutBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<BoxLayout *>::_type("BoxLayoutPtr", "LayoutPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(BoxLayout *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           BoxLayout *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           BoxLayout *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void BoxLayoutBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "Orientation", 
-                     OrientationFieldId, OrientationFieldMask,
-                     false,
-                     (FieldAccessMethod) &BoxLayoutBase::getSFOrientation),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "MajorAxisAlignment", 
-                     MajorAxisAlignmentFieldId, MajorAxisAlignmentFieldMask,
-                     false,
-                     (FieldAccessMethod) &BoxLayoutBase::getSFMajorAxisAlignment),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "MinorAxisAlignment", 
-                     MinorAxisAlignmentFieldId, MinorAxisAlignmentFieldMask,
-                     false,
-                     (FieldAccessMethod) &BoxLayoutBase::getSFMinorAxisAlignment),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "ComponentAlignment", 
-                     ComponentAlignmentFieldId, ComponentAlignmentFieldMask,
-                     false,
-                     (FieldAccessMethod) &BoxLayoutBase::getSFComponentAlignment),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "MajorAxisMinimumGap", 
-                     MajorAxisMinimumGapFieldId, MajorAxisMinimumGapFieldMask,
-                     false,
-                     (FieldAccessMethod) &BoxLayoutBase::getSFMajorAxisMinimumGap),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "MajorAxisMaximumGap", 
-                     MajorAxisMaximumGapFieldId, MajorAxisMaximumGapFieldMask,
-                     false,
-                     (FieldAccessMethod) &BoxLayoutBase::getSFMajorAxisMaximumGap)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType BoxLayoutBase::_type(
-    "BoxLayout",
-    "Layout",
-    NULL,
-    (PrototypeCreateF) &BoxLayoutBase::createEmpty,
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "Orientation",
+        "",
+        OrientationFieldId, OrientationFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&BoxLayout::editHandleOrientation),
+        static_cast<FieldGetMethodSig >(&BoxLayout::getHandleOrientation));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "MajorAxisAlignment",
+        "",
+        MajorAxisAlignmentFieldId, MajorAxisAlignmentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&BoxLayout::editHandleMajorAxisAlignment),
+        static_cast<FieldGetMethodSig >(&BoxLayout::getHandleMajorAxisAlignment));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "MinorAxisAlignment",
+        "",
+        MinorAxisAlignmentFieldId, MinorAxisAlignmentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&BoxLayout::editHandleMinorAxisAlignment),
+        static_cast<FieldGetMethodSig >(&BoxLayout::getHandleMinorAxisAlignment));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "ComponentAlignment",
+        "",
+        ComponentAlignmentFieldId, ComponentAlignmentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&BoxLayout::editHandleComponentAlignment),
+        static_cast<FieldGetMethodSig >(&BoxLayout::getHandleComponentAlignment));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "MajorAxisMinimumGap",
+        "",
+        MajorAxisMinimumGapFieldId, MajorAxisMinimumGapFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&BoxLayout::editHandleMajorAxisMinimumGap),
+        static_cast<FieldGetMethodSig >(&BoxLayout::getHandleMajorAxisMinimumGap));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "MajorAxisMaximumGap",
+        "",
+        MajorAxisMaximumGapFieldId, MajorAxisMaximumGapFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&BoxLayout::editHandleMajorAxisMaximumGap),
+        static_cast<FieldGetMethodSig >(&BoxLayout::getHandleMajorAxisMaximumGap));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+BoxLayoutBase::TypeObject BoxLayoutBase::_type(
+    BoxLayoutBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&BoxLayoutBase::createEmptyLocal),
     BoxLayout::initMethod,
-    _desc,
-    sizeof(_desc));
+    BoxLayout::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&BoxLayout::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"BoxLayout\"\n"
+    "\tparent=\"Layout\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI BoxLayout.\n"
+    "\t<Field\n"
+    "\t\tname=\"Orientation\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"BoxLayout::HORIZONTAL_ORIENTATION\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MajorAxisAlignment\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.5f\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MinorAxisAlignment\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.5f\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ComponentAlignment\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.5f\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MajorAxisMinimumGap\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"2.0f\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MajorAxisMaximumGap\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"100000000.0f\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI BoxLayout.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(BoxLayoutBase, BoxLayoutPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &BoxLayoutBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &BoxLayoutBase::getType(void) const 
+FieldContainerType &BoxLayoutBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr BoxLayoutBase::shallowCopy(void) const 
-{ 
-    BoxLayoutPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const BoxLayout *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 BoxLayoutBase::getContainerSize(void) const 
-{ 
-    return sizeof(BoxLayout); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void BoxLayoutBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &BoxLayoutBase::getType(void) const
 {
-    this->executeSyncImpl((BoxLayoutBase *) &other, whichField);
+    return _type;
 }
-#else
-void BoxLayoutBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 BoxLayoutBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((BoxLayoutBase *) &other, whichField, sInfo);
+    return sizeof(BoxLayout);
 }
-void BoxLayoutBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFUInt32 *BoxLayoutBase::editSFOrientation(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(OrientationFieldMask);
+
+    return &_sfOrientation;
 }
 
-void BoxLayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFUInt32 *BoxLayoutBase::getSFOrientation(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfOrientation;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-BoxLayoutBase::BoxLayoutBase(void) :
-    _sfOrientation            (UInt32(BoxLayout::HORIZONTAL_ORIENTATION)), 
-    _sfMajorAxisAlignment     (Real32(0.5f)), 
-    _sfMinorAxisAlignment     (Real32(0.5f)), 
-    _sfComponentAlignment     (Real32(0.5f)), 
-    _sfMajorAxisMinimumGap    (Real32(2.0f)), 
-    _sfMajorAxisMaximumGap    (Real32(100000000.0f)), 
-    Inherited() 
+SFReal32 *BoxLayoutBase::editSFMajorAxisAlignment(void)
 {
+    editSField(MajorAxisAlignmentFieldMask);
+
+    return &_sfMajorAxisAlignment;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-BoxLayoutBase::BoxLayoutBase(const BoxLayoutBase &source) :
-    _sfOrientation            (source._sfOrientation            ), 
-    _sfMajorAxisAlignment     (source._sfMajorAxisAlignment     ), 
-    _sfMinorAxisAlignment     (source._sfMinorAxisAlignment     ), 
-    _sfComponentAlignment     (source._sfComponentAlignment     ), 
-    _sfMajorAxisMinimumGap    (source._sfMajorAxisMinimumGap    ), 
-    _sfMajorAxisMaximumGap    (source._sfMajorAxisMaximumGap    ), 
-    Inherited                 (source)
+const SFReal32 *BoxLayoutBase::getSFMajorAxisAlignment(void) const
 {
+    return &_sfMajorAxisAlignment;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-BoxLayoutBase::~BoxLayoutBase(void)
+SFReal32 *BoxLayoutBase::editSFMinorAxisAlignment(void)
 {
+    editSField(MinorAxisAlignmentFieldMask);
+
+    return &_sfMinorAxisAlignment;
 }
+
+const SFReal32 *BoxLayoutBase::getSFMinorAxisAlignment(void) const
+{
+    return &_sfMinorAxisAlignment;
+}
+
+
+SFReal32 *BoxLayoutBase::editSFComponentAlignment(void)
+{
+    editSField(ComponentAlignmentFieldMask);
+
+    return &_sfComponentAlignment;
+}
+
+const SFReal32 *BoxLayoutBase::getSFComponentAlignment(void) const
+{
+    return &_sfComponentAlignment;
+}
+
+
+SFReal32 *BoxLayoutBase::editSFMajorAxisMinimumGap(void)
+{
+    editSField(MajorAxisMinimumGapFieldMask);
+
+    return &_sfMajorAxisMinimumGap;
+}
+
+const SFReal32 *BoxLayoutBase::getSFMajorAxisMinimumGap(void) const
+{
+    return &_sfMajorAxisMinimumGap;
+}
+
+
+SFReal32 *BoxLayoutBase::editSFMajorAxisMaximumGap(void)
+{
+    editSField(MajorAxisMaximumGapFieldMask);
+
+    return &_sfMajorAxisMaximumGap;
+}
+
+const SFReal32 *BoxLayoutBase::getSFMajorAxisMaximumGap(void) const
+{
+    return &_sfMajorAxisMaximumGap;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 BoxLayoutBase::getBinSize(const BitVector &whichField)
+UInt32 BoxLayoutBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -258,38 +418,32 @@ UInt32 BoxLayoutBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfOrientation.getBinSize();
     }
-
     if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
     {
         returnValue += _sfMajorAxisAlignment.getBinSize();
     }
-
     if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
     {
         returnValue += _sfMinorAxisAlignment.getBinSize();
     }
-
     if(FieldBits::NoField != (ComponentAlignmentFieldMask & whichField))
     {
         returnValue += _sfComponentAlignment.getBinSize();
     }
-
     if(FieldBits::NoField != (MajorAxisMinimumGapFieldMask & whichField))
     {
         returnValue += _sfMajorAxisMinimumGap.getBinSize();
     }
-
     if(FieldBits::NoField != (MajorAxisMaximumGapFieldMask & whichField))
     {
         returnValue += _sfMajorAxisMaximumGap.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void BoxLayoutBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void BoxLayoutBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -297,37 +451,30 @@ void BoxLayoutBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfOrientation.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
     {
         _sfMajorAxisAlignment.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
     {
         _sfMinorAxisAlignment.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ComponentAlignmentFieldMask & whichField))
     {
         _sfComponentAlignment.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MajorAxisMinimumGapFieldMask & whichField))
     {
         _sfMajorAxisMinimumGap.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MajorAxisMaximumGapFieldMask & whichField))
     {
         _sfMajorAxisMaximumGap.copyToBin(pMem);
     }
-
-
 }
 
-void BoxLayoutBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void BoxLayoutBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -335,137 +482,368 @@ void BoxLayoutBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfOrientation.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
     {
         _sfMajorAxisAlignment.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
     {
         _sfMinorAxisAlignment.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ComponentAlignmentFieldMask & whichField))
     {
         _sfComponentAlignment.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MajorAxisMinimumGapFieldMask & whichField))
     {
         _sfMajorAxisMinimumGap.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MajorAxisMaximumGapFieldMask & whichField))
     {
         _sfMajorAxisMaximumGap.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void BoxLayoutBase::executeSyncImpl(      BoxLayoutBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+BoxLayoutTransitPtr BoxLayoutBase::createLocal(BitVector bFlags)
 {
+    BoxLayoutTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (OrientationFieldMask & whichField))
-        _sfOrientation.syncWith(pOther->_sfOrientation);
+        fc = dynamic_pointer_cast<BoxLayout>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
-        _sfMajorAxisAlignment.syncWith(pOther->_sfMajorAxisAlignment);
-
-    if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
-        _sfMinorAxisAlignment.syncWith(pOther->_sfMinorAxisAlignment);
-
-    if(FieldBits::NoField != (ComponentAlignmentFieldMask & whichField))
-        _sfComponentAlignment.syncWith(pOther->_sfComponentAlignment);
-
-    if(FieldBits::NoField != (MajorAxisMinimumGapFieldMask & whichField))
-        _sfMajorAxisMinimumGap.syncWith(pOther->_sfMajorAxisMinimumGap);
-
-    if(FieldBits::NoField != (MajorAxisMaximumGapFieldMask & whichField))
-        _sfMajorAxisMaximumGap.syncWith(pOther->_sfMajorAxisMaximumGap);
-
-
-}
-#else
-void BoxLayoutBase::executeSyncImpl(      BoxLayoutBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (OrientationFieldMask & whichField))
-        _sfOrientation.syncWith(pOther->_sfOrientation);
-
-    if(FieldBits::NoField != (MajorAxisAlignmentFieldMask & whichField))
-        _sfMajorAxisAlignment.syncWith(pOther->_sfMajorAxisAlignment);
-
-    if(FieldBits::NoField != (MinorAxisAlignmentFieldMask & whichField))
-        _sfMinorAxisAlignment.syncWith(pOther->_sfMinorAxisAlignment);
-
-    if(FieldBits::NoField != (ComponentAlignmentFieldMask & whichField))
-        _sfComponentAlignment.syncWith(pOther->_sfComponentAlignment);
-
-    if(FieldBits::NoField != (MajorAxisMinimumGapFieldMask & whichField))
-        _sfMajorAxisMinimumGap.syncWith(pOther->_sfMajorAxisMinimumGap);
-
-    if(FieldBits::NoField != (MajorAxisMaximumGapFieldMask & whichField))
-        _sfMajorAxisMaximumGap.syncWith(pOther->_sfMajorAxisMaximumGap);
-
-
-
+    return fc;
 }
 
-void BoxLayoutBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+BoxLayoutTransitPtr BoxLayoutBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    BoxLayoutTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<BoxLayout>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+BoxLayoutTransitPtr BoxLayoutBase::create(void)
+{
+    BoxLayoutTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<BoxLayout>(tmpPtr);
+    }
+
+    return fc;
+}
+
+BoxLayout *BoxLayoutBase::createEmptyLocal(BitVector bFlags)
+{
+    BoxLayout *returnValue;
+
+    newPtr<BoxLayout>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+BoxLayout *BoxLayoutBase::createEmpty(void)
+{
+    BoxLayout *returnValue;
+
+    newPtr<BoxLayout>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr BoxLayoutBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    BoxLayout *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const BoxLayout *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr BoxLayoutBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    BoxLayout *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const BoxLayout *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr BoxLayoutBase::shallowCopy(void) const
+{
+    BoxLayout *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const BoxLayout *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+BoxLayoutBase::BoxLayoutBase(void) :
+    Inherited(),
+    _sfOrientation            (UInt32(BoxLayout::HORIZONTAL_ORIENTATION)),
+    _sfMajorAxisAlignment     (Real32(0.5f)),
+    _sfMinorAxisAlignment     (Real32(0.5f)),
+    _sfComponentAlignment     (Real32(0.5f)),
+    _sfMajorAxisMinimumGap    (Real32(2.0f)),
+    _sfMajorAxisMaximumGap    (Real32(100000000.0f))
+{
+}
+
+BoxLayoutBase::BoxLayoutBase(const BoxLayoutBase &source) :
+    Inherited(source),
+    _sfOrientation            (source._sfOrientation            ),
+    _sfMajorAxisAlignment     (source._sfMajorAxisAlignment     ),
+    _sfMinorAxisAlignment     (source._sfMinorAxisAlignment     ),
+    _sfComponentAlignment     (source._sfComponentAlignment     ),
+    _sfMajorAxisMinimumGap    (source._sfMajorAxisMinimumGap    ),
+    _sfMajorAxisMaximumGap    (source._sfMajorAxisMaximumGap    )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+BoxLayoutBase::~BoxLayoutBase(void)
+{
+}
+
+
+GetFieldHandlePtr BoxLayoutBase::getHandleOrientation     (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfOrientation,
+             this->getType().getFieldDesc(OrientationFieldId),
+             const_cast<BoxLayoutBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr BoxLayoutBase::editHandleOrientation    (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfOrientation,
+             this->getType().getFieldDesc(OrientationFieldId),
+             this));
+
+
+    editSField(OrientationFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr BoxLayoutBase::getHandleMajorAxisAlignment (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMajorAxisAlignment,
+             this->getType().getFieldDesc(MajorAxisAlignmentFieldId),
+             const_cast<BoxLayoutBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr BoxLayoutBase::editHandleMajorAxisAlignment(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMajorAxisAlignment,
+             this->getType().getFieldDesc(MajorAxisAlignmentFieldId),
+             this));
+
+
+    editSField(MajorAxisAlignmentFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr BoxLayoutBase::getHandleMinorAxisAlignment (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMinorAxisAlignment,
+             this->getType().getFieldDesc(MinorAxisAlignmentFieldId),
+             const_cast<BoxLayoutBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr BoxLayoutBase::editHandleMinorAxisAlignment(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMinorAxisAlignment,
+             this->getType().getFieldDesc(MinorAxisAlignmentFieldId),
+             this));
+
+
+    editSField(MinorAxisAlignmentFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr BoxLayoutBase::getHandleComponentAlignment (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfComponentAlignment,
+             this->getType().getFieldDesc(ComponentAlignmentFieldId),
+             const_cast<BoxLayoutBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr BoxLayoutBase::editHandleComponentAlignment(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfComponentAlignment,
+             this->getType().getFieldDesc(ComponentAlignmentFieldId),
+             this));
+
+
+    editSField(ComponentAlignmentFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr BoxLayoutBase::getHandleMajorAxisMinimumGap (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMajorAxisMinimumGap,
+             this->getType().getFieldDesc(MajorAxisMinimumGapFieldId),
+             const_cast<BoxLayoutBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr BoxLayoutBase::editHandleMajorAxisMinimumGap(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMajorAxisMinimumGap,
+             this->getType().getFieldDesc(MajorAxisMinimumGapFieldId),
+             this));
+
+
+    editSField(MajorAxisMinimumGapFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr BoxLayoutBase::getHandleMajorAxisMaximumGap (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMajorAxisMaximumGap,
+             this->getType().getFieldDesc(MajorAxisMaximumGapFieldId),
+             const_cast<BoxLayoutBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr BoxLayoutBase::editHandleMajorAxisMaximumGap(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMajorAxisMaximumGap,
+             this->getType().getFieldDesc(MajorAxisMaximumGapFieldId),
+             this));
+
+
+    editSField(MajorAxisMaximumGapFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void BoxLayoutBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    BoxLayout *pThis = static_cast<BoxLayout *>(this);
+
+    pThis->execSync(static_cast<BoxLayout *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *BoxLayoutBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    BoxLayout *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const BoxLayout *>(pRefAspect),
+                  dynamic_cast<const BoxLayout *>(this));
+
+    return returnValue;
+}
+#endif
+
+void BoxLayoutBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<BoxLayoutPtr>::_type("BoxLayoutPtr", "LayoutPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(BoxLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(BoxLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGBOXLAYOUTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGBOXLAYOUTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGBOXLAYOUTFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

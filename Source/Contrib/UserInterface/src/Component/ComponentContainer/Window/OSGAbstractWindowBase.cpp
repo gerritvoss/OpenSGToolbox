@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,410 +50,941 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEABSTRACTWINDOWINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGUIDrawingSurface.h"        // DrawingSurface Class
+#include "OSGUIDrawObjectCanvas.h"      // DesktopIcon Class
 
 #include "OSGAbstractWindowBase.h"
 #include "OSGAbstractWindow.h"
 
+#include <boost/bind.hpp>
+
+#include "OSGEvent.h"
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  AbstractWindowBase::DrawingSurfaceFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractWindowBase::DrawingSurfaceFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  AbstractWindowBase::ClosableFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractWindowBase::ClosableFieldId);
+/*! \class OSG::AbstractWindow
+    A UI Abstract Window.
+ */
 
-const OSG::BitVector  AbstractWindowBase::IconableFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractWindowBase::IconableFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  AbstractWindowBase::MaximizableFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractWindowBase::MaximizableFieldId);
-
-const OSG::BitVector  AbstractWindowBase::IsClosedFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractWindowBase::IsClosedFieldId);
-
-const OSG::BitVector  AbstractWindowBase::IsIconFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractWindowBase::IsIconFieldId);
-
-const OSG::BitVector  AbstractWindowBase::IsMaximizedFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractWindowBase::IsMaximizedFieldId);
-
-const OSG::BitVector  AbstractWindowBase::ResizableFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractWindowBase::ResizableFieldId);
-
-const OSG::BitVector  AbstractWindowBase::IsSelectedFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractWindowBase::IsSelectedFieldId);
-
-const OSG::BitVector  AbstractWindowBase::TitleFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractWindowBase::TitleFieldId);
-
-const OSG::BitVector  AbstractWindowBase::DesktopIconFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractWindowBase::DesktopIconFieldId);
-
-const OSG::BitVector  AbstractWindowBase::AllwaysOnTopFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractWindowBase::AllwaysOnTopFieldId);
-
-const OSG::BitVector  AbstractWindowBase::DrawTitlebarFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractWindowBase::DrawTitlebarFieldId);
-
-const OSG::BitVector  AbstractWindowBase::DrawDecorationsFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractWindowBase::DrawDecorationsFieldId);
-
-const OSG::BitVector  AbstractWindowBase::LockInputFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractWindowBase::LockInputFieldId);
-
-const OSG::BitVector  AbstractWindowBase::AlignmentInDrawingSurfaceFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractWindowBase::AlignmentInDrawingSurfaceFieldId);
-
-const OSG::BitVector  AbstractWindowBase::ScalingInDrawingSurfaceFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractWindowBase::ScalingInDrawingSurfaceFieldId);
-
-const OSG::BitVector  AbstractWindowBase::ResizeModifyCursorWidthFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractWindowBase::ResizeModifyCursorWidthFieldId);
-
-const OSG::BitVector AbstractWindowBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var UIDrawingSurfacePtr AbstractWindowBase::_sfDrawingSurface
+/*! \var UIDrawingSurface * AbstractWindowBase::_sfDrawingSurface
     
 */
+
 /*! \var bool            AbstractWindowBase::_sfClosable
     
 */
+
 /*! \var bool            AbstractWindowBase::_sfIconable
     
 */
+
 /*! \var bool            AbstractWindowBase::_sfMaximizable
     
 */
+
 /*! \var bool            AbstractWindowBase::_sfIsClosed
     
 */
+
 /*! \var bool            AbstractWindowBase::_sfIsIcon
     
 */
+
 /*! \var bool            AbstractWindowBase::_sfIsMaximized
     
 */
+
 /*! \var bool            AbstractWindowBase::_sfResizable
     
 */
+
 /*! \var bool            AbstractWindowBase::_sfIsSelected
     
 */
+
 /*! \var std::string     AbstractWindowBase::_sfTitle
     
 */
-/*! \var UIDrawObjectCanvasPtr AbstractWindowBase::_sfDesktopIcon
+
+/*! \var UIDrawObjectCanvas * AbstractWindowBase::_sfDesktopIcon
     
 */
+
 /*! \var bool            AbstractWindowBase::_sfAllwaysOnTop
     
 */
+
 /*! \var bool            AbstractWindowBase::_sfDrawTitlebar
     
 */
+
 /*! \var bool            AbstractWindowBase::_sfDrawDecorations
     
 */
+
 /*! \var bool            AbstractWindowBase::_sfLockInput
     
 */
+
 /*! \var Vec2f           AbstractWindowBase::_sfAlignmentInDrawingSurface
     
 */
+
 /*! \var Vec2f           AbstractWindowBase::_sfScalingInDrawingSurface
     
 */
+
 /*! \var UInt32          AbstractWindowBase::_sfResizeModifyCursorWidth
     
 */
 
-//! AbstractWindow description
 
-FieldDescription *AbstractWindowBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<AbstractWindow *>::_type("AbstractWindowPtr", "ComponentContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(AbstractWindow *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           AbstractWindow *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           AbstractWindow *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void AbstractWindowBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUIDrawingSurfacePtr::getClassType(), 
-                     "DrawingSurface", 
-                     DrawingSurfaceFieldId, DrawingSurfaceFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFDrawingSurface)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "Closable", 
-                     ClosableFieldId, ClosableFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFClosable)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "Iconable", 
-                     IconableFieldId, IconableFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFIconable)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "Maximizable", 
-                     MaximizableFieldId, MaximizableFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFMaximizable)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "IsClosed", 
-                     IsClosedFieldId, IsClosedFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFIsClosed)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "IsIcon", 
-                     IsIconFieldId, IsIconFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFIsIcon)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "IsMaximized", 
-                     IsMaximizedFieldId, IsMaximizedFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFIsMaximized)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "Resizable", 
-                     ResizableFieldId, ResizableFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFResizable)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "IsSelected", 
-                     IsSelectedFieldId, IsSelectedFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFIsSelected)),
-    new FieldDescription(SFString::getClassType(), 
-                     "Title", 
-                     TitleFieldId, TitleFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFTitle)),
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "DesktopIcon", 
-                     DesktopIconFieldId, DesktopIconFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFDesktopIcon)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "AllwaysOnTop", 
-                     AllwaysOnTopFieldId, AllwaysOnTopFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFAllwaysOnTop)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "DrawTitlebar", 
-                     DrawTitlebarFieldId, DrawTitlebarFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFDrawTitlebar)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "DrawDecorations", 
-                     DrawDecorationsFieldId, DrawDecorationsFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFDrawDecorations)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "LockInput", 
-                     LockInputFieldId, LockInputFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFLockInput)),
-    new FieldDescription(SFVec2f::getClassType(), 
-                     "AlignmentInDrawingSurface", 
-                     AlignmentInDrawingSurfaceFieldId, AlignmentInDrawingSurfaceFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFAlignmentInDrawingSurface)),
-    new FieldDescription(SFVec2f::getClassType(), 
-                     "ScalingInDrawingSurface", 
-                     ScalingInDrawingSurfaceFieldId, ScalingInDrawingSurfaceFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFScalingInDrawingSurface)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "ResizeModifyCursorWidth", 
-                     ResizeModifyCursorWidthFieldId, ResizeModifyCursorWidthFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFResizeModifyCursorWidth))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType AbstractWindowBase::_type(
-    "AbstractWindow",
-    "Container",
+    pDesc = new SFUnrecUIDrawingSurfacePtr::Description(
+        SFUnrecUIDrawingSurfacePtr::getClassType(),
+        "DrawingSurface",
+        "",
+        DrawingSurfaceFieldId, DrawingSurfaceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbstractWindow::editHandleDrawingSurface),
+        static_cast<FieldGetMethodSig >(&AbstractWindow::getHandleDrawingSurface));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Closable",
+        "",
+        ClosableFieldId, ClosableFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbstractWindow::editHandleClosable),
+        static_cast<FieldGetMethodSig >(&AbstractWindow::getHandleClosable));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Iconable",
+        "",
+        IconableFieldId, IconableFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbstractWindow::editHandleIconable),
+        static_cast<FieldGetMethodSig >(&AbstractWindow::getHandleIconable));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Maximizable",
+        "",
+        MaximizableFieldId, MaximizableFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbstractWindow::editHandleMaximizable),
+        static_cast<FieldGetMethodSig >(&AbstractWindow::getHandleMaximizable));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "IsClosed",
+        "",
+        IsClosedFieldId, IsClosedFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbstractWindow::editHandleIsClosed),
+        static_cast<FieldGetMethodSig >(&AbstractWindow::getHandleIsClosed));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "IsIcon",
+        "",
+        IsIconFieldId, IsIconFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbstractWindow::editHandleIsIcon),
+        static_cast<FieldGetMethodSig >(&AbstractWindow::getHandleIsIcon));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "IsMaximized",
+        "",
+        IsMaximizedFieldId, IsMaximizedFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbstractWindow::editHandleIsMaximized),
+        static_cast<FieldGetMethodSig >(&AbstractWindow::getHandleIsMaximized));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Resizable",
+        "",
+        ResizableFieldId, ResizableFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbstractWindow::editHandleResizable),
+        static_cast<FieldGetMethodSig >(&AbstractWindow::getHandleResizable));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "IsSelected",
+        "",
+        IsSelectedFieldId, IsSelectedFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbstractWindow::editHandleIsSelected),
+        static_cast<FieldGetMethodSig >(&AbstractWindow::getHandleIsSelected));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFString::Description(
+        SFString::getClassType(),
+        "Title",
+        "",
+        TitleFieldId, TitleFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbstractWindow::editHandleTitle),
+        static_cast<FieldGetMethodSig >(&AbstractWindow::getHandleTitle));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
+        SFUnrecUIDrawObjectCanvasPtr::getClassType(),
+        "DesktopIcon",
+        "",
+        DesktopIconFieldId, DesktopIconFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbstractWindow::editHandleDesktopIcon),
+        static_cast<FieldGetMethodSig >(&AbstractWindow::getHandleDesktopIcon));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "AllwaysOnTop",
+        "",
+        AllwaysOnTopFieldId, AllwaysOnTopFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbstractWindow::editHandleAllwaysOnTop),
+        static_cast<FieldGetMethodSig >(&AbstractWindow::getHandleAllwaysOnTop));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "DrawTitlebar",
+        "",
+        DrawTitlebarFieldId, DrawTitlebarFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbstractWindow::editHandleDrawTitlebar),
+        static_cast<FieldGetMethodSig >(&AbstractWindow::getHandleDrawTitlebar));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "DrawDecorations",
+        "",
+        DrawDecorationsFieldId, DrawDecorationsFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbstractWindow::editHandleDrawDecorations),
+        static_cast<FieldGetMethodSig >(&AbstractWindow::getHandleDrawDecorations));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "LockInput",
+        "",
+        LockInputFieldId, LockInputFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbstractWindow::editHandleLockInput),
+        static_cast<FieldGetMethodSig >(&AbstractWindow::getHandleLockInput));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFVec2f::Description(
+        SFVec2f::getClassType(),
+        "AlignmentInDrawingSurface",
+        "",
+        AlignmentInDrawingSurfaceFieldId, AlignmentInDrawingSurfaceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbstractWindow::editHandleAlignmentInDrawingSurface),
+        static_cast<FieldGetMethodSig >(&AbstractWindow::getHandleAlignmentInDrawingSurface));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFVec2f::Description(
+        SFVec2f::getClassType(),
+        "ScalingInDrawingSurface",
+        "",
+        ScalingInDrawingSurfaceFieldId, ScalingInDrawingSurfaceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbstractWindow::editHandleScalingInDrawingSurface),
+        static_cast<FieldGetMethodSig >(&AbstractWindow::getHandleScalingInDrawingSurface));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "ResizeModifyCursorWidth",
+        "",
+        ResizeModifyCursorWidthFieldId, ResizeModifyCursorWidthFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbstractWindow::editHandleResizeModifyCursorWidth),
+        static_cast<FieldGetMethodSig >(&AbstractWindow::getHandleResizeModifyCursorWidth));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+AbstractWindowBase::TypeObject AbstractWindowBase::_type(
+    AbstractWindowBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
     NULL,
-    NULL, 
     AbstractWindow::initMethod,
-    _desc,
-    sizeof(_desc));
+    AbstractWindow::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&AbstractWindow::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "    name=\"AbstractWindow\"\n"
+    "    parent=\"ComponentContainer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "    structure=\"abstract\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    parentProducer=\"Component\"\n"
+    "    >\n"
+    "    A UI Abstract Window.\n"
+    "    <Field\n"
+    "        name=\"DrawingSurface\"\n"
+    "        type=\"UIDrawingSurface\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Closable\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"true\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Iconable\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"true\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Maximizable\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"true\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"IsClosed\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"true\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"IsIcon\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"false\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"IsMaximized\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"false\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Resizable\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"true\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"IsSelected\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"false\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Title\"\n"
+    "        type=\"std::string\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"DesktopIcon\"\n"
+    "        type=\"UIDrawObjectCanvas\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"AllwaysOnTop\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"false\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"DrawTitlebar\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"false\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"DrawDecorations\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"true\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"LockInput\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"false\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"AlignmentInDrawingSurface\"\n"
+    "        type=\"Vec2f\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"-1.0,-1.0\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"ScalingInDrawingSurface\"\n"
+    "        type=\"Vec2f\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"-1.0,-1.0\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"ResizeModifyCursorWidth\"\n"
+    "        type=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"3\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <ProducedMethod\n"
+    "        name=\"WindowOpened\"\n"
+    "        type=\"WindowEventPtr\"\n"
+    "        >\n"
+    "    </ProducedMethod>\n"
+    "    <ProducedMethod\n"
+    "        name=\"WindowClosing\"\n"
+    "        type=\"WindowEventPtr\"\n"
+    "        >\n"
+    "    </ProducedMethod>\n"
+    "    <ProducedMethod\n"
+    "        name=\"WindowClosed\"\n"
+    "        type=\"WindowEventPtr\"\n"
+    "        >\n"
+    "    </ProducedMethod>\n"
+    "    <ProducedMethod\n"
+    "        name=\"WindowIconified\"\n"
+    "        type=\"WindowEventPtr\"\n"
+    "        >\n"
+    "    </ProducedMethod>\n"
+    "    <ProducedMethod\n"
+    "        name=\"WindowDeiconified\"\n"
+    "        type=\"WindowEventPtr\"\n"
+    "        >\n"
+    "    </ProducedMethod>\n"
+    "    <ProducedMethod\n"
+    "        name=\"WindowActivated\"\n"
+    "        type=\"WindowEventPtr\"\n"
+    "        >\n"
+    "    </ProducedMethod>\n"
+    "    <ProducedMethod\n"
+    "        name=\"WindowDeactivated\"\n"
+    "        type=\"WindowEventPtr\"\n"
+    "        >\n"
+    "    </ProducedMethod>\n"
+    "    <ProducedMethod\n"
+    "        name=\"WindowEntered\"\n"
+    "        type=\"WindowEventPtr\"\n"
+    "        >\n"
+    "    </ProducedMethod>\n"
+    "    <ProducedMethod\n"
+    "        name=\"WindowExited\"\n"
+    "        type=\"WindowEventPtr\"\n"
+    "        >\n"
+    "    </ProducedMethod>\n"
+    "</FieldContainer>\n",
+    "A UI Abstract Window.\n"
+    );
 
 //! AbstractWindow Produced Methods
 
 MethodDescription *AbstractWindowBase::_methodDesc[] =
 {
     new MethodDescription("WindowOpened", 
+                    "",
                      WindowOpenedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("WindowClosing", 
+                    "",
                      WindowClosingMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("WindowClosed", 
+                    "",
                      WindowClosedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("WindowIconified", 
+                    "",
                      WindowIconifiedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("WindowDeiconified", 
+                    "",
                      WindowDeiconifiedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("WindowActivated", 
+                    "",
                      WindowActivatedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("WindowDeactivated", 
+                    "",
                      WindowDeactivatedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("WindowEntered", 
+                    "",
                      WindowEnteredMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("WindowExited", 
+                    "",
                      WindowExitedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod())
 };
 
 EventProducerType AbstractWindowBase::_producerType(
     "AbstractWindowProducerType",
     "ComponentProducerType",
-    NULL,
+    "",
     InitEventProducerFunctor(),
     _methodDesc,
     sizeof(_methodDesc));
-//OSG_FIELD_CONTAINER_DEF(AbstractWindowBase, AbstractWindowPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &AbstractWindowBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &AbstractWindowBase::getType(void) const 
+FieldContainerType &AbstractWindowBase::getType(void)
 {
     return _type;
-} 
+}
+
+const FieldContainerType &AbstractWindowBase::getType(void) const
+{
+    return _type;
+}
 
 const EventProducerType &AbstractWindowBase::getProducerType(void) const
 {
     return _producerType;
 }
 
-
-UInt32 AbstractWindowBase::getContainerSize(void) const 
-{ 
-    return sizeof(AbstractWindow); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void AbstractWindowBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+UInt32 AbstractWindowBase::getContainerSize(void) const
 {
-    this->executeSyncImpl(static_cast<AbstractWindowBase *>(&other),
-                          whichField);
+    return sizeof(AbstractWindow);
 }
-#else
-void AbstractWindowBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the AbstractWindow::_sfDrawingSurface field.
+const SFUnrecUIDrawingSurfacePtr *AbstractWindowBase::getSFDrawingSurface(void) const
 {
-    this->executeSyncImpl((AbstractWindowBase *) &other, whichField, sInfo);
+    return &_sfDrawingSurface;
 }
-void AbstractWindowBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+SFUnrecUIDrawingSurfacePtr *AbstractWindowBase::editSFDrawingSurface (void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(DrawingSurfaceFieldMask);
+
+    return &_sfDrawingSurface;
 }
 
-void AbstractWindowBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFBool *AbstractWindowBase::editSFClosable(void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(ClosableFieldMask);
 
+    return &_sfClosable;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-AbstractWindowBase::AbstractWindowBase(void) :
-    _sfDrawingSurface         (UIDrawingSurfacePtr(NullFC)), 
-    _sfClosable               (bool(true)), 
-    _sfIconable               (bool(true)), 
-    _sfMaximizable            (bool(true)), 
-    _sfIsClosed               (bool(true)), 
-    _sfIsIcon                 (bool(false)), 
-    _sfIsMaximized            (bool(false)), 
-    _sfResizable              (bool(true)), 
-    _sfIsSelected             (bool(false)), 
-    _sfTitle                  (), 
-    _sfDesktopIcon            (UIDrawObjectCanvasPtr(NullFC)), 
-    _sfAllwaysOnTop           (bool(false)), 
-    _sfDrawTitlebar           (bool(false)), 
-    _sfDrawDecorations        (bool(true)), 
-    _sfLockInput              (bool(false)), 
-    _sfAlignmentInDrawingSurface(Vec2f(-1.0,-1.0)), 
-    _sfScalingInDrawingSurface(Vec2f(-1.0,-1.0)), 
-    _sfResizeModifyCursorWidth(UInt32(3)), 
-    Inherited() 
+const SFBool *AbstractWindowBase::getSFClosable(void) const
 {
-    _Producer.setType(&_producerType);
+    return &_sfClosable;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-AbstractWindowBase::AbstractWindowBase(const AbstractWindowBase &source) :
-    _sfDrawingSurface         (source._sfDrawingSurface         ), 
-    _sfClosable               (source._sfClosable               ), 
-    _sfIconable               (source._sfIconable               ), 
-    _sfMaximizable            (source._sfMaximizable            ), 
-    _sfIsClosed               (source._sfIsClosed               ), 
-    _sfIsIcon                 (source._sfIsIcon                 ), 
-    _sfIsMaximized            (source._sfIsMaximized            ), 
-    _sfResizable              (source._sfResizable              ), 
-    _sfIsSelected             (source._sfIsSelected             ), 
-    _sfTitle                  (source._sfTitle                  ), 
-    _sfDesktopIcon            (source._sfDesktopIcon            ), 
-    _sfAllwaysOnTop           (source._sfAllwaysOnTop           ), 
-    _sfDrawTitlebar           (source._sfDrawTitlebar           ), 
-    _sfDrawDecorations        (source._sfDrawDecorations        ), 
-    _sfLockInput              (source._sfLockInput              ), 
-    _sfAlignmentInDrawingSurface(source._sfAlignmentInDrawingSurface), 
-    _sfScalingInDrawingSurface(source._sfScalingInDrawingSurface), 
-    _sfResizeModifyCursorWidth(source._sfResizeModifyCursorWidth), 
-    Inherited                 (source)
+SFBool *AbstractWindowBase::editSFIconable(void)
 {
+    editSField(IconableFieldMask);
+
+    return &_sfIconable;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-AbstractWindowBase::~AbstractWindowBase(void)
+const SFBool *AbstractWindowBase::getSFIconable(void) const
 {
+    return &_sfIconable;
 }
+
+
+SFBool *AbstractWindowBase::editSFMaximizable(void)
+{
+    editSField(MaximizableFieldMask);
+
+    return &_sfMaximizable;
+}
+
+const SFBool *AbstractWindowBase::getSFMaximizable(void) const
+{
+    return &_sfMaximizable;
+}
+
+
+SFBool *AbstractWindowBase::editSFIsClosed(void)
+{
+    editSField(IsClosedFieldMask);
+
+    return &_sfIsClosed;
+}
+
+const SFBool *AbstractWindowBase::getSFIsClosed(void) const
+{
+    return &_sfIsClosed;
+}
+
+
+SFBool *AbstractWindowBase::editSFIsIcon(void)
+{
+    editSField(IsIconFieldMask);
+
+    return &_sfIsIcon;
+}
+
+const SFBool *AbstractWindowBase::getSFIsIcon(void) const
+{
+    return &_sfIsIcon;
+}
+
+
+SFBool *AbstractWindowBase::editSFIsMaximized(void)
+{
+    editSField(IsMaximizedFieldMask);
+
+    return &_sfIsMaximized;
+}
+
+const SFBool *AbstractWindowBase::getSFIsMaximized(void) const
+{
+    return &_sfIsMaximized;
+}
+
+
+SFBool *AbstractWindowBase::editSFResizable(void)
+{
+    editSField(ResizableFieldMask);
+
+    return &_sfResizable;
+}
+
+const SFBool *AbstractWindowBase::getSFResizable(void) const
+{
+    return &_sfResizable;
+}
+
+
+SFBool *AbstractWindowBase::editSFIsSelected(void)
+{
+    editSField(IsSelectedFieldMask);
+
+    return &_sfIsSelected;
+}
+
+const SFBool *AbstractWindowBase::getSFIsSelected(void) const
+{
+    return &_sfIsSelected;
+}
+
+
+SFString *AbstractWindowBase::editSFTitle(void)
+{
+    editSField(TitleFieldMask);
+
+    return &_sfTitle;
+}
+
+const SFString *AbstractWindowBase::getSFTitle(void) const
+{
+    return &_sfTitle;
+}
+
+
+//! Get the AbstractWindow::_sfDesktopIcon field.
+const SFUnrecUIDrawObjectCanvasPtr *AbstractWindowBase::getSFDesktopIcon(void) const
+{
+    return &_sfDesktopIcon;
+}
+
+SFUnrecUIDrawObjectCanvasPtr *AbstractWindowBase::editSFDesktopIcon    (void)
+{
+    editSField(DesktopIconFieldMask);
+
+    return &_sfDesktopIcon;
+}
+
+SFBool *AbstractWindowBase::editSFAllwaysOnTop(void)
+{
+    editSField(AllwaysOnTopFieldMask);
+
+    return &_sfAllwaysOnTop;
+}
+
+const SFBool *AbstractWindowBase::getSFAllwaysOnTop(void) const
+{
+    return &_sfAllwaysOnTop;
+}
+
+
+SFBool *AbstractWindowBase::editSFDrawTitlebar(void)
+{
+    editSField(DrawTitlebarFieldMask);
+
+    return &_sfDrawTitlebar;
+}
+
+const SFBool *AbstractWindowBase::getSFDrawTitlebar(void) const
+{
+    return &_sfDrawTitlebar;
+}
+
+
+SFBool *AbstractWindowBase::editSFDrawDecorations(void)
+{
+    editSField(DrawDecorationsFieldMask);
+
+    return &_sfDrawDecorations;
+}
+
+const SFBool *AbstractWindowBase::getSFDrawDecorations(void) const
+{
+    return &_sfDrawDecorations;
+}
+
+
+SFBool *AbstractWindowBase::editSFLockInput(void)
+{
+    editSField(LockInputFieldMask);
+
+    return &_sfLockInput;
+}
+
+const SFBool *AbstractWindowBase::getSFLockInput(void) const
+{
+    return &_sfLockInput;
+}
+
+
+SFVec2f *AbstractWindowBase::editSFAlignmentInDrawingSurface(void)
+{
+    editSField(AlignmentInDrawingSurfaceFieldMask);
+
+    return &_sfAlignmentInDrawingSurface;
+}
+
+const SFVec2f *AbstractWindowBase::getSFAlignmentInDrawingSurface(void) const
+{
+    return &_sfAlignmentInDrawingSurface;
+}
+
+
+SFVec2f *AbstractWindowBase::editSFScalingInDrawingSurface(void)
+{
+    editSField(ScalingInDrawingSurfaceFieldMask);
+
+    return &_sfScalingInDrawingSurface;
+}
+
+const SFVec2f *AbstractWindowBase::getSFScalingInDrawingSurface(void) const
+{
+    return &_sfScalingInDrawingSurface;
+}
+
+
+SFUInt32 *AbstractWindowBase::editSFResizeModifyCursorWidth(void)
+{
+    editSField(ResizeModifyCursorWidthFieldMask);
+
+    return &_sfResizeModifyCursorWidth;
+}
+
+const SFUInt32 *AbstractWindowBase::getSFResizeModifyCursorWidth(void) const
+{
+    return &_sfResizeModifyCursorWidth;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 AbstractWindowBase::getBinSize(const BitVector &whichField)
+UInt32 AbstractWindowBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -461,98 +992,80 @@ UInt32 AbstractWindowBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfDrawingSurface.getBinSize();
     }
-
     if(FieldBits::NoField != (ClosableFieldMask & whichField))
     {
         returnValue += _sfClosable.getBinSize();
     }
-
     if(FieldBits::NoField != (IconableFieldMask & whichField))
     {
         returnValue += _sfIconable.getBinSize();
     }
-
     if(FieldBits::NoField != (MaximizableFieldMask & whichField))
     {
         returnValue += _sfMaximizable.getBinSize();
     }
-
     if(FieldBits::NoField != (IsClosedFieldMask & whichField))
     {
         returnValue += _sfIsClosed.getBinSize();
     }
-
     if(FieldBits::NoField != (IsIconFieldMask & whichField))
     {
         returnValue += _sfIsIcon.getBinSize();
     }
-
     if(FieldBits::NoField != (IsMaximizedFieldMask & whichField))
     {
         returnValue += _sfIsMaximized.getBinSize();
     }
-
     if(FieldBits::NoField != (ResizableFieldMask & whichField))
     {
         returnValue += _sfResizable.getBinSize();
     }
-
     if(FieldBits::NoField != (IsSelectedFieldMask & whichField))
     {
         returnValue += _sfIsSelected.getBinSize();
     }
-
     if(FieldBits::NoField != (TitleFieldMask & whichField))
     {
         returnValue += _sfTitle.getBinSize();
     }
-
     if(FieldBits::NoField != (DesktopIconFieldMask & whichField))
     {
         returnValue += _sfDesktopIcon.getBinSize();
     }
-
     if(FieldBits::NoField != (AllwaysOnTopFieldMask & whichField))
     {
         returnValue += _sfAllwaysOnTop.getBinSize();
     }
-
     if(FieldBits::NoField != (DrawTitlebarFieldMask & whichField))
     {
         returnValue += _sfDrawTitlebar.getBinSize();
     }
-
     if(FieldBits::NoField != (DrawDecorationsFieldMask & whichField))
     {
         returnValue += _sfDrawDecorations.getBinSize();
     }
-
     if(FieldBits::NoField != (LockInputFieldMask & whichField))
     {
         returnValue += _sfLockInput.getBinSize();
     }
-
     if(FieldBits::NoField != (AlignmentInDrawingSurfaceFieldMask & whichField))
     {
         returnValue += _sfAlignmentInDrawingSurface.getBinSize();
     }
-
     if(FieldBits::NoField != (ScalingInDrawingSurfaceFieldMask & whichField))
     {
         returnValue += _sfScalingInDrawingSurface.getBinSize();
     }
-
     if(FieldBits::NoField != (ResizeModifyCursorWidthFieldMask & whichField))
     {
         returnValue += _sfResizeModifyCursorWidth.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void AbstractWindowBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void AbstractWindowBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -560,97 +1073,78 @@ void AbstractWindowBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfDrawingSurface.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ClosableFieldMask & whichField))
     {
         _sfClosable.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (IconableFieldMask & whichField))
     {
         _sfIconable.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MaximizableFieldMask & whichField))
     {
         _sfMaximizable.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (IsClosedFieldMask & whichField))
     {
         _sfIsClosed.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (IsIconFieldMask & whichField))
     {
         _sfIsIcon.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (IsMaximizedFieldMask & whichField))
     {
         _sfIsMaximized.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ResizableFieldMask & whichField))
     {
         _sfResizable.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (IsSelectedFieldMask & whichField))
     {
         _sfIsSelected.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TitleFieldMask & whichField))
     {
         _sfTitle.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DesktopIconFieldMask & whichField))
     {
         _sfDesktopIcon.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (AllwaysOnTopFieldMask & whichField))
     {
         _sfAllwaysOnTop.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawTitlebarFieldMask & whichField))
     {
         _sfDrawTitlebar.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawDecorationsFieldMask & whichField))
     {
         _sfDrawDecorations.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (LockInputFieldMask & whichField))
     {
         _sfLockInput.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (AlignmentInDrawingSurfaceFieldMask & whichField))
     {
         _sfAlignmentInDrawingSurface.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ScalingInDrawingSurfaceFieldMask & whichField))
     {
         _sfScalingInDrawingSurface.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ResizeModifyCursorWidthFieldMask & whichField))
     {
         _sfResizeModifyCursorWidth.copyToBin(pMem);
     }
-
-
 }
 
-void AbstractWindowBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void AbstractWindowBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -658,249 +1152,635 @@ void AbstractWindowBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfDrawingSurface.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ClosableFieldMask & whichField))
     {
         _sfClosable.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (IconableFieldMask & whichField))
     {
         _sfIconable.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MaximizableFieldMask & whichField))
     {
         _sfMaximizable.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (IsClosedFieldMask & whichField))
     {
         _sfIsClosed.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (IsIconFieldMask & whichField))
     {
         _sfIsIcon.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (IsMaximizedFieldMask & whichField))
     {
         _sfIsMaximized.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ResizableFieldMask & whichField))
     {
         _sfResizable.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (IsSelectedFieldMask & whichField))
     {
         _sfIsSelected.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TitleFieldMask & whichField))
     {
         _sfTitle.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DesktopIconFieldMask & whichField))
     {
         _sfDesktopIcon.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (AllwaysOnTopFieldMask & whichField))
     {
         _sfAllwaysOnTop.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawTitlebarFieldMask & whichField))
     {
         _sfDrawTitlebar.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawDecorationsFieldMask & whichField))
     {
         _sfDrawDecorations.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (LockInputFieldMask & whichField))
     {
         _sfLockInput.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (AlignmentInDrawingSurfaceFieldMask & whichField))
     {
         _sfAlignmentInDrawingSurface.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ScalingInDrawingSurfaceFieldMask & whichField))
     {
         _sfScalingInDrawingSurface.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ResizeModifyCursorWidthFieldMask & whichField))
     {
         _sfResizeModifyCursorWidth.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void AbstractWindowBase::executeSyncImpl(      AbstractWindowBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+AbstractWindowBase::AbstractWindowBase(void) :
+    Inherited(),
+    _sfDrawingSurface         (NULL),
+    _sfClosable               (bool(true)),
+    _sfIconable               (bool(true)),
+    _sfMaximizable            (bool(true)),
+    _sfIsClosed               (bool(true)),
+    _sfIsIcon                 (bool(false)),
+    _sfIsMaximized            (bool(false)),
+    _sfResizable              (bool(true)),
+    _sfIsSelected             (bool(false)),
+    _sfTitle                  (),
+    _sfDesktopIcon            (NULL),
+    _sfAllwaysOnTop           (bool(false)),
+    _sfDrawTitlebar           (bool(false)),
+    _sfDrawDecorations        (bool(true)),
+    _sfLockInput              (bool(false)),
+    _sfAlignmentInDrawingSurface(Vec2f(-1.0,-1.0)),
+    _sfScalingInDrawingSurface(Vec2f(-1.0,-1.0)),
+    _sfResizeModifyCursorWidth(UInt32(3))
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-    if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
-        _sfDrawingSurface.syncWith(pOther->_sfDrawingSurface);
-
-    if(FieldBits::NoField != (ClosableFieldMask & whichField))
-        _sfClosable.syncWith(pOther->_sfClosable);
-
-    if(FieldBits::NoField != (IconableFieldMask & whichField))
-        _sfIconable.syncWith(pOther->_sfIconable);
-
-    if(FieldBits::NoField != (MaximizableFieldMask & whichField))
-        _sfMaximizable.syncWith(pOther->_sfMaximizable);
-
-    if(FieldBits::NoField != (IsClosedFieldMask & whichField))
-        _sfIsClosed.syncWith(pOther->_sfIsClosed);
-
-    if(FieldBits::NoField != (IsIconFieldMask & whichField))
-        _sfIsIcon.syncWith(pOther->_sfIsIcon);
-
-    if(FieldBits::NoField != (IsMaximizedFieldMask & whichField))
-        _sfIsMaximized.syncWith(pOther->_sfIsMaximized);
-
-    if(FieldBits::NoField != (ResizableFieldMask & whichField))
-        _sfResizable.syncWith(pOther->_sfResizable);
-
-    if(FieldBits::NoField != (IsSelectedFieldMask & whichField))
-        _sfIsSelected.syncWith(pOther->_sfIsSelected);
-
-    if(FieldBits::NoField != (TitleFieldMask & whichField))
-        _sfTitle.syncWith(pOther->_sfTitle);
-
-    if(FieldBits::NoField != (DesktopIconFieldMask & whichField))
-        _sfDesktopIcon.syncWith(pOther->_sfDesktopIcon);
-
-    if(FieldBits::NoField != (AllwaysOnTopFieldMask & whichField))
-        _sfAllwaysOnTop.syncWith(pOther->_sfAllwaysOnTop);
-
-    if(FieldBits::NoField != (DrawTitlebarFieldMask & whichField))
-        _sfDrawTitlebar.syncWith(pOther->_sfDrawTitlebar);
-
-    if(FieldBits::NoField != (DrawDecorationsFieldMask & whichField))
-        _sfDrawDecorations.syncWith(pOther->_sfDrawDecorations);
-
-    if(FieldBits::NoField != (LockInputFieldMask & whichField))
-        _sfLockInput.syncWith(pOther->_sfLockInput);
-
-    if(FieldBits::NoField != (AlignmentInDrawingSurfaceFieldMask & whichField))
-        _sfAlignmentInDrawingSurface.syncWith(pOther->_sfAlignmentInDrawingSurface);
-
-    if(FieldBits::NoField != (ScalingInDrawingSurfaceFieldMask & whichField))
-        _sfScalingInDrawingSurface.syncWith(pOther->_sfScalingInDrawingSurface);
-
-    if(FieldBits::NoField != (ResizeModifyCursorWidthFieldMask & whichField))
-        _sfResizeModifyCursorWidth.syncWith(pOther->_sfResizeModifyCursorWidth);
-
-
-}
-#else
-void AbstractWindowBase::executeSyncImpl(      AbstractWindowBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
-        _sfDrawingSurface.syncWith(pOther->_sfDrawingSurface);
-
-    if(FieldBits::NoField != (ClosableFieldMask & whichField))
-        _sfClosable.syncWith(pOther->_sfClosable);
-
-    if(FieldBits::NoField != (IconableFieldMask & whichField))
-        _sfIconable.syncWith(pOther->_sfIconable);
-
-    if(FieldBits::NoField != (MaximizableFieldMask & whichField))
-        _sfMaximizable.syncWith(pOther->_sfMaximizable);
-
-    if(FieldBits::NoField != (IsClosedFieldMask & whichField))
-        _sfIsClosed.syncWith(pOther->_sfIsClosed);
-
-    if(FieldBits::NoField != (IsIconFieldMask & whichField))
-        _sfIsIcon.syncWith(pOther->_sfIsIcon);
-
-    if(FieldBits::NoField != (IsMaximizedFieldMask & whichField))
-        _sfIsMaximized.syncWith(pOther->_sfIsMaximized);
-
-    if(FieldBits::NoField != (ResizableFieldMask & whichField))
-        _sfResizable.syncWith(pOther->_sfResizable);
-
-    if(FieldBits::NoField != (IsSelectedFieldMask & whichField))
-        _sfIsSelected.syncWith(pOther->_sfIsSelected);
-
-    if(FieldBits::NoField != (TitleFieldMask & whichField))
-        _sfTitle.syncWith(pOther->_sfTitle);
-
-    if(FieldBits::NoField != (DesktopIconFieldMask & whichField))
-        _sfDesktopIcon.syncWith(pOther->_sfDesktopIcon);
-
-    if(FieldBits::NoField != (AllwaysOnTopFieldMask & whichField))
-        _sfAllwaysOnTop.syncWith(pOther->_sfAllwaysOnTop);
-
-    if(FieldBits::NoField != (DrawTitlebarFieldMask & whichField))
-        _sfDrawTitlebar.syncWith(pOther->_sfDrawTitlebar);
-
-    if(FieldBits::NoField != (DrawDecorationsFieldMask & whichField))
-        _sfDrawDecorations.syncWith(pOther->_sfDrawDecorations);
-
-    if(FieldBits::NoField != (LockInputFieldMask & whichField))
-        _sfLockInput.syncWith(pOther->_sfLockInput);
-
-    if(FieldBits::NoField != (AlignmentInDrawingSurfaceFieldMask & whichField))
-        _sfAlignmentInDrawingSurface.syncWith(pOther->_sfAlignmentInDrawingSurface);
-
-    if(FieldBits::NoField != (ScalingInDrawingSurfaceFieldMask & whichField))
-        _sfScalingInDrawingSurface.syncWith(pOther->_sfScalingInDrawingSurface);
-
-    if(FieldBits::NoField != (ResizeModifyCursorWidthFieldMask & whichField))
-        _sfResizeModifyCursorWidth.syncWith(pOther->_sfResizeModifyCursorWidth);
-
-
-
+    _Producer.setType(&_producerType);
 }
 
-void AbstractWindowBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+AbstractWindowBase::AbstractWindowBase(const AbstractWindowBase &source) :
+    Inherited(source),
+    _sfDrawingSurface         (NULL),
+    _sfClosable               (source._sfClosable               ),
+    _sfIconable               (source._sfIconable               ),
+    _sfMaximizable            (source._sfMaximizable            ),
+    _sfIsClosed               (source._sfIsClosed               ),
+    _sfIsIcon                 (source._sfIsIcon                 ),
+    _sfIsMaximized            (source._sfIsMaximized            ),
+    _sfResizable              (source._sfResizable              ),
+    _sfIsSelected             (source._sfIsSelected             ),
+    _sfTitle                  (source._sfTitle                  ),
+    _sfDesktopIcon            (NULL),
+    _sfAllwaysOnTop           (source._sfAllwaysOnTop           ),
+    _sfDrawTitlebar           (source._sfDrawTitlebar           ),
+    _sfDrawDecorations        (source._sfDrawDecorations        ),
+    _sfLockInput              (source._sfLockInput              ),
+    _sfAlignmentInDrawingSurface(source._sfAlignmentInDrawingSurface),
+    _sfScalingInDrawingSurface(source._sfScalingInDrawingSurface),
+    _sfResizeModifyCursorWidth(source._sfResizeModifyCursorWidth)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
+
+/*-------------------------- destructors ----------------------------------*/
+
+AbstractWindowBase::~AbstractWindowBase(void)
+{
+}
+
+void AbstractWindowBase::onCreate(const AbstractWindow *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        AbstractWindow *pThis = static_cast<AbstractWindow *>(this);
+
+        pThis->setDrawingSurface(source->getDrawingSurface());
+
+        pThis->setDesktopIcon(source->getDesktopIcon());
+    }
+}
+
+GetFieldHandlePtr AbstractWindowBase::getHandleDrawingSurface  (void) const
+{
+    SFUnrecUIDrawingSurfacePtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawingSurfacePtr::GetHandle(
+             &_sfDrawingSurface,
+             this->getType().getFieldDesc(DrawingSurfaceFieldId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbstractWindowBase::editHandleDrawingSurface (void)
+{
+    SFUnrecUIDrawingSurfacePtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawingSurfacePtr::EditHandle(
+             &_sfDrawingSurface,
+             this->getType().getFieldDesc(DrawingSurfaceFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&AbstractWindow::setDrawingSurface,
+                    static_cast<AbstractWindow *>(this), _1));
+
+    editSField(DrawingSurfaceFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AbstractWindowBase::getHandleClosable        (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfClosable,
+             this->getType().getFieldDesc(ClosableFieldId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbstractWindowBase::editHandleClosable       (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfClosable,
+             this->getType().getFieldDesc(ClosableFieldId),
+             this));
+
+
+    editSField(ClosableFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AbstractWindowBase::getHandleIconable        (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfIconable,
+             this->getType().getFieldDesc(IconableFieldId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbstractWindowBase::editHandleIconable       (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfIconable,
+             this->getType().getFieldDesc(IconableFieldId),
+             this));
+
+
+    editSField(IconableFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AbstractWindowBase::getHandleMaximizable     (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfMaximizable,
+             this->getType().getFieldDesc(MaximizableFieldId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbstractWindowBase::editHandleMaximizable    (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfMaximizable,
+             this->getType().getFieldDesc(MaximizableFieldId),
+             this));
+
+
+    editSField(MaximizableFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AbstractWindowBase::getHandleIsClosed        (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfIsClosed,
+             this->getType().getFieldDesc(IsClosedFieldId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbstractWindowBase::editHandleIsClosed       (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfIsClosed,
+             this->getType().getFieldDesc(IsClosedFieldId),
+             this));
+
+
+    editSField(IsClosedFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AbstractWindowBase::getHandleIsIcon          (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfIsIcon,
+             this->getType().getFieldDesc(IsIconFieldId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbstractWindowBase::editHandleIsIcon         (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfIsIcon,
+             this->getType().getFieldDesc(IsIconFieldId),
+             this));
+
+
+    editSField(IsIconFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AbstractWindowBase::getHandleIsMaximized     (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfIsMaximized,
+             this->getType().getFieldDesc(IsMaximizedFieldId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbstractWindowBase::editHandleIsMaximized    (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfIsMaximized,
+             this->getType().getFieldDesc(IsMaximizedFieldId),
+             this));
+
+
+    editSField(IsMaximizedFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AbstractWindowBase::getHandleResizable       (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfResizable,
+             this->getType().getFieldDesc(ResizableFieldId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbstractWindowBase::editHandleResizable      (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfResizable,
+             this->getType().getFieldDesc(ResizableFieldId),
+             this));
+
+
+    editSField(ResizableFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AbstractWindowBase::getHandleIsSelected      (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfIsSelected,
+             this->getType().getFieldDesc(IsSelectedFieldId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbstractWindowBase::editHandleIsSelected     (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfIsSelected,
+             this->getType().getFieldDesc(IsSelectedFieldId),
+             this));
+
+
+    editSField(IsSelectedFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AbstractWindowBase::getHandleTitle           (void) const
+{
+    SFString::GetHandlePtr returnValue(
+        new  SFString::GetHandle(
+             &_sfTitle,
+             this->getType().getFieldDesc(TitleFieldId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbstractWindowBase::editHandleTitle          (void)
+{
+    SFString::EditHandlePtr returnValue(
+        new  SFString::EditHandle(
+             &_sfTitle,
+             this->getType().getFieldDesc(TitleFieldId),
+             this));
+
+
+    editSField(TitleFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AbstractWindowBase::getHandleDesktopIcon     (void) const
+{
+    SFUnrecUIDrawObjectCanvasPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::GetHandle(
+             &_sfDesktopIcon,
+             this->getType().getFieldDesc(DesktopIconFieldId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbstractWindowBase::editHandleDesktopIcon    (void)
+{
+    SFUnrecUIDrawObjectCanvasPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::EditHandle(
+             &_sfDesktopIcon,
+             this->getType().getFieldDesc(DesktopIconFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&AbstractWindow::setDesktopIcon,
+                    static_cast<AbstractWindow *>(this), _1));
+
+    editSField(DesktopIconFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AbstractWindowBase::getHandleAllwaysOnTop    (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfAllwaysOnTop,
+             this->getType().getFieldDesc(AllwaysOnTopFieldId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbstractWindowBase::editHandleAllwaysOnTop   (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfAllwaysOnTop,
+             this->getType().getFieldDesc(AllwaysOnTopFieldId),
+             this));
+
+
+    editSField(AllwaysOnTopFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AbstractWindowBase::getHandleDrawTitlebar    (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfDrawTitlebar,
+             this->getType().getFieldDesc(DrawTitlebarFieldId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbstractWindowBase::editHandleDrawTitlebar   (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfDrawTitlebar,
+             this->getType().getFieldDesc(DrawTitlebarFieldId),
+             this));
+
+
+    editSField(DrawTitlebarFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AbstractWindowBase::getHandleDrawDecorations (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfDrawDecorations,
+             this->getType().getFieldDesc(DrawDecorationsFieldId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbstractWindowBase::editHandleDrawDecorations(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfDrawDecorations,
+             this->getType().getFieldDesc(DrawDecorationsFieldId),
+             this));
+
+
+    editSField(DrawDecorationsFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AbstractWindowBase::getHandleLockInput       (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfLockInput,
+             this->getType().getFieldDesc(LockInputFieldId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbstractWindowBase::editHandleLockInput      (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfLockInput,
+             this->getType().getFieldDesc(LockInputFieldId),
+             this));
+
+
+    editSField(LockInputFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AbstractWindowBase::getHandleAlignmentInDrawingSurface (void) const
+{
+    SFVec2f::GetHandlePtr returnValue(
+        new  SFVec2f::GetHandle(
+             &_sfAlignmentInDrawingSurface,
+             this->getType().getFieldDesc(AlignmentInDrawingSurfaceFieldId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbstractWindowBase::editHandleAlignmentInDrawingSurface(void)
+{
+    SFVec2f::EditHandlePtr returnValue(
+        new  SFVec2f::EditHandle(
+             &_sfAlignmentInDrawingSurface,
+             this->getType().getFieldDesc(AlignmentInDrawingSurfaceFieldId),
+             this));
+
+
+    editSField(AlignmentInDrawingSurfaceFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AbstractWindowBase::getHandleScalingInDrawingSurface (void) const
+{
+    SFVec2f::GetHandlePtr returnValue(
+        new  SFVec2f::GetHandle(
+             &_sfScalingInDrawingSurface,
+             this->getType().getFieldDesc(ScalingInDrawingSurfaceFieldId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbstractWindowBase::editHandleScalingInDrawingSurface(void)
+{
+    SFVec2f::EditHandlePtr returnValue(
+        new  SFVec2f::EditHandle(
+             &_sfScalingInDrawingSurface,
+             this->getType().getFieldDesc(ScalingInDrawingSurfaceFieldId),
+             this));
+
+
+    editSField(ScalingInDrawingSurfaceFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AbstractWindowBase::getHandleResizeModifyCursorWidth (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfResizeModifyCursorWidth,
+             this->getType().getFieldDesc(ResizeModifyCursorWidthFieldId),
+             const_cast<AbstractWindowBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbstractWindowBase::editHandleResizeModifyCursorWidth(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfResizeModifyCursorWidth,
+             this->getType().getFieldDesc(ResizeModifyCursorWidthFieldId),
+             this));
+
+
+    editSField(ResizeModifyCursorWidthFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void AbstractWindowBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    AbstractWindow *pThis = static_cast<AbstractWindow *>(this);
+
+    pThis->execSync(static_cast<AbstractWindow *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
 
-OSG_END_NAMESPACE
+void AbstractWindowBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
+    static_cast<AbstractWindow *>(this)->setDrawingSurface(NULL);
 
-OSG_BEGIN_NAMESPACE
+    static_cast<AbstractWindow *>(this)->setDesktopIcon(NULL);
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<AbstractWindowPtr>::_type("AbstractWindowPtr", "ContainerPtr");
-#endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(AbstractWindowPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(AbstractWindowPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+}
 
 
 OSG_END_NAMESPACE
-

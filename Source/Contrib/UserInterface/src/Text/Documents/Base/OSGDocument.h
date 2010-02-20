@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,100 +42,44 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include <vector>
-#include <map>
-
 #include "OSGDocumentBase.h"
-#include "OSGElementFields.h"
-#include "UndoableEdit/OSGUndoableEditListener.h"
-#include "OSGDocumentListener.h"
-#include <OpenSG/Toolbox/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Document class. See \ref 
-           PageUserInterfaceDocument for a description.
+/*! \brief Document class. See \ref
+           PageContribUserInterfaceDocument for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING Document : public DocumentBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Document : public DocumentBase
 {
-  private:
-
-    typedef DocumentBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef DocumentBase Inherited;
+    typedef Document     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    //Registers the given observer to begin receiving notifications when changes are made to the document.
-    virtual EventConnection addDocumentListener(DocumentListenerPtr Listener) = 0;
+    /*=========================  PROTECTED  ===============================*/
 
-	virtual bool isDocumentListenerAttached(DocumentListenerPtr Listener) const = 0;
-
-    //Unregisters the given observer from the notification list so it will no longer receive change updates.
-    virtual void removeDocumentListener(DocumentListenerPtr Listener) = 0;
-
-    //Registers the given observer to begin receiving notifications when undoable edits are made to the document.
-    virtual EventConnection addUndoableEditListener(UndoableEditListenerPtr Listener) = 0;
-
-	virtual bool isUndoableEditListenerAttached(UndoableEditListenerPtr Listener) const = 0;
-
-    //Unregisters the given observer from the notification list so it will no longer receive updates.
-    virtual void removeUndoableEditListener(UndoableEditListenerPtr Listener) = 0;
-
-    //This method allows an application to mark a place in a sequence of character content.
-    virtual UInt32 createPosition(Int32 offs) = 0;
-
-    //Returns the root element that views should be based upon, unless some other mechanism for assigning views to element structures is provided.
-    virtual ElementPtr getDefaultRootElement(void) const = 0;
-
-    //Returns a position that represents the end of the document.
-    virtual UInt32 getEndPosition(void) const = 0;
-
-    //Returns number of characters of content currently in the document.
-    virtual UInt32 getLength(void) const = 0;
-
-    //Gets the properties associated with the document.
-    virtual UInt32 getProperty(const std::string& key) const = 0;
-
-    //Returns all of the root elements that are defined.
-    virtual std::vector<ElementPtr> getRootElements(void) = 0;
-
-    //Returns a position that represents the start of the document.
-    virtual UInt64 getStartPosition(void) const = 0;
-
-    //Fetches the text contained within the given portion of the document.
-    virtual std::string getText(Int32 offset, UInt32 length) const = 0;
-
-    //Fetches the text contained within the given portion of the document.
-    virtual void getText(Int32 offset, UInt32 length, std::string& txt) const = 0;
-
-    //Inserts a string of content.
-    virtual void insertString(Int32 offset, const std::string& str, std::map<std::string,UInt32> properties) = 0;
-
-    //Associates a property with the document.
-    virtual void putProperty(const std::string& key, UInt32 value) = 0;
-
-    //Removes a portion of the content of the document.
-    virtual void remove(Int32 offs, UInt32 len) = 0;
-
-/*=========================  PROTECTED  ===============================*/
   protected:
 
     // Variables should all be in DocumentBase.
@@ -152,20 +96,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING Document : public DocumentBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Document(void); 
+    virtual ~Document(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class DocumentBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const Document &source);
 };
 

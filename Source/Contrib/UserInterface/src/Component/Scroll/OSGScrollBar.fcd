@@ -2,21 +2,23 @@
 
 <FieldContainer
 	name="ScrollBar"
-	parent="Container"
-    parentHeader="Component/Container/OSGContainer"
-	library="UserInterface"
-	pointerfieldtypes="both"
+	parent="ComponentContainer"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
+    systemcomponent="true"
+    parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="true"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
     parentProducer="Component"
 >
 A UI ScrollBar.
 	<Field
 		name="Orientation"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -26,6 +28,7 @@ A UI ScrollBar.
 	<Field
 		name="UnitIncrement"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -35,6 +38,7 @@ A UI ScrollBar.
 	<Field
 		name="BlockIncrement"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -43,87 +47,88 @@ A UI ScrollBar.
 	</Field>
 	<Field
 		name="VerticalMinButton"
-		type="ButtonPtr"
+		type="Button"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Component/Button/OSGButton.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="VerticalMaxButton"
-		type="ButtonPtr"
+		type="Button"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Component/Button/OSGButton.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="VerticalScrollBar"
-		type="ButtonPtr"
+		type="Button"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Component/Button/OSGButton.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="VerticalScrollField"
-		type="ButtonPtr"
+		type="Button"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Component/Button/OSGButton.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="HorizontalMinButton"
-		type="ButtonPtr"
+		type="Button"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Component/Button/OSGButton.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="HorizontalMaxButton"
-		type="ButtonPtr"
+		type="Button"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Component/Button/OSGButton.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="HorizontalScrollBar"
-		type="ButtonPtr"
+		type="Button"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Component/Button/OSGButton.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="HorizontalScrollField"
-		type="ButtonPtr"
+		type="Button"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Component/Button/OSGButton.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="ScrollBarMinLength"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -132,17 +137,17 @@ A UI ScrollBar.
 	</Field>
 	<Field
 		name="RangeModel"
-		type="BoundedRangeModelPtr"
+		type="BoundedRangeModel"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="Component/Scroll/OSGBoundedRangeModelFields.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<ProducedMethod
 		name="AdjustmentValueChanged"
-		producedEventType="AdjustmentEventPtr"
+		type="AdjustmentEventPtr"
 	>
 	</ProducedMethod>
 </FieldContainer>

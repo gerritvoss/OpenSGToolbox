@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,142 +50,168 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEGLVIEWPORTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGViewport.h"                // Port Class
 
 #include "OSGGLViewportBase.h"
 #include "OSGGLViewport.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  GLViewportBase::PortFieldMask = 
-    (TypeTraits<BitVector>::One << GLViewportBase::PortFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector GLViewportBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::GLViewport
+    An OpenSG Viewport Component.
+ */
 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-// Field descriptions
-
-/*! \var ViewportPtr     GLViewportBase::_sfPort
+/*! \var Viewport *      GLViewportBase::_sfPort
     
 */
 
-//! GLViewport description
 
-FieldDescription *GLViewportBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<GLViewport *>::_type("GLViewportPtr", "ComponentPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(GLViewport *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           GLViewport *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           GLViewport *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void GLViewportBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFViewportPtr::getClassType(), 
-                     "Port", 
-                     PortFieldId, PortFieldMask,
-                     false,
-                     (FieldAccessMethod) &GLViewportBase::getSFPort)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType GLViewportBase::_type(
-    "GLViewport",
-    "Component",
-    NULL,
-    (PrototypeCreateF) &GLViewportBase::createEmpty,
+    pDesc = new SFUnrecViewportPtr::Description(
+        SFUnrecViewportPtr::getClassType(),
+        "Port",
+        "",
+        PortFieldId, PortFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GLViewport::editHandlePort),
+        static_cast<FieldGetMethodSig >(&GLViewport::getHandlePort));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+GLViewportBase::TypeObject GLViewportBase::_type(
+    GLViewportBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&GLViewportBase::createEmptyLocal),
     GLViewport::initMethod,
-    _desc,
-    sizeof(_desc));
+    GLViewport::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&GLViewport::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"GLViewport\"\n"
+    "\tparent=\"Component\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "An OpenSG Viewport Component.\n"
+    "\t<Field\n"
+    "\t\tname=\"Port\"\n"
+    "\t\ttype=\"Viewport\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "An OpenSG Viewport Component.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(GLViewportBase, GLViewportPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &GLViewportBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &GLViewportBase::getType(void) const 
+FieldContainerType &GLViewportBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr GLViewportBase::shallowCopy(void) const 
-{ 
-    GLViewportPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const GLViewport *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 GLViewportBase::getContainerSize(void) const 
-{ 
-    return sizeof(GLViewport); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void GLViewportBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &GLViewportBase::getType(void) const
 {
-    this->executeSyncImpl((GLViewportBase *) &other, whichField);
+    return _type;
 }
-#else
-void GLViewportBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 GLViewportBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((GLViewportBase *) &other, whichField, sInfo);
+    return sizeof(GLViewport);
 }
-void GLViewportBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the GLViewport::_sfPort field.
+const SFUnrecViewportPtr *GLViewportBase::getSFPort(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfPort;
 }
 
-void GLViewportBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecViewportPtr  *GLViewportBase::editSFPort           (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(PortFieldMask);
 
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-GLViewportBase::GLViewportBase(void) :
-    _sfPort                   (ViewportPtr(NullFC)), 
-    Inherited() 
-{
+    return &_sfPort;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-GLViewportBase::GLViewportBase(const GLViewportBase &source) :
-    _sfPort                   (source._sfPort                   ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-GLViewportBase::~GLViewportBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 GLViewportBase::getBinSize(const BitVector &whichField)
+UInt32 GLViewportBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -194,12 +220,11 @@ UInt32 GLViewportBase::getBinSize(const BitVector &whichField)
         returnValue += _sfPort.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void GLViewportBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void GLViewportBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -207,12 +232,10 @@ void GLViewportBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfPort.copyToBin(pMem);
     }
-
-
 }
 
-void GLViewportBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void GLViewportBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -220,82 +243,229 @@ void GLViewportBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfPort.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void GLViewportBase::executeSyncImpl(      GLViewportBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+GLViewportTransitPtr GLViewportBase::createLocal(BitVector bFlags)
 {
+    GLViewportTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (PortFieldMask & whichField))
-        _sfPort.syncWith(pOther->_sfPort);
+        fc = dynamic_pointer_cast<GLViewport>(tmpPtr);
+    }
 
-
-}
-#else
-void GLViewportBase::executeSyncImpl(      GLViewportBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (PortFieldMask & whichField))
-        _sfPort.syncWith(pOther->_sfPort);
-
-
-
+    return fc;
 }
 
-void GLViewportBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+GLViewportTransitPtr GLViewportBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    GLViewportTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<GLViewport>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+GLViewportTransitPtr GLViewportBase::create(void)
+{
+    GLViewportTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<GLViewport>(tmpPtr);
+    }
+
+    return fc;
+}
+
+GLViewport *GLViewportBase::createEmptyLocal(BitVector bFlags)
+{
+    GLViewport *returnValue;
+
+    newPtr<GLViewport>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+GLViewport *GLViewportBase::createEmpty(void)
+{
+    GLViewport *returnValue;
+
+    newPtr<GLViewport>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr GLViewportBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    GLViewport *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const GLViewport *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr GLViewportBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    GLViewport *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const GLViewport *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr GLViewportBase::shallowCopy(void) const
+{
+    GLViewport *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const GLViewport *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+GLViewportBase::GLViewportBase(void) :
+    Inherited(),
+    _sfPort                   (NULL)
+{
+}
+
+GLViewportBase::GLViewportBase(const GLViewportBase &source) :
+    Inherited(source),
+    _sfPort                   (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+GLViewportBase::~GLViewportBase(void)
+{
+}
+
+void GLViewportBase::onCreate(const GLViewport *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        GLViewport *pThis = static_cast<GLViewport *>(this);
+
+        pThis->setPort(source->getPort());
+    }
+}
+
+GetFieldHandlePtr GLViewportBase::getHandlePort            (void) const
+{
+    SFUnrecViewportPtr::GetHandlePtr returnValue(
+        new  SFUnrecViewportPtr::GetHandle(
+             &_sfPort,
+             this->getType().getFieldDesc(PortFieldId),
+             const_cast<GLViewportBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GLViewportBase::editHandlePort           (void)
+{
+    SFUnrecViewportPtr::EditHandlePtr returnValue(
+        new  SFUnrecViewportPtr::EditHandle(
+             &_sfPort,
+             this->getType().getFieldDesc(PortFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&GLViewport::setPort,
+                    static_cast<GLViewport *>(this), _1));
+
+    editSField(PortFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void GLViewportBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    GLViewport *pThis = static_cast<GLViewport *>(this);
+
+    pThis->execSync(static_cast<GLViewport *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *GLViewportBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    GLViewport *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const GLViewport *>(pRefAspect),
+                  dynamic_cast<const GLViewport *>(this));
+
+    return returnValue;
+}
+#endif
+
+void GLViewportBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<GLViewport *>(this)->setPort(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<GLViewportPtr>::_type("GLViewportPtr", "ComponentPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(GLViewportPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(GLViewportPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGGLVIEWPORTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGGLVIEWPORTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGGLVIEWPORTFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

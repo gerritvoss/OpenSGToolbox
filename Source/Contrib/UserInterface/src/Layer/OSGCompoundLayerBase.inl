@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,76 +55,58 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &CompoundLayerBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 CompoundLayerBase::getClassTypeId(void) 
+OSG::UInt32 CompoundLayerBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-CompoundLayerPtr CompoundLayerBase::create(void) 
-{
-    CompoundLayerPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = CompoundLayerPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-CompoundLayerPtr CompoundLayerBase::createEmpty(void) 
-{ 
-    CompoundLayerPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 CompoundLayerBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
-
-//! Get the CompoundLayer::_mfBackgrounds field.
-inline
-MFLayerPtr *CompoundLayerBase::getMFBackgrounds(void)
-{
-    return &_mfBackgrounds;
-}
-
 
 
 //! Get the value of the \a index element the CompoundLayer::_mfBackgrounds field.
 inline
-LayerPtr &CompoundLayerBase::getBackgrounds(const UInt32 index)
+Layer * CompoundLayerBase::getBackgrounds(const UInt32 index) const
 {
     return _mfBackgrounds[index];
 }
 
-//! Get the CompoundLayer::_mfBackgrounds field.
-inline
-MFLayerPtr &CompoundLayerBase::getBackgrounds(void)
-{
-    return _mfBackgrounds;
-}
 
-//! Get the CompoundLayer::_mfBackgrounds field.
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-const MFLayerPtr &CompoundLayerBase::getBackgrounds(void) const
+void CompoundLayerBase::execSync (      CompoundLayerBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfBackgrounds;
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (BackgroundsFieldMask & whichField))
+        _mfBackgrounds.syncWith(pFrom->_mfBackgrounds,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
 }
+#endif
+
+
+inline
+const Char8 *CompoundLayerBase::getClassname(void)
+{
+    return "CompoundLayer";
+}
+OSG_GEN_CONTAINERPTR(CompoundLayer);
 
 OSG_END_NAMESPACE
-
-#define OSGCOMPOUNDLAYERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

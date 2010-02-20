@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,52 +42,49 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGSumLayoutSpringBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief SumLayoutSpring class. See \ref 
-           PageUserInterfaceSumLayoutSpring for a description.
+/*! \brief SumLayoutSpring class. See \ref
+           PageContribUserInterfaceSumLayoutSpring for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING SumLayoutSpring : public SumLayoutSpringBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SumLayoutSpring : public SumLayoutSpringBase
 {
-  private:
-
-    typedef SumLayoutSpringBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef SumLayoutSpringBase Inherited;
+    typedef SumLayoutSpring     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Construction                               */
-    /*! \{                                                                 */
 
-    static  SumLayoutSpringPtr create (LayoutSpringPtr TheSpring1, LayoutSpringPtr TheSpring2); 
+    static  SumLayoutSpringTransitPtr create (LayoutSpringRefPtr TheSpring1, LayoutSpringRefPtr TheSpring2); 
     
-    /*! \}                                                                 */
     virtual Real32 operation(const Real32& Left, const Real32& Right) const;
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in SumLayoutSpringBase.
@@ -104,21 +101,26 @@ class OSG_USERINTERFACELIB_DLLMAPPING SumLayoutSpring : public SumLayoutSpringBa
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SumLayoutSpring(void); 
+    virtual ~SumLayoutSpring(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
     virtual void setNonClearValue(const Real32& value);
     
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class SumLayoutSpringBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const SumLayoutSpring &source);
 };
 
@@ -128,7 +130,5 @@ OSG_END_NAMESPACE
 
 #include "OSGSumLayoutSpringBase.inl"
 #include "OSGSumLayoutSpring.inl"
-
-#define OSGSUMLAYOUTSPRING_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGSUMLAYOUTSPRING_H_ */

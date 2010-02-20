@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,66 +42,70 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGPopupMenuBase.h"
+#include "OSGSeparator.h"
+#include "OSGSingleSelectionModel.h"
 #include "OSGMenuItemFields.h"
-#include "Models/SelectionModels/OSGSelectionListener.h"
-#include "Event/OSGPopupMenuListener.h"
+#include "OSGSelectionListener.h"
+#include "OSGPopupMenuListener.h"
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief PopupMenu class. See \ref 
-           PageUserInterfacePopupMenu for a description.
+/*! \brief PopupMenu class. See \ref
+           PageContribUserInterfacePopupMenu for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING PopupMenu : public PopupMenuBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING PopupMenu : public PopupMenuBase
 {
-  private:
-
-    typedef PopupMenuBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef PopupMenuBase Inherited;
+    typedef PopupMenu     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
-    virtual void addItem(MenuItemPtr Item);
-    virtual void addItem(MenuItemPtr Item, const UInt32& Index);
-    virtual void removeItem(MenuItemPtr Item);
+    /*! \}                                                                 */
+
+    virtual void addItem(MenuItemRefPtr Item);
+    virtual void addItem(MenuItemRefPtr Item, const UInt32& Index);
+    virtual void removeItem(MenuItemRefPtr Item);
     virtual void removeItem(const UInt32& Index);
     virtual void removeAllItems(void);
-    virtual MenuItemPtr getItem(const UInt32& Index);
+    virtual MenuItem* getItem(const UInt32& Index);
     virtual UInt32 getNumItems(void) const;
 
     void addSeparator(void);
-    void addSeparator(SeparatorPtr TheSeparator);
+    void addSeparator(SeparatorRefPtr TheSeparator);
     void removeSeparator(const UInt32&  Index);
-    void removeSeparator(SeparatorPtr TheSeparator);
+    void removeSeparator(SeparatorRefPtr TheSeparator);
     void removeAllSeparators(void);
     UInt32 getNumSeparators(void) const;
     
 	virtual void updateClipBounds(void);
     
 	//Mouse Motion Events
-    virtual void mouseMoved(const MouseEventPtr e);
-    virtual void mouseDragged(const MouseEventPtr e);
+    virtual void mouseMoved(const MouseEventUnrecPtr e);
+    virtual void mouseDragged(const MouseEventUnrecPtr e);
     
     EventConnection addPopupMenuListener(PopupMenuListenerPtr Listener);
 	bool isPopupMenuListenerAttached(PopupMenuListenerPtr Listener) const;
@@ -112,8 +116,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenu : public PopupMenuBase
     void clearSelection(void);
     void setSelection(const Int32& Index);
     Int32 getSelectionIndex(void) const;
-    /*! \}                                                                 */
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in PopupMenuBase.
@@ -130,18 +135,33 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenu : public PopupMenuBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~PopupMenu(void); 
+    virtual ~PopupMenu(void);
+
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const PopupMenu *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
     
     virtual void updateLayout(void);
     
 	class MenuSelectionListener : public SelectionListener
 	{
 	public:
-		MenuSelectionListener(PopupMenuPtr ThePopupMenu);
-        virtual void selectionChanged(const SelectionEventPtr e);
+		MenuSelectionListener(PopupMenuRefPtr ThePopupMenu);
+        virtual void selectionChanged(const SelectionEventUnrecPtr e);
 	private:
-		PopupMenuPtr _PopupMenu;
+		PopupMenuRefPtr _PopupMenu;
 	};
 
 	friend class MenuSelectionListener;
@@ -153,22 +173,21 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenu : public PopupMenuBase
     typedef PopupMenuListenerSet::const_iterator PopupMenuListenerSetConstItor;
 	
     PopupMenuListenerSet       _PopupMenuListeners;
-    void producePopupMenuWillBecomeVisible(const PopupMenuEventPtr e);
-    void producePopupMenuWillBecomeInvisible(const PopupMenuEventPtr e);
-    void producePopupMenuCanceled(const PopupMenuEventPtr e);
-    void producePopupMenuContentsChanged(const PopupMenuEventPtr e);
+    void producePopupMenuWillBecomeVisible(const PopupMenuEventUnrecPtr e);
+    void producePopupMenuWillBecomeInvisible(const PopupMenuEventUnrecPtr e);
+    void producePopupMenuCanceled(const PopupMenuEventUnrecPtr e);
+    void producePopupMenuContentsChanged(const PopupMenuEventUnrecPtr e);
     
     void updateSeparatorSizes(void);
+
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class PopupMenuBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const PopupMenu &source);
 };
 
@@ -178,7 +197,5 @@ OSG_END_NAMESPACE
 
 #include "OSGPopupMenuBase.inl"
 #include "OSGPopupMenu.inl"
-
-#define OSGPOPUPMENU_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGPOPUPMENU_H_ */

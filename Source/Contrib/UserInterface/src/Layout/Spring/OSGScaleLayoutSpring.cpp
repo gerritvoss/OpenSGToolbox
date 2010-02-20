@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGScaleLayoutSpring.h"
+#include "OSGSpringLayout.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::ScaleLayoutSpring
-A UI Scale LayoutSpring. 	
-*/
+// Documentation for this class is emitted in the
+// OSGScaleLayoutSpringBase.cpp file.
+// To modify it, please change the .fcd file (OSGScaleLayoutSpring.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,20 +63,23 @@ A UI Scale LayoutSpring.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ScaleLayoutSpring::initMethod (void)
+void ScaleLayoutSpring::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-ScaleLayoutSpringPtr ScaleLayoutSpring::create(LayoutSpringPtr TheSpring, Real32 Factor)
+ScaleLayoutSpringTransitPtr ScaleLayoutSpring::create(LayoutSpringRefPtr TheSpring, Real32 Factor)
 {
-    ScaleLayoutSpringPtr NewSpring = createEmpty();
+    ScaleLayoutSpring* NewSpring = createEmpty();
 
-    beginEditCP(NewSpring, SpringFieldMask | FactorFieldMask);
-        NewSpring->setSpring(TheSpring);
-        NewSpring->setFactor(Factor);
-    endEditCP(NewSpring, SpringFieldMask | FactorFieldMask);
+    NewSpring->setSpring(TheSpring);
+    NewSpring->setFactor(Factor);
 
-    return NewSpring;
+    return ScaleLayoutSpringTransitPtr(NewSpring);
 }
 
 /***************************************************************************\
@@ -95,13 +94,13 @@ Real32 ScaleLayoutSpring::getMinimumValue(void) const
     }
     else
     {
-        return static_cast<Real32>(osgfloor(getFactor() * static_cast<Real32>(getSpring()->getMinimumValue())));
+        return static_cast<Real32>(osgFloor(getFactor() * static_cast<Real32>(getSpring()->getMinimumValue())));
     }
 }
 
 Real32 ScaleLayoutSpring::getPreferredValue(void) const
 {
-    return static_cast<Real32>(osgfloor(getFactor() * static_cast<Real32>(getSpring()->getPreferredValue())));
+    return static_cast<Real32>(osgFloor(getFactor() * static_cast<Real32>(getSpring()->getPreferredValue())));
 }
 
 Real32 ScaleLayoutSpring::getMaximumValue(void) const
@@ -112,13 +111,13 @@ Real32 ScaleLayoutSpring::getMaximumValue(void) const
     }
     else
     {
-        return static_cast<Real32>(osgfloor(getFactor() * static_cast<Real32>(getSpring()->getMaximumValue())));
+        return static_cast<Real32>(osgFloor(getFactor() * static_cast<Real32>(getSpring()->getMaximumValue())));
     }
 }
 
 Real32 ScaleLayoutSpring::getValue(void) const
 {
-    return static_cast<Real32>(osgfloor(getFactor() * static_cast<Real32>(getSpring()->getValue())));
+    return static_cast<Real32>(osgFloor(getFactor() * static_cast<Real32>(getSpring()->getValue())));
 }
 
 void ScaleLayoutSpring::setValue(const Real32& value)
@@ -129,11 +128,11 @@ void ScaleLayoutSpring::setValue(const Real32& value)
     }
     else
     {
-        getSpring()->setValue(osgfloor(static_cast<Real32>(getSpring()->getValue()) / getFactor()));
+        getSpring()->setValue(osgFloor(static_cast<Real32>(getSpring()->getValue()) / getFactor()));
     }
 }
 
-bool ScaleLayoutSpring::isCyclic(SpringLayoutPtr l) const
+bool ScaleLayoutSpring::isCyclic(const SpringLayout* l) const
 {
     return getSpring()->isCyclic(l);
 }
@@ -160,41 +159,17 @@ ScaleLayoutSpring::~ScaleLayoutSpring(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void ScaleLayoutSpring::changed(BitVector whichField, UInt32 origin)
+void ScaleLayoutSpring::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void ScaleLayoutSpring::dump(      UInt32    , 
+void ScaleLayoutSpring::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump ScaleLayoutSpring NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGSCALELAYOUTSPRINGBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSCALELAYOUTSPRINGBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSCALELAYOUTSPRINGFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

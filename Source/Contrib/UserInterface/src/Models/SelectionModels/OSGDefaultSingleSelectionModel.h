@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,41 +42,41 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGDefaultSingleSelectionModelBase.h"
 #include <set>
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DefaultSingleSelectionModel class. See \ref 
-           PageUserInterfaceDefaultSingleSelectionModel for a description.
+/*! \brief DefaultSingleSelectionModel class. See \ref
+           PageContribUserInterfaceDefaultSingleSelectionModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultSingleSelectionModel : public DefaultSingleSelectionModelBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultSingleSelectionModel : public DefaultSingleSelectionModelBase
 {
-  private:
-
-    typedef DefaultSingleSelectionModelBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef DefaultSingleSelectionModelBase Inherited;
+    typedef DefaultSingleSelectionModel     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -99,6 +99,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultSingleSelectionModel : public Defau
     //Sets the model's selected index to index.
     virtual void setSelectedIndex(Int32 index);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in DefaultSingleSelectionModelBase.
@@ -115,7 +116,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultSingleSelectionModel : public Defau
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DefaultSingleSelectionModel(void); 
+    virtual ~DefaultSingleSelectionModel(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
 	typedef std::set<SelectionListenerPtr> SelectionListenerSet;
@@ -125,17 +133,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultSingleSelectionModel : public Defau
     SelectionListenerSet       _SelectionListeners;
     
     virtual void produceSelectionChanged(const Int32& SelectedIndex, const Int32& PreviouslySelectedIndex);
-    
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class DefaultSingleSelectionModelBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const DefaultSingleSelectionModel &source);
 };
 
@@ -145,7 +150,5 @@ OSG_END_NAMESPACE
 
 #include "OSGDefaultSingleSelectionModelBase.inl"
 #include "OSGDefaultSingleSelectionModel.inl"
-
-#define OSGDEFAULTSINGLESELECTIONMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGDEFAULTSINGLESELECTIONMODEL_H_ */

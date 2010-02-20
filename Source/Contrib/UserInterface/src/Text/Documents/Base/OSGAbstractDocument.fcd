@@ -3,23 +3,25 @@
 <FieldContainer
 	name="AbstractDocument"
 	parent="Document"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="abstract"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 UI AbstractDocument.
 	<Field
 		name="RootElement"
-		type="ElementPtr"
+		type="Element"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 		access="protected"
-		header="OSGElementFields.h"
 	>
 	</Field>
 </FieldContainer>

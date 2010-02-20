@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,23 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGLayout.h"
-#include "Component/Container/OSGContainer.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::Layout
-A UI Layout Interface.
-*/
+// Documentation for this class is emitted in the
+// OSGLayoutBase.cpp file.
+// To modify it, please change the .fcd file (OSGLayout.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -66,35 +62,41 @@ A UI Layout Interface.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void Layout::initMethod (void)
+void Layout::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-Vec2f Layout::minimumLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+
+Vec2f Layout::minimumLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
 {
     return minimumContentsLayoutSize(Components,ParentComponent) + ParentComponent->getBorderingLength();
 }
 
-Vec2f Layout::requestedLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+Vec2f Layout::requestedLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
 {
     return requestedContentsLayoutSize(Components,ParentComponent) + ParentComponent->getBorderingLength();
 }
 
-Vec2f Layout::preferredLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+Vec2f Layout::preferredLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
 {
     return preferredContentsLayoutSize(Components,ParentComponent) + ParentComponent->getBorderingLength();
 }
 
-Vec2f Layout::maximumLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+Vec2f Layout::maximumLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const
 {
     return maximumContentsLayoutSize(Components,ParentComponent) + ParentComponent->getBorderingLength();
 }
 
-Vec2f Layout::getComponentSize(ComponentPtr TheComponent, SizeType TheSizeType)
+Vec2f Layout::getComponentSize(const Component* TheComponent, SizeType TheSizeType)
 {
     switch(TheSizeType)
     {
@@ -113,8 +115,6 @@ Vec2f Layout::getComponentSize(ComponentPtr TheComponent, SizeType TheSizeType)
         break;
     }
 }
-
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -137,46 +137,17 @@ Layout::~Layout(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void Layout::changed(BitVector whichField, UInt32 origin)
+void Layout::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
-
-    if(getParentContainer() != NullFC)
-    {
-        Container::Ptr::dcast(getParentContainer())->updateLayout();
-    }
+    Inherited::changed(whichField, origin, details);
 }
 
-void Layout::dump(      UInt32    , 
+void Layout::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump Layout NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGLAYOUTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGLAYOUTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGLAYOUTFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

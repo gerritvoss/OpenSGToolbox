@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,74 +58,86 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include "Component/OSGComponent.h" // Parent
+#include "OSGComponent.h" // Parent
 
-#include "Text/OSGUIFont.h" // Font type
-#include "Component/OSGComponentFields.h" // TippedComponent type
-#include <OpenSG/OSGStringFields.h> // Text type
-#include <OpenSG/OSGVec2fFields.h> // Alignment type
-#include <OpenSG/OSGColor4fFields.h> // TextColor type
+#include "OSGUIFontFields.h"            // Font type
+#include "OSGComponentFields.h"         // TippedComponent type
+#include "OSGBaseFields.h"              // Text type
+#include "OSGVecFields.h"               // Alignment type
 
 #include "OSGToolTipFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class ToolTip;
-class BinaryDataHandler;
 
 //! \brief ToolTip Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING ToolTipBase : public Component
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ToolTipBase : public Component
 {
-  private:
-
-    typedef Component    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ToolTipPtr  Ptr;
+    typedef Component Inherited;
+    typedef Component ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(ToolTip);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        FontFieldId            = Inherited::NextFieldId,
-        TippedComponentFieldId = FontFieldId            + 1,
-        TextFieldId            = TippedComponentFieldId + 1,
-        AlignmentFieldId       = TextFieldId            + 1,
-        TextColorFieldId       = AlignmentFieldId       + 1,
-        NextFieldId            = TextColorFieldId       + 1
+        FontFieldId = Inherited::NextFieldId,
+        TippedComponentFieldId = FontFieldId + 1,
+        TextFieldId = TippedComponentFieldId + 1,
+        AlignmentFieldId = TextFieldId + 1,
+        TextColorFieldId = AlignmentFieldId + 1,
+        NextFieldId = TextColorFieldId + 1
     };
 
-    static const OSG::BitVector FontFieldMask;
-    static const OSG::BitVector TippedComponentFieldMask;
-    static const OSG::BitVector TextFieldMask;
-    static const OSG::BitVector AlignmentFieldMask;
-    static const OSG::BitVector TextColorFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector FontFieldMask =
+        (TypeTraits<BitVector>::One << FontFieldId);
+    static const OSG::BitVector TippedComponentFieldMask =
+        (TypeTraits<BitVector>::One << TippedComponentFieldId);
+    static const OSG::BitVector TextFieldMask =
+        (TypeTraits<BitVector>::One << TextFieldId);
+    static const OSG::BitVector AlignmentFieldMask =
+        (TypeTraits<BitVector>::One << AlignmentFieldId);
+    static const OSG::BitVector TextColorFieldMask =
+        (TypeTraits<BitVector>::One << TextColorFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecUIFontPtr  SFFontType;
+    typedef SFUnrecComponentPtr SFTippedComponentType;
+    typedef SFString          SFTextType;
+    typedef SFVec2f           SFAlignmentType;
+    typedef SFColor4f         SFTextColorType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -134,37 +146,53 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolTipBase : public Component
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUIFontPtr         *getSFFont           (void);
-           SFComponentPtr      *getSFTippedComponent(void);
-           SFString            *getSFText           (void);
-           SFVec2f             *getSFAlignment      (void);
-           SFColor4f           *getSFTextColor      (void);
+            const SFUnrecUIFontPtr    *getSFFont           (void) const;
+                  SFUnrecUIFontPtr    *editSFFont           (void);
+            const SFUnrecComponentPtr *getSFTippedComponent(void) const;
+                  SFUnrecComponentPtr *editSFTippedComponent(void);
 
-           UIFontPtr           &getFont           (void);
-     const UIFontPtr           &getFont           (void) const;
-           ComponentPtr        &getTippedComponent(void);
-     const ComponentPtr        &getTippedComponent(void) const;
-           std::string         &getText           (void);
-     const std::string         &getText           (void) const;
-           Vec2f               &getAlignment      (void);
-     const Vec2f               &getAlignment      (void) const;
-           Color4f             &getTextColor      (void);
-     const Color4f             &getTextColor      (void) const;
+                  SFString            *editSFText           (void);
+            const SFString            *getSFText            (void) const;
+
+                  SFVec2f             *editSFAlignment      (void);
+            const SFVec2f             *getSFAlignment       (void) const;
+
+                  SFColor4f           *editSFTextColor      (void);
+            const SFColor4f           *getSFTextColor       (void) const;
+
+
+                  UIFont * getFont           (void) const;
+
+                  Component * getTippedComponent(void) const;
+
+                  std::string         &editText           (void);
+            const std::string         &getText            (void) const;
+
+                  Vec2f               &editAlignment      (void);
+            const Vec2f               &getAlignment       (void) const;
+
+                  Color4f             &editTextColor      (void);
+            const Color4f             &getTextColor       (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setFont           ( const UIFontPtr &value );
-     void setTippedComponent( const ComponentPtr &value );
-     void setText           ( const std::string &value );
-     void setAlignment      ( const Vec2f &value );
-     void setTextColor      ( const Color4f &value );
+            void setFont           (UIFont * const value);
+            void setTippedComponent(Component * const value);
+            void setText           (const std::string &value);
+            void setAlignment      (const Vec2f &value);
+            void setTextColor      (const Color4f &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -172,11 +200,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolTipBase : public Component
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -184,30 +212,47 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolTipBase : public Component
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  ToolTipPtr      create          (void); 
-    static  ToolTipPtr      createEmpty     (void); 
+    static  ToolTipTransitPtr  create          (void);
+    static  ToolTip           *createEmpty     (void);
+
+    static  ToolTipTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  ToolTip            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  ToolTipTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUIFontPtr         _sfFont;
-    SFComponentPtr      _sfTippedComponent;
-    SFString            _sfText;
-    SFVec2f             _sfAlignment;
-    SFColor4f           _sfTextColor;
+    SFUnrecUIFontPtr  _sfFont;
+    SFUnrecComponentPtr _sfTippedComponent;
+    SFString          _sfText;
+    SFVec2f           _sfAlignment;
+    SFColor4f         _sfTextColor;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -222,69 +267,88 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToolTipBase : public Component
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ToolTipBase(void); 
+    virtual ~ToolTipBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const ToolTip *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleFont            (void) const;
+    EditFieldHandlePtr editHandleFont           (void);
+    GetFieldHandlePtr  getHandleTippedComponent (void) const;
+    EditFieldHandlePtr editHandleTippedComponent(void);
+    GetFieldHandlePtr  getHandleText            (void) const;
+    EditFieldHandlePtr editHandleText           (void);
+    GetFieldHandlePtr  getHandleAlignment       (void) const;
+    EditFieldHandlePtr editHandleAlignment      (void);
+    GetFieldHandlePtr  getHandleTextColor       (void) const;
+    EditFieldHandlePtr editHandleTextColor      (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ToolTipBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      ToolTipBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      ToolTipBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const ToolTipBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef ToolTipBase *ToolTipBaseP;
 
-typedef osgIF<ToolTipBase::isNodeCore,
-              CoredNodePtr<ToolTip>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ToolTipNodePtr;
-
-typedef RefPtr<ToolTipPtr> ToolTipRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGTOOLTIPBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGTOOLTIPBASE_H_ */

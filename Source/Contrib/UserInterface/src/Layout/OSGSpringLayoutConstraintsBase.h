@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,89 +58,104 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGLayoutConstraints.h" // Parent
 
-#include "Layout/Spring/OSGLayoutSpringFields.h" // NorthSpring type
-#include "Layout/Spring/OSGLayoutSpringFields.h" // WestSpring type
-#include "Layout/Spring/OSGLayoutSpringFields.h" // EastSpring type
-#include "Layout/Spring/OSGLayoutSpringFields.h" // SouthSpring type
-#include "Layout/Spring/OSGLayoutSpringFields.h" // WidthSpring type
-#include "Layout/Spring/OSGLayoutSpringFields.h" // HeightSpring type
-#include "Layout/Spring/OSGLayoutSpringFields.h" // HorizontalCenterSpring type
-#include "Layout/Spring/OSGLayoutSpringFields.h" // VerticalCenterSpring type
-#include "Layout/Spring/OSGLayoutSpringFields.h" // BaselineSpring type
-#include "Component/OSGComponentFields.h" // Component type
+#include "OSGLayoutSpringFields.h"      // NorthSpring type
+#include "OSGComponentFields.h"         // Component type
 
 #include "OSGSpringLayoutConstraintsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class SpringLayoutConstraints;
-class BinaryDataHandler;
 
 //! \brief SpringLayoutConstraints Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING SpringLayoutConstraintsBase : public LayoutConstraints
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpringLayoutConstraintsBase : public LayoutConstraints
 {
-  private:
-
-    typedef LayoutConstraints    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef SpringLayoutConstraintsPtr  Ptr;
+    typedef LayoutConstraints Inherited;
+    typedef LayoutConstraints ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(SpringLayoutConstraints);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        NorthSpringFieldId            = Inherited::NextFieldId,
-        WestSpringFieldId             = NorthSpringFieldId            + 1,
-        EastSpringFieldId             = WestSpringFieldId             + 1,
-        SouthSpringFieldId            = EastSpringFieldId             + 1,
-        WidthSpringFieldId            = SouthSpringFieldId            + 1,
-        HeightSpringFieldId           = WidthSpringFieldId            + 1,
-        HorizontalCenterSpringFieldId = HeightSpringFieldId           + 1,
-        VerticalCenterSpringFieldId   = HorizontalCenterSpringFieldId + 1,
-        BaselineSpringFieldId         = VerticalCenterSpringFieldId   + 1,
-        ComponentFieldId              = BaselineSpringFieldId         + 1,
-        NextFieldId                   = ComponentFieldId              + 1
+        NorthSpringFieldId = Inherited::NextFieldId,
+        WestSpringFieldId = NorthSpringFieldId + 1,
+        EastSpringFieldId = WestSpringFieldId + 1,
+        SouthSpringFieldId = EastSpringFieldId + 1,
+        WidthSpringFieldId = SouthSpringFieldId + 1,
+        HeightSpringFieldId = WidthSpringFieldId + 1,
+        HorizontalCenterSpringFieldId = HeightSpringFieldId + 1,
+        VerticalCenterSpringFieldId = HorizontalCenterSpringFieldId + 1,
+        BaselineSpringFieldId = VerticalCenterSpringFieldId + 1,
+        ComponentFieldId = BaselineSpringFieldId + 1,
+        NextFieldId = ComponentFieldId + 1
     };
 
-    static const OSG::BitVector NorthSpringFieldMask;
-    static const OSG::BitVector WestSpringFieldMask;
-    static const OSG::BitVector EastSpringFieldMask;
-    static const OSG::BitVector SouthSpringFieldMask;
-    static const OSG::BitVector WidthSpringFieldMask;
-    static const OSG::BitVector HeightSpringFieldMask;
-    static const OSG::BitVector HorizontalCenterSpringFieldMask;
-    static const OSG::BitVector VerticalCenterSpringFieldMask;
-    static const OSG::BitVector BaselineSpringFieldMask;
-    static const OSG::BitVector ComponentFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector NorthSpringFieldMask =
+        (TypeTraits<BitVector>::One << NorthSpringFieldId);
+    static const OSG::BitVector WestSpringFieldMask =
+        (TypeTraits<BitVector>::One << WestSpringFieldId);
+    static const OSG::BitVector EastSpringFieldMask =
+        (TypeTraits<BitVector>::One << EastSpringFieldId);
+    static const OSG::BitVector SouthSpringFieldMask =
+        (TypeTraits<BitVector>::One << SouthSpringFieldId);
+    static const OSG::BitVector WidthSpringFieldMask =
+        (TypeTraits<BitVector>::One << WidthSpringFieldId);
+    static const OSG::BitVector HeightSpringFieldMask =
+        (TypeTraits<BitVector>::One << HeightSpringFieldId);
+    static const OSG::BitVector HorizontalCenterSpringFieldMask =
+        (TypeTraits<BitVector>::One << HorizontalCenterSpringFieldId);
+    static const OSG::BitVector VerticalCenterSpringFieldMask =
+        (TypeTraits<BitVector>::One << VerticalCenterSpringFieldId);
+    static const OSG::BitVector BaselineSpringFieldMask =
+        (TypeTraits<BitVector>::One << BaselineSpringFieldId);
+    static const OSG::BitVector ComponentFieldMask =
+        (TypeTraits<BitVector>::One << ComponentFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecLayoutSpringPtr SFNorthSpringType;
+    typedef SFUnrecLayoutSpringPtr SFWestSpringType;
+    typedef SFUnrecLayoutSpringPtr SFEastSpringType;
+    typedef SFUnrecLayoutSpringPtr SFSouthSpringType;
+    typedef SFUnrecLayoutSpringPtr SFWidthSpringType;
+    typedef SFUnrecLayoutSpringPtr SFHeightSpringType;
+    typedef SFUnrecLayoutSpringPtr SFHorizontalCenterSpringType;
+    typedef SFUnrecLayoutSpringPtr SFVerticalCenterSpringType;
+    typedef SFUnrecLayoutSpringPtr SFBaselineSpringType;
+    typedef SFUnrecComponentPtr SFComponentType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -149,57 +164,72 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayoutConstraintsBase : public Layou
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFLayoutSpringPtr   *getSFNorthSpring    (void);
-           SFLayoutSpringPtr   *getSFWestSpring     (void);
-           SFLayoutSpringPtr   *getSFEastSpring     (void);
-           SFLayoutSpringPtr   *getSFSouthSpring    (void);
-           SFLayoutSpringPtr   *getSFWidthSpring    (void);
-           SFLayoutSpringPtr   *getSFHeightSpring   (void);
-           SFLayoutSpringPtr   *getSFHorizontalCenterSpring(void);
-           SFLayoutSpringPtr   *getSFVerticalCenterSpring(void);
-           SFLayoutSpringPtr   *getSFBaselineSpring (void);
-           SFComponentPtr      *getSFComponent      (void);
+            const SFUnrecLayoutSpringPtr *getSFNorthSpring    (void) const;
+                  SFUnrecLayoutSpringPtr *editSFNorthSpring    (void);
+            const SFUnrecLayoutSpringPtr *getSFWestSpring     (void) const;
+                  SFUnrecLayoutSpringPtr *editSFWestSpring     (void);
+            const SFUnrecLayoutSpringPtr *getSFEastSpring     (void) const;
+                  SFUnrecLayoutSpringPtr *editSFEastSpring     (void);
+            const SFUnrecLayoutSpringPtr *getSFSouthSpring    (void) const;
+                  SFUnrecLayoutSpringPtr *editSFSouthSpring    (void);
+            const SFUnrecLayoutSpringPtr *getSFWidthSpring    (void) const;
+                  SFUnrecLayoutSpringPtr *editSFWidthSpring    (void);
+            const SFUnrecLayoutSpringPtr *getSFHeightSpring   (void) const;
+                  SFUnrecLayoutSpringPtr *editSFHeightSpring   (void);
+            const SFUnrecLayoutSpringPtr *getSFHorizontalCenterSpring(void) const;
+                  SFUnrecLayoutSpringPtr *editSFHorizontalCenterSpring(void);
+            const SFUnrecLayoutSpringPtr *getSFVerticalCenterSpring(void) const;
+                  SFUnrecLayoutSpringPtr *editSFVerticalCenterSpring(void);
+            const SFUnrecLayoutSpringPtr *getSFBaselineSpring (void) const;
+                  SFUnrecLayoutSpringPtr *editSFBaselineSpring (void);
+            const SFUnrecComponentPtr *getSFComponent      (void) const;
+                  SFUnrecComponentPtr *editSFComponent      (void);
 
-           LayoutSpringPtr     &getNorthSpring    (void);
-     const LayoutSpringPtr     &getNorthSpring    (void) const;
-           LayoutSpringPtr     &getWestSpring     (void);
-     const LayoutSpringPtr     &getWestSpring     (void) const;
-           LayoutSpringPtr     &getEastSpring     (void);
-     const LayoutSpringPtr     &getEastSpring     (void) const;
-           LayoutSpringPtr     &getSouthSpring    (void);
-     const LayoutSpringPtr     &getSouthSpring    (void) const;
-           LayoutSpringPtr     &getWidthSpring    (void);
-     const LayoutSpringPtr     &getWidthSpring    (void) const;
-           LayoutSpringPtr     &getHeightSpring   (void);
-     const LayoutSpringPtr     &getHeightSpring   (void) const;
-           LayoutSpringPtr     &getHorizontalCenterSpring(void);
-     const LayoutSpringPtr     &getHorizontalCenterSpring(void) const;
-           LayoutSpringPtr     &getVerticalCenterSpring(void);
-     const LayoutSpringPtr     &getVerticalCenterSpring(void) const;
-           LayoutSpringPtr     &getBaselineSpring (void);
-     const LayoutSpringPtr     &getBaselineSpring (void) const;
-           ComponentPtr        &getComponent      (void);
-     const ComponentPtr        &getComponent      (void) const;
+
+                  LayoutSpring * getNorthSpring    (void) const;
+
+                  LayoutSpring * getWestSpring     (void) const;
+
+                  LayoutSpring * getEastSpring     (void) const;
+
+                  LayoutSpring * getSouthSpring    (void) const;
+
+                  LayoutSpring * getWidthSpring    (void) const;
+
+                  LayoutSpring * getHeightSpring   (void) const;
+
+                  LayoutSpring * getHorizontalCenterSpring(void) const;
+
+                  LayoutSpring * getVerticalCenterSpring(void) const;
+
+                  LayoutSpring * getBaselineSpring (void) const;
+
+                  Component * getComponent      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setNorthSpring    ( const LayoutSpringPtr &value );
-     void setWestSpring     ( const LayoutSpringPtr &value );
-     void setEastSpring     ( const LayoutSpringPtr &value );
-     void setSouthSpring    ( const LayoutSpringPtr &value );
-     void setWidthSpring    ( const LayoutSpringPtr &value );
-     void setHeightSpring   ( const LayoutSpringPtr &value );
-     void setHorizontalCenterSpring( const LayoutSpringPtr &value );
-     void setVerticalCenterSpring( const LayoutSpringPtr &value );
-     void setBaselineSpring ( const LayoutSpringPtr &value );
-     void setComponent      ( const ComponentPtr &value );
+            void setNorthSpring    (LayoutSpring * const value);
+            void setWestSpring     (LayoutSpring * const value);
+            void setEastSpring     (LayoutSpring * const value);
+            void setSouthSpring    (LayoutSpring * const value);
+            void setWidthSpring    (LayoutSpring * const value);
+            void setHeightSpring   (LayoutSpring * const value);
+            void setHorizontalCenterSpring(LayoutSpring * const value);
+            void setVerticalCenterSpring(LayoutSpring * const value);
+            void setBaselineSpring (LayoutSpring * const value);
+            void setComponent      (Component * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -207,11 +237,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayoutConstraintsBase : public Layou
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -219,35 +249,52 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayoutConstraintsBase : public Layou
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  SpringLayoutConstraintsPtr      create          (void); 
-    static  SpringLayoutConstraintsPtr      createEmpty     (void); 
+    static  SpringLayoutConstraintsTransitPtr  create          (void);
+    static  SpringLayoutConstraints           *createEmpty     (void);
+
+    static  SpringLayoutConstraintsTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  SpringLayoutConstraints            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  SpringLayoutConstraintsTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFLayoutSpringPtr   _sfNorthSpring;
-    SFLayoutSpringPtr   _sfWestSpring;
-    SFLayoutSpringPtr   _sfEastSpring;
-    SFLayoutSpringPtr   _sfSouthSpring;
-    SFLayoutSpringPtr   _sfWidthSpring;
-    SFLayoutSpringPtr   _sfHeightSpring;
-    SFLayoutSpringPtr   _sfHorizontalCenterSpring;
-    SFLayoutSpringPtr   _sfVerticalCenterSpring;
-    SFLayoutSpringPtr   _sfBaselineSpring;
-    SFComponentPtr      _sfComponent;
+    SFUnrecLayoutSpringPtr _sfNorthSpring;
+    SFUnrecLayoutSpringPtr _sfWestSpring;
+    SFUnrecLayoutSpringPtr _sfEastSpring;
+    SFUnrecLayoutSpringPtr _sfSouthSpring;
+    SFUnrecLayoutSpringPtr _sfWidthSpring;
+    SFUnrecLayoutSpringPtr _sfHeightSpring;
+    SFUnrecLayoutSpringPtr _sfHorizontalCenterSpring;
+    SFUnrecLayoutSpringPtr _sfVerticalCenterSpring;
+    SFUnrecLayoutSpringPtr _sfBaselineSpring;
+    SFUnrecComponentPtr _sfComponent;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -262,69 +309,98 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayoutConstraintsBase : public Layou
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SpringLayoutConstraintsBase(void); 
+    virtual ~SpringLayoutConstraintsBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const SpringLayoutConstraints *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleNorthSpring     (void) const;
+    EditFieldHandlePtr editHandleNorthSpring    (void);
+    GetFieldHandlePtr  getHandleWestSpring      (void) const;
+    EditFieldHandlePtr editHandleWestSpring     (void);
+    GetFieldHandlePtr  getHandleEastSpring      (void) const;
+    EditFieldHandlePtr editHandleEastSpring     (void);
+    GetFieldHandlePtr  getHandleSouthSpring     (void) const;
+    EditFieldHandlePtr editHandleSouthSpring    (void);
+    GetFieldHandlePtr  getHandleWidthSpring     (void) const;
+    EditFieldHandlePtr editHandleWidthSpring    (void);
+    GetFieldHandlePtr  getHandleHeightSpring    (void) const;
+    EditFieldHandlePtr editHandleHeightSpring   (void);
+    GetFieldHandlePtr  getHandleHorizontalCenterSpring (void) const;
+    EditFieldHandlePtr editHandleHorizontalCenterSpring(void);
+    GetFieldHandlePtr  getHandleVerticalCenterSpring (void) const;
+    EditFieldHandlePtr editHandleVerticalCenterSpring(void);
+    GetFieldHandlePtr  getHandleBaselineSpring  (void) const;
+    EditFieldHandlePtr editHandleBaselineSpring (void);
+    GetFieldHandlePtr  getHandleComponent       (void) const;
+    EditFieldHandlePtr editHandleComponent      (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      SpringLayoutConstraintsBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      SpringLayoutConstraintsBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      SpringLayoutConstraintsBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const SpringLayoutConstraintsBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef SpringLayoutConstraintsBase *SpringLayoutConstraintsBaseP;
 
-typedef osgIF<SpringLayoutConstraintsBase::isNodeCore,
-              CoredNodePtr<SpringLayoutConstraints>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet SpringLayoutConstraintsNodePtr;
-
-typedef RefPtr<SpringLayoutConstraintsPtr> SpringLayoutConstraintsRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGSPRINGLAYOUTCONSTRAINTSBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGSPRINGLAYOUTCONSTRAINTSBASE_H_ */

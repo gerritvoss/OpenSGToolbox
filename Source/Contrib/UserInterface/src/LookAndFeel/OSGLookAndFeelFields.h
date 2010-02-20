@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/OSGFieldContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class LookAndFeel;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! LookAndFeelPtr
+OSG_GEN_CONTAINERPTR(LookAndFeel);
 
-typedef FCPtr<FieldContainerPtr, LookAndFeel> LookAndFeelPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<LookAndFeelPtr> : 
-    public FieldTraitsRecurseMapper<LookAndFeelPtr, true>
+struct FieldTraits<LookAndFeel *> :
+    public FieldTraitsFCPtrBase<LookAndFeel *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFLookAndFeelPtr"; }
-    static const char *getMName(void) { return "MFLookAndFeelPtr"; }
+    typedef FieldTraits<LookAndFeel *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFLookAndFeelPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFLookAndFeelPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<LookAndFeelPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<LookAndFeel *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecLookAndFeelPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<LookAndFeel *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecLookAndFeelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<LookAndFeel *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakLookAndFeelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<LookAndFeel *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdLookAndFeelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<LookAndFeel *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecLookAndFeelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<LookAndFeel *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecLookAndFeelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<LookAndFeel *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakLookAndFeelPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<LookAndFeel *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdLookAndFeelPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<LookAndFeel *,
+                      RecordedRefCountPolicy  > SFRecLookAndFeelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<LookAndFeel *,
+                      UnrecordedRefCountPolicy> SFUnrecLookAndFeelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<LookAndFeel *,
+                      WeakRefCountPolicy      > SFWeakLookAndFeelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<LookAndFeel *,
+                      NoRefCountPolicy        > SFUncountedLookAndFeelPtr;
 
-typedef SField<LookAndFeelPtr> SFLookAndFeelPtr;
-#endif
 
-#ifndef OSG_COMPILELOOKANDFEELINST
-OSG_DLLEXPORT_DECL1(SField, LookAndFeelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<LookAndFeel *,
+                      RecordedRefCountPolicy  > MFRecLookAndFeelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<LookAndFeel *,
+                      UnrecordedRefCountPolicy> MFUnrecLookAndFeelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<LookAndFeel *,
+                      WeakRefCountPolicy      > MFWeakLookAndFeelPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<LookAndFeel *,
+                      NoRefCountPolicy        > MFUncountedLookAndFeelPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<LookAndFeelPtr> MFLookAndFeelPtr;
-#endif
 
-#ifndef OSG_COMPILELOOKANDFEELINST
-OSG_DLLEXPORT_DECL1(MField, LookAndFeelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecLookAndFeelPtr : 
+    public PointerSField<LookAndFeel *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecLookAndFeelPtr : 
+    public PointerSField<LookAndFeel *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakLookAndFeelPtr :
+    public PointerSField<LookAndFeel *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedLookAndFeelPtr :
+    public PointerSField<LookAndFeel *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecLookAndFeelPtr :
+    public PointerMField<LookAndFeel *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecLookAndFeelPtr :
+    public PointerMField<LookAndFeel *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakLookAndFeelPtr :
+    public PointerMField<LookAndFeel *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedLookAndFeelPtr :
+    public PointerMField<LookAndFeel *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGLOOKANDFEELFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGLOOKANDFEELFIELDS_H_ */

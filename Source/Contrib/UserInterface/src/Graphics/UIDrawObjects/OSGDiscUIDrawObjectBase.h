@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,86 +58,101 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGUIDrawObject.h" // Parent
 
-#include <OpenSG/OSGPnt2fFields.h> // Center type
-#include <OpenSG/OSGReal32Fields.h> // Width type
-#include <OpenSG/OSGReal32Fields.h> // Height type
-#include <OpenSG/OSGReal32Fields.h> // StartAngleRad type
-#include <OpenSG/OSGReal32Fields.h> // EndAngleRad type
-#include <OpenSG/OSGUInt16Fields.h> // SubDivisions type
-#include <OpenSG/OSGColor4fFields.h> // CenterColor type
-#include <OpenSG/OSGColor4fFields.h> // OuterColor type
-#include <OpenSG/OSGReal32Fields.h> // Opacity type
+#include "OSGVecFields.h"               // Center type
+#include "OSGSysFields.h"               // Width type
+#include "OSGBaseFields.h"              // CenterColor type
 
 #include "OSGDiscUIDrawObjectFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class DiscUIDrawObject;
-class BinaryDataHandler;
 
 //! \brief DiscUIDrawObject Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING DiscUIDrawObjectBase : public UIDrawObject
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DiscUIDrawObjectBase : public UIDrawObject
 {
-  private:
-
-    typedef UIDrawObject    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef DiscUIDrawObjectPtr  Ptr;
+    typedef UIDrawObject Inherited;
+    typedef UIDrawObject ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(DiscUIDrawObject);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        CenterFieldId        = Inherited::NextFieldId,
-        WidthFieldId         = CenterFieldId        + 1,
-        HeightFieldId        = WidthFieldId         + 1,
-        StartAngleRadFieldId = HeightFieldId        + 1,
-        EndAngleRadFieldId   = StartAngleRadFieldId + 1,
-        SubDivisionsFieldId  = EndAngleRadFieldId   + 1,
-        CenterColorFieldId   = SubDivisionsFieldId  + 1,
-        OuterColorFieldId    = CenterColorFieldId   + 1,
-        OpacityFieldId       = OuterColorFieldId    + 1,
-        NextFieldId          = OpacityFieldId       + 1
+        CenterFieldId = Inherited::NextFieldId,
+        WidthFieldId = CenterFieldId + 1,
+        HeightFieldId = WidthFieldId + 1,
+        StartAngleRadFieldId = HeightFieldId + 1,
+        EndAngleRadFieldId = StartAngleRadFieldId + 1,
+        SubDivisionsFieldId = EndAngleRadFieldId + 1,
+        CenterColorFieldId = SubDivisionsFieldId + 1,
+        OuterColorFieldId = CenterColorFieldId + 1,
+        OpacityFieldId = OuterColorFieldId + 1,
+        NextFieldId = OpacityFieldId + 1
     };
 
-    static const OSG::BitVector CenterFieldMask;
-    static const OSG::BitVector WidthFieldMask;
-    static const OSG::BitVector HeightFieldMask;
-    static const OSG::BitVector StartAngleRadFieldMask;
-    static const OSG::BitVector EndAngleRadFieldMask;
-    static const OSG::BitVector SubDivisionsFieldMask;
-    static const OSG::BitVector CenterColorFieldMask;
-    static const OSG::BitVector OuterColorFieldMask;
-    static const OSG::BitVector OpacityFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector CenterFieldMask =
+        (TypeTraits<BitVector>::One << CenterFieldId);
+    static const OSG::BitVector WidthFieldMask =
+        (TypeTraits<BitVector>::One << WidthFieldId);
+    static const OSG::BitVector HeightFieldMask =
+        (TypeTraits<BitVector>::One << HeightFieldId);
+    static const OSG::BitVector StartAngleRadFieldMask =
+        (TypeTraits<BitVector>::One << StartAngleRadFieldId);
+    static const OSG::BitVector EndAngleRadFieldMask =
+        (TypeTraits<BitVector>::One << EndAngleRadFieldId);
+    static const OSG::BitVector SubDivisionsFieldMask =
+        (TypeTraits<BitVector>::One << SubDivisionsFieldId);
+    static const OSG::BitVector CenterColorFieldMask =
+        (TypeTraits<BitVector>::One << CenterColorFieldId);
+    static const OSG::BitVector OuterColorFieldMask =
+        (TypeTraits<BitVector>::One << OuterColorFieldId);
+    static const OSG::BitVector OpacityFieldMask =
+        (TypeTraits<BitVector>::One << OpacityFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFPnt2f           SFCenterType;
+    typedef SFReal32          SFWidthType;
+    typedef SFReal32          SFHeightType;
+    typedef SFReal32          SFStartAngleRadType;
+    typedef SFReal32          SFEndAngleRadType;
+    typedef SFUInt16          SFSubDivisionsType;
+    typedef SFColor4f         SFCenterColorType;
+    typedef SFColor4f         SFOuterColorType;
+    typedef SFReal32          SFOpacityType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -146,53 +161,80 @@ class OSG_USERINTERFACELIB_DLLMAPPING DiscUIDrawObjectBase : public UIDrawObject
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFPnt2f             *getSFCenter         (void);
-           SFReal32            *getSFWidth          (void);
-           SFReal32            *getSFHeight         (void);
-           SFReal32            *getSFStartAngleRad  (void);
-           SFReal32            *getSFEndAngleRad    (void);
-           SFUInt16            *getSFSubDivisions   (void);
-           SFColor4f           *getSFCenterColor    (void);
-           SFColor4f           *getSFOuterColor     (void);
-           SFReal32            *getSFOpacity        (void);
 
-           Pnt2f               &getCenter         (void);
-     const Pnt2f               &getCenter         (void) const;
-           Real32              &getWidth          (void);
-     const Real32              &getWidth          (void) const;
-           Real32              &getHeight         (void);
-     const Real32              &getHeight         (void) const;
-           Real32              &getStartAngleRad  (void);
-     const Real32              &getStartAngleRad  (void) const;
-           Real32              &getEndAngleRad    (void);
-     const Real32              &getEndAngleRad    (void) const;
-           UInt16              &getSubDivisions   (void);
-     const UInt16              &getSubDivisions   (void) const;
-           Color4f             &getCenterColor    (void);
-     const Color4f             &getCenterColor    (void) const;
-           Color4f             &getOuterColor     (void);
-     const Color4f             &getOuterColor     (void) const;
-           Real32              &getOpacity        (void);
-     const Real32              &getOpacity        (void) const;
+                  SFPnt2f             *editSFCenter         (void);
+            const SFPnt2f             *getSFCenter          (void) const;
+
+                  SFReal32            *editSFWidth          (void);
+            const SFReal32            *getSFWidth           (void) const;
+
+                  SFReal32            *editSFHeight         (void);
+            const SFReal32            *getSFHeight          (void) const;
+
+                  SFReal32            *editSFStartAngleRad  (void);
+            const SFReal32            *getSFStartAngleRad   (void) const;
+
+                  SFReal32            *editSFEndAngleRad    (void);
+            const SFReal32            *getSFEndAngleRad     (void) const;
+
+                  SFUInt16            *editSFSubDivisions   (void);
+            const SFUInt16            *getSFSubDivisions    (void) const;
+
+                  SFColor4f           *editSFCenterColor    (void);
+            const SFColor4f           *getSFCenterColor     (void) const;
+
+                  SFColor4f           *editSFOuterColor     (void);
+            const SFColor4f           *getSFOuterColor      (void) const;
+
+                  SFReal32            *editSFOpacity        (void);
+            const SFReal32            *getSFOpacity         (void) const;
+
+
+                  Pnt2f               &editCenter         (void);
+            const Pnt2f               &getCenter          (void) const;
+
+                  Real32              &editWidth          (void);
+                  Real32               getWidth           (void) const;
+
+                  Real32              &editHeight         (void);
+                  Real32               getHeight          (void) const;
+
+                  Real32              &editStartAngleRad  (void);
+                  Real32               getStartAngleRad   (void) const;
+
+                  Real32              &editEndAngleRad    (void);
+                  Real32               getEndAngleRad     (void) const;
+
+                  UInt16              &editSubDivisions   (void);
+                  UInt16               getSubDivisions    (void) const;
+
+                  Color4f             &editCenterColor    (void);
+            const Color4f             &getCenterColor     (void) const;
+
+                  Color4f             &editOuterColor     (void);
+            const Color4f             &getOuterColor      (void) const;
+
+                  Real32              &editOpacity        (void);
+                  Real32               getOpacity         (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setCenter         ( const Pnt2f &value );
-     void setWidth          ( const Real32 &value );
-     void setHeight         ( const Real32 &value );
-     void setStartAngleRad  ( const Real32 &value );
-     void setEndAngleRad    ( const Real32 &value );
-     void setSubDivisions   ( const UInt16 &value );
-     void setCenterColor    ( const Color4f &value );
-     void setOuterColor     ( const Color4f &value );
-     void setOpacity        ( const Real32 &value );
+            void setCenter         (const Pnt2f &value);
+            void setWidth          (const Real32 value);
+            void setHeight         (const Real32 value);
+            void setStartAngleRad  (const Real32 value);
+            void setEndAngleRad    (const Real32 value);
+            void setSubDivisions   (const UInt16 value);
+            void setCenterColor    (const Color4f &value);
+            void setOuterColor     (const Color4f &value);
+            void setOpacity        (const Real32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -200,11 +242,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING DiscUIDrawObjectBase : public UIDrawObject
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -212,34 +254,51 @@ class OSG_USERINTERFACELIB_DLLMAPPING DiscUIDrawObjectBase : public UIDrawObject
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  DiscUIDrawObjectPtr      create          (void); 
-    static  DiscUIDrawObjectPtr      createEmpty     (void); 
+    static  DiscUIDrawObjectTransitPtr  create          (void);
+    static  DiscUIDrawObject           *createEmpty     (void);
+
+    static  DiscUIDrawObjectTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  DiscUIDrawObject            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  DiscUIDrawObjectTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFPnt2f             _sfCenter;
-    SFReal32            _sfWidth;
-    SFReal32            _sfHeight;
-    SFReal32            _sfStartAngleRad;
-    SFReal32            _sfEndAngleRad;
-    SFUInt16            _sfSubDivisions;
-    SFColor4f           _sfCenterColor;
-    SFColor4f           _sfOuterColor;
-    SFReal32            _sfOpacity;
+    SFPnt2f           _sfCenter;
+    SFReal32          _sfWidth;
+    SFReal32          _sfHeight;
+    SFReal32          _sfStartAngleRad;
+    SFReal32          _sfEndAngleRad;
+    SFUInt16          _sfSubDivisions;
+    SFColor4f         _sfCenterColor;
+    SFColor4f         _sfOuterColor;
+    SFReal32          _sfOpacity;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -254,69 +313,95 @@ class OSG_USERINTERFACELIB_DLLMAPPING DiscUIDrawObjectBase : public UIDrawObject
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DiscUIDrawObjectBase(void); 
+    virtual ~DiscUIDrawObjectBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleCenter          (void) const;
+    EditFieldHandlePtr editHandleCenter         (void);
+    GetFieldHandlePtr  getHandleWidth           (void) const;
+    EditFieldHandlePtr editHandleWidth          (void);
+    GetFieldHandlePtr  getHandleHeight          (void) const;
+    EditFieldHandlePtr editHandleHeight         (void);
+    GetFieldHandlePtr  getHandleStartAngleRad   (void) const;
+    EditFieldHandlePtr editHandleStartAngleRad  (void);
+    GetFieldHandlePtr  getHandleEndAngleRad     (void) const;
+    EditFieldHandlePtr editHandleEndAngleRad    (void);
+    GetFieldHandlePtr  getHandleSubDivisions    (void) const;
+    EditFieldHandlePtr editHandleSubDivisions   (void);
+    GetFieldHandlePtr  getHandleCenterColor     (void) const;
+    EditFieldHandlePtr editHandleCenterColor    (void);
+    GetFieldHandlePtr  getHandleOuterColor      (void) const;
+    EditFieldHandlePtr editHandleOuterColor     (void);
+    GetFieldHandlePtr  getHandleOpacity         (void) const;
+    EditFieldHandlePtr editHandleOpacity        (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      DiscUIDrawObjectBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      DiscUIDrawObjectBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      DiscUIDrawObjectBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const DiscUIDrawObjectBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef DiscUIDrawObjectBase *DiscUIDrawObjectBaseP;
 
-typedef osgIF<DiscUIDrawObjectBase::isNodeCore,
-              CoredNodePtr<DiscUIDrawObject>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet DiscUIDrawObjectNodePtr;
-
-typedef RefPtr<DiscUIDrawObjectPtr> DiscUIDrawObjectRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGDISCUIDRAWOBJECTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGDISCUIDRAWOBJECTBASE_H_ */

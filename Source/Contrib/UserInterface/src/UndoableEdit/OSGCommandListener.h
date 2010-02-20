@@ -31,21 +31,21 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
 #include "OSGCommandEvent.h"
 
-#include <OpenSG/Toolbox/OSGEventListener.h>
+#include "OSGEventListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING CommandListener : public EventListener
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING CommandListener : public EventListener
 {
     /*=========================  PUBLIC  ===============================*/
   public:
 	//An undoable edit happened.
-	virtual void commandExecuted(CommandEventPtr e)  = 0;
+	virtual void commandExecuted(CommandEventUnrecPtr e)  = 0;
 };
 
 typedef CommandListener* CommandListenerPtr;

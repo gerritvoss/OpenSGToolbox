@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,21 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGAbsoluteLayout.h"
 #include "OSGAbsoluteLayoutConstraints.h"
-#include "Component/Container/OSGContainer.h"
+#include "OSGComponentContainer.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::AbsoluteLayout
-A UI AbsoluteLayout.
-*/
+// Documentation for this class is emitted in the
+// OSGAbsoluteLayoutBase.cpp file.
+// To modify it, please change the .fcd file (OSGAbsoluteLayout.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,8 +64,13 @@ A UI AbsoluteLayout.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void AbsoluteLayout::initMethod (void)
+void AbsoluteLayout::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -76,42 +78,43 @@ void AbsoluteLayout::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void AbsoluteLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+void AbsoluteLayout::updateLayout(const MFUnrecComponentPtr* Components,
+                                  const Component* ParentComponent) const
 {
-	Pnt2f ParentInsetsTopLeft, ParentInsetBottomRight;
-    Container::Ptr::dcast(ParentComponent)->getInsideInsetsBounds(ParentInsetsTopLeft, ParentInsetBottomRight);
-	for(UInt32 i = 0 ; i<Components.size(); ++i)
-	{
-		//Calculate the Components Size
-		beginEditCP(Components[i], Component::PositionFieldMask|Component::SizeFieldMask);
-			Components[i]->setSize(Components[i]->getPreferredSize());
-			if(Components[i]->getConstraints() != NullFC)
-			{
-				//Get the Components Position
-				Pnt2f pos = AbsoluteLayoutConstraintsPtr::dcast(Components[i]->getConstraints())->getPosition();
-				
-				Components[i]->setPosition(ParentInsetsTopLeft + Vec2f(pos));
-			}
-			else
-			{
-			   Components[i]->setPosition(ParentInsetsTopLeft);
-			}
-		endEditCP(Components[i], Component::PositionFieldMask|Component::SizeFieldMask);
-	}
+    Pnt2f ParentInsetsTopLeft, ParentInsetBottomRight;
+    dynamic_cast<const ComponentContainer*>(ParentComponent)->getInsideInsetsBounds(ParentInsetsTopLeft, ParentInsetBottomRight);
+    for(UInt32 i = 0 ; i<Components->size(); ++i)
+    {
+        //Calculate the Components Size
+        (*Components)[i]->setSize((*Components)[i]->getPreferredSize());
+        if((*Components)[i]->getConstraints() != NULL)
+        {
+            //Get the Components Position
+            Pnt2f pos = dynamic_cast<AbsoluteLayoutConstraints*>((*Components)[i]->getConstraints())->getPosition();
+
+            (*Components)[i]->setPosition(ParentInsetsTopLeft + pos.subZero());
+        }
+        else
+        {
+            (*Components)[i]->setPosition(ParentInsetsTopLeft);
+        }
+    }
 }
 
 
-Vec2f AbsoluteLayout::layoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent, SizeType TheSizeType) const
+Vec2f AbsoluteLayout::layoutSize(const MFUnrecComponentPtr* Components,
+                                 const Component* ParentComponent,
+                                 SizeType TheSizeType) const
 {
     Vec2f Result(0.0,0.0);
 
     Vec2f ComponentSize;
     Pnt2f ComponentPosition;
-    for(UInt32 i(0) ; i<Components.size() ; ++i)
+    for(UInt32 i(0) ; i<Components->size() ; ++i)
     {
-        ComponentPosition = AbsoluteLayoutConstraintsPtr::dcast(Components[i]->getConstraints())->getPosition();
-				
-        ComponentSize = getComponentSize(Components[i],TheSizeType);
+        ComponentPosition = dynamic_cast<AbsoluteLayoutConstraints*>((*Components)[i]->getConstraints())->getPosition();
+
+        ComponentSize = getComponentSize((*Components)[i],TheSizeType);
         if(ComponentPosition.x() + ComponentSize.x() > Result.x())
         {
             Result[0] = ComponentPosition.x() + ComponentSize.x();
@@ -125,22 +128,26 @@ Vec2f AbsoluteLayout::layoutSize(const MFComponentPtr Components,const Component
     return Result;
 }
 
-Vec2f AbsoluteLayout::minimumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+Vec2f AbsoluteLayout::minimumContentsLayoutSize(const MFUnrecComponentPtr* Components,
+                                                const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, MIN_SIZE);
 }
 
-Vec2f AbsoluteLayout::requestedContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+Vec2f AbsoluteLayout::requestedContentsLayoutSize(const MFUnrecComponentPtr* Components,
+                                                  const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, REQUESTED_SIZE);
 }
 
-Vec2f AbsoluteLayout::preferredContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+Vec2f AbsoluteLayout::preferredContentsLayoutSize(const MFUnrecComponentPtr* Components,
+                                                  const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, PREFERRED_SIZE);
 }
 
-Vec2f AbsoluteLayout::maximumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
+Vec2f AbsoluteLayout::maximumContentsLayoutSize(const MFUnrecComponentPtr* Components,
+                                                const Component* ParentComponent) const
 {
     return layoutSize(Components, ParentComponent, MAX_SIZE);
 }
@@ -167,41 +174,17 @@ AbsoluteLayout::~AbsoluteLayout(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void AbsoluteLayout::changed(BitVector whichField, UInt32 origin)
+void AbsoluteLayout::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void AbsoluteLayout::dump(      UInt32    , 
+void AbsoluteLayout::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump AbsoluteLayout NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGABSOLUTELAYOUTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGABSOLUTELAYOUTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGABSOLUTELAYOUTFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

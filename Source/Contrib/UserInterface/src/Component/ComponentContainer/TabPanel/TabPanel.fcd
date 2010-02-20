@@ -2,37 +2,40 @@
 
 <FieldContainer
 	name="TabPanel"
-	parent="Container"
-	library="UserInterface"
-	pointerfieldtypes="both"
+	parent="ComponentContainer"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
+    systemcomponent="true"
+    parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="true"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI Tab Panel.
 	<Field
 		name="Tabs"
-		type="ComponentPtr"
+		type="Component"
+		category="pointer"
 		cardinality="multi"
 		visibility="external"
-		header="Component/OSGComponent.h"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="TabContents"
-		type="ComponentPtr"
+		type="Component"
+		category="pointer"
 		cardinality="multi"
 		visibility="external"
-		header="Component/OSGComponent.h"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="TabPlacement"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -42,6 +45,7 @@ A UI Tab Panel.
 	<Field
 		name="TabAlignment"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -51,6 +55,7 @@ A UI Tab Panel.
 	<Field
 		name="TabRotation"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -60,6 +65,7 @@ A UI Tab Panel.
 	<Field
 		name="TabBorderInsets"
 		type="Vec2f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -68,107 +74,108 @@ A UI Tab Panel.
 	</Field>
 	<Field
 		name="TabBorder"
-		type="BorderPtr"
+		type="Border"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Border/OSGBorder.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="TabBackground"
-		type="LayerPtr"
+		type="Layer"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Layer/OSGLayer.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="TabDisabledBorder"
-		type="BorderPtr"
+		type="Border"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Border/OSGBorder.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="TabDisabledBackground"
-		type="LayerPtr"
+		type="Layer"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Layer/OSGLayer.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="TabFocusedBorder"
-		type="BorderPtr"
+		type="Border"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Border/OSGBorder.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="TabFocusedBackground"
-		type="LayerPtr"
+		type="Layer"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Layer/OSGLayer.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="TabRolloverBorder"
-		type="BorderPtr"
+		type="Border"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Border/OSGBorder.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="TabRolloverBackground"
-		type="LayerPtr"
+		type="Layer"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Layer/OSGLayer.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="TabActiveBorder"
-		type="BorderPtr"
+		type="Border"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Border/OSGBorder.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="TabActiveBackground"
-		type="LayerPtr"
+		type="Layer"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Layer/OSGLayer.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="ContentBorderInsets"
 		type="Vec2f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -177,71 +184,71 @@ A UI Tab Panel.
 	</Field>
 	<Field
 		name="ContentBorder"
-		type="BorderPtr"
+		type="Border"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Border/OSGBorder.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="ContentBackground"
-		type="LayerPtr"
+		type="Layer"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Layer/OSGLayer.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="ContentDisabledBorder"
-		type="BorderPtr"
+		type="Border"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Border/OSGBorder.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="ContentDisabledBackground"
-		type="LayerPtr"
+		type="Layer"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Layer/OSGLayer.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="ContentRolloverBorder"
-		type="BorderPtr"
+		type="Border"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Border/OSGBorder.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="ContentRolloverBackground"
-		type="LayerPtr"
+		type="Layer"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Layer/OSGLayer.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="SelectionModel"
-		type="SingleSelectionModelPtr"
+		type="SingleSelectionModel"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="Models/SelectionModels/OSGSingleSelectionModelFields.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
@@ -249,81 +256,73 @@ A UI Tab Panel.
 </FieldContainer>
 	<!--<Field-->
 		<!--name="TabForeground"-->
-		<!--type="LayerPtr"-->
+		<!--type="Layer"-->
 		<!--cardinality="single"-->
 		<!--visibility="external"-->
-		<!--defaultValue="NullFC"-->
-		<!--header="Layer/OSGLayer.h"-->
+		<!--defaultValue="NULL"-->
 		<!--access="public"-->
 	<!-->-->
 	<!--</Field>-->
 	<!--<Field-->
 		<!--name="TabDisabledForeground"-->
-		<!--type="LayerPtr"-->
+		<!--type="Layer"-->
 		<!--cardinality="single"-->
 		<!--visibility="external"-->
-		<!--defaultValue="NullFC"-->
-		<!--header="Layer/OSGLayer.h"-->
+		<!--defaultValue="NULL"-->
 		<!--access="public"-->
 	<!-->-->
 	<!--</Field>-->
 	<!--<Field-->
 		<!--name="TabFocusedForeground"-->
-		<!--type="LayerPtr"-->
+		<!--type="Layer"-->
 		<!--cardinality="single"-->
 		<!--visibility="external"-->
-		<!--defaultValue="NullFC"-->
-		<!--header="Layer/OSGLayer.h"-->
+		<!--defaultValue="NULL"-->
 		<!--access="public"-->
 	<!-->-->
 	<!--</Field>-->
 	<!--<Field-->
 		<!--name="TabRolloverForeground"-->
-		<!--type="LayerPtr"-->
+		<!--type="Layer"-->
 		<!--cardinality="single"-->
 		<!--visibility="external"-->
-		<!--defaultValue="NullFC"-->
-		<!--header="Layer/OSGLayer.h"-->
+		<!--defaultValue="NULL"-->
 		<!--access="public"-->
 	<!-->-->
 	<!--</Field>-->
 	<!--<Field-->
 		<!--name="TabActiveForeground"-->
-		<!--type="LayerPtr"-->
+		<!--type="Layer"-->
 		<!--cardinality="single"-->
 		<!--visibility="external"-->
-		<!--defaultValue="NullFC"-->
-		<!--header="Layer/OSGLayer.h"-->
+		<!--defaultValue="NULL"-->
 		<!--access="public"-->
 	<!-->-->
 	<!--</Field>-->
 	<!--<Field-->
 		<!--name="ContentForeground"-->
-		<!--type="LayerPtr"-->
+		<!--type="Layer"-->
 		<!--cardinality="single"-->
 		<!--visibility="external"-->
-		<!--defaultValue="NullFC"-->
-		<!--header="Layer/OSGLayer.h"-->
+		<!--defaultValue="NULL"-->
 		<!--access="public"-->
 	<!-->-->
 	<!--</Field>-->
 	<!--<Field-->
 		<!--name="ContentDisabledForeground"-->
-		<!--type="LayerPtr"-->
+		<!--type="Layer"-->
 		<!--cardinality="single"-->
 		<!--visibility="external"-->
-		<!--defaultValue="NullFC"-->
-		<!--header="Layer/OSGLayer.h"-->
+		<!--defaultValue="NULL"-->
 		<!--access="public"-->
 	<!-->-->
 	<!--</Field>-->
 	<!--<Field-->
 		<!--name="ContentRolloverForeground"-->
-		<!--type="LayerPtr"-->
+		<!--type="Layer"-->
 		<!--cardinality="single"-->
 		<!--visibility="external"-->
-		<!--defaultValue="NullFC"-->
-		<!--header="Layer/OSGLayer.h"-->
+		<!--defaultValue="NULL"-->
 		<!--access="public"-->
 	<!-->-->
 	<!--</Field>-->

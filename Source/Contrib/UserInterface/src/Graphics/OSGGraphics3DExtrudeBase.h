@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,80 +58,93 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGGraphics.h" // Parent
 
-#include <OpenSG/OSGDepthChunkFields.h> // UIDepth type
-#include <OpenSG/OSGReal32Fields.h> // ExtrudeLength type
-#include <OpenSG/OSGReal32Fields.h> // InternalClipPlaneOffset type
-#include <OpenSG/OSGReal32Fields.h> // TextOffset type
-#include <OpenSG/OSGBoolFields.h> // Enable3DText type
-#include <OpenSG/OSGBoolFields.h> // EnableLighting type
-#include <OpenSG/OSGMaterialFields.h> // Material type
+#include "OSGDepthChunkFields.h"        // UIDepth type
+#include "OSGSysFields.h"               // ExtrudeLength type
+#include "OSGMaterialFields.h"          // Material type
 
 #include "OSGGraphics3DExtrudeFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class Graphics3DExtrude;
-class BinaryDataHandler;
 
 //! \brief Graphics3DExtrude Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING Graphics3DExtrudeBase : public Graphics
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Graphics3DExtrudeBase : public Graphics
 {
-  private:
-
-    typedef Graphics    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef Graphics3DExtrudePtr  Ptr;
+    typedef Graphics Inherited;
+    typedef Graphics ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(Graphics3DExtrude);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        UIDepthFieldId                 = Inherited::NextFieldId,
-        ExtrudeLengthFieldId           = UIDepthFieldId                 + 1,
-        InternalClipPlaneOffsetFieldId = ExtrudeLengthFieldId           + 1,
-        TextOffsetFieldId              = InternalClipPlaneOffsetFieldId + 1,
-        Enable3DTextFieldId            = TextOffsetFieldId              + 1,
-        EnableLightingFieldId          = Enable3DTextFieldId            + 1,
-        MaterialFieldId                = EnableLightingFieldId          + 1,
-        NextFieldId                    = MaterialFieldId                + 1
+        UIDepthFieldId = Inherited::NextFieldId,
+        ExtrudeLengthFieldId = UIDepthFieldId + 1,
+        InternalClipPlaneOffsetFieldId = ExtrudeLengthFieldId + 1,
+        TextOffsetFieldId = InternalClipPlaneOffsetFieldId + 1,
+        Enable3DTextFieldId = TextOffsetFieldId + 1,
+        EnableLightingFieldId = Enable3DTextFieldId + 1,
+        MaterialFieldId = EnableLightingFieldId + 1,
+        NextFieldId = MaterialFieldId + 1
     };
 
-    static const OSG::BitVector UIDepthFieldMask;
-    static const OSG::BitVector ExtrudeLengthFieldMask;
-    static const OSG::BitVector InternalClipPlaneOffsetFieldMask;
-    static const OSG::BitVector TextOffsetFieldMask;
-    static const OSG::BitVector Enable3DTextFieldMask;
-    static const OSG::BitVector EnableLightingFieldMask;
-    static const OSG::BitVector MaterialFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector UIDepthFieldMask =
+        (TypeTraits<BitVector>::One << UIDepthFieldId);
+    static const OSG::BitVector ExtrudeLengthFieldMask =
+        (TypeTraits<BitVector>::One << ExtrudeLengthFieldId);
+    static const OSG::BitVector InternalClipPlaneOffsetFieldMask =
+        (TypeTraits<BitVector>::One << InternalClipPlaneOffsetFieldId);
+    static const OSG::BitVector TextOffsetFieldMask =
+        (TypeTraits<BitVector>::One << TextOffsetFieldId);
+    static const OSG::BitVector Enable3DTextFieldMask =
+        (TypeTraits<BitVector>::One << Enable3DTextFieldId);
+    static const OSG::BitVector EnableLightingFieldMask =
+        (TypeTraits<BitVector>::One << EnableLightingFieldId);
+    static const OSG::BitVector MaterialFieldMask =
+        (TypeTraits<BitVector>::One << MaterialFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecDepthChunkPtr SFUIDepthType;
+    typedef SFReal32          SFExtrudeLengthType;
+    typedef SFReal32          SFInternalClipPlaneOffsetType;
+    typedef SFReal32          SFTextOffsetType;
+    typedef SFBool            SFEnable3DTextType;
+    typedef SFBool            SFEnableLightingType;
+    typedef SFUnrecMaterialPtr SFMaterialType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -140,41 +153,62 @@ class OSG_USERINTERFACELIB_DLLMAPPING Graphics3DExtrudeBase : public Graphics
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *getSFExtrudeLength  (void);
-           SFReal32            *getSFInternalClipPlaneOffset(void);
-           SFReal32            *getSFTextOffset     (void);
-           SFBool              *getSFEnable3DText   (void);
-           SFBool              *getSFEnableLighting (void);
-           SFMaterialPtr       *getSFMaterial       (void);
 
-           Real32              &getExtrudeLength  (void);
-     const Real32              &getExtrudeLength  (void) const;
-           Real32              &getInternalClipPlaneOffset(void);
-     const Real32              &getInternalClipPlaneOffset(void) const;
-           Real32              &getTextOffset     (void);
-     const Real32              &getTextOffset     (void) const;
-           bool                &getEnable3DText   (void);
-     const bool                &getEnable3DText   (void) const;
-           bool                &getEnableLighting (void);
-     const bool                &getEnableLighting (void) const;
-           MaterialPtr         &getMaterial       (void);
-     const MaterialPtr         &getMaterial       (void) const;
+                  SFReal32            *editSFExtrudeLength  (void);
+            const SFReal32            *getSFExtrudeLength   (void) const;
+
+                  SFReal32            *editSFInternalClipPlaneOffset(void);
+            const SFReal32            *getSFInternalClipPlaneOffset (void) const;
+
+                  SFReal32            *editSFTextOffset     (void);
+            const SFReal32            *getSFTextOffset      (void) const;
+
+                  SFBool              *editSFEnable3DText   (void);
+            const SFBool              *getSFEnable3DText    (void) const;
+
+                  SFBool              *editSFEnableLighting (void);
+            const SFBool              *getSFEnableLighting  (void) const;
+            const SFUnrecMaterialPtr  *getSFMaterial       (void) const;
+                  SFUnrecMaterialPtr  *editSFMaterial       (void);
+
+
+                  Real32              &editExtrudeLength  (void);
+                  Real32               getExtrudeLength   (void) const;
+
+                  Real32              &editInternalClipPlaneOffset(void);
+                  Real32               getInternalClipPlaneOffset (void) const;
+
+                  Real32              &editTextOffset     (void);
+                  Real32               getTextOffset      (void) const;
+
+                  bool                &editEnable3DText   (void);
+                  bool                 getEnable3DText    (void) const;
+
+                  bool                &editEnableLighting (void);
+                  bool                 getEnableLighting  (void) const;
+
+                  Material * getMaterial       (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setExtrudeLength  ( const Real32 &value );
-     void setInternalClipPlaneOffset( const Real32 &value );
-     void setTextOffset     ( const Real32 &value );
-     void setEnable3DText   ( const bool &value );
-     void setEnableLighting ( const bool &value );
-     void setMaterial       ( const MaterialPtr &value );
+            void setExtrudeLength  (const Real32 value);
+            void setInternalClipPlaneOffset(const Real32 value);
+            void setTextOffset     (const Real32 value);
+            void setEnable3DText   (const bool value);
+            void setEnableLighting (const bool value);
+            void setMaterial       (Material * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -182,11 +216,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING Graphics3DExtrudeBase : public Graphics
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -194,32 +228,49 @@ class OSG_USERINTERFACELIB_DLLMAPPING Graphics3DExtrudeBase : public Graphics
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  Graphics3DExtrudePtr      create          (void); 
-    static  Graphics3DExtrudePtr      createEmpty     (void); 
+    static  Graphics3DExtrudeTransitPtr  create          (void);
+    static  Graphics3DExtrude           *createEmpty     (void);
+
+    static  Graphics3DExtrudeTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  Graphics3DExtrude            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  Graphics3DExtrudeTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFDepthChunkPtr     _sfUIDepth;
-    SFReal32            _sfExtrudeLength;
-    SFReal32            _sfInternalClipPlaneOffset;
-    SFReal32            _sfTextOffset;
-    SFBool              _sfEnable3DText;
-    SFBool              _sfEnableLighting;
-    SFMaterialPtr       _sfMaterial;
+    SFUnrecDepthChunkPtr _sfUIDepth;
+    SFReal32          _sfExtrudeLength;
+    SFReal32          _sfInternalClipPlaneOffset;
+    SFReal32          _sfTextOffset;
+    SFBool            _sfEnable3DText;
+    SFBool            _sfEnableLighting;
+    SFUnrecMaterialPtr _sfMaterial;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -234,86 +285,115 @@ class OSG_USERINTERFACELIB_DLLMAPPING Graphics3DExtrudeBase : public Graphics
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Graphics3DExtrudeBase(void); 
+    virtual ~Graphics3DExtrudeBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const Graphics3DExtrude *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleUIDepth         (void) const;
+    EditFieldHandlePtr editHandleUIDepth        (void);
+    GetFieldHandlePtr  getHandleExtrudeLength   (void) const;
+    EditFieldHandlePtr editHandleExtrudeLength  (void);
+    GetFieldHandlePtr  getHandleInternalClipPlaneOffset (void) const;
+    EditFieldHandlePtr editHandleInternalClipPlaneOffset(void);
+    GetFieldHandlePtr  getHandleTextOffset      (void) const;
+    EditFieldHandlePtr editHandleTextOffset     (void);
+    GetFieldHandlePtr  getHandleEnable3DText    (void) const;
+    EditFieldHandlePtr editHandleEnable3DText   (void);
+    GetFieldHandlePtr  getHandleEnableLighting  (void) const;
+    EditFieldHandlePtr editHandleEnableLighting (void);
+    GetFieldHandlePtr  getHandleMaterial        (void) const;
+    EditFieldHandlePtr editHandleMaterial       (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFDepthChunkPtr     *getSFUIDepth        (void);
+            const SFUnrecDepthChunkPtr *getSFUIDepth         (void) const;
+                  SFUnrecDepthChunkPtr *editSFUIDepth        (void);
 
-           DepthChunkPtr       &getUIDepth        (void);
-     const DepthChunkPtr       &getUIDepth        (void) const;
+
+                  DepthChunk * getUIDepth        (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setUIDepth        (const DepthChunkPtr &value);
+            void setUIDepth        (DepthChunk * const value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      Graphics3DExtrudeBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      Graphics3DExtrudeBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      Graphics3DExtrudeBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const Graphics3DExtrudeBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef Graphics3DExtrudeBase *Graphics3DExtrudeBaseP;
 
-typedef osgIF<Graphics3DExtrudeBase::isNodeCore,
-              CoredNodePtr<Graphics3DExtrude>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet Graphics3DExtrudeNodePtr;
-
-typedef RefPtr<Graphics3DExtrudePtr> Graphics3DExtrudeRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGGRAPHICS3DEXTRUDEBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGGRAPHICS3DEXTRUDEBASE_H_ */

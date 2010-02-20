@@ -31,24 +31,24 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGEventListener.h>
+#include "OSGEventListener.h"
 #include "OSGMenuEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING MenuListener : public EventListener
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuListener : public EventListener
 {
    /*=========================  PUBLIC  ===============================*/
 public:
 	//Invoked when the menu is canceled.
-	virtual void menuCanceled(const MenuEventPtr e) = 0;
+	virtual void menuCanceled(const MenuEventUnrecPtr e) = 0;
 	//Invoked when the menu is deselected.
-	virtual void menuDeselected(const MenuEventPtr e) = 0;
+	virtual void menuDeselected(const MenuEventUnrecPtr e) = 0;
 	//Invoked when a menu is selected.
-	virtual void menuSelected(const MenuEventPtr e) = 0;
+	virtual void menuSelected(const MenuEventUnrecPtr e) = 0;
 };
 
 typedef MenuListener* MenuListenerPtr;

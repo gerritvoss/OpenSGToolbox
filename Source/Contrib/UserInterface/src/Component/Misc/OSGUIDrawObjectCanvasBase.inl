@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,104 +55,86 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &UIDrawObjectCanvasBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 UIDrawObjectCanvasBase::getClassTypeId(void) 
+OSG::UInt32 UIDrawObjectCanvasBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-UIDrawObjectCanvasPtr UIDrawObjectCanvasBase::create(void) 
-{
-    UIDrawObjectCanvasPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = UIDrawObjectCanvasPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-UIDrawObjectCanvasPtr UIDrawObjectCanvasBase::createEmpty(void) 
-{ 
-    UIDrawObjectCanvasPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 UIDrawObjectCanvasBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the UIDrawObjectCanvas::_mfDrawObjects field.
-inline
-MFUIDrawObjectPtr *UIDrawObjectCanvasBase::getMFDrawObjects(void)
-{
-    return &_mfDrawObjects;
-}
-
-//! Get the UIDrawObjectCanvas::_sfUsePreferredSizeAsRequested field.
-inline
-SFBool *UIDrawObjectCanvasBase::getSFUsePreferredSizeAsRequested(void)
-{
-    return &_sfUsePreferredSizeAsRequested;
-}
-
-
 //! Get the value of the UIDrawObjectCanvas::_sfUsePreferredSizeAsRequested field.
+
 inline
-bool &UIDrawObjectCanvasBase::getUsePreferredSizeAsRequested(void)
+bool &UIDrawObjectCanvasBase::editUsePreferredSizeAsRequested(void)
 {
+    editSField(UsePreferredSizeAsRequestedFieldMask);
+
     return _sfUsePreferredSizeAsRequested.getValue();
 }
 
 //! Get the value of the UIDrawObjectCanvas::_sfUsePreferredSizeAsRequested field.
 inline
-const bool &UIDrawObjectCanvasBase::getUsePreferredSizeAsRequested(void) const
+      bool  UIDrawObjectCanvasBase::getUsePreferredSizeAsRequested(void) const
 {
     return _sfUsePreferredSizeAsRequested.getValue();
 }
 
 //! Set the value of the UIDrawObjectCanvas::_sfUsePreferredSizeAsRequested field.
 inline
-void UIDrawObjectCanvasBase::setUsePreferredSizeAsRequested(const bool &value)
+void UIDrawObjectCanvasBase::setUsePreferredSizeAsRequested(const bool value)
 {
+    editSField(UsePreferredSizeAsRequestedFieldMask);
+
     _sfUsePreferredSizeAsRequested.setValue(value);
 }
 
-
 //! Get the value of the \a index element the UIDrawObjectCanvas::_mfDrawObjects field.
 inline
-UIDrawObjectPtr &UIDrawObjectCanvasBase::getDrawObjects(const UInt32 index)
+UIDrawObject * UIDrawObjectCanvasBase::getDrawObjects(const UInt32 index) const
 {
     return _mfDrawObjects[index];
 }
 
-//! Get the UIDrawObjectCanvas::_mfDrawObjects field.
-inline
-MFUIDrawObjectPtr &UIDrawObjectCanvasBase::getDrawObjects(void)
-{
-    return _mfDrawObjects;
-}
 
-//! Get the UIDrawObjectCanvas::_mfDrawObjects field.
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-const MFUIDrawObjectPtr &UIDrawObjectCanvasBase::getDrawObjects(void) const
+void UIDrawObjectCanvasBase::execSync (      UIDrawObjectCanvasBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfDrawObjects;
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (DrawObjectsFieldMask & whichField))
+        _mfDrawObjects.syncWith(pFrom->_mfDrawObjects,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (UsePreferredSizeAsRequestedFieldMask & whichField))
+        _sfUsePreferredSizeAsRequested.syncWith(pFrom->_sfUsePreferredSizeAsRequested);
 }
+#endif
+
+
+inline
+const Char8 *UIDrawObjectCanvasBase::getClassname(void)
+{
+    return "UIDrawObjectCanvas";
+}
+OSG_GEN_CONTAINERPTR(UIDrawObjectCanvas);
 
 OSG_END_NAMESPACE
-
-#define OSGUIDRAWOBJECTCANVASBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,22 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include <OSGConfig.h>
+
 #include "OSGLineUIDrawObject.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::LineUIDrawObject
-A UI DrawObject. 	
-*/
+// Documentation for this class is emitted in the
+// OSGLineUIDrawObjectBase.cpp file.
+// To modify it, please change the .fcd file (OSGLineUIDrawObject.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -65,8 +62,13 @@ A UI DrawObject.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void LineUIDrawObject::initMethod (void)
+void LineUIDrawObject::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -74,7 +76,7 @@ void LineUIDrawObject::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void LineUIDrawObject::draw(const GraphicsPtr Graphics, Real32 Opacity) const
+void LineUIDrawObject::draw(const GraphicsWeakPtr Graphics, Real32 Opacity) const
 {
 	Graphics->drawLine(getTopLeft(), getBottomRight(), getWidth(), getColor(), getOpacity()*Opacity);
 }
@@ -84,6 +86,7 @@ void LineUIDrawObject::getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 	TopLeft = getTopLeft();
 	BottomRight = getBottomRight();
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -106,41 +109,17 @@ LineUIDrawObject::~LineUIDrawObject(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void LineUIDrawObject::changed(BitVector whichField, UInt32 origin)
+void LineUIDrawObject::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void LineUIDrawObject::dump(      UInt32    , 
+void LineUIDrawObject::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump LineUIDrawObject NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGLINEUIDRAWOBJECTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGLINEUIDRAWOBJECTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGLINEUIDRAWOBJECTFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

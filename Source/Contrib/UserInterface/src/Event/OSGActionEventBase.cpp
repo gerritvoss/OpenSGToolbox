@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,121 +50,124 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEACTIONEVENTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGActionEventBase.h"
 #include "OSGActionEvent.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector ActionEventBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::ActionEvent
+    
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
 
-FieldContainerType ActionEventBase::_type(
-    "ActionEvent",
-    "Event",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&ActionEventBase::createEmpty),
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ActionEvent *>::_type("ActionEventPtr", "EventPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ActionEvent *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ActionEvent *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ActionEvent *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ActionEventBase::classDescInserter(TypeObject &oType)
+{
+}
+
+
+ActionEventBase::TypeObject ActionEventBase::_type(
+    ActionEventBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ActionEventBase::createEmptyLocal),
     ActionEvent::initMethod,
-    NULL,
-    0);
+    ActionEvent::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ActionEvent::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ActionEvent\"\n"
+    "\tparent=\"Event\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(ActionEventBase, ActionEventPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ActionEventBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ActionEventBase::getType(void) const 
+FieldContainerType &ActionEventBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr ActionEventBase::shallowCopy(void) const 
-{ 
-    ActionEventPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const ActionEvent *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 ActionEventBase::getContainerSize(void) const 
-{ 
-    return sizeof(ActionEvent); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ActionEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &ActionEventBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<ActionEventBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void ActionEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 ActionEventBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((ActionEventBase *) &other, whichField, sInfo);
-}
-void ActionEventBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(ActionEvent);
 }
 
-void ActionEventBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-ActionEventBase::ActionEventBase(void) :
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-ActionEventBase::ActionEventBase(const ActionEventBase &source) :
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-ActionEventBase::~ActionEventBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ActionEventBase::getBinSize(const BitVector &whichField)
+UInt32 ActionEventBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -172,66 +175,198 @@ UInt32 ActionEventBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void ActionEventBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ActionEventBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-
 }
 
-void ActionEventBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ActionEventBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ActionEventBase::executeSyncImpl(      ActionEventBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ActionEventTransitPtr ActionEventBase::createLocal(BitVector bFlags)
 {
+    ActionEventTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
+        fc = dynamic_pointer_cast<ActionEvent>(tmpPtr);
+    }
 
-}
-#else
-void ActionEventBase::executeSyncImpl(      ActionEventBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
+    return fc;
 }
 
-void ActionEventBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ActionEventTransitPtr ActionEventBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ActionEventTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<ActionEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ActionEventTransitPtr ActionEventBase::create(void)
+{
+    ActionEventTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<ActionEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+ActionEvent *ActionEventBase::createEmptyLocal(BitVector bFlags)
+{
+    ActionEvent *returnValue;
+
+    newPtr<ActionEvent>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+ActionEvent *ActionEventBase::createEmpty(void)
+{
+    ActionEvent *returnValue;
+
+    newPtr<ActionEvent>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ActionEventBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    ActionEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ActionEvent *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ActionEventBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    ActionEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ActionEvent *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ActionEventBase::shallowCopy(void) const
+{
+    ActionEvent *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const ActionEvent *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ActionEventBase::ActionEventBase(void) :
+    Inherited()
+{
+}
+
+ActionEventBase::ActionEventBase(const ActionEventBase &source) :
+    Inherited(source)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ActionEventBase::~ActionEventBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ActionEventBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ActionEvent *pThis = static_cast<ActionEvent *>(this);
+
+    pThis->execSync(static_cast<ActionEvent *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ActionEventBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    ActionEvent *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const ActionEvent *>(pRefAspect),
+                  dynamic_cast<const ActionEvent *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ActionEventPtr>::_type("ActionEventPtr", "EventPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(ActionEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void ActionEventBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

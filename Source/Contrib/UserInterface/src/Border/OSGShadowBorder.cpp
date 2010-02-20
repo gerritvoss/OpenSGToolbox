@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGShadowBorder.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::ShadowBorder
-UI Shadow Border. 	
-*/
+// Documentation for this class is emitted in the
+// OSGShadowBorderBase.cpp file.
+// To modify it, please change the .fcd file (OSGShadowBorder.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,8 +62,13 @@ UI Shadow Border.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ShadowBorder::initMethod (void)
+void ShadowBorder::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -76,9 +76,9 @@ void ShadowBorder::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ShadowBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity, bool Clipping) const
+void ShadowBorder::draw(const GraphicsWeakPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity, bool Clipping) const
 {
-	//Draw the Inside Border
+    //Draw the Inside Border
     getInsideBorder()->draw(g, x+getLeftOffset(), y+getTopOffset(),Width-getRightOffset()-getLeftOffset(),Height-getTopOffset()-getBottomOffset(), Opacity);
 
 
@@ -86,7 +86,7 @@ void ShadowBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , co
 
 void ShadowBorder::getInsets(Real32& Left, Real32& Right,Real32& Top,Real32& Bottom) const
 {
-    if(getInsideBorder() != NullFC)
+    if(getInsideBorder() != NULL)
     {
         getInsideBorder()->getInsets(Left, Right, Top, Bottom);
     }
@@ -101,7 +101,7 @@ void ShadowBorder::getInsets(Real32& Left, Real32& Right,Real32& Top,Real32& Bot
     Bottom +=getBottomOffset();
 }
 
-void ShadowBorder::activateInternalDrawConstraints(const GraphicsPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
+void ShadowBorder::activateInternalDrawConstraints(const GraphicsWeakPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const
 {
     //Determine TopLeft and BottomRight of the Shadow
     Pnt2f ShadowTopLeft,
@@ -110,7 +110,7 @@ void ShadowBorder::activateInternalDrawConstraints(const GraphicsPtr g, const Re
     //Top
     if(getTopOffset() > 0) { ShadowTopLeft[1] = y; }
     else { ShadowTopLeft[1] = y + getBottomOffset(); }
-    
+
     //Bottom
     if(getBottomOffset() > 0) { ShadowBottomRight[1] = y+Height; }
     else { ShadowBottomRight[1] = y + Height - getTopOffset(); }
@@ -179,7 +179,7 @@ void ShadowBorder::activateInternalDrawConstraints(const GraphicsPtr g, const Re
                     Pnt2f(ShadowBottomRight.x()-getInternalToEdgeColorLength(),ShadowBottomRight.y()-getInternalToEdgeColorLength()),
                     getInternalColor(), getEdgeColor(), getEdgeColor(), getInternalColor(), 1.0f);
         //Center
-	    g->drawRect(ShadowTopLeft+Vec2f(getInternalToEdgeColorLength(),getInternalToEdgeColorLength()), ShadowBottomRight-Vec2f(getInternalToEdgeColorLength(),getInternalToEdgeColorLength()), getInternalColor(), 1.0f);
+        g->drawRect(ShadowTopLeft+Vec2f(getInternalToEdgeColorLength(),getInternalToEdgeColorLength()), ShadowBottomRight-Vec2f(getInternalToEdgeColorLength(),getInternalToEdgeColorLength()), getInternalColor(), 1.0f);
     }
     else
     {
@@ -187,28 +187,28 @@ void ShadowBorder::activateInternalDrawConstraints(const GraphicsPtr g, const Re
         UInt32 InternalCornerRadius(getCornerRadius() - getInternalToEdgeColorLength());
         //TopLeft
         g->drawComplexDisc(ShadowTopLeft + Vec2f(getCornerRadius(),getCornerRadius()),
-            InternalCornerRadius,getCornerRadius(),
-            3.14159265, 4.71238898, 10,
-            getInternalColor(), getEdgeColor(), 1.0f
-            );
+                           InternalCornerRadius,getCornerRadius(),
+                           3.14159265, 4.71238898, 10,
+                           getInternalColor(), getEdgeColor(), 1.0f
+                          );
         //TopRight
         g->drawComplexDisc(Pnt2f(ShadowBottomRight.x()-getCornerRadius(), ShadowTopLeft.y() + getCornerRadius()),
-            InternalCornerRadius,getCornerRadius(),
-            4.71238898,6.28318531, 10,
-            getInternalColor(), getEdgeColor(), 1.0f
-            );
+                           InternalCornerRadius,getCornerRadius(),
+                           4.71238898,6.28318531, 10,
+                           getInternalColor(), getEdgeColor(), 1.0f
+                          );
         //BottomRight
         g->drawComplexDisc(Pnt2f(ShadowBottomRight.x()-getCornerRadius(), ShadowBottomRight.y() - getCornerRadius()),
-            InternalCornerRadius,getCornerRadius(),
-            0.0, 1.57079633, 10,
-            getInternalColor(), getEdgeColor(), 1.0f
-            );
+                           InternalCornerRadius,getCornerRadius(),
+                           0.0, 1.57079633, 10,
+                           getInternalColor(), getEdgeColor(), 1.0f
+                          );
         //BottomLeft
         g->drawComplexDisc(Pnt2f(ShadowTopLeft.x()+getCornerRadius(), ShadowBottomRight.y() - getCornerRadius()),
-            InternalCornerRadius,getCornerRadius(),
-            1.57079633, 3.14159265, 10,
-            getInternalColor(), getEdgeColor(), 1.0f
-            );
+                           InternalCornerRadius,getCornerRadius(),
+                           1.57079633, 3.14159265, 10,
+                           getInternalColor(), getEdgeColor(), 1.0f
+                          );
         //Rectangles
         //Top
         g->drawQuad(Pnt2f(ShadowTopLeft.x()+getCornerRadius(),ShadowTopLeft.y()),
@@ -216,7 +216,7 @@ void ShadowBorder::activateInternalDrawConstraints(const GraphicsPtr g, const Re
                     Pnt2f(ShadowBottomRight.x()-getCornerRadius(),ShadowTopLeft.y()+getInternalToEdgeColorLength()),
                     Pnt2f(ShadowTopLeft.x()+getCornerRadius(),ShadowTopLeft.y()+getInternalToEdgeColorLength()),
                     getEdgeColor(), getEdgeColor(), getInternalColor(), getInternalColor(), 1.0f);
-        
+
         //Bottom
         g->drawQuad(Pnt2f(ShadowTopLeft.x()+getCornerRadius(),ShadowBottomRight.y()-getInternalToEdgeColorLength()),
                     Pnt2f(ShadowBottomRight.x()-getCornerRadius(),ShadowBottomRight.y()-getInternalToEdgeColorLength()),
@@ -236,34 +236,34 @@ void ShadowBorder::activateInternalDrawConstraints(const GraphicsPtr g, const Re
                     Pnt2f(ShadowBottomRight.x()-getInternalToEdgeColorLength(),ShadowBottomRight.y()-getCornerRadius()),
                     getInternalColor(), getEdgeColor(), getEdgeColor(), getInternalColor(), 1.0f);
         //Center
-	    g->drawRect(ShadowTopLeft+Vec2f(getCornerRadius(),getCornerRadius()), ShadowBottomRight-Vec2f(getCornerRadius(),getCornerRadius()), getInternalColor(), 1.0f);
+        g->drawRect(ShadowTopLeft+Vec2f(getCornerRadius(),getCornerRadius()), ShadowBottomRight-Vec2f(getCornerRadius(),getCornerRadius()), getInternalColor(), 1.0f);
 
         if(getInternalToEdgeColorLength() < getCornerRadius())
         {
             //TopLeft
             g->drawDisc(ShadowTopLeft + Vec2f(getCornerRadius(),getCornerRadius()),
-                InternalCornerRadius,InternalCornerRadius,
-                3.14159265, 4.71238898, 10,
-                getInternalColor(), getInternalColor(), 1.0f
-                );
+                        InternalCornerRadius,InternalCornerRadius,
+                        3.14159265, 4.71238898, 10,
+                        getInternalColor(), getInternalColor(), 1.0f
+                       );
             //TopRight
             g->drawDisc(Pnt2f(ShadowBottomRight.x()-getCornerRadius(), ShadowTopLeft.y() + getCornerRadius()),
-                InternalCornerRadius,InternalCornerRadius,
-                4.71238898,6.28318531, 10,
-                getInternalColor(), getInternalColor(), 1.0f
-                );
+                        InternalCornerRadius,InternalCornerRadius,
+                        4.71238898,6.28318531, 10,
+                        getInternalColor(), getInternalColor(), 1.0f
+                       );
             //BottomRight
             g->drawDisc(Pnt2f(ShadowBottomRight.x()-getCornerRadius(), ShadowBottomRight.y() - getCornerRadius()),
-                InternalCornerRadius,InternalCornerRadius,
-                0.0, 1.57079633, 10,
-                getInternalColor(), getInternalColor(), 1.0f
-                );
+                        InternalCornerRadius,InternalCornerRadius,
+                        0.0, 1.57079633, 10,
+                        getInternalColor(), getInternalColor(), 1.0f
+                       );
             //BottomLeft
             g->drawDisc(Pnt2f(ShadowTopLeft.x()+getCornerRadius(), ShadowBottomRight.y() - getCornerRadius()),
-                InternalCornerRadius,InternalCornerRadius,
-                1.57079633, 3.14159265, 10,
-                getInternalColor(), getInternalColor(), 1.0f
-                );
+                        InternalCornerRadius,InternalCornerRadius,
+                        1.57079633, 3.14159265, 10,
+                        getInternalColor(), getInternalColor(), 1.0f
+                       );
             //Top
             g->drawRect(Pnt2f(ShadowTopLeft.x()+getCornerRadius(), ShadowTopLeft.y()+getInternalToEdgeColorLength()), 
                         Pnt2f(ShadowBottomRight.x()-getCornerRadius(), ShadowTopLeft.y()+getCornerRadius()),
@@ -281,7 +281,7 @@ void ShadowBorder::activateInternalDrawConstraints(const GraphicsPtr g, const Re
                         Pnt2f(ShadowBottomRight.x()-getInternalToEdgeColorLength(), ShadowBottomRight.y()-getCornerRadius()),
                         getInternalColor(), 1.0f);
         }
-    
+
     }
 
     getInsideBorder()->activateInternalDrawConstraints(g, x+getLeftOffset(), y+getTopOffset(),Width-getRightOffset()-getLeftOffset(),Height-getTopOffset()-getBottomOffset());
@@ -291,6 +291,7 @@ bool ShadowBorder::isContained(const Pnt2f& p, const Real32& x, const Real32& y 
 {
     return getInsideBorder()->isContained(p, x+getLeftOffset(), y+getTopOffset(),Width-getRightOffset()-getLeftOffset(),Height-getTopOffset()-getBottomOffset());
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -313,41 +314,17 @@ ShadowBorder::~ShadowBorder(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void ShadowBorder::changed(BitVector whichField, UInt32 origin)
+void ShadowBorder::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void ShadowBorder::dump(      UInt32    , 
+void ShadowBorder::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump ShadowBorder NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGSHADOWBORDERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSHADOWBORDERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSHADOWBORDERFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

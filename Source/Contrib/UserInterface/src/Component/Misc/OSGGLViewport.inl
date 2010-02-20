@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -38,8 +38,6 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 inline
@@ -62,7 +60,7 @@ void GLViewport::setMaxOffset(const Vec3f& MaxOffset)
 
 
 inline
-GLViewport::MouseControlListener::MouseControlListener(GLViewportPtr TheGLViewport) :
+GLViewport::MouseControlListener::MouseControlListener(GLViewportRefPtr TheGLViewport) :
 _GLViewport(TheGLViewport)
 {
 }
@@ -74,6 +72,3 @@ void GLViewport::setMode(Navigator::Mode TheMode)
 }
 
 OSG_END_NAMESPACE
-
-#define OSGGLVIEWPORT_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
-

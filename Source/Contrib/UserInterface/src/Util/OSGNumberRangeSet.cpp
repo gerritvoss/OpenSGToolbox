@@ -28,7 +28,7 @@
 \*---------------------------------------------------------------------------*/
 #include "OSGNumberRangeSet.h"
 
-#include <OpenSG/OSGBaseFunctions.h>
+#include "OSGBaseFunctions.h"
 #include <iostream>
 
 OSG_BEGIN_NAMESPACE

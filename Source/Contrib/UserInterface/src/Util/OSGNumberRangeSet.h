@@ -32,16 +32,16 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
+#include "OSGBaseTypes.h"
 #include <list>
 #include <vector>
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING NumberRange
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING NumberRange
 {  //Inclusive
 public:
 	NumberRange(Int32 start, Int32 end);
@@ -69,10 +69,10 @@ private:
     bool _IsEmpty;
 };
 
-NumberRange OSG_USERINTERFACELIB_DLLMAPPING intersection(const NumberRange& left, const NumberRange& right);
-NumberRange OSG_USERINTERFACELIB_DLLMAPPING getMinMax(const NumberRange& range1, const NumberRange& range2);
+NumberRange OSG_CONTRIBUSERINTERFACE_DLLMAPPING intersection(const NumberRange& left, const NumberRange& right);
+NumberRange OSG_CONTRIBUSERINTERFACE_DLLMAPPING getMinMax(const NumberRange& range1, const NumberRange& range2);
 
-class OSG_USERINTERFACELIB_DLLMAPPING NumberSet
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING NumberSet
 {
 public:
 	typedef std::list<NumberRange> RangeListType;
@@ -107,13 +107,13 @@ public:
     std::vector<NumberRange> getIntersection(const NumberRange& r) const;
 
     void print(void) const;
-    friend NumberSet OSG_USERINTERFACELIB_DLLMAPPING intersection_NumberSet(const NumberSet& left, const NumberSet& right);
-    friend NumberSet OSG_USERINTERFACELIB_DLLMAPPING union_NumberSet(const NumberSet& left, const NumberSet& right);
-    friend NumberSet OSG_USERINTERFACELIB_DLLMAPPING difference_NumberSet(const NumberSet& left, const NumberSet& right);
+    friend NumberSet OSG_CONTRIBUSERINTERFACE_DLLMAPPING intersection_NumberSet(const NumberSet& left, const NumberSet& right);
+    friend NumberSet OSG_CONTRIBUSERINTERFACE_DLLMAPPING union_NumberSet(const NumberSet& left, const NumberSet& right);
+    friend NumberSet OSG_CONTRIBUSERINTERFACE_DLLMAPPING difference_NumberSet(const NumberSet& left, const NumberSet& right);
     
-    friend NumberSet OSG_USERINTERFACELIB_DLLMAPPING intersection_NumberSet(const NumberSet& left, const NumberRange& right);
-    friend NumberSet OSG_USERINTERFACELIB_DLLMAPPING union_NumberSet(const NumberSet& left, const NumberRange& right);
-    friend NumberSet OSG_USERINTERFACELIB_DLLMAPPING difference_NumberSet(const NumberSet& left, const NumberRange& right);
+    friend NumberSet OSG_CONTRIBUSERINTERFACE_DLLMAPPING intersection_NumberSet(const NumberSet& left, const NumberRange& right);
+    friend NumberSet OSG_CONTRIBUSERINTERFACE_DLLMAPPING union_NumberSet(const NumberSet& left, const NumberRange& right);
+    friend NumberSet OSG_CONTRIBUSERINTERFACE_DLLMAPPING difference_NumberSet(const NumberSet& left, const NumberRange& right);
 
 
 private:
@@ -123,17 +123,17 @@ private:
 };
 
 
-NumberSet OSG_USERINTERFACELIB_DLLMAPPING intersection_NumberSet(const NumberRange& left, const NumberRange& right);
-NumberSet OSG_USERINTERFACELIB_DLLMAPPING union_NumberSet(const NumberRange& left, const NumberRange& right);
-NumberSet OSG_USERINTERFACELIB_DLLMAPPING difference_NumberSet(const NumberRange& left, const NumberRange& right);
+NumberSet OSG_CONTRIBUSERINTERFACE_DLLMAPPING intersection_NumberSet(const NumberRange& left, const NumberRange& right);
+NumberSet OSG_CONTRIBUSERINTERFACE_DLLMAPPING union_NumberSet(const NumberRange& left, const NumberRange& right);
+NumberSet OSG_CONTRIBUSERINTERFACE_DLLMAPPING difference_NumberSet(const NumberRange& left, const NumberRange& right);
 
-NumberSet OSG_USERINTERFACELIB_DLLMAPPING intersection_NumberSet(const NumberSet& left, const NumberSet& right);
-NumberSet OSG_USERINTERFACELIB_DLLMAPPING union_NumberSet(const NumberSet& left, const NumberSet& right);
-NumberSet OSG_USERINTERFACELIB_DLLMAPPING difference_NumberSet(const NumberSet& left, const NumberSet& right);
+NumberSet OSG_CONTRIBUSERINTERFACE_DLLMAPPING intersection_NumberSet(const NumberSet& left, const NumberSet& right);
+NumberSet OSG_CONTRIBUSERINTERFACE_DLLMAPPING union_NumberSet(const NumberSet& left, const NumberSet& right);
+NumberSet OSG_CONTRIBUSERINTERFACE_DLLMAPPING difference_NumberSet(const NumberSet& left, const NumberSet& right);
 
-NumberSet OSG_USERINTERFACELIB_DLLMAPPING intersection_NumberSet(const NumberSet& left, const NumberRange& right);
-NumberSet OSG_USERINTERFACELIB_DLLMAPPING union_NumberSet(const NumberSet& left, const NumberRange& right);
-NumberSet OSG_USERINTERFACELIB_DLLMAPPING difference_NumberSet(const NumberSet& left, const NumberRange& right);
+NumberSet OSG_CONTRIBUSERINTERFACE_DLLMAPPING intersection_NumberSet(const NumberSet& left, const NumberRange& right);
+NumberSet OSG_CONTRIBUSERINTERFACE_DLLMAPPING union_NumberSet(const NumberSet& left, const NumberRange& right);
+NumberSet OSG_CONTRIBUSERINTERFACE_DLLMAPPING difference_NumberSet(const NumberSet& left, const NumberRange& right);
 
 	
 OSG_END_NAMESPACE

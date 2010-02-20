@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,64 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/Toolbox/OSGEventFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class ChangeEvent;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! ChangeEventPtr
+OSG_GEN_CONTAINERPTR(ChangeEvent);
 
-typedef FCPtr<EventPtr, ChangeEvent> ChangeEventPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<ChangeEventPtr> : 
-    public FieldTraitsRecurseMapper<ChangeEventPtr, true>
+struct FieldTraits<ChangeEvent *> :
+    public FieldTraitsFCPtrBase<ChangeEvent *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFChangeEventPtr"; }
+    typedef FieldTraits<ChangeEvent *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFChangeEventPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFChangeEventPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<ChangeEventPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<ChangeEvent *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecChangeEventPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<ChangeEvent *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecChangeEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ChangeEvent *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakChangeEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ChangeEvent *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdChangeEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ChangeEvent *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecChangeEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ChangeEvent *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecChangeEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ChangeEvent *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakChangeEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ChangeEvent *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdChangeEventPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ChangeEvent *,
+                      RecordedRefCountPolicy  > SFRecChangeEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ChangeEvent *,
+                      UnrecordedRefCountPolicy> SFUnrecChangeEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ChangeEvent *,
+                      WeakRefCountPolicy      > SFWeakChangeEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ChangeEvent *,
+                      NoRefCountPolicy        > SFUncountedChangeEventPtr;
 
-typedef SField<ChangeEventPtr> SFChangeEventPtr;
-#endif
 
-#ifndef OSG_COMPILECHANGEEVENTINST
-OSG_DLLEXPORT_DECL1(SField, ChangeEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ChangeEvent *,
+                      RecordedRefCountPolicy  > MFRecChangeEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ChangeEvent *,
+                      UnrecordedRefCountPolicy> MFUnrecChangeEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ChangeEvent *,
+                      WeakRefCountPolicy      > MFWeakChangeEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ChangeEvent *,
+                      NoRefCountPolicy        > MFUncountedChangeEventPtr;
+
+
+
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecChangeEventPtr : 
+    public PointerSField<ChangeEvent *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecChangeEventPtr : 
+    public PointerSField<ChangeEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakChangeEventPtr :
+    public PointerSField<ChangeEvent *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedChangeEventPtr :
+    public PointerSField<ChangeEvent *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecChangeEventPtr :
+    public PointerMField<ChangeEvent *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecChangeEventPtr :
+    public PointerMField<ChangeEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakChangeEventPtr :
+    public PointerMField<ChangeEvent *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedChangeEventPtr :
+    public PointerMField<ChangeEvent *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

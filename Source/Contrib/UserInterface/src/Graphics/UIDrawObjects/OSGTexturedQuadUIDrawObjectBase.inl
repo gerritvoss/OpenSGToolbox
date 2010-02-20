@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,120 +55,31 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &TexturedQuadUIDrawObjectBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 TexturedQuadUIDrawObjectBase::getClassTypeId(void) 
+OSG::UInt32 TexturedQuadUIDrawObjectBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-TexturedQuadUIDrawObjectPtr TexturedQuadUIDrawObjectBase::create(void) 
-{
-    TexturedQuadUIDrawObjectPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = TexturedQuadUIDrawObjectPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-TexturedQuadUIDrawObjectPtr TexturedQuadUIDrawObjectBase::createEmpty(void) 
-{ 
-    TexturedQuadUIDrawObjectPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 TexturedQuadUIDrawObjectBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the TexturedQuadUIDrawObject::_sfPoint1 field.
-inline
-SFPnt2f *TexturedQuadUIDrawObjectBase::getSFPoint1(void)
-{
-    return &_sfPoint1;
-}
-
-//! Get the TexturedQuadUIDrawObject::_sfPoint2 field.
-inline
-SFPnt2f *TexturedQuadUIDrawObjectBase::getSFPoint2(void)
-{
-    return &_sfPoint2;
-}
-
-//! Get the TexturedQuadUIDrawObject::_sfPoint3 field.
-inline
-SFPnt2f *TexturedQuadUIDrawObjectBase::getSFPoint3(void)
-{
-    return &_sfPoint3;
-}
-
-//! Get the TexturedQuadUIDrawObject::_sfPoint4 field.
-inline
-SFPnt2f *TexturedQuadUIDrawObjectBase::getSFPoint4(void)
-{
-    return &_sfPoint4;
-}
-
-//! Get the TexturedQuadUIDrawObject::_sfTexCoord1 field.
-inline
-SFVec2f *TexturedQuadUIDrawObjectBase::getSFTexCoord1(void)
-{
-    return &_sfTexCoord1;
-}
-
-//! Get the TexturedQuadUIDrawObject::_sfTexCoord2 field.
-inline
-SFVec2f *TexturedQuadUIDrawObjectBase::getSFTexCoord2(void)
-{
-    return &_sfTexCoord2;
-}
-
-//! Get the TexturedQuadUIDrawObject::_sfTexCoord3 field.
-inline
-SFVec2f *TexturedQuadUIDrawObjectBase::getSFTexCoord3(void)
-{
-    return &_sfTexCoord3;
-}
-
-//! Get the TexturedQuadUIDrawObject::_sfTexCoord4 field.
-inline
-SFVec2f *TexturedQuadUIDrawObjectBase::getSFTexCoord4(void)
-{
-    return &_sfTexCoord4;
-}
-
-//! Get the TexturedQuadUIDrawObject::_sfTexture field.
-inline
-SFTextureChunkPtr *TexturedQuadUIDrawObjectBase::getSFTexture(void)
-{
-    return &_sfTexture;
-}
-
-//! Get the TexturedQuadUIDrawObject::_sfOpacity field.
-inline
-SFReal32 *TexturedQuadUIDrawObjectBase::getSFOpacity(void)
-{
-    return &_sfOpacity;
-}
-
-
 //! Get the value of the TexturedQuadUIDrawObject::_sfPoint1 field.
+
 inline
-Pnt2f &TexturedQuadUIDrawObjectBase::getPoint1(void)
+Pnt2f &TexturedQuadUIDrawObjectBase::editPoint1(void)
 {
+    editSField(Point1FieldMask);
+
     return _sfPoint1.getValue();
 }
 
@@ -185,13 +94,17 @@ const Pnt2f &TexturedQuadUIDrawObjectBase::getPoint1(void) const
 inline
 void TexturedQuadUIDrawObjectBase::setPoint1(const Pnt2f &value)
 {
+    editSField(Point1FieldMask);
+
     _sfPoint1.setValue(value);
 }
-
 //! Get the value of the TexturedQuadUIDrawObject::_sfPoint2 field.
+
 inline
-Pnt2f &TexturedQuadUIDrawObjectBase::getPoint2(void)
+Pnt2f &TexturedQuadUIDrawObjectBase::editPoint2(void)
 {
+    editSField(Point2FieldMask);
+
     return _sfPoint2.getValue();
 }
 
@@ -206,13 +119,17 @@ const Pnt2f &TexturedQuadUIDrawObjectBase::getPoint2(void) const
 inline
 void TexturedQuadUIDrawObjectBase::setPoint2(const Pnt2f &value)
 {
+    editSField(Point2FieldMask);
+
     _sfPoint2.setValue(value);
 }
-
 //! Get the value of the TexturedQuadUIDrawObject::_sfPoint3 field.
+
 inline
-Pnt2f &TexturedQuadUIDrawObjectBase::getPoint3(void)
+Pnt2f &TexturedQuadUIDrawObjectBase::editPoint3(void)
 {
+    editSField(Point3FieldMask);
+
     return _sfPoint3.getValue();
 }
 
@@ -227,13 +144,17 @@ const Pnt2f &TexturedQuadUIDrawObjectBase::getPoint3(void) const
 inline
 void TexturedQuadUIDrawObjectBase::setPoint3(const Pnt2f &value)
 {
+    editSField(Point3FieldMask);
+
     _sfPoint3.setValue(value);
 }
-
 //! Get the value of the TexturedQuadUIDrawObject::_sfPoint4 field.
+
 inline
-Pnt2f &TexturedQuadUIDrawObjectBase::getPoint4(void)
+Pnt2f &TexturedQuadUIDrawObjectBase::editPoint4(void)
 {
+    editSField(Point4FieldMask);
+
     return _sfPoint4.getValue();
 }
 
@@ -248,13 +169,17 @@ const Pnt2f &TexturedQuadUIDrawObjectBase::getPoint4(void) const
 inline
 void TexturedQuadUIDrawObjectBase::setPoint4(const Pnt2f &value)
 {
+    editSField(Point4FieldMask);
+
     _sfPoint4.setValue(value);
 }
-
 //! Get the value of the TexturedQuadUIDrawObject::_sfTexCoord1 field.
+
 inline
-Vec2f &TexturedQuadUIDrawObjectBase::getTexCoord1(void)
+Vec2f &TexturedQuadUIDrawObjectBase::editTexCoord1(void)
 {
+    editSField(TexCoord1FieldMask);
+
     return _sfTexCoord1.getValue();
 }
 
@@ -269,13 +194,17 @@ const Vec2f &TexturedQuadUIDrawObjectBase::getTexCoord1(void) const
 inline
 void TexturedQuadUIDrawObjectBase::setTexCoord1(const Vec2f &value)
 {
+    editSField(TexCoord1FieldMask);
+
     _sfTexCoord1.setValue(value);
 }
-
 //! Get the value of the TexturedQuadUIDrawObject::_sfTexCoord2 field.
+
 inline
-Vec2f &TexturedQuadUIDrawObjectBase::getTexCoord2(void)
+Vec2f &TexturedQuadUIDrawObjectBase::editTexCoord2(void)
 {
+    editSField(TexCoord2FieldMask);
+
     return _sfTexCoord2.getValue();
 }
 
@@ -290,13 +219,17 @@ const Vec2f &TexturedQuadUIDrawObjectBase::getTexCoord2(void) const
 inline
 void TexturedQuadUIDrawObjectBase::setTexCoord2(const Vec2f &value)
 {
+    editSField(TexCoord2FieldMask);
+
     _sfTexCoord2.setValue(value);
 }
-
 //! Get the value of the TexturedQuadUIDrawObject::_sfTexCoord3 field.
+
 inline
-Vec2f &TexturedQuadUIDrawObjectBase::getTexCoord3(void)
+Vec2f &TexturedQuadUIDrawObjectBase::editTexCoord3(void)
 {
+    editSField(TexCoord3FieldMask);
+
     return _sfTexCoord3.getValue();
 }
 
@@ -311,13 +244,17 @@ const Vec2f &TexturedQuadUIDrawObjectBase::getTexCoord3(void) const
 inline
 void TexturedQuadUIDrawObjectBase::setTexCoord3(const Vec2f &value)
 {
+    editSField(TexCoord3FieldMask);
+
     _sfTexCoord3.setValue(value);
 }
-
 //! Get the value of the TexturedQuadUIDrawObject::_sfTexCoord4 field.
+
 inline
-Vec2f &TexturedQuadUIDrawObjectBase::getTexCoord4(void)
+Vec2f &TexturedQuadUIDrawObjectBase::editTexCoord4(void)
 {
+    editSField(TexCoord4FieldMask);
+
     return _sfTexCoord4.getValue();
 }
 
@@ -332,53 +269,102 @@ const Vec2f &TexturedQuadUIDrawObjectBase::getTexCoord4(void) const
 inline
 void TexturedQuadUIDrawObjectBase::setTexCoord4(const Vec2f &value)
 {
+    editSField(TexCoord4FieldMask);
+
     _sfTexCoord4.setValue(value);
 }
 
 //! Get the value of the TexturedQuadUIDrawObject::_sfTexture field.
 inline
-TextureChunkPtr &TexturedQuadUIDrawObjectBase::getTexture(void)
-{
-    return _sfTexture.getValue();
-}
-
-//! Get the value of the TexturedQuadUIDrawObject::_sfTexture field.
-inline
-const TextureChunkPtr &TexturedQuadUIDrawObjectBase::getTexture(void) const
+TextureObjChunk * TexturedQuadUIDrawObjectBase::getTexture(void) const
 {
     return _sfTexture.getValue();
 }
 
 //! Set the value of the TexturedQuadUIDrawObject::_sfTexture field.
 inline
-void TexturedQuadUIDrawObjectBase::setTexture(const TextureChunkPtr &value)
+void TexturedQuadUIDrawObjectBase::setTexture(TextureObjChunk * const value)
 {
+    editSField(TextureFieldMask);
+
     _sfTexture.setValue(value);
 }
-
 //! Get the value of the TexturedQuadUIDrawObject::_sfOpacity field.
+
 inline
-Real32 &TexturedQuadUIDrawObjectBase::getOpacity(void)
+Real32 &TexturedQuadUIDrawObjectBase::editOpacity(void)
 {
+    editSField(OpacityFieldMask);
+
     return _sfOpacity.getValue();
 }
 
 //! Get the value of the TexturedQuadUIDrawObject::_sfOpacity field.
 inline
-const Real32 &TexturedQuadUIDrawObjectBase::getOpacity(void) const
+      Real32  TexturedQuadUIDrawObjectBase::getOpacity(void) const
 {
     return _sfOpacity.getValue();
 }
 
 //! Set the value of the TexturedQuadUIDrawObject::_sfOpacity field.
 inline
-void TexturedQuadUIDrawObjectBase::setOpacity(const Real32 &value)
+void TexturedQuadUIDrawObjectBase::setOpacity(const Real32 value)
 {
+    editSField(OpacityFieldMask);
+
     _sfOpacity.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void TexturedQuadUIDrawObjectBase::execSync (      TexturedQuadUIDrawObjectBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGTEXTUREDQUADUIDRAWOBJECTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (Point1FieldMask & whichField))
+        _sfPoint1.syncWith(pFrom->_sfPoint1);
+
+    if(FieldBits::NoField != (Point2FieldMask & whichField))
+        _sfPoint2.syncWith(pFrom->_sfPoint2);
+
+    if(FieldBits::NoField != (Point3FieldMask & whichField))
+        _sfPoint3.syncWith(pFrom->_sfPoint3);
+
+    if(FieldBits::NoField != (Point4FieldMask & whichField))
+        _sfPoint4.syncWith(pFrom->_sfPoint4);
+
+    if(FieldBits::NoField != (TexCoord1FieldMask & whichField))
+        _sfTexCoord1.syncWith(pFrom->_sfTexCoord1);
+
+    if(FieldBits::NoField != (TexCoord2FieldMask & whichField))
+        _sfTexCoord2.syncWith(pFrom->_sfTexCoord2);
+
+    if(FieldBits::NoField != (TexCoord3FieldMask & whichField))
+        _sfTexCoord3.syncWith(pFrom->_sfTexCoord3);
+
+    if(FieldBits::NoField != (TexCoord4FieldMask & whichField))
+        _sfTexCoord4.syncWith(pFrom->_sfTexCoord4);
+
+    if(FieldBits::NoField != (TextureFieldMask & whichField))
+        _sfTexture.syncWith(pFrom->_sfTexture);
+
+    if(FieldBits::NoField != (OpacityFieldMask & whichField))
+        _sfOpacity.syncWith(pFrom->_sfOpacity);
+}
+#endif
+
+
+inline
+const Char8 *TexturedQuadUIDrawObjectBase::getClassname(void)
+{
+    return "TexturedQuadUIDrawObject";
+}
+OSG_GEN_CONTAINERPTR(TexturedQuadUIDrawObject);
+
+OSG_END_NAMESPACE
 

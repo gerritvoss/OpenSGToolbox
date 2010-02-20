@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,83 +58,95 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGToggleButton.h" // Parent
 
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // RadioDrawObject type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // SelectedRadioDrawObject type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // ActiveRadioDrawObject type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // ActiveSelectedRadioDrawObject type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // RolloverRadioDrawObject type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // RolloverSelectedRadioDrawObject type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // DisabledRadioDrawObject type
-#include "Component/Misc/OSGUIDrawObjectCanvas.h" // DisabledSelectedRadioDrawObject type
+#include "OSGUIDrawObjectCanvasFields.h" // RadioDrawObject type
 
 #include "OSGRadioButtonFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class RadioButton;
-class BinaryDataHandler;
 
 //! \brief RadioButton Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonBase : public ToggleButton
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING RadioButtonBase : public ToggleButton
 {
-  private:
-
-    typedef ToggleButton    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef RadioButtonPtr  Ptr;
+    typedef ToggleButton Inherited;
+    typedef ToggleButton ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(RadioButton);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        RadioDrawObjectFieldId                 = Inherited::NextFieldId,
-        SelectedRadioDrawObjectFieldId         = RadioDrawObjectFieldId                 + 1,
-        ActiveRadioDrawObjectFieldId           = SelectedRadioDrawObjectFieldId         + 1,
-        ActiveSelectedRadioDrawObjectFieldId   = ActiveRadioDrawObjectFieldId           + 1,
-        RolloverRadioDrawObjectFieldId         = ActiveSelectedRadioDrawObjectFieldId   + 1,
-        RolloverSelectedRadioDrawObjectFieldId = RolloverRadioDrawObjectFieldId         + 1,
-        DisabledRadioDrawObjectFieldId         = RolloverSelectedRadioDrawObjectFieldId + 1,
-        DisabledSelectedRadioDrawObjectFieldId = DisabledRadioDrawObjectFieldId         + 1,
-        NextFieldId                            = DisabledSelectedRadioDrawObjectFieldId + 1
+        RadioDrawObjectFieldId = Inherited::NextFieldId,
+        SelectedRadioDrawObjectFieldId = RadioDrawObjectFieldId + 1,
+        ActiveRadioDrawObjectFieldId = SelectedRadioDrawObjectFieldId + 1,
+        ActiveSelectedRadioDrawObjectFieldId = ActiveRadioDrawObjectFieldId + 1,
+        RolloverRadioDrawObjectFieldId = ActiveSelectedRadioDrawObjectFieldId + 1,
+        RolloverSelectedRadioDrawObjectFieldId = RolloverRadioDrawObjectFieldId + 1,
+        DisabledRadioDrawObjectFieldId = RolloverSelectedRadioDrawObjectFieldId + 1,
+        DisabledSelectedRadioDrawObjectFieldId = DisabledRadioDrawObjectFieldId + 1,
+        NextFieldId = DisabledSelectedRadioDrawObjectFieldId + 1
     };
 
-    static const OSG::BitVector RadioDrawObjectFieldMask;
-    static const OSG::BitVector SelectedRadioDrawObjectFieldMask;
-    static const OSG::BitVector ActiveRadioDrawObjectFieldMask;
-    static const OSG::BitVector ActiveSelectedRadioDrawObjectFieldMask;
-    static const OSG::BitVector RolloverRadioDrawObjectFieldMask;
-    static const OSG::BitVector RolloverSelectedRadioDrawObjectFieldMask;
-    static const OSG::BitVector DisabledRadioDrawObjectFieldMask;
-    static const OSG::BitVector DisabledSelectedRadioDrawObjectFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector RadioDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << RadioDrawObjectFieldId);
+    static const OSG::BitVector SelectedRadioDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << SelectedRadioDrawObjectFieldId);
+    static const OSG::BitVector ActiveRadioDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << ActiveRadioDrawObjectFieldId);
+    static const OSG::BitVector ActiveSelectedRadioDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << ActiveSelectedRadioDrawObjectFieldId);
+    static const OSG::BitVector RolloverRadioDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << RolloverRadioDrawObjectFieldId);
+    static const OSG::BitVector RolloverSelectedRadioDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << RolloverSelectedRadioDrawObjectFieldId);
+    static const OSG::BitVector DisabledRadioDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << DisabledRadioDrawObjectFieldId);
+    static const OSG::BitVector DisabledSelectedRadioDrawObjectFieldMask =
+        (TypeTraits<BitVector>::One << DisabledSelectedRadioDrawObjectFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecUIDrawObjectCanvasPtr SFRadioDrawObjectType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFSelectedRadioDrawObjectType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFActiveRadioDrawObjectType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFActiveSelectedRadioDrawObjectType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFRolloverRadioDrawObjectType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFRolloverSelectedRadioDrawObjectType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFDisabledRadioDrawObjectType;
+    typedef SFUnrecUIDrawObjectCanvasPtr SFDisabledSelectedRadioDrawObjectType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -143,49 +155,62 @@ class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonBase : public ToggleButton
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUIDrawObjectCanvasPtr *getSFRadioDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFSelectedRadioDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFActiveRadioDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFActiveSelectedRadioDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFRolloverRadioDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFRolloverSelectedRadioDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFDisabledRadioDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFDisabledSelectedRadioDrawObject(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFRadioDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFRadioDrawObject(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFSelectedRadioDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFSelectedRadioDrawObject(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFActiveRadioDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFActiveRadioDrawObject(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFActiveSelectedRadioDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFActiveSelectedRadioDrawObject(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFRolloverRadioDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFRolloverRadioDrawObject(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFRolloverSelectedRadioDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFRolloverSelectedRadioDrawObject(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFDisabledRadioDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFDisabledRadioDrawObject(void);
+            const SFUnrecUIDrawObjectCanvasPtr *getSFDisabledSelectedRadioDrawObject(void) const;
+                  SFUnrecUIDrawObjectCanvasPtr *editSFDisabledSelectedRadioDrawObject(void);
 
-           UIDrawObjectCanvasPtr &getRadioDrawObject(void);
-     const UIDrawObjectCanvasPtr &getRadioDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getSelectedRadioDrawObject(void);
-     const UIDrawObjectCanvasPtr &getSelectedRadioDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getActiveRadioDrawObject(void);
-     const UIDrawObjectCanvasPtr &getActiveRadioDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getActiveSelectedRadioDrawObject(void);
-     const UIDrawObjectCanvasPtr &getActiveSelectedRadioDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getRolloverRadioDrawObject(void);
-     const UIDrawObjectCanvasPtr &getRolloverRadioDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getRolloverSelectedRadioDrawObject(void);
-     const UIDrawObjectCanvasPtr &getRolloverSelectedRadioDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getDisabledRadioDrawObject(void);
-     const UIDrawObjectCanvasPtr &getDisabledRadioDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getDisabledSelectedRadioDrawObject(void);
-     const UIDrawObjectCanvasPtr &getDisabledSelectedRadioDrawObject(void) const;
+
+                  UIDrawObjectCanvas * getRadioDrawObject(void) const;
+
+                  UIDrawObjectCanvas * getSelectedRadioDrawObject(void) const;
+
+                  UIDrawObjectCanvas * getActiveRadioDrawObject(void) const;
+
+                  UIDrawObjectCanvas * getActiveSelectedRadioDrawObject(void) const;
+
+                  UIDrawObjectCanvas * getRolloverRadioDrawObject(void) const;
+
+                  UIDrawObjectCanvas * getRolloverSelectedRadioDrawObject(void) const;
+
+                  UIDrawObjectCanvas * getDisabledRadioDrawObject(void) const;
+
+                  UIDrawObjectCanvas * getDisabledSelectedRadioDrawObject(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setRadioDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setSelectedRadioDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setActiveRadioDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setActiveSelectedRadioDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setRolloverRadioDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setRolloverSelectedRadioDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setDisabledRadioDrawObject( const UIDrawObjectCanvasPtr &value );
-     void setDisabledSelectedRadioDrawObject( const UIDrawObjectCanvasPtr &value );
+            void setRadioDrawObject(UIDrawObjectCanvas * const value);
+            void setSelectedRadioDrawObject(UIDrawObjectCanvas * const value);
+            void setActiveRadioDrawObject(UIDrawObjectCanvas * const value);
+            void setActiveSelectedRadioDrawObject(UIDrawObjectCanvas * const value);
+            void setRolloverRadioDrawObject(UIDrawObjectCanvas * const value);
+            void setRolloverSelectedRadioDrawObject(UIDrawObjectCanvas * const value);
+            void setDisabledRadioDrawObject(UIDrawObjectCanvas * const value);
+            void setDisabledSelectedRadioDrawObject(UIDrawObjectCanvas * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -193,11 +218,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonBase : public ToggleButton
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -205,33 +230,50 @@ class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonBase : public ToggleButton
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  RadioButtonPtr      create          (void); 
-    static  RadioButtonPtr      createEmpty     (void); 
+    static  RadioButtonTransitPtr  create          (void);
+    static  RadioButton           *createEmpty     (void);
+
+    static  RadioButtonTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  RadioButton            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  RadioButtonTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUIDrawObjectCanvasPtr   _sfRadioDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfSelectedRadioDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfActiveRadioDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfActiveSelectedRadioDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfRolloverRadioDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfRolloverSelectedRadioDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfDisabledRadioDrawObject;
-    SFUIDrawObjectCanvasPtr   _sfDisabledSelectedRadioDrawObject;
+    SFUnrecUIDrawObjectCanvasPtr _sfRadioDrawObject;
+    SFUnrecUIDrawObjectCanvasPtr _sfSelectedRadioDrawObject;
+    SFUnrecUIDrawObjectCanvasPtr _sfActiveRadioDrawObject;
+    SFUnrecUIDrawObjectCanvasPtr _sfActiveSelectedRadioDrawObject;
+    SFUnrecUIDrawObjectCanvasPtr _sfRolloverRadioDrawObject;
+    SFUnrecUIDrawObjectCanvasPtr _sfRolloverSelectedRadioDrawObject;
+    SFUnrecUIDrawObjectCanvasPtr _sfDisabledRadioDrawObject;
+    SFUnrecUIDrawObjectCanvasPtr _sfDisabledSelectedRadioDrawObject;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -246,69 +288,94 @@ class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonBase : public ToggleButton
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~RadioButtonBase(void); 
+    virtual ~RadioButtonBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const RadioButton *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleRadioDrawObject (void) const;
+    EditFieldHandlePtr editHandleRadioDrawObject(void);
+    GetFieldHandlePtr  getHandleSelectedRadioDrawObject (void) const;
+    EditFieldHandlePtr editHandleSelectedRadioDrawObject(void);
+    GetFieldHandlePtr  getHandleActiveRadioDrawObject (void) const;
+    EditFieldHandlePtr editHandleActiveRadioDrawObject(void);
+    GetFieldHandlePtr  getHandleActiveSelectedRadioDrawObject (void) const;
+    EditFieldHandlePtr editHandleActiveSelectedRadioDrawObject(void);
+    GetFieldHandlePtr  getHandleRolloverRadioDrawObject (void) const;
+    EditFieldHandlePtr editHandleRolloverRadioDrawObject(void);
+    GetFieldHandlePtr  getHandleRolloverSelectedRadioDrawObject (void) const;
+    EditFieldHandlePtr editHandleRolloverSelectedRadioDrawObject(void);
+    GetFieldHandlePtr  getHandleDisabledRadioDrawObject (void) const;
+    EditFieldHandlePtr editHandleDisabledRadioDrawObject(void);
+    GetFieldHandlePtr  getHandleDisabledSelectedRadioDrawObject (void) const;
+    EditFieldHandlePtr editHandleDisabledSelectedRadioDrawObject(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      RadioButtonBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      RadioButtonBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      RadioButtonBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const RadioButtonBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef RadioButtonBase *RadioButtonBaseP;
 
-typedef osgIF<RadioButtonBase::isNodeCore,
-              CoredNodePtr<RadioButton>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet RadioButtonNodePtr;
-
-typedef RefPtr<RadioButtonPtr> RadioButtonRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGRADIOBUTTONBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGRADIOBUTTONBASE_H_ */

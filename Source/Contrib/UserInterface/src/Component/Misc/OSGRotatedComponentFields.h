@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,75 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "Component/Container/OSGContainerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class RotatedComponent;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! RotatedComponentPtr
+OSG_GEN_CONTAINERPTR(RotatedComponent);
 
-typedef FCPtr<ContainerPtr, RotatedComponent> RotatedComponentPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<RotatedComponentPtr> : 
-    public FieldTraitsRecurseMapper<RotatedComponentPtr, true>
+struct FieldTraits<RotatedComponent *> :
+    public FieldTraitsFCPtrBase<RotatedComponent *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFRotatedComponentPtr"; }
-    static const char *getMName(void) { return "MFRotatedComponentPtr"; }
+    typedef FieldTraits<RotatedComponent *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFRotatedComponentPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFRotatedComponentPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<RotatedComponentPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<RotatedComponent *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecRotatedComponentPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<RotatedComponent *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecRotatedComponentPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RotatedComponent *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakRotatedComponentPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RotatedComponent *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdRotatedComponentPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RotatedComponent *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecRotatedComponentPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RotatedComponent *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecRotatedComponentPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RotatedComponent *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakRotatedComponentPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<RotatedComponent *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdRotatedComponentPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<RotatedComponent *,
+                      RecordedRefCountPolicy  > SFRecRotatedComponentPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<RotatedComponent *,
+                      UnrecordedRefCountPolicy> SFUnrecRotatedComponentPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<RotatedComponent *,
+                      WeakRefCountPolicy      > SFWeakRotatedComponentPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<RotatedComponent *,
+                      NoRefCountPolicy        > SFUncountedRotatedComponentPtr;
 
-typedef SField<RotatedComponentPtr> SFRotatedComponentPtr;
-#endif
 
-#ifndef OSG_COMPILEROTATEDCOMPONENTINST
-OSG_DLLEXPORT_DECL1(SField, RotatedComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<RotatedComponent *,
+                      RecordedRefCountPolicy  > MFRecRotatedComponentPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<RotatedComponent *,
+                      UnrecordedRefCountPolicy> MFUnrecRotatedComponentPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<RotatedComponent *,
+                      WeakRefCountPolicy      > MFWeakRotatedComponentPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<RotatedComponent *,
+                      NoRefCountPolicy        > MFUncountedRotatedComponentPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<RotatedComponentPtr> MFRotatedComponentPtr;
-#endif
 
-#ifndef OSG_COMPILEROTATEDCOMPONENTINST
-OSG_DLLEXPORT_DECL1(MField, RotatedComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecRotatedComponentPtr : 
+    public PointerSField<RotatedComponent *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecRotatedComponentPtr : 
+    public PointerSField<RotatedComponent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakRotatedComponentPtr :
+    public PointerSField<RotatedComponent *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedRotatedComponentPtr :
+    public PointerSField<RotatedComponent *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecRotatedComponentPtr :
+    public PointerMField<RotatedComponent *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecRotatedComponentPtr :
+    public PointerMField<RotatedComponent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakRotatedComponentPtr :
+    public PointerMField<RotatedComponent *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedRotatedComponentPtr :
+    public PointerMField<RotatedComponent *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

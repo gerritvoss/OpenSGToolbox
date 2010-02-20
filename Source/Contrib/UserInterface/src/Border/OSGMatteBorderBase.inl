@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,176 +55,131 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &MatteBorderBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 MatteBorderBase::getClassTypeId(void) 
+OSG::UInt32 MatteBorderBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-MatteBorderPtr MatteBorderBase::create(void) 
-{
-    MatteBorderPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = MatteBorderPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-MatteBorderPtr MatteBorderBase::createEmpty(void) 
-{ 
-    MatteBorderPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 MatteBorderBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the MatteBorder::_sfLeftWidth field.
-inline
-SFReal32 *MatteBorderBase::getSFLeftWidth(void)
-{
-    return &_sfLeftWidth;
-}
-
-//! Get the MatteBorder::_sfRightWidth field.
-inline
-SFReal32 *MatteBorderBase::getSFRightWidth(void)
-{
-    return &_sfRightWidth;
-}
-
-//! Get the MatteBorder::_sfTopWidth field.
-inline
-SFReal32 *MatteBorderBase::getSFTopWidth(void)
-{
-    return &_sfTopWidth;
-}
-
-//! Get the MatteBorder::_sfBottomWidth field.
-inline
-SFReal32 *MatteBorderBase::getSFBottomWidth(void)
-{
-    return &_sfBottomWidth;
-}
-
-//! Get the MatteBorder::_sfColor field.
-inline
-SFColor4f *MatteBorderBase::getSFColor(void)
-{
-    return &_sfColor;
-}
-
-//! Get the MatteBorder::_sfMaterial field.
-inline
-SFMaterialPtr *MatteBorderBase::getSFMaterial(void)
-{
-    return &_sfMaterial;
-}
-
-
 //! Get the value of the MatteBorder::_sfLeftWidth field.
+
 inline
-Real32 &MatteBorderBase::getLeftWidth(void)
+Real32 &MatteBorderBase::editLeftWidth(void)
 {
+    editSField(LeftWidthFieldMask);
+
     return _sfLeftWidth.getValue();
 }
 
 //! Get the value of the MatteBorder::_sfLeftWidth field.
 inline
-const Real32 &MatteBorderBase::getLeftWidth(void) const
+      Real32  MatteBorderBase::getLeftWidth(void) const
 {
     return _sfLeftWidth.getValue();
 }
 
 //! Set the value of the MatteBorder::_sfLeftWidth field.
 inline
-void MatteBorderBase::setLeftWidth(const Real32 &value)
+void MatteBorderBase::setLeftWidth(const Real32 value)
 {
+    editSField(LeftWidthFieldMask);
+
     _sfLeftWidth.setValue(value);
 }
-
 //! Get the value of the MatteBorder::_sfRightWidth field.
+
 inline
-Real32 &MatteBorderBase::getRightWidth(void)
+Real32 &MatteBorderBase::editRightWidth(void)
 {
+    editSField(RightWidthFieldMask);
+
     return _sfRightWidth.getValue();
 }
 
 //! Get the value of the MatteBorder::_sfRightWidth field.
 inline
-const Real32 &MatteBorderBase::getRightWidth(void) const
+      Real32  MatteBorderBase::getRightWidth(void) const
 {
     return _sfRightWidth.getValue();
 }
 
 //! Set the value of the MatteBorder::_sfRightWidth field.
 inline
-void MatteBorderBase::setRightWidth(const Real32 &value)
+void MatteBorderBase::setRightWidth(const Real32 value)
 {
+    editSField(RightWidthFieldMask);
+
     _sfRightWidth.setValue(value);
 }
-
 //! Get the value of the MatteBorder::_sfTopWidth field.
+
 inline
-Real32 &MatteBorderBase::getTopWidth(void)
+Real32 &MatteBorderBase::editTopWidth(void)
 {
+    editSField(TopWidthFieldMask);
+
     return _sfTopWidth.getValue();
 }
 
 //! Get the value of the MatteBorder::_sfTopWidth field.
 inline
-const Real32 &MatteBorderBase::getTopWidth(void) const
+      Real32  MatteBorderBase::getTopWidth(void) const
 {
     return _sfTopWidth.getValue();
 }
 
 //! Set the value of the MatteBorder::_sfTopWidth field.
 inline
-void MatteBorderBase::setTopWidth(const Real32 &value)
+void MatteBorderBase::setTopWidth(const Real32 value)
 {
+    editSField(TopWidthFieldMask);
+
     _sfTopWidth.setValue(value);
 }
-
 //! Get the value of the MatteBorder::_sfBottomWidth field.
+
 inline
-Real32 &MatteBorderBase::getBottomWidth(void)
+Real32 &MatteBorderBase::editBottomWidth(void)
 {
+    editSField(BottomWidthFieldMask);
+
     return _sfBottomWidth.getValue();
 }
 
 //! Get the value of the MatteBorder::_sfBottomWidth field.
 inline
-const Real32 &MatteBorderBase::getBottomWidth(void) const
+      Real32  MatteBorderBase::getBottomWidth(void) const
 {
     return _sfBottomWidth.getValue();
 }
 
 //! Set the value of the MatteBorder::_sfBottomWidth field.
 inline
-void MatteBorderBase::setBottomWidth(const Real32 &value)
+void MatteBorderBase::setBottomWidth(const Real32 value)
 {
+    editSField(BottomWidthFieldMask);
+
     _sfBottomWidth.setValue(value);
 }
-
 //! Get the value of the MatteBorder::_sfColor field.
+
 inline
-Color4f &MatteBorderBase::getColor(void)
+Color4f &MatteBorderBase::editColor(void)
 {
+    editSField(ColorFieldMask);
+
     return _sfColor.getValue();
 }
 
@@ -241,32 +194,65 @@ const Color4f &MatteBorderBase::getColor(void) const
 inline
 void MatteBorderBase::setColor(const Color4f &value)
 {
+    editSField(ColorFieldMask);
+
     _sfColor.setValue(value);
 }
 
 //! Get the value of the MatteBorder::_sfMaterial field.
 inline
-MaterialPtr &MatteBorderBase::getMaterial(void)
-{
-    return _sfMaterial.getValue();
-}
-
-//! Get the value of the MatteBorder::_sfMaterial field.
-inline
-const MaterialPtr &MatteBorderBase::getMaterial(void) const
+Material * MatteBorderBase::getMaterial(void) const
 {
     return _sfMaterial.getValue();
 }
 
 //! Set the value of the MatteBorder::_sfMaterial field.
 inline
-void MatteBorderBase::setMaterial(const MaterialPtr &value)
+void MatteBorderBase::setMaterial(Material * const value)
 {
+    editSField(MaterialFieldMask);
+
     _sfMaterial.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void MatteBorderBase::execSync (      MatteBorderBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGMATTEBORDERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (LeftWidthFieldMask & whichField))
+        _sfLeftWidth.syncWith(pFrom->_sfLeftWidth);
+
+    if(FieldBits::NoField != (RightWidthFieldMask & whichField))
+        _sfRightWidth.syncWith(pFrom->_sfRightWidth);
+
+    if(FieldBits::NoField != (TopWidthFieldMask & whichField))
+        _sfTopWidth.syncWith(pFrom->_sfTopWidth);
+
+    if(FieldBits::NoField != (BottomWidthFieldMask & whichField))
+        _sfBottomWidth.syncWith(pFrom->_sfBottomWidth);
+
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+        _sfColor.syncWith(pFrom->_sfColor);
+
+    if(FieldBits::NoField != (MaterialFieldMask & whichField))
+        _sfMaterial.syncWith(pFrom->_sfMaterial);
+}
+#endif
+
+
+inline
+const Char8 *MatteBorderBase::getClassname(void)
+{
+    return "MatteBorder";
+}
+OSG_GEN_CONTAINERPTR(MatteBorder);
+
+OSG_END_NAMESPACE
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,64 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/Toolbox/OSGEventFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class ListDataEvent;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! ListDataEventPtr
+OSG_GEN_CONTAINERPTR(ListDataEvent);
 
-typedef FCPtr<EventPtr, ListDataEvent> ListDataEventPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<ListDataEventPtr> : 
-    public FieldTraitsRecurseMapper<ListDataEventPtr, true>
+struct FieldTraits<ListDataEvent *> :
+    public FieldTraitsFCPtrBase<ListDataEvent *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFListDataEventPtr"; }
+    typedef FieldTraits<ListDataEvent *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFListDataEventPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFListDataEventPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<ListDataEventPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<ListDataEvent *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecListDataEventPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<ListDataEvent *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecListDataEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ListDataEvent *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakListDataEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ListDataEvent *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdListDataEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ListDataEvent *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecListDataEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ListDataEvent *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecListDataEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ListDataEvent *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakListDataEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ListDataEvent *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdListDataEventPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ListDataEvent *,
+                      RecordedRefCountPolicy  > SFRecListDataEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ListDataEvent *,
+                      UnrecordedRefCountPolicy> SFUnrecListDataEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ListDataEvent *,
+                      WeakRefCountPolicy      > SFWeakListDataEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ListDataEvent *,
+                      NoRefCountPolicy        > SFUncountedListDataEventPtr;
 
-typedef SField<ListDataEventPtr> SFListDataEventPtr;
-#endif
 
-#ifndef OSG_COMPILELISTDATAEVENTINST
-OSG_DLLEXPORT_DECL1(SField, ListDataEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ListDataEvent *,
+                      RecordedRefCountPolicy  > MFRecListDataEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ListDataEvent *,
+                      UnrecordedRefCountPolicy> MFUnrecListDataEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ListDataEvent *,
+                      WeakRefCountPolicy      > MFWeakListDataEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ListDataEvent *,
+                      NoRefCountPolicy        > MFUncountedListDataEventPtr;
+
+
+
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecListDataEventPtr : 
+    public PointerSField<ListDataEvent *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecListDataEventPtr : 
+    public PointerSField<ListDataEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakListDataEventPtr :
+    public PointerSField<ListDataEvent *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedListDataEventPtr :
+    public PointerSField<ListDataEvent *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecListDataEventPtr :
+    public PointerMField<ListDataEvent *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecListDataEventPtr :
+    public PointerMField<ListDataEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakListDataEventPtr :
+    public PointerMField<ListDataEvent *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedListDataEventPtr :
+    public PointerMField<ListDataEvent *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

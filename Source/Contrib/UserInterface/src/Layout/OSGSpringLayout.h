@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,77 +42,78 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGSpringLayoutBase.h"
-#include "Layout/Spring/OSGLayoutSpringFields.h"
-#include "Component/OSGComponentFields.h"
-#include "Component/Container/OSGContainerFields.h"
-#include "Layout/Spring/OSGLayoutSpringFields.h"
-#include "Layout/OSGSpringLayoutConstraintsFields.h"
+#include "OSGLayoutSpringFields.h"
+#include "OSGComponentFields.h"
+#include "OSGComponentContainerFields.h"
+#include "OSGLayoutSpringFields.h"
+#include "OSGSpringLayoutConstraintsFields.h"
 #include <set>
 
-#include <OpenSG/Toolbox/rapidxml.h>
-#include <OpenSG/Toolbox/rapidxml_iterators.h>
-#include <OpenSG/Toolbox/OSGXMLFCFileType.h>
+#include "rapidxml.h"
+#include "rapidxml_iterators.h"
+#include "OSGXMLFCFileType.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief SpringLayout class. See \ref 
-           PageUserInterfaceSpringLayout for a description.
+/*! \brief SpringLayout class. See \ref
+           PageContribUserInterfaceSpringLayout for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING SpringLayout : public SpringLayoutBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpringLayout : public SpringLayoutBase
 {
-  private:
-
-    typedef SpringLayoutBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef SpringLayoutBase Inherited;
+    typedef SpringLayout     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual void updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
+    virtual void updateLayout(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const;
 
-    bool isCyclic(LayoutSpringPtr TheSpring) const;
+    bool isCyclic(const LayoutSpring* TheSpring) const;
 
     //Returns the constraints for the specified component.
-    SpringLayoutConstraintsPtr getConstraint(ComponentPtr TheComponent) const;
+    SpringLayoutConstraintsRefPtr getConstraint(ComponentUnrecPtr TheComponent) const;
 
     //Returns the spring controlling the distance between the specified edge of the component and the top or left edge of its parent.
-    LayoutSpringPtr getConstraint(const UInt32 Edge, ComponentPtr TheComponent) const;
+    LayoutSpringRefPtr getConstraint(const UInt32 Edge, const ComponentUnrecPtr TheComponent) const;
 
     //Links edge e1 of component c1 to edge e2 of component c2, with a fixed distance between the edges.
-    void putConstraint(const UInt32 e1, ComponentPtr c1, const Real32& pad, const UInt32 e2, ComponentPtr c2);
+    void putConstraint(const UInt32 e1, ComponentRefPtr c1, const Real32& pad, const UInt32 e2, ComponentRefPtr c2);
 
     //Links edge e1 of component c1 to edge e2 of component c2.
-    void putConstraint(const UInt32 e1, ComponentPtr c1, LayoutSpringPtr s, const UInt32 e2, ComponentPtr c2);
+    void putConstraint(const UInt32 e1, ComponentRefPtr c1, LayoutSpringRefPtr s, const UInt32 e2, ComponentRefPtr c2);
 
-    void putConstraint(const UInt32 e, ComponentPtr c, LayoutSpringPtr s);
-    virtual Vec2f minimumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
-	virtual Vec2f requestedContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
-	virtual Vec2f preferredContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
-	virtual Vec2f maximumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
+    void putConstraint(const UInt32 e, ComponentRefPtr c, LayoutSpringRefPtr s);
+    virtual Vec2f minimumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const;
+	virtual Vec2f requestedContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const;
+	virtual Vec2f preferredContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const;
+	virtual Vec2f maximumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const;
 
-	static bool xmlReadHandler (rapidxml::xml_node<char>&, const XMLFCFileType::IDLookupMap&,const FieldContainerPtr&);
-	static bool xmlWriteHandler (const FieldContainerPtr&);
+	static bool xmlReadHandler (rapidxml::xml_node<char>&, const XMLFCFileType::IDLookupMap&,const FieldContainerRefPtr&);
+	static bool xmlWriteHandler (const FieldContainerRefPtr&);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in SpringLayoutBase.
@@ -129,40 +130,44 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayout : public SpringLayoutBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SpringLayout(void); 
+    virtual ~SpringLayout(void);
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
 
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class SpringLayoutBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const SpringLayout &source);
 
-    LayoutSpringPtr getDecycledSpring(LayoutSpringPtr s) const;
+    LayoutSpringRefPtr getDecycledSpring(LayoutSpringRefPtr s) const;
 	
     void resetCyclicStatuses(void);
 
-    void setParent(ContainerPtr p);
+    void setParent(ComponentContainerRefPtr p);
 
-    static SpringLayoutConstraintsPtr applyDefaults(ComponentPtr c, SpringLayoutConstraintsPtr constraints);
+    static SpringLayoutConstraintsRefPtr applyDefaults(ComponentUnrecPtr c, SpringLayoutConstraintsRefPtr constraints);
 
-    //void applyDefaults(SpringLayoutConstraintsPtr constraints, const UInt32 name1,
-    //                       LayoutSpringPtr spring1, const UInt32 name2, LayoutSpringPtr spring2,
+    //void applyDefaults(SpringLayoutConstraintsRefPtr constraints, const UInt32 name1,
+    //                       LayoutSpringRefPtr spring1, const UInt32 name2, LayoutSpringRefPtr spring2,
     //                       List<String> history);
 
-    typedef std::set<LayoutSpringPtr> LayoutSpringSet;
+    typedef std::set<const LayoutSpring*> LayoutSpringSet;
 
     mutable LayoutSpringSet _CyclicSprings;
     mutable LayoutSpringSet _AcyclicSprings;
 
-    LayoutSpringPtr _CyclicDummySpring;
+    LayoutSpringRefPtr _CyclicDummySpring;
 };
 
 typedef SpringLayout *SpringLayoutP;
@@ -171,7 +176,5 @@ OSG_END_NAMESPACE
 
 #include "OSGSpringLayoutBase.inl"
 #include "OSGSpringLayout.inl"
-
-#define OSGSPRINGLAYOUT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGSPRINGLAYOUT_H_ */

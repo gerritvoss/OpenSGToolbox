@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,85 +55,31 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &LineUIDrawObjectBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 LineUIDrawObjectBase::getClassTypeId(void) 
+OSG::UInt32 LineUIDrawObjectBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-LineUIDrawObjectPtr LineUIDrawObjectBase::create(void) 
-{
-    LineUIDrawObjectPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = LineUIDrawObjectPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-LineUIDrawObjectPtr LineUIDrawObjectBase::createEmpty(void) 
-{ 
-    LineUIDrawObjectPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 LineUIDrawObjectBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the LineUIDrawObject::_sfTopLeft field.
-inline
-SFPnt2f *LineUIDrawObjectBase::getSFTopLeft(void)
-{
-    return &_sfTopLeft;
-}
-
-//! Get the LineUIDrawObject::_sfBottomRight field.
-inline
-SFPnt2f *LineUIDrawObjectBase::getSFBottomRight(void)
-{
-    return &_sfBottomRight;
-}
-
-//! Get the LineUIDrawObject::_sfWidth field.
-inline
-SFReal32 *LineUIDrawObjectBase::getSFWidth(void)
-{
-    return &_sfWidth;
-}
-
-//! Get the LineUIDrawObject::_sfColor field.
-inline
-SFColor4f *LineUIDrawObjectBase::getSFColor(void)
-{
-    return &_sfColor;
-}
-
-//! Get the LineUIDrawObject::_sfOpacity field.
-inline
-SFReal32 *LineUIDrawObjectBase::getSFOpacity(void)
-{
-    return &_sfOpacity;
-}
-
-
 //! Get the value of the LineUIDrawObject::_sfTopLeft field.
+
 inline
-Pnt2f &LineUIDrawObjectBase::getTopLeft(void)
+Pnt2f &LineUIDrawObjectBase::editTopLeft(void)
 {
+    editSField(TopLeftFieldMask);
+
     return _sfTopLeft.getValue();
 }
 
@@ -150,13 +94,17 @@ const Pnt2f &LineUIDrawObjectBase::getTopLeft(void) const
 inline
 void LineUIDrawObjectBase::setTopLeft(const Pnt2f &value)
 {
+    editSField(TopLeftFieldMask);
+
     _sfTopLeft.setValue(value);
 }
-
 //! Get the value of the LineUIDrawObject::_sfBottomRight field.
+
 inline
-Pnt2f &LineUIDrawObjectBase::getBottomRight(void)
+Pnt2f &LineUIDrawObjectBase::editBottomRight(void)
 {
+    editSField(BottomRightFieldMask);
+
     return _sfBottomRight.getValue();
 }
 
@@ -171,34 +119,42 @@ const Pnt2f &LineUIDrawObjectBase::getBottomRight(void) const
 inline
 void LineUIDrawObjectBase::setBottomRight(const Pnt2f &value)
 {
+    editSField(BottomRightFieldMask);
+
     _sfBottomRight.setValue(value);
 }
-
 //! Get the value of the LineUIDrawObject::_sfWidth field.
+
 inline
-Real32 &LineUIDrawObjectBase::getWidth(void)
+Real32 &LineUIDrawObjectBase::editWidth(void)
 {
+    editSField(WidthFieldMask);
+
     return _sfWidth.getValue();
 }
 
 //! Get the value of the LineUIDrawObject::_sfWidth field.
 inline
-const Real32 &LineUIDrawObjectBase::getWidth(void) const
+      Real32  LineUIDrawObjectBase::getWidth(void) const
 {
     return _sfWidth.getValue();
 }
 
 //! Set the value of the LineUIDrawObject::_sfWidth field.
 inline
-void LineUIDrawObjectBase::setWidth(const Real32 &value)
+void LineUIDrawObjectBase::setWidth(const Real32 value)
 {
+    editSField(WidthFieldMask);
+
     _sfWidth.setValue(value);
 }
-
 //! Get the value of the LineUIDrawObject::_sfColor field.
+
 inline
-Color4f &LineUIDrawObjectBase::getColor(void)
+Color4f &LineUIDrawObjectBase::editColor(void)
 {
+    editSField(ColorFieldMask);
+
     return _sfColor.getValue();
 }
 
@@ -213,32 +169,71 @@ const Color4f &LineUIDrawObjectBase::getColor(void) const
 inline
 void LineUIDrawObjectBase::setColor(const Color4f &value)
 {
+    editSField(ColorFieldMask);
+
     _sfColor.setValue(value);
 }
-
 //! Get the value of the LineUIDrawObject::_sfOpacity field.
+
 inline
-Real32 &LineUIDrawObjectBase::getOpacity(void)
+Real32 &LineUIDrawObjectBase::editOpacity(void)
 {
+    editSField(OpacityFieldMask);
+
     return _sfOpacity.getValue();
 }
 
 //! Get the value of the LineUIDrawObject::_sfOpacity field.
 inline
-const Real32 &LineUIDrawObjectBase::getOpacity(void) const
+      Real32  LineUIDrawObjectBase::getOpacity(void) const
 {
     return _sfOpacity.getValue();
 }
 
 //! Set the value of the LineUIDrawObject::_sfOpacity field.
 inline
-void LineUIDrawObjectBase::setOpacity(const Real32 &value)
+void LineUIDrawObjectBase::setOpacity(const Real32 value)
 {
+    editSField(OpacityFieldMask);
+
     _sfOpacity.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void LineUIDrawObjectBase::execSync (      LineUIDrawObjectBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGLINEUIDRAWOBJECTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (TopLeftFieldMask & whichField))
+        _sfTopLeft.syncWith(pFrom->_sfTopLeft);
+
+    if(FieldBits::NoField != (BottomRightFieldMask & whichField))
+        _sfBottomRight.syncWith(pFrom->_sfBottomRight);
+
+    if(FieldBits::NoField != (WidthFieldMask & whichField))
+        _sfWidth.syncWith(pFrom->_sfWidth);
+
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+        _sfColor.syncWith(pFrom->_sfColor);
+
+    if(FieldBits::NoField != (OpacityFieldMask & whichField))
+        _sfOpacity.syncWith(pFrom->_sfOpacity);
+}
+#endif
+
+
+inline
+const Char8 *LineUIDrawObjectBase::getClassname(void)
+{
+    return "LineUIDrawObject";
+}
+OSG_GEN_CONTAINERPTR(LineUIDrawObject);
+
+OSG_END_NAMESPACE
 

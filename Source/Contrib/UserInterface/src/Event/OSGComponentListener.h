@@ -31,25 +31,25 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGEventListener.h>
+#include "OSGEventListener.h"
 #include "OSGComponentEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING ComponentListener : public EventListener
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentListener : public EventListener
 {
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void componentHidden(const ComponentEventPtr e) = 0;
-   virtual void componentVisible(const ComponentEventPtr e) = 0;
-   virtual void componentMoved(const ComponentEventPtr e) = 0;
-   virtual void componentResized(const ComponentEventPtr e) = 0;
-   virtual void componentEnabled(const ComponentEventPtr e) = 0;
-   virtual void componentDisabled(const ComponentEventPtr e) = 0;
+   virtual void componentHidden(const ComponentEventUnrecPtr e) = 0;
+   virtual void componentVisible(const ComponentEventUnrecPtr e) = 0;
+   virtual void componentMoved(const ComponentEventUnrecPtr e) = 0;
+   virtual void componentResized(const ComponentEventUnrecPtr e) = 0;
+   virtual void componentEnabled(const ComponentEventUnrecPtr e) = 0;
+   virtual void componentDisabled(const ComponentEventUnrecPtr e) = 0;
 };
 
 typedef ComponentListener* ComponentListenerPtr;

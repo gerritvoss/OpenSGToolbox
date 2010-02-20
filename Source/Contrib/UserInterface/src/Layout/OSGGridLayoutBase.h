@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,71 +58,79 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGLayout.h" // Parent
 
-#include <OpenSG/OSGUInt32Fields.h> // Rows type
-#include <OpenSG/OSGUInt32Fields.h> // Columns type
-#include <OpenSG/OSGReal32Fields.h> // HorizontalGap type
-#include <OpenSG/OSGReal32Fields.h> // VerticalGap type
+#include "OSGSysFields.h"               // Rows type
 
 #include "OSGGridLayoutFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class GridLayout;
-class BinaryDataHandler;
 
 //! \brief GridLayout Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING GridLayoutBase : public Layout
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING GridLayoutBase : public Layout
 {
-  private:
-
-    typedef Layout    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef GridLayoutPtr  Ptr;
+    typedef Layout Inherited;
+    typedef Layout ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(GridLayout);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        RowsFieldId          = Inherited::NextFieldId,
-        ColumnsFieldId       = RowsFieldId          + 1,
-        HorizontalGapFieldId = ColumnsFieldId       + 1,
-        VerticalGapFieldId   = HorizontalGapFieldId + 1,
-        NextFieldId          = VerticalGapFieldId   + 1
+        RowsFieldId = Inherited::NextFieldId,
+        ColumnsFieldId = RowsFieldId + 1,
+        HorizontalGapFieldId = ColumnsFieldId + 1,
+        VerticalGapFieldId = HorizontalGapFieldId + 1,
+        NextFieldId = VerticalGapFieldId + 1
     };
 
-    static const OSG::BitVector RowsFieldMask;
-    static const OSG::BitVector ColumnsFieldMask;
-    static const OSG::BitVector HorizontalGapFieldMask;
-    static const OSG::BitVector VerticalGapFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector RowsFieldMask =
+        (TypeTraits<BitVector>::One << RowsFieldId);
+    static const OSG::BitVector ColumnsFieldMask =
+        (TypeTraits<BitVector>::One << ColumnsFieldId);
+    static const OSG::BitVector HorizontalGapFieldMask =
+        (TypeTraits<BitVector>::One << HorizontalGapFieldId);
+    static const OSG::BitVector VerticalGapFieldMask =
+        (TypeTraits<BitVector>::One << VerticalGapFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUInt32          SFRowsType;
+    typedef SFUInt32          SFColumnsType;
+    typedef SFReal32          SFHorizontalGapType;
+    typedef SFReal32          SFVerticalGapType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -131,33 +139,45 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridLayoutBase : public Layout
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUInt32            *getSFRows           (void);
-           SFUInt32            *getSFColumns        (void);
-           SFReal32            *getSFHorizontalGap  (void);
-           SFReal32            *getSFVerticalGap    (void);
 
-           UInt32              &getRows           (void);
-     const UInt32              &getRows           (void) const;
-           UInt32              &getColumns        (void);
-     const UInt32              &getColumns        (void) const;
-           Real32              &getHorizontalGap  (void);
-     const Real32              &getHorizontalGap  (void) const;
-           Real32              &getVerticalGap    (void);
-     const Real32              &getVerticalGap    (void) const;
+                  SFUInt32            *editSFRows           (void);
+            const SFUInt32            *getSFRows            (void) const;
+
+                  SFUInt32            *editSFColumns        (void);
+            const SFUInt32            *getSFColumns         (void) const;
+
+                  SFReal32            *editSFHorizontalGap  (void);
+            const SFReal32            *getSFHorizontalGap   (void) const;
+
+                  SFReal32            *editSFVerticalGap    (void);
+            const SFReal32            *getSFVerticalGap     (void) const;
+
+
+                  UInt32              &editRows           (void);
+                  UInt32               getRows            (void) const;
+
+                  UInt32              &editColumns        (void);
+                  UInt32               getColumns         (void) const;
+
+                  Real32              &editHorizontalGap  (void);
+                  Real32               getHorizontalGap   (void) const;
+
+                  Real32              &editVerticalGap    (void);
+                  Real32               getVerticalGap     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setRows           ( const UInt32 &value );
-     void setColumns        ( const UInt32 &value );
-     void setHorizontalGap  ( const Real32 &value );
-     void setVerticalGap    ( const Real32 &value );
+            void setRows           (const UInt32 value);
+            void setColumns        (const UInt32 value);
+            void setHorizontalGap  (const Real32 value);
+            void setVerticalGap    (const Real32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -165,11 +185,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridLayoutBase : public Layout
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -177,29 +197,46 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridLayoutBase : public Layout
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  GridLayoutPtr      create          (void); 
-    static  GridLayoutPtr      createEmpty     (void); 
+    static  GridLayoutTransitPtr  create          (void);
+    static  GridLayout           *createEmpty     (void);
+
+    static  GridLayoutTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  GridLayout            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  GridLayoutTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUInt32            _sfRows;
-    SFUInt32            _sfColumns;
-    SFReal32            _sfHorizontalGap;
-    SFReal32            _sfVerticalGap;
+    SFUInt32          _sfRows;
+    SFUInt32          _sfColumns;
+    SFReal32          _sfHorizontalGap;
+    SFReal32          _sfVerticalGap;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -214,69 +251,85 @@ class OSG_USERINTERFACELIB_DLLMAPPING GridLayoutBase : public Layout
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~GridLayoutBase(void); 
+    virtual ~GridLayoutBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleRows            (void) const;
+    EditFieldHandlePtr editHandleRows           (void);
+    GetFieldHandlePtr  getHandleColumns         (void) const;
+    EditFieldHandlePtr editHandleColumns        (void);
+    GetFieldHandlePtr  getHandleHorizontalGap   (void) const;
+    EditFieldHandlePtr editHandleHorizontalGap  (void);
+    GetFieldHandlePtr  getHandleVerticalGap     (void) const;
+    EditFieldHandlePtr editHandleVerticalGap    (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      GridLayoutBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      GridLayoutBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      GridLayoutBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const GridLayoutBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef GridLayoutBase *GridLayoutBaseP;
 
-typedef osgIF<GridLayoutBase::isNodeCore,
-              CoredNodePtr<GridLayout>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet GridLayoutNodePtr;
-
-typedef RefPtr<GridLayoutPtr> GridLayoutRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGGRIDLAYOUTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGGRIDLAYOUTBASE_H_ */

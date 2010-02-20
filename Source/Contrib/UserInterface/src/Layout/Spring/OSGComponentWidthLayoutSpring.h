@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,64 +42,65 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGComponentWidthLayoutSpringBase.h"
+#include "OSGComponent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ComponentWidthLayoutSpring class. See \ref 
-           PageUserInterfaceComponentWidthLayoutSpring for a description.
+/*! \brief ComponentWidthLayoutSpring class. See \ref
+           PageContribUserInterfaceComponentWidthLayoutSpring for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING ComponentWidthLayoutSpring : public ComponentWidthLayoutSpringBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentWidthLayoutSpring : public ComponentWidthLayoutSpringBase
 {
-  private:
-
-    typedef ComponentWidthLayoutSpringBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
-      enum SizeField{PREFERRED_SIZE = 0,
-		             MINIMUM_SIZE   = 1, 
-					 MAXIMUM_SIZE   = 2, 
-					 REQUESTED_SIZE = 3, 
-					 SIZE           = 4};
+    enum SizeField
+    {
+        PREFERRED_SIZE = 0,
+        MINIMUM_SIZE   = 1,
+        MAXIMUM_SIZE   = 2,
+        REQUESTED_SIZE = 3,
+        SIZE           = 4
+    };
+
+    typedef ComponentWidthLayoutSpringBase Inherited;
+    typedef ComponentWidthLayoutSpring     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Construction                               */
-    /*! \{                                                                 */
 
-    static  ComponentWidthLayoutSpringPtr      create          (ComponentPtr TheComponent, UInt32 SizeField = PREFERRED_SIZE); 
+    static  ComponentWidthLayoutSpringTransitPtr      create          (ComponentRefPtr TheComponent, UInt32 SizeField = PREFERRED_SIZE); 
     
-    /*! \}                                                                 */
 
-    //Returns the maximum value of this LayoutSpringPtr.
+    //Returns the maximum value of this LayoutSpringRefPtr.
     virtual Real32 getMinimumValue(void) const;
 
-    //Returns the Preferred value of this LayoutSpringPtr.
+    //Returns the Preferred value of this LayoutSpringRefPtr.
     virtual Real32 getPreferredValue(void) const;
 
-    //Returns the minimum value of this LayoutSpringPtr.
+    //Returns the minimum value of this LayoutSpringRefPtr.
     virtual Real32 getMaximumValue(void) const;
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ComponentWidthLayoutSpringBase.
@@ -116,20 +117,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentWidthLayoutSpring : public Compon
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ComponentWidthLayoutSpring(void); 
+    virtual ~ComponentWidthLayoutSpring(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ComponentWidthLayoutSpringBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ComponentWidthLayoutSpring &source);
 };
 
@@ -139,7 +144,5 @@ OSG_END_NAMESPACE
 
 #include "OSGComponentWidthLayoutSpringBase.inl"
 #include "OSGComponentWidthLayoutSpring.inl"
-
-#define OSGCOMPONENTWIDTHLAYOUTSPRING_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGCOMPONENTWIDTHLAYOUTSPRING_H_ */

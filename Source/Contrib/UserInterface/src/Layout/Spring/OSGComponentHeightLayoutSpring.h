@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,60 +42,65 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGComponentHeightLayoutSpringBase.h"
+#include "OSGComponent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ComponentHeightLayoutSpring class. See \ref 
-           PageUserInterfaceComponentHeightLayoutSpring for a description.
+/*! \brief ComponentHeightLayoutSpring class. See \ref
+           PageContribUserInterfaceComponentHeightLayoutSpring for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING ComponentHeightLayoutSpring : public ComponentHeightLayoutSpringBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentHeightLayoutSpring : public ComponentHeightLayoutSpringBase
 {
-  private:
-
-    typedef ComponentHeightLayoutSpringBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
-      enum SizeField{PREFERRED_SIZE=0, MINIMUM_SIZE, MAXIMUM_SIZE, REQUESTED_SIZE, SIZE};
+    enum SizeField
+    {
+        PREFERRED_SIZE = 0,
+        MINIMUM_SIZE   = 1,
+        MAXIMUM_SIZE   = 2,
+        REQUESTED_SIZE = 3,
+        SIZE           = 4
+    };
+
+    typedef ComponentHeightLayoutSpringBase Inherited;
+    typedef ComponentHeightLayoutSpring     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Construction                               */
-    /*! \{                                                                 */
 
-    static  ComponentHeightLayoutSpringPtr      create          (ComponentPtr TheComponent, UInt32 SizeField = PREFERRED_SIZE); 
-    
-    /*! \}                                                                 */
+    static  ComponentHeightLayoutSpringTransitPtr      create          (ComponentRefPtr TheComponent, UInt32 SizeField = PREFERRED_SIZE); 
 
-    //Returns the maximum value of this LayoutSpringPtr.
+    //Returns the maximum value of this LayoutSpringRefPtr.
     virtual Real32 getMinimumValue(void) const;
 
-    //Returns the Preferred value of this LayoutSpringPtr.
+    //Returns the Preferred value of this LayoutSpringRefPtr.
     virtual Real32 getPreferredValue(void) const;
 
-    //Returns the minimum value of this LayoutSpringPtr.
+    //Returns the minimum value of this LayoutSpringRefPtr.
     virtual Real32 getMaximumValue(void) const;
+    
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ComponentHeightLayoutSpringBase.
@@ -112,20 +117,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentHeightLayoutSpring : public Compo
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ComponentHeightLayoutSpring(void); 
+    virtual ~ComponentHeightLayoutSpring(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ComponentHeightLayoutSpringBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ComponentHeightLayoutSpring &source);
 };
 
@@ -135,7 +144,5 @@ OSG_END_NAMESPACE
 
 #include "OSGComponentHeightLayoutSpringBase.inl"
 #include "OSGComponentHeightLayoutSpring.inl"
-
-#define OSGCOMPONENTHEIGHTLAYOUTSPRING_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGCOMPONENTHEIGHTLAYOUTSPRING_H_ */

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,142 +50,165 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEABSOLUTELAYOUTCONSTRAINTSINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGAbsoluteLayoutConstraintsBase.h"
 #include "OSGAbsoluteLayoutConstraints.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  AbsoluteLayoutConstraintsBase::PositionFieldMask = 
-    (TypeTraits<BitVector>::One << AbsoluteLayoutConstraintsBase::PositionFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector AbsoluteLayoutConstraintsBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::AbsoluteLayoutConstraints
+    A UI AbsoluteLayoutConstraints.
+ */
 
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Pnt2f           AbsoluteLayoutConstraintsBase::_sfPosition
     
 */
 
-//! AbsoluteLayoutConstraints description
 
-FieldDescription *AbsoluteLayoutConstraintsBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<AbsoluteLayoutConstraints *>::_type("AbsoluteLayoutConstraintsPtr", "LayoutConstraintsPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(AbsoluteLayoutConstraints *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           AbsoluteLayoutConstraints *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           AbsoluteLayoutConstraints *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void AbsoluteLayoutConstraintsBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFPnt2f::getClassType(), 
-                     "Position", 
-                     PositionFieldId, PositionFieldMask,
-                     false,
-                     (FieldAccessMethod) &AbsoluteLayoutConstraintsBase::getSFPosition)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType AbsoluteLayoutConstraintsBase::_type(
-    "AbsoluteLayoutConstraints",
-    "LayoutConstraints",
-    NULL,
-    (PrototypeCreateF) &AbsoluteLayoutConstraintsBase::createEmpty,
+    pDesc = new SFPnt2f::Description(
+        SFPnt2f::getClassType(),
+        "Position",
+        "",
+        PositionFieldId, PositionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&AbsoluteLayoutConstraints::editHandlePosition),
+        static_cast<FieldGetMethodSig >(&AbsoluteLayoutConstraints::getHandlePosition));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+AbsoluteLayoutConstraintsBase::TypeObject AbsoluteLayoutConstraintsBase::_type(
+    AbsoluteLayoutConstraintsBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&AbsoluteLayoutConstraintsBase::createEmptyLocal),
     AbsoluteLayoutConstraints::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(AbsoluteLayoutConstraintsBase, AbsoluteLayoutConstraintsPtr)
+    AbsoluteLayoutConstraints::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&AbsoluteLayoutConstraints::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"AbsoluteLayoutConstraints\"\n"
+    "\tparent=\"LayoutConstraints\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI AbsoluteLayoutConstraints.\n"
+    "\t<Field\n"
+    "\t\tname=\"Position\"\n"
+    "\t\ttype=\"Pnt2f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0,0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI AbsoluteLayoutConstraints.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &AbsoluteLayoutConstraintsBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &AbsoluteLayoutConstraintsBase::getType(void) const 
+FieldContainerType &AbsoluteLayoutConstraintsBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr AbsoluteLayoutConstraintsBase::shallowCopy(void) const 
-{ 
-    AbsoluteLayoutConstraintsPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const AbsoluteLayoutConstraints *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 AbsoluteLayoutConstraintsBase::getContainerSize(void) const 
-{ 
-    return sizeof(AbsoluteLayoutConstraints); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void AbsoluteLayoutConstraintsBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &AbsoluteLayoutConstraintsBase::getType(void) const
 {
-    this->executeSyncImpl((AbsoluteLayoutConstraintsBase *) &other, whichField);
+    return _type;
 }
-#else
-void AbsoluteLayoutConstraintsBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 AbsoluteLayoutConstraintsBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((AbsoluteLayoutConstraintsBase *) &other, whichField, sInfo);
+    return sizeof(AbsoluteLayoutConstraints);
 }
-void AbsoluteLayoutConstraintsBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFPnt2f *AbsoluteLayoutConstraintsBase::editSFPosition(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(PositionFieldMask);
+
+    return &_sfPosition;
 }
 
-void AbsoluteLayoutConstraintsBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFPnt2f *AbsoluteLayoutConstraintsBase::getSFPosition(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-AbsoluteLayoutConstraintsBase::AbsoluteLayoutConstraintsBase(void) :
-    _sfPosition               (Pnt2f(0,0)), 
-    Inherited() 
-{
+    return &_sfPosition;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-AbsoluteLayoutConstraintsBase::AbsoluteLayoutConstraintsBase(const AbsoluteLayoutConstraintsBase &source) :
-    _sfPosition               (source._sfPosition               ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-AbsoluteLayoutConstraintsBase::~AbsoluteLayoutConstraintsBase(void)
-{
-}
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 AbsoluteLayoutConstraintsBase::getBinSize(const BitVector &whichField)
+UInt32 AbsoluteLayoutConstraintsBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -194,12 +217,11 @@ UInt32 AbsoluteLayoutConstraintsBase::getBinSize(const BitVector &whichField)
         returnValue += _sfPosition.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void AbsoluteLayoutConstraintsBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void AbsoluteLayoutConstraintsBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -207,12 +229,10 @@ void AbsoluteLayoutConstraintsBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfPosition.copyToBin(pMem);
     }
-
-
 }
 
-void AbsoluteLayoutConstraintsBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void AbsoluteLayoutConstraintsBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -220,82 +240,213 @@ void AbsoluteLayoutConstraintsBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfPosition.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void AbsoluteLayoutConstraintsBase::executeSyncImpl(      AbsoluteLayoutConstraintsBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+AbsoluteLayoutConstraintsTransitPtr AbsoluteLayoutConstraintsBase::createLocal(BitVector bFlags)
 {
+    AbsoluteLayoutConstraintsTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (PositionFieldMask & whichField))
-        _sfPosition.syncWith(pOther->_sfPosition);
+        fc = dynamic_pointer_cast<AbsoluteLayoutConstraints>(tmpPtr);
+    }
 
-
-}
-#else
-void AbsoluteLayoutConstraintsBase::executeSyncImpl(      AbsoluteLayoutConstraintsBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (PositionFieldMask & whichField))
-        _sfPosition.syncWith(pOther->_sfPosition);
-
-
-
+    return fc;
 }
 
-void AbsoluteLayoutConstraintsBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+AbsoluteLayoutConstraintsTransitPtr AbsoluteLayoutConstraintsBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    AbsoluteLayoutConstraintsTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<AbsoluteLayoutConstraints>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+AbsoluteLayoutConstraintsTransitPtr AbsoluteLayoutConstraintsBase::create(void)
+{
+    AbsoluteLayoutConstraintsTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<AbsoluteLayoutConstraints>(tmpPtr);
+    }
+
+    return fc;
+}
+
+AbsoluteLayoutConstraints *AbsoluteLayoutConstraintsBase::createEmptyLocal(BitVector bFlags)
+{
+    AbsoluteLayoutConstraints *returnValue;
+
+    newPtr<AbsoluteLayoutConstraints>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+AbsoluteLayoutConstraints *AbsoluteLayoutConstraintsBase::createEmpty(void)
+{
+    AbsoluteLayoutConstraints *returnValue;
+
+    newPtr<AbsoluteLayoutConstraints>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr AbsoluteLayoutConstraintsBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    AbsoluteLayoutConstraints *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const AbsoluteLayoutConstraints *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr AbsoluteLayoutConstraintsBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    AbsoluteLayoutConstraints *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const AbsoluteLayoutConstraints *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr AbsoluteLayoutConstraintsBase::shallowCopy(void) const
+{
+    AbsoluteLayoutConstraints *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const AbsoluteLayoutConstraints *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+AbsoluteLayoutConstraintsBase::AbsoluteLayoutConstraintsBase(void) :
+    Inherited(),
+    _sfPosition               (Pnt2f(0,0))
+{
+}
+
+AbsoluteLayoutConstraintsBase::AbsoluteLayoutConstraintsBase(const AbsoluteLayoutConstraintsBase &source) :
+    Inherited(source),
+    _sfPosition               (source._sfPosition               )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+AbsoluteLayoutConstraintsBase::~AbsoluteLayoutConstraintsBase(void)
+{
+}
+
+
+GetFieldHandlePtr AbsoluteLayoutConstraintsBase::getHandlePosition        (void) const
+{
+    SFPnt2f::GetHandlePtr returnValue(
+        new  SFPnt2f::GetHandle(
+             &_sfPosition,
+             this->getType().getFieldDesc(PositionFieldId),
+             const_cast<AbsoluteLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AbsoluteLayoutConstraintsBase::editHandlePosition       (void)
+{
+    SFPnt2f::EditHandlePtr returnValue(
+        new  SFPnt2f::EditHandle(
+             &_sfPosition,
+             this->getType().getFieldDesc(PositionFieldId),
+             this));
+
+
+    editSField(PositionFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void AbsoluteLayoutConstraintsBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    AbsoluteLayoutConstraints *pThis = static_cast<AbsoluteLayoutConstraints *>(this);
+
+    pThis->execSync(static_cast<AbsoluteLayoutConstraints *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *AbsoluteLayoutConstraintsBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    AbsoluteLayoutConstraints *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const AbsoluteLayoutConstraints *>(pRefAspect),
+                  dynamic_cast<const AbsoluteLayoutConstraints *>(this));
+
+    return returnValue;
+}
+#endif
+
+void AbsoluteLayoutConstraintsBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<AbsoluteLayoutConstraintsPtr>::_type("AbsoluteLayoutConstraintsPtr", "LayoutConstraintsPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(AbsoluteLayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(AbsoluteLayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGABSOLUTELAYOUTCONSTRAINTSBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGABSOLUTELAYOUTCONSTRAINTSBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGABSOLUTELAYOUTCONSTRAINTSFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

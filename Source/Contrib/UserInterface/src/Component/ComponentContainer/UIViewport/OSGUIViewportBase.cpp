@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,192 +50,276 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEUIVIEWPORTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGComponent.h"               // ViewComponent Class
 
 #include "OSGUIViewportBase.h"
 #include "OSGUIViewport.h"
 
+#include <boost/bind.hpp>
+
+#include "OSGEvent.h"
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  UIViewportBase::ViewPositionFieldMask = 
-    (TypeTraits<BitVector>::One << UIViewportBase::ViewPositionFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  UIViewportBase::ViewComponentFieldMask = 
-    (TypeTraits<BitVector>::One << UIViewportBase::ViewComponentFieldId);
+/*! \class OSG::UIViewport
+    A UI UIViewport
+ */
 
-const OSG::BitVector  UIViewportBase::ViewSizeFieldMask = 
-    (TypeTraits<BitVector>::One << UIViewportBase::ViewSizeFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector UIViewportBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var Pnt2s           UIViewportBase::_sfViewPosition
-    
-*/
-/*! \var ComponentPtr    UIViewportBase::_sfViewComponent
-    
-*/
-/*! \var Vec2s           UIViewportBase::_sfViewSize
+/*! \var Pnt2f           UIViewportBase::_sfViewPosition
     
 */
 
-//! UIViewport description
+/*! \var Component *     UIViewportBase::_sfViewComponent
+    
+*/
 
-FieldDescription *UIViewportBase::_desc[] = 
+/*! \var Vec2f           UIViewportBase::_sfViewSize
+    
+*/
+
+
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<UIViewport *>::_type("UIViewportPtr", "ComponentContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(UIViewport *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           UIViewport *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           UIViewport *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void UIViewportBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFPnt2s::getClassType(), 
-                     "ViewPosition", 
-                     ViewPositionFieldId, ViewPositionFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&UIViewportBase::editSFViewPosition)),
-    new FieldDescription(SFComponentPtr::getClassType(), 
-                     "ViewComponent", 
-                     ViewComponentFieldId, ViewComponentFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&UIViewportBase::editSFViewComponent)),
-    new FieldDescription(SFVec2s::getClassType(), 
-                     "ViewSize", 
-                     ViewSizeFieldId, ViewSizeFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&UIViewportBase::editSFViewSize))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType UIViewportBase::_type(
-    "UIViewport",
-    "Container",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&UIViewportBase::createEmpty),
+    pDesc = new SFPnt2f::Description(
+        SFPnt2f::getClassType(),
+        "ViewPosition",
+        "",
+        ViewPositionFieldId, ViewPositionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&UIViewport::editHandleViewPosition),
+        static_cast<FieldGetMethodSig >(&UIViewport::getHandleViewPosition));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecComponentPtr::Description(
+        SFUnrecComponentPtr::getClassType(),
+        "ViewComponent",
+        "",
+        ViewComponentFieldId, ViewComponentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&UIViewport::editHandleViewComponent),
+        static_cast<FieldGetMethodSig >(&UIViewport::getHandleViewComponent));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFVec2f::Description(
+        SFVec2f::getClassType(),
+        "ViewSize",
+        "",
+        ViewSizeFieldId, ViewSizeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&UIViewport::editHandleViewSize),
+        static_cast<FieldGetMethodSig >(&UIViewport::getHandleViewSize));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+UIViewportBase::TypeObject UIViewportBase::_type(
+    UIViewportBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&UIViewportBase::createEmptyLocal),
     UIViewport::initMethod,
-    _desc,
-    sizeof(_desc));
+    UIViewport::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&UIViewport::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"UIViewport\"\n"
+    "\tparent=\"ComponentContainer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "\tdecoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    parentProducer=\"Component\"\n"
+    ">\n"
+    "A UI UIViewport\n"
+    "\t<Field\n"
+    "\t\tname=\"ViewPosition\"\n"
+    "\t\ttype=\"Pnt2f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.0f,0.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ViewComponent\"\n"
+    "\t\ttype=\"Component\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ViewSize\"\n"
+    "\t\ttype=\"Vec2f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"-1.0f,-1.0f\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"StateChanged\"\n"
+    "\t\ttype=\"ChangeEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "</FieldContainer>\n",
+    "A UI UIViewport\n"
+    );
 
 //! UIViewport Produced Methods
 
 MethodDescription *UIViewportBase::_methodDesc[] =
 {
     new MethodDescription("StateChanged", 
+                    "",
                      StateChangedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod())
 };
 
 EventProducerType UIViewportBase::_producerType(
     "UIViewportProducerType",
     "ComponentProducerType",
-    NULL,
+    "",
     InitEventProducerFunctor(),
     _methodDesc,
     sizeof(_methodDesc));
-//OSG_FIELD_CONTAINER_DEF(UIViewportBase, UIViewportPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &UIViewportBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &UIViewportBase::getType(void) const 
+FieldContainerType &UIViewportBase::getType(void)
 {
     return _type;
-} 
+}
+
+const FieldContainerType &UIViewportBase::getType(void) const
+{
+    return _type;
+}
 
 const EventProducerType &UIViewportBase::getProducerType(void) const
 {
     return _producerType;
 }
 
-
-FieldContainerPtr UIViewportBase::shallowCopy(void) const 
-{ 
-    UIViewportPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const UIViewport *>(this)); 
-
-    return returnValue; 
-}
-
-UInt32 UIViewportBase::getContainerSize(void) const 
-{ 
-    return sizeof(UIViewport); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void UIViewportBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+UInt32 UIViewportBase::getContainerSize(void) const
 {
-    this->executeSyncImpl(static_cast<UIViewportBase *>(&other),
-                          whichField);
+    return sizeof(UIViewport);
 }
-#else
-void UIViewportBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFPnt2f *UIViewportBase::editSFViewPosition(void)
 {
-    this->executeSyncImpl((UIViewportBase *) &other, whichField, sInfo);
+    editSField(ViewPositionFieldMask);
+
+    return &_sfViewPosition;
 }
-void UIViewportBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+const SFPnt2f *UIViewportBase::getSFViewPosition(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfViewPosition;
 }
 
-void UIViewportBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+
+//! Get the UIViewport::_sfViewComponent field.
+const SFUnrecComponentPtr *UIViewportBase::getSFViewComponent(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfViewComponent;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-UIViewportBase::UIViewportBase(void) :
-    _sfViewPosition           (Pnt2s(0,0)), 
-    _sfViewComponent          (ComponentPtr(NullFC)), 
-    _sfViewSize               (Vec2s(-1,-1)), 
-    Inherited() 
+SFUnrecComponentPtr *UIViewportBase::editSFViewComponent  (void)
 {
-    _Producer.setType(&_producerType);
+    editSField(ViewComponentFieldMask);
+
+    return &_sfViewComponent;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-UIViewportBase::UIViewportBase(const UIViewportBase &source) :
-    _sfViewPosition           (source._sfViewPosition           ), 
-    _sfViewComponent          (source._sfViewComponent          ), 
-    _sfViewSize               (source._sfViewSize               ), 
-    Inherited                 (source)
+SFVec2f *UIViewportBase::editSFViewSize(void)
 {
+    editSField(ViewSizeFieldMask);
+
+    return &_sfViewSize;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-UIViewportBase::~UIViewportBase(void)
+const SFVec2f *UIViewportBase::getSFViewSize(void) const
 {
+    return &_sfViewSize;
 }
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 UIViewportBase::getBinSize(const BitVector &whichField)
+UInt32 UIViewportBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -243,23 +327,20 @@ UInt32 UIViewportBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfViewPosition.getBinSize();
     }
-
     if(FieldBits::NoField != (ViewComponentFieldMask & whichField))
     {
         returnValue += _sfViewComponent.getBinSize();
     }
-
     if(FieldBits::NoField != (ViewSizeFieldMask & whichField))
     {
         returnValue += _sfViewSize.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void UIViewportBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void UIViewportBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -267,22 +348,18 @@ void UIViewportBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfViewPosition.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ViewComponentFieldMask & whichField))
     {
         _sfViewComponent.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ViewSizeFieldMask & whichField))
     {
         _sfViewSize.copyToBin(pMem);
     }
-
-
 }
 
-void UIViewportBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void UIViewportBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -290,84 +367,292 @@ void UIViewportBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfViewPosition.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ViewComponentFieldMask & whichField))
     {
         _sfViewComponent.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ViewSizeFieldMask & whichField))
     {
         _sfViewSize.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void UIViewportBase::executeSyncImpl(      UIViewportBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+UIViewportTransitPtr UIViewportBase::createLocal(BitVector bFlags)
 {
+    UIViewportTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (ViewPositionFieldMask & whichField))
-        _sfViewPosition.syncWith(pOther->_sfViewPosition);
+        fc = dynamic_pointer_cast<UIViewport>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (ViewComponentFieldMask & whichField))
-        _sfViewComponent.syncWith(pOther->_sfViewComponent);
-
-    if(FieldBits::NoField != (ViewSizeFieldMask & whichField))
-        _sfViewSize.syncWith(pOther->_sfViewSize);
-
-
-}
-#else
-void UIViewportBase::executeSyncImpl(      UIViewportBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ViewPositionFieldMask & whichField))
-        _sfViewPosition.syncWith(pOther->_sfViewPosition);
-
-    if(FieldBits::NoField != (ViewComponentFieldMask & whichField))
-        _sfViewComponent.syncWith(pOther->_sfViewComponent);
-
-    if(FieldBits::NoField != (ViewSizeFieldMask & whichField))
-        _sfViewSize.syncWith(pOther->_sfViewSize);
-
-
-
+    return fc;
 }
 
-void UIViewportBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+UIViewportTransitPtr UIViewportBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    UIViewportTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<UIViewport>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+UIViewportTransitPtr UIViewportBase::create(void)
+{
+    UIViewportTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<UIViewport>(tmpPtr);
+    }
+
+    return fc;
+}
+
+UIViewport *UIViewportBase::createEmptyLocal(BitVector bFlags)
+{
+    UIViewport *returnValue;
+
+    newPtr<UIViewport>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+UIViewport *UIViewportBase::createEmpty(void)
+{
+    UIViewport *returnValue;
+
+    newPtr<UIViewport>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr UIViewportBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    UIViewport *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const UIViewport *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr UIViewportBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    UIViewport *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const UIViewport *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr UIViewportBase::shallowCopy(void) const
+{
+    UIViewport *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const UIViewport *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+UIViewportBase::UIViewportBase(void) :
+    Inherited(),
+    _sfViewPosition           (Pnt2f(0.0f,0.0f)),
+    _sfViewComponent          (NULL),
+    _sfViewSize               (Vec2f(-1.0f,-1.0f))
+{
+    _Producer.setType(&_producerType);
+}
+
+UIViewportBase::UIViewportBase(const UIViewportBase &source) :
+    Inherited(source),
+    _sfViewPosition           (source._sfViewPosition           ),
+    _sfViewComponent          (NULL),
+    _sfViewSize               (source._sfViewSize               )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+UIViewportBase::~UIViewportBase(void)
+{
+}
+
+void UIViewportBase::onCreate(const UIViewport *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        UIViewport *pThis = static_cast<UIViewport *>(this);
+
+        pThis->setViewComponent(source->getViewComponent());
+    }
+}
+
+GetFieldHandlePtr UIViewportBase::getHandleViewPosition    (void) const
+{
+    SFPnt2f::GetHandlePtr returnValue(
+        new  SFPnt2f::GetHandle(
+             &_sfViewPosition,
+             this->getType().getFieldDesc(ViewPositionFieldId),
+             const_cast<UIViewportBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr UIViewportBase::editHandleViewPosition   (void)
+{
+    SFPnt2f::EditHandlePtr returnValue(
+        new  SFPnt2f::EditHandle(
+             &_sfViewPosition,
+             this->getType().getFieldDesc(ViewPositionFieldId),
+             this));
+
+
+    editSField(ViewPositionFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr UIViewportBase::getHandleViewComponent   (void) const
+{
+    SFUnrecComponentPtr::GetHandlePtr returnValue(
+        new  SFUnrecComponentPtr::GetHandle(
+             &_sfViewComponent,
+             this->getType().getFieldDesc(ViewComponentFieldId),
+             const_cast<UIViewportBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr UIViewportBase::editHandleViewComponent  (void)
+{
+    SFUnrecComponentPtr::EditHandlePtr returnValue(
+        new  SFUnrecComponentPtr::EditHandle(
+             &_sfViewComponent,
+             this->getType().getFieldDesc(ViewComponentFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&UIViewport::setViewComponent,
+                    static_cast<UIViewport *>(this), _1));
+
+    editSField(ViewComponentFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr UIViewportBase::getHandleViewSize        (void) const
+{
+    SFVec2f::GetHandlePtr returnValue(
+        new  SFVec2f::GetHandle(
+             &_sfViewSize,
+             this->getType().getFieldDesc(ViewSizeFieldId),
+             const_cast<UIViewportBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr UIViewportBase::editHandleViewSize       (void)
+{
+    SFVec2f::EditHandlePtr returnValue(
+        new  SFVec2f::EditHandle(
+             &_sfViewSize,
+             this->getType().getFieldDesc(ViewSizeFieldId),
+             this));
+
+
+    editSField(ViewSizeFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void UIViewportBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    UIViewport *pThis = static_cast<UIViewport *>(this);
+
+    pThis->execSync(static_cast<UIViewport *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *UIViewportBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    UIViewport *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const UIViewport *>(pRefAspect),
+                  dynamic_cast<const UIViewport *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<UIViewportPtr>::_type("UIViewportPtr", "ContainerPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(UIViewportPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(UIViewportPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void UIViewportBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<UIViewport *>(this)->setViewComponent(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-

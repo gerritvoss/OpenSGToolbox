@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,99 +55,56 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &DialogWindowEventBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 DialogWindowEventBase::getClassTypeId(void) 
+OSG::UInt32 DialogWindowEventBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-DialogWindowEventPtr DialogWindowEventBase::create(void) 
-{
-    DialogWindowEventPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = DialogWindowEventPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-DialogWindowEventPtr DialogWindowEventBase::createEmpty(void) 
-{ 
-    DialogWindowEventPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 DialogWindowEventBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the DialogWindowEvent::_sfOption field.
-inline
-const SFUInt8 *DialogWindowEventBase::getSFOption(void) const
-{
-    return &_sfOption;
-}
-
-//! Get the DialogWindowEvent::_sfOption field.
-inline
-SFUInt8 *DialogWindowEventBase::editSFOption(void)
-{
-    return &_sfOption;
-}
-
-//! Get the DialogWindowEvent::_sfInput field.
-inline
-const SFString *DialogWindowEventBase::getSFInput(void) const
-{
-    return &_sfInput;
-}
-
-//! Get the DialogWindowEvent::_sfInput field.
-inline
-SFString *DialogWindowEventBase::editSFInput(void)
-{
-    return &_sfInput;
-}
-
-
 //! Get the value of the DialogWindowEvent::_sfOption field.
+
 inline
 UInt8 &DialogWindowEventBase::editOption(void)
 {
+    editSField(OptionFieldMask);
+
     return _sfOption.getValue();
 }
 
 //! Get the value of the DialogWindowEvent::_sfOption field.
 inline
-const UInt8 &DialogWindowEventBase::getOption(void) const
+      UInt8  DialogWindowEventBase::getOption(void) const
 {
     return _sfOption.getValue();
 }
 
 //! Set the value of the DialogWindowEvent::_sfOption field.
 inline
-void DialogWindowEventBase::setOption(const UInt8 &value)
+void DialogWindowEventBase::setOption(const UInt8 value)
 {
+    editSField(OptionFieldMask);
+
     _sfOption.setValue(value);
 }
-
 //! Get the value of the DialogWindowEvent::_sfInput field.
+
 inline
 std::string &DialogWindowEventBase::editInput(void)
 {
+    editSField(InputFieldMask);
+
     return _sfInput.getValue();
 }
 
@@ -164,8 +119,37 @@ const std::string &DialogWindowEventBase::getInput(void) const
 inline
 void DialogWindowEventBase::setInput(const std::string &value)
 {
+    editSField(InputFieldMask);
+
     _sfInput.setValue(value);
 }
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void DialogWindowEventBase::execSync (      DialogWindowEventBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (OptionFieldMask & whichField))
+        _sfOption.syncWith(pFrom->_sfOption);
+
+    if(FieldBits::NoField != (InputFieldMask & whichField))
+        _sfInput.syncWith(pFrom->_sfInput);
+}
+#endif
+
+
+inline
+const Char8 *DialogWindowEventBase::getClassname(void)
+{
+    return "DialogWindowEvent";
+}
+OSG_GEN_CONTAINERPTR(DialogWindowEvent);
+
 OSG_END_NAMESPACE
+

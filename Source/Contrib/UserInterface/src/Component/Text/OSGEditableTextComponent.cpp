@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,27 +40,22 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGEditableTextComponent.h"
-#include "UIDrawingSurface/OSGUIDrawingSurface.h"
-#include "Component/Container/Window/OSGInternalWindow.h"
-#include <OpenSG/Input/OSGWindowEventProducer.h>
+#include "OSGUIDrawingSurface.h"
+#include "OSGInternalWindow.h"
+#include "OSGWindowEventProducer.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::EditableTextComponent
-A UI Editable Text Component. 	
-*/
+// Documentation for this class is emitted in the
+// OSGEditableTextComponentBase.cpp file.
+// To modify it, please change the .fcd file (OSGEditableTextComponent.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -70,25 +65,31 @@ A UI Editable Text Component.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void EditableTextComponent::initMethod (void)
+void EditableTextComponent::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-void EditableTextComponent::keyPressed(const KeyEventPtr e)
+
+void EditableTextComponent::keyPressed(const KeyEventUnrecPtr e)
 {
 	Inherited::keyPressed(e);
 }
 
-void EditableTextComponent::keyReleased(const KeyEventPtr e)
+void EditableTextComponent::keyReleased(const KeyEventUnrecPtr e)
 {
 	Inherited::keyReleased(e);
 }
 
-void EditableTextComponent::keyTyped(const KeyEventPtr e)
+void EditableTextComponent::keyTyped(const KeyEventUnrecPtr e)
 {
 	
     if(getEnabled() && getEditable() && !(e->getModifiers() &( KeyEvent::KEY_MODIFIER_ALT | KeyEvent::KEY_MODIFIER_CONTROL | KeyEvent::KEY_MODIFIER_META )))
@@ -173,7 +174,7 @@ void EditableTextComponent::keyTyped(const KeyEventPtr e)
 	Inherited::keyTyped(e);
 }
 
-LayerPtr EditableTextComponent::getDrawnBackground(void) const
+LayerRefPtr EditableTextComponent::getDrawnBackground(void) const
 {
 	if(getEditable())
 	{
@@ -185,7 +186,7 @@ LayerPtr EditableTextComponent::getDrawnBackground(void) const
 	}
 }
 
-LayerPtr EditableTextComponent::getDrawnForeground(void) const
+LayerRefPtr EditableTextComponent::getDrawnForeground(void) const
 {
 	if(getEditable())
 	{
@@ -197,7 +198,7 @@ LayerPtr EditableTextComponent::getDrawnForeground(void) const
 	}
 }
 
-BorderPtr EditableTextComponent::getDrawnBorder(void) const
+BorderRefPtr EditableTextComponent::getDrawnBorder(void) const
 {
     return Inherited::getDrawnBorder();
 }
@@ -215,9 +216,7 @@ void EditableTextComponent::setupCursor(void)
     }
     if(Cursor != getCursor())
     {
-        beginEditCP(EditableTextComponentPtr(this) , CursorFieldMask);
-            setCursor(Cursor);
-        endEditCP(EditableTextComponentPtr(this) , CursorFieldMask);
+        setCursor(Cursor);
     }
 }
 
@@ -238,9 +237,9 @@ void EditableTextComponent::cut(void)
 
 void EditableTextComponent::paste(void)
 {
-    if(getParentWindow() != NullFC && 
-        getParentWindow()->getDrawingSurface() != NullFC &&
-        getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+    if(getParentWindow() != NULL && 
+        getParentWindow()->getDrawingSurface() != NULL &&
+        getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
     {
         write(getParentWindow()->getDrawingSurface()->getEventProducer()->getClipboard());
     }
@@ -270,9 +269,11 @@ EditableTextComponent::~EditableTextComponent(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void EditableTextComponent::changed(BitVector whichField, UInt32 origin)
+void EditableTextComponent::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 
     if((whichField & EnabledFieldMask) || (whichField & EditableFieldMask))
     {
@@ -280,36 +281,10 @@ void EditableTextComponent::changed(BitVector whichField, UInt32 origin)
     }
 }
 
-void EditableTextComponent::dump(      UInt32    , 
+void EditableTextComponent::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump EditableTextComponent NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGEDITABLETEXTCOMPONENTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGEDITABLETEXTCOMPONENTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGEDITABLETEXTCOMPONENTFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

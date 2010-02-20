@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,76 +55,64 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &NegativeLayoutSpringBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 NegativeLayoutSpringBase::getClassTypeId(void) 
+OSG::UInt32 NegativeLayoutSpringBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-NegativeLayoutSpringPtr NegativeLayoutSpringBase::create(void) 
-{
-    NegativeLayoutSpringPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = NegativeLayoutSpringPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-NegativeLayoutSpringPtr NegativeLayoutSpringBase::createEmpty(void) 
-{ 
-    NegativeLayoutSpringPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 NegativeLayoutSpringBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the NegativeLayoutSpring::_sfSpring field.
-inline
-SFLayoutSpringPtr *NegativeLayoutSpringBase::getSFSpring(void)
-{
-    return &_sfSpring;
-}
-
 
 //! Get the value of the NegativeLayoutSpring::_sfSpring field.
 inline
-LayoutSpringPtr &NegativeLayoutSpringBase::getSpring(void)
-{
-    return _sfSpring.getValue();
-}
-
-//! Get the value of the NegativeLayoutSpring::_sfSpring field.
-inline
-const LayoutSpringPtr &NegativeLayoutSpringBase::getSpring(void) const
+LayoutSpring * NegativeLayoutSpringBase::getSpring(void) const
 {
     return _sfSpring.getValue();
 }
 
 //! Set the value of the NegativeLayoutSpring::_sfSpring field.
 inline
-void NegativeLayoutSpringBase::setSpring(const LayoutSpringPtr &value)
+void NegativeLayoutSpringBase::setSpring(LayoutSpring * const value)
 {
+    editSField(SpringFieldMask);
+
     _sfSpring.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void NegativeLayoutSpringBase::execSync (      NegativeLayoutSpringBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGNEGATIVELAYOUTSPRINGBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (SpringFieldMask & whichField))
+        _sfSpring.syncWith(pFrom->_sfSpring);
+}
+#endif
+
+
+inline
+const Char8 *NegativeLayoutSpringBase::getClassname(void)
+{
+    return "NegativeLayoutSpring";
+}
+OSG_GEN_CONTAINERPTR(NegativeLayoutSpring);
+
+OSG_END_NAMESPACE
 

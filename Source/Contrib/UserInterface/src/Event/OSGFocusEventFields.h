@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,64 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/Toolbox/OSGEventFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class FocusEvent;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! FocusEventPtr
+OSG_GEN_CONTAINERPTR(FocusEvent);
 
-typedef FCPtr<EventPtr, FocusEvent> FocusEventPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<FocusEventPtr> : 
-    public FieldTraitsRecurseMapper<FocusEventPtr, true>
+struct FieldTraits<FocusEvent *> :
+    public FieldTraitsFCPtrBase<FocusEvent *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFFocusEventPtr"; }
+    typedef FieldTraits<FocusEvent *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFFocusEventPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFFocusEventPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<FocusEventPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<FocusEvent *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecFocusEventPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<FocusEvent *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecFocusEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<FocusEvent *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakFocusEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<FocusEvent *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdFocusEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<FocusEvent *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecFocusEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<FocusEvent *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecFocusEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<FocusEvent *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakFocusEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<FocusEvent *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdFocusEventPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<FocusEvent *,
+                      RecordedRefCountPolicy  > SFRecFocusEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<FocusEvent *,
+                      UnrecordedRefCountPolicy> SFUnrecFocusEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<FocusEvent *,
+                      WeakRefCountPolicy      > SFWeakFocusEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<FocusEvent *,
+                      NoRefCountPolicy        > SFUncountedFocusEventPtr;
 
-typedef SField<FocusEventPtr> SFFocusEventPtr;
-#endif
 
-#ifndef OSG_COMPILEFOCUSEVENTINST
-OSG_DLLEXPORT_DECL1(SField, FocusEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<FocusEvent *,
+                      RecordedRefCountPolicy  > MFRecFocusEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<FocusEvent *,
+                      UnrecordedRefCountPolicy> MFUnrecFocusEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<FocusEvent *,
+                      WeakRefCountPolicy      > MFWeakFocusEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<FocusEvent *,
+                      NoRefCountPolicy        > MFUncountedFocusEventPtr;
+
+
+
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecFocusEventPtr : 
+    public PointerSField<FocusEvent *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecFocusEventPtr : 
+    public PointerSField<FocusEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakFocusEventPtr :
+    public PointerSField<FocusEvent *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedFocusEventPtr :
+    public PointerSField<FocusEvent *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecFocusEventPtr :
+    public PointerMField<FocusEvent *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecFocusEventPtr :
+    public PointerMField<FocusEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakFocusEventPtr :
+    public PointerMField<FocusEvent *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedFocusEventPtr :
+    public PointerMField<FocusEvent *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

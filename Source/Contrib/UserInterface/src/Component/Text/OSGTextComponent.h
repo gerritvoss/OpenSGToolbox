@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,46 +42,48 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGTextComponentBase.h"
-#include "Event/OSGTextListener.h"
-#include "Event/OSGCaretListener.h"
+#include "OSGUIFont.h"
+#include "OSGTextListener.h"
+#include "OSGCaretListener.h"
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TextComponent class. See \ref 
-           PageUserInterfaceTextComponent for a description.
+/*! \brief TextComponent class. See \ref
+           PageContribUserInterfaceTextComponent for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING TextComponent : public TextComponentBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextComponent : public TextComponentBase
 {
-  private:
-
-    typedef TextComponentBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef TextComponentBase Inherited;
+    typedef TextComponent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
     EventConnection addTextListener(TextListenerPtr Listener);
 	bool isTextListenerAttached(TextListenerPtr Listener) const;
     void removeTextListener(TextListenerPtr Listener);
@@ -90,7 +92,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponent : public TextComponentBase
 	bool isCaretListenerAttached(CaretListenerPtr Listener) const;
     void removeCaretListener(CaretListenerPtr Listener);
 	
-	virtual void keyTyped(const KeyEventPtr e);
+	virtual void keyTyped(const KeyEventUnrecPtr e);
 
     bool hasSelection(void) const;
 	virtual void select(const UInt32& Start,
@@ -116,6 +118,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponent : public TextComponentBase
 
     void copy(void) const;
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in TextComponentBase.
@@ -132,7 +135,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponent : public TextComponentBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TextComponent(void); 
+    virtual ~TextComponent(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
 	UInt32 _TextSelectionStart;
@@ -143,27 +153,25 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponent : public TextComponentBase
     typedef TextListenerSet::const_iterator TextListenerSetConstItor;
 	
     TextListenerSet       _TextListeners;
-    void produceTextValueChanged(const TextEventPtr e);
+    void produceTextValueChanged(const TextEventUnrecPtr e);
 
 	typedef std::set<CaretListenerPtr> CaretListenerSet;
     typedef CaretListenerSet::iterator CaretListenerSetItor;
     typedef CaretListenerSet::const_iterator CaretListenerSetConstItor;
 	
     CaretListenerSet       _CaretListeners;
-    void produceCaretChanged(const CaretEventPtr e);
+    void produceCaretChanged(const CaretEventUnrecPtr e);
 
     virtual Color4f getDrawnTextColor(void) const;
     
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class TextComponentBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const TextComponent &source);
 };
 

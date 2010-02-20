@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -45,81 +45,90 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Container
+ **     class ComponentContainer
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGCONTAINERBASE_H_
-#define _OSGCONTAINERBASE_H_
+#ifndef _OSGCOMPONENTCONTAINERBASE_H_
+#define _OSGCOMPONENTCONTAINERBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include "Component/OSGComponent.h" // Parent
+#include "OSGComponent.h" // Parent
 
-#include "Component/OSGComponent.h" // Children type
-#include "Layout/OSGLayout.h" // Layout type
-#include <OpenSG/OSGVec4fFields.h> // Inset type
+#include "OSGComponentFields.h"         // Children type
+#include "OSGLayoutFields.h"            // Layout type
+#include "OSGVecFields.h"               // Inset type
 
-#include "OSGContainerFields.h"
+#include "OSGComponentContainerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Container;
-class BinaryDataHandler;
+class ComponentContainer;
 
-//! \brief Container Base Class.
+//! \brief ComponentContainer Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING ContainerBase : public Component
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentContainerBase : public Component
 {
-  private:
-
-    typedef Component    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ContainerPtr  Ptr;
+    typedef Component Inherited;
+    typedef Component ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(ComponentContainer);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
         ChildrenFieldId = Inherited::NextFieldId,
-        LayoutFieldId   = ChildrenFieldId + 1,
-        InsetFieldId    = LayoutFieldId   + 1,
-        NextFieldId     = InsetFieldId    + 1
+        LayoutFieldId = ChildrenFieldId + 1,
+        InsetFieldId = LayoutFieldId + 1,
+        NextFieldId = InsetFieldId + 1
     };
 
-    static const OSG::BitVector ChildrenFieldMask;
-    static const OSG::BitVector LayoutFieldMask;
-    static const OSG::BitVector InsetFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector ChildrenFieldMask =
+        (TypeTraits<BitVector>::One << ChildrenFieldId);
+    static const OSG::BitVector LayoutFieldMask =
+        (TypeTraits<BitVector>::One << LayoutFieldId);
+    static const OSG::BitVector InsetFieldMask =
+        (TypeTraits<BitVector>::One << InsetFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef MFUnrecComponentPtr MFChildrenType;
+    typedef SFUnrecLayoutPtr  SFLayoutType;
+    typedef SFVec4f           SFInsetType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -128,131 +137,162 @@ class OSG_USERINTERFACELIB_DLLMAPPING ContainerBase : public Component
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFComponentPtr      *getMFChildren       (void);
-           SFLayoutPtr         *getSFLayout         (void);
-           SFVec4f             *getSFInset          (void);
+            const MFUnrecComponentPtr *getMFChildren       (void) const;
+                  MFUnrecComponentPtr *editMFChildren       (void);
+            const SFUnrecLayoutPtr    *getSFLayout         (void) const;
+                  SFUnrecLayoutPtr    *editSFLayout         (void);
 
-           LayoutPtr           &getLayout         (void);
-     const LayoutPtr           &getLayout         (void) const;
-           Vec4f               &getInset          (void);
-     const Vec4f               &getInset          (void) const;
-           ComponentPtr        &getChildren       (const UInt32 index);
-           MFComponentPtr      &getChildren       (void);
-     const MFComponentPtr      &getChildren       (void) const;
+                  SFVec4f             *editSFInset          (void);
+            const SFVec4f             *getSFInset           (void) const;
+
+
+                  Component * getChildren       (const UInt32 index) const;
+
+                  Layout * getLayout         (void) const;
+
+                  Vec4f               &editInset          (void);
+            const Vec4f               &getInset           (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setLayout         ( const LayoutPtr &value );
-     void setInset          ( const Vec4f &value );
+            void setLayout         (Layout * const value);
+            void setInset          (const Vec4f &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
     /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    void pushToChildren            (Component * const value   );
+    void assignChildren           (const MFUnrecComponentPtr &value);
+    void removeFromChildren (UInt32               uiIndex );
+    void removeObjFromChildren(Component * const value   );
+    void clearChildren              (void                         );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    MFComponentPtr      _mfChildren;
-    SFLayoutPtr         _sfLayout;
-    SFVec4f             _sfInset;
+    MFUnrecComponentPtr _mfChildren;
+    SFUnrecLayoutPtr  _sfLayout;
+    SFVec4f           _sfInset;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    ContainerBase(void);
-    ContainerBase(const ContainerBase &source);
+    ComponentContainerBase(void);
+    ComponentContainerBase(const ComponentContainerBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ContainerBase(void); 
+    virtual ~ComponentContainerBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const ComponentContainer *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleChildren        (void) const;
+    EditFieldHandlePtr editHandleChildren       (void);
+    GetFieldHandlePtr  getHandleLayout          (void) const;
+    EditFieldHandlePtr editHandleLayout         (void);
+    GetFieldHandlePtr  getHandleInset           (void) const;
+    EditFieldHandlePtr editHandleInset          (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ContainerBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      ContainerBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      ComponentContainerBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const ContainerBase &source);
+    void operator =(const ComponentContainerBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
-typedef ContainerBase *ContainerBaseP;
-
-typedef osgIF<ContainerBase::isNodeCore,
-              CoredNodePtr<Container>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ContainerNodePtr;
-
-typedef RefPtr<ContainerPtr> ContainerRefPtr;
+typedef ComponentContainerBase *ComponentContainerBaseP;
 
 OSG_END_NAMESPACE
 
-#define OSGCONTAINERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
-
-#endif /* _OSGCONTAINERBASE_H_ */
+#endif /* _OSGCOMPONENTCONTAINERBASE_H_ */

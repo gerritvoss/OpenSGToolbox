@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,120 +50,125 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILESUMLAYOUTSPRINGINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGSumLayoutSpringBase.h"
 #include "OSGSumLayoutSpring.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector SumLayoutSpringBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::SumLayoutSpring
+    A UI Sum LayoutSpring.
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
 
-FieldContainerType SumLayoutSpringBase::_type(
-    "SumLayoutSpring",
-    "CompoundLayoutSpring",
-    NULL,
-    (PrototypeCreateF) &SumLayoutSpringBase::createEmpty,
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<SumLayoutSpring *>::_type("SumLayoutSpringPtr", "CompoundLayoutSpringPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(SumLayoutSpring *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           SumLayoutSpring *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           SumLayoutSpring *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void SumLayoutSpringBase::classDescInserter(TypeObject &oType)
+{
+}
+
+
+SumLayoutSpringBase::TypeObject SumLayoutSpringBase::_type(
+    SumLayoutSpringBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&SumLayoutSpringBase::createEmptyLocal),
     SumLayoutSpring::initMethod,
-    NULL,
-    0);
+    SumLayoutSpring::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&SumLayoutSpring::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"SumLayoutSpring\"\n"
+    "\tparent=\"CompoundLayoutSpring\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Sum LayoutSpring.\n"
+    "</FieldContainer>\n",
+    "A UI Sum LayoutSpring.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(SumLayoutSpringBase, SumLayoutSpringPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &SumLayoutSpringBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &SumLayoutSpringBase::getType(void) const 
+FieldContainerType &SumLayoutSpringBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr SumLayoutSpringBase::shallowCopy(void) const 
-{ 
-    SumLayoutSpringPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const SumLayoutSpring *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 SumLayoutSpringBase::getContainerSize(void) const 
-{ 
-    return sizeof(SumLayoutSpring); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void SumLayoutSpringBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &SumLayoutSpringBase::getType(void) const
 {
-    this->executeSyncImpl((SumLayoutSpringBase *) &other, whichField);
+    return _type;
 }
-#else
-void SumLayoutSpringBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 SumLayoutSpringBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((SumLayoutSpringBase *) &other, whichField, sInfo);
-}
-void SumLayoutSpringBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(SumLayoutSpring);
 }
 
-void SumLayoutSpringBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-SumLayoutSpringBase::SumLayoutSpringBase(void) :
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-SumLayoutSpringBase::SumLayoutSpringBase(const SumLayoutSpringBase &source) :
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-SumLayoutSpringBase::~SumLayoutSpringBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 SumLayoutSpringBase::getBinSize(const BitVector &whichField)
+UInt32 SumLayoutSpringBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -171,88 +176,198 @@ UInt32 SumLayoutSpringBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void SumLayoutSpringBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void SumLayoutSpringBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-
 }
 
-void SumLayoutSpringBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void SumLayoutSpringBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void SumLayoutSpringBase::executeSyncImpl(      SumLayoutSpringBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+SumLayoutSpringTransitPtr SumLayoutSpringBase::createLocal(BitVector bFlags)
 {
+    SumLayoutSpringTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
+        fc = dynamic_pointer_cast<SumLayoutSpring>(tmpPtr);
+    }
 
-}
-#else
-void SumLayoutSpringBase::executeSyncImpl(      SumLayoutSpringBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
+    return fc;
 }
 
-void SumLayoutSpringBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+SumLayoutSpringTransitPtr SumLayoutSpringBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    SumLayoutSpringTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<SumLayoutSpring>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+SumLayoutSpringTransitPtr SumLayoutSpringBase::create(void)
+{
+    SumLayoutSpringTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<SumLayoutSpring>(tmpPtr);
+    }
+
+    return fc;
+}
+
+SumLayoutSpring *SumLayoutSpringBase::createEmptyLocal(BitVector bFlags)
+{
+    SumLayoutSpring *returnValue;
+
+    newPtr<SumLayoutSpring>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+SumLayoutSpring *SumLayoutSpringBase::createEmpty(void)
+{
+    SumLayoutSpring *returnValue;
+
+    newPtr<SumLayoutSpring>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr SumLayoutSpringBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    SumLayoutSpring *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const SumLayoutSpring *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr SumLayoutSpringBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    SumLayoutSpring *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const SumLayoutSpring *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr SumLayoutSpringBase::shallowCopy(void) const
+{
+    SumLayoutSpring *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const SumLayoutSpring *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+SumLayoutSpringBase::SumLayoutSpringBase(void) :
+    Inherited()
+{
+}
+
+SumLayoutSpringBase::SumLayoutSpringBase(const SumLayoutSpringBase &source) :
+    Inherited(source)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+SumLayoutSpringBase::~SumLayoutSpringBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void SumLayoutSpringBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    SumLayoutSpring *pThis = static_cast<SumLayoutSpring *>(this);
+
+    pThis->execSync(static_cast<SumLayoutSpring *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *SumLayoutSpringBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    SumLayoutSpring *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const SumLayoutSpring *>(pRefAspect),
+                  dynamic_cast<const SumLayoutSpring *>(this));
+
+    return returnValue;
+}
+#endif
+
+void SumLayoutSpringBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<SumLayoutSpringPtr>::_type("SumLayoutSpringPtr", "CompoundLayoutSpringPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(SumLayoutSpringPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(SumLayoutSpringPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGSUMLAYOUTSPRINGBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSUMLAYOUTSPRINGBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSUMLAYOUTSPRINGFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

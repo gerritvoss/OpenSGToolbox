@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGToggleButtonFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class CheckboxButton;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! CheckboxButtonPtr
+OSG_GEN_CONTAINERPTR(CheckboxButton);
 
-typedef FCPtr<ToggleButtonPtr, CheckboxButton> CheckboxButtonPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<CheckboxButtonPtr> : 
-    public FieldTraitsRecurseMapper<CheckboxButtonPtr, true>
+struct FieldTraits<CheckboxButton *> :
+    public FieldTraitsFCPtrBase<CheckboxButton *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFCheckboxButtonPtr"; }
-    static const char *getMName(void) { return "MFCheckboxButtonPtr"; }
+    typedef FieldTraits<CheckboxButton *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFCheckboxButtonPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFCheckboxButtonPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<CheckboxButtonPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<CheckboxButton *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecCheckboxButtonPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<CheckboxButton *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecCheckboxButtonPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CheckboxButton *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakCheckboxButtonPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CheckboxButton *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdCheckboxButtonPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CheckboxButton *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecCheckboxButtonPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CheckboxButton *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecCheckboxButtonPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CheckboxButton *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakCheckboxButtonPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CheckboxButton *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdCheckboxButtonPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<CheckboxButton *,
+                      RecordedRefCountPolicy  > SFRecCheckboxButtonPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<CheckboxButton *,
+                      UnrecordedRefCountPolicy> SFUnrecCheckboxButtonPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<CheckboxButton *,
+                      WeakRefCountPolicy      > SFWeakCheckboxButtonPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<CheckboxButton *,
+                      NoRefCountPolicy        > SFUncountedCheckboxButtonPtr;
 
-typedef SField<CheckboxButtonPtr> SFCheckboxButtonPtr;
-#endif
 
-#ifndef OSG_COMPILECHECKBOXBUTTONINST
-OSG_DLLEXPORT_DECL1(SField, CheckboxButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<CheckboxButton *,
+                      RecordedRefCountPolicy  > MFRecCheckboxButtonPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<CheckboxButton *,
+                      UnrecordedRefCountPolicy> MFUnrecCheckboxButtonPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<CheckboxButton *,
+                      WeakRefCountPolicy      > MFWeakCheckboxButtonPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<CheckboxButton *,
+                      NoRefCountPolicy        > MFUncountedCheckboxButtonPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<CheckboxButtonPtr> MFCheckboxButtonPtr;
-#endif
 
-#ifndef OSG_COMPILECHECKBOXBUTTONINST
-OSG_DLLEXPORT_DECL1(MField, CheckboxButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecCheckboxButtonPtr : 
+    public PointerSField<CheckboxButton *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecCheckboxButtonPtr : 
+    public PointerSField<CheckboxButton *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakCheckboxButtonPtr :
+    public PointerSField<CheckboxButton *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedCheckboxButtonPtr :
+    public PointerSField<CheckboxButton *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecCheckboxButtonPtr :
+    public PointerMField<CheckboxButton *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecCheckboxButtonPtr :
+    public PointerMField<CheckboxButton *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakCheckboxButtonPtr :
+    public PointerMField<CheckboxButton *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedCheckboxButtonPtr :
+    public PointerMField<CheckboxButton *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGCHECKBOXBUTTONFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGCHECKBOXBUTTONFIELDS_H_ */

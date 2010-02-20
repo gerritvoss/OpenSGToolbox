@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,285 +50,596 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEDEFAULTLISTCOMPONENTGENERATORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGComponent.h"               // DrawObjectPrototype Class
+#include "OSGLayer.h"                   // SelectedBackground Class
+#include "OSGBorder.h"                  // SelectedBorder Class
 
 #include "OSGDefaultListComponentGeneratorBase.h"
 #include "OSGDefaultListComponentGenerator.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  DefaultListComponentGeneratorBase::DrawObjectPrototypeFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultListComponentGeneratorBase::DrawObjectPrototypeFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  DefaultListComponentGeneratorBase::SelectedBackgroundFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultListComponentGeneratorBase::SelectedBackgroundFieldId);
+/*! \class OSG::DefaultListComponentGenerator
+    A UI Default List ComponentGenerator.
+ */
 
-const OSG::BitVector  DefaultListComponentGeneratorBase::FocusedBackgroundFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultListComponentGeneratorBase::FocusedBackgroundFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  DefaultListComponentGeneratorBase::SelectedForegroundFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultListComponentGeneratorBase::SelectedForegroundFieldId);
-
-const OSG::BitVector  DefaultListComponentGeneratorBase::FocusedForegroundFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultListComponentGeneratorBase::FocusedForegroundFieldId);
-
-const OSG::BitVector  DefaultListComponentGeneratorBase::SelectedBorderFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultListComponentGeneratorBase::SelectedBorderFieldId);
-
-const OSG::BitVector  DefaultListComponentGeneratorBase::FocusedBorderFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultListComponentGeneratorBase::FocusedBorderFieldId);
-
-const OSG::BitVector  DefaultListComponentGeneratorBase::SelectedTextColorFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultListComponentGeneratorBase::SelectedTextColorFieldId);
-
-const OSG::BitVector  DefaultListComponentGeneratorBase::FocusedTextColorFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultListComponentGeneratorBase::FocusedTextColorFieldId);
-
-const OSG::BitVector  DefaultListComponentGeneratorBase::FocusedTextColorHasPriorityFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultListComponentGeneratorBase::FocusedTextColorHasPriorityFieldId);
-
-const OSG::BitVector  DefaultListComponentGeneratorBase::FocusedBorderHasPriorityFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultListComponentGeneratorBase::FocusedBorderHasPriorityFieldId);
-
-const OSG::BitVector  DefaultListComponentGeneratorBase::FocusedBackgroundHasPriorityFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultListComponentGeneratorBase::FocusedBackgroundHasPriorityFieldId);
-
-const OSG::BitVector DefaultListComponentGeneratorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var ComponentPtr    DefaultListComponentGeneratorBase::_sfDrawObjectPrototype
+/*! \var Component *     DefaultListComponentGeneratorBase::_sfDrawObjectPrototype
     
 */
-/*! \var LayerPtr        DefaultListComponentGeneratorBase::_sfSelectedBackground
+
+/*! \var Layer *         DefaultListComponentGeneratorBase::_sfSelectedBackground
     
 */
-/*! \var LayerPtr        DefaultListComponentGeneratorBase::_sfFocusedBackground
+
+/*! \var Layer *         DefaultListComponentGeneratorBase::_sfFocusedBackground
     
 */
-/*! \var LayerPtr        DefaultListComponentGeneratorBase::_sfSelectedForeground
+
+/*! \var Layer *         DefaultListComponentGeneratorBase::_sfSelectedForeground
     
 */
-/*! \var LayerPtr        DefaultListComponentGeneratorBase::_sfFocusedForeground
+
+/*! \var Layer *         DefaultListComponentGeneratorBase::_sfFocusedForeground
     
 */
-/*! \var BorderPtr       DefaultListComponentGeneratorBase::_sfSelectedBorder
+
+/*! \var Border *        DefaultListComponentGeneratorBase::_sfSelectedBorder
     
 */
-/*! \var BorderPtr       DefaultListComponentGeneratorBase::_sfFocusedBorder
+
+/*! \var Border *        DefaultListComponentGeneratorBase::_sfFocusedBorder
     
 */
+
 /*! \var Color4f         DefaultListComponentGeneratorBase::_sfSelectedTextColor
     
 */
+
 /*! \var Color4f         DefaultListComponentGeneratorBase::_sfFocusedTextColor
     
 */
+
 /*! \var bool            DefaultListComponentGeneratorBase::_sfFocusedTextColorHasPriority
     
 */
+
 /*! \var bool            DefaultListComponentGeneratorBase::_sfFocusedBorderHasPriority
     
 */
+
 /*! \var bool            DefaultListComponentGeneratorBase::_sfFocusedBackgroundHasPriority
     
 */
 
-//! DefaultListComponentGenerator description
 
-FieldDescription *DefaultListComponentGeneratorBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<DefaultListComponentGenerator *>::_type("DefaultListComponentGeneratorPtr", "ListComponentGeneratorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(DefaultListComponentGenerator *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           DefaultListComponentGenerator *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           DefaultListComponentGenerator *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void DefaultListComponentGeneratorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFComponentPtr::getClassType(), 
-                     "DrawObjectPrototype", 
-                     DrawObjectPrototypeFieldId, DrawObjectPrototypeFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultListComponentGeneratorBase::getSFDrawObjectPrototype),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "SelectedBackground", 
-                     SelectedBackgroundFieldId, SelectedBackgroundFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultListComponentGeneratorBase::getSFSelectedBackground),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "FocusedBackground", 
-                     FocusedBackgroundFieldId, FocusedBackgroundFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultListComponentGeneratorBase::getSFFocusedBackground),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "SelectedForeground", 
-                     SelectedForegroundFieldId, SelectedForegroundFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultListComponentGeneratorBase::getSFSelectedForeground),
-    new FieldDescription(SFLayerPtr::getClassType(), 
-                     "FocusedForeground", 
-                     FocusedForegroundFieldId, FocusedForegroundFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultListComponentGeneratorBase::getSFFocusedForeground),
-    new FieldDescription(SFBorderPtr::getClassType(), 
-                     "SelectedBorder", 
-                     SelectedBorderFieldId, SelectedBorderFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultListComponentGeneratorBase::getSFSelectedBorder),
-    new FieldDescription(SFBorderPtr::getClassType(), 
-                     "FocusedBorder", 
-                     FocusedBorderFieldId, FocusedBorderFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultListComponentGeneratorBase::getSFFocusedBorder),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "SelectedTextColor", 
-                     SelectedTextColorFieldId, SelectedTextColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultListComponentGeneratorBase::getSFSelectedTextColor),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "FocusedTextColor", 
-                     FocusedTextColorFieldId, FocusedTextColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultListComponentGeneratorBase::getSFFocusedTextColor),
-    new FieldDescription(SFBool::getClassType(), 
-                     "FocusedTextColorHasPriority", 
-                     FocusedTextColorHasPriorityFieldId, FocusedTextColorHasPriorityFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultListComponentGeneratorBase::getSFFocusedTextColorHasPriority),
-    new FieldDescription(SFBool::getClassType(), 
-                     "FocusedBorderHasPriority", 
-                     FocusedBorderHasPriorityFieldId, FocusedBorderHasPriorityFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultListComponentGeneratorBase::getSFFocusedBorderHasPriority),
-    new FieldDescription(SFBool::getClassType(), 
-                     "FocusedBackgroundHasPriority", 
-                     FocusedBackgroundHasPriorityFieldId, FocusedBackgroundHasPriorityFieldMask,
-                     false,
-                     (FieldAccessMethod) &DefaultListComponentGeneratorBase::getSFFocusedBackgroundHasPriority)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType DefaultListComponentGeneratorBase::_type(
-    "DefaultListComponentGenerator",
-    "ListComponentGenerator",
-    NULL,
-    (PrototypeCreateF) &DefaultListComponentGeneratorBase::createEmpty,
+    pDesc = new SFUnrecComponentPtr::Description(
+        SFUnrecComponentPtr::getClassType(),
+        "DrawObjectPrototype",
+        "",
+        DrawObjectPrototypeFieldId, DrawObjectPrototypeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultListComponentGenerator::editHandleDrawObjectPrototype),
+        static_cast<FieldGetMethodSig >(&DefaultListComponentGenerator::getHandleDrawObjectPrototype));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "SelectedBackground",
+        "",
+        SelectedBackgroundFieldId, SelectedBackgroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultListComponentGenerator::editHandleSelectedBackground),
+        static_cast<FieldGetMethodSig >(&DefaultListComponentGenerator::getHandleSelectedBackground));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "FocusedBackground",
+        "",
+        FocusedBackgroundFieldId, FocusedBackgroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultListComponentGenerator::editHandleFocusedBackground),
+        static_cast<FieldGetMethodSig >(&DefaultListComponentGenerator::getHandleFocusedBackground));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "SelectedForeground",
+        "",
+        SelectedForegroundFieldId, SelectedForegroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultListComponentGenerator::editHandleSelectedForeground),
+        static_cast<FieldGetMethodSig >(&DefaultListComponentGenerator::getHandleSelectedForeground));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "FocusedForeground",
+        "",
+        FocusedForegroundFieldId, FocusedForegroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultListComponentGenerator::editHandleFocusedForeground),
+        static_cast<FieldGetMethodSig >(&DefaultListComponentGenerator::getHandleFocusedForeground));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecBorderPtr::Description(
+        SFUnrecBorderPtr::getClassType(),
+        "SelectedBorder",
+        "",
+        SelectedBorderFieldId, SelectedBorderFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultListComponentGenerator::editHandleSelectedBorder),
+        static_cast<FieldGetMethodSig >(&DefaultListComponentGenerator::getHandleSelectedBorder));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecBorderPtr::Description(
+        SFUnrecBorderPtr::getClassType(),
+        "FocusedBorder",
+        "",
+        FocusedBorderFieldId, FocusedBorderFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultListComponentGenerator::editHandleFocusedBorder),
+        static_cast<FieldGetMethodSig >(&DefaultListComponentGenerator::getHandleFocusedBorder));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "SelectedTextColor",
+        "",
+        SelectedTextColorFieldId, SelectedTextColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultListComponentGenerator::editHandleSelectedTextColor),
+        static_cast<FieldGetMethodSig >(&DefaultListComponentGenerator::getHandleSelectedTextColor));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "FocusedTextColor",
+        "",
+        FocusedTextColorFieldId, FocusedTextColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultListComponentGenerator::editHandleFocusedTextColor),
+        static_cast<FieldGetMethodSig >(&DefaultListComponentGenerator::getHandleFocusedTextColor));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "FocusedTextColorHasPriority",
+        "",
+        FocusedTextColorHasPriorityFieldId, FocusedTextColorHasPriorityFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultListComponentGenerator::editHandleFocusedTextColorHasPriority),
+        static_cast<FieldGetMethodSig >(&DefaultListComponentGenerator::getHandleFocusedTextColorHasPriority));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "FocusedBorderHasPriority",
+        "",
+        FocusedBorderHasPriorityFieldId, FocusedBorderHasPriorityFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultListComponentGenerator::editHandleFocusedBorderHasPriority),
+        static_cast<FieldGetMethodSig >(&DefaultListComponentGenerator::getHandleFocusedBorderHasPriority));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "FocusedBackgroundHasPriority",
+        "",
+        FocusedBackgroundHasPriorityFieldId, FocusedBackgroundHasPriorityFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultListComponentGenerator::editHandleFocusedBackgroundHasPriority),
+        static_cast<FieldGetMethodSig >(&DefaultListComponentGenerator::getHandleFocusedBackgroundHasPriority));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+DefaultListComponentGeneratorBase::TypeObject DefaultListComponentGeneratorBase::_type(
+    DefaultListComponentGeneratorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&DefaultListComponentGeneratorBase::createEmptyLocal),
     DefaultListComponentGenerator::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(DefaultListComponentGeneratorBase, DefaultListComponentGeneratorPtr)
+    DefaultListComponentGenerator::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&DefaultListComponentGenerator::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"DefaultListComponentGenerator\"\n"
+    "\tparent=\"ListComponentGenerator\"\n"
+    "\tlibrary=\"ContribUserInterface\"\n"
+    "\tpointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "\tsystemcomponent=\"true\"\n"
+    "\tparentsystemcomponent=\"true\"\n"
+    "\tdecoratable=\"false\"\n"
+    "\tuseLocalIncludes=\"false\"\n"
+    "\tisNodeCore=\"false\"\n"
+    "\tauthors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Default List ComponentGenerator.\n"
+    "\t<Field\n"
+    "\t\tname=\"DrawObjectPrototype\"\n"
+    "\t\ttype=\"Component\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SelectedBackground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FocusedBackground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SelectedForeground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FocusedForeground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SelectedBorder\"\n"
+    "\t\ttype=\"Border\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FocusedBorder\"\n"
+    "\t\ttype=\"Border\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SelectedTextColor\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FocusedTextColor\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FocusedTextColorHasPriority\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"true\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FocusedBorderHasPriority\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"true\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FocusedBackgroundHasPriority\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"true\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI Default List ComponentGenerator.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &DefaultListComponentGeneratorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &DefaultListComponentGeneratorBase::getType(void) const 
+FieldContainerType &DefaultListComponentGeneratorBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr DefaultListComponentGeneratorBase::shallowCopy(void) const 
-{ 
-    DefaultListComponentGeneratorPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const DefaultListComponentGenerator *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 DefaultListComponentGeneratorBase::getContainerSize(void) const 
-{ 
-    return sizeof(DefaultListComponentGenerator); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DefaultListComponentGeneratorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &DefaultListComponentGeneratorBase::getType(void) const
 {
-    this->executeSyncImpl((DefaultListComponentGeneratorBase *) &other, whichField);
+    return _type;
 }
-#else
-void DefaultListComponentGeneratorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 DefaultListComponentGeneratorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((DefaultListComponentGeneratorBase *) &other, whichField, sInfo);
+    return sizeof(DefaultListComponentGenerator);
 }
-void DefaultListComponentGeneratorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the DefaultListComponentGenerator::_sfDrawObjectPrototype field.
+const SFUnrecComponentPtr *DefaultListComponentGeneratorBase::getSFDrawObjectPrototype(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfDrawObjectPrototype;
 }
 
-void DefaultListComponentGeneratorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecComponentPtr *DefaultListComponentGeneratorBase::editSFDrawObjectPrototype(void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(DrawObjectPrototypeFieldMask);
 
+    return &_sfDrawObjectPrototype;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-DefaultListComponentGeneratorBase::DefaultListComponentGeneratorBase(void) :
-    _sfDrawObjectPrototype    (ComponentPtr(NullFC)), 
-    _sfSelectedBackground     (LayerPtr(NullFC)), 
-    _sfFocusedBackground      (LayerPtr(NullFC)), 
-    _sfSelectedForeground     (LayerPtr(NullFC)), 
-    _sfFocusedForeground      (LayerPtr(NullFC)), 
-    _sfSelectedBorder         (BorderPtr(NullFC)), 
-    _sfFocusedBorder          (BorderPtr(NullFC)), 
-    _sfSelectedTextColor      (Color4f(0.0,0.0,0.0,1.0)), 
-    _sfFocusedTextColor       (Color4f(0.0,0.0,0.0,1.0)), 
-    _sfFocusedTextColorHasPriority(bool(true)), 
-    _sfFocusedBorderHasPriority(bool(true)), 
-    _sfFocusedBackgroundHasPriority(bool(true)), 
-    Inherited() 
+//! Get the DefaultListComponentGenerator::_sfSelectedBackground field.
+const SFUnrecLayerPtr *DefaultListComponentGeneratorBase::getSFSelectedBackground(void) const
 {
+    return &_sfSelectedBackground;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-DefaultListComponentGeneratorBase::DefaultListComponentGeneratorBase(const DefaultListComponentGeneratorBase &source) :
-    _sfDrawObjectPrototype    (source._sfDrawObjectPrototype    ), 
-    _sfSelectedBackground     (source._sfSelectedBackground     ), 
-    _sfFocusedBackground      (source._sfFocusedBackground      ), 
-    _sfSelectedForeground     (source._sfSelectedForeground     ), 
-    _sfFocusedForeground      (source._sfFocusedForeground      ), 
-    _sfSelectedBorder         (source._sfSelectedBorder         ), 
-    _sfFocusedBorder          (source._sfFocusedBorder          ), 
-    _sfSelectedTextColor      (source._sfSelectedTextColor      ), 
-    _sfFocusedTextColor       (source._sfFocusedTextColor       ), 
-    _sfFocusedTextColorHasPriority(source._sfFocusedTextColorHasPriority), 
-    _sfFocusedBorderHasPriority(source._sfFocusedBorderHasPriority), 
-    _sfFocusedBackgroundHasPriority(source._sfFocusedBackgroundHasPriority), 
-    Inherited                 (source)
+SFUnrecLayerPtr     *DefaultListComponentGeneratorBase::editSFSelectedBackground(void)
 {
+    editSField(SelectedBackgroundFieldMask);
+
+    return &_sfSelectedBackground;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-DefaultListComponentGeneratorBase::~DefaultListComponentGeneratorBase(void)
+//! Get the DefaultListComponentGenerator::_sfFocusedBackground field.
+const SFUnrecLayerPtr *DefaultListComponentGeneratorBase::getSFFocusedBackground(void) const
 {
+    return &_sfFocusedBackground;
 }
+
+SFUnrecLayerPtr     *DefaultListComponentGeneratorBase::editSFFocusedBackground(void)
+{
+    editSField(FocusedBackgroundFieldMask);
+
+    return &_sfFocusedBackground;
+}
+
+//! Get the DefaultListComponentGenerator::_sfSelectedForeground field.
+const SFUnrecLayerPtr *DefaultListComponentGeneratorBase::getSFSelectedForeground(void) const
+{
+    return &_sfSelectedForeground;
+}
+
+SFUnrecLayerPtr     *DefaultListComponentGeneratorBase::editSFSelectedForeground(void)
+{
+    editSField(SelectedForegroundFieldMask);
+
+    return &_sfSelectedForeground;
+}
+
+//! Get the DefaultListComponentGenerator::_sfFocusedForeground field.
+const SFUnrecLayerPtr *DefaultListComponentGeneratorBase::getSFFocusedForeground(void) const
+{
+    return &_sfFocusedForeground;
+}
+
+SFUnrecLayerPtr     *DefaultListComponentGeneratorBase::editSFFocusedForeground(void)
+{
+    editSField(FocusedForegroundFieldMask);
+
+    return &_sfFocusedForeground;
+}
+
+//! Get the DefaultListComponentGenerator::_sfSelectedBorder field.
+const SFUnrecBorderPtr *DefaultListComponentGeneratorBase::getSFSelectedBorder(void) const
+{
+    return &_sfSelectedBorder;
+}
+
+SFUnrecBorderPtr    *DefaultListComponentGeneratorBase::editSFSelectedBorder (void)
+{
+    editSField(SelectedBorderFieldMask);
+
+    return &_sfSelectedBorder;
+}
+
+//! Get the DefaultListComponentGenerator::_sfFocusedBorder field.
+const SFUnrecBorderPtr *DefaultListComponentGeneratorBase::getSFFocusedBorder(void) const
+{
+    return &_sfFocusedBorder;
+}
+
+SFUnrecBorderPtr    *DefaultListComponentGeneratorBase::editSFFocusedBorder  (void)
+{
+    editSField(FocusedBorderFieldMask);
+
+    return &_sfFocusedBorder;
+}
+
+SFColor4f *DefaultListComponentGeneratorBase::editSFSelectedTextColor(void)
+{
+    editSField(SelectedTextColorFieldMask);
+
+    return &_sfSelectedTextColor;
+}
+
+const SFColor4f *DefaultListComponentGeneratorBase::getSFSelectedTextColor(void) const
+{
+    return &_sfSelectedTextColor;
+}
+
+
+SFColor4f *DefaultListComponentGeneratorBase::editSFFocusedTextColor(void)
+{
+    editSField(FocusedTextColorFieldMask);
+
+    return &_sfFocusedTextColor;
+}
+
+const SFColor4f *DefaultListComponentGeneratorBase::getSFFocusedTextColor(void) const
+{
+    return &_sfFocusedTextColor;
+}
+
+
+SFBool *DefaultListComponentGeneratorBase::editSFFocusedTextColorHasPriority(void)
+{
+    editSField(FocusedTextColorHasPriorityFieldMask);
+
+    return &_sfFocusedTextColorHasPriority;
+}
+
+const SFBool *DefaultListComponentGeneratorBase::getSFFocusedTextColorHasPriority(void) const
+{
+    return &_sfFocusedTextColorHasPriority;
+}
+
+
+SFBool *DefaultListComponentGeneratorBase::editSFFocusedBorderHasPriority(void)
+{
+    editSField(FocusedBorderHasPriorityFieldMask);
+
+    return &_sfFocusedBorderHasPriority;
+}
+
+const SFBool *DefaultListComponentGeneratorBase::getSFFocusedBorderHasPriority(void) const
+{
+    return &_sfFocusedBorderHasPriority;
+}
+
+
+SFBool *DefaultListComponentGeneratorBase::editSFFocusedBackgroundHasPriority(void)
+{
+    editSField(FocusedBackgroundHasPriorityFieldMask);
+
+    return &_sfFocusedBackgroundHasPriority;
+}
+
+const SFBool *DefaultListComponentGeneratorBase::getSFFocusedBackgroundHasPriority(void) const
+{
+    return &_sfFocusedBackgroundHasPriority;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 DefaultListComponentGeneratorBase::getBinSize(const BitVector &whichField)
+UInt32 DefaultListComponentGeneratorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -336,68 +647,56 @@ UInt32 DefaultListComponentGeneratorBase::getBinSize(const BitVector &whichField
     {
         returnValue += _sfDrawObjectPrototype.getBinSize();
     }
-
     if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
     {
         returnValue += _sfSelectedBackground.getBinSize();
     }
-
     if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
     {
         returnValue += _sfFocusedBackground.getBinSize();
     }
-
     if(FieldBits::NoField != (SelectedForegroundFieldMask & whichField))
     {
         returnValue += _sfSelectedForeground.getBinSize();
     }
-
     if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
     {
         returnValue += _sfFocusedForeground.getBinSize();
     }
-
     if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
     {
         returnValue += _sfSelectedBorder.getBinSize();
     }
-
     if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
     {
         returnValue += _sfFocusedBorder.getBinSize();
     }
-
     if(FieldBits::NoField != (SelectedTextColorFieldMask & whichField))
     {
         returnValue += _sfSelectedTextColor.getBinSize();
     }
-
     if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
     {
         returnValue += _sfFocusedTextColor.getBinSize();
     }
-
     if(FieldBits::NoField != (FocusedTextColorHasPriorityFieldMask & whichField))
     {
         returnValue += _sfFocusedTextColorHasPriority.getBinSize();
     }
-
     if(FieldBits::NoField != (FocusedBorderHasPriorityFieldMask & whichField))
     {
         returnValue += _sfFocusedBorderHasPriority.getBinSize();
     }
-
     if(FieldBits::NoField != (FocusedBackgroundHasPriorityFieldMask & whichField))
     {
         returnValue += _sfFocusedBackgroundHasPriority.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void DefaultListComponentGeneratorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void DefaultListComponentGeneratorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -405,67 +704,54 @@ void DefaultListComponentGeneratorBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfDrawObjectPrototype.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
     {
         _sfSelectedBackground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
     {
         _sfFocusedBackground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectedForegroundFieldMask & whichField))
     {
         _sfSelectedForeground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
     {
         _sfFocusedForeground.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
     {
         _sfSelectedBorder.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
     {
         _sfFocusedBorder.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectedTextColorFieldMask & whichField))
     {
         _sfSelectedTextColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
     {
         _sfFocusedTextColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedTextColorHasPriorityFieldMask & whichField))
     {
         _sfFocusedTextColorHasPriority.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedBorderHasPriorityFieldMask & whichField))
     {
         _sfFocusedBorderHasPriority.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedBackgroundHasPriorityFieldMask & whichField))
     {
         _sfFocusedBackgroundHasPriority.copyToBin(pMem);
     }
-
-
 }
 
-void DefaultListComponentGeneratorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void DefaultListComponentGeneratorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -473,203 +759,612 @@ void DefaultListComponentGeneratorBase::copyFromBin(      BinaryDataHandler &pMe
     {
         _sfDrawObjectPrototype.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
     {
         _sfSelectedBackground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
     {
         _sfFocusedBackground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectedForegroundFieldMask & whichField))
     {
         _sfSelectedForeground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
     {
         _sfFocusedForeground.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
     {
         _sfSelectedBorder.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
     {
         _sfFocusedBorder.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectedTextColorFieldMask & whichField))
     {
         _sfSelectedTextColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
     {
         _sfFocusedTextColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedTextColorHasPriorityFieldMask & whichField))
     {
         _sfFocusedTextColorHasPriority.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedBorderHasPriorityFieldMask & whichField))
     {
         _sfFocusedBorderHasPriority.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FocusedBackgroundHasPriorityFieldMask & whichField))
     {
         _sfFocusedBackgroundHasPriority.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void DefaultListComponentGeneratorBase::executeSyncImpl(      DefaultListComponentGeneratorBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+DefaultListComponentGeneratorTransitPtr DefaultListComponentGeneratorBase::createLocal(BitVector bFlags)
 {
+    DefaultListComponentGeneratorTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (DrawObjectPrototypeFieldMask & whichField))
-        _sfDrawObjectPrototype.syncWith(pOther->_sfDrawObjectPrototype);
+        fc = dynamic_pointer_cast<DefaultListComponentGenerator>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
-        _sfSelectedBackground.syncWith(pOther->_sfSelectedBackground);
-
-    if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
-        _sfFocusedBackground.syncWith(pOther->_sfFocusedBackground);
-
-    if(FieldBits::NoField != (SelectedForegroundFieldMask & whichField))
-        _sfSelectedForeground.syncWith(pOther->_sfSelectedForeground);
-
-    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
-        _sfFocusedForeground.syncWith(pOther->_sfFocusedForeground);
-
-    if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
-        _sfSelectedBorder.syncWith(pOther->_sfSelectedBorder);
-
-    if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
-        _sfFocusedBorder.syncWith(pOther->_sfFocusedBorder);
-
-    if(FieldBits::NoField != (SelectedTextColorFieldMask & whichField))
-        _sfSelectedTextColor.syncWith(pOther->_sfSelectedTextColor);
-
-    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
-        _sfFocusedTextColor.syncWith(pOther->_sfFocusedTextColor);
-
-    if(FieldBits::NoField != (FocusedTextColorHasPriorityFieldMask & whichField))
-        _sfFocusedTextColorHasPriority.syncWith(pOther->_sfFocusedTextColorHasPriority);
-
-    if(FieldBits::NoField != (FocusedBorderHasPriorityFieldMask & whichField))
-        _sfFocusedBorderHasPriority.syncWith(pOther->_sfFocusedBorderHasPriority);
-
-    if(FieldBits::NoField != (FocusedBackgroundHasPriorityFieldMask & whichField))
-        _sfFocusedBackgroundHasPriority.syncWith(pOther->_sfFocusedBackgroundHasPriority);
-
-
-}
-#else
-void DefaultListComponentGeneratorBase::executeSyncImpl(      DefaultListComponentGeneratorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (DrawObjectPrototypeFieldMask & whichField))
-        _sfDrawObjectPrototype.syncWith(pOther->_sfDrawObjectPrototype);
-
-    if(FieldBits::NoField != (SelectedBackgroundFieldMask & whichField))
-        _sfSelectedBackground.syncWith(pOther->_sfSelectedBackground);
-
-    if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
-        _sfFocusedBackground.syncWith(pOther->_sfFocusedBackground);
-
-    if(FieldBits::NoField != (SelectedForegroundFieldMask & whichField))
-        _sfSelectedForeground.syncWith(pOther->_sfSelectedForeground);
-
-    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
-        _sfFocusedForeground.syncWith(pOther->_sfFocusedForeground);
-
-    if(FieldBits::NoField != (SelectedBorderFieldMask & whichField))
-        _sfSelectedBorder.syncWith(pOther->_sfSelectedBorder);
-
-    if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
-        _sfFocusedBorder.syncWith(pOther->_sfFocusedBorder);
-
-    if(FieldBits::NoField != (SelectedTextColorFieldMask & whichField))
-        _sfSelectedTextColor.syncWith(pOther->_sfSelectedTextColor);
-
-    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
-        _sfFocusedTextColor.syncWith(pOther->_sfFocusedTextColor);
-
-    if(FieldBits::NoField != (FocusedTextColorHasPriorityFieldMask & whichField))
-        _sfFocusedTextColorHasPriority.syncWith(pOther->_sfFocusedTextColorHasPriority);
-
-    if(FieldBits::NoField != (FocusedBorderHasPriorityFieldMask & whichField))
-        _sfFocusedBorderHasPriority.syncWith(pOther->_sfFocusedBorderHasPriority);
-
-    if(FieldBits::NoField != (FocusedBackgroundHasPriorityFieldMask & whichField))
-        _sfFocusedBackgroundHasPriority.syncWith(pOther->_sfFocusedBackgroundHasPriority);
-
-
-
+    return fc;
 }
 
-void DefaultListComponentGeneratorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+DefaultListComponentGeneratorTransitPtr DefaultListComponentGeneratorBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    DefaultListComponentGeneratorTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<DefaultListComponentGenerator>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+DefaultListComponentGeneratorTransitPtr DefaultListComponentGeneratorBase::create(void)
+{
+    DefaultListComponentGeneratorTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<DefaultListComponentGenerator>(tmpPtr);
+    }
+
+    return fc;
+}
+
+DefaultListComponentGenerator *DefaultListComponentGeneratorBase::createEmptyLocal(BitVector bFlags)
+{
+    DefaultListComponentGenerator *returnValue;
+
+    newPtr<DefaultListComponentGenerator>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+DefaultListComponentGenerator *DefaultListComponentGeneratorBase::createEmpty(void)
+{
+    DefaultListComponentGenerator *returnValue;
+
+    newPtr<DefaultListComponentGenerator>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr DefaultListComponentGeneratorBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    DefaultListComponentGenerator *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DefaultListComponentGenerator *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DefaultListComponentGeneratorBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    DefaultListComponentGenerator *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const DefaultListComponentGenerator *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr DefaultListComponentGeneratorBase::shallowCopy(void) const
+{
+    DefaultListComponentGenerator *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const DefaultListComponentGenerator *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+DefaultListComponentGeneratorBase::DefaultListComponentGeneratorBase(void) :
+    Inherited(),
+    _sfDrawObjectPrototype    (NULL),
+    _sfSelectedBackground     (NULL),
+    _sfFocusedBackground      (NULL),
+    _sfSelectedForeground     (NULL),
+    _sfFocusedForeground      (NULL),
+    _sfSelectedBorder         (NULL),
+    _sfFocusedBorder          (NULL),
+    _sfSelectedTextColor      (Color4f(0.0,0.0,0.0,1.0)),
+    _sfFocusedTextColor       (Color4f(0.0,0.0,0.0,1.0)),
+    _sfFocusedTextColorHasPriority(bool(true)),
+    _sfFocusedBorderHasPriority(bool(true)),
+    _sfFocusedBackgroundHasPriority(bool(true))
+{
+}
+
+DefaultListComponentGeneratorBase::DefaultListComponentGeneratorBase(const DefaultListComponentGeneratorBase &source) :
+    Inherited(source),
+    _sfDrawObjectPrototype    (NULL),
+    _sfSelectedBackground     (NULL),
+    _sfFocusedBackground      (NULL),
+    _sfSelectedForeground     (NULL),
+    _sfFocusedForeground      (NULL),
+    _sfSelectedBorder         (NULL),
+    _sfFocusedBorder          (NULL),
+    _sfSelectedTextColor      (source._sfSelectedTextColor      ),
+    _sfFocusedTextColor       (source._sfFocusedTextColor       ),
+    _sfFocusedTextColorHasPriority(source._sfFocusedTextColorHasPriority),
+    _sfFocusedBorderHasPriority(source._sfFocusedBorderHasPriority),
+    _sfFocusedBackgroundHasPriority(source._sfFocusedBackgroundHasPriority)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+DefaultListComponentGeneratorBase::~DefaultListComponentGeneratorBase(void)
+{
+}
+
+void DefaultListComponentGeneratorBase::onCreate(const DefaultListComponentGenerator *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        DefaultListComponentGenerator *pThis = static_cast<DefaultListComponentGenerator *>(this);
+
+        pThis->setDrawObjectPrototype(source->getDrawObjectPrototype());
+
+        pThis->setSelectedBackground(source->getSelectedBackground());
+
+        pThis->setFocusedBackground(source->getFocusedBackground());
+
+        pThis->setSelectedForeground(source->getSelectedForeground());
+
+        pThis->setFocusedForeground(source->getFocusedForeground());
+
+        pThis->setSelectedBorder(source->getSelectedBorder());
+
+        pThis->setFocusedBorder(source->getFocusedBorder());
+    }
+}
+
+GetFieldHandlePtr DefaultListComponentGeneratorBase::getHandleDrawObjectPrototype (void) const
+{
+    SFUnrecComponentPtr::GetHandlePtr returnValue(
+        new  SFUnrecComponentPtr::GetHandle(
+             &_sfDrawObjectPrototype,
+             this->getType().getFieldDesc(DrawObjectPrototypeFieldId),
+             const_cast<DefaultListComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultListComponentGeneratorBase::editHandleDrawObjectPrototype(void)
+{
+    SFUnrecComponentPtr::EditHandlePtr returnValue(
+        new  SFUnrecComponentPtr::EditHandle(
+             &_sfDrawObjectPrototype,
+             this->getType().getFieldDesc(DrawObjectPrototypeFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultListComponentGenerator::setDrawObjectPrototype,
+                    static_cast<DefaultListComponentGenerator *>(this), _1));
+
+    editSField(DrawObjectPrototypeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultListComponentGeneratorBase::getHandleSelectedBackground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfSelectedBackground,
+             this->getType().getFieldDesc(SelectedBackgroundFieldId),
+             const_cast<DefaultListComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultListComponentGeneratorBase::editHandleSelectedBackground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfSelectedBackground,
+             this->getType().getFieldDesc(SelectedBackgroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultListComponentGenerator::setSelectedBackground,
+                    static_cast<DefaultListComponentGenerator *>(this), _1));
+
+    editSField(SelectedBackgroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultListComponentGeneratorBase::getHandleFocusedBackground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfFocusedBackground,
+             this->getType().getFieldDesc(FocusedBackgroundFieldId),
+             const_cast<DefaultListComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultListComponentGeneratorBase::editHandleFocusedBackground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfFocusedBackground,
+             this->getType().getFieldDesc(FocusedBackgroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultListComponentGenerator::setFocusedBackground,
+                    static_cast<DefaultListComponentGenerator *>(this), _1));
+
+    editSField(FocusedBackgroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultListComponentGeneratorBase::getHandleSelectedForeground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfSelectedForeground,
+             this->getType().getFieldDesc(SelectedForegroundFieldId),
+             const_cast<DefaultListComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultListComponentGeneratorBase::editHandleSelectedForeground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfSelectedForeground,
+             this->getType().getFieldDesc(SelectedForegroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultListComponentGenerator::setSelectedForeground,
+                    static_cast<DefaultListComponentGenerator *>(this), _1));
+
+    editSField(SelectedForegroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultListComponentGeneratorBase::getHandleFocusedForeground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfFocusedForeground,
+             this->getType().getFieldDesc(FocusedForegroundFieldId),
+             const_cast<DefaultListComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultListComponentGeneratorBase::editHandleFocusedForeground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfFocusedForeground,
+             this->getType().getFieldDesc(FocusedForegroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultListComponentGenerator::setFocusedForeground,
+                    static_cast<DefaultListComponentGenerator *>(this), _1));
+
+    editSField(FocusedForegroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultListComponentGeneratorBase::getHandleSelectedBorder  (void) const
+{
+    SFUnrecBorderPtr::GetHandlePtr returnValue(
+        new  SFUnrecBorderPtr::GetHandle(
+             &_sfSelectedBorder,
+             this->getType().getFieldDesc(SelectedBorderFieldId),
+             const_cast<DefaultListComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultListComponentGeneratorBase::editHandleSelectedBorder (void)
+{
+    SFUnrecBorderPtr::EditHandlePtr returnValue(
+        new  SFUnrecBorderPtr::EditHandle(
+             &_sfSelectedBorder,
+             this->getType().getFieldDesc(SelectedBorderFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultListComponentGenerator::setSelectedBorder,
+                    static_cast<DefaultListComponentGenerator *>(this), _1));
+
+    editSField(SelectedBorderFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultListComponentGeneratorBase::getHandleFocusedBorder   (void) const
+{
+    SFUnrecBorderPtr::GetHandlePtr returnValue(
+        new  SFUnrecBorderPtr::GetHandle(
+             &_sfFocusedBorder,
+             this->getType().getFieldDesc(FocusedBorderFieldId),
+             const_cast<DefaultListComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultListComponentGeneratorBase::editHandleFocusedBorder  (void)
+{
+    SFUnrecBorderPtr::EditHandlePtr returnValue(
+        new  SFUnrecBorderPtr::EditHandle(
+             &_sfFocusedBorder,
+             this->getType().getFieldDesc(FocusedBorderFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultListComponentGenerator::setFocusedBorder,
+                    static_cast<DefaultListComponentGenerator *>(this), _1));
+
+    editSField(FocusedBorderFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultListComponentGeneratorBase::getHandleSelectedTextColor (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfSelectedTextColor,
+             this->getType().getFieldDesc(SelectedTextColorFieldId),
+             const_cast<DefaultListComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultListComponentGeneratorBase::editHandleSelectedTextColor(void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfSelectedTextColor,
+             this->getType().getFieldDesc(SelectedTextColorFieldId),
+             this));
+
+
+    editSField(SelectedTextColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultListComponentGeneratorBase::getHandleFocusedTextColor (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfFocusedTextColor,
+             this->getType().getFieldDesc(FocusedTextColorFieldId),
+             const_cast<DefaultListComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultListComponentGeneratorBase::editHandleFocusedTextColor(void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfFocusedTextColor,
+             this->getType().getFieldDesc(FocusedTextColorFieldId),
+             this));
+
+
+    editSField(FocusedTextColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultListComponentGeneratorBase::getHandleFocusedTextColorHasPriority (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfFocusedTextColorHasPriority,
+             this->getType().getFieldDesc(FocusedTextColorHasPriorityFieldId),
+             const_cast<DefaultListComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultListComponentGeneratorBase::editHandleFocusedTextColorHasPriority(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfFocusedTextColorHasPriority,
+             this->getType().getFieldDesc(FocusedTextColorHasPriorityFieldId),
+             this));
+
+
+    editSField(FocusedTextColorHasPriorityFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultListComponentGeneratorBase::getHandleFocusedBorderHasPriority (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfFocusedBorderHasPriority,
+             this->getType().getFieldDesc(FocusedBorderHasPriorityFieldId),
+             const_cast<DefaultListComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultListComponentGeneratorBase::editHandleFocusedBorderHasPriority(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfFocusedBorderHasPriority,
+             this->getType().getFieldDesc(FocusedBorderHasPriorityFieldId),
+             this));
+
+
+    editSField(FocusedBorderHasPriorityFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultListComponentGeneratorBase::getHandleFocusedBackgroundHasPriority (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfFocusedBackgroundHasPriority,
+             this->getType().getFieldDesc(FocusedBackgroundHasPriorityFieldId),
+             const_cast<DefaultListComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultListComponentGeneratorBase::editHandleFocusedBackgroundHasPriority(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfFocusedBackgroundHasPriority,
+             this->getType().getFieldDesc(FocusedBackgroundHasPriorityFieldId),
+             this));
+
+
+    editSField(FocusedBackgroundHasPriorityFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void DefaultListComponentGeneratorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    DefaultListComponentGenerator *pThis = static_cast<DefaultListComponentGenerator *>(this);
+
+    pThis->execSync(static_cast<DefaultListComponentGenerator *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *DefaultListComponentGeneratorBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    DefaultListComponentGenerator *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const DefaultListComponentGenerator *>(pRefAspect),
+                  dynamic_cast<const DefaultListComponentGenerator *>(this));
+
+    return returnValue;
+}
+#endif
+
+void DefaultListComponentGeneratorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<DefaultListComponentGenerator *>(this)->setDrawObjectPrototype(NULL);
+
+    static_cast<DefaultListComponentGenerator *>(this)->setSelectedBackground(NULL);
+
+    static_cast<DefaultListComponentGenerator *>(this)->setFocusedBackground(NULL);
+
+    static_cast<DefaultListComponentGenerator *>(this)->setSelectedForeground(NULL);
+
+    static_cast<DefaultListComponentGenerator *>(this)->setFocusedForeground(NULL);
+
+    static_cast<DefaultListComponentGenerator *>(this)->setSelectedBorder(NULL);
+
+    static_cast<DefaultListComponentGenerator *>(this)->setFocusedBorder(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<DefaultListComponentGeneratorPtr>::_type("DefaultListComponentGeneratorPtr", "ListComponentGeneratorPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(DefaultListComponentGeneratorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(DefaultListComponentGeneratorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGDEFAULTLISTCOMPONENTGENERATORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDEFAULTLISTCOMPONENTGENERATORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDEFAULTLISTCOMPONENTGENERATORFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

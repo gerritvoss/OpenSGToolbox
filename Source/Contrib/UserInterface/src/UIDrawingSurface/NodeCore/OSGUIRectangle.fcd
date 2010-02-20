@@ -3,18 +3,21 @@
 <FieldContainer
 	name="UIRectangle"
 	parent="Drawable"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="true"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI Rectangle.
 	<Field
 		name="Point"
 		type="Pnt3f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -24,6 +27,7 @@ A UI Rectangle.
 	<Field
 		name="Width"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -33,6 +37,7 @@ A UI Rectangle.
 	<Field
 		name="Height"
 		type="Real32"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -41,40 +46,41 @@ A UI Rectangle.
 	</Field>
 	<Field
 		name="DrawingSurface"
-		type="UIDrawingSurfacePtr"
+		type="UIDrawingSurface"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="UIDrawingSurface/OSGUIDrawingSurfaceFields.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="RectColorMask"
-		type="ColorMaskChunkPtr"
+		type="ColorMaskChunk"
+		category="pointer"
 		cardinality="single"
 		visibility="internal"
 		access="protected"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="RectPolygon"
-		type="PolygonChunkPtr"
+		type="PolygonChunk"
+		category="pointer"
 		cardinality="single"
 		visibility="internal"
 		access="protected"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="MouseTransformFunctor"
-		type="UIRectangleMouseTransformFunctorPtr"
+		type="UIRectangleMouseTransformFunctor"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="UIRectangleMouseTransformFunctor::create()"
-		header="UIDrawingSurface/NodeCore/OSGUIRectangleMouseTransformFunctorFields.h"
-		defaultHeader="UIDrawingSurface/NodeCore/OSGUIRectangleMouseTransformFunctor.h"
+		defaultValue="NULL"
 		access="protected"
 	>
 	</Field>

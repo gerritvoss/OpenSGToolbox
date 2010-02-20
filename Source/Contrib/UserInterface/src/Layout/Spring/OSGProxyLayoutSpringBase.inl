@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,132 +55,111 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &ProxyLayoutSpringBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ProxyLayoutSpringBase::getClassTypeId(void) 
+OSG::UInt32 ProxyLayoutSpringBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-ProxyLayoutSpringPtr ProxyLayoutSpringBase::create(void) 
-{
-    ProxyLayoutSpringPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = ProxyLayoutSpringPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-ProxyLayoutSpringPtr ProxyLayoutSpringBase::createEmpty(void) 
-{ 
-    ProxyLayoutSpringPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 ProxyLayoutSpringBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ProxyLayoutSpring::_sfEdge field.
-inline
-SFUInt32 *ProxyLayoutSpringBase::getSFEdge(void)
-{
-    return &_sfEdge;
-}
-
-//! Get the ProxyLayoutSpring::_sfComponent field.
-inline
-SFComponentPtr *ProxyLayoutSpringBase::getSFComponent(void)
-{
-    return &_sfComponent;
-}
-
-//! Get the ProxyLayoutSpring::_sfLayout field.
-inline
-SFSpringLayoutPtr *ProxyLayoutSpringBase::getSFLayout(void)
-{
-    return &_sfLayout;
-}
-
-
 //! Get the value of the ProxyLayoutSpring::_sfEdge field.
+
 inline
-UInt32 &ProxyLayoutSpringBase::getEdge(void)
+UInt32 &ProxyLayoutSpringBase::editEdge(void)
 {
+    editSField(EdgeFieldMask);
+
     return _sfEdge.getValue();
 }
 
 //! Get the value of the ProxyLayoutSpring::_sfEdge field.
 inline
-const UInt32 &ProxyLayoutSpringBase::getEdge(void) const
+      UInt32  ProxyLayoutSpringBase::getEdge(void) const
 {
     return _sfEdge.getValue();
 }
 
 //! Set the value of the ProxyLayoutSpring::_sfEdge field.
 inline
-void ProxyLayoutSpringBase::setEdge(const UInt32 &value)
+void ProxyLayoutSpringBase::setEdge(const UInt32 value)
 {
+    editSField(EdgeFieldMask);
+
     _sfEdge.setValue(value);
 }
 
 //! Get the value of the ProxyLayoutSpring::_sfComponent field.
 inline
-ComponentPtr &ProxyLayoutSpringBase::getComponent(void)
-{
-    return _sfComponent.getValue();
-}
-
-//! Get the value of the ProxyLayoutSpring::_sfComponent field.
-inline
-const ComponentPtr &ProxyLayoutSpringBase::getComponent(void) const
+Component * ProxyLayoutSpringBase::getComponent(void) const
 {
     return _sfComponent.getValue();
 }
 
 //! Set the value of the ProxyLayoutSpring::_sfComponent field.
 inline
-void ProxyLayoutSpringBase::setComponent(const ComponentPtr &value)
+void ProxyLayoutSpringBase::setComponent(Component * const value)
 {
+    editSField(ComponentFieldMask);
+
     _sfComponent.setValue(value);
 }
 
 //! Get the value of the ProxyLayoutSpring::_sfLayout field.
 inline
-SpringLayoutPtr &ProxyLayoutSpringBase::getLayout(void)
-{
-    return _sfLayout.getValue();
-}
-
-//! Get the value of the ProxyLayoutSpring::_sfLayout field.
-inline
-const SpringLayoutPtr &ProxyLayoutSpringBase::getLayout(void) const
+SpringLayout * ProxyLayoutSpringBase::getLayout(void) const
 {
     return _sfLayout.getValue();
 }
 
 //! Set the value of the ProxyLayoutSpring::_sfLayout field.
 inline
-void ProxyLayoutSpringBase::setLayout(const SpringLayoutPtr &value)
+void ProxyLayoutSpringBase::setLayout(SpringLayout * const value)
 {
+    editSField(LayoutFieldMask);
+
     _sfLayout.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void ProxyLayoutSpringBase::execSync (      ProxyLayoutSpringBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGPROXYLAYOUTSPRINGBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (EdgeFieldMask & whichField))
+        _sfEdge.syncWith(pFrom->_sfEdge);
+
+    if(FieldBits::NoField != (ComponentFieldMask & whichField))
+        _sfComponent.syncWith(pFrom->_sfComponent);
+
+    if(FieldBits::NoField != (LayoutFieldMask & whichField))
+        _sfLayout.syncWith(pFrom->_sfLayout);
+}
+#endif
+
+
+inline
+const Char8 *ProxyLayoutSpringBase::getClassname(void)
+{
+    return "ProxyLayoutSpring";
+}
+OSG_GEN_CONTAINERPTR(ProxyLayoutSpring);
+
+OSG_END_NAMESPACE
 

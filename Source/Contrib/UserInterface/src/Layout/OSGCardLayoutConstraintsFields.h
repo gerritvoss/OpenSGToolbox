@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGLayoutConstraintsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class CardLayoutConstraints;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! CardLayoutConstraintsPtr
+OSG_GEN_CONTAINERPTR(CardLayoutConstraints);
 
-typedef FCPtr<LayoutConstraintsPtr, CardLayoutConstraints> CardLayoutConstraintsPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<CardLayoutConstraintsPtr> : 
-    public FieldTraitsRecurseMapper<CardLayoutConstraintsPtr, true>
+struct FieldTraits<CardLayoutConstraints *> :
+    public FieldTraitsFCPtrBase<CardLayoutConstraints *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFCardLayoutConstraintsPtr"; }
-    static const char *getMName(void) { return "MFCardLayoutConstraintsPtr"; }
+    typedef FieldTraits<CardLayoutConstraints *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFCardLayoutConstraintsPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFCardLayoutConstraintsPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<CardLayoutConstraintsPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<CardLayoutConstraints *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecCardLayoutConstraintsPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<CardLayoutConstraints *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecCardLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CardLayoutConstraints *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakCardLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CardLayoutConstraints *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdCardLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CardLayoutConstraints *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecCardLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CardLayoutConstraints *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecCardLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CardLayoutConstraints *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakCardLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<CardLayoutConstraints *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdCardLayoutConstraintsPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<CardLayoutConstraints *,
+                      RecordedRefCountPolicy  > SFRecCardLayoutConstraintsPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<CardLayoutConstraints *,
+                      UnrecordedRefCountPolicy> SFUnrecCardLayoutConstraintsPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<CardLayoutConstraints *,
+                      WeakRefCountPolicy      > SFWeakCardLayoutConstraintsPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<CardLayoutConstraints *,
+                      NoRefCountPolicy        > SFUncountedCardLayoutConstraintsPtr;
 
-typedef SField<CardLayoutConstraintsPtr> SFCardLayoutConstraintsPtr;
-#endif
 
-#ifndef OSG_COMPILECARDLAYOUTCONSTRAINTSINST
-OSG_DLLEXPORT_DECL1(SField, CardLayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<CardLayoutConstraints *,
+                      RecordedRefCountPolicy  > MFRecCardLayoutConstraintsPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<CardLayoutConstraints *,
+                      UnrecordedRefCountPolicy> MFUnrecCardLayoutConstraintsPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<CardLayoutConstraints *,
+                      WeakRefCountPolicy      > MFWeakCardLayoutConstraintsPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<CardLayoutConstraints *,
+                      NoRefCountPolicy        > MFUncountedCardLayoutConstraintsPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<CardLayoutConstraintsPtr> MFCardLayoutConstraintsPtr;
-#endif
 
-#ifndef OSG_COMPILECARDLAYOUTCONSTRAINTSINST
-OSG_DLLEXPORT_DECL1(MField, CardLayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecCardLayoutConstraintsPtr : 
+    public PointerSField<CardLayoutConstraints *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecCardLayoutConstraintsPtr : 
+    public PointerSField<CardLayoutConstraints *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakCardLayoutConstraintsPtr :
+    public PointerSField<CardLayoutConstraints *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedCardLayoutConstraintsPtr :
+    public PointerSField<CardLayoutConstraints *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecCardLayoutConstraintsPtr :
+    public PointerMField<CardLayoutConstraints *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecCardLayoutConstraintsPtr :
+    public PointerMField<CardLayoutConstraints *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakCardLayoutConstraintsPtr :
+    public PointerMField<CardLayoutConstraints *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedCardLayoutConstraintsPtr :
+    public PointerMField<CardLayoutConstraints *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGCARDLAYOUTCONSTRAINTSFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGCARDLAYOUTCONSTRAINTSFIELDS_H_ */

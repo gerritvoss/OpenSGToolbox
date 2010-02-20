@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,155 +50,205 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEMENUBARINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGSingleSelectionModel.h"    // SelectionModel Class
 
 #include "OSGMenuBarBase.h"
 #include "OSGMenuBar.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  MenuBarBase::MenuDelayFieldMask = 
-    (TypeTraits<BitVector>::One << MenuBarBase::MenuDelayFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  MenuBarBase::SelectionModelFieldMask = 
-    (TypeTraits<BitVector>::One << MenuBarBase::SelectionModelFieldId);
+/*! \class OSG::MenuBar
+    A UI MenuBar.
+ */
 
-const OSG::BitVector MenuBarBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Real32          MenuBarBase::_sfMenuDelay
     
 */
-/*! \var SingleSelectionModelPtr MenuBarBase::_sfSelectionModel
+
+/*! \var SingleSelectionModel * MenuBarBase::_sfSelectionModel
     
 */
 
-//! MenuBar description
 
-FieldDescription *MenuBarBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<MenuBar *>::_type("MenuBarPtr", "ComponentContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(MenuBar *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           MenuBar *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           MenuBar *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void MenuBarBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "MenuDelay", 
-                     MenuDelayFieldId, MenuDelayFieldMask,
-                     false,
-                     (FieldAccessMethod) &MenuBarBase::getSFMenuDelay),
-    new FieldDescription(SFSingleSelectionModelPtr::getClassType(), 
-                     "SelectionModel", 
-                     SelectionModelFieldId, SelectionModelFieldMask,
-                     false,
-                     (FieldAccessMethod) &MenuBarBase::getSFSelectionModel)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType MenuBarBase::_type(
-    "MenuBar",
-    "Container",
-    NULL,
-    (PrototypeCreateF) &MenuBarBase::createEmpty,
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "MenuDelay",
+        "",
+        MenuDelayFieldId, MenuDelayFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MenuBar::editHandleMenuDelay),
+        static_cast<FieldGetMethodSig >(&MenuBar::getHandleMenuDelay));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecSingleSelectionModelPtr::Description(
+        SFUnrecSingleSelectionModelPtr::getClassType(),
+        "SelectionModel",
+        "",
+        SelectionModelFieldId, SelectionModelFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MenuBar::editHandleSelectionModel),
+        static_cast<FieldGetMethodSig >(&MenuBar::getHandleSelectionModel));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+MenuBarBase::TypeObject MenuBarBase::_type(
+    MenuBarBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&MenuBarBase::createEmptyLocal),
     MenuBar::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(MenuBarBase, MenuBarPtr)
+    MenuBar::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&MenuBar::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"MenuBar\"\n"
+    "\tparent=\"ComponentContainer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI MenuBar.\n"
+    "\t<Field\n"
+    "\t\tname=\"MenuDelay\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.5\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SelectionModel\"\n"
+    "\t\ttype=\"SingleSelectionModel\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI MenuBar.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &MenuBarBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &MenuBarBase::getType(void) const 
+FieldContainerType &MenuBarBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr MenuBarBase::shallowCopy(void) const 
-{ 
-    MenuBarPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const MenuBar *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 MenuBarBase::getContainerSize(void) const 
-{ 
-    return sizeof(MenuBar); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void MenuBarBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &MenuBarBase::getType(void) const
 {
-    this->executeSyncImpl((MenuBarBase *) &other, whichField);
+    return _type;
 }
-#else
-void MenuBarBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 MenuBarBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((MenuBarBase *) &other, whichField, sInfo);
+    return sizeof(MenuBar);
 }
-void MenuBarBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFReal32 *MenuBarBase::editSFMenuDelay(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(MenuDelayFieldMask);
+
+    return &_sfMenuDelay;
 }
 
-void MenuBarBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFReal32 *MenuBarBase::getSFMenuDelay(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfMenuDelay;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-MenuBarBase::MenuBarBase(void) :
-    _sfMenuDelay              (Real32(0.5)), 
-    _sfSelectionModel         (SingleSelectionModelPtr(NullFC)), 
-    Inherited() 
+//! Get the MenuBar::_sfSelectionModel field.
+const SFUnrecSingleSelectionModelPtr *MenuBarBase::getSFSelectionModel(void) const
 {
+    return &_sfSelectionModel;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-MenuBarBase::MenuBarBase(const MenuBarBase &source) :
-    _sfMenuDelay              (source._sfMenuDelay              ), 
-    _sfSelectionModel         (source._sfSelectionModel         ), 
-    Inherited                 (source)
+SFUnrecSingleSelectionModelPtr *MenuBarBase::editSFSelectionModel (void)
 {
+    editSField(SelectionModelFieldMask);
+
+    return &_sfSelectionModel;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-MenuBarBase::~MenuBarBase(void)
-{
-}
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 MenuBarBase::getBinSize(const BitVector &whichField)
+UInt32 MenuBarBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -206,18 +256,16 @@ UInt32 MenuBarBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfMenuDelay.getBinSize();
     }
-
     if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
     {
         returnValue += _sfSelectionModel.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void MenuBarBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void MenuBarBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -225,17 +273,14 @@ void MenuBarBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfMenuDelay.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
     {
         _sfSelectionModel.copyToBin(pMem);
     }
-
-
 }
 
-void MenuBarBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void MenuBarBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -243,93 +288,260 @@ void MenuBarBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfMenuDelay.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
     {
         _sfSelectionModel.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void MenuBarBase::executeSyncImpl(      MenuBarBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+MenuBarTransitPtr MenuBarBase::createLocal(BitVector bFlags)
 {
+    MenuBarTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (MenuDelayFieldMask & whichField))
-        _sfMenuDelay.syncWith(pOther->_sfMenuDelay);
+        fc = dynamic_pointer_cast<MenuBar>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
-        _sfSelectionModel.syncWith(pOther->_sfSelectionModel);
-
-
-}
-#else
-void MenuBarBase::executeSyncImpl(      MenuBarBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (MenuDelayFieldMask & whichField))
-        _sfMenuDelay.syncWith(pOther->_sfMenuDelay);
-
-    if(FieldBits::NoField != (SelectionModelFieldMask & whichField))
-        _sfSelectionModel.syncWith(pOther->_sfSelectionModel);
-
-
-
+    return fc;
 }
 
-void MenuBarBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+MenuBarTransitPtr MenuBarBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    MenuBarTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<MenuBar>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+MenuBarTransitPtr MenuBarBase::create(void)
+{
+    MenuBarTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<MenuBar>(tmpPtr);
+    }
+
+    return fc;
+}
+
+MenuBar *MenuBarBase::createEmptyLocal(BitVector bFlags)
+{
+    MenuBar *returnValue;
+
+    newPtr<MenuBar>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+MenuBar *MenuBarBase::createEmpty(void)
+{
+    MenuBar *returnValue;
+
+    newPtr<MenuBar>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr MenuBarBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    MenuBar *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const MenuBar *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr MenuBarBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    MenuBar *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const MenuBar *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr MenuBarBase::shallowCopy(void) const
+{
+    MenuBar *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const MenuBar *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+MenuBarBase::MenuBarBase(void) :
+    Inherited(),
+    _sfMenuDelay              (Real32(0.5)),
+    _sfSelectionModel         (NULL)
+{
+}
+
+MenuBarBase::MenuBarBase(const MenuBarBase &source) :
+    Inherited(source),
+    _sfMenuDelay              (source._sfMenuDelay              ),
+    _sfSelectionModel         (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+MenuBarBase::~MenuBarBase(void)
+{
+}
+
+void MenuBarBase::onCreate(const MenuBar *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        MenuBar *pThis = static_cast<MenuBar *>(this);
+
+        pThis->setSelectionModel(source->getSelectionModel());
+    }
+}
+
+GetFieldHandlePtr MenuBarBase::getHandleMenuDelay       (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfMenuDelay,
+             this->getType().getFieldDesc(MenuDelayFieldId),
+             const_cast<MenuBarBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MenuBarBase::editHandleMenuDelay      (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfMenuDelay,
+             this->getType().getFieldDesc(MenuDelayFieldId),
+             this));
+
+
+    editSField(MenuDelayFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MenuBarBase::getHandleSelectionModel  (void) const
+{
+    SFUnrecSingleSelectionModelPtr::GetHandlePtr returnValue(
+        new  SFUnrecSingleSelectionModelPtr::GetHandle(
+             &_sfSelectionModel,
+             this->getType().getFieldDesc(SelectionModelFieldId),
+             const_cast<MenuBarBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MenuBarBase::editHandleSelectionModel (void)
+{
+    SFUnrecSingleSelectionModelPtr::EditHandlePtr returnValue(
+        new  SFUnrecSingleSelectionModelPtr::EditHandle(
+             &_sfSelectionModel,
+             this->getType().getFieldDesc(SelectionModelFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&MenuBar::setSelectionModel,
+                    static_cast<MenuBar *>(this), _1));
+
+    editSField(SelectionModelFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void MenuBarBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    MenuBar *pThis = static_cast<MenuBar *>(this);
+
+    pThis->execSync(static_cast<MenuBar *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *MenuBarBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    MenuBar *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const MenuBar *>(pRefAspect),
+                  dynamic_cast<const MenuBar *>(this));
+
+    return returnValue;
+}
+#endif
+
+void MenuBarBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<MenuBar *>(this)->setSelectionModel(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<MenuBarPtr>::_type("MenuBarPtr", "ContainerPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(MenuBarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(MenuBarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGMENUBARBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGMENUBARBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGMENUBARFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

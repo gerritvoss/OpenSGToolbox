@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,113 +55,31 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &ArcUIDrawObjectBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ArcUIDrawObjectBase::getClassTypeId(void) 
+OSG::UInt32 ArcUIDrawObjectBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-ArcUIDrawObjectPtr ArcUIDrawObjectBase::create(void) 
-{
-    ArcUIDrawObjectPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = ArcUIDrawObjectPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-ArcUIDrawObjectPtr ArcUIDrawObjectBase::createEmpty(void) 
-{ 
-    ArcUIDrawObjectPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 ArcUIDrawObjectBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ArcUIDrawObject::_sfCenter field.
-inline
-SFPnt2f *ArcUIDrawObjectBase::getSFCenter(void)
-{
-    return &_sfCenter;
-}
-
-//! Get the ArcUIDrawObject::_sfWidth field.
-inline
-SFReal32 *ArcUIDrawObjectBase::getSFWidth(void)
-{
-    return &_sfWidth;
-}
-
-//! Get the ArcUIDrawObject::_sfHeight field.
-inline
-SFReal32 *ArcUIDrawObjectBase::getSFHeight(void)
-{
-    return &_sfHeight;
-}
-
-//! Get the ArcUIDrawObject::_sfStartAngleRad field.
-inline
-SFReal32 *ArcUIDrawObjectBase::getSFStartAngleRad(void)
-{
-    return &_sfStartAngleRad;
-}
-
-//! Get the ArcUIDrawObject::_sfEndAngleRad field.
-inline
-SFReal32 *ArcUIDrawObjectBase::getSFEndAngleRad(void)
-{
-    return &_sfEndAngleRad;
-}
-
-//! Get the ArcUIDrawObject::_sfSubDivisions field.
-inline
-SFUInt16 *ArcUIDrawObjectBase::getSFSubDivisions(void)
-{
-    return &_sfSubDivisions;
-}
-
-//! Get the ArcUIDrawObject::_sfColor field.
-inline
-SFColor4f *ArcUIDrawObjectBase::getSFColor(void)
-{
-    return &_sfColor;
-}
-
-//! Get the ArcUIDrawObject::_sfLineWidth field.
-inline
-SFReal32 *ArcUIDrawObjectBase::getSFLineWidth(void)
-{
-    return &_sfLineWidth;
-}
-
-//! Get the ArcUIDrawObject::_sfOpacity field.
-inline
-SFReal32 *ArcUIDrawObjectBase::getSFOpacity(void)
-{
-    return &_sfOpacity;
-}
-
-
 //! Get the value of the ArcUIDrawObject::_sfCenter field.
+
 inline
-Pnt2f &ArcUIDrawObjectBase::getCenter(void)
+Pnt2f &ArcUIDrawObjectBase::editCenter(void)
 {
+    editSField(CenterFieldMask);
+
     return _sfCenter.getValue();
 }
 
@@ -178,118 +94,142 @@ const Pnt2f &ArcUIDrawObjectBase::getCenter(void) const
 inline
 void ArcUIDrawObjectBase::setCenter(const Pnt2f &value)
 {
+    editSField(CenterFieldMask);
+
     _sfCenter.setValue(value);
 }
-
 //! Get the value of the ArcUIDrawObject::_sfWidth field.
+
 inline
-Real32 &ArcUIDrawObjectBase::getWidth(void)
+Real32 &ArcUIDrawObjectBase::editWidth(void)
 {
+    editSField(WidthFieldMask);
+
     return _sfWidth.getValue();
 }
 
 //! Get the value of the ArcUIDrawObject::_sfWidth field.
 inline
-const Real32 &ArcUIDrawObjectBase::getWidth(void) const
+      Real32  ArcUIDrawObjectBase::getWidth(void) const
 {
     return _sfWidth.getValue();
 }
 
 //! Set the value of the ArcUIDrawObject::_sfWidth field.
 inline
-void ArcUIDrawObjectBase::setWidth(const Real32 &value)
+void ArcUIDrawObjectBase::setWidth(const Real32 value)
 {
+    editSField(WidthFieldMask);
+
     _sfWidth.setValue(value);
 }
-
 //! Get the value of the ArcUIDrawObject::_sfHeight field.
+
 inline
-Real32 &ArcUIDrawObjectBase::getHeight(void)
+Real32 &ArcUIDrawObjectBase::editHeight(void)
 {
+    editSField(HeightFieldMask);
+
     return _sfHeight.getValue();
 }
 
 //! Get the value of the ArcUIDrawObject::_sfHeight field.
 inline
-const Real32 &ArcUIDrawObjectBase::getHeight(void) const
+      Real32  ArcUIDrawObjectBase::getHeight(void) const
 {
     return _sfHeight.getValue();
 }
 
 //! Set the value of the ArcUIDrawObject::_sfHeight field.
 inline
-void ArcUIDrawObjectBase::setHeight(const Real32 &value)
+void ArcUIDrawObjectBase::setHeight(const Real32 value)
 {
+    editSField(HeightFieldMask);
+
     _sfHeight.setValue(value);
 }
-
 //! Get the value of the ArcUIDrawObject::_sfStartAngleRad field.
+
 inline
-Real32 &ArcUIDrawObjectBase::getStartAngleRad(void)
+Real32 &ArcUIDrawObjectBase::editStartAngleRad(void)
 {
+    editSField(StartAngleRadFieldMask);
+
     return _sfStartAngleRad.getValue();
 }
 
 //! Get the value of the ArcUIDrawObject::_sfStartAngleRad field.
 inline
-const Real32 &ArcUIDrawObjectBase::getStartAngleRad(void) const
+      Real32  ArcUIDrawObjectBase::getStartAngleRad(void) const
 {
     return _sfStartAngleRad.getValue();
 }
 
 //! Set the value of the ArcUIDrawObject::_sfStartAngleRad field.
 inline
-void ArcUIDrawObjectBase::setStartAngleRad(const Real32 &value)
+void ArcUIDrawObjectBase::setStartAngleRad(const Real32 value)
 {
+    editSField(StartAngleRadFieldMask);
+
     _sfStartAngleRad.setValue(value);
 }
-
 //! Get the value of the ArcUIDrawObject::_sfEndAngleRad field.
+
 inline
-Real32 &ArcUIDrawObjectBase::getEndAngleRad(void)
+Real32 &ArcUIDrawObjectBase::editEndAngleRad(void)
 {
+    editSField(EndAngleRadFieldMask);
+
     return _sfEndAngleRad.getValue();
 }
 
 //! Get the value of the ArcUIDrawObject::_sfEndAngleRad field.
 inline
-const Real32 &ArcUIDrawObjectBase::getEndAngleRad(void) const
+      Real32  ArcUIDrawObjectBase::getEndAngleRad(void) const
 {
     return _sfEndAngleRad.getValue();
 }
 
 //! Set the value of the ArcUIDrawObject::_sfEndAngleRad field.
 inline
-void ArcUIDrawObjectBase::setEndAngleRad(const Real32 &value)
+void ArcUIDrawObjectBase::setEndAngleRad(const Real32 value)
 {
+    editSField(EndAngleRadFieldMask);
+
     _sfEndAngleRad.setValue(value);
 }
-
 //! Get the value of the ArcUIDrawObject::_sfSubDivisions field.
+
 inline
-UInt16 &ArcUIDrawObjectBase::getSubDivisions(void)
+UInt16 &ArcUIDrawObjectBase::editSubDivisions(void)
 {
+    editSField(SubDivisionsFieldMask);
+
     return _sfSubDivisions.getValue();
 }
 
 //! Get the value of the ArcUIDrawObject::_sfSubDivisions field.
 inline
-const UInt16 &ArcUIDrawObjectBase::getSubDivisions(void) const
+      UInt16  ArcUIDrawObjectBase::getSubDivisions(void) const
 {
     return _sfSubDivisions.getValue();
 }
 
 //! Set the value of the ArcUIDrawObject::_sfSubDivisions field.
 inline
-void ArcUIDrawObjectBase::setSubDivisions(const UInt16 &value)
+void ArcUIDrawObjectBase::setSubDivisions(const UInt16 value)
 {
+    editSField(SubDivisionsFieldMask);
+
     _sfSubDivisions.setValue(value);
 }
-
 //! Get the value of the ArcUIDrawObject::_sfColor field.
+
 inline
-Color4f &ArcUIDrawObjectBase::getColor(void)
+Color4f &ArcUIDrawObjectBase::editColor(void)
 {
+    editSField(ColorFieldMask);
+
     return _sfColor.getValue();
 }
 
@@ -304,53 +244,108 @@ const Color4f &ArcUIDrawObjectBase::getColor(void) const
 inline
 void ArcUIDrawObjectBase::setColor(const Color4f &value)
 {
+    editSField(ColorFieldMask);
+
     _sfColor.setValue(value);
 }
-
 //! Get the value of the ArcUIDrawObject::_sfLineWidth field.
+
 inline
-Real32 &ArcUIDrawObjectBase::getLineWidth(void)
+Real32 &ArcUIDrawObjectBase::editLineWidth(void)
 {
+    editSField(LineWidthFieldMask);
+
     return _sfLineWidth.getValue();
 }
 
 //! Get the value of the ArcUIDrawObject::_sfLineWidth field.
 inline
-const Real32 &ArcUIDrawObjectBase::getLineWidth(void) const
+      Real32  ArcUIDrawObjectBase::getLineWidth(void) const
 {
     return _sfLineWidth.getValue();
 }
 
 //! Set the value of the ArcUIDrawObject::_sfLineWidth field.
 inline
-void ArcUIDrawObjectBase::setLineWidth(const Real32 &value)
+void ArcUIDrawObjectBase::setLineWidth(const Real32 value)
 {
+    editSField(LineWidthFieldMask);
+
     _sfLineWidth.setValue(value);
 }
-
 //! Get the value of the ArcUIDrawObject::_sfOpacity field.
+
 inline
-Real32 &ArcUIDrawObjectBase::getOpacity(void)
+Real32 &ArcUIDrawObjectBase::editOpacity(void)
 {
+    editSField(OpacityFieldMask);
+
     return _sfOpacity.getValue();
 }
 
 //! Get the value of the ArcUIDrawObject::_sfOpacity field.
 inline
-const Real32 &ArcUIDrawObjectBase::getOpacity(void) const
+      Real32  ArcUIDrawObjectBase::getOpacity(void) const
 {
     return _sfOpacity.getValue();
 }
 
 //! Set the value of the ArcUIDrawObject::_sfOpacity field.
 inline
-void ArcUIDrawObjectBase::setOpacity(const Real32 &value)
+void ArcUIDrawObjectBase::setOpacity(const Real32 value)
 {
+    editSField(OpacityFieldMask);
+
     _sfOpacity.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void ArcUIDrawObjectBase::execSync (      ArcUIDrawObjectBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGARCUIDRAWOBJECTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (CenterFieldMask & whichField))
+        _sfCenter.syncWith(pFrom->_sfCenter);
+
+    if(FieldBits::NoField != (WidthFieldMask & whichField))
+        _sfWidth.syncWith(pFrom->_sfWidth);
+
+    if(FieldBits::NoField != (HeightFieldMask & whichField))
+        _sfHeight.syncWith(pFrom->_sfHeight);
+
+    if(FieldBits::NoField != (StartAngleRadFieldMask & whichField))
+        _sfStartAngleRad.syncWith(pFrom->_sfStartAngleRad);
+
+    if(FieldBits::NoField != (EndAngleRadFieldMask & whichField))
+        _sfEndAngleRad.syncWith(pFrom->_sfEndAngleRad);
+
+    if(FieldBits::NoField != (SubDivisionsFieldMask & whichField))
+        _sfSubDivisions.syncWith(pFrom->_sfSubDivisions);
+
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+        _sfColor.syncWith(pFrom->_sfColor);
+
+    if(FieldBits::NoField != (LineWidthFieldMask & whichField))
+        _sfLineWidth.syncWith(pFrom->_sfLineWidth);
+
+    if(FieldBits::NoField != (OpacityFieldMask & whichField))
+        _sfOpacity.syncWith(pFrom->_sfOpacity);
+}
+#endif
+
+
+inline
+const Char8 *ArcUIDrawObjectBase::getClassname(void)
+{
+    return "ArcUIDrawObject";
+}
+OSG_GEN_CONTAINERPTR(ArcUIDrawObject);
+
+OSG_END_NAMESPACE
 

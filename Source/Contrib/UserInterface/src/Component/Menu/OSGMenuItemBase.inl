@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,185 +55,148 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &MenuItemBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 MenuItemBase::getClassTypeId(void) 
+OSG::UInt32 MenuItemBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-MenuItemPtr MenuItemBase::create(void) 
-{
-    MenuItemPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = MenuItemPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-MenuItemPtr MenuItemBase::createEmpty(void) 
-{ 
-    MenuItemPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 MenuItemBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the MenuItem::_sfParentMenu field.
-inline
-const SFMenuPtr *MenuItemBase::getSFParentMenu(void) const
-{
-    return &_sfParentMenu;
-}
-
-//! Get the MenuItem::_sfParentMenu field.
-inline
-SFMenuPtr *MenuItemBase::editSFParentMenu(void)
-{
-    return &_sfParentMenu;
-}
-
-//! Get the MenuItem::_sfAcceleratorModifiers field.
-inline
-const SFUInt32 *MenuItemBase::getSFAcceleratorModifiers(void) const
-{
-    return &_sfAcceleratorModifiers;
-}
-
-//! Get the MenuItem::_sfAcceleratorModifiers field.
-inline
-SFUInt32 *MenuItemBase::editSFAcceleratorModifiers(void)
-{
-    return &_sfAcceleratorModifiers;
-}
-
-//! Get the MenuItem::_sfAcceleratorKey field.
-inline
-const SFUInt32 *MenuItemBase::getSFAcceleratorKey(void) const
-{
-    return &_sfAcceleratorKey;
-}
-
-//! Get the MenuItem::_sfAcceleratorKey field.
-inline
-SFUInt32 *MenuItemBase::editSFAcceleratorKey(void)
-{
-    return &_sfAcceleratorKey;
-}
-
-//! Get the MenuItem::_sfMnemonicKey field.
-inline
-const SFUInt32 *MenuItemBase::getSFMnemonicKey(void) const
-{
-    return &_sfMnemonicKey;
-}
-
-//! Get the MenuItem::_sfMnemonicKey field.
-inline
-SFUInt32 *MenuItemBase::editSFMnemonicKey(void)
-{
-    return &_sfMnemonicKey;
-}
-
 
 //! Get the value of the MenuItem::_sfParentMenu field.
 inline
-MenuPtr &MenuItemBase::editParentMenu(void)
-{
-    return _sfParentMenu.getValue();
-}
-
-//! Get the value of the MenuItem::_sfParentMenu field.
-inline
-const MenuPtr &MenuItemBase::getParentMenu(void) const
+Menu * MenuItemBase::getParentMenu(void) const
 {
     return _sfParentMenu.getValue();
 }
 
 //! Set the value of the MenuItem::_sfParentMenu field.
 inline
-void MenuItemBase::setParentMenu(const MenuPtr &value)
+void MenuItemBase::setParentMenu(Menu * const value)
 {
+    editSField(ParentMenuFieldMask);
+
     _sfParentMenu.setValue(value);
 }
-
 //! Get the value of the MenuItem::_sfAcceleratorModifiers field.
+
 inline
 UInt32 &MenuItemBase::editAcceleratorModifiers(void)
 {
+    editSField(AcceleratorModifiersFieldMask);
+
     return _sfAcceleratorModifiers.getValue();
 }
 
 //! Get the value of the MenuItem::_sfAcceleratorModifiers field.
 inline
-const UInt32 &MenuItemBase::getAcceleratorModifiers(void) const
+      UInt32  MenuItemBase::getAcceleratorModifiers(void) const
 {
     return _sfAcceleratorModifiers.getValue();
 }
 
 //! Set the value of the MenuItem::_sfAcceleratorModifiers field.
 inline
-void MenuItemBase::setAcceleratorModifiers(const UInt32 &value)
+void MenuItemBase::setAcceleratorModifiers(const UInt32 value)
 {
+    editSField(AcceleratorModifiersFieldMask);
+
     _sfAcceleratorModifiers.setValue(value);
 }
-
 //! Get the value of the MenuItem::_sfAcceleratorKey field.
+
 inline
 UInt32 &MenuItemBase::editAcceleratorKey(void)
 {
+    editSField(AcceleratorKeyFieldMask);
+
     return _sfAcceleratorKey.getValue();
 }
 
 //! Get the value of the MenuItem::_sfAcceleratorKey field.
 inline
-const UInt32 &MenuItemBase::getAcceleratorKey(void) const
+      UInt32  MenuItemBase::getAcceleratorKey(void) const
 {
     return _sfAcceleratorKey.getValue();
 }
 
 //! Set the value of the MenuItem::_sfAcceleratorKey field.
 inline
-void MenuItemBase::setAcceleratorKey(const UInt32 &value)
+void MenuItemBase::setAcceleratorKey(const UInt32 value)
 {
+    editSField(AcceleratorKeyFieldMask);
+
     _sfAcceleratorKey.setValue(value);
 }
-
 //! Get the value of the MenuItem::_sfMnemonicKey field.
+
 inline
 UInt32 &MenuItemBase::editMnemonicKey(void)
 {
+    editSField(MnemonicKeyFieldMask);
+
     return _sfMnemonicKey.getValue();
 }
 
 //! Get the value of the MenuItem::_sfMnemonicKey field.
 inline
-const UInt32 &MenuItemBase::getMnemonicKey(void) const
+      UInt32  MenuItemBase::getMnemonicKey(void) const
 {
     return _sfMnemonicKey.getValue();
 }
 
 //! Set the value of the MenuItem::_sfMnemonicKey field.
 inline
-void MenuItemBase::setMnemonicKey(const UInt32 &value)
+void MenuItemBase::setMnemonicKey(const UInt32 value)
 {
+    editSField(MnemonicKeyFieldMask);
+
     _sfMnemonicKey.setValue(value);
 }
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void MenuItemBase::execSync (      MenuItemBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (ParentMenuFieldMask & whichField))
+        _sfParentMenu.syncWith(pFrom->_sfParentMenu);
+
+    if(FieldBits::NoField != (AcceleratorModifiersFieldMask & whichField))
+        _sfAcceleratorModifiers.syncWith(pFrom->_sfAcceleratorModifiers);
+
+    if(FieldBits::NoField != (AcceleratorKeyFieldMask & whichField))
+        _sfAcceleratorKey.syncWith(pFrom->_sfAcceleratorKey);
+
+    if(FieldBits::NoField != (MnemonicKeyFieldMask & whichField))
+        _sfMnemonicKey.syncWith(pFrom->_sfMnemonicKey);
+}
+#endif
+
+
+inline
+const Char8 *MenuItemBase::getClassname(void)
+{
+    return "MenuItem";
+}
+OSG_GEN_CONTAINERPTR(MenuItem);
+
 OSG_END_NAMESPACE
+

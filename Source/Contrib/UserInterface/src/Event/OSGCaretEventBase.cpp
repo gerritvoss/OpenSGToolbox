@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,143 +50,167 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILECARETEVENTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGCaretEventBase.h"
 #include "OSGCaretEvent.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  CaretEventBase::PositionFieldMask = 
-    (TypeTraits<BitVector>::One << CaretEventBase::PositionFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector CaretEventBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::CaretEvent
+    
+ */
 
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var UInt32          CaretEventBase::_sfPosition
     
 */
 
-//! CaretEvent description
 
-FieldDescription *CaretEventBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<CaretEvent *>::_type("CaretEventPtr", "EventPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(CaretEvent *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           CaretEvent *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           CaretEvent *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void CaretEventBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "Position", 
-                     PositionFieldId, PositionFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&CaretEventBase::editSFPosition))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType CaretEventBase::_type(
-    "CaretEvent",
-    "Event",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&CaretEventBase::createEmpty),
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "Position",
+        "",
+        PositionFieldId, PositionFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&CaretEvent::editHandlePosition),
+        static_cast<FieldGetMethodSig >(&CaretEvent::getHandlePosition));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+CaretEventBase::TypeObject CaretEventBase::_type(
+    CaretEventBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&CaretEventBase::createEmptyLocal),
     CaretEvent::initMethod,
-    _desc,
-    sizeof(_desc));
+    CaretEvent::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&CaretEvent::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"CaretEvent\"\n"
+    "\tparent=\"Event\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"Position\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"0\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(CaretEventBase, CaretEventPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &CaretEventBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &CaretEventBase::getType(void) const 
+FieldContainerType &CaretEventBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr CaretEventBase::shallowCopy(void) const 
-{ 
-    CaretEventPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const CaretEvent *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 CaretEventBase::getContainerSize(void) const 
-{ 
-    return sizeof(CaretEvent); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void CaretEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &CaretEventBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<CaretEventBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void CaretEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 CaretEventBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((CaretEventBase *) &other, whichField, sInfo);
+    return sizeof(CaretEvent);
 }
-void CaretEventBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFUInt32 *CaretEventBase::editSFPosition(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(PositionFieldMask);
+
+    return &_sfPosition;
 }
 
-void CaretEventBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFUInt32 *CaretEventBase::getSFPosition(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-CaretEventBase::CaretEventBase(void) :
-    _sfPosition               (UInt32(0)), 
-    Inherited() 
-{
+    return &_sfPosition;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-CaretEventBase::CaretEventBase(const CaretEventBase &source) :
-    _sfPosition               (source._sfPosition               ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-CaretEventBase::~CaretEventBase(void)
-{
-}
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 CaretEventBase::getBinSize(const BitVector &whichField)
+UInt32 CaretEventBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -195,12 +219,11 @@ UInt32 CaretEventBase::getBinSize(const BitVector &whichField)
         returnValue += _sfPosition.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void CaretEventBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void CaretEventBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -208,12 +231,10 @@ void CaretEventBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfPosition.copyToBin(pMem);
     }
-
-
 }
 
-void CaretEventBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void CaretEventBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -221,60 +242,213 @@ void CaretEventBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfPosition.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void CaretEventBase::executeSyncImpl(      CaretEventBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+CaretEventTransitPtr CaretEventBase::createLocal(BitVector bFlags)
 {
+    CaretEventTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (PositionFieldMask & whichField))
-        _sfPosition.syncWith(pOther->_sfPosition);
+        fc = dynamic_pointer_cast<CaretEvent>(tmpPtr);
+    }
 
-
-}
-#else
-void CaretEventBase::executeSyncImpl(      CaretEventBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (PositionFieldMask & whichField))
-        _sfPosition.syncWith(pOther->_sfPosition);
-
-
-
+    return fc;
 }
 
-void CaretEventBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+CaretEventTransitPtr CaretEventBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    CaretEventTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<CaretEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+CaretEventTransitPtr CaretEventBase::create(void)
+{
+    CaretEventTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<CaretEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+CaretEvent *CaretEventBase::createEmptyLocal(BitVector bFlags)
+{
+    CaretEvent *returnValue;
+
+    newPtr<CaretEvent>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+CaretEvent *CaretEventBase::createEmpty(void)
+{
+    CaretEvent *returnValue;
+
+    newPtr<CaretEvent>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr CaretEventBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    CaretEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const CaretEvent *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr CaretEventBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    CaretEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const CaretEvent *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr CaretEventBase::shallowCopy(void) const
+{
+    CaretEvent *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const CaretEvent *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+CaretEventBase::CaretEventBase(void) :
+    Inherited(),
+    _sfPosition               (UInt32(0))
+{
+}
+
+CaretEventBase::CaretEventBase(const CaretEventBase &source) :
+    Inherited(source),
+    _sfPosition               (source._sfPosition               )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+CaretEventBase::~CaretEventBase(void)
+{
+}
+
+
+GetFieldHandlePtr CaretEventBase::getHandlePosition        (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfPosition,
+             this->getType().getFieldDesc(PositionFieldId),
+             const_cast<CaretEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr CaretEventBase::editHandlePosition       (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfPosition,
+             this->getType().getFieldDesc(PositionFieldId),
+             this));
+
+
+    editSField(PositionFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void CaretEventBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    CaretEvent *pThis = static_cast<CaretEvent *>(this);
+
+    pThis->execSync(static_cast<CaretEvent *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *CaretEventBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    CaretEvent *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const CaretEvent *>(pRefAspect),
+                  dynamic_cast<const CaretEvent *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<CaretEventPtr>::_type("CaretEventPtr", "EventPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(CaretEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void CaretEventBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

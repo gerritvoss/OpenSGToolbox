@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,120 +50,125 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILECANVASINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGCanvasBase.h"
 #include "OSGCanvas.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector CanvasBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::Canvas
+    A UI Canvas.
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
 
-FieldContainerType CanvasBase::_type(
-    "Canvas",
-    "Component",
-    NULL,
-    (PrototypeCreateF) &CanvasBase::createEmpty,
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<Canvas *>::_type("CanvasPtr", "ComponentPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(Canvas *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           Canvas *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           Canvas *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void CanvasBase::classDescInserter(TypeObject &oType)
+{
+}
+
+
+CanvasBase::TypeObject CanvasBase::_type(
+    CanvasBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&CanvasBase::createEmptyLocal),
     Canvas::initMethod,
-    NULL,
-    0);
+    Canvas::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&Canvas::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"Canvas\"\n"
+    "\tparent=\"Component\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Canvas.\n"
+    "</FieldContainer>\n",
+    "A UI Canvas.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(CanvasBase, CanvasPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &CanvasBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &CanvasBase::getType(void) const 
+FieldContainerType &CanvasBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr CanvasBase::shallowCopy(void) const 
-{ 
-    CanvasPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const Canvas *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 CanvasBase::getContainerSize(void) const 
-{ 
-    return sizeof(Canvas); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void CanvasBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &CanvasBase::getType(void) const
 {
-    this->executeSyncImpl((CanvasBase *) &other, whichField);
+    return _type;
 }
-#else
-void CanvasBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 CanvasBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((CanvasBase *) &other, whichField, sInfo);
-}
-void CanvasBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(Canvas);
 }
 
-void CanvasBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-CanvasBase::CanvasBase(void) :
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-CanvasBase::CanvasBase(const CanvasBase &source) :
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-CanvasBase::~CanvasBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 CanvasBase::getBinSize(const BitVector &whichField)
+UInt32 CanvasBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -171,88 +176,198 @@ UInt32 CanvasBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void CanvasBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void CanvasBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-
 }
 
-void CanvasBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void CanvasBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void CanvasBase::executeSyncImpl(      CanvasBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+CanvasTransitPtr CanvasBase::createLocal(BitVector bFlags)
 {
+    CanvasTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
+        fc = dynamic_pointer_cast<Canvas>(tmpPtr);
+    }
 
-}
-#else
-void CanvasBase::executeSyncImpl(      CanvasBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
+    return fc;
 }
 
-void CanvasBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+CanvasTransitPtr CanvasBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    CanvasTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<Canvas>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+CanvasTransitPtr CanvasBase::create(void)
+{
+    CanvasTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<Canvas>(tmpPtr);
+    }
+
+    return fc;
+}
+
+Canvas *CanvasBase::createEmptyLocal(BitVector bFlags)
+{
+    Canvas *returnValue;
+
+    newPtr<Canvas>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+Canvas *CanvasBase::createEmpty(void)
+{
+    Canvas *returnValue;
+
+    newPtr<Canvas>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr CanvasBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    Canvas *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Canvas *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr CanvasBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    Canvas *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Canvas *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr CanvasBase::shallowCopy(void) const
+{
+    Canvas *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const Canvas *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+CanvasBase::CanvasBase(void) :
+    Inherited()
+{
+}
+
+CanvasBase::CanvasBase(const CanvasBase &source) :
+    Inherited(source)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+CanvasBase::~CanvasBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void CanvasBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Canvas *pThis = static_cast<Canvas *>(this);
+
+    pThis->execSync(static_cast<Canvas *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *CanvasBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    Canvas *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const Canvas *>(pRefAspect),
+                  dynamic_cast<const Canvas *>(this));
+
+    return returnValue;
+}
+#endif
+
+void CanvasBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<CanvasPtr>::_type("CanvasPtr", "ComponentPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(CanvasPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(CanvasPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGCANVASBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCANVASBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCANVASFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

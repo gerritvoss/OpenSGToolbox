@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,92 +55,56 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &LineBorderBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 LineBorderBase::getClassTypeId(void) 
+OSG::UInt32 LineBorderBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-LineBorderPtr LineBorderBase::create(void) 
-{
-    LineBorderPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = LineBorderPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-LineBorderPtr LineBorderBase::createEmpty(void) 
-{ 
-    LineBorderPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 LineBorderBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the LineBorder::_sfWidth field.
-inline
-SFReal32 *LineBorderBase::getSFWidth(void)
-{
-    return &_sfWidth;
-}
-
-//! Get the LineBorder::_sfColor field.
-inline
-SFColor4f *LineBorderBase::getSFColor(void)
-{
-    return &_sfColor;
-}
-
-//! Get the LineBorder::_sfMaterial field.
-inline
-SFMaterialPtr *LineBorderBase::getSFMaterial(void)
-{
-    return &_sfMaterial;
-}
-
-
 //! Get the value of the LineBorder::_sfWidth field.
+
 inline
-Real32 &LineBorderBase::getWidth(void)
+Real32 &LineBorderBase::editWidth(void)
 {
+    editSField(WidthFieldMask);
+
     return _sfWidth.getValue();
 }
 
 //! Get the value of the LineBorder::_sfWidth field.
 inline
-const Real32 &LineBorderBase::getWidth(void) const
+      Real32  LineBorderBase::getWidth(void) const
 {
     return _sfWidth.getValue();
 }
 
 //! Set the value of the LineBorder::_sfWidth field.
 inline
-void LineBorderBase::setWidth(const Real32 &value)
+void LineBorderBase::setWidth(const Real32 value)
 {
+    editSField(WidthFieldMask);
+
     _sfWidth.setValue(value);
 }
-
 //! Get the value of the LineBorder::_sfColor field.
+
 inline
-Color4f &LineBorderBase::getColor(void)
+Color4f &LineBorderBase::editColor(void)
 {
+    editSField(ColorFieldMask);
+
     return _sfColor.getValue();
 }
 
@@ -157,32 +119,56 @@ const Color4f &LineBorderBase::getColor(void) const
 inline
 void LineBorderBase::setColor(const Color4f &value)
 {
+    editSField(ColorFieldMask);
+
     _sfColor.setValue(value);
 }
 
 //! Get the value of the LineBorder::_sfMaterial field.
 inline
-MaterialPtr &LineBorderBase::getMaterial(void)
-{
-    return _sfMaterial.getValue();
-}
-
-//! Get the value of the LineBorder::_sfMaterial field.
-inline
-const MaterialPtr &LineBorderBase::getMaterial(void) const
+Material * LineBorderBase::getMaterial(void) const
 {
     return _sfMaterial.getValue();
 }
 
 //! Set the value of the LineBorder::_sfMaterial field.
 inline
-void LineBorderBase::setMaterial(const MaterialPtr &value)
+void LineBorderBase::setMaterial(Material * const value)
 {
+    editSField(MaterialFieldMask);
+
     _sfMaterial.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void LineBorderBase::execSync (      LineBorderBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGLINEBORDERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (WidthFieldMask & whichField))
+        _sfWidth.syncWith(pFrom->_sfWidth);
+
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+        _sfColor.syncWith(pFrom->_sfColor);
+
+    if(FieldBits::NoField != (MaterialFieldMask & whichField))
+        _sfMaterial.syncWith(pFrom->_sfMaterial);
+}
+#endif
+
+
+inline
+const Char8 *LineBorderBase::getClassname(void)
+{
+    return "LineBorder";
+}
+OSG_GEN_CONTAINERPTR(LineBorder);
+
+OSG_END_NAMESPACE
 

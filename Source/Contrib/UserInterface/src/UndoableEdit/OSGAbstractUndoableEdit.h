@@ -42,8 +42,8 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
 #include "OSGUndoableEdit.h"
 
@@ -54,9 +54,9 @@ OSG_BEGIN_NAMESPACE
 */
 
 class AbstractUndoableEdit;
-typedef boost::intrusive_ptr<AbstractUndoableEdit> AbstractUndoableEditPtr;
+typedef boost::shared_ptr<AbstractUndoableEdit> AbstractUndoableEditPtr;
 
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractUndoableEdit : public UndoableEdit
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractUndoableEdit : public UndoableEdit
 {
     /*==========================  PUBLIC  =================================*/
   public:
@@ -120,7 +120,5 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractUndoableEdit : public UndoableEdit
 OSG_END_NAMESPACE
 
 #include "OSGAbstractUndoableEdit.inl"
-
-#define OSGABSTRACTUNDOABLEEDIT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGABSTRACTUNDOABLEEDIT_H_ */

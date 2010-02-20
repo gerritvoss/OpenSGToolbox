@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGSelectionEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::SelectionEvent
-
-*/
+// Documentation for this class is emitted in the
+// OSGSelectionEventBase.cpp file.
+// To modify it, please change the .fcd file (OSGSelectionEvent.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,17 +62,22 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void SelectionEvent::initMethod (void)
+void SelectionEvent::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-SelectionEventPtr SelectionEvent::create(  FieldContainerPtr Source,
-                                           Time TimeStamp,
-                                           const std::vector<Int32>& Selected,
-                                           const std::vector<Int32>& PreviouslySelected,
-                                           bool ValueIsAdjusting)
+SelectionEventTransitPtr SelectionEvent::create(  FieldContainerRefPtr Source,
+                                                  Time TimeStamp,
+                                                  const std::vector<Int32>& Selected,
+                                                  const std::vector<Int32>& PreviouslySelected,
+                                                  bool ValueIsAdjusting)
 {
-    SelectionEventPtr TheEvent = SelectionEvent::createEmpty();
+    SelectionEvent* TheEvent = SelectionEvent::createEmpty();
 
     TheEvent->setSource(Source);
     TheEvent->setTimeStamp(TimeStamp);
@@ -85,7 +85,7 @@ SelectionEventPtr SelectionEvent::create(  FieldContainerPtr Source,
     TheEvent->editMFPreviouslySelected()->setValues(PreviouslySelected);
     TheEvent->setValueIsAdjusting(ValueIsAdjusting);
 
-    return TheEvent;
+    return SelectionEventTransitPtr(TheEvent);
 }
 
 /***************************************************************************\
@@ -114,17 +114,17 @@ SelectionEvent::~SelectionEvent(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void SelectionEvent::changed(BitVector whichField, UInt32 origin)
+void SelectionEvent::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void SelectionEvent::dump(      UInt32    , 
+void SelectionEvent::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump SelectionEvent NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

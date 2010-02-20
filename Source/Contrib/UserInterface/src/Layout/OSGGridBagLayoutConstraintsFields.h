@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGLayoutConstraintsFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class GridBagLayoutConstraints;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! GridBagLayoutConstraintsPtr
+OSG_GEN_CONTAINERPTR(GridBagLayoutConstraints);
 
-typedef FCPtr<LayoutConstraintsPtr, GridBagLayoutConstraints> GridBagLayoutConstraintsPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<GridBagLayoutConstraintsPtr> : 
-    public FieldTraitsRecurseMapper<GridBagLayoutConstraintsPtr, true>
+struct FieldTraits<GridBagLayoutConstraints *> :
+    public FieldTraitsFCPtrBase<GridBagLayoutConstraints *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFGridBagLayoutConstraintsPtr"; }
-    static const char *getMName(void) { return "MFGridBagLayoutConstraintsPtr"; }
+    typedef FieldTraits<GridBagLayoutConstraints *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFGridBagLayoutConstraintsPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFGridBagLayoutConstraintsPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<GridBagLayoutConstraintsPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<GridBagLayoutConstraints *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecGridBagLayoutConstraintsPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<GridBagLayoutConstraints *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecGridBagLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GridBagLayoutConstraints *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakGridBagLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GridBagLayoutConstraints *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdGridBagLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GridBagLayoutConstraints *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecGridBagLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GridBagLayoutConstraints *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecGridBagLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GridBagLayoutConstraints *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakGridBagLayoutConstraintsPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<GridBagLayoutConstraints *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdGridBagLayoutConstraintsPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<GridBagLayoutConstraints *,
+                      RecordedRefCountPolicy  > SFRecGridBagLayoutConstraintsPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<GridBagLayoutConstraints *,
+                      UnrecordedRefCountPolicy> SFUnrecGridBagLayoutConstraintsPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<GridBagLayoutConstraints *,
+                      WeakRefCountPolicy      > SFWeakGridBagLayoutConstraintsPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<GridBagLayoutConstraints *,
+                      NoRefCountPolicy        > SFUncountedGridBagLayoutConstraintsPtr;
 
-typedef SField<GridBagLayoutConstraintsPtr> SFGridBagLayoutConstraintsPtr;
-#endif
 
-#ifndef OSG_COMPILEGRIDBAGLAYOUTCONSTRAINTSINST
-OSG_DLLEXPORT_DECL1(SField, GridBagLayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<GridBagLayoutConstraints *,
+                      RecordedRefCountPolicy  > MFRecGridBagLayoutConstraintsPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<GridBagLayoutConstraints *,
+                      UnrecordedRefCountPolicy> MFUnrecGridBagLayoutConstraintsPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<GridBagLayoutConstraints *,
+                      WeakRefCountPolicy      > MFWeakGridBagLayoutConstraintsPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<GridBagLayoutConstraints *,
+                      NoRefCountPolicy        > MFUncountedGridBagLayoutConstraintsPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<GridBagLayoutConstraintsPtr> MFGridBagLayoutConstraintsPtr;
-#endif
 
-#ifndef OSG_COMPILEGRIDBAGLAYOUTCONSTRAINTSINST
-OSG_DLLEXPORT_DECL1(MField, GridBagLayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecGridBagLayoutConstraintsPtr : 
+    public PointerSField<GridBagLayoutConstraints *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecGridBagLayoutConstraintsPtr : 
+    public PointerSField<GridBagLayoutConstraints *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakGridBagLayoutConstraintsPtr :
+    public PointerSField<GridBagLayoutConstraints *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedGridBagLayoutConstraintsPtr :
+    public PointerSField<GridBagLayoutConstraints *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecGridBagLayoutConstraintsPtr :
+    public PointerMField<GridBagLayoutConstraints *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecGridBagLayoutConstraintsPtr :
+    public PointerMField<GridBagLayoutConstraints *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakGridBagLayoutConstraintsPtr :
+    public PointerMField<GridBagLayoutConstraints *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedGridBagLayoutConstraintsPtr :
+    public PointerMField<GridBagLayoutConstraints *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGGRIDBAGLAYOUTCONSTRAINTSFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGGRIDBAGLAYOUTCONSTRAINTSFIELDS_H_ */

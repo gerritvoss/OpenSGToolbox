@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,233 +50,440 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILETITLEBARINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGButton.h"                  // IconifyButton Class
+#include "OSGLabel.h"                   // TitleLabel Class
+#include "OSGUIDrawObjectCanvas.h"      // FrameIcon Class
 
 #include "OSGTitlebarBase.h"
 #include "OSGTitlebar.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  TitlebarBase::IconifyButtonFieldMask = 
-    (TypeTraits<BitVector>::One << TitlebarBase::IconifyButtonFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  TitlebarBase::MaximizeButtonFieldMask = 
-    (TypeTraits<BitVector>::One << TitlebarBase::MaximizeButtonFieldId);
+/*! \class OSG::Titlebar
+    A UI Titlebar.
+ */
 
-const OSG::BitVector  TitlebarBase::CloseButtonFieldMask = 
-    (TypeTraits<BitVector>::One << TitlebarBase::CloseButtonFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  TitlebarBase::TitleLabelFieldMask = 
-    (TypeTraits<BitVector>::One << TitlebarBase::TitleLabelFieldId);
-
-const OSG::BitVector  TitlebarBase::FrameIconFieldMask = 
-    (TypeTraits<BitVector>::One << TitlebarBase::FrameIconFieldId);
-
-const OSG::BitVector  TitlebarBase::DrawCloseFieldMask = 
-    (TypeTraits<BitVector>::One << TitlebarBase::DrawCloseFieldId);
-
-const OSG::BitVector  TitlebarBase::DrawMaximizeFieldMask = 
-    (TypeTraits<BitVector>::One << TitlebarBase::DrawMaximizeFieldId);
-
-const OSG::BitVector  TitlebarBase::DrawIconifyFieldMask = 
-    (TypeTraits<BitVector>::One << TitlebarBase::DrawIconifyFieldId);
-
-const OSG::BitVector TitlebarBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var ButtonPtr       TitlebarBase::_sfIconifyButton
+/*! \var Button *        TitlebarBase::_sfIconifyButton
     
 */
-/*! \var ButtonPtr       TitlebarBase::_sfMaximizeButton
+
+/*! \var Button *        TitlebarBase::_sfMaximizeButton
     
 */
-/*! \var ButtonPtr       TitlebarBase::_sfCloseButton
+
+/*! \var Button *        TitlebarBase::_sfCloseButton
     
 */
-/*! \var LabelPtr        TitlebarBase::_sfTitleLabel
+
+/*! \var Label *         TitlebarBase::_sfTitleLabel
     
 */
-/*! \var UIDrawObjectCanvasPtr TitlebarBase::_sfFrameIcon
+
+/*! \var UIDrawObjectCanvas * TitlebarBase::_sfFrameIcon
     
 */
+
 /*! \var bool            TitlebarBase::_sfDrawClose
     
 */
+
 /*! \var bool            TitlebarBase::_sfDrawMaximize
     
 */
+
 /*! \var bool            TitlebarBase::_sfDrawIconify
     
 */
 
-//! Titlebar description
 
-FieldDescription *TitlebarBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<Titlebar *>::_type("TitlebarPtr", "PanelPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(Titlebar *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           Titlebar *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           Titlebar *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void TitlebarBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFButtonPtr::getClassType(), 
-                     "IconifyButton", 
-                     IconifyButtonFieldId, IconifyButtonFieldMask,
-                     false,
-                     (FieldAccessMethod) &TitlebarBase::getSFIconifyButton),
-    new FieldDescription(SFButtonPtr::getClassType(), 
-                     "MaximizeButton", 
-                     MaximizeButtonFieldId, MaximizeButtonFieldMask,
-                     false,
-                     (FieldAccessMethod) &TitlebarBase::getSFMaximizeButton),
-    new FieldDescription(SFButtonPtr::getClassType(), 
-                     "CloseButton", 
-                     CloseButtonFieldId, CloseButtonFieldMask,
-                     false,
-                     (FieldAccessMethod) &TitlebarBase::getSFCloseButton),
-    new FieldDescription(SFLabelPtr::getClassType(), 
-                     "TitleLabel", 
-                     TitleLabelFieldId, TitleLabelFieldMask,
-                     false,
-                     (FieldAccessMethod) &TitlebarBase::getSFTitleLabel),
-    new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
-                     "FrameIcon", 
-                     FrameIconFieldId, FrameIconFieldMask,
-                     false,
-                     (FieldAccessMethod) &TitlebarBase::getSFFrameIcon),
-    new FieldDescription(SFBool::getClassType(), 
-                     "DrawClose", 
-                     DrawCloseFieldId, DrawCloseFieldMask,
-                     false,
-                     (FieldAccessMethod) &TitlebarBase::getSFDrawClose),
-    new FieldDescription(SFBool::getClassType(), 
-                     "DrawMaximize", 
-                     DrawMaximizeFieldId, DrawMaximizeFieldMask,
-                     false,
-                     (FieldAccessMethod) &TitlebarBase::getSFDrawMaximize),
-    new FieldDescription(SFBool::getClassType(), 
-                     "DrawIconify", 
-                     DrawIconifyFieldId, DrawIconifyFieldMask,
-                     false,
-                     (FieldAccessMethod) &TitlebarBase::getSFDrawIconify)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType TitlebarBase::_type(
-    "Titlebar",
-    "Panel",
-    NULL,
-    (PrototypeCreateF) &TitlebarBase::createEmpty,
+    pDesc = new SFUnrecButtonPtr::Description(
+        SFUnrecButtonPtr::getClassType(),
+        "IconifyButton",
+        "",
+        IconifyButtonFieldId, IconifyButtonFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Titlebar::editHandleIconifyButton),
+        static_cast<FieldGetMethodSig >(&Titlebar::getHandleIconifyButton));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecButtonPtr::Description(
+        SFUnrecButtonPtr::getClassType(),
+        "MaximizeButton",
+        "",
+        MaximizeButtonFieldId, MaximizeButtonFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Titlebar::editHandleMaximizeButton),
+        static_cast<FieldGetMethodSig >(&Titlebar::getHandleMaximizeButton));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecButtonPtr::Description(
+        SFUnrecButtonPtr::getClassType(),
+        "CloseButton",
+        "",
+        CloseButtonFieldId, CloseButtonFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Titlebar::editHandleCloseButton),
+        static_cast<FieldGetMethodSig >(&Titlebar::getHandleCloseButton));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLabelPtr::Description(
+        SFUnrecLabelPtr::getClassType(),
+        "TitleLabel",
+        "",
+        TitleLabelFieldId, TitleLabelFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Titlebar::editHandleTitleLabel),
+        static_cast<FieldGetMethodSig >(&Titlebar::getHandleTitleLabel));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecUIDrawObjectCanvasPtr::Description(
+        SFUnrecUIDrawObjectCanvasPtr::getClassType(),
+        "FrameIcon",
+        "",
+        FrameIconFieldId, FrameIconFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Titlebar::editHandleFrameIcon),
+        static_cast<FieldGetMethodSig >(&Titlebar::getHandleFrameIcon));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "DrawClose",
+        "",
+        DrawCloseFieldId, DrawCloseFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Titlebar::editHandleDrawClose),
+        static_cast<FieldGetMethodSig >(&Titlebar::getHandleDrawClose));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "DrawMaximize",
+        "",
+        DrawMaximizeFieldId, DrawMaximizeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Titlebar::editHandleDrawMaximize),
+        static_cast<FieldGetMethodSig >(&Titlebar::getHandleDrawMaximize));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "DrawIconify",
+        "",
+        DrawIconifyFieldId, DrawIconifyFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Titlebar::editHandleDrawIconify),
+        static_cast<FieldGetMethodSig >(&Titlebar::getHandleDrawIconify));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+TitlebarBase::TypeObject TitlebarBase::_type(
+    TitlebarBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&TitlebarBase::createEmptyLocal),
     Titlebar::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(TitlebarBase, TitlebarPtr)
+    Titlebar::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&Titlebar::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "    name=\"Titlebar\"\n"
+    "    parent=\"Panel\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "    structure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    >\n"
+    "    A UI Titlebar.\n"
+    "    <Field\n"
+    "        name=\"IconifyButton\"\n"
+    "        type=\"Button\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"MaximizeButton\"\n"
+    "        type=\"Button\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"CloseButton\"\n"
+    "        type=\"Button\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"TitleLabel\"\n"
+    "        type=\"Label\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"FrameIcon\"\n"
+    "        type=\"UIDrawObjectCanvas\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"DrawClose\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"true\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"DrawMaximize\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"true\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"DrawIconify\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"true\"\n"
+    "        >\n"
+    "    </Field>\n"
+    "</FieldContainer>\n",
+    "A UI Titlebar.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &TitlebarBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &TitlebarBase::getType(void) const 
+FieldContainerType &TitlebarBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr TitlebarBase::shallowCopy(void) const 
-{ 
-    TitlebarPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const Titlebar *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 TitlebarBase::getContainerSize(void) const 
-{ 
-    return sizeof(Titlebar); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TitlebarBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &TitlebarBase::getType(void) const
 {
-    this->executeSyncImpl((TitlebarBase *) &other, whichField);
+    return _type;
 }
-#else
-void TitlebarBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 TitlebarBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((TitlebarBase *) &other, whichField, sInfo);
+    return sizeof(Titlebar);
 }
-void TitlebarBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the Titlebar::_sfIconifyButton field.
+const SFUnrecButtonPtr *TitlebarBase::getSFIconifyButton(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfIconifyButton;
 }
 
-void TitlebarBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecButtonPtr    *TitlebarBase::editSFIconifyButton  (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(IconifyButtonFieldMask);
 
+    return &_sfIconifyButton;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-TitlebarBase::TitlebarBase(void) :
-    _sfIconifyButton          (ButtonPtr(NullFC)), 
-    _sfMaximizeButton         (ButtonPtr(NullFC)), 
-    _sfCloseButton            (ButtonPtr(NullFC)), 
-    _sfTitleLabel             (LabelPtr(NullFC)), 
-    _sfFrameIcon              (UIDrawObjectCanvasPtr(NullFC)), 
-    _sfDrawClose              (bool(true)), 
-    _sfDrawMaximize           (bool(true)), 
-    _sfDrawIconify            (bool(true)), 
-    Inherited() 
+//! Get the Titlebar::_sfMaximizeButton field.
+const SFUnrecButtonPtr *TitlebarBase::getSFMaximizeButton(void) const
 {
+    return &_sfMaximizeButton;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-TitlebarBase::TitlebarBase(const TitlebarBase &source) :
-    _sfIconifyButton          (source._sfIconifyButton          ), 
-    _sfMaximizeButton         (source._sfMaximizeButton         ), 
-    _sfCloseButton            (source._sfCloseButton            ), 
-    _sfTitleLabel             (source._sfTitleLabel             ), 
-    _sfFrameIcon              (source._sfFrameIcon              ), 
-    _sfDrawClose              (source._sfDrawClose              ), 
-    _sfDrawMaximize           (source._sfDrawMaximize           ), 
-    _sfDrawIconify            (source._sfDrawIconify            ), 
-    Inherited                 (source)
+SFUnrecButtonPtr    *TitlebarBase::editSFMaximizeButton (void)
 {
+    editSField(MaximizeButtonFieldMask);
+
+    return &_sfMaximizeButton;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-TitlebarBase::~TitlebarBase(void)
+//! Get the Titlebar::_sfCloseButton field.
+const SFUnrecButtonPtr *TitlebarBase::getSFCloseButton(void) const
 {
+    return &_sfCloseButton;
 }
+
+SFUnrecButtonPtr    *TitlebarBase::editSFCloseButton    (void)
+{
+    editSField(CloseButtonFieldMask);
+
+    return &_sfCloseButton;
+}
+
+//! Get the Titlebar::_sfTitleLabel field.
+const SFUnrecLabelPtr *TitlebarBase::getSFTitleLabel(void) const
+{
+    return &_sfTitleLabel;
+}
+
+SFUnrecLabelPtr     *TitlebarBase::editSFTitleLabel     (void)
+{
+    editSField(TitleLabelFieldMask);
+
+    return &_sfTitleLabel;
+}
+
+//! Get the Titlebar::_sfFrameIcon field.
+const SFUnrecUIDrawObjectCanvasPtr *TitlebarBase::getSFFrameIcon(void) const
+{
+    return &_sfFrameIcon;
+}
+
+SFUnrecUIDrawObjectCanvasPtr *TitlebarBase::editSFFrameIcon      (void)
+{
+    editSField(FrameIconFieldMask);
+
+    return &_sfFrameIcon;
+}
+
+SFBool *TitlebarBase::editSFDrawClose(void)
+{
+    editSField(DrawCloseFieldMask);
+
+    return &_sfDrawClose;
+}
+
+const SFBool *TitlebarBase::getSFDrawClose(void) const
+{
+    return &_sfDrawClose;
+}
+
+
+SFBool *TitlebarBase::editSFDrawMaximize(void)
+{
+    editSField(DrawMaximizeFieldMask);
+
+    return &_sfDrawMaximize;
+}
+
+const SFBool *TitlebarBase::getSFDrawMaximize(void) const
+{
+    return &_sfDrawMaximize;
+}
+
+
+SFBool *TitlebarBase::editSFDrawIconify(void)
+{
+    editSField(DrawIconifyFieldMask);
+
+    return &_sfDrawIconify;
+}
+
+const SFBool *TitlebarBase::getSFDrawIconify(void) const
+{
+    return &_sfDrawIconify;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 TitlebarBase::getBinSize(const BitVector &whichField)
+UInt32 TitlebarBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -284,48 +491,40 @@ UInt32 TitlebarBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfIconifyButton.getBinSize();
     }
-
     if(FieldBits::NoField != (MaximizeButtonFieldMask & whichField))
     {
         returnValue += _sfMaximizeButton.getBinSize();
     }
-
     if(FieldBits::NoField != (CloseButtonFieldMask & whichField))
     {
         returnValue += _sfCloseButton.getBinSize();
     }
-
     if(FieldBits::NoField != (TitleLabelFieldMask & whichField))
     {
         returnValue += _sfTitleLabel.getBinSize();
     }
-
     if(FieldBits::NoField != (FrameIconFieldMask & whichField))
     {
         returnValue += _sfFrameIcon.getBinSize();
     }
-
     if(FieldBits::NoField != (DrawCloseFieldMask & whichField))
     {
         returnValue += _sfDrawClose.getBinSize();
     }
-
     if(FieldBits::NoField != (DrawMaximizeFieldMask & whichField))
     {
         returnValue += _sfDrawMaximize.getBinSize();
     }
-
     if(FieldBits::NoField != (DrawIconifyFieldMask & whichField))
     {
         returnValue += _sfDrawIconify.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void TitlebarBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void TitlebarBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -333,47 +532,38 @@ void TitlebarBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfIconifyButton.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MaximizeButtonFieldMask & whichField))
     {
         _sfMaximizeButton.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (CloseButtonFieldMask & whichField))
     {
         _sfCloseButton.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TitleLabelFieldMask & whichField))
     {
         _sfTitleLabel.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FrameIconFieldMask & whichField))
     {
         _sfFrameIcon.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawCloseFieldMask & whichField))
     {
         _sfDrawClose.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawMaximizeFieldMask & whichField))
     {
         _sfDrawMaximize.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawIconifyFieldMask & whichField))
     {
         _sfDrawIconify.copyToBin(pMem);
     }
-
-
 }
 
-void TitlebarBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void TitlebarBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -381,159 +571,474 @@ void TitlebarBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfIconifyButton.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MaximizeButtonFieldMask & whichField))
     {
         _sfMaximizeButton.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (CloseButtonFieldMask & whichField))
     {
         _sfCloseButton.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TitleLabelFieldMask & whichField))
     {
         _sfTitleLabel.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FrameIconFieldMask & whichField))
     {
         _sfFrameIcon.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawCloseFieldMask & whichField))
     {
         _sfDrawClose.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawMaximizeFieldMask & whichField))
     {
         _sfDrawMaximize.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawIconifyFieldMask & whichField))
     {
         _sfDrawIconify.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TitlebarBase::executeSyncImpl(      TitlebarBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+TitlebarTransitPtr TitlebarBase::createLocal(BitVector bFlags)
 {
+    TitlebarTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (IconifyButtonFieldMask & whichField))
-        _sfIconifyButton.syncWith(pOther->_sfIconifyButton);
+        fc = dynamic_pointer_cast<Titlebar>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (MaximizeButtonFieldMask & whichField))
-        _sfMaximizeButton.syncWith(pOther->_sfMaximizeButton);
-
-    if(FieldBits::NoField != (CloseButtonFieldMask & whichField))
-        _sfCloseButton.syncWith(pOther->_sfCloseButton);
-
-    if(FieldBits::NoField != (TitleLabelFieldMask & whichField))
-        _sfTitleLabel.syncWith(pOther->_sfTitleLabel);
-
-    if(FieldBits::NoField != (FrameIconFieldMask & whichField))
-        _sfFrameIcon.syncWith(pOther->_sfFrameIcon);
-
-    if(FieldBits::NoField != (DrawCloseFieldMask & whichField))
-        _sfDrawClose.syncWith(pOther->_sfDrawClose);
-
-    if(FieldBits::NoField != (DrawMaximizeFieldMask & whichField))
-        _sfDrawMaximize.syncWith(pOther->_sfDrawMaximize);
-
-    if(FieldBits::NoField != (DrawIconifyFieldMask & whichField))
-        _sfDrawIconify.syncWith(pOther->_sfDrawIconify);
-
-
-}
-#else
-void TitlebarBase::executeSyncImpl(      TitlebarBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (IconifyButtonFieldMask & whichField))
-        _sfIconifyButton.syncWith(pOther->_sfIconifyButton);
-
-    if(FieldBits::NoField != (MaximizeButtonFieldMask & whichField))
-        _sfMaximizeButton.syncWith(pOther->_sfMaximizeButton);
-
-    if(FieldBits::NoField != (CloseButtonFieldMask & whichField))
-        _sfCloseButton.syncWith(pOther->_sfCloseButton);
-
-    if(FieldBits::NoField != (TitleLabelFieldMask & whichField))
-        _sfTitleLabel.syncWith(pOther->_sfTitleLabel);
-
-    if(FieldBits::NoField != (FrameIconFieldMask & whichField))
-        _sfFrameIcon.syncWith(pOther->_sfFrameIcon);
-
-    if(FieldBits::NoField != (DrawCloseFieldMask & whichField))
-        _sfDrawClose.syncWith(pOther->_sfDrawClose);
-
-    if(FieldBits::NoField != (DrawMaximizeFieldMask & whichField))
-        _sfDrawMaximize.syncWith(pOther->_sfDrawMaximize);
-
-    if(FieldBits::NoField != (DrawIconifyFieldMask & whichField))
-        _sfDrawIconify.syncWith(pOther->_sfDrawIconify);
-
-
-
+    return fc;
 }
 
-void TitlebarBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+TitlebarTransitPtr TitlebarBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    TitlebarTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<Titlebar>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+TitlebarTransitPtr TitlebarBase::create(void)
+{
+    TitlebarTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<Titlebar>(tmpPtr);
+    }
+
+    return fc;
+}
+
+Titlebar *TitlebarBase::createEmptyLocal(BitVector bFlags)
+{
+    Titlebar *returnValue;
+
+    newPtr<Titlebar>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+Titlebar *TitlebarBase::createEmpty(void)
+{
+    Titlebar *returnValue;
+
+    newPtr<Titlebar>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr TitlebarBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    Titlebar *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Titlebar *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TitlebarBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    Titlebar *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const Titlebar *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr TitlebarBase::shallowCopy(void) const
+{
+    Titlebar *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const Titlebar *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+TitlebarBase::TitlebarBase(void) :
+    Inherited(),
+    _sfIconifyButton          (NULL),
+    _sfMaximizeButton         (NULL),
+    _sfCloseButton            (NULL),
+    _sfTitleLabel             (NULL),
+    _sfFrameIcon              (NULL),
+    _sfDrawClose              (bool(true)),
+    _sfDrawMaximize           (bool(true)),
+    _sfDrawIconify            (bool(true))
+{
+}
+
+TitlebarBase::TitlebarBase(const TitlebarBase &source) :
+    Inherited(source),
+    _sfIconifyButton          (NULL),
+    _sfMaximizeButton         (NULL),
+    _sfCloseButton            (NULL),
+    _sfTitleLabel             (NULL),
+    _sfFrameIcon              (NULL),
+    _sfDrawClose              (source._sfDrawClose              ),
+    _sfDrawMaximize           (source._sfDrawMaximize           ),
+    _sfDrawIconify            (source._sfDrawIconify            )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+TitlebarBase::~TitlebarBase(void)
+{
+}
+
+void TitlebarBase::onCreate(const Titlebar *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        Titlebar *pThis = static_cast<Titlebar *>(this);
+
+        pThis->setIconifyButton(source->getIconifyButton());
+
+        pThis->setMaximizeButton(source->getMaximizeButton());
+
+        pThis->setCloseButton(source->getCloseButton());
+
+        pThis->setTitleLabel(source->getTitleLabel());
+
+        pThis->setFrameIcon(source->getFrameIcon());
+    }
+}
+
+GetFieldHandlePtr TitlebarBase::getHandleIconifyButton   (void) const
+{
+    SFUnrecButtonPtr::GetHandlePtr returnValue(
+        new  SFUnrecButtonPtr::GetHandle(
+             &_sfIconifyButton,
+             this->getType().getFieldDesc(IconifyButtonFieldId),
+             const_cast<TitlebarBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TitlebarBase::editHandleIconifyButton  (void)
+{
+    SFUnrecButtonPtr::EditHandlePtr returnValue(
+        new  SFUnrecButtonPtr::EditHandle(
+             &_sfIconifyButton,
+             this->getType().getFieldDesc(IconifyButtonFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Titlebar::setIconifyButton,
+                    static_cast<Titlebar *>(this), _1));
+
+    editSField(IconifyButtonFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TitlebarBase::getHandleMaximizeButton  (void) const
+{
+    SFUnrecButtonPtr::GetHandlePtr returnValue(
+        new  SFUnrecButtonPtr::GetHandle(
+             &_sfMaximizeButton,
+             this->getType().getFieldDesc(MaximizeButtonFieldId),
+             const_cast<TitlebarBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TitlebarBase::editHandleMaximizeButton (void)
+{
+    SFUnrecButtonPtr::EditHandlePtr returnValue(
+        new  SFUnrecButtonPtr::EditHandle(
+             &_sfMaximizeButton,
+             this->getType().getFieldDesc(MaximizeButtonFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Titlebar::setMaximizeButton,
+                    static_cast<Titlebar *>(this), _1));
+
+    editSField(MaximizeButtonFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TitlebarBase::getHandleCloseButton     (void) const
+{
+    SFUnrecButtonPtr::GetHandlePtr returnValue(
+        new  SFUnrecButtonPtr::GetHandle(
+             &_sfCloseButton,
+             this->getType().getFieldDesc(CloseButtonFieldId),
+             const_cast<TitlebarBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TitlebarBase::editHandleCloseButton    (void)
+{
+    SFUnrecButtonPtr::EditHandlePtr returnValue(
+        new  SFUnrecButtonPtr::EditHandle(
+             &_sfCloseButton,
+             this->getType().getFieldDesc(CloseButtonFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Titlebar::setCloseButton,
+                    static_cast<Titlebar *>(this), _1));
+
+    editSField(CloseButtonFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TitlebarBase::getHandleTitleLabel      (void) const
+{
+    SFUnrecLabelPtr::GetHandlePtr returnValue(
+        new  SFUnrecLabelPtr::GetHandle(
+             &_sfTitleLabel,
+             this->getType().getFieldDesc(TitleLabelFieldId),
+             const_cast<TitlebarBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TitlebarBase::editHandleTitleLabel     (void)
+{
+    SFUnrecLabelPtr::EditHandlePtr returnValue(
+        new  SFUnrecLabelPtr::EditHandle(
+             &_sfTitleLabel,
+             this->getType().getFieldDesc(TitleLabelFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Titlebar::setTitleLabel,
+                    static_cast<Titlebar *>(this), _1));
+
+    editSField(TitleLabelFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TitlebarBase::getHandleFrameIcon       (void) const
+{
+    SFUnrecUIDrawObjectCanvasPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::GetHandle(
+             &_sfFrameIcon,
+             this->getType().getFieldDesc(FrameIconFieldId),
+             const_cast<TitlebarBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TitlebarBase::editHandleFrameIcon      (void)
+{
+    SFUnrecUIDrawObjectCanvasPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawObjectCanvasPtr::EditHandle(
+             &_sfFrameIcon,
+             this->getType().getFieldDesc(FrameIconFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Titlebar::setFrameIcon,
+                    static_cast<Titlebar *>(this), _1));
+
+    editSField(FrameIconFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TitlebarBase::getHandleDrawClose       (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfDrawClose,
+             this->getType().getFieldDesc(DrawCloseFieldId),
+             const_cast<TitlebarBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TitlebarBase::editHandleDrawClose      (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfDrawClose,
+             this->getType().getFieldDesc(DrawCloseFieldId),
+             this));
+
+
+    editSField(DrawCloseFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TitlebarBase::getHandleDrawMaximize    (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfDrawMaximize,
+             this->getType().getFieldDesc(DrawMaximizeFieldId),
+             const_cast<TitlebarBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TitlebarBase::editHandleDrawMaximize   (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfDrawMaximize,
+             this->getType().getFieldDesc(DrawMaximizeFieldId),
+             this));
+
+
+    editSField(DrawMaximizeFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr TitlebarBase::getHandleDrawIconify     (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfDrawIconify,
+             this->getType().getFieldDesc(DrawIconifyFieldId),
+             const_cast<TitlebarBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr TitlebarBase::editHandleDrawIconify    (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfDrawIconify,
+             this->getType().getFieldDesc(DrawIconifyFieldId),
+             this));
+
+
+    editSField(DrawIconifyFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void TitlebarBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Titlebar *pThis = static_cast<Titlebar *>(this);
+
+    pThis->execSync(static_cast<Titlebar *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *TitlebarBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    Titlebar *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const Titlebar *>(pRefAspect),
+                  dynamic_cast<const Titlebar *>(this));
+
+    return returnValue;
+}
+#endif
+
+void TitlebarBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<Titlebar *>(this)->setIconifyButton(NULL);
+
+    static_cast<Titlebar *>(this)->setMaximizeButton(NULL);
+
+    static_cast<Titlebar *>(this)->setCloseButton(NULL);
+
+    static_cast<Titlebar *>(this)->setTitleLabel(NULL);
+
+    static_cast<Titlebar *>(this)->setFrameIcon(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TitlebarPtr>::_type("TitlebarPtr", "PanelPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(TitlebarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(TitlebarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGTITLEBARBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTITLEBARBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTITLEBARFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

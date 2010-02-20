@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,42 +42,41 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGBoundedRangeModelBase.h"
-
-#include <OpenSG/Toolbox/OSGEventConnection.h>
-#include "Event/OSGChangeListener.h"
+#include "OSGEventConnection.h"
+#include "OSGChangeListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief BoundedRangeModel class. See \ref 
-           PageUserInterfaceBoundedRangeModel for a description.
+/*! \brief BoundedRangeModel class. See \ref
+           PageContribUserInterfaceBoundedRangeModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING BoundedRangeModel : public BoundedRangeModelBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING BoundedRangeModel : public BoundedRangeModelBase
 {
-  private:
-
-    typedef BoundedRangeModelBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef BoundedRangeModelBase Inherited;
+    typedef BoundedRangeModel     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -118,6 +117,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING BoundedRangeModel : public BoundedRangeMod
 	virtual bool isChangeListenerAttached(ChangeListenerPtr l) const = 0;
 	virtual void removeChangeListener(ChangeListenerPtr l) = 0;
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in BoundedRangeModelBase.
@@ -134,20 +134,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING BoundedRangeModel : public BoundedRangeMod
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~BoundedRangeModel(void); 
+    virtual ~BoundedRangeModel(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class BoundedRangeModelBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const BoundedRangeModel &source);
 };
 

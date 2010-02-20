@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,168 +50,247 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEROUNDEDCORNERLINEBORDERINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGRoundedCornerLineBorderBase.h"
 #include "OSGRoundedCornerLineBorder.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  RoundedCornerLineBorderBase::WidthFieldMask = 
-    (TypeTraits<BitVector>::One << RoundedCornerLineBorderBase::WidthFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  RoundedCornerLineBorderBase::ColorFieldMask = 
-    (TypeTraits<BitVector>::One << RoundedCornerLineBorderBase::ColorFieldId);
+/*! \class OSG::RoundedCornerLineBorder
+    UI Line Border.
+ */
 
-const OSG::BitVector  RoundedCornerLineBorderBase::CornerRadiusFieldMask = 
-    (TypeTraits<BitVector>::One << RoundedCornerLineBorderBase::CornerRadiusFieldId);
-
-const OSG::BitVector RoundedCornerLineBorderBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Real32          RoundedCornerLineBorderBase::_sfWidth
     
 */
+
 /*! \var Color4f         RoundedCornerLineBorderBase::_sfColor
     
 */
+
 /*! \var Real32          RoundedCornerLineBorderBase::_sfCornerRadius
     
 */
 
-//! RoundedCornerLineBorder description
 
-FieldDescription *RoundedCornerLineBorderBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<RoundedCornerLineBorder *>::_type("RoundedCornerLineBorderPtr", "BorderPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(RoundedCornerLineBorder *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           RoundedCornerLineBorder *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           RoundedCornerLineBorder *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void RoundedCornerLineBorderBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Width", 
-                     WidthFieldId, WidthFieldMask,
-                     false,
-                     (FieldAccessMethod) &RoundedCornerLineBorderBase::getSFWidth),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "Color", 
-                     ColorFieldId, ColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &RoundedCornerLineBorderBase::getSFColor),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "CornerRadius", 
-                     CornerRadiusFieldId, CornerRadiusFieldMask,
-                     false,
-                     (FieldAccessMethod) &RoundedCornerLineBorderBase::getSFCornerRadius)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType RoundedCornerLineBorderBase::_type(
-    "RoundedCornerLineBorder",
-    "Border",
-    NULL,
-    (PrototypeCreateF) &RoundedCornerLineBorderBase::createEmpty,
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Width",
+        "",
+        WidthFieldId, WidthFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&RoundedCornerLineBorder::editHandleWidth),
+        static_cast<FieldGetMethodSig >(&RoundedCornerLineBorder::getHandleWidth));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "Color",
+        "",
+        ColorFieldId, ColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&RoundedCornerLineBorder::editHandleColor),
+        static_cast<FieldGetMethodSig >(&RoundedCornerLineBorder::getHandleColor));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "CornerRadius",
+        "",
+        CornerRadiusFieldId, CornerRadiusFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&RoundedCornerLineBorder::editHandleCornerRadius),
+        static_cast<FieldGetMethodSig >(&RoundedCornerLineBorder::getHandleCornerRadius));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+RoundedCornerLineBorderBase::TypeObject RoundedCornerLineBorderBase::_type(
+    RoundedCornerLineBorderBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&RoundedCornerLineBorderBase::createEmptyLocal),
     RoundedCornerLineBorder::initMethod,
-    _desc,
-    sizeof(_desc));
+    RoundedCornerLineBorder::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&RoundedCornerLineBorder::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"RoundedCornerLineBorder\"\n"
+    "\tparent=\"Border\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "UI Line Border.\n"
+    "\t<Field\n"
+    "\t\tname=\"Width\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Color\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"CornerRadius\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"3\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "UI Line Border.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(RoundedCornerLineBorderBase, RoundedCornerLineBorderPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &RoundedCornerLineBorderBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &RoundedCornerLineBorderBase::getType(void) const 
+FieldContainerType &RoundedCornerLineBorderBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr RoundedCornerLineBorderBase::shallowCopy(void) const 
-{ 
-    RoundedCornerLineBorderPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const RoundedCornerLineBorder *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 RoundedCornerLineBorderBase::getContainerSize(void) const 
-{ 
-    return sizeof(RoundedCornerLineBorder); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void RoundedCornerLineBorderBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &RoundedCornerLineBorderBase::getType(void) const
 {
-    this->executeSyncImpl((RoundedCornerLineBorderBase *) &other, whichField);
+    return _type;
 }
-#else
-void RoundedCornerLineBorderBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 RoundedCornerLineBorderBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((RoundedCornerLineBorderBase *) &other, whichField, sInfo);
+    return sizeof(RoundedCornerLineBorder);
 }
-void RoundedCornerLineBorderBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFReal32 *RoundedCornerLineBorderBase::editSFWidth(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(WidthFieldMask);
+
+    return &_sfWidth;
 }
 
-void RoundedCornerLineBorderBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFReal32 *RoundedCornerLineBorderBase::getSFWidth(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfWidth;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-RoundedCornerLineBorderBase::RoundedCornerLineBorderBase(void) :
-    _sfWidth                  (Real32(1)), 
-    _sfColor                  (Color4f(0.0,0.0,0.0,1.0)), 
-    _sfCornerRadius           (Real32(3)), 
-    Inherited() 
+SFColor4f *RoundedCornerLineBorderBase::editSFColor(void)
 {
+    editSField(ColorFieldMask);
+
+    return &_sfColor;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-RoundedCornerLineBorderBase::RoundedCornerLineBorderBase(const RoundedCornerLineBorderBase &source) :
-    _sfWidth                  (source._sfWidth                  ), 
-    _sfColor                  (source._sfColor                  ), 
-    _sfCornerRadius           (source._sfCornerRadius           ), 
-    Inherited                 (source)
+const SFColor4f *RoundedCornerLineBorderBase::getSFColor(void) const
 {
+    return &_sfColor;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-RoundedCornerLineBorderBase::~RoundedCornerLineBorderBase(void)
+SFReal32 *RoundedCornerLineBorderBase::editSFCornerRadius(void)
 {
+    editSField(CornerRadiusFieldMask);
+
+    return &_sfCornerRadius;
 }
+
+const SFReal32 *RoundedCornerLineBorderBase::getSFCornerRadius(void) const
+{
+    return &_sfCornerRadius;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 RoundedCornerLineBorderBase::getBinSize(const BitVector &whichField)
+UInt32 RoundedCornerLineBorderBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -219,23 +298,20 @@ UInt32 RoundedCornerLineBorderBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfWidth.getBinSize();
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         returnValue += _sfColor.getBinSize();
     }
-
     if(FieldBits::NoField != (CornerRadiusFieldMask & whichField))
     {
         returnValue += _sfCornerRadius.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void RoundedCornerLineBorderBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void RoundedCornerLineBorderBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -243,22 +319,18 @@ void RoundedCornerLineBorderBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfWidth.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         _sfColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (CornerRadiusFieldMask & whichField))
     {
         _sfCornerRadius.copyToBin(pMem);
     }
-
-
 }
 
-void RoundedCornerLineBorderBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void RoundedCornerLineBorderBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -266,104 +338,275 @@ void RoundedCornerLineBorderBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfWidth.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         _sfColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (CornerRadiusFieldMask & whichField))
     {
         _sfCornerRadius.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void RoundedCornerLineBorderBase::executeSyncImpl(      RoundedCornerLineBorderBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+RoundedCornerLineBorderTransitPtr RoundedCornerLineBorderBase::createLocal(BitVector bFlags)
 {
+    RoundedCornerLineBorderTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (WidthFieldMask & whichField))
-        _sfWidth.syncWith(pOther->_sfWidth);
+        fc = dynamic_pointer_cast<RoundedCornerLineBorder>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
-
-    if(FieldBits::NoField != (CornerRadiusFieldMask & whichField))
-        _sfCornerRadius.syncWith(pOther->_sfCornerRadius);
-
-
-}
-#else
-void RoundedCornerLineBorderBase::executeSyncImpl(      RoundedCornerLineBorderBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (WidthFieldMask & whichField))
-        _sfWidth.syncWith(pOther->_sfWidth);
-
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
-
-    if(FieldBits::NoField != (CornerRadiusFieldMask & whichField))
-        _sfCornerRadius.syncWith(pOther->_sfCornerRadius);
-
-
-
+    return fc;
 }
 
-void RoundedCornerLineBorderBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+RoundedCornerLineBorderTransitPtr RoundedCornerLineBorderBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    RoundedCornerLineBorderTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<RoundedCornerLineBorder>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+RoundedCornerLineBorderTransitPtr RoundedCornerLineBorderBase::create(void)
+{
+    RoundedCornerLineBorderTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<RoundedCornerLineBorder>(tmpPtr);
+    }
+
+    return fc;
+}
+
+RoundedCornerLineBorder *RoundedCornerLineBorderBase::createEmptyLocal(BitVector bFlags)
+{
+    RoundedCornerLineBorder *returnValue;
+
+    newPtr<RoundedCornerLineBorder>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+RoundedCornerLineBorder *RoundedCornerLineBorderBase::createEmpty(void)
+{
+    RoundedCornerLineBorder *returnValue;
+
+    newPtr<RoundedCornerLineBorder>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr RoundedCornerLineBorderBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    RoundedCornerLineBorder *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const RoundedCornerLineBorder *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr RoundedCornerLineBorderBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    RoundedCornerLineBorder *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const RoundedCornerLineBorder *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr RoundedCornerLineBorderBase::shallowCopy(void) const
+{
+    RoundedCornerLineBorder *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const RoundedCornerLineBorder *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+RoundedCornerLineBorderBase::RoundedCornerLineBorderBase(void) :
+    Inherited(),
+    _sfWidth                  (Real32(1)),
+    _sfColor                  (Color4f(0.0,0.0,0.0,1.0)),
+    _sfCornerRadius           (Real32(3))
+{
+}
+
+RoundedCornerLineBorderBase::RoundedCornerLineBorderBase(const RoundedCornerLineBorderBase &source) :
+    Inherited(source),
+    _sfWidth                  (source._sfWidth                  ),
+    _sfColor                  (source._sfColor                  ),
+    _sfCornerRadius           (source._sfCornerRadius           )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+RoundedCornerLineBorderBase::~RoundedCornerLineBorderBase(void)
+{
+}
+
+
+GetFieldHandlePtr RoundedCornerLineBorderBase::getHandleWidth           (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfWidth,
+             this->getType().getFieldDesc(WidthFieldId),
+             const_cast<RoundedCornerLineBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr RoundedCornerLineBorderBase::editHandleWidth          (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfWidth,
+             this->getType().getFieldDesc(WidthFieldId),
+             this));
+
+
+    editSField(WidthFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr RoundedCornerLineBorderBase::getHandleColor           (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfColor,
+             this->getType().getFieldDesc(ColorFieldId),
+             const_cast<RoundedCornerLineBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr RoundedCornerLineBorderBase::editHandleColor          (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfColor,
+             this->getType().getFieldDesc(ColorFieldId),
+             this));
+
+
+    editSField(ColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr RoundedCornerLineBorderBase::getHandleCornerRadius    (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfCornerRadius,
+             this->getType().getFieldDesc(CornerRadiusFieldId),
+             const_cast<RoundedCornerLineBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr RoundedCornerLineBorderBase::editHandleCornerRadius   (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfCornerRadius,
+             this->getType().getFieldDesc(CornerRadiusFieldId),
+             this));
+
+
+    editSField(CornerRadiusFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void RoundedCornerLineBorderBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    RoundedCornerLineBorder *pThis = static_cast<RoundedCornerLineBorder *>(this);
+
+    pThis->execSync(static_cast<RoundedCornerLineBorder *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *RoundedCornerLineBorderBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    RoundedCornerLineBorder *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const RoundedCornerLineBorder *>(pRefAspect),
+                  dynamic_cast<const RoundedCornerLineBorder *>(this));
+
+    return returnValue;
+}
+#endif
+
+void RoundedCornerLineBorderBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<RoundedCornerLineBorderPtr>::_type("RoundedCornerLineBorderPtr", "BorderPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(RoundedCornerLineBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(RoundedCornerLineBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGROUNDEDCORNERLINEBORDERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGROUNDEDCORNERLINEBORDERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGROUNDEDCORNERLINEBORDERFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,16 +55,15 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &SingleSelectionModelBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 SingleSelectionModelBase::getClassTypeId(void) 
+OSG::UInt32 SingleSelectionModelBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
+    return _type.getId();
+}
 //! access the producer type of the class
 inline
 const EventProducerType &SingleSelectionModelBase::getProducerClassType(void)
@@ -81,20 +78,43 @@ UInt32 SingleSelectionModelBase::getProducerClassTypeId(void)
     return _producerType.getId();
 }
 
+inline
+OSG::UInt16 SingleSelectionModelBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
+}
 
 /*------------------------------ get -----------------------------------*/
 
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void SingleSelectionModelBase::execSync (      SingleSelectionModelBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+}
+#endif
+
 
 inline
-EventConnection SingleSelectionModelBase::attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
+const Char8 *SingleSelectionModelBase::getClassname(void)
+{
+    return "SingleSelectionModel";
+}
+
+inline
+EventConnection SingleSelectionModelBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
 {
     return _Producer.attachActivity(TheActivity, ProducedEventId);
 }
 
 inline
-bool SingleSelectionModelBase::isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const
+bool SingleSelectionModelBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
 {
     return _Producer.isActivityAttached(TheActivity, ProducedEventId);
 }
@@ -106,13 +126,13 @@ UInt32 SingleSelectionModelBase::getNumActivitiesAttached(UInt32 ProducedEventId
 }
 
 inline
-ActivityPtr SingleSelectionModelBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
+ActivityRefPtr SingleSelectionModelBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
 {
     return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
 }
 
 inline
-void SingleSelectionModelBase::detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
+void SingleSelectionModelBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
 {
     _Producer.detachActivity(TheActivity, ProducedEventId);
 }
@@ -124,7 +144,7 @@ UInt32 SingleSelectionModelBase::getNumProducedEvents(void) const
 }
 
 inline
-const MethodDescription *SingleSelectionModelBase::getProducedEventDescription(const Char8 *ProducedEventName) const
+const MethodDescription *SingleSelectionModelBase::getProducedEventDescription(const std::string &ProducedEventName) const
 {
     return _Producer.getProducedEventDescription(ProducedEventName);
 }
@@ -136,7 +156,7 @@ const MethodDescription *SingleSelectionModelBase::getProducedEventDescription(U
 }
 
 inline
-UInt32 SingleSelectionModelBase::getProducedEventId(const Char8 *ProducedEventName) const
+UInt32 SingleSelectionModelBase::getProducedEventId(const std::string &ProducedEventName) const
 {
     return _Producer.getProducedEventId(ProducedEventName);
 }
@@ -154,4 +174,7 @@ EventProducerPtr &SingleSelectionModelBase::editEventProducer(void)
     return _sfEventProducer.getValue();
 }
 
+OSG_GEN_CONTAINERPTR(SingleSelectionModel);
+
 OSG_END_NAMESPACE
+

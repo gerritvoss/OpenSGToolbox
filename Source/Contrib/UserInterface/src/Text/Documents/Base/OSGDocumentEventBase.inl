@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,151 +55,120 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &DocumentEventBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 DocumentEventBase::getClassTypeId(void) 
+OSG::UInt32 DocumentEventBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-DocumentEventPtr DocumentEventBase::create(void) 
-{
-    DocumentEventPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = DocumentEventPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-DocumentEventPtr DocumentEventBase::createEmpty(void) 
-{ 
-    DocumentEventPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 DocumentEventBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the DocumentEvent::_sfDocument field.
-inline
-const SFDocumentPtr *DocumentEventBase::getSFDocument(void) const
-{
-    return &_sfDocument;
-}
-
-//! Get the DocumentEvent::_sfDocument field.
-inline
-SFDocumentPtr *DocumentEventBase::editSFDocument(void)
-{
-    return &_sfDocument;
-}
-
-//! Get the DocumentEvent::_sfOffset field.
-inline
-const SFInt32 *DocumentEventBase::getSFOffset(void) const
-{
-    return &_sfOffset;
-}
-
-//! Get the DocumentEvent::_sfOffset field.
-inline
-SFInt32 *DocumentEventBase::editSFOffset(void)
-{
-    return &_sfOffset;
-}
-
-//! Get the DocumentEvent::_sfLength field.
-inline
-const SFUInt32 *DocumentEventBase::getSFLength(void) const
-{
-    return &_sfLength;
-}
-
-//! Get the DocumentEvent::_sfLength field.
-inline
-SFUInt32 *DocumentEventBase::editSFLength(void)
-{
-    return &_sfLength;
-}
-
 
 //! Get the value of the DocumentEvent::_sfDocument field.
 inline
-DocumentPtr &DocumentEventBase::editDocument(void)
-{
-    return _sfDocument.getValue();
-}
-
-//! Get the value of the DocumentEvent::_sfDocument field.
-inline
-const DocumentPtr &DocumentEventBase::getDocument(void) const
+Document * DocumentEventBase::getDocument(void) const
 {
     return _sfDocument.getValue();
 }
 
 //! Set the value of the DocumentEvent::_sfDocument field.
 inline
-void DocumentEventBase::setDocument(const DocumentPtr &value)
+void DocumentEventBase::setDocument(Document * const value)
 {
+    editSField(DocumentFieldMask);
+
     _sfDocument.setValue(value);
 }
-
 //! Get the value of the DocumentEvent::_sfOffset field.
+
 inline
 Int32 &DocumentEventBase::editOffset(void)
 {
+    editSField(OffsetFieldMask);
+
     return _sfOffset.getValue();
 }
 
 //! Get the value of the DocumentEvent::_sfOffset field.
 inline
-const Int32 &DocumentEventBase::getOffset(void) const
+      Int32  DocumentEventBase::getOffset(void) const
 {
     return _sfOffset.getValue();
 }
 
 //! Set the value of the DocumentEvent::_sfOffset field.
 inline
-void DocumentEventBase::setOffset(const Int32 &value)
+void DocumentEventBase::setOffset(const Int32 value)
 {
+    editSField(OffsetFieldMask);
+
     _sfOffset.setValue(value);
 }
-
 //! Get the value of the DocumentEvent::_sfLength field.
+
 inline
 UInt32 &DocumentEventBase::editLength(void)
 {
+    editSField(LengthFieldMask);
+
     return _sfLength.getValue();
 }
 
 //! Get the value of the DocumentEvent::_sfLength field.
 inline
-const UInt32 &DocumentEventBase::getLength(void) const
+      UInt32  DocumentEventBase::getLength(void) const
 {
     return _sfLength.getValue();
 }
 
 //! Set the value of the DocumentEvent::_sfLength field.
 inline
-void DocumentEventBase::setLength(const UInt32 &value)
+void DocumentEventBase::setLength(const UInt32 value)
 {
+    editSField(LengthFieldMask);
+
     _sfLength.setValue(value);
 }
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void DocumentEventBase::execSync (      DocumentEventBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (DocumentFieldMask & whichField))
+        _sfDocument.syncWith(pFrom->_sfDocument);
+
+    if(FieldBits::NoField != (OffsetFieldMask & whichField))
+        _sfOffset.syncWith(pFrom->_sfOffset);
+
+    if(FieldBits::NoField != (LengthFieldMask & whichField))
+        _sfLength.syncWith(pFrom->_sfLength);
+}
+#endif
+
+
+inline
+const Char8 *DocumentEventBase::getClassname(void)
+{
+    return "DocumentEvent";
+}
+OSG_GEN_CONTAINERPTR(DocumentEvent);
 
 OSG_END_NAMESPACE
 

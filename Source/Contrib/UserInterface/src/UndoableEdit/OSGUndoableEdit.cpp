@@ -45,7 +45,7 @@
 
 #define OSG_COMPILEUSERINTERFACELIB
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 #include "OSGUndoableEdit.h"
 
@@ -55,7 +55,7 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::UndoableEdit
+/*! \class OSG::UndoableEdit
 A UndoableEdit. 
 */
 
@@ -82,21 +82,6 @@ UndoableEdit::~UndoableEdit(void)
 }
 
 /*----------------------------- class specific ----------------------------*/
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

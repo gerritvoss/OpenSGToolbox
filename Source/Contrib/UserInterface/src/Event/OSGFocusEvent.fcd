@@ -3,18 +3,20 @@
 <FieldContainer
 	name="FocusEvent"
 	parent="Event"
-    parentHeader="OpenSG/Toolbox/OSGEvent"
-	library="UserInterface"
-	pointerfieldtypes="single"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="true"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 	<Field
 		name="IsTemporary"
 		type="bool"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="protected"
@@ -24,12 +26,12 @@
 	</Field>
 	<Field
 		name="OppositeComponent"
-		type="ComponentPtr"
-		header="Component/OSGComponentFields.h"
+		type="Component"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="protected"
-		defaultValue="NullFC"
+		defaultValue="NULL"
         publicRead="true"
 	>
 	</Field>

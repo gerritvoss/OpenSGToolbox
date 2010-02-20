@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,111 +58,130 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include "Component/Container/OSGContainer.h" // Parent
+#include "OSGComponentContainer.h" // Parent
 
-#include <OpenSG/OSGUInt32Fields.h> // Orientation type
-#include <OpenSG/OSGUInt32Fields.h> // UnitIncrement type
-#include <OpenSG/OSGUInt32Fields.h> // BlockIncrement type
-#include "Component/Button/OSGButton.h" // VerticalMinButton type
-#include "Component/Button/OSGButton.h" // VerticalMaxButton type
-#include "Component/Button/OSGButton.h" // VerticalScrollBar type
-#include "Component/Button/OSGButton.h" // VerticalScrollField type
-#include "Component/Button/OSGButton.h" // HorizontalMinButton type
-#include "Component/Button/OSGButton.h" // HorizontalMaxButton type
-#include "Component/Button/OSGButton.h" // HorizontalScrollBar type
-#include "Component/Button/OSGButton.h" // HorizontalScrollField type
-#include <OpenSG/OSGUInt32Fields.h> // ScrollBarMinLength type
-#include "Component/Scroll/OSGBoundedRangeModelFields.h" // RangeModel type
+#include "OSGSysFields.h"               // Orientation type
+#include "OSGButtonFields.h"            // VerticalMinButton type
+#include "OSGBoundedRangeModelFields.h" // RangeModel type
 
 #include "OSGScrollBarFields.h"
-#include <OpenSG/Toolbox/OSGEventProducer.h>
-#include <OpenSG/Toolbox/OSGEventProducerType.h>
-#include <OpenSG/Toolbox/OSGMethodDescription.h>
+
+//Event Producer Headers
+#include "OSGEventProducer.h"
+#include "OSGEventProducerType.h"
+#include "OSGMethodDescription.h"
 
 OSG_BEGIN_NAMESPACE
 
 class ScrollBar;
-class BinaryDataHandler;
 
 //! \brief ScrollBar Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ScrollBarBase : public ComponentContainer
 {
-  private:
-
-    typedef Container    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ScrollBarPtr  Ptr;
+    typedef ComponentContainer Inherited;
+    typedef ComponentContainer ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(ScrollBar);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        OrientationFieldId           = Inherited::NextFieldId,
-        UnitIncrementFieldId         = OrientationFieldId           + 1,
-        BlockIncrementFieldId        = UnitIncrementFieldId         + 1,
-        VerticalMinButtonFieldId     = BlockIncrementFieldId        + 1,
-        VerticalMaxButtonFieldId     = VerticalMinButtonFieldId     + 1,
-        VerticalScrollBarFieldId     = VerticalMaxButtonFieldId     + 1,
-        VerticalScrollFieldFieldId   = VerticalScrollBarFieldId     + 1,
-        HorizontalMinButtonFieldId   = VerticalScrollFieldFieldId   + 1,
-        HorizontalMaxButtonFieldId   = HorizontalMinButtonFieldId   + 1,
-        HorizontalScrollBarFieldId   = HorizontalMaxButtonFieldId   + 1,
-        HorizontalScrollFieldFieldId = HorizontalScrollBarFieldId   + 1,
-        ScrollBarMinLengthFieldId    = HorizontalScrollFieldFieldId + 1,
-        RangeModelFieldId            = ScrollBarMinLengthFieldId    + 1,
-        NextFieldId                  = RangeModelFieldId            + 1
+        OrientationFieldId = Inherited::NextFieldId,
+        UnitIncrementFieldId = OrientationFieldId + 1,
+        BlockIncrementFieldId = UnitIncrementFieldId + 1,
+        VerticalMinButtonFieldId = BlockIncrementFieldId + 1,
+        VerticalMaxButtonFieldId = VerticalMinButtonFieldId + 1,
+        VerticalScrollBarFieldId = VerticalMaxButtonFieldId + 1,
+        VerticalScrollFieldFieldId = VerticalScrollBarFieldId + 1,
+        HorizontalMinButtonFieldId = VerticalScrollFieldFieldId + 1,
+        HorizontalMaxButtonFieldId = HorizontalMinButtonFieldId + 1,
+        HorizontalScrollBarFieldId = HorizontalMaxButtonFieldId + 1,
+        HorizontalScrollFieldFieldId = HorizontalScrollBarFieldId + 1,
+        ScrollBarMinLengthFieldId = HorizontalScrollFieldFieldId + 1,
+        RangeModelFieldId = ScrollBarMinLengthFieldId + 1,
+        NextFieldId = RangeModelFieldId + 1
     };
 
-    static const OSG::BitVector OrientationFieldMask;
-    static const OSG::BitVector UnitIncrementFieldMask;
-    static const OSG::BitVector BlockIncrementFieldMask;
-    static const OSG::BitVector VerticalMinButtonFieldMask;
-    static const OSG::BitVector VerticalMaxButtonFieldMask;
-    static const OSG::BitVector VerticalScrollBarFieldMask;
-    static const OSG::BitVector VerticalScrollFieldFieldMask;
-    static const OSG::BitVector HorizontalMinButtonFieldMask;
-    static const OSG::BitVector HorizontalMaxButtonFieldMask;
-    static const OSG::BitVector HorizontalScrollBarFieldMask;
-    static const OSG::BitVector HorizontalScrollFieldFieldMask;
-    static const OSG::BitVector ScrollBarMinLengthFieldMask;
-    static const OSG::BitVector RangeModelFieldMask;
-
+    static const OSG::BitVector OrientationFieldMask =
+        (TypeTraits<BitVector>::One << OrientationFieldId);
+    static const OSG::BitVector UnitIncrementFieldMask =
+        (TypeTraits<BitVector>::One << UnitIncrementFieldId);
+    static const OSG::BitVector BlockIncrementFieldMask =
+        (TypeTraits<BitVector>::One << BlockIncrementFieldId);
+    static const OSG::BitVector VerticalMinButtonFieldMask =
+        (TypeTraits<BitVector>::One << VerticalMinButtonFieldId);
+    static const OSG::BitVector VerticalMaxButtonFieldMask =
+        (TypeTraits<BitVector>::One << VerticalMaxButtonFieldId);
+    static const OSG::BitVector VerticalScrollBarFieldMask =
+        (TypeTraits<BitVector>::One << VerticalScrollBarFieldId);
+    static const OSG::BitVector VerticalScrollFieldFieldMask =
+        (TypeTraits<BitVector>::One << VerticalScrollFieldFieldId);
+    static const OSG::BitVector HorizontalMinButtonFieldMask =
+        (TypeTraits<BitVector>::One << HorizontalMinButtonFieldId);
+    static const OSG::BitVector HorizontalMaxButtonFieldMask =
+        (TypeTraits<BitVector>::One << HorizontalMaxButtonFieldId);
+    static const OSG::BitVector HorizontalScrollBarFieldMask =
+        (TypeTraits<BitVector>::One << HorizontalScrollBarFieldId);
+    static const OSG::BitVector HorizontalScrollFieldFieldMask =
+        (TypeTraits<BitVector>::One << HorizontalScrollFieldFieldId);
+    static const OSG::BitVector ScrollBarMinLengthFieldMask =
+        (TypeTraits<BitVector>::One << ScrollBarMinLengthFieldId);
+    static const OSG::BitVector RangeModelFieldMask =
+        (TypeTraits<BitVector>::One << RangeModelFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUInt32          SFOrientationType;
+    typedef SFUInt32          SFUnitIncrementType;
+    typedef SFUInt32          SFBlockIncrementType;
+    typedef SFUnrecButtonPtr  SFVerticalMinButtonType;
+    typedef SFUnrecButtonPtr  SFVerticalMaxButtonType;
+    typedef SFUnrecButtonPtr  SFVerticalScrollBarType;
+    typedef SFUnrecButtonPtr  SFVerticalScrollFieldType;
+    typedef SFUnrecButtonPtr  SFHorizontalMinButtonType;
+    typedef SFUnrecButtonPtr  SFHorizontalMaxButtonType;
+    typedef SFUnrecButtonPtr  SFHorizontalScrollBarType;
+    typedef SFUnrecButtonPtr  SFHorizontalScrollFieldType;
+    typedef SFUInt32          SFScrollBarMinLengthType;
+    typedef SFUnrecBoundedRangeModelPtr SFRangeModelType;
 
     enum
     {
-        AdjustmentValueChangedMethodId = Inherited::NextMethodId,
-        NextMethodId                   = AdjustmentValueChangedMethodId + 1
+        AdjustmentValueChangedMethodId = Inherited::NextProducedMethodId,
+        NextProducedMethodId = AdjustmentValueChangedMethodId + 1
     };
-
-
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
-    static const  EventProducerType  &getProducerClassType  (void); 
-    static        UInt32              getProducerClassTypeId(void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
+    static const  EventProducerType  &getProducerClassType  (void);
+    static        UInt32              getProducerClassTypeId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -172,103 +191,107 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
     /*! \{                                                                 */
 
 
-           SFUInt32            *editSFOrientation    (void);
-     const SFUInt32            *getSFOrientation    (void) const;
+                  SFUInt32            *editSFOrientation    (void);
+            const SFUInt32            *getSFOrientation     (void) const;
 
-           SFUInt32            *editSFUnitIncrement  (void);
-     const SFUInt32            *getSFUnitIncrement  (void) const;
+                  SFUInt32            *editSFUnitIncrement  (void);
+            const SFUInt32            *getSFUnitIncrement   (void) const;
 
-           SFUInt32            *editSFBlockIncrement (void);
-     const SFUInt32            *getSFBlockIncrement (void) const;
+                  SFUInt32            *editSFBlockIncrement (void);
+            const SFUInt32            *getSFBlockIncrement  (void) const;
+            const SFUnrecButtonPtr    *getSFVerticalMinButton(void) const;
+                  SFUnrecButtonPtr    *editSFVerticalMinButton(void);
+            const SFUnrecButtonPtr    *getSFVerticalMaxButton(void) const;
+                  SFUnrecButtonPtr    *editSFVerticalMaxButton(void);
+            const SFUnrecButtonPtr    *getSFVerticalScrollBar(void) const;
+                  SFUnrecButtonPtr    *editSFVerticalScrollBar(void);
+            const SFUnrecButtonPtr    *getSFVerticalScrollField(void) const;
+                  SFUnrecButtonPtr    *editSFVerticalScrollField(void);
+            const SFUnrecButtonPtr    *getSFHorizontalMinButton(void) const;
+                  SFUnrecButtonPtr    *editSFHorizontalMinButton(void);
+            const SFUnrecButtonPtr    *getSFHorizontalMaxButton(void) const;
+                  SFUnrecButtonPtr    *editSFHorizontalMaxButton(void);
+            const SFUnrecButtonPtr    *getSFHorizontalScrollBar(void) const;
+                  SFUnrecButtonPtr    *editSFHorizontalScrollBar(void);
+            const SFUnrecButtonPtr    *getSFHorizontalScrollField(void) const;
+                  SFUnrecButtonPtr    *editSFHorizontalScrollField(void);
 
-           SFButtonPtr         *editSFVerticalMinButton(void);
-     const SFButtonPtr         *getSFVerticalMinButton(void) const;
-
-           SFButtonPtr         *editSFVerticalMaxButton(void);
-     const SFButtonPtr         *getSFVerticalMaxButton(void) const;
-
-           SFButtonPtr         *editSFVerticalScrollBar(void);
-     const SFButtonPtr         *getSFVerticalScrollBar(void) const;
-
-           SFButtonPtr         *editSFVerticalScrollField(void);
-     const SFButtonPtr         *getSFVerticalScrollField(void) const;
-
-           SFButtonPtr         *editSFHorizontalMinButton(void);
-     const SFButtonPtr         *getSFHorizontalMinButton(void) const;
-
-           SFButtonPtr         *editSFHorizontalMaxButton(void);
-     const SFButtonPtr         *getSFHorizontalMaxButton(void) const;
-
-           SFButtonPtr         *editSFHorizontalScrollBar(void);
-     const SFButtonPtr         *getSFHorizontalScrollBar(void) const;
-
-           SFButtonPtr         *editSFHorizontalScrollField(void);
-     const SFButtonPtr         *getSFHorizontalScrollField(void) const;
-
-           SFUInt32            *editSFScrollBarMinLength(void);
-     const SFUInt32            *getSFScrollBarMinLength(void) const;
-
-           SFBoundedRangeModelPtr *editSFRangeModel     (void);
-     const SFBoundedRangeModelPtr *getSFRangeModel     (void) const;
+                  SFUInt32            *editSFScrollBarMinLength(void);
+            const SFUInt32            *getSFScrollBarMinLength (void) const;
+            const SFUnrecBoundedRangeModelPtr *getSFRangeModel     (void) const;
+                  SFUnrecBoundedRangeModelPtr *editSFRangeModel     (void);
 
 
-           UInt32              &editOrientation    (void);
-     const UInt32              &getOrientation    (void) const;
+                  UInt32              &editOrientation    (void);
+                  UInt32               getOrientation     (void) const;
 
-           UInt32              &editUnitIncrement  (void);
-     const UInt32              &getUnitIncrement  (void) const;
+                  UInt32              &editUnitIncrement  (void);
+                  UInt32               getUnitIncrement   (void) const;
 
-           UInt32              &editBlockIncrement (void);
-     const UInt32              &getBlockIncrement (void) const;
+                  UInt32              &editBlockIncrement (void);
+                  UInt32               getBlockIncrement  (void) const;
 
-           ButtonPtr           &editVerticalMinButton(void);
-     const ButtonPtr           &getVerticalMinButton(void) const;
+                  Button * getVerticalMinButton(void) const;
 
-           ButtonPtr           &editVerticalMaxButton(void);
-     const ButtonPtr           &getVerticalMaxButton(void) const;
+                  Button * getVerticalMaxButton(void) const;
 
-           ButtonPtr           &editVerticalScrollBar(void);
-     const ButtonPtr           &getVerticalScrollBar(void) const;
+                  Button * getVerticalScrollBar(void) const;
 
-           ButtonPtr           &editVerticalScrollField(void);
-     const ButtonPtr           &getVerticalScrollField(void) const;
+                  Button * getVerticalScrollField(void) const;
 
-           ButtonPtr           &editHorizontalMinButton(void);
-     const ButtonPtr           &getHorizontalMinButton(void) const;
+                  Button * getHorizontalMinButton(void) const;
 
-           ButtonPtr           &editHorizontalMaxButton(void);
-     const ButtonPtr           &getHorizontalMaxButton(void) const;
+                  Button * getHorizontalMaxButton(void) const;
 
-           ButtonPtr           &editHorizontalScrollBar(void);
-     const ButtonPtr           &getHorizontalScrollBar(void) const;
+                  Button * getHorizontalScrollBar(void) const;
 
-           ButtonPtr           &editHorizontalScrollField(void);
-     const ButtonPtr           &getHorizontalScrollField(void) const;
+                  Button * getHorizontalScrollField(void) const;
 
-           UInt32              &editScrollBarMinLength(void);
-     const UInt32              &getScrollBarMinLength(void) const;
+                  UInt32              &editScrollBarMinLength(void);
+                  UInt32               getScrollBarMinLength (void) const;
 
-           BoundedRangeModelPtr &editRangeModel     (void);
-     const BoundedRangeModelPtr &getRangeModel     (void) const;
+                  BoundedRangeModel * getRangeModel     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setOrientation    ( const UInt32 &value );
-     void setUnitIncrement  ( const UInt32 &value );
-     void setBlockIncrement ( const UInt32 &value );
-     void setVerticalMinButton( const ButtonPtr &value );
-     void setVerticalMaxButton( const ButtonPtr &value );
-     void setVerticalScrollBar( const ButtonPtr &value );
-     void setVerticalScrollField( const ButtonPtr &value );
-     void setHorizontalMinButton( const ButtonPtr &value );
-     void setHorizontalMaxButton( const ButtonPtr &value );
-     void setHorizontalScrollBar( const ButtonPtr &value );
-     void setHorizontalScrollField( const ButtonPtr &value );
-     void setScrollBarMinLength( const UInt32 &value );
-     void setRangeModel     ( const BoundedRangeModelPtr &value );
+            void setOrientation    (const UInt32 value);
+            void setUnitIncrement  (const UInt32 value);
+            void setBlockIncrement (const UInt32 value);
+            void setVerticalMinButton(Button * const value);
+            void setVerticalMaxButton(Button * const value);
+            void setVerticalScrollBar(Button * const value);
+            void setVerticalScrollField(Button * const value);
+            void setHorizontalMinButton(Button * const value);
+            void setHorizontalMaxButton(Button * const value);
+            void setHorizontalScrollBar(Button * const value);
+            void setHorizontalScrollField(Button * const value);
+            void setScrollBarMinLength(const UInt32 value);
+            void setRangeModel     (BoundedRangeModel * const value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Binary Access                              */
+    /*! \{                                                                 */
+
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -277,60 +300,61 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
 
     virtual const EventProducerType &getProducerType(void) const; 
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
-    /*! \{                                                                 */
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Binary Access                              */
-    /*! \{                                                                 */
-
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  ScrollBarPtr      create          (void); 
-    static  ScrollBarPtr      createEmpty     (void); 
+    static  ScrollBarTransitPtr  create          (void);
+    static  ScrollBar           *createEmpty     (void);
+
+    static  ScrollBarTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  ScrollBar            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  ScrollBarTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFUInt32            _sfOrientation;
-    SFUInt32            _sfUnitIncrement;
-    SFUInt32            _sfBlockIncrement;
-    SFButtonPtr         _sfVerticalMinButton;
-    SFButtonPtr         _sfVerticalMaxButton;
-    SFButtonPtr         _sfVerticalScrollBar;
-    SFButtonPtr         _sfVerticalScrollField;
-    SFButtonPtr         _sfHorizontalMinButton;
-    SFButtonPtr         _sfHorizontalMaxButton;
-    SFButtonPtr         _sfHorizontalScrollBar;
-    SFButtonPtr         _sfHorizontalScrollField;
-    SFUInt32            _sfScrollBarMinLength;
-    SFBoundedRangeModelPtr   _sfRangeModel;
+    SFUInt32          _sfOrientation;
+    SFUInt32          _sfUnitIncrement;
+    SFUInt32          _sfBlockIncrement;
+    SFUnrecButtonPtr  _sfVerticalMinButton;
+    SFUnrecButtonPtr  _sfVerticalMaxButton;
+    SFUnrecButtonPtr  _sfVerticalScrollBar;
+    SFUnrecButtonPtr  _sfVerticalScrollField;
+    SFUnrecButtonPtr  _sfHorizontalMinButton;
+    SFUnrecButtonPtr  _sfHorizontalMaxButton;
+    SFUnrecButtonPtr  _sfHorizontalScrollBar;
+    SFUnrecButtonPtr  _sfHorizontalScrollField;
+    SFUInt32          _sfScrollBarMinLength;
+    SFUnrecBoundedRangeModelPtr _sfRangeModel;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -345,69 +369,106 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ScrollBarBase(void); 
+    virtual ~ScrollBarBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const ScrollBar *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleOrientation     (void) const;
+    EditFieldHandlePtr editHandleOrientation    (void);
+    GetFieldHandlePtr  getHandleUnitIncrement   (void) const;
+    EditFieldHandlePtr editHandleUnitIncrement  (void);
+    GetFieldHandlePtr  getHandleBlockIncrement  (void) const;
+    EditFieldHandlePtr editHandleBlockIncrement (void);
+    GetFieldHandlePtr  getHandleVerticalMinButton (void) const;
+    EditFieldHandlePtr editHandleVerticalMinButton(void);
+    GetFieldHandlePtr  getHandleVerticalMaxButton (void) const;
+    EditFieldHandlePtr editHandleVerticalMaxButton(void);
+    GetFieldHandlePtr  getHandleVerticalScrollBar (void) const;
+    EditFieldHandlePtr editHandleVerticalScrollBar(void);
+    GetFieldHandlePtr  getHandleVerticalScrollField (void) const;
+    EditFieldHandlePtr editHandleVerticalScrollField(void);
+    GetFieldHandlePtr  getHandleHorizontalMinButton (void) const;
+    EditFieldHandlePtr editHandleHorizontalMinButton(void);
+    GetFieldHandlePtr  getHandleHorizontalMaxButton (void) const;
+    EditFieldHandlePtr editHandleHorizontalMaxButton(void);
+    GetFieldHandlePtr  getHandleHorizontalScrollBar (void) const;
+    EditFieldHandlePtr editHandleHorizontalScrollBar(void);
+    GetFieldHandlePtr  getHandleHorizontalScrollField (void) const;
+    EditFieldHandlePtr editHandleHorizontalScrollField(void);
+    GetFieldHandlePtr  getHandleScrollBarMinLength (void) const;
+    EditFieldHandlePtr editHandleScrollBarMinLength(void);
+    GetFieldHandlePtr  getHandleRangeModel      (void) const;
+    EditFieldHandlePtr editHandleRangeModel     (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ScrollBarBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      ScrollBarBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      ScrollBarBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
+    /*---------------------------------------------------------------------*/
     static MethodDescription   *_methodDesc[];
     static EventProducerType _producerType;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const ScrollBarBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef ScrollBarBase *ScrollBarBaseP;
-
-typedef osgIF<ScrollBarBase::isNodeCore,
-              CoredNodePtr<ScrollBar>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ScrollBarNodePtr;
-
-typedef RefPtr<ScrollBarPtr> ScrollBarRefPtr;
 
 OSG_END_NAMESPACE
 

@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
 #include "OSGBevelBorder.h"
 #include "OSGCompoundBorder.h"
@@ -50,3 +50,4 @@
 #include "OSGRoundedCornerLineBorder.h"
 #include "OSGWindowBorder.h"
 #include "OSGPolygonBorder.h"
+

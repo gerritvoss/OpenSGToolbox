@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,46 +42,54 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGPatternLayerBase.h"
+#include "OSGTextureObjChunk.h"
+#include "OSGTextureTransformChunk.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief PatternLayer class. See \ref 
-           PageUserInterfacePatternLayer for a description.
+/*! \brief PatternLayer class. See \ref
+           PageContribUserInterfacePatternLayer for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING PatternLayer : public PatternLayerBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING PatternLayer : public PatternLayerBase
 {
-  private:
-
-    typedef PatternLayerBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
-	  enum PatternRepeat {PATTERN_REPEAT_BY_POINT, PATTERN_REPEAT_ABSOLUTE};
+	enum PatternRepeat
+    {
+        PATTERN_REPEAT_BY_POINT = 0,
+        PATTERN_REPEAT_ABSOLUTE = 1
+    };
+
+    typedef PatternLayerBase Inherited;
+    typedef PatternLayer     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32 Opacity) const;
+	virtual void draw(const GraphicsWeakPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32 Opacity) const;
 
 	Vec2f getCorrectedPatternSize(void) const;
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in PatternLayerBase.
@@ -98,20 +106,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING PatternLayer : public PatternLayerBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~PatternLayer(void); 
+    virtual ~PatternLayer(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class PatternLayerBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const PatternLayer &source);
 };
 

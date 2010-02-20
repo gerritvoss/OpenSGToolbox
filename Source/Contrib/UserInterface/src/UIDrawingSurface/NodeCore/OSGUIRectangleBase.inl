@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,10 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-#include "UIDrawingSurface/OSGUIDrawingSurface.h"
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -59,99 +55,31 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &UIRectangleBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 UIRectangleBase::getClassTypeId(void) 
+OSG::UInt32 UIRectangleBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-UIRectanglePtr UIRectangleBase::create(void) 
-{
-    UIRectanglePtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = UIRectanglePtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-UIRectanglePtr UIRectangleBase::createEmpty(void) 
-{ 
-    UIRectanglePtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 UIRectangleBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the UIRectangle::_sfPoint field.
-inline
-SFPnt3f *UIRectangleBase::getSFPoint(void)
-{
-    return &_sfPoint;
-}
-
-//! Get the UIRectangle::_sfWidth field.
-inline
-SFReal32 *UIRectangleBase::getSFWidth(void)
-{
-    return &_sfWidth;
-}
-
-//! Get the UIRectangle::_sfHeight field.
-inline
-SFReal32 *UIRectangleBase::getSFHeight(void)
-{
-    return &_sfHeight;
-}
-
-//! Get the UIRectangle::_sfDrawingSurface field.
-inline
-SFUIDrawingSurfacePtr *UIRectangleBase::getSFDrawingSurface(void)
-{
-    return &_sfDrawingSurface;
-}
-
-//! Get the UIRectangle::_sfRectColorMask field.
-inline
-SFColorMaskChunkPtr *UIRectangleBase::getSFRectColorMask(void)
-{
-    return &_sfRectColorMask;
-}
-
-//! Get the UIRectangle::_sfRectPolygon field.
-inline
-SFPolygonChunkPtr *UIRectangleBase::getSFRectPolygon(void)
-{
-    return &_sfRectPolygon;
-}
-
-//! Get the UIRectangle::_sfMouseTransformFunctor field.
-inline
-SFUIRectangleMouseTransformFunctorPtr *UIRectangleBase::getSFMouseTransformFunctor(void)
-{
-    return &_sfMouseTransformFunctor;
-}
-
-
 //! Get the value of the UIRectangle::_sfPoint field.
+
 inline
-Pnt3f &UIRectangleBase::getPoint(void)
+Pnt3f &UIRectangleBase::editPoint(void)
 {
+    editSField(PointFieldMask);
+
     return _sfPoint.getValue();
 }
 
@@ -166,141 +94,166 @@ const Pnt3f &UIRectangleBase::getPoint(void) const
 inline
 void UIRectangleBase::setPoint(const Pnt3f &value)
 {
+    editSField(PointFieldMask);
+
     _sfPoint.setValue(value);
 }
-
 //! Get the value of the UIRectangle::_sfWidth field.
+
 inline
-Real32 &UIRectangleBase::getWidth(void)
+Real32 &UIRectangleBase::editWidth(void)
 {
+    editSField(WidthFieldMask);
+
     return _sfWidth.getValue();
 }
 
 //! Get the value of the UIRectangle::_sfWidth field.
 inline
-const Real32 &UIRectangleBase::getWidth(void) const
+      Real32  UIRectangleBase::getWidth(void) const
 {
     return _sfWidth.getValue();
 }
 
 //! Set the value of the UIRectangle::_sfWidth field.
 inline
-void UIRectangleBase::setWidth(const Real32 &value)
+void UIRectangleBase::setWidth(const Real32 value)
 {
+    editSField(WidthFieldMask);
+
     _sfWidth.setValue(value);
 }
-
 //! Get the value of the UIRectangle::_sfHeight field.
+
 inline
-Real32 &UIRectangleBase::getHeight(void)
+Real32 &UIRectangleBase::editHeight(void)
 {
+    editSField(HeightFieldMask);
+
     return _sfHeight.getValue();
 }
 
 //! Get the value of the UIRectangle::_sfHeight field.
 inline
-const Real32 &UIRectangleBase::getHeight(void) const
+      Real32  UIRectangleBase::getHeight(void) const
 {
     return _sfHeight.getValue();
 }
 
 //! Set the value of the UIRectangle::_sfHeight field.
 inline
-void UIRectangleBase::setHeight(const Real32 &value)
+void UIRectangleBase::setHeight(const Real32 value)
 {
+    editSField(HeightFieldMask);
+
     _sfHeight.setValue(value);
 }
 
 //! Get the value of the UIRectangle::_sfDrawingSurface field.
 inline
-UIDrawingSurfacePtr &UIRectangleBase::getDrawingSurface(void)
-{
-    return _sfDrawingSurface.getValue();
-}
-
-//! Get the value of the UIRectangle::_sfDrawingSurface field.
-inline
-const UIDrawingSurfacePtr &UIRectangleBase::getDrawingSurface(void) const
+UIDrawingSurface * UIRectangleBase::getDrawingSurface(void) const
 {
     return _sfDrawingSurface.getValue();
 }
 
 //! Set the value of the UIRectangle::_sfDrawingSurface field.
 inline
-void UIRectangleBase::setDrawingSurface(const UIDrawingSurfacePtr &value)
+void UIRectangleBase::setDrawingSurface(UIDrawingSurface * const value)
 {
+    editSField(DrawingSurfaceFieldMask);
+
     _sfDrawingSurface.setValue(value);
-	if(getDrawingSurface() != NullFC)
-	{
-		getDrawingSurface()->setMouseTransformFunctor(getMouseTransformFunctor());
-	}
 }
 
 //! Get the value of the UIRectangle::_sfRectColorMask field.
 inline
-ColorMaskChunkPtr &UIRectangleBase::getRectColorMask(void)
-{
-    return _sfRectColorMask.getValue();
-}
-
-//! Get the value of the UIRectangle::_sfRectColorMask field.
-inline
-const ColorMaskChunkPtr &UIRectangleBase::getRectColorMask(void) const
+ColorMaskChunk * UIRectangleBase::getRectColorMask(void) const
 {
     return _sfRectColorMask.getValue();
 }
 
 //! Set the value of the UIRectangle::_sfRectColorMask field.
 inline
-void UIRectangleBase::setRectColorMask(const ColorMaskChunkPtr &value)
+void UIRectangleBase::setRectColorMask(ColorMaskChunk * const value)
 {
+    editSField(RectColorMaskFieldMask);
+
     _sfRectColorMask.setValue(value);
 }
 
 //! Get the value of the UIRectangle::_sfRectPolygon field.
 inline
-PolygonChunkPtr &UIRectangleBase::getRectPolygon(void)
-{
-    return _sfRectPolygon.getValue();
-}
-
-//! Get the value of the UIRectangle::_sfRectPolygon field.
-inline
-const PolygonChunkPtr &UIRectangleBase::getRectPolygon(void) const
+PolygonChunk * UIRectangleBase::getRectPolygon(void) const
 {
     return _sfRectPolygon.getValue();
 }
 
 //! Set the value of the UIRectangle::_sfRectPolygon field.
 inline
-void UIRectangleBase::setRectPolygon(const PolygonChunkPtr &value)
+void UIRectangleBase::setRectPolygon(PolygonChunk * const value)
 {
+    editSField(RectPolygonFieldMask);
+
     _sfRectPolygon.setValue(value);
 }
 
 //! Get the value of the UIRectangle::_sfMouseTransformFunctor field.
 inline
-UIRectangleMouseTransformFunctorPtr &UIRectangleBase::getMouseTransformFunctor(void)
-{
-    return _sfMouseTransformFunctor.getValue();
-}
-
-//! Get the value of the UIRectangle::_sfMouseTransformFunctor field.
-inline
-const UIRectangleMouseTransformFunctorPtr &UIRectangleBase::getMouseTransformFunctor(void) const
+UIRectangleMouseTransformFunctor * UIRectangleBase::getMouseTransformFunctor(void) const
 {
     return _sfMouseTransformFunctor.getValue();
 }
 
 //! Set the value of the UIRectangle::_sfMouseTransformFunctor field.
 inline
-void UIRectangleBase::setMouseTransformFunctor(const UIRectangleMouseTransformFunctorPtr &value)
+void UIRectangleBase::setMouseTransformFunctor(UIRectangleMouseTransformFunctor * const value)
 {
+    editSField(MouseTransformFunctorFieldMask);
+
     _sfMouseTransformFunctor.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void UIRectangleBase::execSync (      UIRectangleBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGUIRECTANGLEBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (PointFieldMask & whichField))
+        _sfPoint.syncWith(pFrom->_sfPoint);
+
+    if(FieldBits::NoField != (WidthFieldMask & whichField))
+        _sfWidth.syncWith(pFrom->_sfWidth);
+
+    if(FieldBits::NoField != (HeightFieldMask & whichField))
+        _sfHeight.syncWith(pFrom->_sfHeight);
+
+    if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
+        _sfDrawingSurface.syncWith(pFrom->_sfDrawingSurface);
+
+    if(FieldBits::NoField != (RectColorMaskFieldMask & whichField))
+        _sfRectColorMask.syncWith(pFrom->_sfRectColorMask);
+
+    if(FieldBits::NoField != (RectPolygonFieldMask & whichField))
+        _sfRectPolygon.syncWith(pFrom->_sfRectPolygon);
+
+    if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
+        _sfMouseTransformFunctor.syncWith(pFrom->_sfMouseTransformFunctor);
+}
+#endif
+
+
+inline
+const Char8 *UIRectangleBase::getClassname(void)
+{
+    return "UIRectangle";
+}
+OSG_GEN_CONTAINERPTR(UIRectangle);
+
+OSG_END_NAMESPACE
 

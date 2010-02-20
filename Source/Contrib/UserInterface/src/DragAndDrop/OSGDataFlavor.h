@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,42 +42,44 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGDataFlavorBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DataFlavor class. See \ref 
-           PageUserInterfaceDataFlavor for a description.
+/*! \brief DataFlavor class. See \ref
+           PageContribUserInterfaceDataFlavor for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DataFlavor : public DataFlavorBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataFlavor : public DataFlavorBase
 {
-  private:
-
-    typedef DataFlavorBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef DataFlavorBase Inherited;
+    typedef DataFlavor     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in DataFlavorBase.
@@ -94,20 +96,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING DataFlavor : public DataFlavorBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DataFlavor(void); 
+    virtual ~DataFlavor(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class DataFlavorBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const DataFlavor &source);
 };
 
@@ -117,7 +123,5 @@ OSG_END_NAMESPACE
 
 #include "OSGDataFlavorBase.inl"
 #include "OSGDataFlavor.inl"
-
-#define OSGDATAFLAVOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGDATAFLAVOR_H_ */

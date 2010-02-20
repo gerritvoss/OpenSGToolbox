@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,75 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGAbstractElementFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class AbstractBranchElement;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! AbstractBranchElementPtr
+OSG_GEN_CONTAINERPTR(AbstractBranchElement);
 
-typedef FCPtr<AbstractElementPtr, AbstractBranchElement> AbstractBranchElementPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<AbstractBranchElementPtr> : 
-    public FieldTraitsRecurseMapper<AbstractBranchElementPtr, true>
+struct FieldTraits<AbstractBranchElement *> :
+    public FieldTraitsFCPtrBase<AbstractBranchElement *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFAbstractBranchElementPtr"; }
-    static const char *getMName(void) { return "MFAbstractBranchElementPtr"; }
+    typedef FieldTraits<AbstractBranchElement *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFAbstractBranchElementPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFAbstractBranchElementPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<AbstractBranchElementPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<AbstractBranchElement *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecAbstractBranchElementPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<AbstractBranchElement *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecAbstractBranchElementPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractBranchElement *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakAbstractBranchElementPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractBranchElement *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdAbstractBranchElementPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractBranchElement *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecAbstractBranchElementPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractBranchElement *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecAbstractBranchElementPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractBranchElement *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakAbstractBranchElementPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<AbstractBranchElement *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdAbstractBranchElementPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<AbstractBranchElement *,
+                      RecordedRefCountPolicy  > SFRecAbstractBranchElementPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<AbstractBranchElement *,
+                      UnrecordedRefCountPolicy> SFUnrecAbstractBranchElementPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<AbstractBranchElement *,
+                      WeakRefCountPolicy      > SFWeakAbstractBranchElementPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<AbstractBranchElement *,
+                      NoRefCountPolicy        > SFUncountedAbstractBranchElementPtr;
 
-typedef SField<AbstractBranchElementPtr> SFAbstractBranchElementPtr;
-#endif
 
-#ifndef OSG_COMPILEABSTRACTBRANCHELEMENTINST
-OSG_DLLEXPORT_DECL1(SField, AbstractBranchElementPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<AbstractBranchElement *,
+                      RecordedRefCountPolicy  > MFRecAbstractBranchElementPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<AbstractBranchElement *,
+                      UnrecordedRefCountPolicy> MFUnrecAbstractBranchElementPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<AbstractBranchElement *,
+                      WeakRefCountPolicy      > MFWeakAbstractBranchElementPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<AbstractBranchElement *,
+                      NoRefCountPolicy        > MFUncountedAbstractBranchElementPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<AbstractBranchElementPtr> MFAbstractBranchElementPtr;
-#endif
 
-#ifndef OSG_COMPILEABSTRACTBRANCHELEMENTINST
-OSG_DLLEXPORT_DECL1(MField, AbstractBranchElementPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecAbstractBranchElementPtr : 
+    public PointerSField<AbstractBranchElement *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecAbstractBranchElementPtr : 
+    public PointerSField<AbstractBranchElement *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakAbstractBranchElementPtr :
+    public PointerSField<AbstractBranchElement *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedAbstractBranchElementPtr :
+    public PointerSField<AbstractBranchElement *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecAbstractBranchElementPtr :
+    public PointerMField<AbstractBranchElement *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecAbstractBranchElementPtr :
+    public PointerMField<AbstractBranchElement *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakAbstractBranchElementPtr :
+    public PointerMField<AbstractBranchElement *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedAbstractBranchElementPtr :
+    public PointerMField<AbstractBranchElement *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

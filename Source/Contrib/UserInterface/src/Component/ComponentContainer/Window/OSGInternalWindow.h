@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,68 +42,67 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGInternalWindowBase.h"
+#include "OSGMouseAdapter.h"
+#include "OSGMouseMotionAdapter.h"
+#include "OSGKeyAdapter.h"
+#include "OSGKeyAcceleratorListener.h"
+#include "OSGActionListener.h"
 
-#include <OpenSG/Input/OSGMouseAdapter.h>
-#include <OpenSG/Input/OSGMouseMotionAdapter.h>
-#include <OpenSG/Input/OSGKeyAdapter.h>
-#include "Event/OSGKeyAcceleratorListener.h"
-#include "Event/OSGActionListener.h"
-
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief InternalWindow class. See \ref 
-           PageUserInterfaceInternalWindow for a description.
+/*! \brief InternalWindow class. See \ref
+           PageContribUserInterfaceInternalWindow for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindow : public InternalWindowBase
 {
-  private:
-
-    typedef InternalWindowBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef InternalWindowBase Inherited;
+    typedef InternalWindow     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 	//Key Events
-	virtual void keyPressed(const KeyEventPtr e);
-	virtual void keyReleased(const KeyEventPtr e);
-	virtual void keyTyped(const KeyEventPtr e);
+	virtual void keyPressed(const KeyEventUnrecPtr e);
+	virtual void keyReleased(const KeyEventUnrecPtr e);
+	virtual void keyTyped(const KeyEventUnrecPtr e);
 
 	//Mouse Events
-    virtual void mouseClicked(const MouseEventPtr e);
-    virtual void mouseEntered(const MouseEventPtr e);
-    virtual void mouseExited(const MouseEventPtr e);
-    virtual void mousePressed(const MouseEventPtr e);
-    virtual void mouseReleased(const MouseEventPtr e);
+    virtual void mouseClicked(const MouseEventUnrecPtr e);
+    virtual void mouseEntered(const MouseEventUnrecPtr e);
+    virtual void mouseExited(const MouseEventUnrecPtr e);
+    virtual void mousePressed(const MouseEventUnrecPtr e);
+    virtual void mouseReleased(const MouseEventUnrecPtr e);
 
 	//Mouse Motion Events
-    virtual void mouseMoved(const MouseEventPtr e);
-    virtual void mouseDragged(const MouseEventPtr e);
+    virtual void mouseMoved(const MouseEventUnrecPtr e);
+    virtual void mouseDragged(const MouseEventUnrecPtr e);
 
 	//Mouse Wheel Events
-    virtual void mouseWheelMoved(const MouseWheelEventPtr e);
+    virtual void mouseWheelMoved(const MouseWheelEventUnrecPtr e);
     void destroyPopupMenu(void);
     
     virtual void updateLayout(void);
@@ -113,11 +112,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
     virtual void getContentPaneBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
 
 
-    virtual       InternalWindowPtr            &getParentWindow    (void);
-    virtual const InternalWindowPtr            &getParentWindow    (void) const;
-	
+    virtual InternalWindow *            getParentWindow    (void) const;
 
-	bool giveFocus(ComponentPtr NewFocusedComponent, bool Temporary = false);
+	bool giveFocus(ComponentRefPtr NewFocusedComponent, bool Temporary = false);
 	bool takeFocus(bool Temporary = false);
 
     EventConnection addKeyAccelerator(KeyEvent::Key TheKey, UInt32 Modifiers, KeyAcceleratorListenerPtr Listener);
@@ -143,6 +140,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
 
     void detachFromEventProducer(void);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in InternalWindowBase.
@@ -159,29 +157,36 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~InternalWindow(void); 
+    virtual ~InternalWindow(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
     
-	virtual void drawInternal(const GraphicsPtr TheGraphics, Real32 Opacity = 1.0f) const;
-	virtual void drawUnclipped(const GraphicsPtr TheGraphics, Real32 Opacity = 1.0f) const;
+	virtual void drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opacity = 1.0f) const;
+	virtual void drawUnclipped(const GraphicsWeakPtr TheGraphics, Real32 Opacity = 1.0f) const;
 	
 	class PopupMenuInteractionListener : public MouseAdapter, public MouseMotionAdapter, public KeyAdapter
 	{
 	public :
-		PopupMenuInteractionListener(InternalWindowPtr TheInternalWindow);
+		PopupMenuInteractionListener(InternalWindowRefPtr TheInternalWindow);
 		
-        virtual void mouseClicked(const MouseEventPtr e);
-		virtual void mousePressed(const MouseEventPtr e);
-        virtual void mouseReleased(const MouseEventPtr e);
-		virtual void keyPressed(const KeyEventPtr e);
-		virtual void mouseMoved(const MouseEventPtr e);
-        virtual void mouseDragged(const MouseEventPtr e);
+        virtual void mouseClicked(const MouseEventUnrecPtr e);
+		virtual void mousePressed(const MouseEventUnrecPtr e);
+        virtual void mouseReleased(const MouseEventUnrecPtr e);
+		virtual void keyPressed(const KeyEventUnrecPtr e);
+		virtual void mouseMoved(const MouseEventUnrecPtr e);
+        virtual void mouseDragged(const MouseEventUnrecPtr e);
 
         void disconnect(void);
 
 	protected :
-		InternalWindowPtr _InternalWindow;
+		InternalWindowRefPtr _InternalWindow;
 	};
 
 	friend class PopupMenuInteractionListener;
@@ -195,11 +200,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
 	class TitlebarStartDragListener : public MouseAdapter
 	{
 	public :
-		TitlebarStartDragListener(InternalWindowPtr TheInternalWindow);
+		TitlebarStartDragListener(InternalWindowRefPtr TheInternalWindow);
 		
-		virtual void mousePressed(const MouseEventPtr e);
+		virtual void mousePressed(const MouseEventUnrecPtr e);
 	protected :
-		InternalWindowPtr _InternalWindow;
+		InternalWindowRefPtr _InternalWindow;
 	};
 
 	friend class TitlebarStartDragListener;
@@ -209,19 +214,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
 	class TitlebarDraggedListener : public MouseMotionAdapter, public MouseAdapter, public KeyAdapter
 	{
 	public :
-		TitlebarDraggedListener(InternalWindowPtr TheInternalWindow);
-		virtual void mouseDragged(const MouseEventPtr e);
+		TitlebarDraggedListener(InternalWindowRefPtr TheInternalWindow);
+		virtual void mouseDragged(const MouseEventUnrecPtr e);
 		
-		virtual void mouseReleased(const MouseEventPtr e);
+		virtual void mouseReleased(const MouseEventUnrecPtr e);
 
-		virtual void keyPressed(const KeyEventPtr e);
+		virtual void keyPressed(const KeyEventUnrecPtr e);
 
 		void setWindowStartPosition(const Pnt2f& Pos);
 		void setMouseStartPosition(const Pnt2f& Pos);
 
         void disconnect(void);
 	protected :
-		InternalWindowPtr _InternalWindow;
+		InternalWindowRefPtr _InternalWindow;
 
 		Pnt2f _WindowStartPosition;
 		Pnt2f _MouseStartPosition;
@@ -234,12 +239,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
 	class BorderDraggedListener : public MouseMotionAdapter, public MouseAdapter, public KeyAdapter
 	{
 	public :
-		BorderDraggedListener(InternalWindowPtr TheInternalWindow);
-		virtual void mouseDragged(const MouseEventPtr e);
+		BorderDraggedListener(InternalWindowRefPtr TheInternalWindow);
+		virtual void mouseDragged(const MouseEventUnrecPtr e);
 		
-		virtual void mouseReleased(const MouseEventPtr e);
+		virtual void mouseReleased(const MouseEventUnrecPtr e);
 		
-		virtual void keyPressed(const KeyEventPtr e);
+		virtual void keyPressed(const KeyEventUnrecPtr e);
 
 		void setWindowStartPosition(const Pnt2f& Pos);
 		void setWindowStartSize(const Vec2f& Size);
@@ -249,7 +254,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
         void disconnect(void);
 
 	protected :
-		InternalWindowPtr _InternalWindow;
+		InternalWindowRefPtr _InternalWindow;
 
 		Pnt2f _WindowStartPosition;
 		Vec2f _WindowStartSize;
@@ -267,11 +272,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
 	class CloseButtonListener : public ActionListener
 	{
 	public :
-		CloseButtonListener(InternalWindowPtr TheInternalWindow);
+		CloseButtonListener(InternalWindowRefPtr TheInternalWindow);
 		
-		virtual void actionPerformed(const ActionEventPtr e);
+		virtual void actionPerformed(const ActionEventUnrecPtr e);
 	protected :
-		InternalWindowPtr _InternalWindow;
+		InternalWindowRefPtr _InternalWindow;
 	};
 
 	friend class CloseButtonListener;
@@ -282,11 +287,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
 	class MaximizeButtonListener : public ActionListener
 	{
 	public :
-		MaximizeButtonListener(InternalWindowPtr TheInternalWindow);
+		MaximizeButtonListener(InternalWindowRefPtr TheInternalWindow);
 		
-		virtual void actionPerformed(const ActionEventPtr e);
+		virtual void actionPerformed(const ActionEventUnrecPtr e);
 	protected :
-		InternalWindowPtr _InternalWindow;
+		InternalWindowRefPtr _InternalWindow;
 	};
 
 	friend class MaximizeButtonListener;
@@ -297,11 +302,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
 	class IconifyButtonListener : public ActionListener
 	{
 	public :
-		IconifyButtonListener(InternalWindowPtr TheInternalWindow);
+		IconifyButtonListener(InternalWindowRefPtr TheInternalWindow);
 		
-		virtual void actionPerformed(const ActionEventPtr e);
+		virtual void actionPerformed(const ActionEventUnrecPtr e);
 	protected :
-		InternalWindowPtr _InternalWindow;
+		InternalWindowRefPtr _InternalWindow;
 	};
 
 	friend class IconifyButtonListener;
@@ -310,15 +315,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
 	virtual UInt32 queryCursor(const Pnt2f& CursorLoc) const;
 
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class InternalWindowBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const InternalWindow &source);
 };
 
@@ -326,9 +329,12 @@ typedef InternalWindow *InternalWindowP;
 
 OSG_END_NAMESPACE
 
+#include "OSGPopupMenu.h"
+#include "OSGToolTip.h"
+#include "OSGTitlebar.h"
+#include "OSGMenuBar.h"
+
 #include "OSGInternalWindowBase.inl"
 #include "OSGInternalWindow.inl"
-
-#define OSGINTERNALWINDOW_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGINTERNALWINDOW_H_ */

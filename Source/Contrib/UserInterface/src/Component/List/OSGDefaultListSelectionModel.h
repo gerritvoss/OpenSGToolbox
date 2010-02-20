@@ -42,14 +42,14 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
 #include "OSGListSelectionModel.h"
 #include <set>
 #include <list>
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -57,7 +57,7 @@ OSG_BEGIN_NAMESPACE
            PageUserInterfaceDefaultListSelectionModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultListSelectionModel : public ListSelectionModel
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultListSelectionModel : public ListSelectionModel
 {
     /*==========================  PUBLIC  =================================*/
   public:
@@ -134,7 +134,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListSelectionModel : public ListSel
 	
     ListSelectionListenerSet       _ListSelectionListeners;
 	
-    virtual void produceSelectionChanged(const ListSelectionEventPtr e);
+    virtual void produceSelectionChanged(const ListSelectionEventUnrecPtr e);
 
 	struct IndexRange{  //Inclusive
 		IndexRange(UInt32 start, UInt32 end)

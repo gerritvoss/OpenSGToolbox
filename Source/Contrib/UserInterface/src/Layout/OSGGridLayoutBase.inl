@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,160 +55,157 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &GridLayoutBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 GridLayoutBase::getClassTypeId(void) 
+OSG::UInt32 GridLayoutBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-GridLayoutPtr GridLayoutBase::create(void) 
-{
-    GridLayoutPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = GridLayoutPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-GridLayoutPtr GridLayoutBase::createEmpty(void) 
-{ 
-    GridLayoutPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 GridLayoutBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the GridLayout::_sfRows field.
-inline
-SFUInt32 *GridLayoutBase::getSFRows(void)
-{
-    return &_sfRows;
-}
-
-//! Get the GridLayout::_sfColumns field.
-inline
-SFUInt32 *GridLayoutBase::getSFColumns(void)
-{
-    return &_sfColumns;
-}
-
-//! Get the GridLayout::_sfHorizontalGap field.
-inline
-SFReal32 *GridLayoutBase::getSFHorizontalGap(void)
-{
-    return &_sfHorizontalGap;
-}
-
-//! Get the GridLayout::_sfVerticalGap field.
-inline
-SFReal32 *GridLayoutBase::getSFVerticalGap(void)
-{
-    return &_sfVerticalGap;
-}
-
-
 //! Get the value of the GridLayout::_sfRows field.
+
 inline
-UInt32 &GridLayoutBase::getRows(void)
+UInt32 &GridLayoutBase::editRows(void)
 {
+    editSField(RowsFieldMask);
+
     return _sfRows.getValue();
 }
 
 //! Get the value of the GridLayout::_sfRows field.
 inline
-const UInt32 &GridLayoutBase::getRows(void) const
+      UInt32  GridLayoutBase::getRows(void) const
 {
     return _sfRows.getValue();
 }
 
 //! Set the value of the GridLayout::_sfRows field.
 inline
-void GridLayoutBase::setRows(const UInt32 &value)
+void GridLayoutBase::setRows(const UInt32 value)
 {
+    editSField(RowsFieldMask);
+
     _sfRows.setValue(value);
 }
-
 //! Get the value of the GridLayout::_sfColumns field.
+
 inline
-UInt32 &GridLayoutBase::getColumns(void)
+UInt32 &GridLayoutBase::editColumns(void)
 {
+    editSField(ColumnsFieldMask);
+
     return _sfColumns.getValue();
 }
 
 //! Get the value of the GridLayout::_sfColumns field.
 inline
-const UInt32 &GridLayoutBase::getColumns(void) const
+      UInt32  GridLayoutBase::getColumns(void) const
 {
     return _sfColumns.getValue();
 }
 
 //! Set the value of the GridLayout::_sfColumns field.
 inline
-void GridLayoutBase::setColumns(const UInt32 &value)
+void GridLayoutBase::setColumns(const UInt32 value)
 {
+    editSField(ColumnsFieldMask);
+
     _sfColumns.setValue(value);
 }
-
 //! Get the value of the GridLayout::_sfHorizontalGap field.
+
 inline
-Real32 &GridLayoutBase::getHorizontalGap(void)
+Real32 &GridLayoutBase::editHorizontalGap(void)
 {
+    editSField(HorizontalGapFieldMask);
+
     return _sfHorizontalGap.getValue();
 }
 
 //! Get the value of the GridLayout::_sfHorizontalGap field.
 inline
-const Real32 &GridLayoutBase::getHorizontalGap(void) const
+      Real32  GridLayoutBase::getHorizontalGap(void) const
 {
     return _sfHorizontalGap.getValue();
 }
 
 //! Set the value of the GridLayout::_sfHorizontalGap field.
 inline
-void GridLayoutBase::setHorizontalGap(const Real32 &value)
+void GridLayoutBase::setHorizontalGap(const Real32 value)
 {
+    editSField(HorizontalGapFieldMask);
+
     _sfHorizontalGap.setValue(value);
 }
-
 //! Get the value of the GridLayout::_sfVerticalGap field.
+
 inline
-Real32 &GridLayoutBase::getVerticalGap(void)
+Real32 &GridLayoutBase::editVerticalGap(void)
 {
+    editSField(VerticalGapFieldMask);
+
     return _sfVerticalGap.getValue();
 }
 
 //! Get the value of the GridLayout::_sfVerticalGap field.
 inline
-const Real32 &GridLayoutBase::getVerticalGap(void) const
+      Real32  GridLayoutBase::getVerticalGap(void) const
 {
     return _sfVerticalGap.getValue();
 }
 
 //! Set the value of the GridLayout::_sfVerticalGap field.
 inline
-void GridLayoutBase::setVerticalGap(const Real32 &value)
+void GridLayoutBase::setVerticalGap(const Real32 value)
 {
+    editSField(VerticalGapFieldMask);
+
     _sfVerticalGap.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void GridLayoutBase::execSync (      GridLayoutBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGGRIDLAYOUTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (RowsFieldMask & whichField))
+        _sfRows.syncWith(pFrom->_sfRows);
+
+    if(FieldBits::NoField != (ColumnsFieldMask & whichField))
+        _sfColumns.syncWith(pFrom->_sfColumns);
+
+    if(FieldBits::NoField != (HorizontalGapFieldMask & whichField))
+        _sfHorizontalGap.syncWith(pFrom->_sfHorizontalGap);
+
+    if(FieldBits::NoField != (VerticalGapFieldMask & whichField))
+        _sfVerticalGap.syncWith(pFrom->_sfVerticalGap);
+}
+#endif
+
+
+inline
+const Char8 *GridLayoutBase::getClassname(void)
+{
+    return "GridLayout";
+}
+OSG_GEN_CONTAINERPTR(GridLayout);
+
+OSG_END_NAMESPACE
 

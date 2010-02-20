@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "UIDrawingSurface/OSGUIDrawingSurfaceMouseTransformFunctorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class UIForegroundMouseTransformFunctor;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! UIForegroundMouseTransformFunctorPtr
+OSG_GEN_CONTAINERPTR(UIForegroundMouseTransformFunctor);
 
-typedef FCPtr<UIDrawingSurfaceMouseTransformFunctorPtr, UIForegroundMouseTransformFunctor> UIForegroundMouseTransformFunctorPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<UIForegroundMouseTransformFunctorPtr> : 
-    public FieldTraitsRecurseMapper<UIForegroundMouseTransformFunctorPtr, true>
+struct FieldTraits<UIForegroundMouseTransformFunctor *> :
+    public FieldTraitsFCPtrBase<UIForegroundMouseTransformFunctor *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFUIForegroundMouseTransformFunctorPtr"; }
-    static const char *getMName(void) { return "MFUIForegroundMouseTransformFunctorPtr"; }
+    typedef FieldTraits<UIForegroundMouseTransformFunctor *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFUIForegroundMouseTransformFunctorPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFUIForegroundMouseTransformFunctorPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<UIForegroundMouseTransformFunctorPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<UIForegroundMouseTransformFunctor *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecUIForegroundMouseTransformFunctorPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<UIForegroundMouseTransformFunctor *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecUIForegroundMouseTransformFunctorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<UIForegroundMouseTransformFunctor *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakUIForegroundMouseTransformFunctorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<UIForegroundMouseTransformFunctor *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdUIForegroundMouseTransformFunctorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<UIForegroundMouseTransformFunctor *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecUIForegroundMouseTransformFunctorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<UIForegroundMouseTransformFunctor *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecUIForegroundMouseTransformFunctorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<UIForegroundMouseTransformFunctor *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakUIForegroundMouseTransformFunctorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<UIForegroundMouseTransformFunctor *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdUIForegroundMouseTransformFunctorPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<UIForegroundMouseTransformFunctor *,
+                      RecordedRefCountPolicy  > SFRecUIForegroundMouseTransformFunctorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<UIForegroundMouseTransformFunctor *,
+                      UnrecordedRefCountPolicy> SFUnrecUIForegroundMouseTransformFunctorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<UIForegroundMouseTransformFunctor *,
+                      WeakRefCountPolicy      > SFWeakUIForegroundMouseTransformFunctorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<UIForegroundMouseTransformFunctor *,
+                      NoRefCountPolicy        > SFUncountedUIForegroundMouseTransformFunctorPtr;
 
-typedef SField<UIForegroundMouseTransformFunctorPtr> SFUIForegroundMouseTransformFunctorPtr;
-#endif
 
-#ifndef OSG_COMPILEUIFOREGROUNDMOUSETRANSFORMFUNCTORINST
-OSG_DLLEXPORT_DECL1(SField, UIForegroundMouseTransformFunctorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<UIForegroundMouseTransformFunctor *,
+                      RecordedRefCountPolicy  > MFRecUIForegroundMouseTransformFunctorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<UIForegroundMouseTransformFunctor *,
+                      UnrecordedRefCountPolicy> MFUnrecUIForegroundMouseTransformFunctorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<UIForegroundMouseTransformFunctor *,
+                      WeakRefCountPolicy      > MFWeakUIForegroundMouseTransformFunctorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<UIForegroundMouseTransformFunctor *,
+                      NoRefCountPolicy        > MFUncountedUIForegroundMouseTransformFunctorPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<UIForegroundMouseTransformFunctorPtr> MFUIForegroundMouseTransformFunctorPtr;
-#endif
 
-#ifndef OSG_COMPILEUIFOREGROUNDMOUSETRANSFORMFUNCTORINST
-OSG_DLLEXPORT_DECL1(MField, UIForegroundMouseTransformFunctorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecUIForegroundMouseTransformFunctorPtr : 
+    public PointerSField<UIForegroundMouseTransformFunctor *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecUIForegroundMouseTransformFunctorPtr : 
+    public PointerSField<UIForegroundMouseTransformFunctor *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakUIForegroundMouseTransformFunctorPtr :
+    public PointerSField<UIForegroundMouseTransformFunctor *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedUIForegroundMouseTransformFunctorPtr :
+    public PointerSField<UIForegroundMouseTransformFunctor *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecUIForegroundMouseTransformFunctorPtr :
+    public PointerMField<UIForegroundMouseTransformFunctor *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecUIForegroundMouseTransformFunctorPtr :
+    public PointerMField<UIForegroundMouseTransformFunctor *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakUIForegroundMouseTransformFunctorPtr :
+    public PointerMField<UIForegroundMouseTransformFunctor *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedUIForegroundMouseTransformFunctorPtr :
+    public PointerMField<UIForegroundMouseTransformFunctor *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGUIFOREGROUNDMOUSETRANSFORMFUNCTORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGUIFOREGROUNDMOUSETRANSFORMFUNCTORFIELDS_H_ */

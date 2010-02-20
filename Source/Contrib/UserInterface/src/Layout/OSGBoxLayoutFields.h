@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGLayoutFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class BoxLayout;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! BoxLayoutPtr
+OSG_GEN_CONTAINERPTR(BoxLayout);
 
-typedef FCPtr<LayoutPtr, BoxLayout> BoxLayoutPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<BoxLayoutPtr> : 
-    public FieldTraitsRecurseMapper<BoxLayoutPtr, true>
+struct FieldTraits<BoxLayout *> :
+    public FieldTraitsFCPtrBase<BoxLayout *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFBoxLayoutPtr"; }
-    static const char *getMName(void) { return "MFBoxLayoutPtr"; }
+    typedef FieldTraits<BoxLayout *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFBoxLayoutPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFBoxLayoutPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<BoxLayoutPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<BoxLayout *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecBoxLayoutPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<BoxLayout *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecBoxLayoutPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<BoxLayout *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakBoxLayoutPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<BoxLayout *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdBoxLayoutPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<BoxLayout *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecBoxLayoutPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<BoxLayout *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecBoxLayoutPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<BoxLayout *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakBoxLayoutPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<BoxLayout *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdBoxLayoutPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<BoxLayout *,
+                      RecordedRefCountPolicy  > SFRecBoxLayoutPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<BoxLayout *,
+                      UnrecordedRefCountPolicy> SFUnrecBoxLayoutPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<BoxLayout *,
+                      WeakRefCountPolicy      > SFWeakBoxLayoutPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<BoxLayout *,
+                      NoRefCountPolicy        > SFUncountedBoxLayoutPtr;
 
-typedef SField<BoxLayoutPtr> SFBoxLayoutPtr;
-#endif
 
-#ifndef OSG_COMPILEBOXLAYOUTINST
-OSG_DLLEXPORT_DECL1(SField, BoxLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<BoxLayout *,
+                      RecordedRefCountPolicy  > MFRecBoxLayoutPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<BoxLayout *,
+                      UnrecordedRefCountPolicy> MFUnrecBoxLayoutPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<BoxLayout *,
+                      WeakRefCountPolicy      > MFWeakBoxLayoutPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<BoxLayout *,
+                      NoRefCountPolicy        > MFUncountedBoxLayoutPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<BoxLayoutPtr> MFBoxLayoutPtr;
-#endif
 
-#ifndef OSG_COMPILEBOXLAYOUTINST
-OSG_DLLEXPORT_DECL1(MField, BoxLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecBoxLayoutPtr : 
+    public PointerSField<BoxLayout *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecBoxLayoutPtr : 
+    public PointerSField<BoxLayout *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakBoxLayoutPtr :
+    public PointerSField<BoxLayout *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedBoxLayoutPtr :
+    public PointerSField<BoxLayout *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecBoxLayoutPtr :
+    public PointerMField<BoxLayout *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecBoxLayoutPtr :
+    public PointerMField<BoxLayout *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakBoxLayoutPtr :
+    public PointerMField<BoxLayout *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedBoxLayoutPtr :
+    public PointerMField<BoxLayout *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGBOXLAYOUTFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGBOXLAYOUTFIELDS_H_ */

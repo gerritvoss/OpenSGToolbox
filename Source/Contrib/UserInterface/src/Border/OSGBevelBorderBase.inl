@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,92 +55,31 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &BevelBorderBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 BevelBorderBase::getClassTypeId(void) 
+OSG::UInt32 BevelBorderBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-BevelBorderPtr BevelBorderBase::create(void) 
-{
-    BevelBorderPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = BevelBorderPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-BevelBorderPtr BevelBorderBase::createEmpty(void) 
-{ 
-    BevelBorderPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 BevelBorderBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the BevelBorder::_sfHighlightInner field.
-inline
-SFColor4f *BevelBorderBase::getSFHighlightInner(void)
-{
-    return &_sfHighlightInner;
-}
-
-//! Get the BevelBorder::_sfWidth field.
-inline
-SFReal32 *BevelBorderBase::getSFWidth(void)
-{
-    return &_sfWidth;
-}
-
-//! Get the BevelBorder::_sfHighlightOuter field.
-inline
-SFColor4f *BevelBorderBase::getSFHighlightOuter(void)
-{
-    return &_sfHighlightOuter;
-}
-
-//! Get the BevelBorder::_sfShadowInner field.
-inline
-SFColor4f *BevelBorderBase::getSFShadowInner(void)
-{
-    return &_sfShadowInner;
-}
-
-//! Get the BevelBorder::_sfShadowOuter field.
-inline
-SFColor4f *BevelBorderBase::getSFShadowOuter(void)
-{
-    return &_sfShadowOuter;
-}
-
-//! Get the BevelBorder::_sfRaised field.
-inline
-SFBool *BevelBorderBase::getSFRaised(void)
-{
-    return &_sfRaised;
-}
-
-
 //! Get the value of the BevelBorder::_sfHighlightInner field.
+
 inline
-Color4f &BevelBorderBase::getHighlightInner(void)
+Color4f &BevelBorderBase::editHighlightInner(void)
 {
+    editSField(HighlightInnerFieldMask);
+
     return _sfHighlightInner.getValue();
 }
 
@@ -157,34 +94,42 @@ const Color4f &BevelBorderBase::getHighlightInner(void) const
 inline
 void BevelBorderBase::setHighlightInner(const Color4f &value)
 {
+    editSField(HighlightInnerFieldMask);
+
     _sfHighlightInner.setValue(value);
 }
-
 //! Get the value of the BevelBorder::_sfWidth field.
+
 inline
-Real32 &BevelBorderBase::getWidth(void)
+Real32 &BevelBorderBase::editWidth(void)
 {
+    editSField(WidthFieldMask);
+
     return _sfWidth.getValue();
 }
 
 //! Get the value of the BevelBorder::_sfWidth field.
 inline
-const Real32 &BevelBorderBase::getWidth(void) const
+      Real32  BevelBorderBase::getWidth(void) const
 {
     return _sfWidth.getValue();
 }
 
 //! Set the value of the BevelBorder::_sfWidth field.
 inline
-void BevelBorderBase::setWidth(const Real32 &value)
+void BevelBorderBase::setWidth(const Real32 value)
 {
+    editSField(WidthFieldMask);
+
     _sfWidth.setValue(value);
 }
-
 //! Get the value of the BevelBorder::_sfHighlightOuter field.
+
 inline
-Color4f &BevelBorderBase::getHighlightOuter(void)
+Color4f &BevelBorderBase::editHighlightOuter(void)
 {
+    editSField(HighlightOuterFieldMask);
+
     return _sfHighlightOuter.getValue();
 }
 
@@ -199,13 +144,17 @@ const Color4f &BevelBorderBase::getHighlightOuter(void) const
 inline
 void BevelBorderBase::setHighlightOuter(const Color4f &value)
 {
+    editSField(HighlightOuterFieldMask);
+
     _sfHighlightOuter.setValue(value);
 }
-
 //! Get the value of the BevelBorder::_sfShadowInner field.
+
 inline
-Color4f &BevelBorderBase::getShadowInner(void)
+Color4f &BevelBorderBase::editShadowInner(void)
 {
+    editSField(ShadowInnerFieldMask);
+
     return _sfShadowInner.getValue();
 }
 
@@ -220,13 +169,17 @@ const Color4f &BevelBorderBase::getShadowInner(void) const
 inline
 void BevelBorderBase::setShadowInner(const Color4f &value)
 {
+    editSField(ShadowInnerFieldMask);
+
     _sfShadowInner.setValue(value);
 }
-
 //! Get the value of the BevelBorder::_sfShadowOuter field.
+
 inline
-Color4f &BevelBorderBase::getShadowOuter(void)
+Color4f &BevelBorderBase::editShadowOuter(void)
 {
+    editSField(ShadowOuterFieldMask);
+
     return _sfShadowOuter.getValue();
 }
 
@@ -241,32 +194,74 @@ const Color4f &BevelBorderBase::getShadowOuter(void) const
 inline
 void BevelBorderBase::setShadowOuter(const Color4f &value)
 {
+    editSField(ShadowOuterFieldMask);
+
     _sfShadowOuter.setValue(value);
 }
-
 //! Get the value of the BevelBorder::_sfRaised field.
+
 inline
-bool &BevelBorderBase::getRaised(void)
+bool &BevelBorderBase::editRaised(void)
 {
+    editSField(RaisedFieldMask);
+
     return _sfRaised.getValue();
 }
 
 //! Get the value of the BevelBorder::_sfRaised field.
 inline
-const bool &BevelBorderBase::getRaised(void) const
+      bool  BevelBorderBase::getRaised(void) const
 {
     return _sfRaised.getValue();
 }
 
 //! Set the value of the BevelBorder::_sfRaised field.
 inline
-void BevelBorderBase::setRaised(const bool &value)
+void BevelBorderBase::setRaised(const bool value)
 {
+    editSField(RaisedFieldMask);
+
     _sfRaised.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void BevelBorderBase::execSync (      BevelBorderBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGBEVELBORDERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (HighlightInnerFieldMask & whichField))
+        _sfHighlightInner.syncWith(pFrom->_sfHighlightInner);
+
+    if(FieldBits::NoField != (WidthFieldMask & whichField))
+        _sfWidth.syncWith(pFrom->_sfWidth);
+
+    if(FieldBits::NoField != (HighlightOuterFieldMask & whichField))
+        _sfHighlightOuter.syncWith(pFrom->_sfHighlightOuter);
+
+    if(FieldBits::NoField != (ShadowInnerFieldMask & whichField))
+        _sfShadowInner.syncWith(pFrom->_sfShadowInner);
+
+    if(FieldBits::NoField != (ShadowOuterFieldMask & whichField))
+        _sfShadowOuter.syncWith(pFrom->_sfShadowOuter);
+
+    if(FieldBits::NoField != (RaisedFieldMask & whichField))
+        _sfRaised.syncWith(pFrom->_sfRaised);
+}
+#endif
+
+
+inline
+const Char8 *BevelBorderBase::getClassname(void)
+{
+    return "BevelBorder";
+}
+OSG_GEN_CONTAINERPTR(BevelBorder);
+
+OSG_END_NAMESPACE
 

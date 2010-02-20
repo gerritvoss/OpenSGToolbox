@@ -43,20 +43,20 @@
 #pragma once
 #endif
  
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGLine.h>
-#include <OpenSG/OSGVector.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGLine.h"
+#include "OSGVector.h"
+#include "OSGContribUserInterfaceDef.h"
 
 OSG_BEGIN_NAMESPACE
 
 bool intersectLineRect ( const Line& l,
-		 const Pnt3f & RectPoint1,
-		const Pnt3f & RectPoint2,
-		const Pnt3f & RectPoint3,
-		const Pnt3f & RectPoint4,
-		Real32 &t
-	);
+                         const Pnt3f & RectPoint1,
+                         const Pnt3f & RectPoint2,
+                         const Pnt3f & RectPoint3,
+                         const Pnt3f & RectPoint4,
+                         Real32 &t
+                       );
 	 
 OSG_END_NAMESPACE
 

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,272 +55,197 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &RadioButtonBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 RadioButtonBase::getClassTypeId(void) 
+OSG::UInt32 RadioButtonBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-RadioButtonPtr RadioButtonBase::create(void) 
-{
-    RadioButtonPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = RadioButtonPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-RadioButtonPtr RadioButtonBase::createEmpty(void) 
-{ 
-    RadioButtonPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 RadioButtonBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the RadioButton::_sfRadioDrawObject field.
-inline
-SFUIDrawObjectCanvasPtr *RadioButtonBase::getSFRadioDrawObject(void)
-{
-    return &_sfRadioDrawObject;
-}
-
-//! Get the RadioButton::_sfSelectedRadioDrawObject field.
-inline
-SFUIDrawObjectCanvasPtr *RadioButtonBase::getSFSelectedRadioDrawObject(void)
-{
-    return &_sfSelectedRadioDrawObject;
-}
-
-//! Get the RadioButton::_sfActiveRadioDrawObject field.
-inline
-SFUIDrawObjectCanvasPtr *RadioButtonBase::getSFActiveRadioDrawObject(void)
-{
-    return &_sfActiveRadioDrawObject;
-}
-
-//! Get the RadioButton::_sfActiveSelectedRadioDrawObject field.
-inline
-SFUIDrawObjectCanvasPtr *RadioButtonBase::getSFActiveSelectedRadioDrawObject(void)
-{
-    return &_sfActiveSelectedRadioDrawObject;
-}
-
-//! Get the RadioButton::_sfRolloverRadioDrawObject field.
-inline
-SFUIDrawObjectCanvasPtr *RadioButtonBase::getSFRolloverRadioDrawObject(void)
-{
-    return &_sfRolloverRadioDrawObject;
-}
-
-//! Get the RadioButton::_sfRolloverSelectedRadioDrawObject field.
-inline
-SFUIDrawObjectCanvasPtr *RadioButtonBase::getSFRolloverSelectedRadioDrawObject(void)
-{
-    return &_sfRolloverSelectedRadioDrawObject;
-}
-
-//! Get the RadioButton::_sfDisabledRadioDrawObject field.
-inline
-SFUIDrawObjectCanvasPtr *RadioButtonBase::getSFDisabledRadioDrawObject(void)
-{
-    return &_sfDisabledRadioDrawObject;
-}
-
-//! Get the RadioButton::_sfDisabledSelectedRadioDrawObject field.
-inline
-SFUIDrawObjectCanvasPtr *RadioButtonBase::getSFDisabledSelectedRadioDrawObject(void)
-{
-    return &_sfDisabledSelectedRadioDrawObject;
-}
-
 
 //! Get the value of the RadioButton::_sfRadioDrawObject field.
 inline
-UIDrawObjectCanvasPtr &RadioButtonBase::getRadioDrawObject(void)
-{
-    return _sfRadioDrawObject.getValue();
-}
-
-//! Get the value of the RadioButton::_sfRadioDrawObject field.
-inline
-const UIDrawObjectCanvasPtr &RadioButtonBase::getRadioDrawObject(void) const
+UIDrawObjectCanvas * RadioButtonBase::getRadioDrawObject(void) const
 {
     return _sfRadioDrawObject.getValue();
 }
 
 //! Set the value of the RadioButton::_sfRadioDrawObject field.
 inline
-void RadioButtonBase::setRadioDrawObject(const UIDrawObjectCanvasPtr &value)
+void RadioButtonBase::setRadioDrawObject(UIDrawObjectCanvas * const value)
 {
+    editSField(RadioDrawObjectFieldMask);
+
     _sfRadioDrawObject.setValue(value);
 }
 
 //! Get the value of the RadioButton::_sfSelectedRadioDrawObject field.
 inline
-UIDrawObjectCanvasPtr &RadioButtonBase::getSelectedRadioDrawObject(void)
-{
-    return _sfSelectedRadioDrawObject.getValue();
-}
-
-//! Get the value of the RadioButton::_sfSelectedRadioDrawObject field.
-inline
-const UIDrawObjectCanvasPtr &RadioButtonBase::getSelectedRadioDrawObject(void) const
+UIDrawObjectCanvas * RadioButtonBase::getSelectedRadioDrawObject(void) const
 {
     return _sfSelectedRadioDrawObject.getValue();
 }
 
 //! Set the value of the RadioButton::_sfSelectedRadioDrawObject field.
 inline
-void RadioButtonBase::setSelectedRadioDrawObject(const UIDrawObjectCanvasPtr &value)
+void RadioButtonBase::setSelectedRadioDrawObject(UIDrawObjectCanvas * const value)
 {
+    editSField(SelectedRadioDrawObjectFieldMask);
+
     _sfSelectedRadioDrawObject.setValue(value);
 }
 
 //! Get the value of the RadioButton::_sfActiveRadioDrawObject field.
 inline
-UIDrawObjectCanvasPtr &RadioButtonBase::getActiveRadioDrawObject(void)
-{
-    return _sfActiveRadioDrawObject.getValue();
-}
-
-//! Get the value of the RadioButton::_sfActiveRadioDrawObject field.
-inline
-const UIDrawObjectCanvasPtr &RadioButtonBase::getActiveRadioDrawObject(void) const
+UIDrawObjectCanvas * RadioButtonBase::getActiveRadioDrawObject(void) const
 {
     return _sfActiveRadioDrawObject.getValue();
 }
 
 //! Set the value of the RadioButton::_sfActiveRadioDrawObject field.
 inline
-void RadioButtonBase::setActiveRadioDrawObject(const UIDrawObjectCanvasPtr &value)
+void RadioButtonBase::setActiveRadioDrawObject(UIDrawObjectCanvas * const value)
 {
+    editSField(ActiveRadioDrawObjectFieldMask);
+
     _sfActiveRadioDrawObject.setValue(value);
 }
 
 //! Get the value of the RadioButton::_sfActiveSelectedRadioDrawObject field.
 inline
-UIDrawObjectCanvasPtr &RadioButtonBase::getActiveSelectedRadioDrawObject(void)
-{
-    return _sfActiveSelectedRadioDrawObject.getValue();
-}
-
-//! Get the value of the RadioButton::_sfActiveSelectedRadioDrawObject field.
-inline
-const UIDrawObjectCanvasPtr &RadioButtonBase::getActiveSelectedRadioDrawObject(void) const
+UIDrawObjectCanvas * RadioButtonBase::getActiveSelectedRadioDrawObject(void) const
 {
     return _sfActiveSelectedRadioDrawObject.getValue();
 }
 
 //! Set the value of the RadioButton::_sfActiveSelectedRadioDrawObject field.
 inline
-void RadioButtonBase::setActiveSelectedRadioDrawObject(const UIDrawObjectCanvasPtr &value)
+void RadioButtonBase::setActiveSelectedRadioDrawObject(UIDrawObjectCanvas * const value)
 {
+    editSField(ActiveSelectedRadioDrawObjectFieldMask);
+
     _sfActiveSelectedRadioDrawObject.setValue(value);
 }
 
 //! Get the value of the RadioButton::_sfRolloverRadioDrawObject field.
 inline
-UIDrawObjectCanvasPtr &RadioButtonBase::getRolloverRadioDrawObject(void)
-{
-    return _sfRolloverRadioDrawObject.getValue();
-}
-
-//! Get the value of the RadioButton::_sfRolloverRadioDrawObject field.
-inline
-const UIDrawObjectCanvasPtr &RadioButtonBase::getRolloverRadioDrawObject(void) const
+UIDrawObjectCanvas * RadioButtonBase::getRolloverRadioDrawObject(void) const
 {
     return _sfRolloverRadioDrawObject.getValue();
 }
 
 //! Set the value of the RadioButton::_sfRolloverRadioDrawObject field.
 inline
-void RadioButtonBase::setRolloverRadioDrawObject(const UIDrawObjectCanvasPtr &value)
+void RadioButtonBase::setRolloverRadioDrawObject(UIDrawObjectCanvas * const value)
 {
+    editSField(RolloverRadioDrawObjectFieldMask);
+
     _sfRolloverRadioDrawObject.setValue(value);
 }
 
 //! Get the value of the RadioButton::_sfRolloverSelectedRadioDrawObject field.
 inline
-UIDrawObjectCanvasPtr &RadioButtonBase::getRolloverSelectedRadioDrawObject(void)
-{
-    return _sfRolloverSelectedRadioDrawObject.getValue();
-}
-
-//! Get the value of the RadioButton::_sfRolloverSelectedRadioDrawObject field.
-inline
-const UIDrawObjectCanvasPtr &RadioButtonBase::getRolloverSelectedRadioDrawObject(void) const
+UIDrawObjectCanvas * RadioButtonBase::getRolloverSelectedRadioDrawObject(void) const
 {
     return _sfRolloverSelectedRadioDrawObject.getValue();
 }
 
 //! Set the value of the RadioButton::_sfRolloverSelectedRadioDrawObject field.
 inline
-void RadioButtonBase::setRolloverSelectedRadioDrawObject(const UIDrawObjectCanvasPtr &value)
+void RadioButtonBase::setRolloverSelectedRadioDrawObject(UIDrawObjectCanvas * const value)
 {
+    editSField(RolloverSelectedRadioDrawObjectFieldMask);
+
     _sfRolloverSelectedRadioDrawObject.setValue(value);
 }
 
 //! Get the value of the RadioButton::_sfDisabledRadioDrawObject field.
 inline
-UIDrawObjectCanvasPtr &RadioButtonBase::getDisabledRadioDrawObject(void)
-{
-    return _sfDisabledRadioDrawObject.getValue();
-}
-
-//! Get the value of the RadioButton::_sfDisabledRadioDrawObject field.
-inline
-const UIDrawObjectCanvasPtr &RadioButtonBase::getDisabledRadioDrawObject(void) const
+UIDrawObjectCanvas * RadioButtonBase::getDisabledRadioDrawObject(void) const
 {
     return _sfDisabledRadioDrawObject.getValue();
 }
 
 //! Set the value of the RadioButton::_sfDisabledRadioDrawObject field.
 inline
-void RadioButtonBase::setDisabledRadioDrawObject(const UIDrawObjectCanvasPtr &value)
+void RadioButtonBase::setDisabledRadioDrawObject(UIDrawObjectCanvas * const value)
 {
+    editSField(DisabledRadioDrawObjectFieldMask);
+
     _sfDisabledRadioDrawObject.setValue(value);
 }
 
 //! Get the value of the RadioButton::_sfDisabledSelectedRadioDrawObject field.
 inline
-UIDrawObjectCanvasPtr &RadioButtonBase::getDisabledSelectedRadioDrawObject(void)
-{
-    return _sfDisabledSelectedRadioDrawObject.getValue();
-}
-
-//! Get the value of the RadioButton::_sfDisabledSelectedRadioDrawObject field.
-inline
-const UIDrawObjectCanvasPtr &RadioButtonBase::getDisabledSelectedRadioDrawObject(void) const
+UIDrawObjectCanvas * RadioButtonBase::getDisabledSelectedRadioDrawObject(void) const
 {
     return _sfDisabledSelectedRadioDrawObject.getValue();
 }
 
 //! Set the value of the RadioButton::_sfDisabledSelectedRadioDrawObject field.
 inline
-void RadioButtonBase::setDisabledSelectedRadioDrawObject(const UIDrawObjectCanvasPtr &value)
+void RadioButtonBase::setDisabledSelectedRadioDrawObject(UIDrawObjectCanvas * const value)
 {
+    editSField(DisabledSelectedRadioDrawObjectFieldMask);
+
     _sfDisabledSelectedRadioDrawObject.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void RadioButtonBase::execSync (      RadioButtonBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGRADIOBUTTONBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (RadioDrawObjectFieldMask & whichField))
+        _sfRadioDrawObject.syncWith(pFrom->_sfRadioDrawObject);
+
+    if(FieldBits::NoField != (SelectedRadioDrawObjectFieldMask & whichField))
+        _sfSelectedRadioDrawObject.syncWith(pFrom->_sfSelectedRadioDrawObject);
+
+    if(FieldBits::NoField != (ActiveRadioDrawObjectFieldMask & whichField))
+        _sfActiveRadioDrawObject.syncWith(pFrom->_sfActiveRadioDrawObject);
+
+    if(FieldBits::NoField != (ActiveSelectedRadioDrawObjectFieldMask & whichField))
+        _sfActiveSelectedRadioDrawObject.syncWith(pFrom->_sfActiveSelectedRadioDrawObject);
+
+    if(FieldBits::NoField != (RolloverRadioDrawObjectFieldMask & whichField))
+        _sfRolloverRadioDrawObject.syncWith(pFrom->_sfRolloverRadioDrawObject);
+
+    if(FieldBits::NoField != (RolloverSelectedRadioDrawObjectFieldMask & whichField))
+        _sfRolloverSelectedRadioDrawObject.syncWith(pFrom->_sfRolloverSelectedRadioDrawObject);
+
+    if(FieldBits::NoField != (DisabledRadioDrawObjectFieldMask & whichField))
+        _sfDisabledRadioDrawObject.syncWith(pFrom->_sfDisabledRadioDrawObject);
+
+    if(FieldBits::NoField != (DisabledSelectedRadioDrawObjectFieldMask & whichField))
+        _sfDisabledSelectedRadioDrawObject.syncWith(pFrom->_sfDisabledSelectedRadioDrawObject);
+}
+#endif
+
+
+inline
+const Char8 *RadioButtonBase::getClassname(void)
+{
+    return "RadioButton";
+}
+OSG_GEN_CONTAINERPTR(RadioButton);
+
+OSG_END_NAMESPACE
 

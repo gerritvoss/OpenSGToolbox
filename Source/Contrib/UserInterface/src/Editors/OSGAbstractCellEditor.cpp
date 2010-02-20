@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,26 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGAbstractCellEditor.h"
-
 #include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::AbstractCellEditor
-A UI Abstract Cell Editor. 
-*/
+// Documentation for this class is emitted in the
+// OSGAbstractCellEditorBase.cpp file.
+// To modify it, please change the .fcd file (OSGAbstractCellEditor.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -69,8 +63,13 @@ A UI Abstract Cell Editor.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void AbstractCellEditor::initMethod (void)
+void AbstractCellEditor::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -83,12 +82,12 @@ void AbstractCellEditor::cancelCellEditing(void)
     produceEditingCanceled();
 }
 
-bool AbstractCellEditor::isCellEditable(const EventPtr anEvent) const
+bool AbstractCellEditor::isCellEditable(const EventUnrecPtr anEvent) const
 {
     return true;
 }
 
-bool AbstractCellEditor::shouldSelectCell(const EventPtr anEvent) const
+bool AbstractCellEditor::shouldSelectCell(const EventUnrecPtr anEvent) const
 {
     return true;
 }
@@ -101,42 +100,43 @@ bool AbstractCellEditor::stopCellEditing(void)
 
 EventConnection AbstractCellEditor::addCellEditorListener(CellEditorListenerPtr l)
 {
-   _CellEditorListeners.insert(l);
-   return EventConnection(
-       boost::bind(&AbstractCellEditor::isCellEditorListenerAttached, this, l),
-       boost::bind(&AbstractCellEditor::removeCellEditorListener, this, l));
+    _CellEditorListeners.insert(l);
+    return EventConnection(
+                           boost::bind(&AbstractCellEditor::isCellEditorListenerAttached, this, l),
+                           boost::bind(&AbstractCellEditor::removeCellEditorListener, this, l));
 }
 
 void AbstractCellEditor::removeCellEditorListener(CellEditorListenerPtr l)
 {
-   CellEditorListenerSetItor EraseIter(_CellEditorListeners.find(l));
-   if(EraseIter != _CellEditorListeners.end())
-   {
-      _CellEditorListeners.erase(EraseIter);
-   }
+    CellEditorListenerSetItor EraseIter(_CellEditorListeners.find(l));
+    if(EraseIter != _CellEditorListeners.end())
+    {
+        _CellEditorListeners.erase(EraseIter);
+    }
 }
 
 void AbstractCellEditor::produceEditingCanceled(void)
 {
-   const ChangeEventPtr TheEvent = ChangeEvent::create(NullFC, getSystemTime());
-   CellEditorListenerSet CellEditorListenerSet(_CellEditorListeners);
-   for(CellEditorListenerSetConstItor SetItor(CellEditorListenerSet.begin()) ; SetItor != CellEditorListenerSet.end() ; ++SetItor)
-   {
-      (*SetItor)->editingCanceled(TheEvent);
-   }
-   _Producer.produceEvent(EditingCanceledMethodId,TheEvent);
+    const ChangeEventUnrecPtr TheEvent = ChangeEvent::create(NULL, getSystemTime());
+    CellEditorListenerSet CellEditorListenerSet(_CellEditorListeners);
+    for(CellEditorListenerSetConstItor SetItor(CellEditorListenerSet.begin()) ; SetItor != CellEditorListenerSet.end() ; ++SetItor)
+    {
+        (*SetItor)->editingCanceled(TheEvent);
+    }
+    _Producer.produceEvent(EditingCanceledMethodId,TheEvent);
 }
 
 void AbstractCellEditor::produceEditingStopped(void)
 {
-   const ChangeEventPtr TheEvent = ChangeEvent::create(NullFC, getSystemTime());
-   CellEditorListenerSet CellEditorListenerSet(_CellEditorListeners);
-   for(CellEditorListenerSetConstItor SetItor(CellEditorListenerSet.begin()) ; SetItor != CellEditorListenerSet.end() ; ++SetItor)
-   {
-      (*SetItor)->editingStopped(TheEvent);
-   }
-   _Producer.produceEvent(EditingStoppedMethodId,TheEvent);
+    const ChangeEventUnrecPtr TheEvent = ChangeEvent::create(NULL, getSystemTime());
+    CellEditorListenerSet CellEditorListenerSet(_CellEditorListeners);
+    for(CellEditorListenerSetConstItor SetItor(CellEditorListenerSet.begin()) ; SetItor != CellEditorListenerSet.end() ; ++SetItor)
+    {
+        (*SetItor)->editingStopped(TheEvent);
+    }
+    _Producer.produceEvent(EditingStoppedMethodId,TheEvent);
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -159,16 +159,17 @@ AbstractCellEditor::~AbstractCellEditor(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void AbstractCellEditor::changed(BitVector whichField, UInt32 origin)
+void AbstractCellEditor::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void AbstractCellEditor::dump(      UInt32    , 
+void AbstractCellEditor::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump AbstractCellEditor NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
-

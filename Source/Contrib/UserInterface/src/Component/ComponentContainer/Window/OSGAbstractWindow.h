@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,47 +42,47 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGAbstractWindowBase.h"
 
-#include <OpenSG/Input/OSGMouseAdapter.h>
-#include <OpenSG/Input/OSGMouseMotionAdapter.h>
-#include <OpenSG/Input/OSGKeyAdapter.h>
+#include "OSGMouseAdapter.h"
+#include "OSGMouseMotionAdapter.h"
+#include "OSGKeyAdapter.h"
 
-#include <OpenSG/Input/OSGWindowListener.h>
+#include "OSGWindowListener.h"
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief AbstractWindow class. See \ref 
-           PageUserInterfaceAbstractWindow for a description.
+/*! \brief AbstractWindow class. See \ref
+           PageContribUserInterfaceAbstractWindow for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindow : public AbstractWindowBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindow : public AbstractWindowBase
 {
-  private:
-
-    typedef AbstractWindowBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef AbstractWindowBase Inherited;
+    typedef AbstractWindow     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -97,12 +97,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindow : public AbstractWindowBase
     virtual void updateContainerLayout(void);
 	virtual void updateClipBounds(void);
 	
-    virtual void mouseEntered(const MouseEventPtr e);
-    virtual void mouseExited(const MouseEventPtr e);
+    virtual void mouseEntered(const MouseEventUnrecPtr e);
+    virtual void mouseExited(const MouseEventUnrecPtr e);
 
 	//Focus Events
-	virtual void focusGained(const FocusEventPtr e);
-	virtual void focusLost(const FocusEventPtr e);
+	virtual void focusGained(const FocusEventUnrecPtr e);
+	virtual void focusLost(const FocusEventUnrecPtr e);
 
 	void vetoWindowClose(void);
 
@@ -110,6 +110,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindow : public AbstractWindowBase
 
 	virtual void close(void) = 0;
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in AbstractWindowBase.
@@ -126,13 +127,20 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindow : public AbstractWindowBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~AbstractWindow(void); 
+    virtual ~AbstractWindow(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
     
-    virtual BorderPtr getDrawnBorder(void) const;
-    virtual LayerPtr getDrawnBackground(void) const;
-    virtual LayerPtr getDrawnForeground(void) const;
+    virtual BorderRefPtr getDrawnBorder(void) const;
+    virtual LayerRefPtr getDrawnBackground(void) const;
+    virtual LayerRefPtr getDrawnForeground(void) const;
 	
 	typedef std::set<WindowListenerPtr> WindowListenerSet;
     typedef WindowListenerSet::iterator WindowListenerSetItor;
@@ -140,36 +148,37 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindow : public AbstractWindowBase
 	
     WindowListenerSet       _WindowListeners;
 	
-    void produceWindowOpened(void);
-    void produceWindowClosing(void);
-    void produceWindowClosed(void);
-    void produceWindowIconified(void);
-    void produceWindowDeiconified(void);
-    void produceWindowActivated(void);
-    void produceWindowDeactivated(void);
-    void produceWindowEntered(void);
-    void produceWindowExited(void);
+    void produceWindowOpened     ( void);
+    void produceWindowClosing    ( void);
+    void produceWindowClosed     ( void);
+    void produceWindowIconified  ( void);
+    void produceWindowDeiconified( void);
+    void produceWindowActivated  ( void);
+    void produceWindowDeactivated( void);
+    void produceWindowEntered    ( void);
+    void produceWindowExited     ( void);
 
 	bool _VetoWindowClose;
 
     Pnt2f _PreviousPosition;
     Vec2f _PreviousSize;
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class AbstractWindowBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const AbstractWindow &source);
 };
 
 typedef AbstractWindow *AbstractWindowP;
 
 OSG_END_NAMESPACE
+
+#include "OSGUIDrawObjectCanvas.h"
+#include "OSGUIDrawingSurface.h"
 
 #include "OSGAbstractWindowBase.inl"
 #include "OSGAbstractWindow.inl"

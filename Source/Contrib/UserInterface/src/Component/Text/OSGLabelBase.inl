@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,64 +55,31 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &LabelBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 LabelBase::getClassTypeId(void) 
+OSG::UInt32 LabelBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-LabelPtr LabelBase::create(void) 
-{
-    LabelPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = LabelPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-LabelPtr LabelBase::createEmpty(void) 
-{ 
-    LabelPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 LabelBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Label::_sfAlignment field.
-inline
-SFVec2f *LabelBase::getSFAlignment(void)
-{
-    return &_sfAlignment;
-}
-
-//! Get the Label::_sfTextSelectable field.
-inline
-SFBool *LabelBase::getSFTextSelectable(void)
-{
-    return &_sfTextSelectable;
-}
-
-
 //! Get the value of the Label::_sfAlignment field.
+
 inline
-Vec2f &LabelBase::getAlignment(void)
+Vec2f &LabelBase::editAlignment(void)
 {
+    editSField(AlignmentFieldMask);
+
     return _sfAlignment.getValue();
 }
 
@@ -129,32 +94,62 @@ const Vec2f &LabelBase::getAlignment(void) const
 inline
 void LabelBase::setAlignment(const Vec2f &value)
 {
+    editSField(AlignmentFieldMask);
+
     _sfAlignment.setValue(value);
 }
-
 //! Get the value of the Label::_sfTextSelectable field.
+
 inline
-bool &LabelBase::getTextSelectable(void)
+bool &LabelBase::editTextSelectable(void)
 {
+    editSField(TextSelectableFieldMask);
+
     return _sfTextSelectable.getValue();
 }
 
 //! Get the value of the Label::_sfTextSelectable field.
 inline
-const bool &LabelBase::getTextSelectable(void) const
+      bool  LabelBase::getTextSelectable(void) const
 {
     return _sfTextSelectable.getValue();
 }
 
 //! Set the value of the Label::_sfTextSelectable field.
 inline
-void LabelBase::setTextSelectable(const bool &value)
+void LabelBase::setTextSelectable(const bool value)
 {
+    editSField(TextSelectableFieldMask);
+
     _sfTextSelectable.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void LabelBase::execSync (      LabelBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGLABELBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+        _sfAlignment.syncWith(pFrom->_sfAlignment);
+
+    if(FieldBits::NoField != (TextSelectableFieldMask & whichField))
+        _sfTextSelectable.syncWith(pFrom->_sfTextSelectable);
+}
+#endif
+
+
+inline
+const Char8 *LabelBase::getClassname(void)
+{
+    return "Label";
+}
+OSG_GEN_CONTAINERPTR(Label);
+
+OSG_END_NAMESPACE
 

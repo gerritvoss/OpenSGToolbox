@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGDefaultListModel.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::DefaultListModel
-A UI DefaultListModel. 
-*/
+// Documentation for this class is emitted in the
+// OSGDefaultListModelBase.cpp file.
+// To modify it, please change the .fcd file (OSGDefaultListModel.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,8 +62,13 @@ A UI DefaultListModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DefaultListModel::initMethod (void)
+void DefaultListModel::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -78,84 +78,85 @@ void DefaultListModel::initMethod (void)
 
 UInt32 DefaultListModel::getSize(void) const
 {
-	return _FieldList.size();
+    return _FieldList.size();
 }
 
 boost::any DefaultListModel::getElementAt(UInt32 index) const
 {
-	if(index < _FieldList.size())
-	{
-		return (*(_FieldList.begin() + index));
-	}
-	else
-	{
+    if(index < _FieldList.size())
+    {
+        return (*(_FieldList.begin() + index));
+    }
+    else
+    {
         return boost::any();
-	}
+    }
 }
- 
+
 void DefaultListModel::set(UInt32 Index, const boost::any& v)
 {
-	if(Index < _FieldList.size())
-	{
-		_FieldList[Index] = v;
-		produceListDataContentsChanged(DefaultListModelPtr(this),Index,Index);
-	}
+    if(Index < _FieldList.size())
+    {
+        _FieldList[Index] = v;
+        produceListDataContentsChanged(DefaultListModelRefPtr(this),Index,Index);
+    }
 }
 
 void DefaultListModel::pushBack(const boost::any& f)
 {
-	_FieldList.push_back(f);
-	produceListDataIntervalAdded(DefaultListModelPtr(this),_FieldList.size()-1,_FieldList.size()-1);
+    _FieldList.push_back(f);
+    produceListDataIntervalAdded(DefaultListModelRefPtr(this),_FieldList.size()-1,_FieldList.size()-1);
 }
 
 void DefaultListModel::clear(void)
 {
-	UInt32 Size(_FieldList.size());
-	_FieldList.clear();
-	produceListDataIntervalRemoved(DefaultListModelPtr(this),0,Size-1);
+    UInt32 Size(_FieldList.size());
+    _FieldList.clear();
+    produceListDataIntervalRemoved(DefaultListModelRefPtr(this),0,Size-1);
 }
 
 void DefaultListModel::popBack(void)
 {
-	_FieldList.pop_back();
-	produceListDataIntervalRemoved(DefaultListModelPtr(this),_FieldList.size(),_FieldList.size());
+    _FieldList.pop_back();
+    produceListDataIntervalRemoved(DefaultListModelRefPtr(this),_FieldList.size(),_FieldList.size());
 }
 
 void DefaultListModel::pushFront(const boost::any& f)
 {
-	_FieldList.push_front(f);
-	produceListDataIntervalAdded(DefaultListModelPtr(this),0,0);
+    _FieldList.push_front(f);
+    produceListDataIntervalAdded(DefaultListModelRefPtr(this),0,0);
 }
 
 void DefaultListModel::popFront(void)
 {
-	_FieldList.pop_front();
-	produceListDataIntervalRemoved(DefaultListModelPtr(this),0,0);
+    _FieldList.pop_front();
+    produceListDataIntervalRemoved(DefaultListModelRefPtr(this),0,0);
 }
 
 void DefaultListModel::insert(UInt32 Index, const boost::any& f)
 {
-	if(Index < _FieldList.size())
-	{
-		_FieldList.insert(_FieldList.begin() + Index, f);
-		produceListDataIntervalAdded(DefaultListModelPtr(this),Index,Index);
-	}
-	else
-	{
-		pushBack(f);
-	}
+    if(Index < _FieldList.size())
+    {
+        _FieldList.insert(_FieldList.begin() + Index, f);
+        produceListDataIntervalAdded(DefaultListModelRefPtr(this),Index,Index);
+    }
+    else
+    {
+        pushBack(f);
+    }
 }
 
 void DefaultListModel::erase(UInt32 Index)
 {
-	if(Index < _FieldList.size())
-	{
-		FieldList::iterator SearchItor(_FieldList.begin());
-		for(UInt32 i(0) ; i<Index ; ++i) {++SearchItor;}
-		_FieldList.erase(SearchItor);
-		produceListDataIntervalRemoved(DefaultListModelPtr(this),Index,Index);
-	}
+    if(Index < _FieldList.size())
+    {
+        FieldList::iterator SearchItor(_FieldList.begin());
+        for(UInt32 i(0) ; i<Index ; ++i) {++SearchItor;}
+        _FieldList.erase(SearchItor);
+        produceListDataIntervalRemoved(DefaultListModelRefPtr(this),Index,Index);
+    }
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -178,41 +179,17 @@ DefaultListModel::~DefaultListModel(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void DefaultListModel::changed(BitVector whichField, UInt32 origin)
+void DefaultListModel::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void DefaultListModel::dump(      UInt32    , 
+void DefaultListModel::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump DefaultListModel NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGDEFAULTLISTMODELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDEFAULTLISTMODELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDEFAULTLISTMODELFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

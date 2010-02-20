@@ -3,20 +3,22 @@
 <FieldContainer
 	name="TextComponent"
 	parent="Component"
-    parentHeader="Component/Container/OSGContainer"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="abstract"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
     parentProducer="Component"
 >
 A UI Button.
 	<Field
 		name="Text"
 		type="std::string"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -25,6 +27,7 @@ A UI Button.
 	<Field
 		name="CaretPosition"
 		type="UInt32"
+		category="data"
 		cardinality="single"
 		visibility="internal"
 		defaultValue="0"
@@ -33,16 +36,18 @@ A UI Button.
 	</Field>
 	<Field
 		name="Font"
-		type="UIFontPtr"
+		type="UIFont"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Text/OSGUIFont.h"
+		defaultValue="NULL"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="SelectionBoxColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.0,0.0,1.0,1.0"
@@ -52,6 +57,7 @@ A UI Button.
 	<Field
 		name="SelectionTextColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="1.0,1.0,1.0,1.0"
@@ -61,6 +67,7 @@ A UI Button.
 	<Field
 		name="ActiveTextColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -69,6 +76,7 @@ A UI Button.
 	<Field
 		name="FocusedTextColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -77,6 +85,7 @@ A UI Button.
 	<Field
 		name="RolloverTextColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -85,6 +94,7 @@ A UI Button.
 	<Field
 		name="DisabledTextColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -93,6 +103,7 @@ A UI Button.
 	<Field
 		name="TextColor"
 		type="Color4f"
+		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -100,12 +111,12 @@ A UI Button.
 	</Field>
 	<ProducedMethod
 		name="TextValueChanged"
-		producedEventType="TextEventPtr"
+		type="TextEventPtr"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="CaretChanged"
-		producedEventType="CaretEventPtr"
+		type="CaretEventPtr"
 	>
 	</ProducedMethod>
 </FieldContainer>

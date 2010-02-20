@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,194 +50,327 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILETOOLTIPINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGUIFont.h"                  // Font Class
+#include "OSGComponent.h"               // TippedComponent Class
 
 #include "OSGToolTipBase.h"
 #include "OSGToolTip.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ToolTipBase::FontFieldMask = 
-    (TypeTraits<BitVector>::One << ToolTipBase::FontFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  ToolTipBase::TippedComponentFieldMask = 
-    (TypeTraits<BitVector>::One << ToolTipBase::TippedComponentFieldId);
+/*! \class OSG::ToolTip
+    A UI Tooltip.
+ */
 
-const OSG::BitVector  ToolTipBase::TextFieldMask = 
-    (TypeTraits<BitVector>::One << ToolTipBase::TextFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  ToolTipBase::AlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << ToolTipBase::AlignmentFieldId);
-
-const OSG::BitVector  ToolTipBase::TextColorFieldMask = 
-    (TypeTraits<BitVector>::One << ToolTipBase::TextColorFieldId);
-
-const OSG::BitVector ToolTipBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var UIFontPtr       ToolTipBase::_sfFont
+/*! \var UIFont *        ToolTipBase::_sfFont
     
 */
-/*! \var ComponentPtr    ToolTipBase::_sfTippedComponent
+
+/*! \var Component *     ToolTipBase::_sfTippedComponent
     
 */
+
 /*! \var std::string     ToolTipBase::_sfText
     
 */
+
 /*! \var Vec2f           ToolTipBase::_sfAlignment
     
 */
+
 /*! \var Color4f         ToolTipBase::_sfTextColor
     
 */
 
-//! ToolTip description
 
-FieldDescription *ToolTipBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ToolTip *>::_type("ToolTipPtr", "ComponentPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ToolTip *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ToolTip *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ToolTip *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ToolTipBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUIFontPtr::getClassType(), 
-                     "Font", 
-                     FontFieldId, FontFieldMask,
-                     false,
-                     (FieldAccessMethod) &ToolTipBase::getSFFont),
-    new FieldDescription(SFComponentPtr::getClassType(), 
-                     "TippedComponent", 
-                     TippedComponentFieldId, TippedComponentFieldMask,
-                     false,
-                     (FieldAccessMethod) &ToolTipBase::getSFTippedComponent),
-    new FieldDescription(SFString::getClassType(), 
-                     "Text", 
-                     TextFieldId, TextFieldMask,
-                     false,
-                     (FieldAccessMethod) &ToolTipBase::getSFText),
-    new FieldDescription(SFVec2f::getClassType(), 
-                     "Alignment", 
-                     AlignmentFieldId, AlignmentFieldMask,
-                     false,
-                     (FieldAccessMethod) &ToolTipBase::getSFAlignment),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "TextColor", 
-                     TextColorFieldId, TextColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &ToolTipBase::getSFTextColor)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType ToolTipBase::_type(
-    "ToolTip",
-    "Component",
-    NULL,
-    (PrototypeCreateF) &ToolTipBase::createEmpty,
+    pDesc = new SFUnrecUIFontPtr::Description(
+        SFUnrecUIFontPtr::getClassType(),
+        "Font",
+        "",
+        FontFieldId, FontFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ToolTip::editHandleFont),
+        static_cast<FieldGetMethodSig >(&ToolTip::getHandleFont));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecComponentPtr::Description(
+        SFUnrecComponentPtr::getClassType(),
+        "TippedComponent",
+        "",
+        TippedComponentFieldId, TippedComponentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ToolTip::editHandleTippedComponent),
+        static_cast<FieldGetMethodSig >(&ToolTip::getHandleTippedComponent));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFString::Description(
+        SFString::getClassType(),
+        "Text",
+        "",
+        TextFieldId, TextFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ToolTip::editHandleText),
+        static_cast<FieldGetMethodSig >(&ToolTip::getHandleText));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFVec2f::Description(
+        SFVec2f::getClassType(),
+        "Alignment",
+        "",
+        AlignmentFieldId, AlignmentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ToolTip::editHandleAlignment),
+        static_cast<FieldGetMethodSig >(&ToolTip::getHandleAlignment));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "TextColor",
+        "",
+        TextColorFieldId, TextColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ToolTip::editHandleTextColor),
+        static_cast<FieldGetMethodSig >(&ToolTip::getHandleTextColor));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+ToolTipBase::TypeObject ToolTipBase::_type(
+    ToolTipBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ToolTipBase::createEmptyLocal),
     ToolTip::initMethod,
-    _desc,
-    sizeof(_desc));
+    ToolTip::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ToolTip::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ToolTip\"\n"
+    "\tparent=\"Component\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Tooltip.\n"
+    "\t<Field\n"
+    "\t\tname=\"Font\"\n"
+    "\t\ttype=\"UIFont\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TippedComponent\"\n"
+    "\t\ttype=\"Component\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Text\"\n"
+    "\t\ttype=\"std::string\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Alignment\"\n"
+    "\t\ttype=\"Vec2f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0f,0.5f\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TextColor\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI Tooltip.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(ToolTipBase, ToolTipPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ToolTipBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ToolTipBase::getType(void) const 
+FieldContainerType &ToolTipBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr ToolTipBase::shallowCopy(void) const 
-{ 
-    ToolTipPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const ToolTip *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 ToolTipBase::getContainerSize(void) const 
-{ 
-    return sizeof(ToolTip); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ToolTipBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &ToolTipBase::getType(void) const
 {
-    this->executeSyncImpl((ToolTipBase *) &other, whichField);
+    return _type;
 }
-#else
-void ToolTipBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 ToolTipBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((ToolTipBase *) &other, whichField, sInfo);
+    return sizeof(ToolTip);
 }
-void ToolTipBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the ToolTip::_sfFont field.
+const SFUnrecUIFontPtr *ToolTipBase::getSFFont(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfFont;
 }
 
-void ToolTipBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecUIFontPtr    *ToolTipBase::editSFFont           (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(FontFieldMask);
 
+    return &_sfFont;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-ToolTipBase::ToolTipBase(void) :
-    _sfFont                   (), 
-    _sfTippedComponent        (ComponentPtr(NullFC)), 
-    _sfText                   (), 
-    _sfAlignment              (Vec2f(0.0f,0.5f)), 
-    _sfTextColor              (), 
-    Inherited() 
+//! Get the ToolTip::_sfTippedComponent field.
+const SFUnrecComponentPtr *ToolTipBase::getSFTippedComponent(void) const
 {
+    return &_sfTippedComponent;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-ToolTipBase::ToolTipBase(const ToolTipBase &source) :
-    _sfFont                   (source._sfFont                   ), 
-    _sfTippedComponent        (source._sfTippedComponent        ), 
-    _sfText                   (source._sfText                   ), 
-    _sfAlignment              (source._sfAlignment              ), 
-    _sfTextColor              (source._sfTextColor              ), 
-    Inherited                 (source)
+SFUnrecComponentPtr *ToolTipBase::editSFTippedComponent(void)
 {
+    editSField(TippedComponentFieldMask);
+
+    return &_sfTippedComponent;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-ToolTipBase::~ToolTipBase(void)
+SFString *ToolTipBase::editSFText(void)
 {
+    editSField(TextFieldMask);
+
+    return &_sfText;
 }
+
+const SFString *ToolTipBase::getSFText(void) const
+{
+    return &_sfText;
+}
+
+
+SFVec2f *ToolTipBase::editSFAlignment(void)
+{
+    editSField(AlignmentFieldMask);
+
+    return &_sfAlignment;
+}
+
+const SFVec2f *ToolTipBase::getSFAlignment(void) const
+{
+    return &_sfAlignment;
+}
+
+
+SFColor4f *ToolTipBase::editSFTextColor(void)
+{
+    editSField(TextColorFieldMask);
+
+    return &_sfTextColor;
+}
+
+const SFColor4f *ToolTipBase::getSFTextColor(void) const
+{
+    return &_sfTextColor;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ToolTipBase::getBinSize(const BitVector &whichField)
+UInt32 ToolTipBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -245,33 +378,28 @@ UInt32 ToolTipBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfFont.getBinSize();
     }
-
     if(FieldBits::NoField != (TippedComponentFieldMask & whichField))
     {
         returnValue += _sfTippedComponent.getBinSize();
     }
-
     if(FieldBits::NoField != (TextFieldMask & whichField))
     {
         returnValue += _sfText.getBinSize();
     }
-
     if(FieldBits::NoField != (AlignmentFieldMask & whichField))
     {
         returnValue += _sfAlignment.getBinSize();
     }
-
     if(FieldBits::NoField != (TextColorFieldMask & whichField))
     {
         returnValue += _sfTextColor.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ToolTipBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ToolTipBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -279,32 +407,26 @@ void ToolTipBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfFont.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TippedComponentFieldMask & whichField))
     {
         _sfTippedComponent.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TextFieldMask & whichField))
     {
         _sfText.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (AlignmentFieldMask & whichField))
     {
         _sfAlignment.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TextColorFieldMask & whichField))
     {
         _sfTextColor.copyToBin(pMem);
     }
-
-
 }
 
-void ToolTipBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ToolTipBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -312,126 +434,360 @@ void ToolTipBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfFont.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TippedComponentFieldMask & whichField))
     {
         _sfTippedComponent.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TextFieldMask & whichField))
     {
         _sfText.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (AlignmentFieldMask & whichField))
     {
         _sfAlignment.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TextColorFieldMask & whichField))
     {
         _sfTextColor.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ToolTipBase::executeSyncImpl(      ToolTipBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ToolTipTransitPtr ToolTipBase::createLocal(BitVector bFlags)
 {
+    ToolTipTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (FontFieldMask & whichField))
-        _sfFont.syncWith(pOther->_sfFont);
+        fc = dynamic_pointer_cast<ToolTip>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (TippedComponentFieldMask & whichField))
-        _sfTippedComponent.syncWith(pOther->_sfTippedComponent);
-
-    if(FieldBits::NoField != (TextFieldMask & whichField))
-        _sfText.syncWith(pOther->_sfText);
-
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
-        _sfAlignment.syncWith(pOther->_sfAlignment);
-
-    if(FieldBits::NoField != (TextColorFieldMask & whichField))
-        _sfTextColor.syncWith(pOther->_sfTextColor);
-
-
-}
-#else
-void ToolTipBase::executeSyncImpl(      ToolTipBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (FontFieldMask & whichField))
-        _sfFont.syncWith(pOther->_sfFont);
-
-    if(FieldBits::NoField != (TippedComponentFieldMask & whichField))
-        _sfTippedComponent.syncWith(pOther->_sfTippedComponent);
-
-    if(FieldBits::NoField != (TextFieldMask & whichField))
-        _sfText.syncWith(pOther->_sfText);
-
-    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
-        _sfAlignment.syncWith(pOther->_sfAlignment);
-
-    if(FieldBits::NoField != (TextColorFieldMask & whichField))
-        _sfTextColor.syncWith(pOther->_sfTextColor);
-
-
-
+    return fc;
 }
 
-void ToolTipBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ToolTipTransitPtr ToolTipBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ToolTipTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<ToolTip>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ToolTipTransitPtr ToolTipBase::create(void)
+{
+    ToolTipTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<ToolTip>(tmpPtr);
+    }
+
+    return fc;
+}
+
+ToolTip *ToolTipBase::createEmptyLocal(BitVector bFlags)
+{
+    ToolTip *returnValue;
+
+    newPtr<ToolTip>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+ToolTip *ToolTipBase::createEmpty(void)
+{
+    ToolTip *returnValue;
+
+    newPtr<ToolTip>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ToolTipBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    ToolTip *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ToolTip *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ToolTipBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    ToolTip *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ToolTip *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ToolTipBase::shallowCopy(void) const
+{
+    ToolTip *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const ToolTip *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ToolTipBase::ToolTipBase(void) :
+    Inherited(),
+    _sfFont                   (NULL),
+    _sfTippedComponent        (NULL),
+    _sfText                   (),
+    _sfAlignment              (Vec2f(0.0f,0.5f)),
+    _sfTextColor              ()
+{
+}
+
+ToolTipBase::ToolTipBase(const ToolTipBase &source) :
+    Inherited(source),
+    _sfFont                   (NULL),
+    _sfTippedComponent        (NULL),
+    _sfText                   (source._sfText                   ),
+    _sfAlignment              (source._sfAlignment              ),
+    _sfTextColor              (source._sfTextColor              )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ToolTipBase::~ToolTipBase(void)
+{
+}
+
+void ToolTipBase::onCreate(const ToolTip *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        ToolTip *pThis = static_cast<ToolTip *>(this);
+
+        pThis->setFont(source->getFont());
+
+        pThis->setTippedComponent(source->getTippedComponent());
+    }
+}
+
+GetFieldHandlePtr ToolTipBase::getHandleFont            (void) const
+{
+    SFUnrecUIFontPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIFontPtr::GetHandle(
+             &_sfFont,
+             this->getType().getFieldDesc(FontFieldId),
+             const_cast<ToolTipBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ToolTipBase::editHandleFont           (void)
+{
+    SFUnrecUIFontPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIFontPtr::EditHandle(
+             &_sfFont,
+             this->getType().getFieldDesc(FontFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ToolTip::setFont,
+                    static_cast<ToolTip *>(this), _1));
+
+    editSField(FontFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ToolTipBase::getHandleTippedComponent (void) const
+{
+    SFUnrecComponentPtr::GetHandlePtr returnValue(
+        new  SFUnrecComponentPtr::GetHandle(
+             &_sfTippedComponent,
+             this->getType().getFieldDesc(TippedComponentFieldId),
+             const_cast<ToolTipBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ToolTipBase::editHandleTippedComponent(void)
+{
+    SFUnrecComponentPtr::EditHandlePtr returnValue(
+        new  SFUnrecComponentPtr::EditHandle(
+             &_sfTippedComponent,
+             this->getType().getFieldDesc(TippedComponentFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ToolTip::setTippedComponent,
+                    static_cast<ToolTip *>(this), _1));
+
+    editSField(TippedComponentFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ToolTipBase::getHandleText            (void) const
+{
+    SFString::GetHandlePtr returnValue(
+        new  SFString::GetHandle(
+             &_sfText,
+             this->getType().getFieldDesc(TextFieldId),
+             const_cast<ToolTipBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ToolTipBase::editHandleText           (void)
+{
+    SFString::EditHandlePtr returnValue(
+        new  SFString::EditHandle(
+             &_sfText,
+             this->getType().getFieldDesc(TextFieldId),
+             this));
+
+
+    editSField(TextFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ToolTipBase::getHandleAlignment       (void) const
+{
+    SFVec2f::GetHandlePtr returnValue(
+        new  SFVec2f::GetHandle(
+             &_sfAlignment,
+             this->getType().getFieldDesc(AlignmentFieldId),
+             const_cast<ToolTipBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ToolTipBase::editHandleAlignment      (void)
+{
+    SFVec2f::EditHandlePtr returnValue(
+        new  SFVec2f::EditHandle(
+             &_sfAlignment,
+             this->getType().getFieldDesc(AlignmentFieldId),
+             this));
+
+
+    editSField(AlignmentFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ToolTipBase::getHandleTextColor       (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfTextColor,
+             this->getType().getFieldDesc(TextColorFieldId),
+             const_cast<ToolTipBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ToolTipBase::editHandleTextColor      (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfTextColor,
+             this->getType().getFieldDesc(TextColorFieldId),
+             this));
+
+
+    editSField(TextColorFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ToolTipBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ToolTip *pThis = static_cast<ToolTip *>(this);
+
+    pThis->execSync(static_cast<ToolTip *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ToolTipBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    ToolTip *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const ToolTip *>(pRefAspect),
+                  dynamic_cast<const ToolTip *>(this));
+
+    return returnValue;
+}
+#endif
+
+void ToolTipBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<ToolTip *>(this)->setFont(NULL);
+
+    static_cast<ToolTip *>(this)->setTippedComponent(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ToolTipPtr>::_type("ToolTipPtr", "ComponentPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(ToolTipPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ToolTipPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGTOOLTIPBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTOOLTIPBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTOOLTIPFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

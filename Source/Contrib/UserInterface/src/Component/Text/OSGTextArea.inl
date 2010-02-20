@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -38,18 +38,16 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 inline
-TextArea::CaretUpdateListener::CaretUpdateListener(TextAreaPtr TheTextArea) :
+TextArea::CaretUpdateListener::CaretUpdateListener(TextAreaRefPtr TheTextArea) :
 									_TextArea(TheTextArea)
 {
 }
 
 inline
-TextArea::MouseDownListener::MouseDownListener(TextAreaPtr TheTextArea) :
+TextArea::MouseDownListener::MouseDownListener(TextAreaRefPtr TheTextArea) :
 _TextArea(TheTextArea)
 {
 }
@@ -67,6 +65,3 @@ std::string TextArea::getWrappedLine(UInt32 line) const
 }
 
 OSG_END_NAMESPACE
-
-#define OSGTEXTAREA_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
-

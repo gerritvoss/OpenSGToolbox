@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/OSGFieldContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class UIDrawingSurfaceMouseTransformFunctor;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! UIDrawingSurfaceMouseTransformFunctorPtr
+OSG_GEN_CONTAINERPTR(UIDrawingSurfaceMouseTransformFunctor);
 
-typedef FCPtr<FieldContainerPtr, UIDrawingSurfaceMouseTransformFunctor> UIDrawingSurfaceMouseTransformFunctorPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<UIDrawingSurfaceMouseTransformFunctorPtr> : 
-    public FieldTraitsRecurseMapper<UIDrawingSurfaceMouseTransformFunctorPtr, true>
+struct FieldTraits<UIDrawingSurfaceMouseTransformFunctor *> :
+    public FieldTraitsFCPtrBase<UIDrawingSurfaceMouseTransformFunctor *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFUIDrawingSurfaceMouseTransformFunctorPtr"; }
-    static const char *getMName(void) { return "MFUIDrawingSurfaceMouseTransformFunctorPtr"; }
+    typedef FieldTraits<UIDrawingSurfaceMouseTransformFunctor *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFUIDrawingSurfaceMouseTransformFunctorPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFUIDrawingSurfaceMouseTransformFunctorPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<UIDrawingSurfaceMouseTransformFunctorPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<UIDrawingSurfaceMouseTransformFunctor *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecUIDrawingSurfaceMouseTransformFunctorPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<UIDrawingSurfaceMouseTransformFunctor *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecUIDrawingSurfaceMouseTransformFunctorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<UIDrawingSurfaceMouseTransformFunctor *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakUIDrawingSurfaceMouseTransformFunctorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<UIDrawingSurfaceMouseTransformFunctor *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdUIDrawingSurfaceMouseTransformFunctorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<UIDrawingSurfaceMouseTransformFunctor *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecUIDrawingSurfaceMouseTransformFunctorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<UIDrawingSurfaceMouseTransformFunctor *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecUIDrawingSurfaceMouseTransformFunctorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<UIDrawingSurfaceMouseTransformFunctor *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakUIDrawingSurfaceMouseTransformFunctorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<UIDrawingSurfaceMouseTransformFunctor *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdUIDrawingSurfaceMouseTransformFunctorPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<UIDrawingSurfaceMouseTransformFunctor *,
+                      RecordedRefCountPolicy  > SFRecUIDrawingSurfaceMouseTransformFunctorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<UIDrawingSurfaceMouseTransformFunctor *,
+                      UnrecordedRefCountPolicy> SFUnrecUIDrawingSurfaceMouseTransformFunctorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<UIDrawingSurfaceMouseTransformFunctor *,
+                      WeakRefCountPolicy      > SFWeakUIDrawingSurfaceMouseTransformFunctorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<UIDrawingSurfaceMouseTransformFunctor *,
+                      NoRefCountPolicy        > SFUncountedUIDrawingSurfaceMouseTransformFunctorPtr;
 
-typedef SField<UIDrawingSurfaceMouseTransformFunctorPtr> SFUIDrawingSurfaceMouseTransformFunctorPtr;
-#endif
 
-#ifndef OSG_COMPILEUIDRAWINGSURFACEMOUSETRANSFORMFUNCTORINST
-OSG_DLLEXPORT_DECL1(SField, UIDrawingSurfaceMouseTransformFunctorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<UIDrawingSurfaceMouseTransformFunctor *,
+                      RecordedRefCountPolicy  > MFRecUIDrawingSurfaceMouseTransformFunctorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<UIDrawingSurfaceMouseTransformFunctor *,
+                      UnrecordedRefCountPolicy> MFUnrecUIDrawingSurfaceMouseTransformFunctorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<UIDrawingSurfaceMouseTransformFunctor *,
+                      WeakRefCountPolicy      > MFWeakUIDrawingSurfaceMouseTransformFunctorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<UIDrawingSurfaceMouseTransformFunctor *,
+                      NoRefCountPolicy        > MFUncountedUIDrawingSurfaceMouseTransformFunctorPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<UIDrawingSurfaceMouseTransformFunctorPtr> MFUIDrawingSurfaceMouseTransformFunctorPtr;
-#endif
 
-#ifndef OSG_COMPILEUIDRAWINGSURFACEMOUSETRANSFORMFUNCTORINST
-OSG_DLLEXPORT_DECL1(MField, UIDrawingSurfaceMouseTransformFunctorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecUIDrawingSurfaceMouseTransformFunctorPtr : 
+    public PointerSField<UIDrawingSurfaceMouseTransformFunctor *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecUIDrawingSurfaceMouseTransformFunctorPtr : 
+    public PointerSField<UIDrawingSurfaceMouseTransformFunctor *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakUIDrawingSurfaceMouseTransformFunctorPtr :
+    public PointerSField<UIDrawingSurfaceMouseTransformFunctor *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedUIDrawingSurfaceMouseTransformFunctorPtr :
+    public PointerSField<UIDrawingSurfaceMouseTransformFunctor *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecUIDrawingSurfaceMouseTransformFunctorPtr :
+    public PointerMField<UIDrawingSurfaceMouseTransformFunctor *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecUIDrawingSurfaceMouseTransformFunctorPtr :
+    public PointerMField<UIDrawingSurfaceMouseTransformFunctor *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakUIDrawingSurfaceMouseTransformFunctorPtr :
+    public PointerMField<UIDrawingSurfaceMouseTransformFunctor *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedUIDrawingSurfaceMouseTransformFunctorPtr :
+    public PointerMField<UIDrawingSurfaceMouseTransformFunctor *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGUIDRAWINGSURFACEMOUSETRANSFORMFUNCTORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGUIDRAWINGSURFACEMOUSETRANSFORMFUNCTORFIELDS_H_ */

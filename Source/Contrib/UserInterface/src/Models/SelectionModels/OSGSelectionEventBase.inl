@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,169 +55,117 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &SelectionEventBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 SelectionEventBase::getClassTypeId(void) 
+OSG::UInt32 SelectionEventBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-SelectionEventPtr SelectionEventBase::create(void) 
-{
-    SelectionEventPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = SelectionEventPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-SelectionEventPtr SelectionEventBase::createEmpty(void) 
-{ 
-    SelectionEventPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 SelectionEventBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the SelectionEvent::_mfSelected field.
-inline
-const MFInt32 *SelectionEventBase::getMFSelected(void) const
-{
-    return &_mfSelected;
-}
-
-//! Get the SelectionEvent::_mfSelected field.
-inline
-MFInt32 *SelectionEventBase::editMFSelected(void)
-{
-    return &_mfSelected;
-}
-
-//! Get the SelectionEvent::_mfPreviouslySelected field.
-inline
-const MFInt32 *SelectionEventBase::getMFPreviouslySelected(void) const
-{
-    return &_mfPreviouslySelected;
-}
-
-//! Get the SelectionEvent::_mfPreviouslySelected field.
-inline
-MFInt32 *SelectionEventBase::editMFPreviouslySelected(void)
-{
-    return &_mfPreviouslySelected;
-}
-
-//! Get the SelectionEvent::_sfValueIsAdjusting field.
-inline
-const SFBool *SelectionEventBase::getSFValueIsAdjusting(void) const
-{
-    return &_sfValueIsAdjusting;
-}
-
-//! Get the SelectionEvent::_sfValueIsAdjusting field.
-inline
-SFBool *SelectionEventBase::editSFValueIsAdjusting(void)
-{
-    return &_sfValueIsAdjusting;
-}
-
-
 //! Get the value of the SelectionEvent::_sfValueIsAdjusting field.
+
 inline
 bool &SelectionEventBase::editValueIsAdjusting(void)
 {
+    editSField(ValueIsAdjustingFieldMask);
+
     return _sfValueIsAdjusting.getValue();
 }
 
 //! Get the value of the SelectionEvent::_sfValueIsAdjusting field.
 inline
-const bool &SelectionEventBase::getValueIsAdjusting(void) const
+      bool  SelectionEventBase::getValueIsAdjusting(void) const
 {
     return _sfValueIsAdjusting.getValue();
 }
 
 //! Set the value of the SelectionEvent::_sfValueIsAdjusting field.
 inline
-void SelectionEventBase::setValueIsAdjusting(const bool &value)
+void SelectionEventBase::setValueIsAdjusting(const bool value)
 {
+    editSField(ValueIsAdjustingFieldMask);
+
     _sfValueIsAdjusting.setValue(value);
 }
 
-
 //! Get the value of the \a index element the SelectionEvent::_mfSelected field.
+inline
+      Int32  SelectionEventBase::getSelected(const UInt32 index) const
+{
+    return _mfSelected[index];
+}
+
 inline
 Int32 &SelectionEventBase::editSelected(const UInt32 index)
 {
+    editMField(SelectedFieldMask, _mfSelected);
+
     return _mfSelected[index];
 }
 
-//! Get the value of the \a index element the SelectionEvent::_mfSelected field.
-inline
-const Int32 &SelectionEventBase::getSelected(const UInt32 index) const
-{
-    return _mfSelected[index];
-}
 
-#ifndef OSG_2_PREP
-//! Get the SelectionEvent::_mfSelected field.
-inline
-MFInt32 &SelectionEventBase::getSelected(void)
-{
-    return _mfSelected;
-}
-
-//! Get the SelectionEvent::_mfSelected field.
-inline
-const MFInt32 &SelectionEventBase::getSelected(void) const
-{
-    return _mfSelected;
-}
-
-#endif
 //! Get the value of the \a index element the SelectionEvent::_mfPreviouslySelected field.
+inline
+      Int32  SelectionEventBase::getPreviouslySelected(const UInt32 index) const
+{
+    return _mfPreviouslySelected[index];
+}
+
 inline
 Int32 &SelectionEventBase::editPreviouslySelected(const UInt32 index)
 {
+    editMField(PreviouslySelectedFieldMask, _mfPreviouslySelected);
+
     return _mfPreviouslySelected[index];
 }
 
-//! Get the value of the \a index element the SelectionEvent::_mfPreviouslySelected field.
-inline
-const Int32 &SelectionEventBase::getPreviouslySelected(const UInt32 index) const
-{
-    return _mfPreviouslySelected[index];
-}
 
-#ifndef OSG_2_PREP
-//! Get the SelectionEvent::_mfPreviouslySelected field.
-inline
-MFInt32 &SelectionEventBase::getPreviouslySelected(void)
-{
-    return _mfPreviouslySelected;
-}
 
-//! Get the SelectionEvent::_mfPreviouslySelected field.
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-const MFInt32 &SelectionEventBase::getPreviouslySelected(void) const
+void SelectionEventBase::execSync (      SelectionEventBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfPreviouslySelected;
-}
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
+    if(FieldBits::NoField != (SelectedFieldMask & whichField))
+        _mfSelected.syncWith(pFrom->_mfSelected,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (PreviouslySelectedFieldMask & whichField))
+        _mfPreviouslySelected.syncWith(pFrom->_mfPreviouslySelected,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (ValueIsAdjustingFieldMask & whichField))
+        _sfValueIsAdjusting.syncWith(pFrom->_sfValueIsAdjusting);
+}
 #endif
+
+
+inline
+const Char8 *SelectionEventBase::getClassname(void)
+{
+    return "SelectionEvent";
+}
+OSG_GEN_CONTAINERPTR(SelectionEvent);
+
 OSG_END_NAMESPACE
 

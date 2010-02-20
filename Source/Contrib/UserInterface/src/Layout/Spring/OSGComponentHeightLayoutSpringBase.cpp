@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,155 +50,208 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILECOMPONENTHEIGHTLAYOUTSPRINGINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGComponent.h"               // Component Class
 
 #include "OSGComponentHeightLayoutSpringBase.h"
 #include "OSGComponentHeightLayoutSpring.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ComponentHeightLayoutSpringBase::ComponentFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentHeightLayoutSpringBase::ComponentFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  ComponentHeightLayoutSpringBase::SizeFieldFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentHeightLayoutSpringBase::SizeFieldFieldId);
+/*! \class OSG::ComponentHeightLayoutSpring
+    A UI ComponentHeight LayoutSpring.
+ */
 
-const OSG::BitVector ComponentHeightLayoutSpringBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-
-// Field descriptions
-
-/*! \var ComponentPtr    ComponentHeightLayoutSpringBase::_sfComponent
+/*! \var Component *     ComponentHeightLayoutSpringBase::_sfComponent
     
 */
+
 /*! \var UInt32          ComponentHeightLayoutSpringBase::_sfSizeField
     
 */
 
-//! ComponentHeightLayoutSpring description
 
-FieldDescription *ComponentHeightLayoutSpringBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ComponentHeightLayoutSpring *>::_type("ComponentHeightLayoutSpringPtr", "AbstractLayoutSpringPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ComponentHeightLayoutSpring *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ComponentHeightLayoutSpring *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ComponentHeightLayoutSpring *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ComponentHeightLayoutSpringBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFComponentPtr::getClassType(), 
-                     "Component", 
-                     ComponentFieldId, ComponentFieldMask,
-                     false,
-                     (FieldAccessMethod) &ComponentHeightLayoutSpringBase::getSFComponent),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "SizeField", 
-                     SizeFieldFieldId, SizeFieldFieldMask,
-                     false,
-                     (FieldAccessMethod) &ComponentHeightLayoutSpringBase::getSFSizeField)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType ComponentHeightLayoutSpringBase::_type(
-    "ComponentHeightLayoutSpring",
-    "AbstractLayoutSpring",
-    NULL,
-    (PrototypeCreateF) &ComponentHeightLayoutSpringBase::createEmpty,
+    pDesc = new SFUnrecComponentPtr::Description(
+        SFUnrecComponentPtr::getClassType(),
+        "Component",
+        "",
+        ComponentFieldId, ComponentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ComponentHeightLayoutSpring::editHandleComponent),
+        static_cast<FieldGetMethodSig >(&ComponentHeightLayoutSpring::getHandleComponent));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "SizeField",
+        "",
+        SizeFieldFieldId, SizeFieldFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ComponentHeightLayoutSpring::editHandleSizeField),
+        static_cast<FieldGetMethodSig >(&ComponentHeightLayoutSpring::getHandleSizeField));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+ComponentHeightLayoutSpringBase::TypeObject ComponentHeightLayoutSpringBase::_type(
+    ComponentHeightLayoutSpringBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ComponentHeightLayoutSpringBase::createEmptyLocal),
     ComponentHeightLayoutSpring::initMethod,
-    _desc,
-    sizeof(_desc));
+    ComponentHeightLayoutSpring::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ComponentHeightLayoutSpring::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ComponentHeightLayoutSpring\"\n"
+    "\tparent=\"AbstractLayoutSpring\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI ComponentHeight LayoutSpring.\n"
+    "\t<Field\n"
+    "\t\tname=\"Component\"\n"
+    "\t\ttype=\"Component\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "      visibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SizeField\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "      visibility=\"external\"\n"
+    "\t\tdefaultValue=\"ComponentHeightLayoutSpring::PREFERRED_SIZE\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "</FieldContainer>\n",
+    "A UI ComponentHeight LayoutSpring.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(ComponentHeightLayoutSpringBase, ComponentHeightLayoutSpringPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ComponentHeightLayoutSpringBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ComponentHeightLayoutSpringBase::getType(void) const 
+FieldContainerType &ComponentHeightLayoutSpringBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr ComponentHeightLayoutSpringBase::shallowCopy(void) const 
-{ 
-    ComponentHeightLayoutSpringPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const ComponentHeightLayoutSpring *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 ComponentHeightLayoutSpringBase::getContainerSize(void) const 
-{ 
-    return sizeof(ComponentHeightLayoutSpring); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ComponentHeightLayoutSpringBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &ComponentHeightLayoutSpringBase::getType(void) const
 {
-    this->executeSyncImpl((ComponentHeightLayoutSpringBase *) &other, whichField);
+    return _type;
 }
-#else
-void ComponentHeightLayoutSpringBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 ComponentHeightLayoutSpringBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((ComponentHeightLayoutSpringBase *) &other, whichField, sInfo);
+    return sizeof(ComponentHeightLayoutSpring);
 }
-void ComponentHeightLayoutSpringBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the ComponentHeightLayoutSpring::_sfComponent field.
+const SFUnrecComponentPtr *ComponentHeightLayoutSpringBase::getSFComponent(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfComponent;
 }
 
-void ComponentHeightLayoutSpringBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecComponentPtr *ComponentHeightLayoutSpringBase::editSFComponent      (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(ComponentFieldMask);
 
+    return &_sfComponent;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-ComponentHeightLayoutSpringBase::ComponentHeightLayoutSpringBase(void) :
-    _sfComponent              (ComponentPtr(NullFC)), 
-    _sfSizeField              (UInt32(ComponentHeightLayoutSpring::PREFERRED_SIZE)), 
-    Inherited() 
+SFUInt32 *ComponentHeightLayoutSpringBase::editSFSizeField(void)
 {
+    editSField(SizeFieldFieldMask);
+
+    return &_sfSizeField;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-ComponentHeightLayoutSpringBase::ComponentHeightLayoutSpringBase(const ComponentHeightLayoutSpringBase &source) :
-    _sfComponent              (source._sfComponent              ), 
-    _sfSizeField              (source._sfSizeField              ), 
-    Inherited                 (source)
+const SFUInt32 *ComponentHeightLayoutSpringBase::getSFSizeField(void) const
 {
+    return &_sfSizeField;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-ComponentHeightLayoutSpringBase::~ComponentHeightLayoutSpringBase(void)
-{
-}
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ComponentHeightLayoutSpringBase::getBinSize(const BitVector &whichField)
+UInt32 ComponentHeightLayoutSpringBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -206,18 +259,16 @@ UInt32 ComponentHeightLayoutSpringBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfComponent.getBinSize();
     }
-
     if(FieldBits::NoField != (SizeFieldFieldMask & whichField))
     {
         returnValue += _sfSizeField.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ComponentHeightLayoutSpringBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ComponentHeightLayoutSpringBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -225,17 +276,14 @@ void ComponentHeightLayoutSpringBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfComponent.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SizeFieldFieldMask & whichField))
     {
         _sfSizeField.copyToBin(pMem);
     }
-
-
 }
 
-void ComponentHeightLayoutSpringBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ComponentHeightLayoutSpringBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -243,93 +291,260 @@ void ComponentHeightLayoutSpringBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfComponent.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SizeFieldFieldMask & whichField))
     {
         _sfSizeField.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ComponentHeightLayoutSpringBase::executeSyncImpl(      ComponentHeightLayoutSpringBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ComponentHeightLayoutSpringTransitPtr ComponentHeightLayoutSpringBase::createLocal(BitVector bFlags)
 {
+    ComponentHeightLayoutSpringTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (ComponentFieldMask & whichField))
-        _sfComponent.syncWith(pOther->_sfComponent);
+        fc = dynamic_pointer_cast<ComponentHeightLayoutSpring>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (SizeFieldFieldMask & whichField))
-        _sfSizeField.syncWith(pOther->_sfSizeField);
-
-
-}
-#else
-void ComponentHeightLayoutSpringBase::executeSyncImpl(      ComponentHeightLayoutSpringBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ComponentFieldMask & whichField))
-        _sfComponent.syncWith(pOther->_sfComponent);
-
-    if(FieldBits::NoField != (SizeFieldFieldMask & whichField))
-        _sfSizeField.syncWith(pOther->_sfSizeField);
-
-
-
+    return fc;
 }
 
-void ComponentHeightLayoutSpringBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ComponentHeightLayoutSpringTransitPtr ComponentHeightLayoutSpringBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ComponentHeightLayoutSpringTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<ComponentHeightLayoutSpring>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ComponentHeightLayoutSpringTransitPtr ComponentHeightLayoutSpringBase::create(void)
+{
+    ComponentHeightLayoutSpringTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<ComponentHeightLayoutSpring>(tmpPtr);
+    }
+
+    return fc;
+}
+
+ComponentHeightLayoutSpring *ComponentHeightLayoutSpringBase::createEmptyLocal(BitVector bFlags)
+{
+    ComponentHeightLayoutSpring *returnValue;
+
+    newPtr<ComponentHeightLayoutSpring>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+ComponentHeightLayoutSpring *ComponentHeightLayoutSpringBase::createEmpty(void)
+{
+    ComponentHeightLayoutSpring *returnValue;
+
+    newPtr<ComponentHeightLayoutSpring>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ComponentHeightLayoutSpringBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    ComponentHeightLayoutSpring *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ComponentHeightLayoutSpring *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ComponentHeightLayoutSpringBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    ComponentHeightLayoutSpring *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ComponentHeightLayoutSpring *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ComponentHeightLayoutSpringBase::shallowCopy(void) const
+{
+    ComponentHeightLayoutSpring *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const ComponentHeightLayoutSpring *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ComponentHeightLayoutSpringBase::ComponentHeightLayoutSpringBase(void) :
+    Inherited(),
+    _sfComponent              (NULL),
+    _sfSizeField              (UInt32(ComponentHeightLayoutSpring::PREFERRED_SIZE))
+{
+}
+
+ComponentHeightLayoutSpringBase::ComponentHeightLayoutSpringBase(const ComponentHeightLayoutSpringBase &source) :
+    Inherited(source),
+    _sfComponent              (NULL),
+    _sfSizeField              (source._sfSizeField              )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ComponentHeightLayoutSpringBase::~ComponentHeightLayoutSpringBase(void)
+{
+}
+
+void ComponentHeightLayoutSpringBase::onCreate(const ComponentHeightLayoutSpring *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        ComponentHeightLayoutSpring *pThis = static_cast<ComponentHeightLayoutSpring *>(this);
+
+        pThis->setComponent(source->getComponent());
+    }
+}
+
+GetFieldHandlePtr ComponentHeightLayoutSpringBase::getHandleComponent       (void) const
+{
+    SFUnrecComponentPtr::GetHandlePtr returnValue(
+        new  SFUnrecComponentPtr::GetHandle(
+             &_sfComponent,
+             this->getType().getFieldDesc(ComponentFieldId),
+             const_cast<ComponentHeightLayoutSpringBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentHeightLayoutSpringBase::editHandleComponent      (void)
+{
+    SFUnrecComponentPtr::EditHandlePtr returnValue(
+        new  SFUnrecComponentPtr::EditHandle(
+             &_sfComponent,
+             this->getType().getFieldDesc(ComponentFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ComponentHeightLayoutSpring::setComponent,
+                    static_cast<ComponentHeightLayoutSpring *>(this), _1));
+
+    editSField(ComponentFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentHeightLayoutSpringBase::getHandleSizeField       (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfSizeField,
+             this->getType().getFieldDesc(SizeFieldFieldId),
+             const_cast<ComponentHeightLayoutSpringBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentHeightLayoutSpringBase::editHandleSizeField      (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfSizeField,
+             this->getType().getFieldDesc(SizeFieldFieldId),
+             this));
+
+
+    editSField(SizeFieldFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ComponentHeightLayoutSpringBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ComponentHeightLayoutSpring *pThis = static_cast<ComponentHeightLayoutSpring *>(this);
+
+    pThis->execSync(static_cast<ComponentHeightLayoutSpring *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ComponentHeightLayoutSpringBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    ComponentHeightLayoutSpring *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const ComponentHeightLayoutSpring *>(pRefAspect),
+                  dynamic_cast<const ComponentHeightLayoutSpring *>(this));
+
+    return returnValue;
+}
+#endif
+
+void ComponentHeightLayoutSpringBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<ComponentHeightLayoutSpring *>(this)->setComponent(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ComponentHeightLayoutSpringPtr>::_type("ComponentHeightLayoutSpringPtr", "AbstractLayoutSpringPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(ComponentHeightLayoutSpringPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ComponentHeightLayoutSpringPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGCOMPONENTHEIGHTLAYOUTSPRINGBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCOMPONENTHEIGHTLAYOUTSPRINGBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCOMPONENTHEIGHTLAYOUTSPRINGFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

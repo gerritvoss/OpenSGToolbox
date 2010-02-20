@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,21 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGQuaternion.h>
-#include <OpenSG/Toolbox/OSGMathUtils.h>
+#include <OSGConfig.h>
 
 #include "OSGGradientLayer.h"
+#include "OSGQuaternion.h"
+#include "OSGMatrix22.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::GradientLayer
-UI Gradient Background. 	
-*/
+// Documentation for this class is emitted in the
+// OSGGradientLayerBase.cpp file.
+// To modify it, please change the .fcd file (OSGGradientLayer.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,8 +64,13 @@ UI Gradient Background.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void GradientLayer::initMethod (void)
+void GradientLayer::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -76,13 +78,13 @@ void GradientLayer::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void GradientLayer::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32 Opacity) const
+void GradientLayer::draw(const GraphicsWeakPtr TheGraphics, const Pnt2f& TopLeft, const Pnt2f& BottomRight, const Real32 Opacity) const
 {
-	if(getColors().size() == getStops().size())
+	if(getMFColors()->size() == getMFStops()->size())
 	{
-		if(getColors().size() == 1)
+		if(getMFColors()->size() == 1)
 		{
-			TheGraphics->drawQuad(TopLeft, Pnt2f(BottomRight.x(), TopLeft.y()), BottomRight, Pnt2f(TopLeft.x(), BottomRight.y()), getColors()[0], getColors()[0], getColors()[0], getColors()[0], Opacity);
+			TheGraphics->drawQuad(TopLeft, Pnt2f(BottomRight.x(), TopLeft.y()), BottomRight, Pnt2f(TopLeft.x(), BottomRight.y()), getColors(0), getColors(0), getColors(0), getColors(0), Opacity);
 		}
 		else
 		{
@@ -126,13 +128,13 @@ void GradientLayer::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, co
 			{
 				//Code for drawing the Gradient with Repeating/Reflection
 					//Determine the Number of Repeats
-					UInt32 RepeatCount = static_cast<UInt32>(osgceil(1.0f/GradientLength));
+					UInt32 RepeatCount = static_cast<UInt32>(osgCeil(1.0f/GradientLength));
 
 					//Determine the relative location in the gradient that the Start left is at
-					Real32 StartGradientLocation = PreStartLength - GradientLength * osgceil(PreStartLength/GradientLength);
+					Real32 StartGradientLocation = PreStartLength - GradientLength * osgCeil(PreStartLength/GradientLength);
 
 					//Determine whether the start is a reflection or normal
-					bool isReflection = getSpreadMethod() == SPREAD_REFLECT && static_cast<UInt32>(osgceil(PreStartLength/GradientLength))%2==1;
+					bool isReflection = getSpreadMethod() == SPREAD_REFLECT && static_cast<UInt32>(osgCeil(PreStartLength/GradientLength))%2==1;
 
 					for(UInt32 i(0) ; i<RepeatCount ; ++i)
 					{
@@ -159,7 +161,8 @@ void GradientLayer::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, co
 				//Front Pad
 				if(PreStartLength != 0.0f)
 				{
-					drawPad(TheGraphics, Origin, Max-Min,u,0.0,PreStartLength,getColors().front(),Opacity);
+					drawPad(TheGraphics, Origin,
+                            Max-Min,u,0.0,PreStartLength,getMFColors()->front(),Opacity);
 				}
 				
 				drawGradient(TheGraphics, Origin, Max-Min,u,PreStartLength,PreStartLength+GradientLength,Opacity);
@@ -167,46 +170,47 @@ void GradientLayer::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, co
 				//End Pad
 				if(PostEndLength != 0.0f)
 				{
-					drawPad(TheGraphics, Origin, Max-Min,u,PreStartLength+GradientLength,1.0,getColors().back(),Opacity);
+					drawPad(TheGraphics, Origin, Max-Min,u,PreStartLength+GradientLength,1.0,getMFColors()->back(),Opacity);
 				}
 			}
 		}
 	}
 }
 
-void GradientLayer::drawGradient(const GraphicsPtr TheGraphics, const Pnt2f& Origin, const Vec2f& Size, const Vec2f& UAxis, const Real32& Start, const Real32& End, const Real32& Opacity) const
+void GradientLayer::drawGradient(const GraphicsWeakPtr TheGraphics, const Pnt2f& Origin, const Vec2f& Size, const Vec2f& UAxis, const Real32& Start, const Real32& End, const Real32& Opacity) const
 {
 	glPushMatrix();
 	Matrix Transformation;
 	Transformation.setTransform(Vec3f(Origin.x()+Start*UAxis.x()*Size.x(), Origin.y()+Start*UAxis.y()*Size.x(),0.0f), Quaternion(Vec3f(1.0f,0.0f,0.0f),Vec3f(UAxis.x(), UAxis.y(), 0.0f)), Vec3f(Size.x()*(End-Start), Size.y(),0.0f));
 	glMultMatrixf(Transformation.getValues());
 
-	if (osgMin(getColors().size(),getStops().size()) > 1)
+	if (osgMin(getMFColors()->size(),getMFStops()->size()) > 1)
 	{
-		if(getColors().size() != getStops().size())
+		if(getMFColors()->size() != getMFStops()->size())
 		{    
 			SWARNING << "GradientLayer::drawGradient: The number of colors and the number of stops are not equal." << std::endl;
 		}
 
-		UInt32 NumStops = osgMin(getColors().size(),getStops().size());
+		UInt32 NumStops = osgMin(getMFColors()->size(),getMFStops()->size());
 		Real32 CurentRelaviteStop= 0.0f;
 			
 		for(UInt32 i(0) ; i<NumStops-1 ; ++i)
 		{
-			TheGraphics->drawQuad(Pnt2f(getStops()[i],0.0f),
-				                  Pnt2f(getStops()[i+1],0.0f),
-				                  Pnt2f(getStops()[i+1],1.0f),
-				                  Pnt2f(getStops()[i],1.0f),
-								  getColors()[i],
-								  getColors()[i+1],
-								  getColors()[i+1],
-								  getColors()[i],
+			TheGraphics->drawQuad(Pnt2f(getStops(i),0.0f),
+				                  Pnt2f(getStops(i+1),0.0f),
+				                  Pnt2f(getStops(i+1),1.0f),
+				                  Pnt2f(getStops(i),1.0f),
+								  getColors(i),
+								  getColors(i+1),
+								  getColors(i+1),
+								  getColors(i),
 								  Opacity);
 		}
 	}
 	glPopMatrix();
 }
-void GradientLayer::drawPad(const GraphicsPtr TheGraphics, const Pnt2f& Origin, const Vec2f& Size, const Vec2f& UAxis, const Real32& Start, const Real32& End, const Color4f Color, const Real32& Opacity) const
+
+void GradientLayer::drawPad(const GraphicsWeakPtr TheGraphics, const Pnt2f& Origin, const Vec2f& Size, const Vec2f& UAxis, const Real32& Start, const Real32& End, const Color4f Color, const Real32& Opacity) const
 {
 	glPushMatrix();
 	Matrix Transformation;
@@ -244,41 +248,17 @@ GradientLayer::~GradientLayer(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void GradientLayer::changed(BitVector whichField, UInt32 origin)
+void GradientLayer::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void GradientLayer::dump(      UInt32    , 
+void GradientLayer::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump GradientLayer NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGGRADIENTLAYERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGGRADIENTLAYERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGGRADIENTLAYERFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

@@ -31,20 +31,20 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGEventListener.h>
+#include "OSGEventListener.h"
 #include "OSGCaretEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING CaretListener : public EventListener
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING CaretListener : public EventListener
 {
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void caretChanged(const CaretEventPtr e) = 0;
+   virtual void caretChanged(const CaretEventUnrecPtr e) = 0;
 };
 
 typedef CaretListener* CaretListenerPtr;

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,324 +50,725 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEGRIDBAGLAYOUTCONSTRAINTSINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGGridBagLayoutConstraintsBase.h"
 #include "OSGGridBagLayoutConstraints.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  GridBagLayoutConstraintsBase::GridXFieldMask = 
-    (TypeTraits<BitVector>::One << GridBagLayoutConstraintsBase::GridXFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  GridBagLayoutConstraintsBase::GridYFieldMask = 
-    (TypeTraits<BitVector>::One << GridBagLayoutConstraintsBase::GridYFieldId);
+/*! \class OSG::GridBagLayoutConstraints
+    A UI GridBagLayoutConstraints.
+ */
 
-const OSG::BitVector  GridBagLayoutConstraintsBase::GridWidthFieldMask = 
-    (TypeTraits<BitVector>::One << GridBagLayoutConstraintsBase::GridWidthFieldId);
-
-const OSG::BitVector  GridBagLayoutConstraintsBase::GridHeightFieldMask = 
-    (TypeTraits<BitVector>::One << GridBagLayoutConstraintsBase::GridHeightFieldId);
-
-const OSG::BitVector  GridBagLayoutConstraintsBase::FillFieldMask = 
-    (TypeTraits<BitVector>::One << GridBagLayoutConstraintsBase::FillFieldId);
-
-const OSG::BitVector  GridBagLayoutConstraintsBase::HorizontalAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << GridBagLayoutConstraintsBase::HorizontalAlignmentFieldId);
-
-const OSG::BitVector  GridBagLayoutConstraintsBase::VerticalAlignmentFieldMask = 
-    (TypeTraits<BitVector>::One << GridBagLayoutConstraintsBase::VerticalAlignmentFieldId);
-
-const OSG::BitVector  GridBagLayoutConstraintsBase::WeightXFieldMask = 
-    (TypeTraits<BitVector>::One << GridBagLayoutConstraintsBase::WeightXFieldId);
-
-const OSG::BitVector  GridBagLayoutConstraintsBase::WeightYFieldMask = 
-    (TypeTraits<BitVector>::One << GridBagLayoutConstraintsBase::WeightYFieldId);
-
-const OSG::BitVector  GridBagLayoutConstraintsBase::InternalPadXFieldMask = 
-    (TypeTraits<BitVector>::One << GridBagLayoutConstraintsBase::InternalPadXFieldId);
-
-const OSG::BitVector  GridBagLayoutConstraintsBase::InternalPadYFieldMask = 
-    (TypeTraits<BitVector>::One << GridBagLayoutConstraintsBase::InternalPadYFieldId);
-
-const OSG::BitVector  GridBagLayoutConstraintsBase::PadLeftFieldMask = 
-    (TypeTraits<BitVector>::One << GridBagLayoutConstraintsBase::PadLeftFieldId);
-
-const OSG::BitVector  GridBagLayoutConstraintsBase::PadRightFieldMask = 
-    (TypeTraits<BitVector>::One << GridBagLayoutConstraintsBase::PadRightFieldId);
-
-const OSG::BitVector  GridBagLayoutConstraintsBase::PadTopFieldMask = 
-    (TypeTraits<BitVector>::One << GridBagLayoutConstraintsBase::PadTopFieldId);
-
-const OSG::BitVector  GridBagLayoutConstraintsBase::PadBottomFieldMask = 
-    (TypeTraits<BitVector>::One << GridBagLayoutConstraintsBase::PadBottomFieldId);
-
-const OSG::BitVector GridBagLayoutConstraintsBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var UInt16          GridBagLayoutConstraintsBase::_sfGridX
     Specifies the cell containing the leading corner of the component's display area
 */
+
 /*! \var UInt16          GridBagLayoutConstraintsBase::_sfGridY
     Specifies the cell containing the leading corner of the component's display area
 */
+
 /*! \var UInt16          GridBagLayoutConstraintsBase::_sfGridWidth
     Specifies the number of cells in a row in the component's display area
 */
+
 /*! \var UInt16          GridBagLayoutConstraintsBase::_sfGridHeight
     Specifies the number of cells in a column in the component's display area
 */
+
 /*! \var UInt32          GridBagLayoutConstraintsBase::_sfFill
     Used when the component's display area is larger than the component's requested size to determine whether (and how) to resize the component
 */
+
 /*! \var Real32          GridBagLayoutConstraintsBase::_sfHorizontalAlignment
     Used when the component is smaller than its display area to determine where (within the display area) to place the component
 */
+
 /*! \var Real32          GridBagLayoutConstraintsBase::_sfVerticalAlignment
     Used when the component is smaller than its display area to determine where (within the display area) to place the component
 */
+
 /*! \var Real32          GridBagLayoutConstraintsBase::_sfWeightX
     Used to determine how to distribute space, which is important for specifying resizing behavior
 */
+
 /*! \var Real32          GridBagLayoutConstraintsBase::_sfWeightY
     Used to determine how to distribute space, which is important for specifying resizing behavior
 */
+
 /*! \var UInt32          GridBagLayoutConstraintsBase::_sfInternalPadX
     Specifies the component's internal padding within the layout, how much to add to the minimum size of the component. The width of the component will be at least its minimum width plus (ipadx * 2) pixels (since the padding applies to both sides of the component)
 */
+
 /*! \var UInt32          GridBagLayoutConstraintsBase::_sfInternalPadY
     Specifies the component's internal padding within the layout, how much to add to the minimum size of the component. The height of the component will be at least its minimum height plus (ipady * 2) pixels (since the padding applies to both sides of the component)
 */
+
 /*! \var UInt32          GridBagLayoutConstraintsBase::_sfPadLeft
     This field specifies the external padding of the component, the minimum amount of space between the component and the Left edge of its display area.
 */
+
 /*! \var UInt32          GridBagLayoutConstraintsBase::_sfPadRight
     This field specifies the external padding of the component, the minimum amount of space between the component and the Right edge of its display area.
 */
+
 /*! \var UInt32          GridBagLayoutConstraintsBase::_sfPadTop
     This field specifies the external padding of the component, the minimum amount of space between the component and the Top edge of its display area.
 */
+
 /*! \var UInt32          GridBagLayoutConstraintsBase::_sfPadBottom
     This field specifies the external padding of the component, the minimum amount of space between the component and the Bottom edge of its display area.
 */
 
-//! GridBagLayoutConstraints description
 
-FieldDescription *GridBagLayoutConstraintsBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<GridBagLayoutConstraints *>::_type("GridBagLayoutConstraintsPtr", "LayoutConstraintsPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(GridBagLayoutConstraints *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           GridBagLayoutConstraints *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           GridBagLayoutConstraints *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void GridBagLayoutConstraintsBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUInt16::getClassType(), 
-                     "GridX", 
-                     GridXFieldId, GridXFieldMask,
-                     false,
-                     (FieldAccessMethod) &GridBagLayoutConstraintsBase::getSFGridX),
-    new FieldDescription(SFUInt16::getClassType(), 
-                     "GridY", 
-                     GridYFieldId, GridYFieldMask,
-                     false,
-                     (FieldAccessMethod) &GridBagLayoutConstraintsBase::getSFGridY),
-    new FieldDescription(SFUInt16::getClassType(), 
-                     "GridWidth", 
-                     GridWidthFieldId, GridWidthFieldMask,
-                     false,
-                     (FieldAccessMethod) &GridBagLayoutConstraintsBase::getSFGridWidth),
-    new FieldDescription(SFUInt16::getClassType(), 
-                     "GridHeight", 
-                     GridHeightFieldId, GridHeightFieldMask,
-                     false,
-                     (FieldAccessMethod) &GridBagLayoutConstraintsBase::getSFGridHeight),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "Fill", 
-                     FillFieldId, FillFieldMask,
-                     false,
-                     (FieldAccessMethod) &GridBagLayoutConstraintsBase::getSFFill),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "HorizontalAlignment", 
-                     HorizontalAlignmentFieldId, HorizontalAlignmentFieldMask,
-                     false,
-                     (FieldAccessMethod) &GridBagLayoutConstraintsBase::getSFHorizontalAlignment),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "VerticalAlignment", 
-                     VerticalAlignmentFieldId, VerticalAlignmentFieldMask,
-                     false,
-                     (FieldAccessMethod) &GridBagLayoutConstraintsBase::getSFVerticalAlignment),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "WeightX", 
-                     WeightXFieldId, WeightXFieldMask,
-                     false,
-                     (FieldAccessMethod) &GridBagLayoutConstraintsBase::getSFWeightX),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "WeightY", 
-                     WeightYFieldId, WeightYFieldMask,
-                     false,
-                     (FieldAccessMethod) &GridBagLayoutConstraintsBase::getSFWeightY),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "InternalPadX", 
-                     InternalPadXFieldId, InternalPadXFieldMask,
-                     false,
-                     (FieldAccessMethod) &GridBagLayoutConstraintsBase::getSFInternalPadX),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "InternalPadY", 
-                     InternalPadYFieldId, InternalPadYFieldMask,
-                     false,
-                     (FieldAccessMethod) &GridBagLayoutConstraintsBase::getSFInternalPadY),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "PadLeft", 
-                     PadLeftFieldId, PadLeftFieldMask,
-                     false,
-                     (FieldAccessMethod) &GridBagLayoutConstraintsBase::getSFPadLeft),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "PadRight", 
-                     PadRightFieldId, PadRightFieldMask,
-                     false,
-                     (FieldAccessMethod) &GridBagLayoutConstraintsBase::getSFPadRight),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "PadTop", 
-                     PadTopFieldId, PadTopFieldMask,
-                     false,
-                     (FieldAccessMethod) &GridBagLayoutConstraintsBase::getSFPadTop),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "PadBottom", 
-                     PadBottomFieldId, PadBottomFieldMask,
-                     false,
-                     (FieldAccessMethod) &GridBagLayoutConstraintsBase::getSFPadBottom)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType GridBagLayoutConstraintsBase::_type(
-    "GridBagLayoutConstraints",
-    "LayoutConstraints",
-    NULL,
-    (PrototypeCreateF) &GridBagLayoutConstraintsBase::createEmpty,
+    pDesc = new SFUInt16::Description(
+        SFUInt16::getClassType(),
+        "GridX",
+        "Specifies the cell containing the leading corner of the component's display area\n",
+        GridXFieldId, GridXFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GridBagLayoutConstraints::editHandleGridX),
+        static_cast<FieldGetMethodSig >(&GridBagLayoutConstraints::getHandleGridX));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt16::Description(
+        SFUInt16::getClassType(),
+        "GridY",
+        "Specifies the cell containing the leading corner of the component's display area\n",
+        GridYFieldId, GridYFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GridBagLayoutConstraints::editHandleGridY),
+        static_cast<FieldGetMethodSig >(&GridBagLayoutConstraints::getHandleGridY));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt16::Description(
+        SFUInt16::getClassType(),
+        "GridWidth",
+        "Specifies the number of cells in a row in the component's display area\n",
+        GridWidthFieldId, GridWidthFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GridBagLayoutConstraints::editHandleGridWidth),
+        static_cast<FieldGetMethodSig >(&GridBagLayoutConstraints::getHandleGridWidth));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt16::Description(
+        SFUInt16::getClassType(),
+        "GridHeight",
+        "Specifies the number of cells in a column in the component's display area\n",
+        GridHeightFieldId, GridHeightFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GridBagLayoutConstraints::editHandleGridHeight),
+        static_cast<FieldGetMethodSig >(&GridBagLayoutConstraints::getHandleGridHeight));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "Fill",
+        "Used when the component's display area is larger than the component's requested size to determine whether (and how) to resize the component\n",
+        FillFieldId, FillFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GridBagLayoutConstraints::editHandleFill),
+        static_cast<FieldGetMethodSig >(&GridBagLayoutConstraints::getHandleFill));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "HorizontalAlignment",
+        "Used when the component is smaller than its display area to determine where (within the display area) to place the component\n",
+        HorizontalAlignmentFieldId, HorizontalAlignmentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GridBagLayoutConstraints::editHandleHorizontalAlignment),
+        static_cast<FieldGetMethodSig >(&GridBagLayoutConstraints::getHandleHorizontalAlignment));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "VerticalAlignment",
+        "Used when the component is smaller than its display area to determine where (within the display area) to place the component\n",
+        VerticalAlignmentFieldId, VerticalAlignmentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GridBagLayoutConstraints::editHandleVerticalAlignment),
+        static_cast<FieldGetMethodSig >(&GridBagLayoutConstraints::getHandleVerticalAlignment));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "WeightX",
+        "Used to determine how to distribute space, which is important for specifying resizing behavior\n",
+        WeightXFieldId, WeightXFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GridBagLayoutConstraints::editHandleWeightX),
+        static_cast<FieldGetMethodSig >(&GridBagLayoutConstraints::getHandleWeightX));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "WeightY",
+        "Used to determine how to distribute space, which is important for specifying resizing behavior\n",
+        WeightYFieldId, WeightYFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GridBagLayoutConstraints::editHandleWeightY),
+        static_cast<FieldGetMethodSig >(&GridBagLayoutConstraints::getHandleWeightY));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "InternalPadX",
+        "Specifies the component's internal padding within the layout, how much to add to the minimum size of the component. The width of the component will be at least its minimum width plus (ipadx * 2) pixels (since the padding applies to both sides of the component)\n",
+        InternalPadXFieldId, InternalPadXFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GridBagLayoutConstraints::editHandleInternalPadX),
+        static_cast<FieldGetMethodSig >(&GridBagLayoutConstraints::getHandleInternalPadX));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "InternalPadY",
+        "Specifies the component's internal padding within the layout, how much to add to the minimum size of the component. The height of the component will be at least its minimum height plus (ipady * 2) pixels (since the padding applies to both sides of the component)\n",
+        InternalPadYFieldId, InternalPadYFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GridBagLayoutConstraints::editHandleInternalPadY),
+        static_cast<FieldGetMethodSig >(&GridBagLayoutConstraints::getHandleInternalPadY));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "PadLeft",
+        "This field specifies the external padding of the component, the minimum amount of space between the component and the Left edge of its display area.\n",
+        PadLeftFieldId, PadLeftFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GridBagLayoutConstraints::editHandlePadLeft),
+        static_cast<FieldGetMethodSig >(&GridBagLayoutConstraints::getHandlePadLeft));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "PadRight",
+        "This field specifies the external padding of the component, the minimum amount of space between the component and the Right edge of its display area.\n",
+        PadRightFieldId, PadRightFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GridBagLayoutConstraints::editHandlePadRight),
+        static_cast<FieldGetMethodSig >(&GridBagLayoutConstraints::getHandlePadRight));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "PadTop",
+        "This field specifies the external padding of the component, the minimum amount of space between the component and the Top edge of its display area.\n",
+        PadTopFieldId, PadTopFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GridBagLayoutConstraints::editHandlePadTop),
+        static_cast<FieldGetMethodSig >(&GridBagLayoutConstraints::getHandlePadTop));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "PadBottom",
+        "This field specifies the external padding of the component, the minimum amount of space between the component and the Bottom edge of its display area.\n",
+        PadBottomFieldId, PadBottomFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GridBagLayoutConstraints::editHandlePadBottom),
+        static_cast<FieldGetMethodSig >(&GridBagLayoutConstraints::getHandlePadBottom));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+GridBagLayoutConstraintsBase::TypeObject GridBagLayoutConstraintsBase::_type(
+    GridBagLayoutConstraintsBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&GridBagLayoutConstraintsBase::createEmptyLocal),
     GridBagLayoutConstraints::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(GridBagLayoutConstraintsBase, GridBagLayoutConstraintsPtr)
+    GridBagLayoutConstraints::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&GridBagLayoutConstraints::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"GridBagLayoutConstraints\"\n"
+    "\tparent=\"LayoutConstraints\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI GridBagLayoutConstraints.\n"
+    "\t<Field\n"
+    "\t\tname=\"GridX\"\n"
+    "\t\ttype=\"UInt16\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\tSpecifies the cell containing the leading corner of the component's display area\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"GridY\"\n"
+    "\t\ttype=\"UInt16\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\tSpecifies the cell containing the leading corner of the component's display area\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"GridWidth\"\n"
+    "\t\ttype=\"UInt16\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\tSpecifies the number of cells in a row in the component's display area\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"GridHeight\"\n"
+    "\t\ttype=\"UInt16\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\tSpecifies the number of cells in a column in the component's display area\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Fill\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\tUsed when the component's display area is larger than the component's requested size to determine whether (and how) to resize the component\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"HorizontalAlignment\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.5\"\n"
+    "\t>\n"
+    "\tUsed when the component is smaller than its display area to determine where (within the display area) to place the component\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"VerticalAlignment\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.5\"\n"
+    "\t>\n"
+    "\tUsed when the component is smaller than its display area to determine where (within the display area) to place the component\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"WeightX\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\tUsed to determine how to distribute space, which is important for specifying resizing behavior\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"WeightY\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\tUsed to determine how to distribute space, which is important for specifying resizing behavior\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalPadX\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\tSpecifies the component's internal padding within the layout, how much to add to the minimum size of the component. The width of the component will be at least its minimum width plus (ipadx * 2) pixels (since the padding applies to both sides of the component)\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalPadY\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\tSpecifies the component's internal padding within the layout, how much to add to the minimum size of the component. The height of the component will be at least its minimum height plus (ipady * 2) pixels (since the padding applies to both sides of the component)\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"PadLeft\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\tThis field specifies the external padding of the component, the minimum amount of space between the component and the Left edge of its display area.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"PadRight\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\tThis field specifies the external padding of the component, the minimum amount of space between the component and the Right edge of its display area.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"PadTop\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\tThis field specifies the external padding of the component, the minimum amount of space between the component and the Top edge of its display area.\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"PadBottom\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\tThis field specifies the external padding of the component, the minimum amount of space between the component and the Bottom edge of its display area.\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI GridBagLayoutConstraints.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &GridBagLayoutConstraintsBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &GridBagLayoutConstraintsBase::getType(void) const 
+FieldContainerType &GridBagLayoutConstraintsBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr GridBagLayoutConstraintsBase::shallowCopy(void) const 
-{ 
-    GridBagLayoutConstraintsPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const GridBagLayoutConstraints *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 GridBagLayoutConstraintsBase::getContainerSize(void) const 
-{ 
-    return sizeof(GridBagLayoutConstraints); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void GridBagLayoutConstraintsBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &GridBagLayoutConstraintsBase::getType(void) const
 {
-    this->executeSyncImpl((GridBagLayoutConstraintsBase *) &other, whichField);
+    return _type;
 }
-#else
-void GridBagLayoutConstraintsBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 GridBagLayoutConstraintsBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((GridBagLayoutConstraintsBase *) &other, whichField, sInfo);
+    return sizeof(GridBagLayoutConstraints);
 }
-void GridBagLayoutConstraintsBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFUInt16 *GridBagLayoutConstraintsBase::editSFGridX(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(GridXFieldMask);
+
+    return &_sfGridX;
 }
 
-void GridBagLayoutConstraintsBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFUInt16 *GridBagLayoutConstraintsBase::getSFGridX(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfGridX;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-GridBagLayoutConstraintsBase::GridBagLayoutConstraintsBase(void) :
-    _sfGridX                  (UInt16(0)), 
-    _sfGridY                  (UInt16(0)), 
-    _sfGridWidth              (UInt16(1)), 
-    _sfGridHeight             (UInt16(1)), 
-    _sfFill                   (), 
-    _sfHorizontalAlignment    (Real32(0.5)), 
-    _sfVerticalAlignment      (Real32(0.5)), 
-    _sfWeightX                (Real32(1.0)), 
-    _sfWeightY                (Real32(1.0)), 
-    _sfInternalPadX           (UInt32(0)), 
-    _sfInternalPadY           (UInt32(0)), 
-    _sfPadLeft                (UInt32(0)), 
-    _sfPadRight               (UInt32(0)), 
-    _sfPadTop                 (UInt32(0)), 
-    _sfPadBottom              (UInt32(0)), 
-    Inherited() 
+SFUInt16 *GridBagLayoutConstraintsBase::editSFGridY(void)
 {
+    editSField(GridYFieldMask);
+
+    return &_sfGridY;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-GridBagLayoutConstraintsBase::GridBagLayoutConstraintsBase(const GridBagLayoutConstraintsBase &source) :
-    _sfGridX                  (source._sfGridX                  ), 
-    _sfGridY                  (source._sfGridY                  ), 
-    _sfGridWidth              (source._sfGridWidth              ), 
-    _sfGridHeight             (source._sfGridHeight             ), 
-    _sfFill                   (source._sfFill                   ), 
-    _sfHorizontalAlignment    (source._sfHorizontalAlignment    ), 
-    _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
-    _sfWeightX                (source._sfWeightX                ), 
-    _sfWeightY                (source._sfWeightY                ), 
-    _sfInternalPadX           (source._sfInternalPadX           ), 
-    _sfInternalPadY           (source._sfInternalPadY           ), 
-    _sfPadLeft                (source._sfPadLeft                ), 
-    _sfPadRight               (source._sfPadRight               ), 
-    _sfPadTop                 (source._sfPadTop                 ), 
-    _sfPadBottom              (source._sfPadBottom              ), 
-    Inherited                 (source)
+const SFUInt16 *GridBagLayoutConstraintsBase::getSFGridY(void) const
 {
+    return &_sfGridY;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-GridBagLayoutConstraintsBase::~GridBagLayoutConstraintsBase(void)
+SFUInt16 *GridBagLayoutConstraintsBase::editSFGridWidth(void)
 {
+    editSField(GridWidthFieldMask);
+
+    return &_sfGridWidth;
 }
+
+const SFUInt16 *GridBagLayoutConstraintsBase::getSFGridWidth(void) const
+{
+    return &_sfGridWidth;
+}
+
+
+SFUInt16 *GridBagLayoutConstraintsBase::editSFGridHeight(void)
+{
+    editSField(GridHeightFieldMask);
+
+    return &_sfGridHeight;
+}
+
+const SFUInt16 *GridBagLayoutConstraintsBase::getSFGridHeight(void) const
+{
+    return &_sfGridHeight;
+}
+
+
+SFUInt32 *GridBagLayoutConstraintsBase::editSFFill(void)
+{
+    editSField(FillFieldMask);
+
+    return &_sfFill;
+}
+
+const SFUInt32 *GridBagLayoutConstraintsBase::getSFFill(void) const
+{
+    return &_sfFill;
+}
+
+
+SFReal32 *GridBagLayoutConstraintsBase::editSFHorizontalAlignment(void)
+{
+    editSField(HorizontalAlignmentFieldMask);
+
+    return &_sfHorizontalAlignment;
+}
+
+const SFReal32 *GridBagLayoutConstraintsBase::getSFHorizontalAlignment(void) const
+{
+    return &_sfHorizontalAlignment;
+}
+
+
+SFReal32 *GridBagLayoutConstraintsBase::editSFVerticalAlignment(void)
+{
+    editSField(VerticalAlignmentFieldMask);
+
+    return &_sfVerticalAlignment;
+}
+
+const SFReal32 *GridBagLayoutConstraintsBase::getSFVerticalAlignment(void) const
+{
+    return &_sfVerticalAlignment;
+}
+
+
+SFReal32 *GridBagLayoutConstraintsBase::editSFWeightX(void)
+{
+    editSField(WeightXFieldMask);
+
+    return &_sfWeightX;
+}
+
+const SFReal32 *GridBagLayoutConstraintsBase::getSFWeightX(void) const
+{
+    return &_sfWeightX;
+}
+
+
+SFReal32 *GridBagLayoutConstraintsBase::editSFWeightY(void)
+{
+    editSField(WeightYFieldMask);
+
+    return &_sfWeightY;
+}
+
+const SFReal32 *GridBagLayoutConstraintsBase::getSFWeightY(void) const
+{
+    return &_sfWeightY;
+}
+
+
+SFUInt32 *GridBagLayoutConstraintsBase::editSFInternalPadX(void)
+{
+    editSField(InternalPadXFieldMask);
+
+    return &_sfInternalPadX;
+}
+
+const SFUInt32 *GridBagLayoutConstraintsBase::getSFInternalPadX(void) const
+{
+    return &_sfInternalPadX;
+}
+
+
+SFUInt32 *GridBagLayoutConstraintsBase::editSFInternalPadY(void)
+{
+    editSField(InternalPadYFieldMask);
+
+    return &_sfInternalPadY;
+}
+
+const SFUInt32 *GridBagLayoutConstraintsBase::getSFInternalPadY(void) const
+{
+    return &_sfInternalPadY;
+}
+
+
+SFUInt32 *GridBagLayoutConstraintsBase::editSFPadLeft(void)
+{
+    editSField(PadLeftFieldMask);
+
+    return &_sfPadLeft;
+}
+
+const SFUInt32 *GridBagLayoutConstraintsBase::getSFPadLeft(void) const
+{
+    return &_sfPadLeft;
+}
+
+
+SFUInt32 *GridBagLayoutConstraintsBase::editSFPadRight(void)
+{
+    editSField(PadRightFieldMask);
+
+    return &_sfPadRight;
+}
+
+const SFUInt32 *GridBagLayoutConstraintsBase::getSFPadRight(void) const
+{
+    return &_sfPadRight;
+}
+
+
+SFUInt32 *GridBagLayoutConstraintsBase::editSFPadTop(void)
+{
+    editSField(PadTopFieldMask);
+
+    return &_sfPadTop;
+}
+
+const SFUInt32 *GridBagLayoutConstraintsBase::getSFPadTop(void) const
+{
+    return &_sfPadTop;
+}
+
+
+SFUInt32 *GridBagLayoutConstraintsBase::editSFPadBottom(void)
+{
+    editSField(PadBottomFieldMask);
+
+    return &_sfPadBottom;
+}
+
+const SFUInt32 *GridBagLayoutConstraintsBase::getSFPadBottom(void) const
+{
+    return &_sfPadBottom;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 GridBagLayoutConstraintsBase::getBinSize(const BitVector &whichField)
+UInt32 GridBagLayoutConstraintsBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -375,83 +776,68 @@ UInt32 GridBagLayoutConstraintsBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfGridX.getBinSize();
     }
-
     if(FieldBits::NoField != (GridYFieldMask & whichField))
     {
         returnValue += _sfGridY.getBinSize();
     }
-
     if(FieldBits::NoField != (GridWidthFieldMask & whichField))
     {
         returnValue += _sfGridWidth.getBinSize();
     }
-
     if(FieldBits::NoField != (GridHeightFieldMask & whichField))
     {
         returnValue += _sfGridHeight.getBinSize();
     }
-
     if(FieldBits::NoField != (FillFieldMask & whichField))
     {
         returnValue += _sfFill.getBinSize();
     }
-
     if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
     {
         returnValue += _sfHorizontalAlignment.getBinSize();
     }
-
     if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
     {
         returnValue += _sfVerticalAlignment.getBinSize();
     }
-
     if(FieldBits::NoField != (WeightXFieldMask & whichField))
     {
         returnValue += _sfWeightX.getBinSize();
     }
-
     if(FieldBits::NoField != (WeightYFieldMask & whichField))
     {
         returnValue += _sfWeightY.getBinSize();
     }
-
     if(FieldBits::NoField != (InternalPadXFieldMask & whichField))
     {
         returnValue += _sfInternalPadX.getBinSize();
     }
-
     if(FieldBits::NoField != (InternalPadYFieldMask & whichField))
     {
         returnValue += _sfInternalPadY.getBinSize();
     }
-
     if(FieldBits::NoField != (PadLeftFieldMask & whichField))
     {
         returnValue += _sfPadLeft.getBinSize();
     }
-
     if(FieldBits::NoField != (PadRightFieldMask & whichField))
     {
         returnValue += _sfPadRight.getBinSize();
     }
-
     if(FieldBits::NoField != (PadTopFieldMask & whichField))
     {
         returnValue += _sfPadTop.getBinSize();
     }
-
     if(FieldBits::NoField != (PadBottomFieldMask & whichField))
     {
         returnValue += _sfPadBottom.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void GridBagLayoutConstraintsBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void GridBagLayoutConstraintsBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -459,82 +845,66 @@ void GridBagLayoutConstraintsBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfGridX.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (GridYFieldMask & whichField))
     {
         _sfGridY.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (GridWidthFieldMask & whichField))
     {
         _sfGridWidth.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (GridHeightFieldMask & whichField))
     {
         _sfGridHeight.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (FillFieldMask & whichField))
     {
         _sfFill.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
     {
         _sfHorizontalAlignment.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
     {
         _sfVerticalAlignment.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (WeightXFieldMask & whichField))
     {
         _sfWeightX.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (WeightYFieldMask & whichField))
     {
         _sfWeightY.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalPadXFieldMask & whichField))
     {
         _sfInternalPadX.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalPadYFieldMask & whichField))
     {
         _sfInternalPadY.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (PadLeftFieldMask & whichField))
     {
         _sfPadLeft.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (PadRightFieldMask & whichField))
     {
         _sfPadRight.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (PadTopFieldMask & whichField))
     {
         _sfPadTop.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (PadBottomFieldMask & whichField))
     {
         _sfPadBottom.copyToBin(pMem);
     }
-
-
 }
 
-void GridBagLayoutConstraintsBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void GridBagLayoutConstraintsBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -542,236 +912,647 @@ void GridBagLayoutConstraintsBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfGridX.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (GridYFieldMask & whichField))
     {
         _sfGridY.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (GridWidthFieldMask & whichField))
     {
         _sfGridWidth.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (GridHeightFieldMask & whichField))
     {
         _sfGridHeight.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (FillFieldMask & whichField))
     {
         _sfFill.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
     {
         _sfHorizontalAlignment.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
     {
         _sfVerticalAlignment.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (WeightXFieldMask & whichField))
     {
         _sfWeightX.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (WeightYFieldMask & whichField))
     {
         _sfWeightY.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalPadXFieldMask & whichField))
     {
         _sfInternalPadX.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalPadYFieldMask & whichField))
     {
         _sfInternalPadY.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (PadLeftFieldMask & whichField))
     {
         _sfPadLeft.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (PadRightFieldMask & whichField))
     {
         _sfPadRight.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (PadTopFieldMask & whichField))
     {
         _sfPadTop.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (PadBottomFieldMask & whichField))
     {
         _sfPadBottom.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void GridBagLayoutConstraintsBase::executeSyncImpl(      GridBagLayoutConstraintsBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+GridBagLayoutConstraintsTransitPtr GridBagLayoutConstraintsBase::createLocal(BitVector bFlags)
 {
+    GridBagLayoutConstraintsTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (GridXFieldMask & whichField))
-        _sfGridX.syncWith(pOther->_sfGridX);
+        fc = dynamic_pointer_cast<GridBagLayoutConstraints>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (GridYFieldMask & whichField))
-        _sfGridY.syncWith(pOther->_sfGridY);
-
-    if(FieldBits::NoField != (GridWidthFieldMask & whichField))
-        _sfGridWidth.syncWith(pOther->_sfGridWidth);
-
-    if(FieldBits::NoField != (GridHeightFieldMask & whichField))
-        _sfGridHeight.syncWith(pOther->_sfGridHeight);
-
-    if(FieldBits::NoField != (FillFieldMask & whichField))
-        _sfFill.syncWith(pOther->_sfFill);
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-        _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
-
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-        _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
-
-    if(FieldBits::NoField != (WeightXFieldMask & whichField))
-        _sfWeightX.syncWith(pOther->_sfWeightX);
-
-    if(FieldBits::NoField != (WeightYFieldMask & whichField))
-        _sfWeightY.syncWith(pOther->_sfWeightY);
-
-    if(FieldBits::NoField != (InternalPadXFieldMask & whichField))
-        _sfInternalPadX.syncWith(pOther->_sfInternalPadX);
-
-    if(FieldBits::NoField != (InternalPadYFieldMask & whichField))
-        _sfInternalPadY.syncWith(pOther->_sfInternalPadY);
-
-    if(FieldBits::NoField != (PadLeftFieldMask & whichField))
-        _sfPadLeft.syncWith(pOther->_sfPadLeft);
-
-    if(FieldBits::NoField != (PadRightFieldMask & whichField))
-        _sfPadRight.syncWith(pOther->_sfPadRight);
-
-    if(FieldBits::NoField != (PadTopFieldMask & whichField))
-        _sfPadTop.syncWith(pOther->_sfPadTop);
-
-    if(FieldBits::NoField != (PadBottomFieldMask & whichField))
-        _sfPadBottom.syncWith(pOther->_sfPadBottom);
-
-
-}
-#else
-void GridBagLayoutConstraintsBase::executeSyncImpl(      GridBagLayoutConstraintsBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (GridXFieldMask & whichField))
-        _sfGridX.syncWith(pOther->_sfGridX);
-
-    if(FieldBits::NoField != (GridYFieldMask & whichField))
-        _sfGridY.syncWith(pOther->_sfGridY);
-
-    if(FieldBits::NoField != (GridWidthFieldMask & whichField))
-        _sfGridWidth.syncWith(pOther->_sfGridWidth);
-
-    if(FieldBits::NoField != (GridHeightFieldMask & whichField))
-        _sfGridHeight.syncWith(pOther->_sfGridHeight);
-
-    if(FieldBits::NoField != (FillFieldMask & whichField))
-        _sfFill.syncWith(pOther->_sfFill);
-
-    if(FieldBits::NoField != (HorizontalAlignmentFieldMask & whichField))
-        _sfHorizontalAlignment.syncWith(pOther->_sfHorizontalAlignment);
-
-    if(FieldBits::NoField != (VerticalAlignmentFieldMask & whichField))
-        _sfVerticalAlignment.syncWith(pOther->_sfVerticalAlignment);
-
-    if(FieldBits::NoField != (WeightXFieldMask & whichField))
-        _sfWeightX.syncWith(pOther->_sfWeightX);
-
-    if(FieldBits::NoField != (WeightYFieldMask & whichField))
-        _sfWeightY.syncWith(pOther->_sfWeightY);
-
-    if(FieldBits::NoField != (InternalPadXFieldMask & whichField))
-        _sfInternalPadX.syncWith(pOther->_sfInternalPadX);
-
-    if(FieldBits::NoField != (InternalPadYFieldMask & whichField))
-        _sfInternalPadY.syncWith(pOther->_sfInternalPadY);
-
-    if(FieldBits::NoField != (PadLeftFieldMask & whichField))
-        _sfPadLeft.syncWith(pOther->_sfPadLeft);
-
-    if(FieldBits::NoField != (PadRightFieldMask & whichField))
-        _sfPadRight.syncWith(pOther->_sfPadRight);
-
-    if(FieldBits::NoField != (PadTopFieldMask & whichField))
-        _sfPadTop.syncWith(pOther->_sfPadTop);
-
-    if(FieldBits::NoField != (PadBottomFieldMask & whichField))
-        _sfPadBottom.syncWith(pOther->_sfPadBottom);
-
-
-
+    return fc;
 }
 
-void GridBagLayoutConstraintsBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+GridBagLayoutConstraintsTransitPtr GridBagLayoutConstraintsBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    GridBagLayoutConstraintsTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<GridBagLayoutConstraints>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+GridBagLayoutConstraintsTransitPtr GridBagLayoutConstraintsBase::create(void)
+{
+    GridBagLayoutConstraintsTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<GridBagLayoutConstraints>(tmpPtr);
+    }
+
+    return fc;
+}
+
+GridBagLayoutConstraints *GridBagLayoutConstraintsBase::createEmptyLocal(BitVector bFlags)
+{
+    GridBagLayoutConstraints *returnValue;
+
+    newPtr<GridBagLayoutConstraints>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+GridBagLayoutConstraints *GridBagLayoutConstraintsBase::createEmpty(void)
+{
+    GridBagLayoutConstraints *returnValue;
+
+    newPtr<GridBagLayoutConstraints>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr GridBagLayoutConstraintsBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    GridBagLayoutConstraints *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const GridBagLayoutConstraints *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr GridBagLayoutConstraintsBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    GridBagLayoutConstraints *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const GridBagLayoutConstraints *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr GridBagLayoutConstraintsBase::shallowCopy(void) const
+{
+    GridBagLayoutConstraints *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const GridBagLayoutConstraints *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+GridBagLayoutConstraintsBase::GridBagLayoutConstraintsBase(void) :
+    Inherited(),
+    _sfGridX                  (UInt16(0)),
+    _sfGridY                  (UInt16(0)),
+    _sfGridWidth              (UInt16(1)),
+    _sfGridHeight             (UInt16(1)),
+    _sfFill                   (),
+    _sfHorizontalAlignment    (Real32(0.5)),
+    _sfVerticalAlignment      (Real32(0.5)),
+    _sfWeightX                (Real32(1.0)),
+    _sfWeightY                (Real32(1.0)),
+    _sfInternalPadX           (UInt32(0)),
+    _sfInternalPadY           (UInt32(0)),
+    _sfPadLeft                (UInt32(0)),
+    _sfPadRight               (UInt32(0)),
+    _sfPadTop                 (UInt32(0)),
+    _sfPadBottom              (UInt32(0))
+{
+}
+
+GridBagLayoutConstraintsBase::GridBagLayoutConstraintsBase(const GridBagLayoutConstraintsBase &source) :
+    Inherited(source),
+    _sfGridX                  (source._sfGridX                  ),
+    _sfGridY                  (source._sfGridY                  ),
+    _sfGridWidth              (source._sfGridWidth              ),
+    _sfGridHeight             (source._sfGridHeight             ),
+    _sfFill                   (source._sfFill                   ),
+    _sfHorizontalAlignment    (source._sfHorizontalAlignment    ),
+    _sfVerticalAlignment      (source._sfVerticalAlignment      ),
+    _sfWeightX                (source._sfWeightX                ),
+    _sfWeightY                (source._sfWeightY                ),
+    _sfInternalPadX           (source._sfInternalPadX           ),
+    _sfInternalPadY           (source._sfInternalPadY           ),
+    _sfPadLeft                (source._sfPadLeft                ),
+    _sfPadRight               (source._sfPadRight               ),
+    _sfPadTop                 (source._sfPadTop                 ),
+    _sfPadBottom              (source._sfPadBottom              )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+GridBagLayoutConstraintsBase::~GridBagLayoutConstraintsBase(void)
+{
+}
+
+
+GetFieldHandlePtr GridBagLayoutConstraintsBase::getHandleGridX           (void) const
+{
+    SFUInt16::GetHandlePtr returnValue(
+        new  SFUInt16::GetHandle(
+             &_sfGridX,
+             this->getType().getFieldDesc(GridXFieldId),
+             const_cast<GridBagLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GridBagLayoutConstraintsBase::editHandleGridX          (void)
+{
+    SFUInt16::EditHandlePtr returnValue(
+        new  SFUInt16::EditHandle(
+             &_sfGridX,
+             this->getType().getFieldDesc(GridXFieldId),
+             this));
+
+
+    editSField(GridXFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr GridBagLayoutConstraintsBase::getHandleGridY           (void) const
+{
+    SFUInt16::GetHandlePtr returnValue(
+        new  SFUInt16::GetHandle(
+             &_sfGridY,
+             this->getType().getFieldDesc(GridYFieldId),
+             const_cast<GridBagLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GridBagLayoutConstraintsBase::editHandleGridY          (void)
+{
+    SFUInt16::EditHandlePtr returnValue(
+        new  SFUInt16::EditHandle(
+             &_sfGridY,
+             this->getType().getFieldDesc(GridYFieldId),
+             this));
+
+
+    editSField(GridYFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr GridBagLayoutConstraintsBase::getHandleGridWidth       (void) const
+{
+    SFUInt16::GetHandlePtr returnValue(
+        new  SFUInt16::GetHandle(
+             &_sfGridWidth,
+             this->getType().getFieldDesc(GridWidthFieldId),
+             const_cast<GridBagLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GridBagLayoutConstraintsBase::editHandleGridWidth      (void)
+{
+    SFUInt16::EditHandlePtr returnValue(
+        new  SFUInt16::EditHandle(
+             &_sfGridWidth,
+             this->getType().getFieldDesc(GridWidthFieldId),
+             this));
+
+
+    editSField(GridWidthFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr GridBagLayoutConstraintsBase::getHandleGridHeight      (void) const
+{
+    SFUInt16::GetHandlePtr returnValue(
+        new  SFUInt16::GetHandle(
+             &_sfGridHeight,
+             this->getType().getFieldDesc(GridHeightFieldId),
+             const_cast<GridBagLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GridBagLayoutConstraintsBase::editHandleGridHeight     (void)
+{
+    SFUInt16::EditHandlePtr returnValue(
+        new  SFUInt16::EditHandle(
+             &_sfGridHeight,
+             this->getType().getFieldDesc(GridHeightFieldId),
+             this));
+
+
+    editSField(GridHeightFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr GridBagLayoutConstraintsBase::getHandleFill            (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfFill,
+             this->getType().getFieldDesc(FillFieldId),
+             const_cast<GridBagLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GridBagLayoutConstraintsBase::editHandleFill           (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfFill,
+             this->getType().getFieldDesc(FillFieldId),
+             this));
+
+
+    editSField(FillFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr GridBagLayoutConstraintsBase::getHandleHorizontalAlignment (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfHorizontalAlignment,
+             this->getType().getFieldDesc(HorizontalAlignmentFieldId),
+             const_cast<GridBagLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GridBagLayoutConstraintsBase::editHandleHorizontalAlignment(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfHorizontalAlignment,
+             this->getType().getFieldDesc(HorizontalAlignmentFieldId),
+             this));
+
+
+    editSField(HorizontalAlignmentFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr GridBagLayoutConstraintsBase::getHandleVerticalAlignment (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfVerticalAlignment,
+             this->getType().getFieldDesc(VerticalAlignmentFieldId),
+             const_cast<GridBagLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GridBagLayoutConstraintsBase::editHandleVerticalAlignment(void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfVerticalAlignment,
+             this->getType().getFieldDesc(VerticalAlignmentFieldId),
+             this));
+
+
+    editSField(VerticalAlignmentFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr GridBagLayoutConstraintsBase::getHandleWeightX         (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfWeightX,
+             this->getType().getFieldDesc(WeightXFieldId),
+             const_cast<GridBagLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GridBagLayoutConstraintsBase::editHandleWeightX        (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfWeightX,
+             this->getType().getFieldDesc(WeightXFieldId),
+             this));
+
+
+    editSField(WeightXFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr GridBagLayoutConstraintsBase::getHandleWeightY         (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfWeightY,
+             this->getType().getFieldDesc(WeightYFieldId),
+             const_cast<GridBagLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GridBagLayoutConstraintsBase::editHandleWeightY        (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfWeightY,
+             this->getType().getFieldDesc(WeightYFieldId),
+             this));
+
+
+    editSField(WeightYFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr GridBagLayoutConstraintsBase::getHandleInternalPadX    (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfInternalPadX,
+             this->getType().getFieldDesc(InternalPadXFieldId),
+             const_cast<GridBagLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GridBagLayoutConstraintsBase::editHandleInternalPadX   (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfInternalPadX,
+             this->getType().getFieldDesc(InternalPadXFieldId),
+             this));
+
+
+    editSField(InternalPadXFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr GridBagLayoutConstraintsBase::getHandleInternalPadY    (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfInternalPadY,
+             this->getType().getFieldDesc(InternalPadYFieldId),
+             const_cast<GridBagLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GridBagLayoutConstraintsBase::editHandleInternalPadY   (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfInternalPadY,
+             this->getType().getFieldDesc(InternalPadYFieldId),
+             this));
+
+
+    editSField(InternalPadYFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr GridBagLayoutConstraintsBase::getHandlePadLeft         (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfPadLeft,
+             this->getType().getFieldDesc(PadLeftFieldId),
+             const_cast<GridBagLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GridBagLayoutConstraintsBase::editHandlePadLeft        (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfPadLeft,
+             this->getType().getFieldDesc(PadLeftFieldId),
+             this));
+
+
+    editSField(PadLeftFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr GridBagLayoutConstraintsBase::getHandlePadRight        (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfPadRight,
+             this->getType().getFieldDesc(PadRightFieldId),
+             const_cast<GridBagLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GridBagLayoutConstraintsBase::editHandlePadRight       (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfPadRight,
+             this->getType().getFieldDesc(PadRightFieldId),
+             this));
+
+
+    editSField(PadRightFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr GridBagLayoutConstraintsBase::getHandlePadTop          (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfPadTop,
+             this->getType().getFieldDesc(PadTopFieldId),
+             const_cast<GridBagLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GridBagLayoutConstraintsBase::editHandlePadTop         (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfPadTop,
+             this->getType().getFieldDesc(PadTopFieldId),
+             this));
+
+
+    editSField(PadTopFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr GridBagLayoutConstraintsBase::getHandlePadBottom       (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfPadBottom,
+             this->getType().getFieldDesc(PadBottomFieldId),
+             const_cast<GridBagLayoutConstraintsBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GridBagLayoutConstraintsBase::editHandlePadBottom      (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfPadBottom,
+             this->getType().getFieldDesc(PadBottomFieldId),
+             this));
+
+
+    editSField(PadBottomFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void GridBagLayoutConstraintsBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    GridBagLayoutConstraints *pThis = static_cast<GridBagLayoutConstraints *>(this);
+
+    pThis->execSync(static_cast<GridBagLayoutConstraints *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *GridBagLayoutConstraintsBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    GridBagLayoutConstraints *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const GridBagLayoutConstraints *>(pRefAspect),
+                  dynamic_cast<const GridBagLayoutConstraints *>(this));
+
+    return returnValue;
+}
+#endif
+
+void GridBagLayoutConstraintsBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<GridBagLayoutConstraintsPtr>::_type("GridBagLayoutConstraintsPtr", "LayoutConstraintsPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(GridBagLayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(GridBagLayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGGRIDBAGLAYOUTCONSTRAINTSBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGGRIDBAGLAYOUTCONSTRAINTSBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGGRIDBAGLAYOUTCONSTRAINTSFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

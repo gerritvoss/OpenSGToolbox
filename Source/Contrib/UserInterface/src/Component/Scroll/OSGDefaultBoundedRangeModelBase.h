@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,113 +58,96 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGBoundedRangeModel.h" // Parent
 
-#include <OpenSG/OSGInt32Fields.h> // InternalMinimum type
-#include <OpenSG/OSGInt32Fields.h> // InternalMaximum type
-#include <OpenSG/OSGInt32Fields.h> // InternalValue type
-#include <OpenSG/OSGUInt32Fields.h> // InternalExtent type
-#include <OpenSG/OSGBoolFields.h> // InternalValueIsAdjusting type
+#include "OSGSysFields.h"               // InternalMinimum type
 
 #include "OSGDefaultBoundedRangeModelFields.h"
+
 OSG_BEGIN_NAMESPACE
 
 class DefaultBoundedRangeModel;
-class BinaryDataHandler;
 
 //! \brief DefaultBoundedRangeModel Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultBoundedRangeModelBase : public BoundedRangeModel
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultBoundedRangeModelBase : public BoundedRangeModel
 {
-  private:
-
-    typedef BoundedRangeModel    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef DefaultBoundedRangeModelPtr  Ptr;
+    typedef BoundedRangeModel Inherited;
+    typedef BoundedRangeModel ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(DefaultBoundedRangeModel);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        InternalMinimumFieldId          = Inherited::NextFieldId,
-        InternalMaximumFieldId          = InternalMinimumFieldId          + 1,
-        InternalValueFieldId            = InternalMaximumFieldId          + 1,
-        InternalExtentFieldId           = InternalValueFieldId            + 1,
-        InternalValueIsAdjustingFieldId = InternalExtentFieldId           + 1,
-        NextFieldId                     = InternalValueIsAdjustingFieldId + 1
+        InternalMinimumFieldId = Inherited::NextFieldId,
+        InternalMaximumFieldId = InternalMinimumFieldId + 1,
+        InternalValueFieldId = InternalMaximumFieldId + 1,
+        InternalExtentFieldId = InternalValueFieldId + 1,
+        InternalValueIsAdjustingFieldId = InternalExtentFieldId + 1,
+        NextFieldId = InternalValueIsAdjustingFieldId + 1
     };
 
-    static const OSG::BitVector InternalMinimumFieldMask;
-    static const OSG::BitVector InternalMaximumFieldMask;
-    static const OSG::BitVector InternalValueFieldMask;
-    static const OSG::BitVector InternalExtentFieldMask;
-    static const OSG::BitVector InternalValueIsAdjustingFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector InternalMinimumFieldMask =
+        (TypeTraits<BitVector>::One << InternalMinimumFieldId);
+    static const OSG::BitVector InternalMaximumFieldMask =
+        (TypeTraits<BitVector>::One << InternalMaximumFieldId);
+    static const OSG::BitVector InternalValueFieldMask =
+        (TypeTraits<BitVector>::One << InternalValueFieldId);
+    static const OSG::BitVector InternalExtentFieldMask =
+        (TypeTraits<BitVector>::One << InternalExtentFieldId);
+    static const OSG::BitVector InternalValueIsAdjustingFieldMask =
+        (TypeTraits<BitVector>::One << InternalValueIsAdjustingFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFInt32           SFInternalMinimumType;
+    typedef SFInt32           SFInternalMaximumType;
+    typedef SFInt32           SFInternalValueType;
+    typedef SFUInt32          SFInternalExtentType;
+    typedef SFBool            SFInternalValueIsAdjustingType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-     const SFInt32             *getSFInternalMinimum(void) const;
-     const SFUInt32            *getSFInternalExtent (void) const;
-
-
-     const Int32               &getInternalMinimum(void) const;
-
-
-
-     const UInt32              &getInternalExtent (void) const;
-
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
-    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -172,30 +155,47 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultBoundedRangeModelBase : public Boun
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  DefaultBoundedRangeModelPtr      create          (void); 
-    static  DefaultBoundedRangeModelPtr      createEmpty     (void); 
+    static  DefaultBoundedRangeModelTransitPtr  create          (void);
+    static  DefaultBoundedRangeModel           *createEmpty     (void);
+
+    static  DefaultBoundedRangeModelTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  DefaultBoundedRangeModel            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  DefaultBoundedRangeModelTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFInt32             _sfInternalMinimum;
-    SFInt32             _sfInternalMaximum;
-    SFInt32             _sfInternalValue;
-    SFUInt32            _sfInternalExtent;
-    SFBool              _sfInternalValueIsAdjusting;
+    SFInt32           _sfInternalMinimum;
+    SFInt32           _sfInternalMaximum;
+    SFInt32           _sfInternalValue;
+    SFUInt32          _sfInternalExtent;
+    SFBool            _sfInternalValueIsAdjusting;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -210,100 +210,139 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultBoundedRangeModelBase : public Boun
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DefaultBoundedRangeModelBase(void); 
+    virtual ~DefaultBoundedRangeModelBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleInternalMinimum (void) const;
+    EditFieldHandlePtr editHandleInternalMinimum(void);
+    GetFieldHandlePtr  getHandleInternalMaximum (void) const;
+    EditFieldHandlePtr editHandleInternalMaximum(void);
+    GetFieldHandlePtr  getHandleInternalValue   (void) const;
+    EditFieldHandlePtr editHandleInternalValue  (void);
+    GetFieldHandlePtr  getHandleInternalExtent  (void) const;
+    EditFieldHandlePtr editHandleInternalExtent (void);
+    GetFieldHandlePtr  getHandleInternalValueIsAdjusting (void) const;
+    EditFieldHandlePtr editHandleInternalValueIsAdjusting(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFInt32             *editSFInternalMinimum(void);
-           SFInt32             *editSFInternalMaximum(void);
-     const SFInt32             *getSFInternalMaximum(void) const;
-           SFInt32             *editSFInternalValue  (void);
-     const SFInt32             *getSFInternalValue  (void) const;
-           SFUInt32            *editSFInternalExtent (void);
-           SFBool              *editSFInternalValueIsAdjusting(void);
-     const SFBool              *getSFInternalValueIsAdjusting(void) const;
 
-           Int32               &editInternalMinimum(void);
-           Int32               &editInternalMaximum(void);
-     const Int32               &getInternalMaximum(void) const;
-           Int32               &editInternalValue  (void);
-     const Int32               &getInternalValue  (void) const;
-           UInt32              &editInternalExtent (void);
-           bool                &editInternalValueIsAdjusting(void);
-     const bool                &getInternalValueIsAdjusting(void) const;
+                  SFInt32             *editSFInternalMinimum(void);
+            const SFInt32             *getSFInternalMinimum (void) const;
+
+                  SFInt32             *editSFInternalMaximum(void);
+            const SFInt32             *getSFInternalMaximum (void) const;
+
+                  SFInt32             *editSFInternalValue  (void);
+            const SFInt32             *getSFInternalValue   (void) const;
+
+                  SFUInt32            *editSFInternalExtent (void);
+            const SFUInt32            *getSFInternalExtent  (void) const;
+
+                  SFBool              *editSFInternalValueIsAdjusting(void);
+            const SFBool              *getSFInternalValueIsAdjusting (void) const;
+
+
+                  Int32               &editInternalMinimum(void);
+                  Int32                getInternalMinimum (void) const;
+
+                  Int32               &editInternalMaximum(void);
+                  Int32                getInternalMaximum (void) const;
+
+                  Int32               &editInternalValue  (void);
+                  Int32                getInternalValue   (void) const;
+
+                  UInt32              &editInternalExtent (void);
+                  UInt32               getInternalExtent  (void) const;
+
+                  bool                &editInternalValueIsAdjusting(void);
+                  bool                 getInternalValueIsAdjusting (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setInternalMinimum(const Int32 &value);
-     void setInternalMaximum(const Int32 &value);
-     void setInternalValue  (const Int32 &value);
-     void setInternalExtent (const UInt32 &value);
-     void setInternalValueIsAdjusting(const bool &value);
+            void setInternalMinimum(const Int32 value);
+            void setInternalMaximum(const Int32 value);
+            void setInternalValue  (const Int32 value);
+            void setInternalExtent (const UInt32 value);
+            void setInternalValueIsAdjusting(const bool value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      DefaultBoundedRangeModelBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      DefaultBoundedRangeModelBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      DefaultBoundedRangeModelBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const DefaultBoundedRangeModelBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef DefaultBoundedRangeModelBase *DefaultBoundedRangeModelBaseP;
-
-typedef osgIF<DefaultBoundedRangeModelBase::isNodeCore,
-              CoredNodePtr<DefaultBoundedRangeModel>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet DefaultBoundedRangeModelNodePtr;
-
-typedef RefPtr<DefaultBoundedRangeModelPtr> DefaultBoundedRangeModelRefPtr;
 
 OSG_END_NAMESPACE
 

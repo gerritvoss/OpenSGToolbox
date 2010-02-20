@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,103 +42,103 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGSpringLayoutConstraintsBase.h"
-#include "Layout/Spring/OSGLayoutSpringFields.h"
+#include "OSGLayoutSpring.h"
+#include "OSGLayoutSpringFields.h"
 
 #include <deque>
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief SpringLayoutConstraints class. See \ref 
-           PageUserInterfaceSpringLayoutConstraints for a description.
+/*! \brief SpringLayoutConstraints class. See \ref
+           PageContribUserInterfaceSpringLayoutConstraints for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING SpringLayoutConstraints : public SpringLayoutConstraintsBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpringLayoutConstraints : public SpringLayoutConstraintsBase
 {
-  private:
-
-    typedef SpringLayoutConstraintsBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
-      enum Edge {NO_EDGE                = 0,
-				 NORTH_EDGE             = 1, 
-				 Y_EDGE                 = 2, 
-				 SOUTH_EDGE             = 3, 
-				 X_EDGE                 = 4, 
-				 EAST_EDGE              = 5, 
-				 WEST_EDGE              = 6, 
-				 HORIZONTAL_CENTER_EDGE = 7, 
-				 VERTICAL_CENTER_EDGE   = 8, 
-				 BASELINE_EDGE          = 9, 
-				 WIDTH_EDGE             = 10, 
-				 HEIGHT_EDGE            = 11};
+    enum Edge
+    {
+        NO_EDGE                = 0,
+        NORTH_EDGE             = 1, 
+        Y_EDGE                 = 2, 
+        SOUTH_EDGE             = 3, 
+        X_EDGE                 = 4, 
+        EAST_EDGE              = 5, 
+        WEST_EDGE              = 6, 
+        HORIZONTAL_CENTER_EDGE = 7, 
+        VERTICAL_CENTER_EDGE   = 8, 
+        BASELINE_EDGE          = 9, 
+        WIDTH_EDGE             = 10, 
+        HEIGHT_EDGE            = 11
+    };
+
+    typedef SpringLayoutConstraintsBase Inherited;
+    typedef SpringLayoutConstraints     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Construction                               */
-    /*! \{                                                                 */
 
-    static  SpringLayoutConstraintsPtr create(LayoutSpringPtr XSpring, LayoutSpringPtr YSpring); 
-    static  SpringLayoutConstraintsPtr create(LayoutSpringPtr XSpring, LayoutSpringPtr YSpring, LayoutSpringPtr WidthSpring, LayoutSpringPtr HeightSpring); 
-    static  SpringLayoutConstraintsPtr create(ComponentPtr TheComponent); 
+    static  SpringLayoutConstraintsTransitPtr create(LayoutSpringRefPtr XSpring, LayoutSpringRefPtr YSpring); 
+    static  SpringLayoutConstraintsTransitPtr create(LayoutSpringRefPtr XSpring, LayoutSpringRefPtr YSpring, LayoutSpringRefPtr WidthSpring, LayoutSpringRefPtr HeightSpring); 
+    static  SpringLayoutConstraintsTransitPtr create(ComponentRefPtr TheComponent); 
     
-    /*! \}                                                                 */
     
-    void setX(LayoutSpringPtr x);
-    LayoutSpringPtr getX(void);
+    void setX(LayoutSpringRefPtr x);
+    LayoutSpringRefPtr getX(void);
     
-    void setY(LayoutSpringPtr y);
-    LayoutSpringPtr getY(void);
+    void setY(LayoutSpringRefPtr y);
+    LayoutSpringRefPtr getY(void);
     
-    void setWidth(LayoutSpringPtr width);
-    LayoutSpringPtr getWidth(void);
+    void setWidth(LayoutSpringRefPtr width);
+    LayoutSpringRefPtr getWidth(void);
     
-    void setHeight(LayoutSpringPtr height);
-    LayoutSpringPtr getHeight(void);
+    void setHeight(LayoutSpringRefPtr height);
+    LayoutSpringRefPtr getHeight(void);
     
-    void setNorth(LayoutSpringPtr north);
-    LayoutSpringPtr getNorth(void);
+    void setNorth(LayoutSpringRefPtr north);
+    LayoutSpringRefPtr getNorth(void);
     
-    void setEast(LayoutSpringPtr east);
-    LayoutSpringPtr getEast(void);
+    void setEast(LayoutSpringRefPtr east);
+    LayoutSpringRefPtr getEast(void);
     
-    void setSouth(LayoutSpringPtr south);
-    LayoutSpringPtr getSouth(void);
+    void setSouth(LayoutSpringRefPtr south);
+    LayoutSpringRefPtr getSouth(void);
     
-    void setWest(LayoutSpringPtr west);
-    LayoutSpringPtr getWest(void);
+    void setWest(LayoutSpringRefPtr west);
+    LayoutSpringRefPtr getWest(void);
     
-    void setHorizontalCenter(LayoutSpringPtr horizontalCenter);
-    LayoutSpringPtr getHorizontalCenter(void);
+    void setHorizontalCenter(LayoutSpringRefPtr horizontalCenter);
+    LayoutSpringRefPtr getHorizontalCenter(void);
     
-    void setVerticalCenter(LayoutSpringPtr verticalCenter);
-    LayoutSpringPtr getVerticalCenter(void);
+    void setVerticalCenter(LayoutSpringRefPtr verticalCenter);
+    LayoutSpringRefPtr getVerticalCenter(void);
 
-    void setBaseline(LayoutSpringPtr baseline);
-    LayoutSpringPtr getBaseline(void);
+    void setBaseline(LayoutSpringRefPtr baseline);
+    LayoutSpringRefPtr getBaseline(void);
 
-    void setConstraint(UInt32 Edge, LayoutSpringPtr s);
+    void setConstraint(UInt32 Edge, LayoutSpringRefPtr s);
     
-    LayoutSpringPtr getConstraint(UInt32 Edge);
+    LayoutSpringRefPtr getConstraint(UInt32 Edge);
     
     void reset(void);
     
@@ -147,6 +147,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayoutConstraints : public SpringLay
     std::deque<Edge> getVerticalHistory(void) const;
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in SpringLayoutConstraintsBase.
@@ -163,42 +164,46 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayoutConstraints : public SpringLay
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SpringLayoutConstraints(void); 
+    virtual ~SpringLayoutConstraints(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
     
-    /*==========================  PRIVATE  ================================*/
-    
     std::deque<Edge> _HorizontalHistory,
                      _VerticalHistory;
+    /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class SpringLayoutConstraintsBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const SpringLayoutConstraints &source);
     
-    LayoutSpringPtr sum(LayoutSpringPtr s1, LayoutSpringPtr s2);
+    LayoutSpringRefPtr sum(LayoutSpringRefPtr s1, LayoutSpringRefPtr s2);
 
-    LayoutSpringPtr difference(LayoutSpringPtr s1, LayoutSpringPtr s2);
+    LayoutSpringRefPtr difference(LayoutSpringRefPtr s1, LayoutSpringRefPtr s2);
 
-    LayoutSpringPtr scale(LayoutSpringPtr s, Real32 factor);
+    LayoutSpringRefPtr scale(LayoutSpringRefPtr s, Real32 factor);
     
     Real32 getBaselineFromHeight(const Real32& height) const;
 
     Real32 getHeightFromBaseLine(const Real32& baseline) const;
 
-    LayoutSpringPtr heightToRelativeBaseline(LayoutSpringPtr s);
+    LayoutSpringRefPtr heightToRelativeBaseline(LayoutSpringRefPtr s);
 
-    LayoutSpringPtr relativeBaselineToHeight(LayoutSpringPtr s);
+    LayoutSpringRefPtr relativeBaselineToHeight(LayoutSpringRefPtr s);
     
     bool defined(const UInt32 Edge) const;
     
-    void pushToHistory(Edge TheEdge, LayoutSpringPtr Value, bool isHorizontal);
+    void pushToHistory(Edge TheEdge, LayoutSpringRefPtr Value, bool isHorizontal);
 };
 
 typedef SpringLayoutConstraints *SpringLayoutConstraintsP;
@@ -207,7 +212,5 @@ OSG_END_NAMESPACE
 
 #include "OSGSpringLayoutConstraintsBase.inl"
 #include "OSGSpringLayoutConstraints.inl"
-
-#define OSGSPRINGLAYOUTCONSTRAINTS_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGSPRINGLAYOUTCONSTRAINTS_H_ */

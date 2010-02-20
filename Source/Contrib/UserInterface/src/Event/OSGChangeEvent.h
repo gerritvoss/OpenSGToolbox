@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,46 +42,48 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGChangeEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ChangeEvent class. See \ref 
-           PageUserInterfaceChangeEvent for a description.
+/*! \brief ChangeEvent class. See \ref
+           PageContribUserInterfaceChangeEvent for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING ChangeEvent : public ChangeEventBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ChangeEvent : public ChangeEventBase
 {
-  private:
-
-    typedef ChangeEventBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef ChangeEventBase Inherited;
+    typedef ChangeEvent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
-    static  ChangeEventPtr      create(  FieldContainerPtr Source,
-                                        Time TimeStamp); 
+    static  ChangeEventTransitPtr      create(  FieldContainerRefPtr Source,
+                                                Time TimeStamp); 
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in ChangeEventBase.
@@ -98,20 +100,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING ChangeEvent : public ChangeEventBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ChangeEvent(void); 
+    virtual ~ChangeEvent(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ChangeEventBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ChangeEvent &source);
 };
 

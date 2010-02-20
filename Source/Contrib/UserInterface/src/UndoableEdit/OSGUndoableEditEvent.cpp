@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGUndoableEditEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::UndoableEditEvent
-
-*/
+// Documentation for this class is emitted in the
+// OSGUndoableEditEventBase.cpp file.
+// To modify it, please change the .fcd file (OSGUndoableEditEvent.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,21 +62,26 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void UndoableEditEvent::initMethod (void)
+void UndoableEditEvent::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-UndoableEditEventPtr UndoableEditEvent::create(  FieldContainerPtr Source,
-                                                 Time TimeStamp,
-                                                 UndoableEditPtr TheUndoableEdit)
+UndoableEditEventTransitPtr UndoableEditEvent::create(  FieldContainerRefPtr Source,
+                                                        Time TimeStamp,
+                                                        UndoableEditPtr TheUndoableEdit)
 {
-    UndoableEditEventPtr TheEvent = UndoableEditEvent::createEmpty();
+    UndoableEditEvent* TheEvent = UndoableEditEvent::createEmpty();
 
     TheEvent->setSource(Source);
     TheEvent->setTimeStamp(TimeStamp);
     TheEvent->_UndoableEdit = TheUndoableEdit;
 
-    return TheEvent;
+    return UndoableEditEventTransitPtr(TheEvent);
 }
 
 /***************************************************************************\
@@ -110,17 +110,17 @@ UndoableEditEvent::~UndoableEditEvent(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void UndoableEditEvent::changed(BitVector whichField, UInt32 origin)
+void UndoableEditEvent::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void UndoableEditEvent::dump(      UInt32    , 
+void UndoableEditEvent::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump UndoableEditEvent NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

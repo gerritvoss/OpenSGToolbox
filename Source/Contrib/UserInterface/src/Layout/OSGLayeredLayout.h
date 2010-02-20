@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,48 +42,50 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGLayeredLayoutBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief LayeredLayout class. See \ref 
-           PageUserInterfaceLayeredLayout for a description.
+/*! \brief LayeredLayout class. See \ref
+           PageContribUserInterfaceLayeredLayout for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING LayeredLayout : public LayeredLayoutBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING LayeredLayout : public LayeredLayoutBase
 {
-  private:
-
-    typedef LayeredLayoutBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef LayeredLayoutBase Inherited;
+    typedef LayeredLayout     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual void updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
+    virtual void updateLayout(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const;
     
-    virtual Vec2f minimumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
-	virtual Vec2f requestedContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
-	virtual Vec2f preferredContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
-	virtual Vec2f maximumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
+    virtual Vec2f minimumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const;
+	virtual Vec2f requestedContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const;
+	virtual Vec2f preferredContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const;
+	virtual Vec2f maximumContentsLayoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent) const;
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in LayeredLayoutBase.
@@ -100,21 +102,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING LayeredLayout : public LayeredLayoutBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~LayeredLayout(void); 
+    virtual ~LayeredLayout(void);
 
     /*! \}                                                                 */
-    virtual Vec2f layoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent, SizeType TheSizeType) const;
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+
+    virtual Vec2f layoutSize(const MFUnrecComponentPtr* Components, const Component* ParentComponent, SizeType TheSizeType) const;
     
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class LayeredLayoutBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const LayeredLayout &source);
 };
 

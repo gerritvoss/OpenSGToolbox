@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,16 +55,15 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &AbstractWindowBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 AbstractWindowBase::getClassTypeId(void) 
+OSG::UInt32 AbstractWindowBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
+    return _type.getId();
+}
 //! access the producer type of the class
 inline
 const EventProducerType &AbstractWindowBase::getProducerClassType(void)
@@ -81,455 +78,237 @@ UInt32 AbstractWindowBase::getProducerClassTypeId(void)
     return _producerType.getId();
 }
 
+inline
+OSG::UInt16 AbstractWindowBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
+}
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the AbstractWindow::_sfDrawingSurface field.
-inline
-const SFUIDrawingSurfacePtr *AbstractWindowBase::getSFDrawingSurface(void) const
-{
-    return &_sfDrawingSurface;
-}
-
-//! Get the AbstractWindow::_sfDrawingSurface field.
-inline
-SFUIDrawingSurfacePtr *AbstractWindowBase::editSFDrawingSurface(void)
-{
-    return &_sfDrawingSurface;
-}
-
-//! Get the AbstractWindow::_sfClosable field.
-inline
-const SFBool *AbstractWindowBase::getSFClosable(void) const
-{
-    return &_sfClosable;
-}
-
-//! Get the AbstractWindow::_sfClosable field.
-inline
-SFBool *AbstractWindowBase::editSFClosable(void)
-{
-    return &_sfClosable;
-}
-
-//! Get the AbstractWindow::_sfIconable field.
-inline
-const SFBool *AbstractWindowBase::getSFIconable(void) const
-{
-    return &_sfIconable;
-}
-
-//! Get the AbstractWindow::_sfIconable field.
-inline
-SFBool *AbstractWindowBase::editSFIconable(void)
-{
-    return &_sfIconable;
-}
-
-//! Get the AbstractWindow::_sfMaximizable field.
-inline
-const SFBool *AbstractWindowBase::getSFMaximizable(void) const
-{
-    return &_sfMaximizable;
-}
-
-//! Get the AbstractWindow::_sfMaximizable field.
-inline
-SFBool *AbstractWindowBase::editSFMaximizable(void)
-{
-    return &_sfMaximizable;
-}
-
-//! Get the AbstractWindow::_sfIsClosed field.
-inline
-const SFBool *AbstractWindowBase::getSFIsClosed(void) const
-{
-    return &_sfIsClosed;
-}
-
-//! Get the AbstractWindow::_sfIsClosed field.
-inline
-SFBool *AbstractWindowBase::editSFIsClosed(void)
-{
-    return &_sfIsClosed;
-}
-
-//! Get the AbstractWindow::_sfIsIcon field.
-inline
-const SFBool *AbstractWindowBase::getSFIsIcon(void) const
-{
-    return &_sfIsIcon;
-}
-
-//! Get the AbstractWindow::_sfIsIcon field.
-inline
-SFBool *AbstractWindowBase::editSFIsIcon(void)
-{
-    return &_sfIsIcon;
-}
-
-//! Get the AbstractWindow::_sfIsMaximized field.
-inline
-const SFBool *AbstractWindowBase::getSFIsMaximized(void) const
-{
-    return &_sfIsMaximized;
-}
-
-//! Get the AbstractWindow::_sfIsMaximized field.
-inline
-SFBool *AbstractWindowBase::editSFIsMaximized(void)
-{
-    return &_sfIsMaximized;
-}
-
-//! Get the AbstractWindow::_sfResizable field.
-inline
-const SFBool *AbstractWindowBase::getSFResizable(void) const
-{
-    return &_sfResizable;
-}
-
-//! Get the AbstractWindow::_sfResizable field.
-inline
-SFBool *AbstractWindowBase::editSFResizable(void)
-{
-    return &_sfResizable;
-}
-
-//! Get the AbstractWindow::_sfIsSelected field.
-inline
-const SFBool *AbstractWindowBase::getSFIsSelected(void) const
-{
-    return &_sfIsSelected;
-}
-
-//! Get the AbstractWindow::_sfIsSelected field.
-inline
-SFBool *AbstractWindowBase::editSFIsSelected(void)
-{
-    return &_sfIsSelected;
-}
-
-//! Get the AbstractWindow::_sfTitle field.
-inline
-const SFString *AbstractWindowBase::getSFTitle(void) const
-{
-    return &_sfTitle;
-}
-
-//! Get the AbstractWindow::_sfTitle field.
-inline
-SFString *AbstractWindowBase::editSFTitle(void)
-{
-    return &_sfTitle;
-}
-
-//! Get the AbstractWindow::_sfDesktopIcon field.
-inline
-const SFUIDrawObjectCanvasPtr *AbstractWindowBase::getSFDesktopIcon(void) const
-{
-    return &_sfDesktopIcon;
-}
-
-//! Get the AbstractWindow::_sfDesktopIcon field.
-inline
-SFUIDrawObjectCanvasPtr *AbstractWindowBase::editSFDesktopIcon(void)
-{
-    return &_sfDesktopIcon;
-}
-
-//! Get the AbstractWindow::_sfAllwaysOnTop field.
-inline
-const SFBool *AbstractWindowBase::getSFAllwaysOnTop(void) const
-{
-    return &_sfAllwaysOnTop;
-}
-
-//! Get the AbstractWindow::_sfAllwaysOnTop field.
-inline
-SFBool *AbstractWindowBase::editSFAllwaysOnTop(void)
-{
-    return &_sfAllwaysOnTop;
-}
-
-//! Get the AbstractWindow::_sfDrawTitlebar field.
-inline
-const SFBool *AbstractWindowBase::getSFDrawTitlebar(void) const
-{
-    return &_sfDrawTitlebar;
-}
-
-//! Get the AbstractWindow::_sfDrawTitlebar field.
-inline
-SFBool *AbstractWindowBase::editSFDrawTitlebar(void)
-{
-    return &_sfDrawTitlebar;
-}
-
-//! Get the AbstractWindow::_sfDrawDecorations field.
-inline
-const SFBool *AbstractWindowBase::getSFDrawDecorations(void) const
-{
-    return &_sfDrawDecorations;
-}
-
-//! Get the AbstractWindow::_sfDrawDecorations field.
-inline
-SFBool *AbstractWindowBase::editSFDrawDecorations(void)
-{
-    return &_sfDrawDecorations;
-}
-
-//! Get the AbstractWindow::_sfLockInput field.
-inline
-const SFBool *AbstractWindowBase::getSFLockInput(void) const
-{
-    return &_sfLockInput;
-}
-
-//! Get the AbstractWindow::_sfLockInput field.
-inline
-SFBool *AbstractWindowBase::editSFLockInput(void)
-{
-    return &_sfLockInput;
-}
-
-//! Get the AbstractWindow::_sfAlignmentInDrawingSurface field.
-inline
-const SFVec2f *AbstractWindowBase::getSFAlignmentInDrawingSurface(void) const
-{
-    return &_sfAlignmentInDrawingSurface;
-}
-
-//! Get the AbstractWindow::_sfAlignmentInDrawingSurface field.
-inline
-SFVec2f *AbstractWindowBase::editSFAlignmentInDrawingSurface(void)
-{
-    return &_sfAlignmentInDrawingSurface;
-}
-
-//! Get the AbstractWindow::_sfScalingInDrawingSurface field.
-inline
-const SFVec2f *AbstractWindowBase::getSFScalingInDrawingSurface(void) const
-{
-    return &_sfScalingInDrawingSurface;
-}
-
-//! Get the AbstractWindow::_sfScalingInDrawingSurface field.
-inline
-SFVec2f *AbstractWindowBase::editSFScalingInDrawingSurface(void)
-{
-    return &_sfScalingInDrawingSurface;
-}
-
-//! Get the AbstractWindow::_sfResizeModifyCursorWidth field.
-inline
-const SFUInt32 *AbstractWindowBase::getSFResizeModifyCursorWidth(void) const
-{
-    return &_sfResizeModifyCursorWidth;
-}
-
-//! Get the AbstractWindow::_sfResizeModifyCursorWidth field.
-inline
-SFUInt32 *AbstractWindowBase::editSFResizeModifyCursorWidth(void)
-{
-    return &_sfResizeModifyCursorWidth;
-}
-
 
 //! Get the value of the AbstractWindow::_sfDrawingSurface field.
 inline
-UIDrawingSurfacePtr &AbstractWindowBase::editDrawingSurface(void)
-{
-    return _sfDrawingSurface.getValue();
-}
-
-//! Get the value of the AbstractWindow::_sfDrawingSurface field.
-inline
-const UIDrawingSurfacePtr &AbstractWindowBase::getDrawingSurface(void) const
+UIDrawingSurface * AbstractWindowBase::getDrawingSurface(void) const
 {
     return _sfDrawingSurface.getValue();
 }
 
 //! Set the value of the AbstractWindow::_sfDrawingSurface field.
 inline
-void AbstractWindowBase::setDrawingSurface(const UIDrawingSurfacePtr &value)
+void AbstractWindowBase::setDrawingSurface(UIDrawingSurface * const value)
 {
+    editSField(DrawingSurfaceFieldMask);
+
     _sfDrawingSurface.setValue(value);
 }
-
 //! Get the value of the AbstractWindow::_sfClosable field.
+
 inline
 bool &AbstractWindowBase::editClosable(void)
 {
+    editSField(ClosableFieldMask);
+
     return _sfClosable.getValue();
 }
 
 //! Get the value of the AbstractWindow::_sfClosable field.
 inline
-const bool &AbstractWindowBase::getClosable(void) const
+      bool  AbstractWindowBase::getClosable(void) const
 {
     return _sfClosable.getValue();
 }
 
 //! Set the value of the AbstractWindow::_sfClosable field.
 inline
-void AbstractWindowBase::setClosable(const bool &value)
+void AbstractWindowBase::setClosable(const bool value)
 {
+    editSField(ClosableFieldMask);
+
     _sfClosable.setValue(value);
 }
-
 //! Get the value of the AbstractWindow::_sfIconable field.
+
 inline
 bool &AbstractWindowBase::editIconable(void)
 {
+    editSField(IconableFieldMask);
+
     return _sfIconable.getValue();
 }
 
 //! Get the value of the AbstractWindow::_sfIconable field.
 inline
-const bool &AbstractWindowBase::getIconable(void) const
+      bool  AbstractWindowBase::getIconable(void) const
 {
     return _sfIconable.getValue();
 }
 
 //! Set the value of the AbstractWindow::_sfIconable field.
 inline
-void AbstractWindowBase::setIconable(const bool &value)
+void AbstractWindowBase::setIconable(const bool value)
 {
+    editSField(IconableFieldMask);
+
     _sfIconable.setValue(value);
 }
-
 //! Get the value of the AbstractWindow::_sfMaximizable field.
+
 inline
 bool &AbstractWindowBase::editMaximizable(void)
 {
+    editSField(MaximizableFieldMask);
+
     return _sfMaximizable.getValue();
 }
 
 //! Get the value of the AbstractWindow::_sfMaximizable field.
 inline
-const bool &AbstractWindowBase::getMaximizable(void) const
+      bool  AbstractWindowBase::getMaximizable(void) const
 {
     return _sfMaximizable.getValue();
 }
 
 //! Set the value of the AbstractWindow::_sfMaximizable field.
 inline
-void AbstractWindowBase::setMaximizable(const bool &value)
+void AbstractWindowBase::setMaximizable(const bool value)
 {
+    editSField(MaximizableFieldMask);
+
     _sfMaximizable.setValue(value);
 }
-
 //! Get the value of the AbstractWindow::_sfIsClosed field.
+
 inline
 bool &AbstractWindowBase::editIsClosed(void)
 {
+    editSField(IsClosedFieldMask);
+
     return _sfIsClosed.getValue();
 }
 
 //! Get the value of the AbstractWindow::_sfIsClosed field.
 inline
-const bool &AbstractWindowBase::getIsClosed(void) const
+      bool  AbstractWindowBase::getIsClosed(void) const
 {
     return _sfIsClosed.getValue();
 }
 
 //! Set the value of the AbstractWindow::_sfIsClosed field.
 inline
-void AbstractWindowBase::setIsClosed(const bool &value)
+void AbstractWindowBase::setIsClosed(const bool value)
 {
+    editSField(IsClosedFieldMask);
+
     _sfIsClosed.setValue(value);
 }
-
 //! Get the value of the AbstractWindow::_sfIsIcon field.
+
 inline
 bool &AbstractWindowBase::editIsIcon(void)
 {
+    editSField(IsIconFieldMask);
+
     return _sfIsIcon.getValue();
 }
 
 //! Get the value of the AbstractWindow::_sfIsIcon field.
 inline
-const bool &AbstractWindowBase::getIsIcon(void) const
+      bool  AbstractWindowBase::getIsIcon(void) const
 {
     return _sfIsIcon.getValue();
 }
 
 //! Set the value of the AbstractWindow::_sfIsIcon field.
 inline
-void AbstractWindowBase::setIsIcon(const bool &value)
+void AbstractWindowBase::setIsIcon(const bool value)
 {
+    editSField(IsIconFieldMask);
+
     _sfIsIcon.setValue(value);
 }
-
 //! Get the value of the AbstractWindow::_sfIsMaximized field.
+
 inline
 bool &AbstractWindowBase::editIsMaximized(void)
 {
+    editSField(IsMaximizedFieldMask);
+
     return _sfIsMaximized.getValue();
 }
 
 //! Get the value of the AbstractWindow::_sfIsMaximized field.
 inline
-const bool &AbstractWindowBase::getIsMaximized(void) const
+      bool  AbstractWindowBase::getIsMaximized(void) const
 {
     return _sfIsMaximized.getValue();
 }
 
 //! Set the value of the AbstractWindow::_sfIsMaximized field.
 inline
-void AbstractWindowBase::setIsMaximized(const bool &value)
+void AbstractWindowBase::setIsMaximized(const bool value)
 {
+    editSField(IsMaximizedFieldMask);
+
     _sfIsMaximized.setValue(value);
 }
-
 //! Get the value of the AbstractWindow::_sfResizable field.
+
 inline
 bool &AbstractWindowBase::editResizable(void)
 {
+    editSField(ResizableFieldMask);
+
     return _sfResizable.getValue();
 }
 
 //! Get the value of the AbstractWindow::_sfResizable field.
 inline
-const bool &AbstractWindowBase::getResizable(void) const
+      bool  AbstractWindowBase::getResizable(void) const
 {
     return _sfResizable.getValue();
 }
 
 //! Set the value of the AbstractWindow::_sfResizable field.
 inline
-void AbstractWindowBase::setResizable(const bool &value)
+void AbstractWindowBase::setResizable(const bool value)
 {
+    editSField(ResizableFieldMask);
+
     _sfResizable.setValue(value);
 }
-
 //! Get the value of the AbstractWindow::_sfIsSelected field.
+
 inline
 bool &AbstractWindowBase::editIsSelected(void)
 {
+    editSField(IsSelectedFieldMask);
+
     return _sfIsSelected.getValue();
 }
 
 //! Get the value of the AbstractWindow::_sfIsSelected field.
 inline
-const bool &AbstractWindowBase::getIsSelected(void) const
+      bool  AbstractWindowBase::getIsSelected(void) const
 {
     return _sfIsSelected.getValue();
 }
 
 //! Set the value of the AbstractWindow::_sfIsSelected field.
 inline
-void AbstractWindowBase::setIsSelected(const bool &value)
+void AbstractWindowBase::setIsSelected(const bool value)
 {
+    editSField(IsSelectedFieldMask);
+
     _sfIsSelected.setValue(value);
 }
-
 //! Get the value of the AbstractWindow::_sfTitle field.
+
 inline
 std::string &AbstractWindowBase::editTitle(void)
 {
+    editSField(TitleFieldMask);
+
     return _sfTitle.getValue();
 }
 
@@ -544,118 +323,133 @@ const std::string &AbstractWindowBase::getTitle(void) const
 inline
 void AbstractWindowBase::setTitle(const std::string &value)
 {
+    editSField(TitleFieldMask);
+
     _sfTitle.setValue(value);
 }
 
 //! Get the value of the AbstractWindow::_sfDesktopIcon field.
 inline
-UIDrawObjectCanvasPtr &AbstractWindowBase::editDesktopIcon(void)
-{
-    return _sfDesktopIcon.getValue();
-}
-
-//! Get the value of the AbstractWindow::_sfDesktopIcon field.
-inline
-const UIDrawObjectCanvasPtr &AbstractWindowBase::getDesktopIcon(void) const
+UIDrawObjectCanvas * AbstractWindowBase::getDesktopIcon(void) const
 {
     return _sfDesktopIcon.getValue();
 }
 
 //! Set the value of the AbstractWindow::_sfDesktopIcon field.
 inline
-void AbstractWindowBase::setDesktopIcon(const UIDrawObjectCanvasPtr &value)
+void AbstractWindowBase::setDesktopIcon(UIDrawObjectCanvas * const value)
 {
+    editSField(DesktopIconFieldMask);
+
     _sfDesktopIcon.setValue(value);
 }
-
 //! Get the value of the AbstractWindow::_sfAllwaysOnTop field.
+
 inline
 bool &AbstractWindowBase::editAllwaysOnTop(void)
 {
+    editSField(AllwaysOnTopFieldMask);
+
     return _sfAllwaysOnTop.getValue();
 }
 
 //! Get the value of the AbstractWindow::_sfAllwaysOnTop field.
 inline
-const bool &AbstractWindowBase::getAllwaysOnTop(void) const
+      bool  AbstractWindowBase::getAllwaysOnTop(void) const
 {
     return _sfAllwaysOnTop.getValue();
 }
 
 //! Set the value of the AbstractWindow::_sfAllwaysOnTop field.
 inline
-void AbstractWindowBase::setAllwaysOnTop(const bool &value)
+void AbstractWindowBase::setAllwaysOnTop(const bool value)
 {
+    editSField(AllwaysOnTopFieldMask);
+
     _sfAllwaysOnTop.setValue(value);
 }
-
 //! Get the value of the AbstractWindow::_sfDrawTitlebar field.
+
 inline
 bool &AbstractWindowBase::editDrawTitlebar(void)
 {
+    editSField(DrawTitlebarFieldMask);
+
     return _sfDrawTitlebar.getValue();
 }
 
 //! Get the value of the AbstractWindow::_sfDrawTitlebar field.
 inline
-const bool &AbstractWindowBase::getDrawTitlebar(void) const
+      bool  AbstractWindowBase::getDrawTitlebar(void) const
 {
     return _sfDrawTitlebar.getValue();
 }
 
 //! Set the value of the AbstractWindow::_sfDrawTitlebar field.
 inline
-void AbstractWindowBase::setDrawTitlebar(const bool &value)
+void AbstractWindowBase::setDrawTitlebar(const bool value)
 {
+    editSField(DrawTitlebarFieldMask);
+
     _sfDrawTitlebar.setValue(value);
 }
-
 //! Get the value of the AbstractWindow::_sfDrawDecorations field.
+
 inline
 bool &AbstractWindowBase::editDrawDecorations(void)
 {
+    editSField(DrawDecorationsFieldMask);
+
     return _sfDrawDecorations.getValue();
 }
 
 //! Get the value of the AbstractWindow::_sfDrawDecorations field.
 inline
-const bool &AbstractWindowBase::getDrawDecorations(void) const
+      bool  AbstractWindowBase::getDrawDecorations(void) const
 {
     return _sfDrawDecorations.getValue();
 }
 
 //! Set the value of the AbstractWindow::_sfDrawDecorations field.
 inline
-void AbstractWindowBase::setDrawDecorations(const bool &value)
+void AbstractWindowBase::setDrawDecorations(const bool value)
 {
+    editSField(DrawDecorationsFieldMask);
+
     _sfDrawDecorations.setValue(value);
 }
-
 //! Get the value of the AbstractWindow::_sfLockInput field.
+
 inline
 bool &AbstractWindowBase::editLockInput(void)
 {
+    editSField(LockInputFieldMask);
+
     return _sfLockInput.getValue();
 }
 
 //! Get the value of the AbstractWindow::_sfLockInput field.
 inline
-const bool &AbstractWindowBase::getLockInput(void) const
+      bool  AbstractWindowBase::getLockInput(void) const
 {
     return _sfLockInput.getValue();
 }
 
 //! Set the value of the AbstractWindow::_sfLockInput field.
 inline
-void AbstractWindowBase::setLockInput(const bool &value)
+void AbstractWindowBase::setLockInput(const bool value)
 {
+    editSField(LockInputFieldMask);
+
     _sfLockInput.setValue(value);
 }
-
 //! Get the value of the AbstractWindow::_sfAlignmentInDrawingSurface field.
+
 inline
 Vec2f &AbstractWindowBase::editAlignmentInDrawingSurface(void)
 {
+    editSField(AlignmentInDrawingSurfaceFieldMask);
+
     return _sfAlignmentInDrawingSurface.getValue();
 }
 
@@ -670,13 +464,17 @@ const Vec2f &AbstractWindowBase::getAlignmentInDrawingSurface(void) const
 inline
 void AbstractWindowBase::setAlignmentInDrawingSurface(const Vec2f &value)
 {
+    editSField(AlignmentInDrawingSurfaceFieldMask);
+
     _sfAlignmentInDrawingSurface.setValue(value);
 }
-
 //! Get the value of the AbstractWindow::_sfScalingInDrawingSurface field.
+
 inline
 Vec2f &AbstractWindowBase::editScalingInDrawingSurface(void)
 {
+    editSField(ScalingInDrawingSurfaceFieldMask);
+
     return _sfScalingInDrawingSurface.getValue();
 }
 
@@ -691,29 +489,110 @@ const Vec2f &AbstractWindowBase::getScalingInDrawingSurface(void) const
 inline
 void AbstractWindowBase::setScalingInDrawingSurface(const Vec2f &value)
 {
+    editSField(ScalingInDrawingSurfaceFieldMask);
+
     _sfScalingInDrawingSurface.setValue(value);
 }
-
 //! Get the value of the AbstractWindow::_sfResizeModifyCursorWidth field.
+
 inline
 UInt32 &AbstractWindowBase::editResizeModifyCursorWidth(void)
 {
+    editSField(ResizeModifyCursorWidthFieldMask);
+
     return _sfResizeModifyCursorWidth.getValue();
 }
 
 //! Get the value of the AbstractWindow::_sfResizeModifyCursorWidth field.
 inline
-const UInt32 &AbstractWindowBase::getResizeModifyCursorWidth(void) const
+      UInt32  AbstractWindowBase::getResizeModifyCursorWidth(void) const
 {
     return _sfResizeModifyCursorWidth.getValue();
 }
 
 //! Set the value of the AbstractWindow::_sfResizeModifyCursorWidth field.
 inline
-void AbstractWindowBase::setResizeModifyCursorWidth(const UInt32 &value)
+void AbstractWindowBase::setResizeModifyCursorWidth(const UInt32 value)
 {
+    editSField(ResizeModifyCursorWidthFieldMask);
+
     _sfResizeModifyCursorWidth.setValue(value);
 }
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void AbstractWindowBase::execSync (      AbstractWindowBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
+        _sfDrawingSurface.syncWith(pFrom->_sfDrawingSurface);
+
+    if(FieldBits::NoField != (ClosableFieldMask & whichField))
+        _sfClosable.syncWith(pFrom->_sfClosable);
+
+    if(FieldBits::NoField != (IconableFieldMask & whichField))
+        _sfIconable.syncWith(pFrom->_sfIconable);
+
+    if(FieldBits::NoField != (MaximizableFieldMask & whichField))
+        _sfMaximizable.syncWith(pFrom->_sfMaximizable);
+
+    if(FieldBits::NoField != (IsClosedFieldMask & whichField))
+        _sfIsClosed.syncWith(pFrom->_sfIsClosed);
+
+    if(FieldBits::NoField != (IsIconFieldMask & whichField))
+        _sfIsIcon.syncWith(pFrom->_sfIsIcon);
+
+    if(FieldBits::NoField != (IsMaximizedFieldMask & whichField))
+        _sfIsMaximized.syncWith(pFrom->_sfIsMaximized);
+
+    if(FieldBits::NoField != (ResizableFieldMask & whichField))
+        _sfResizable.syncWith(pFrom->_sfResizable);
+
+    if(FieldBits::NoField != (IsSelectedFieldMask & whichField))
+        _sfIsSelected.syncWith(pFrom->_sfIsSelected);
+
+    if(FieldBits::NoField != (TitleFieldMask & whichField))
+        _sfTitle.syncWith(pFrom->_sfTitle);
+
+    if(FieldBits::NoField != (DesktopIconFieldMask & whichField))
+        _sfDesktopIcon.syncWith(pFrom->_sfDesktopIcon);
+
+    if(FieldBits::NoField != (AllwaysOnTopFieldMask & whichField))
+        _sfAllwaysOnTop.syncWith(pFrom->_sfAllwaysOnTop);
+
+    if(FieldBits::NoField != (DrawTitlebarFieldMask & whichField))
+        _sfDrawTitlebar.syncWith(pFrom->_sfDrawTitlebar);
+
+    if(FieldBits::NoField != (DrawDecorationsFieldMask & whichField))
+        _sfDrawDecorations.syncWith(pFrom->_sfDrawDecorations);
+
+    if(FieldBits::NoField != (LockInputFieldMask & whichField))
+        _sfLockInput.syncWith(pFrom->_sfLockInput);
+
+    if(FieldBits::NoField != (AlignmentInDrawingSurfaceFieldMask & whichField))
+        _sfAlignmentInDrawingSurface.syncWith(pFrom->_sfAlignmentInDrawingSurface);
+
+    if(FieldBits::NoField != (ScalingInDrawingSurfaceFieldMask & whichField))
+        _sfScalingInDrawingSurface.syncWith(pFrom->_sfScalingInDrawingSurface);
+
+    if(FieldBits::NoField != (ResizeModifyCursorWidthFieldMask & whichField))
+        _sfResizeModifyCursorWidth.syncWith(pFrom->_sfResizeModifyCursorWidth);
+}
+#endif
+
+
+inline
+const Char8 *AbstractWindowBase::getClassname(void)
+{
+    return "AbstractWindow";
+}
+OSG_GEN_CONTAINERPTR(AbstractWindow);
+
 OSG_END_NAMESPACE
+

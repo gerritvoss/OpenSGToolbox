@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGLayoutFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class OverlayLayout;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! OverlayLayoutPtr
+OSG_GEN_CONTAINERPTR(OverlayLayout);
 
-typedef FCPtr<LayoutPtr, OverlayLayout> OverlayLayoutPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<OverlayLayoutPtr> : 
-    public FieldTraitsRecurseMapper<OverlayLayoutPtr, true>
+struct FieldTraits<OverlayLayout *> :
+    public FieldTraitsFCPtrBase<OverlayLayout *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFOverlayLayoutPtr"; }
-    static const char *getMName(void) { return "MFOverlayLayoutPtr"; }
+    typedef FieldTraits<OverlayLayout *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFOverlayLayoutPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFOverlayLayoutPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<OverlayLayoutPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<OverlayLayout *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecOverlayLayoutPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<OverlayLayout *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecOverlayLayoutPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<OverlayLayout *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakOverlayLayoutPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<OverlayLayout *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdOverlayLayoutPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<OverlayLayout *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecOverlayLayoutPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<OverlayLayout *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecOverlayLayoutPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<OverlayLayout *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakOverlayLayoutPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<OverlayLayout *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdOverlayLayoutPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<OverlayLayout *,
+                      RecordedRefCountPolicy  > SFRecOverlayLayoutPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<OverlayLayout *,
+                      UnrecordedRefCountPolicy> SFUnrecOverlayLayoutPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<OverlayLayout *,
+                      WeakRefCountPolicy      > SFWeakOverlayLayoutPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<OverlayLayout *,
+                      NoRefCountPolicy        > SFUncountedOverlayLayoutPtr;
 
-typedef SField<OverlayLayoutPtr> SFOverlayLayoutPtr;
-#endif
 
-#ifndef OSG_COMPILEOVERLAYLAYOUTINST
-OSG_DLLEXPORT_DECL1(SField, OverlayLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<OverlayLayout *,
+                      RecordedRefCountPolicy  > MFRecOverlayLayoutPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<OverlayLayout *,
+                      UnrecordedRefCountPolicy> MFUnrecOverlayLayoutPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<OverlayLayout *,
+                      WeakRefCountPolicy      > MFWeakOverlayLayoutPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<OverlayLayout *,
+                      NoRefCountPolicy        > MFUncountedOverlayLayoutPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<OverlayLayoutPtr> MFOverlayLayoutPtr;
-#endif
 
-#ifndef OSG_COMPILEOVERLAYLAYOUTINST
-OSG_DLLEXPORT_DECL1(MField, OverlayLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecOverlayLayoutPtr : 
+    public PointerSField<OverlayLayout *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecOverlayLayoutPtr : 
+    public PointerSField<OverlayLayout *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakOverlayLayoutPtr :
+    public PointerSField<OverlayLayout *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedOverlayLayoutPtr :
+    public PointerSField<OverlayLayout *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecOverlayLayoutPtr :
+    public PointerMField<OverlayLayout *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecOverlayLayoutPtr :
+    public PointerMField<OverlayLayout *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakOverlayLayoutPtr :
+    public PointerMField<OverlayLayout *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedOverlayLayoutPtr :
+    public PointerMField<OverlayLayout *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGOVERLAYLAYOUTFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGOVERLAYLAYOUTFIELDS_H_ */

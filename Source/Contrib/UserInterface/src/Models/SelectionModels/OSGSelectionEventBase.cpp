@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,171 +50,243 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILESELECTIONEVENTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGSelectionEventBase.h"
 #include "OSGSelectionEvent.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  SelectionEventBase::SelectedFieldMask = 
-    (TypeTraits<BitVector>::One << SelectionEventBase::SelectedFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  SelectionEventBase::PreviouslySelectedFieldMask = 
-    (TypeTraits<BitVector>::One << SelectionEventBase::PreviouslySelectedFieldId);
+/*! \class OSG::SelectionEvent
+    
+ */
 
-const OSG::BitVector  SelectionEventBase::ValueIsAdjustingFieldMask = 
-    (TypeTraits<BitVector>::One << SelectionEventBase::ValueIsAdjustingFieldId);
-
-const OSG::BitVector SelectionEventBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Int32           SelectionEventBase::_mfSelected
     
 */
+
 /*! \var Int32           SelectionEventBase::_mfPreviouslySelected
     
 */
+
 /*! \var bool            SelectionEventBase::_sfValueIsAdjusting
     
 */
 
-//! SelectionEvent description
 
-FieldDescription *SelectionEventBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<SelectionEvent *>::_type("SelectionEventPtr", "EventPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(SelectionEvent *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           SelectionEvent *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           SelectionEvent *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void SelectionEventBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(MFInt32::getClassType(), 
-                     "Selected", 
-                     SelectedFieldId, SelectedFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&SelectionEventBase::editMFSelected)),
-    new FieldDescription(MFInt32::getClassType(), 
-                     "PreviouslySelected", 
-                     PreviouslySelectedFieldId, PreviouslySelectedFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&SelectionEventBase::editMFPreviouslySelected)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "ValueIsAdjusting", 
-                     ValueIsAdjustingFieldId, ValueIsAdjustingFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&SelectionEventBase::editSFValueIsAdjusting))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType SelectionEventBase::_type(
-    "SelectionEvent",
-    "Event",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&SelectionEventBase::createEmpty),
+    pDesc = new MFInt32::Description(
+        MFInt32::getClassType(),
+        "Selected",
+        "",
+        SelectedFieldId, SelectedFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SelectionEvent::editHandleSelected),
+        static_cast<FieldGetMethodSig >(&SelectionEvent::getHandleSelected));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new MFInt32::Description(
+        MFInt32::getClassType(),
+        "PreviouslySelected",
+        "",
+        PreviouslySelectedFieldId, PreviouslySelectedFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SelectionEvent::editHandlePreviouslySelected),
+        static_cast<FieldGetMethodSig >(&SelectionEvent::getHandlePreviouslySelected));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "ValueIsAdjusting",
+        "",
+        ValueIsAdjustingFieldId, ValueIsAdjustingFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SelectionEvent::editHandleValueIsAdjusting),
+        static_cast<FieldGetMethodSig >(&SelectionEvent::getHandleValueIsAdjusting));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+SelectionEventBase::TypeObject SelectionEventBase::_type(
+    SelectionEventBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&SelectionEventBase::createEmptyLocal),
     SelectionEvent::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(SelectionEventBase, SelectionEventPtr)
+    SelectionEvent::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&SelectionEvent::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"SelectionEvent\"\n"
+    "\tparent=\"Event\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"Selected\"\n"
+    "\t\ttype=\"Int32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"PreviouslySelected\"\n"
+    "\t\ttype=\"Int32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ValueIsAdjusting\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t\taccess=\"protected\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &SelectionEventBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &SelectionEventBase::getType(void) const 
+FieldContainerType &SelectionEventBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr SelectionEventBase::shallowCopy(void) const 
-{ 
-    SelectionEventPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const SelectionEvent *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 SelectionEventBase::getContainerSize(void) const 
-{ 
-    return sizeof(SelectionEvent); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void SelectionEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &SelectionEventBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<SelectionEventBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void SelectionEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 SelectionEventBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((SelectionEventBase *) &other, whichField, sInfo);
+    return sizeof(SelectionEvent);
 }
-void SelectionEventBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+MFInt32 *SelectionEventBase::editMFSelected(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editMField(SelectedFieldMask, _mfSelected);
+
+    return &_mfSelected;
 }
 
-void SelectionEventBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const MFInt32 *SelectionEventBase::getMFSelected(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
-    _mfSelected.terminateShare(uiAspect, this->getContainerSize());
-    _mfPreviouslySelected.terminateShare(uiAspect, this->getContainerSize());
+    return &_mfSelected;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-SelectionEventBase::SelectionEventBase(void) :
-    _mfSelected               (), 
-    _mfPreviouslySelected     (), 
-    _sfValueIsAdjusting       (bool(false)), 
-    Inherited() 
+MFInt32 *SelectionEventBase::editMFPreviouslySelected(void)
 {
+    editMField(PreviouslySelectedFieldMask, _mfPreviouslySelected);
+
+    return &_mfPreviouslySelected;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-SelectionEventBase::SelectionEventBase(const SelectionEventBase &source) :
-    _mfSelected               (source._mfSelected               ), 
-    _mfPreviouslySelected     (source._mfPreviouslySelected     ), 
-    _sfValueIsAdjusting       (source._sfValueIsAdjusting       ), 
-    Inherited                 (source)
+const MFInt32 *SelectionEventBase::getMFPreviouslySelected(void) const
 {
+    return &_mfPreviouslySelected;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-SelectionEventBase::~SelectionEventBase(void)
+SFBool *SelectionEventBase::editSFValueIsAdjusting(void)
 {
+    editSField(ValueIsAdjustingFieldMask);
+
+    return &_sfValueIsAdjusting;
 }
+
+const SFBool *SelectionEventBase::getSFValueIsAdjusting(void) const
+{
+    return &_sfValueIsAdjusting;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 SelectionEventBase::getBinSize(const BitVector &whichField)
+UInt32 SelectionEventBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -222,23 +294,20 @@ UInt32 SelectionEventBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _mfSelected.getBinSize();
     }
-
     if(FieldBits::NoField != (PreviouslySelectedFieldMask & whichField))
     {
         returnValue += _mfPreviouslySelected.getBinSize();
     }
-
     if(FieldBits::NoField != (ValueIsAdjustingFieldMask & whichField))
     {
         returnValue += _sfValueIsAdjusting.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void SelectionEventBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void SelectionEventBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -246,22 +315,18 @@ void SelectionEventBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _mfSelected.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (PreviouslySelectedFieldMask & whichField))
     {
         _mfPreviouslySelected.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ValueIsAdjustingFieldMask & whichField))
     {
         _sfValueIsAdjusting.copyToBin(pMem);
     }
-
-
 }
 
-void SelectionEventBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void SelectionEventBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -269,88 +334,288 @@ void SelectionEventBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _mfSelected.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (PreviouslySelectedFieldMask & whichField))
     {
         _mfPreviouslySelected.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ValueIsAdjustingFieldMask & whichField))
     {
         _sfValueIsAdjusting.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void SelectionEventBase::executeSyncImpl(      SelectionEventBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+SelectionEventTransitPtr SelectionEventBase::createLocal(BitVector bFlags)
 {
+    SelectionEventTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (SelectedFieldMask & whichField))
-        _mfSelected.syncWith(pOther->_mfSelected);
+        fc = dynamic_pointer_cast<SelectionEvent>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (PreviouslySelectedFieldMask & whichField))
-        _mfPreviouslySelected.syncWith(pOther->_mfPreviouslySelected);
-
-    if(FieldBits::NoField != (ValueIsAdjustingFieldMask & whichField))
-        _sfValueIsAdjusting.syncWith(pOther->_sfValueIsAdjusting);
-
-
-}
-#else
-void SelectionEventBase::executeSyncImpl(      SelectionEventBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ValueIsAdjustingFieldMask & whichField))
-        _sfValueIsAdjusting.syncWith(pOther->_sfValueIsAdjusting);
-
-
-    if(FieldBits::NoField != (SelectedFieldMask & whichField))
-        _mfSelected.syncWith(pOther->_mfSelected, sInfo);
-
-    if(FieldBits::NoField != (PreviouslySelectedFieldMask & whichField))
-        _mfPreviouslySelected.syncWith(pOther->_mfPreviouslySelected, sInfo);
-
-
+    return fc;
 }
 
-void SelectionEventBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+SelectionEventTransitPtr SelectionEventBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    SelectionEventTransitPtr fc;
 
-    if(FieldBits::NoField != (SelectedFieldMask & whichField))
-        _mfSelected.beginEdit(uiAspect, uiContainerSize);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
-    if(FieldBits::NoField != (PreviouslySelectedFieldMask & whichField))
-        _mfPreviouslySelected.beginEdit(uiAspect, uiContainerSize);
+        fc = dynamic_pointer_cast<SelectionEvent>(tmpPtr);
+    }
 
+    return fc;
+}
+
+//! create a new instance of the class
+SelectionEventTransitPtr SelectionEventBase::create(void)
+{
+    SelectionEventTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<SelectionEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+SelectionEvent *SelectionEventBase::createEmptyLocal(BitVector bFlags)
+{
+    SelectionEvent *returnValue;
+
+    newPtr<SelectionEvent>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+SelectionEvent *SelectionEventBase::createEmpty(void)
+{
+    SelectionEvent *returnValue;
+
+    newPtr<SelectionEvent>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr SelectionEventBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    SelectionEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const SelectionEvent *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr SelectionEventBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    SelectionEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const SelectionEvent *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr SelectionEventBase::shallowCopy(void) const
+{
+    SelectionEvent *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const SelectionEvent *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+SelectionEventBase::SelectionEventBase(void) :
+    Inherited(),
+    _mfSelected               (),
+    _mfPreviouslySelected     (),
+    _sfValueIsAdjusting       (bool(false))
+{
+}
+
+SelectionEventBase::SelectionEventBase(const SelectionEventBase &source) :
+    Inherited(source),
+    _mfSelected               (source._mfSelected               ),
+    _mfPreviouslySelected     (source._mfPreviouslySelected     ),
+    _sfValueIsAdjusting       (source._sfValueIsAdjusting       )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+SelectionEventBase::~SelectionEventBase(void)
+{
+}
+
+
+GetFieldHandlePtr SelectionEventBase::getHandleSelected        (void) const
+{
+    MFInt32::GetHandlePtr returnValue(
+        new  MFInt32::GetHandle(
+             &_mfSelected,
+             this->getType().getFieldDesc(SelectedFieldId),
+             const_cast<SelectionEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SelectionEventBase::editHandleSelected       (void)
+{
+    MFInt32::EditHandlePtr returnValue(
+        new  MFInt32::EditHandle(
+             &_mfSelected,
+             this->getType().getFieldDesc(SelectedFieldId),
+             this));
+
+
+    editMField(SelectedFieldMask, _mfSelected);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SelectionEventBase::getHandlePreviouslySelected (void) const
+{
+    MFInt32::GetHandlePtr returnValue(
+        new  MFInt32::GetHandle(
+             &_mfPreviouslySelected,
+             this->getType().getFieldDesc(PreviouslySelectedFieldId),
+             const_cast<SelectionEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SelectionEventBase::editHandlePreviouslySelected(void)
+{
+    MFInt32::EditHandlePtr returnValue(
+        new  MFInt32::EditHandle(
+             &_mfPreviouslySelected,
+             this->getType().getFieldDesc(PreviouslySelectedFieldId),
+             this));
+
+
+    editMField(PreviouslySelectedFieldMask, _mfPreviouslySelected);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SelectionEventBase::getHandleValueIsAdjusting (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfValueIsAdjusting,
+             this->getType().getFieldDesc(ValueIsAdjustingFieldId),
+             const_cast<SelectionEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SelectionEventBase::editHandleValueIsAdjusting(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfValueIsAdjusting,
+             this->getType().getFieldDesc(ValueIsAdjustingFieldId),
+             this));
+
+
+    editSField(ValueIsAdjustingFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void SelectionEventBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    SelectionEvent *pThis = static_cast<SelectionEvent *>(this);
+
+    pThis->execSync(static_cast<SelectionEvent *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *SelectionEventBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    SelectionEvent *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const SelectionEvent *>(pRefAspect),
+                  dynamic_cast<const SelectionEvent *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<SelectionEventPtr>::_type("SelectionEventPtr", "EventPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(SelectionEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void SelectionEventBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+#ifdef OSG_MT_CPTR_ASPECT
+    AspectOffsetStore oOffsets;
+
+    _pAspectStore->fillOffsetArray(oOffsets, this);
+#endif
+
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfSelected.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfPreviouslySelected.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+}
 
 
 OSG_END_NAMESPACE
-

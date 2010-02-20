@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), Mark Stenerson             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,16 +55,15 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &DialogWindowBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 DialogWindowBase::getClassTypeId(void) 
+OSG::UInt32 DialogWindowBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
+    return _type.getId();
+}
 //! access the producer type of the class
 inline
 const EventProducerType &DialogWindowBase::getProducerClassType(void)
@@ -81,194 +78,94 @@ UInt32 DialogWindowBase::getProducerClassTypeId(void)
     return _producerType.getId();
 }
 
-//! create a new instance of the class
 inline
-DialogWindowPtr DialogWindowBase::create(void) 
+OSG::UInt16 DialogWindowBase::getClassGroupId(void)
 {
-    DialogWindowPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = DialogWindowPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getGroupId();
 }
-
-//! create an empty new instance of the class, do not copy the prototype
-inline
-DialogWindowPtr DialogWindowBase::createEmpty(void) 
-{ 
-    DialogWindowPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
-}
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the DialogWindow::_sfErrorIcon field.
-inline
-const SFReal32 *DialogWindowBase::getSFErrorIcon(void) const
-{
-    return &_sfErrorIcon;
-}
-
-//! Get the DialogWindow::_sfErrorIcon field.
-inline
-SFReal32 *DialogWindowBase::editSFErrorIcon(void)
-{
-    return &_sfErrorIcon;
-}
-
-//! Get the DialogWindow::_sfQuestionIcon field.
-inline
-const SFReal32 *DialogWindowBase::getSFQuestionIcon(void) const
-{
-    return &_sfQuestionIcon;
-}
-
-//! Get the DialogWindow::_sfQuestionIcon field.
-inline
-SFReal32 *DialogWindowBase::editSFQuestionIcon(void)
-{
-    return &_sfQuestionIcon;
-}
-
-//! Get the DialogWindow::_sfDefaultIcon field.
-inline
-const SFReal32 *DialogWindowBase::getSFDefaultIcon(void) const
-{
-    return &_sfDefaultIcon;
-}
-
-//! Get the DialogWindow::_sfDefaultIcon field.
-inline
-SFReal32 *DialogWindowBase::editSFDefaultIcon(void)
-{
-    return &_sfDefaultIcon;
-}
-
-//! Get the DialogWindow::_sfShowCancel field.
-inline
-const SFBool *DialogWindowBase::getSFShowCancel(void) const
-{
-    return &_sfShowCancel;
-}
-
-//! Get the DialogWindow::_sfShowCancel field.
-inline
-SFBool *DialogWindowBase::editSFShowCancel(void)
-{
-    return &_sfShowCancel;
-}
-
-//! Get the DialogWindow::_sfInputValues field.
-inline
-const SFString *DialogWindowBase::getSFInputValues(void) const
-{
-    return &_sfInputValues;
-}
-
-//! Get the DialogWindow::_sfInputValues field.
-inline
-SFString *DialogWindowBase::editSFInputValues(void)
-{
-    return &_sfInputValues;
-}
-
 
 //! Get the value of the DialogWindow::_sfErrorIcon field.
 inline
-Real32 &DialogWindowBase::editErrorIcon(void)
-{
-    return _sfErrorIcon.getValue();
-}
-
-//! Get the value of the DialogWindow::_sfErrorIcon field.
-inline
-const Real32 &DialogWindowBase::getErrorIcon(void) const
+TextureObjChunk * DialogWindowBase::getErrorIcon(void) const
 {
     return _sfErrorIcon.getValue();
 }
 
 //! Set the value of the DialogWindow::_sfErrorIcon field.
 inline
-void DialogWindowBase::setErrorIcon(const Real32 &value)
+void DialogWindowBase::setErrorIcon(TextureObjChunk * const value)
 {
+    editSField(ErrorIconFieldMask);
+
     _sfErrorIcon.setValue(value);
 }
 
 //! Get the value of the DialogWindow::_sfQuestionIcon field.
 inline
-Real32 &DialogWindowBase::editQuestionIcon(void)
-{
-    return _sfQuestionIcon.getValue();
-}
-
-//! Get the value of the DialogWindow::_sfQuestionIcon field.
-inline
-const Real32 &DialogWindowBase::getQuestionIcon(void) const
+TextureObjChunk * DialogWindowBase::getQuestionIcon(void) const
 {
     return _sfQuestionIcon.getValue();
 }
 
 //! Set the value of the DialogWindow::_sfQuestionIcon field.
 inline
-void DialogWindowBase::setQuestionIcon(const Real32 &value)
+void DialogWindowBase::setQuestionIcon(TextureObjChunk * const value)
 {
+    editSField(QuestionIconFieldMask);
+
     _sfQuestionIcon.setValue(value);
 }
 
 //! Get the value of the DialogWindow::_sfDefaultIcon field.
 inline
-Real32 &DialogWindowBase::editDefaultIcon(void)
-{
-    return _sfDefaultIcon.getValue();
-}
-
-//! Get the value of the DialogWindow::_sfDefaultIcon field.
-inline
-const Real32 &DialogWindowBase::getDefaultIcon(void) const
+TextureObjChunk * DialogWindowBase::getDefaultIcon(void) const
 {
     return _sfDefaultIcon.getValue();
 }
 
 //! Set the value of the DialogWindow::_sfDefaultIcon field.
 inline
-void DialogWindowBase::setDefaultIcon(const Real32 &value)
+void DialogWindowBase::setDefaultIcon(TextureObjChunk * const value)
 {
+    editSField(DefaultIconFieldMask);
+
     _sfDefaultIcon.setValue(value);
 }
-
 //! Get the value of the DialogWindow::_sfShowCancel field.
+
 inline
 bool &DialogWindowBase::editShowCancel(void)
 {
+    editSField(ShowCancelFieldMask);
+
     return _sfShowCancel.getValue();
 }
 
 //! Get the value of the DialogWindow::_sfShowCancel field.
 inline
-const bool &DialogWindowBase::getShowCancel(void) const
+      bool  DialogWindowBase::getShowCancel(void) const
 {
     return _sfShowCancel.getValue();
 }
 
 //! Set the value of the DialogWindow::_sfShowCancel field.
 inline
-void DialogWindowBase::setShowCancel(const bool &value)
+void DialogWindowBase::setShowCancel(const bool value)
 {
+    editSField(ShowCancelFieldMask);
+
     _sfShowCancel.setValue(value);
 }
-
 //! Get the value of the DialogWindow::_sfInputValues field.
+
 inline
 std::string &DialogWindowBase::editInputValues(void)
 {
+    editSField(InputValuesFieldMask);
+
     return _sfInputValues.getValue();
 }
 
@@ -283,8 +180,46 @@ const std::string &DialogWindowBase::getInputValues(void) const
 inline
 void DialogWindowBase::setInputValues(const std::string &value)
 {
+    editSField(InputValuesFieldMask);
+
     _sfInputValues.setValue(value);
 }
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void DialogWindowBase::execSync (      DialogWindowBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (ErrorIconFieldMask & whichField))
+        _sfErrorIcon.syncWith(pFrom->_sfErrorIcon);
+
+    if(FieldBits::NoField != (QuestionIconFieldMask & whichField))
+        _sfQuestionIcon.syncWith(pFrom->_sfQuestionIcon);
+
+    if(FieldBits::NoField != (DefaultIconFieldMask & whichField))
+        _sfDefaultIcon.syncWith(pFrom->_sfDefaultIcon);
+
+    if(FieldBits::NoField != (ShowCancelFieldMask & whichField))
+        _sfShowCancel.syncWith(pFrom->_sfShowCancel);
+
+    if(FieldBits::NoField != (InputValuesFieldMask & whichField))
+        _sfInputValues.syncWith(pFrom->_sfInputValues);
+}
+#endif
+
+
+inline
+const Char8 *DialogWindowBase::getClassname(void)
+{
+    return "DialogWindow";
+}
+OSG_GEN_CONTAINERPTR(DialogWindow);
+
 OSG_END_NAMESPACE
+

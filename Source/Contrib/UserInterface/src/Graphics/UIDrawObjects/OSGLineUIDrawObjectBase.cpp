@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,194 +50,327 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILELINEUIDRAWOBJECTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGLineUIDrawObjectBase.h"
 #include "OSGLineUIDrawObject.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  LineUIDrawObjectBase::TopLeftFieldMask = 
-    (TypeTraits<BitVector>::One << LineUIDrawObjectBase::TopLeftFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  LineUIDrawObjectBase::BottomRightFieldMask = 
-    (TypeTraits<BitVector>::One << LineUIDrawObjectBase::BottomRightFieldId);
+/*! \class OSG::LineUIDrawObject
+    A UI DrawObject.
+ */
 
-const OSG::BitVector  LineUIDrawObjectBase::WidthFieldMask = 
-    (TypeTraits<BitVector>::One << LineUIDrawObjectBase::WidthFieldId);
-
-const OSG::BitVector  LineUIDrawObjectBase::ColorFieldMask = 
-    (TypeTraits<BitVector>::One << LineUIDrawObjectBase::ColorFieldId);
-
-const OSG::BitVector  LineUIDrawObjectBase::OpacityFieldMask = 
-    (TypeTraits<BitVector>::One << LineUIDrawObjectBase::OpacityFieldId);
-
-const OSG::BitVector LineUIDrawObjectBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Pnt2f           LineUIDrawObjectBase::_sfTopLeft
     
 */
+
 /*! \var Pnt2f           LineUIDrawObjectBase::_sfBottomRight
     
 */
+
 /*! \var Real32          LineUIDrawObjectBase::_sfWidth
     
 */
+
 /*! \var Color4f         LineUIDrawObjectBase::_sfColor
     
 */
+
 /*! \var Real32          LineUIDrawObjectBase::_sfOpacity
     
 */
 
-//! LineUIDrawObject description
 
-FieldDescription *LineUIDrawObjectBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<LineUIDrawObject *>::_type("LineUIDrawObjectPtr", "UIDrawObjectPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(LineUIDrawObject *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           LineUIDrawObject *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           LineUIDrawObject *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void LineUIDrawObjectBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFPnt2f::getClassType(), 
-                     "TopLeft", 
-                     TopLeftFieldId, TopLeftFieldMask,
-                     false,
-                     (FieldAccessMethod) &LineUIDrawObjectBase::getSFTopLeft),
-    new FieldDescription(SFPnt2f::getClassType(), 
-                     "BottomRight", 
-                     BottomRightFieldId, BottomRightFieldMask,
-                     false,
-                     (FieldAccessMethod) &LineUIDrawObjectBase::getSFBottomRight),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Width", 
-                     WidthFieldId, WidthFieldMask,
-                     false,
-                     (FieldAccessMethod) &LineUIDrawObjectBase::getSFWidth),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "Color", 
-                     ColorFieldId, ColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &LineUIDrawObjectBase::getSFColor),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Opacity", 
-                     OpacityFieldId, OpacityFieldMask,
-                     false,
-                     (FieldAccessMethod) &LineUIDrawObjectBase::getSFOpacity)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType LineUIDrawObjectBase::_type(
-    "LineUIDrawObject",
-    "UIDrawObject",
-    NULL,
-    (PrototypeCreateF) &LineUIDrawObjectBase::createEmpty,
+    pDesc = new SFPnt2f::Description(
+        SFPnt2f::getClassType(),
+        "TopLeft",
+        "",
+        TopLeftFieldId, TopLeftFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&LineUIDrawObject::editHandleTopLeft),
+        static_cast<FieldGetMethodSig >(&LineUIDrawObject::getHandleTopLeft));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFPnt2f::Description(
+        SFPnt2f::getClassType(),
+        "BottomRight",
+        "",
+        BottomRightFieldId, BottomRightFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&LineUIDrawObject::editHandleBottomRight),
+        static_cast<FieldGetMethodSig >(&LineUIDrawObject::getHandleBottomRight));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Width",
+        "",
+        WidthFieldId, WidthFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&LineUIDrawObject::editHandleWidth),
+        static_cast<FieldGetMethodSig >(&LineUIDrawObject::getHandleWidth));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "Color",
+        "",
+        ColorFieldId, ColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&LineUIDrawObject::editHandleColor),
+        static_cast<FieldGetMethodSig >(&LineUIDrawObject::getHandleColor));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Opacity",
+        "",
+        OpacityFieldId, OpacityFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&LineUIDrawObject::editHandleOpacity),
+        static_cast<FieldGetMethodSig >(&LineUIDrawObject::getHandleOpacity));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+LineUIDrawObjectBase::TypeObject LineUIDrawObjectBase::_type(
+    LineUIDrawObjectBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&LineUIDrawObjectBase::createEmptyLocal),
     LineUIDrawObject::initMethod,
-    _desc,
-    sizeof(_desc));
+    LineUIDrawObject::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&LineUIDrawObject::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"LineUIDrawObject\"\n"
+    "\tparent=\"UIDrawObject\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI DrawObject.\n"
+    "\t<Field\n"
+    "\t\tname=\"TopLeft\"\n"
+    "\t\ttype=\"Pnt2f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0,0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"BottomRight\"\n"
+    "\t\ttype=\"Pnt2f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0,0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Width\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Color\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0,1.0,1.0,1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Opacity\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI DrawObject.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(LineUIDrawObjectBase, LineUIDrawObjectPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &LineUIDrawObjectBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &LineUIDrawObjectBase::getType(void) const 
+FieldContainerType &LineUIDrawObjectBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr LineUIDrawObjectBase::shallowCopy(void) const 
-{ 
-    LineUIDrawObjectPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const LineUIDrawObject *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 LineUIDrawObjectBase::getContainerSize(void) const 
-{ 
-    return sizeof(LineUIDrawObject); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void LineUIDrawObjectBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &LineUIDrawObjectBase::getType(void) const
 {
-    this->executeSyncImpl((LineUIDrawObjectBase *) &other, whichField);
+    return _type;
 }
-#else
-void LineUIDrawObjectBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 LineUIDrawObjectBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((LineUIDrawObjectBase *) &other, whichField, sInfo);
+    return sizeof(LineUIDrawObject);
 }
-void LineUIDrawObjectBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFPnt2f *LineUIDrawObjectBase::editSFTopLeft(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(TopLeftFieldMask);
+
+    return &_sfTopLeft;
 }
 
-void LineUIDrawObjectBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFPnt2f *LineUIDrawObjectBase::getSFTopLeft(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfTopLeft;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-LineUIDrawObjectBase::LineUIDrawObjectBase(void) :
-    _sfTopLeft                (Pnt2f(0,0)), 
-    _sfBottomRight            (Pnt2f(0,0)), 
-    _sfWidth                  (Real32(1)), 
-    _sfColor                  (Color4f(1.0,1.0,1.0,1.0)), 
-    _sfOpacity                (Real32(1.0)), 
-    Inherited() 
+SFPnt2f *LineUIDrawObjectBase::editSFBottomRight(void)
 {
+    editSField(BottomRightFieldMask);
+
+    return &_sfBottomRight;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-LineUIDrawObjectBase::LineUIDrawObjectBase(const LineUIDrawObjectBase &source) :
-    _sfTopLeft                (source._sfTopLeft                ), 
-    _sfBottomRight            (source._sfBottomRight            ), 
-    _sfWidth                  (source._sfWidth                  ), 
-    _sfColor                  (source._sfColor                  ), 
-    _sfOpacity                (source._sfOpacity                ), 
-    Inherited                 (source)
+const SFPnt2f *LineUIDrawObjectBase::getSFBottomRight(void) const
 {
+    return &_sfBottomRight;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-LineUIDrawObjectBase::~LineUIDrawObjectBase(void)
+SFReal32 *LineUIDrawObjectBase::editSFWidth(void)
 {
+    editSField(WidthFieldMask);
+
+    return &_sfWidth;
 }
+
+const SFReal32 *LineUIDrawObjectBase::getSFWidth(void) const
+{
+    return &_sfWidth;
+}
+
+
+SFColor4f *LineUIDrawObjectBase::editSFColor(void)
+{
+    editSField(ColorFieldMask);
+
+    return &_sfColor;
+}
+
+const SFColor4f *LineUIDrawObjectBase::getSFColor(void) const
+{
+    return &_sfColor;
+}
+
+
+SFReal32 *LineUIDrawObjectBase::editSFOpacity(void)
+{
+    editSField(OpacityFieldMask);
+
+    return &_sfOpacity;
+}
+
+const SFReal32 *LineUIDrawObjectBase::getSFOpacity(void) const
+{
+    return &_sfOpacity;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 LineUIDrawObjectBase::getBinSize(const BitVector &whichField)
+UInt32 LineUIDrawObjectBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -245,33 +378,28 @@ UInt32 LineUIDrawObjectBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfTopLeft.getBinSize();
     }
-
     if(FieldBits::NoField != (BottomRightFieldMask & whichField))
     {
         returnValue += _sfBottomRight.getBinSize();
     }
-
     if(FieldBits::NoField != (WidthFieldMask & whichField))
     {
         returnValue += _sfWidth.getBinSize();
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         returnValue += _sfColor.getBinSize();
     }
-
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
     {
         returnValue += _sfOpacity.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void LineUIDrawObjectBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void LineUIDrawObjectBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -279,32 +407,26 @@ void LineUIDrawObjectBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfTopLeft.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (BottomRightFieldMask & whichField))
     {
         _sfBottomRight.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (WidthFieldMask & whichField))
     {
         _sfWidth.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         _sfColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
     {
         _sfOpacity.copyToBin(pMem);
     }
-
-
 }
 
-void LineUIDrawObjectBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void LineUIDrawObjectBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -312,126 +434,337 @@ void LineUIDrawObjectBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfTopLeft.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (BottomRightFieldMask & whichField))
     {
         _sfBottomRight.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (WidthFieldMask & whichField))
     {
         _sfWidth.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         _sfColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
     {
         _sfOpacity.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void LineUIDrawObjectBase::executeSyncImpl(      LineUIDrawObjectBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+LineUIDrawObjectTransitPtr LineUIDrawObjectBase::createLocal(BitVector bFlags)
 {
+    LineUIDrawObjectTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (TopLeftFieldMask & whichField))
-        _sfTopLeft.syncWith(pOther->_sfTopLeft);
+        fc = dynamic_pointer_cast<LineUIDrawObject>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (BottomRightFieldMask & whichField))
-        _sfBottomRight.syncWith(pOther->_sfBottomRight);
-
-    if(FieldBits::NoField != (WidthFieldMask & whichField))
-        _sfWidth.syncWith(pOther->_sfWidth);
-
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
-
-    if(FieldBits::NoField != (OpacityFieldMask & whichField))
-        _sfOpacity.syncWith(pOther->_sfOpacity);
-
-
-}
-#else
-void LineUIDrawObjectBase::executeSyncImpl(      LineUIDrawObjectBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (TopLeftFieldMask & whichField))
-        _sfTopLeft.syncWith(pOther->_sfTopLeft);
-
-    if(FieldBits::NoField != (BottomRightFieldMask & whichField))
-        _sfBottomRight.syncWith(pOther->_sfBottomRight);
-
-    if(FieldBits::NoField != (WidthFieldMask & whichField))
-        _sfWidth.syncWith(pOther->_sfWidth);
-
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
-
-    if(FieldBits::NoField != (OpacityFieldMask & whichField))
-        _sfOpacity.syncWith(pOther->_sfOpacity);
-
-
-
+    return fc;
 }
 
-void LineUIDrawObjectBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+LineUIDrawObjectTransitPtr LineUIDrawObjectBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    LineUIDrawObjectTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<LineUIDrawObject>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+LineUIDrawObjectTransitPtr LineUIDrawObjectBase::create(void)
+{
+    LineUIDrawObjectTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<LineUIDrawObject>(tmpPtr);
+    }
+
+    return fc;
+}
+
+LineUIDrawObject *LineUIDrawObjectBase::createEmptyLocal(BitVector bFlags)
+{
+    LineUIDrawObject *returnValue;
+
+    newPtr<LineUIDrawObject>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+LineUIDrawObject *LineUIDrawObjectBase::createEmpty(void)
+{
+    LineUIDrawObject *returnValue;
+
+    newPtr<LineUIDrawObject>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr LineUIDrawObjectBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    LineUIDrawObject *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const LineUIDrawObject *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr LineUIDrawObjectBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    LineUIDrawObject *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const LineUIDrawObject *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr LineUIDrawObjectBase::shallowCopy(void) const
+{
+    LineUIDrawObject *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const LineUIDrawObject *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+LineUIDrawObjectBase::LineUIDrawObjectBase(void) :
+    Inherited(),
+    _sfTopLeft                (Pnt2f(0,0)),
+    _sfBottomRight            (Pnt2f(0,0)),
+    _sfWidth                  (Real32(1)),
+    _sfColor                  (Color4f(1.0,1.0,1.0,1.0)),
+    _sfOpacity                (Real32(1.0))
+{
+}
+
+LineUIDrawObjectBase::LineUIDrawObjectBase(const LineUIDrawObjectBase &source) :
+    Inherited(source),
+    _sfTopLeft                (source._sfTopLeft                ),
+    _sfBottomRight            (source._sfBottomRight            ),
+    _sfWidth                  (source._sfWidth                  ),
+    _sfColor                  (source._sfColor                  ),
+    _sfOpacity                (source._sfOpacity                )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+LineUIDrawObjectBase::~LineUIDrawObjectBase(void)
+{
+}
+
+
+GetFieldHandlePtr LineUIDrawObjectBase::getHandleTopLeft         (void) const
+{
+    SFPnt2f::GetHandlePtr returnValue(
+        new  SFPnt2f::GetHandle(
+             &_sfTopLeft,
+             this->getType().getFieldDesc(TopLeftFieldId),
+             const_cast<LineUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr LineUIDrawObjectBase::editHandleTopLeft        (void)
+{
+    SFPnt2f::EditHandlePtr returnValue(
+        new  SFPnt2f::EditHandle(
+             &_sfTopLeft,
+             this->getType().getFieldDesc(TopLeftFieldId),
+             this));
+
+
+    editSField(TopLeftFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr LineUIDrawObjectBase::getHandleBottomRight     (void) const
+{
+    SFPnt2f::GetHandlePtr returnValue(
+        new  SFPnt2f::GetHandle(
+             &_sfBottomRight,
+             this->getType().getFieldDesc(BottomRightFieldId),
+             const_cast<LineUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr LineUIDrawObjectBase::editHandleBottomRight    (void)
+{
+    SFPnt2f::EditHandlePtr returnValue(
+        new  SFPnt2f::EditHandle(
+             &_sfBottomRight,
+             this->getType().getFieldDesc(BottomRightFieldId),
+             this));
+
+
+    editSField(BottomRightFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr LineUIDrawObjectBase::getHandleWidth           (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfWidth,
+             this->getType().getFieldDesc(WidthFieldId),
+             const_cast<LineUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr LineUIDrawObjectBase::editHandleWidth          (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfWidth,
+             this->getType().getFieldDesc(WidthFieldId),
+             this));
+
+
+    editSField(WidthFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr LineUIDrawObjectBase::getHandleColor           (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfColor,
+             this->getType().getFieldDesc(ColorFieldId),
+             const_cast<LineUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr LineUIDrawObjectBase::editHandleColor          (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfColor,
+             this->getType().getFieldDesc(ColorFieldId),
+             this));
+
+
+    editSField(ColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr LineUIDrawObjectBase::getHandleOpacity         (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfOpacity,
+             this->getType().getFieldDesc(OpacityFieldId),
+             const_cast<LineUIDrawObjectBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr LineUIDrawObjectBase::editHandleOpacity        (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfOpacity,
+             this->getType().getFieldDesc(OpacityFieldId),
+             this));
+
+
+    editSField(OpacityFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void LineUIDrawObjectBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    LineUIDrawObject *pThis = static_cast<LineUIDrawObject *>(this);
+
+    pThis->execSync(static_cast<LineUIDrawObject *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *LineUIDrawObjectBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    LineUIDrawObject *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const LineUIDrawObject *>(pRefAspect),
+                  dynamic_cast<const LineUIDrawObject *>(this));
+
+    return returnValue;
+}
+#endif
+
+void LineUIDrawObjectBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<LineUIDrawObjectPtr>::_type("LineUIDrawObjectPtr", "UIDrawObjectPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(LineUIDrawObjectPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(LineUIDrawObjectPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGLINEUIDRAWOBJECTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGLINEUIDRAWOBJECTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGLINEUIDRAWOBJECTFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

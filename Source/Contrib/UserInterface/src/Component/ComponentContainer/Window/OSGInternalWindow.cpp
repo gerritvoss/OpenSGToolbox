@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,36 +40,32 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGInternalWindow.h"
-#include "UIDrawingSurface/OSGUIDrawingSurface.h"
-#include "Component/Misc/OSGToolTip.h"
-#include "Component/Menu/OSGPopupMenu.h"
-#include "Component/Menu/OSGMenuBar.h"
-#include "Component/Text/OSGLabel.h"
-#include "Component/Button/OSGButton.h"
-#include "Component/Container/Window/OSGTitlebar.h"
-#include "Border/OSGWindowBorder.h"
-#include "Util/OSGUIDrawUtils.h"
-#include <OpenSG/Input/OSGWindowEventProducer.h>
+#include "OSGUIDrawingSurface.h"
+#include "OSGToolTip.h"
+#include "OSGPopupMenu.h"
+#include "OSGMenuBar.h"
+#include "OSGLabel.h"
+#include "OSGButton.h"
+#include "OSGTitlebar.h"
+#include "OSGWindowBorder.h"
+#include "OSGUIDrawUtils.h"
+#include "OSGWindowEventProducer.h"
+#include "OSGMenuItem.h"
 
 #include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::InternalWindow
-A UI Internal Window. 	
-*/
+// Documentation for this class is emitted in the
+// OSGInternalWindowBase.cpp file.
+// To modify it, please change the .fcd file (OSGInternalWindow.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -79,9 +75,15 @@ A UI Internal Window.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void InternalWindow::initMethod (void)
+void InternalWindow::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
+
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -89,560 +91,533 @@ void InternalWindow::initMethod (void)
 
 void InternalWindow::setIconify(bool Iconify)
 {
-	if(Iconify && !getIsIcon())
-	{
-		//TODO: Implement
-		beginEditCP(InternalWindowPtr(this), IsIconFieldMask);
-			setIsIcon(Iconify);
-		endEditCP(InternalWindowPtr(this), IsIconFieldMask);
+    if(Iconify && !getIsIcon())
+    {
+        //TODO: Implement
+        setIsIcon(Iconify);
 
-		produceWindowIconified();
-	}
-	else if(!Iconify && getIsIcon())
-	{
-		//TODO: Implement
-		beginEditCP(InternalWindowPtr(this), IsIconFieldMask);
-			setIsIcon(Iconify);
-		endEditCP(InternalWindowPtr(this), IsIconFieldMask);
+        produceWindowIconified();
+    }
+    else if(!Iconify && getIsIcon())
+    {
+        //TODO: Implement
+        setIsIcon(Iconify);
 
-		produceWindowDeiconified();
-	}
+        produceWindowDeiconified();
+    }
 }
 
 bool InternalWindow::getIconify(void) const
 {
-	return getIsIcon();
+    return getIsIcon();
 }
 
 void InternalWindow::setMaximize(bool Maximize)
 {
-	if(Maximize && !getIsMaximized())
-	{
+    if(Maximize && !getIsMaximized())
+    {
         _PreviousPosition = getPosition();
         _PreviousSize = getSize();
-		beginEditCP(InternalWindowPtr(this), IsMaximizedFieldMask | PreferredSizeFieldMask | PositionFieldMask);
-			setIsMaximized(Maximize);
-			setPosition(Pnt2f(0,0));
-			setPreferredSize(getDrawingSurface()->getSize());
-		endEditCP(InternalWindowPtr(this), IsMaximizedFieldMask | PreferredSizeFieldMask | PositionFieldMask);
-	}
-	else if(!Maximize && getIsMaximized())
-	{
-		beginEditCP(InternalWindowPtr(this), IsMaximizedFieldMask | PreferredSizeFieldMask | PositionFieldMask);
-			setIsMaximized(Maximize);
-			Vec2f TempSize(_PreviousSize);
-			Pnt2f TempPos(_PreviousPosition);
-			setPreferredSize(TempSize);
-			setPosition(TempPos);
-		endEditCP(InternalWindowPtr(this), IsMaximizedFieldMask | PreferredSizeFieldMask | PositionFieldMask);
+        setIsMaximized(Maximize);
+        setPosition(Pnt2f(0,0));
+        setPreferredSize(Vec2f(getDrawingSurface()->getSize().x(),getDrawingSurface()->getSize().x()));
+    }
+    else if(!Maximize && getIsMaximized())
+    {
+        setIsMaximized(Maximize);
+        Vec2f TempSize(_PreviousSize);
+        Pnt2f TempPos(_PreviousPosition);
+        setPreferredSize(TempSize);
+        setPosition(TempPos);
         _PreviousPosition = getPosition();
         _PreviousSize = getSize();
-	}
+    }
 }
 
 bool InternalWindow::getMaximize(void) const
 {
-	return getIsMaximized();
+    return getIsMaximized();
 }
 
 void InternalWindow::open(void)
 {
-	produceWindowOpened();
+    produceWindowOpened();
 }
 
 void InternalWindow::close(void)
 {
-	_VetoWindowClose = false;
+    _VetoWindowClose = false;
 
-	produceWindowClosing();
+    produceWindowClosing();
 
-	if(!_VetoWindowClose && getDrawingSurface() != NullFC)
-	{
-		getDrawingSurface()->closeWindow(InternalWindowPtr(this));
-		produceWindowClosed();
-	}
+    if(!_VetoWindowClose && getDrawingSurface() != NULL)
+    {
+        getDrawingSurface()->closeWindow(InternalWindowRefPtr(this));
+        produceWindowClosed();
+    }
 }
 
-bool InternalWindow::giveFocus(ComponentPtr NewFocusedComponent, bool Temporary)
+bool InternalWindow::giveFocus(ComponentRefPtr NewFocusedComponent, bool Temporary)
 {
-	if(ComponentPtr(this) == NewFocusedComponent)
+    if(ComponentRefPtr(this) == NewFocusedComponent)
     {
-		return true;
+        return true;
     }
-	else
-	{
-        beginEditCP(ComponentPtr(this), FocusedFieldMask);
-           setFocused(false);
-        endEditCP(ComponentPtr(this), FocusedFieldMask);
-        focusLost(FocusEvent::create(ComponentPtr(this),getSystemTime(),Temporary, NewFocusedComponent));
-		return true;
-	}
+    else
+    {
+        setFocused(false);
+        focusLost(FocusEvent::create(ComponentRefPtr(this),getSystemTime(),Temporary, NewFocusedComponent));
+        return true;
+    }
 }
 
 bool InternalWindow::takeFocus(bool Temporary)
 {
-    
-	if(getFocused() &&
-	   getDrawingSurface() != NullFC &&
-	   getDrawingSurface()->getFocusedWindow() == InternalWindowPtr(this))
-	{
-		return true;
-	}
-    beginEditCP(InternalWindowPtr(this), FocusedFieldMask);
-       setFocused(true);
-    endEditCP(InternalWindowPtr(this), FocusedFieldMask);
-	if(Temporary || getDrawingSurface() == NullFC)
-	{
-        focusGained(FocusEvent::create(ComponentPtr(this),getSystemTime(),Temporary, NullFC));
-	}
-	else
-	{
-		if(getDrawingSurface()->getFocusedWindow() != NullFC)
-		{
-			getDrawingSurface()->getFocusedWindow()->giveFocus(InternalWindowPtr(this));
-		}
-	    getDrawingSurface()->setFocusedWindow(InternalWindowPtr(this));
-        focusGained(FocusEvent::create(ComponentPtr(this),getSystemTime(),Temporary, getDrawingSurface()->getFocusedWindow()));
-	}
-	return true;
-}
 
-InternalWindowPtr &InternalWindow::getParentWindow(void)
-{
-    if(Component::getParentWindow() == NullFC)
+    if(getFocused() &&
+       getDrawingSurface() != NULL &&
+       getDrawingSurface()->getFocusedWindow() == InternalWindowRefPtr(this))
     {
-		beginEditCP(InternalWindowPtr(this), Component::ParentWindowFieldMask);
-		   setParentWindow(InternalWindowPtr(this));
-		endEditCP(InternalWindowPtr(this), Component::ParentWindowFieldMask);
+        return true;
     }
-    return Component::editParentWindow();
+    setFocused(true);
+    if(Temporary || getDrawingSurface() == NULL)
+    {
+        focusGained(FocusEvent::create(ComponentRefPtr(this),getSystemTime(),Temporary, NULL));
+    }
+    else
+    {
+        if(getDrawingSurface()->getFocusedWindow() != NULL)
+        {
+            getDrawingSurface()->getFocusedWindow()->giveFocus(InternalWindowRefPtr(this));
+        }
+        getDrawingSurface()->setFocusedWindow(InternalWindowRefPtr(this));
+        focusGained(FocusEvent::create(ComponentRefPtr(this),getSystemTime(),Temporary, getDrawingSurface()->getFocusedWindow()));
+    }
+    return true;
 }
 
-const InternalWindowPtr &InternalWindow::getParentWindow(void) const
+InternalWindow* InternalWindow::getParentWindow(void) const
 {
-    if(Component::getParentWindow() == NullFC)
+    if(Component::getParentWindow() != this)
     {
-        beginEditCP(InternalWindowPtr(this), Component::ParentWindowFieldMask);
-            const_cast<InternalWindow*>(this)->setParentWindow(InternalWindowPtr(this));
-        endEditCP(InternalWindowPtr(this), Component::ParentWindowFieldMask);
+        const_cast<InternalWindow*>(this)->setParentWindow(const_cast<InternalWindow*>(this));
     }
     return Component::getParentWindow();
 }
 
-void InternalWindow::keyPressed(const KeyEventPtr e)
+void InternalWindow::keyPressed(const KeyEventUnrecPtr e)
 {
     if(!getLockInput())
     {
         //Check for Accelerator Keys
         UInt32 RelevantModifiers = (e->getModifiers() & KeyEvent::KEY_MODIFIER_ALT) |
-                                   (e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL) |
-                                   (e->getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT) |
-                                   (e->getModifiers() & KeyEvent::KEY_MODIFIER_META);
+            (e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL) |
+            (e->getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT) |
+            (e->getModifiers() & KeyEvent::KEY_MODIFIER_META);
         KeyAcceleratorMapItor MapItor = _KeyAcceleratorMap.find(KeyEvent::getHashable(e->getKey(), RelevantModifiers));
         if(MapItor != _KeyAcceleratorMap.end())
         {
-            (*MapItor).second->acceleratorTyped(KeyAcceleratorEvent::create(InternalWindowPtr(this), e->getTimeStamp(), e->getKey(), e->getModifiers()));
+            (*MapItor).second->acceleratorTyped(KeyAcceleratorEvent::create(InternalWindowRefPtr(this), e->getTimeStamp(), e->getKey(), e->getModifiers()));
         }
-	    //Send Key event to Component that has Focus
-	    //If there is not Focused Component then do nothing
-	    if(getFocusedComponent() != NullFC &&
-	    getFocusedComponent() != ComponentPtr(this))
-	    {
-		    getFocusedComponent()->keyPressed(e);
-		    ContainerPtr ParentContainer(getFocusedComponent()->getParentContainer());
-		    while(ParentContainer != NullFC &&
-			    ParentContainer != ContainerPtr(this))
-		    {
-			    ParentContainer->keyPressed(e);
-			    ParentContainer = Container::Ptr::dcast(ParentContainer->getParentContainer());
-		    }
-	    }
+        //Send Key event to Component that has Focus
+        //If there is not Focused Component then do nothing
+        if(getFocusedComponent() != NULL &&
+           getFocusedComponent() != this)
+        {
+            getFocusedComponent()->keyPressed(e);
+            ComponentContainerRefPtr ParentContainer(getFocusedComponent()->getParentContainer());
+            while(ParentContainer != NULL &&
+                  ParentContainer != this)
+            {
+                ParentContainer->keyPressed(e);
+                ParentContainer = dynamic_cast<ComponentContainer*>(ParentContainer->getParentContainer());
+            }
+        }
         Component::keyPressed(e);
     }
 }
 
-void InternalWindow::keyReleased(const KeyEventPtr e)
+void InternalWindow::keyReleased(const KeyEventUnrecPtr e)
 {
     if(!getLockInput())
     {
-	    //Send Key event to Component that has Focus
-	    //If there is not Focused Component then do nothing
-	    if(getFocusedComponent() != NullFC &&
-	    getFocusedComponent() != ComponentPtr(this))
-	    {
-		    getFocusedComponent()->keyReleased(e);
-		    ContainerPtr ParentContainer(getFocusedComponent()->getParentContainer());
-		    while(ParentContainer != NullFC &&
-			    ParentContainer != ContainerPtr(this))
-		    {
-			    ParentContainer->keyReleased(e);
-			    ParentContainer = Container::Ptr::dcast(ParentContainer->getParentContainer());
-		    }
-	    }
+        //Send Key event to Component that has Focus
+        //If there is not Focused Component then do nothing
+        if(getFocusedComponent() != NULL &&
+           getFocusedComponent() != ComponentRefPtr(this))
+        {
+            getFocusedComponent()->keyReleased(e);
+            ComponentContainerRefPtr ParentContainer(getFocusedComponent()->getParentContainer());
+            while(ParentContainer != NULL &&
+                  ParentContainer != ComponentContainerRefPtr(this))
+            {
+                ParentContainer->keyReleased(e);
+                ParentContainer = dynamic_cast<ComponentContainer*>(ParentContainer->getParentContainer());
+            }
+        }
         Component::keyReleased(e);
     }
 }
 
-void InternalWindow::keyTyped(const KeyEventPtr e)
+void InternalWindow::keyTyped(const KeyEventUnrecPtr e)
 {
     if(!getLockInput())
     {
-	    //Send Key event to Component that has Focus
-	    //If there is not Focused Component then do nothing
-	    if(getFocusedComponent() != NullFC &&
-	    getFocusedComponent() != ComponentPtr(this))
-	    {
-		    getFocusedComponent()->keyTyped(e);
-		    ContainerPtr ParentContainer(getFocusedComponent()->getParentContainer());
-		    while(ParentContainer != NullFC &&
-			    ParentContainer != ContainerPtr(this))
-		    {
-			    ParentContainer->keyTyped(e);
-			    ParentContainer = Container::Ptr::dcast(ParentContainer->getParentContainer());
-		    }
-	    }
+        //Send Key event to Component that has Focus
+        //If there is not Focused Component then do nothing
+        if(getFocusedComponent() != NULL &&
+           getFocusedComponent() != ComponentRefPtr(this))
+        {
+            getFocusedComponent()->keyTyped(e);
+            ComponentContainerRefPtr ParentContainer(getFocusedComponent()->getParentContainer());
+            while(ParentContainer != NULL &&
+                  ParentContainer != ComponentContainerRefPtr(this))
+            {
+                ParentContainer->keyTyped(e);
+                ParentContainer = dynamic_cast<ComponentContainer*>(ParentContainer->getParentContainer());
+            }
+        }
         Component::keyTyped(e);
     }
 }
 
-void InternalWindow::mouseClicked(const MouseEventPtr e)
+void InternalWindow::mouseClicked(const MouseEventUnrecPtr e)
 {
     if(!getLockInput())
     {
-        if(getMenuBar() != NullFC)
+        if(getMenuBar() != NULL)
         {
-	        bool isContained;
+            bool isContained;
             isContained = getMenuBar()->isContained(e->getLocation(), true);
-		    checkMouseEnterExit(e,e->getLocation(),getMenuBar(),isContained,e->getViewport());
-		    if(isContained)
-		    {
-			    getMenuBar()->mouseClicked(e);
+            checkMouseEnterExit(e,e->getLocation(),getMenuBar(),isContained,e->getViewport());
+            if(isContained)
+            {
+                getMenuBar()->mouseClicked(e);
                 Component::mouseClicked(e);
-			    return;
-		    }
+                return;
+            }
         }
-        if(getTitlebar() != NullFC)
+        if(getTitlebar() != NULL)
         {
-	        bool isContained;
+            bool isContained;
             isContained = getTitlebar()->isContained(e->getLocation(), true);
-		    checkMouseEnterExit(e,e->getLocation(),getTitlebar(),isContained,e->getViewport());
-		    if(isContained)
-		    {
-			    getTitlebar()->mouseClicked(e);
+            checkMouseEnterExit(e,e->getLocation(),getTitlebar(),isContained,e->getViewport());
+            if(isContained)
+            {
+                getTitlebar()->mouseClicked(e);
                 Component::mouseClicked(e);
-			    return;
-		    }
+                return;
+            }
         }
-        Container::mouseClicked(e);
+        ComponentContainer::mouseClicked(e);
     }
 }
 
-void InternalWindow::mouseEntered(const MouseEventPtr e)
+void InternalWindow::mouseEntered(const MouseEventUnrecPtr e)
 {
-    if(getMenuBar() != NullFC)
+    if(getMenuBar() != NULL)
     {
-	    bool isContained;
+        bool isContained;
         isContained = getMenuBar()->isContained(e->getLocation(), true);
-		checkMouseEnterExit(e,e->getLocation(),getMenuBar(),isContained,e->getViewport());
+        checkMouseEnterExit(e,e->getLocation(),getMenuBar(),isContained,e->getViewport());
     }
-    if(getTitlebar() != NullFC)
+    if(getTitlebar() != NULL)
     {
-	    bool isContained;
+        bool isContained;
         isContained = getTitlebar()->isContained(e->getLocation(), true);
-		checkMouseEnterExit(e,e->getLocation(),getTitlebar(),isContained,e->getViewport());
+        checkMouseEnterExit(e,e->getLocation(),getTitlebar(),isContained,e->getViewport());
     }
     if(!getLockInput())
     {
-        Container::mouseEntered(e);
+        ComponentContainer::mouseEntered(e);
     }
 }
 
-void InternalWindow::mouseExited(const MouseEventPtr e)
+void InternalWindow::mouseExited(const MouseEventUnrecPtr e)
 {
-    if(getMenuBar() != NullFC)
+    if(getMenuBar() != NULL)
     {
-	    bool isContained;
+        bool isContained;
         isContained = getMenuBar()->isContained(e->getLocation(), true);
-		checkMouseEnterExit(e,e->getLocation(),getMenuBar(),isContained,e->getViewport());
+        checkMouseEnterExit(e,e->getLocation(),getMenuBar(),isContained,e->getViewport());
     }
-    if(getTitlebar() != NullFC)
+    if(getTitlebar() != NULL)
     {
-	    bool isContained;
+        bool isContained;
         isContained = getTitlebar()->isContained(e->getLocation(), true);
-		checkMouseEnterExit(e,e->getLocation(),getTitlebar(),isContained,e->getViewport());
+        checkMouseEnterExit(e,e->getLocation(),getTitlebar(),isContained,e->getViewport());
     }
     if(!getLockInput())
     {
-		if(getDrawingSurface() != NullFC && getDrawingSurface()->getEventProducer() != NullFC)
-		{
-			getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
-		}
-        Container::mouseExited(e);
+        if(getDrawingSurface() != NULL && getDrawingSurface()->getEventProducer() != NULL)
+        {
+            getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
+        }
+        ComponentContainer::mouseExited(e);
     }
 }
 
-void InternalWindow::mousePressed(const MouseEventPtr e)
+void InternalWindow::mousePressed(const MouseEventUnrecPtr e)
 {
-    
-	if(!getLockInput())
+
+    if(!getLockInput())
     {
-		
-		//Check if the Mouse is whithin the resize border width
-		if(getResizable())
-		{
-			WindowArea TheArea(getCursurArea(e->getLocation()));
-			switch(TheArea)
-			{
-			case WINDOW_LEFT_BORDER:
-			case WINDOW_RIGHT_BORDER:
-			case WINDOW_TOP_BORDER:
-			case WINDOW_BOTTOM_BORDER:
-			case WINDOW_TOP_LEFT_BORDER:
-			case WINDOW_BOTTOM_RIGHT_BORDER:
-			case WINDOW_TOP_RIGHT_BORDER:
-			case WINDOW_BOTTOM_LEFT_BORDER:
-				beginEditCP(InternalWindowPtr(this), InternalWindow::LockInputFieldMask);
-					setLockInput(true);
-				endEditCP(InternalWindowPtr(this), InternalWindow::LockInputFieldMask);
 
-				_BorderDraggedListener.setWindowStartPosition(getPosition());
-				_BorderDraggedListener.setWindowStartSize(getSize());
-				_BorderDraggedListener.setMouseStartPosition(e->getLocation());
-				_BorderDraggedListener.setBorderDragged(TheArea);
-
-				getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_BorderDraggedListener);
-				getDrawingSurface()->getEventProducer()->addMouseListener(&_BorderDraggedListener);
-				getDrawingSurface()->getEventProducer()->addKeyListener(&_BorderDraggedListener);
-				break;
-			}
-		}
-        if(getMenuBar() != NullFC)
+        //Check if the Mouse is whithin the resize border width
+        if(getResizable())
         {
-	        bool isContained;
+            WindowArea TheArea(getCursurArea(e->getLocation()));
+            switch(TheArea)
+            {
+                case WINDOW_LEFT_BORDER:
+                case WINDOW_RIGHT_BORDER:
+                case WINDOW_TOP_BORDER:
+                case WINDOW_BOTTOM_BORDER:
+                case WINDOW_TOP_LEFT_BORDER:
+                case WINDOW_BOTTOM_RIGHT_BORDER:
+                case WINDOW_TOP_RIGHT_BORDER:
+                case WINDOW_BOTTOM_LEFT_BORDER:
+                    setLockInput(true);
+
+                    _BorderDraggedListener.setWindowStartPosition(getPosition());
+                    _BorderDraggedListener.setWindowStartSize(getSize());
+                    _BorderDraggedListener.setMouseStartPosition(e->getLocation());
+                    _BorderDraggedListener.setBorderDragged(TheArea);
+
+                    getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_BorderDraggedListener);
+                    getDrawingSurface()->getEventProducer()->addMouseListener(&_BorderDraggedListener);
+                    getDrawingSurface()->getEventProducer()->addKeyListener(&_BorderDraggedListener);
+                    break;
+            }
+        }
+        if(getMenuBar() != NULL)
+        {
+            bool isContained;
             isContained = getMenuBar()->isContained(e->getLocation(), true);
-		    checkMouseEnterExit(e,e->getLocation(),getMenuBar(),isContained,e->getViewport());
-		    if(isContained)
-		    {
-			    getMenuBar()->mousePressed(e);
+            checkMouseEnterExit(e,e->getLocation(),getMenuBar(),isContained,e->getViewport());
+            if(isContained)
+            {
+                getMenuBar()->mousePressed(e);
                 Component::mousePressed(e);
-			    return;
-		    }
+                return;
+            }
         }
-        if(getTitlebar() != NullFC)
+        if(getTitlebar() != NULL)
         {
-	        bool isContained;
+            bool isContained;
             isContained = getTitlebar()->isContained(e->getLocation(), true);
-		    checkMouseEnterExit(e,e->getLocation(),getTitlebar(),isContained,e->getViewport());
-		    if(isContained)
-		    {
-			    getTitlebar()->mousePressed(e);
+            checkMouseEnterExit(e,e->getLocation(),getTitlebar(),isContained,e->getViewport());
+            if(isContained)
+            {
+                getTitlebar()->mousePressed(e);
                 Component::mousePressed(e);
-			    return;
-		    }
+                return;
+            }
         }
 
-		//Container MousePressed Handling
-		bool isContained(false);
-		for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
-		{
-			isContained = getChildren()[i]->isContained(e->getLocation(), true);
-			checkMouseEnterExit(e,e->getLocation(),getChildren()[i],isContained,e->getViewport());
-			if(isContained)
-			{
-				takeFocus();
-				if(!getChildren()[i]->getType().isDerivedFrom(Container::getClassType()))
-				{
-					getChildren()[i]->takeFocus();
-				}
-				getChildren()[i]->mousePressed(e);
-				break;
-			}
-		}
-		Component::mousePressed(e);
+        //ComponentContainer MousePressed Handling
+        bool isContained(false);
+        for(Int32 i(getMFChildren()->size()-1) ; i>=0 ; --i)
+        {
+            isContained = getChildren(i)->isContained(e->getLocation(), true);
+            checkMouseEnterExit(e,e->getLocation(),getChildren(i),isContained,e->getViewport());
+            if(isContained)
+            {
+                takeFocus();
+                if(!getChildren(i)->getType().isDerivedFrom(ComponentContainer::getClassType()))
+                {
+                    getChildren(i)->takeFocus();
+                }
+                getChildren(i)->mousePressed(e);
+                break;
+            }
+        }
+        Component::mousePressed(e);
     }
 }
 
-void InternalWindow::mouseReleased(const MouseEventPtr e)
+void InternalWindow::mouseReleased(const MouseEventUnrecPtr e)
 {
     if(!getLockInput())
     {
-        if(getMenuBar() != NullFC)
+        if(getMenuBar() != NULL)
         {
-	        bool isContained;
+            bool isContained;
             isContained = getMenuBar()->isContained(e->getLocation(), true);
-		    checkMouseEnterExit(e,e->getLocation(),getMenuBar(),isContained,e->getViewport());
-		    if(isContained)
-		    {
-			    getMenuBar()->mouseReleased(e);
+            checkMouseEnterExit(e,e->getLocation(),getMenuBar(),isContained,e->getViewport());
+            if(isContained)
+            {
+                getMenuBar()->mouseReleased(e);
                 Component::mouseReleased(e);
-			    return;
-		    }
+                return;
+            }
         }
-        if(getTitlebar() != NullFC)
+        if(getTitlebar() != NULL)
         {
-	        bool isContained;
+            bool isContained;
             isContained = getTitlebar()->isContained(e->getLocation(), true);
-		    checkMouseEnterExit(e,e->getLocation(),getTitlebar(),isContained,e->getViewport());
-		    if(isContained)
-		    {
-			    getTitlebar()->mouseReleased(e);
+            checkMouseEnterExit(e,e->getLocation(),getTitlebar(),isContained,e->getViewport());
+            if(isContained)
+            {
+                getTitlebar()->mouseReleased(e);
                 Component::mouseReleased(e);
-			    return;
-		    }
+                return;
+            }
         }
-        Container::mouseReleased(e);
+        ComponentContainer::mouseReleased(e);
     }
 }
 
 void InternalWindow::getTitlebarBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
-	if(getDrawDecorations() && getDrawTitlebar() && getDrawnBorder()->getType().isDerivedFrom(WindowBorder::getClassType()))
-	{
-		WindowBorder::Ptr::dcast(getDrawnBorder())->getTitlebarBounds(0, 0, getSize().x(), getSize().y(), TopLeft, BottomRight);
-	}
-	else
-	{
-		TopLeft.setValues(0,0);
-		BottomRight.setValues(0,0);
-	}
+    if(getDrawDecorations() && getDrawTitlebar() && getDrawnBorder()->getType().isDerivedFrom(WindowBorder::getClassType()))
+    {
+        dynamic_pointer_cast<WindowBorder>(getDrawnBorder())->getTitlebarBounds(0, 0, getSize().x(), getSize().y(), TopLeft, BottomRight);
+    }
+    else
+    {
+        TopLeft.setValues(0,0);
+        BottomRight.setValues(0,0);
+    }
 }
 
 InternalWindow::WindowArea InternalWindow::getCursurArea(const Pnt2f& DrawingSurfaceLocation) const
 {
-	Pnt2f LocationInWindow(DrawingSurfaceToComponent(DrawingSurfaceLocation, InternalWindowPtr(this)));
-	if(LocationInWindow.x() < 0 ||
-	   LocationInWindow.x() > getSize().x() ||
-	   LocationInWindow.y() < 0 ||
-	   LocationInWindow.y() > getSize().y())
-	{
-		return WINDOW_OUTSIDE;
-	}
-	else
-	{
-		if(getDrawDecorations())
-		{
-			Pnt2f TitlebarTopLeft, TitlebarBottomRight;
-			getTitlebarBounds(TitlebarTopLeft, TitlebarBottomRight);
-			//Borders
-			if(LocationInWindow.x() < getResizeModifyCursorWidth() || 
-				LocationInWindow.y() < getResizeModifyCursorWidth() ||
-				LocationInWindow.x() > (getSize().x() - getResizeModifyCursorWidth()) || 
-				LocationInWindow.y() > (getSize().y() - getResizeModifyCursorWidth()))
-			{
-				//Top Left
-				if(LocationInWindow.x() >= 0 &&
-				   LocationInWindow.x() < getResizeModifyCursorWidth() &&
-				   LocationInWindow.y() >= 0 &&
-				   LocationInWindow.y() < getResizeModifyCursorWidth())
-				{
-					return WINDOW_TOP_LEFT_BORDER;
-				}
-				//Bottom Right
-				else if(LocationInWindow.x() >= getSize().x() - getResizeModifyCursorWidth() &&
-				   LocationInWindow.x() < getSize().x() &&
-				   LocationInWindow.y() >= getSize().y() - getResizeModifyCursorWidth() &&
-				   LocationInWindow.y() < getSize().y())
-				{
-					return WINDOW_BOTTOM_RIGHT_BORDER;
-				}
-				//Top Right
-				else if(LocationInWindow.x() >= getSize().x() - getResizeModifyCursorWidth() &&
-				   LocationInWindow.x() < getSize().x() &&
-				   LocationInWindow.y() >= 0 &&
-				   LocationInWindow.y() < getResizeModifyCursorWidth())
-				{
-					return WINDOW_TOP_RIGHT_BORDER;
-				}
-				//Bottom Left
-				else if(LocationInWindow.x() >= 0 &&
-				   LocationInWindow.x() < getResizeModifyCursorWidth() &&
-				   LocationInWindow.y() >= getSize().y() - getResizeModifyCursorWidth() &&
-				   LocationInWindow.y() < getSize().y())
-				{
-					return WINDOW_BOTTOM_LEFT_BORDER;
-				}
-				//Left
-				else if(LocationInWindow.x() >= 0 &&
-					   LocationInWindow.x() < getResizeModifyCursorWidth() &&
-					   LocationInWindow.y() >= getResizeModifyCursorWidth() &&
-					   LocationInWindow.y() < getSize().y() - getResizeModifyCursorWidth())
-				{
-					return WINDOW_LEFT_BORDER;
-				}
-				//Right
-				else if(LocationInWindow.x() >= getSize().x() - getResizeModifyCursorWidth() &&
-					   LocationInWindow.x() < getSize().x() &&
-					   LocationInWindow.y() >= getResizeModifyCursorWidth() &&
-					   LocationInWindow.y() < getSize().y() - getResizeModifyCursorWidth())
-				{
-					return WINDOW_RIGHT_BORDER;
-				}
-				//Top
-				else if(LocationInWindow.x() >= getResizeModifyCursorWidth() &&
-					   LocationInWindow.x() < getSize().x() - getResizeModifyCursorWidth() &&
-					   LocationInWindow.y() >= 0 &&
-					   LocationInWindow.y() < getResizeModifyCursorWidth())
-				{
-					return WINDOW_TOP_BORDER;
-				}
-				//Bottom
-				else if(
-					   (LocationInWindow.x() >= getResizeModifyCursorWidth() &&
-					   LocationInWindow.x() < getSize().x() - getResizeModifyCursorWidth() &&
-					   LocationInWindow.y() >= getSize().y() - getResizeModifyCursorWidth() &&
-					   LocationInWindow.y() < getSize().y()))
-				{
-					return WINDOW_BOTTOM_BORDER;
-				}
-			}
-			//Title bar
-			else if(getDrawTitlebar() && isContainedBounds(LocationInWindow, TitlebarTopLeft, TitlebarBottomRight))
-			{
-				return WINDOW_TITLE_BAR;
-			}
-			//Main Panel
-			else
-			{
-				return WINDOW_MAIN_PANEL;
-			}
-		}
-		else
-		{
-			return WINDOW_MAIN_PANEL;
-		}
-	}
+    Pnt2f LocationInWindow(DrawingSurfaceToComponent(DrawingSurfaceLocation, this));
+    if(LocationInWindow.x() < 0 ||
+       LocationInWindow.x() > getSize().x() ||
+       LocationInWindow.y() < 0 ||
+       LocationInWindow.y() > getSize().y())
+    {
+        return WINDOW_OUTSIDE;
+    }
+    else
+    {
+        if(getDrawDecorations())
+        {
+            Pnt2f TitlebarTopLeft, TitlebarBottomRight;
+            getTitlebarBounds(TitlebarTopLeft, TitlebarBottomRight);
+            //Borders
+            if(LocationInWindow.x() < getResizeModifyCursorWidth() || 
+               LocationInWindow.y() < getResizeModifyCursorWidth() ||
+               LocationInWindow.x() > (getSize().x() - getResizeModifyCursorWidth()) || 
+               LocationInWindow.y() > (getSize().y() - getResizeModifyCursorWidth()))
+            {
+                //Top Left
+                if(LocationInWindow.x() >= 0 &&
+                   LocationInWindow.x() < getResizeModifyCursorWidth() &&
+                   LocationInWindow.y() >= 0 &&
+                   LocationInWindow.y() < getResizeModifyCursorWidth())
+                {
+                    return WINDOW_TOP_LEFT_BORDER;
+                }
+                //Bottom Right
+                else if(LocationInWindow.x() >= getSize().x() - getResizeModifyCursorWidth() &&
+                        LocationInWindow.x() < getSize().x() &&
+                        LocationInWindow.y() >= getSize().y() - getResizeModifyCursorWidth() &&
+                        LocationInWindow.y() < getSize().y())
+                {
+                    return WINDOW_BOTTOM_RIGHT_BORDER;
+                }
+                //Top Right
+                else if(LocationInWindow.x() >= getSize().x() - getResizeModifyCursorWidth() &&
+                        LocationInWindow.x() < getSize().x() &&
+                        LocationInWindow.y() >= 0 &&
+                        LocationInWindow.y() < getResizeModifyCursorWidth())
+                {
+                    return WINDOW_TOP_RIGHT_BORDER;
+                }
+                //Bottom Left
+                else if(LocationInWindow.x() >= 0 &&
+                        LocationInWindow.x() < getResizeModifyCursorWidth() &&
+                        LocationInWindow.y() >= getSize().y() - getResizeModifyCursorWidth() &&
+                        LocationInWindow.y() < getSize().y())
+                {
+                    return WINDOW_BOTTOM_LEFT_BORDER;
+                }
+                //Left
+                else if(LocationInWindow.x() >= 0 &&
+                        LocationInWindow.x() < getResizeModifyCursorWidth() &&
+                        LocationInWindow.y() >= getResizeModifyCursorWidth() &&
+                        LocationInWindow.y() < getSize().y() - getResizeModifyCursorWidth())
+                {
+                    return WINDOW_LEFT_BORDER;
+                }
+                //Right
+                else if(LocationInWindow.x() >= getSize().x() - getResizeModifyCursorWidth() &&
+                        LocationInWindow.x() < getSize().x() &&
+                        LocationInWindow.y() >= getResizeModifyCursorWidth() &&
+                        LocationInWindow.y() < getSize().y() - getResizeModifyCursorWidth())
+                {
+                    return WINDOW_RIGHT_BORDER;
+                }
+                //Top
+                else if(LocationInWindow.x() >= getResizeModifyCursorWidth() &&
+                        LocationInWindow.x() < getSize().x() - getResizeModifyCursorWidth() &&
+                        LocationInWindow.y() >= 0 &&
+                        LocationInWindow.y() < getResizeModifyCursorWidth())
+                {
+                    return WINDOW_TOP_BORDER;
+                }
+                //Bottom
+                else if(
+                        (LocationInWindow.x() >= getResizeModifyCursorWidth() &&
+                         LocationInWindow.x() < getSize().x() - getResizeModifyCursorWidth() &&
+                         LocationInWindow.y() >= getSize().y() - getResizeModifyCursorWidth() &&
+                         LocationInWindow.y() < getSize().y()))
+                {
+                    return WINDOW_BOTTOM_BORDER;
+                }
+            }
+            //Title bar
+            else if(getDrawTitlebar() && isContainedBounds(LocationInWindow, TitlebarTopLeft, TitlebarBottomRight))
+            {
+                return WINDOW_TITLE_BAR;
+            }
+            //Main Panel
+            else
+            {
+                return WINDOW_MAIN_PANEL;
+            }
+        }
+        else
+        {
+            return WINDOW_MAIN_PANEL;
+        }
+    }
 }
 
-void InternalWindow::mouseMoved(const MouseEventPtr e)
+void InternalWindow::mouseMoved(const MouseEventUnrecPtr e)
 {
 
-    if(getMenuBar() != NullFC)
+    if(getMenuBar() != NULL)
     {
-	    bool isContained;
+        bool isContained;
         isContained = getMenuBar()->isContained(e->getLocation(), true);
-		checkMouseEnterExit(e,e->getLocation(),getMenuBar(),isContained,e->getViewport());
-		if(isContained)
-		{
-			getMenuBar()->mouseMoved(e);
+        checkMouseEnterExit(e,e->getLocation(),getMenuBar(),isContained,e->getViewport());
+        if(isContained)
+        {
+            getMenuBar()->mouseMoved(e);
             Component::mouseMoved(e);
-			return;
-		}
+            return;
+        }
     }
-    if(getTitlebar() != NullFC)
+    if(getTitlebar() != NULL)
     {
-	    bool isContained;
+        bool isContained;
         isContained = getTitlebar()->isContained(e->getLocation(), true);
-		checkMouseEnterExit(e,e->getLocation(),getTitlebar(),isContained,e->getViewport());
-		if(isContained)
-		{
-			getTitlebar()->mouseMoved(e);
+        checkMouseEnterExit(e,e->getLocation(),getTitlebar(),isContained,e->getViewport());
+        if(isContained)
+        {
+            getTitlebar()->mouseMoved(e);
             Component::mouseMoved(e);
-			return;
-		}
+            return;
+        }
     }
     if(!getLockInput())
     {
-        Container::mouseMoved(e);
+        ComponentContainer::mouseMoved(e);
     }
 }
 
@@ -650,128 +625,126 @@ UInt32 InternalWindow::queryCursor(const Pnt2f& CursorLoc) const
 {
     if(!getLockInput() && getResizable())
     {
-		//Check if the Mouse is whithin the resize border width
-		WindowArea TheArea(getCursurArea(CursorLoc));
-		switch(TheArea)
-		{
-		case WINDOW_LEFT_BORDER:
-		case WINDOW_RIGHT_BORDER:
-			return WindowEventProducer::CURSOR_RESIZE_W_TO_E;
-			break;
+        //Check if the Mouse is whithin the resize border width
+        WindowArea TheArea(getCursurArea(CursorLoc));
+        switch(TheArea)
+        {
+            case WINDOW_LEFT_BORDER:
+            case WINDOW_RIGHT_BORDER:
+                return WindowEventProducer::CURSOR_RESIZE_W_TO_E;
+                break;
 
-		case WINDOW_TOP_BORDER:
-		case WINDOW_BOTTOM_BORDER:
-			return WindowEventProducer::CURSOR_RESIZE_N_TO_S;
-			break;
-			
-		case WINDOW_TOP_LEFT_BORDER:
-		case WINDOW_BOTTOM_RIGHT_BORDER:
-			return WindowEventProducer::CURSOR_RESIZE_NW_TO_SE;
-			break;
-			
-		case WINDOW_TOP_RIGHT_BORDER:
-		case WINDOW_BOTTOM_LEFT_BORDER:
-			return WindowEventProducer::CURSOR_RESIZE_SW_TO_NE;
-			break;
+            case WINDOW_TOP_BORDER:
+            case WINDOW_BOTTOM_BORDER:
+                return WindowEventProducer::CURSOR_RESIZE_N_TO_S;
+                break;
 
-		case WINDOW_OUTSIDE:
-		case WINDOW_MAIN_PANEL:
-		case WINDOW_TITLE_BAR:
-			return WindowEventProducer::CURSOR_POINTER;
-			break;
-		}
+            case WINDOW_TOP_LEFT_BORDER:
+            case WINDOW_BOTTOM_RIGHT_BORDER:
+                return WindowEventProducer::CURSOR_RESIZE_NW_TO_SE;
+                break;
+
+            case WINDOW_TOP_RIGHT_BORDER:
+            case WINDOW_BOTTOM_LEFT_BORDER:
+                return WindowEventProducer::CURSOR_RESIZE_SW_TO_NE;
+                break;
+
+            case WINDOW_OUTSIDE:
+            case WINDOW_MAIN_PANEL:
+            case WINDOW_TITLE_BAR:
+                return WindowEventProducer::CURSOR_POINTER;
+                break;
+        }
     }
 
     return Inherited::queryCursor(CursorLoc);
 }
 
-void InternalWindow::mouseDragged(const MouseEventPtr e)
+void InternalWindow::mouseDragged(const MouseEventUnrecPtr e)
 {
-    if(getMenuBar() != NullFC)
+    if(getMenuBar() != NULL)
     {
-	    bool isContained;
+        bool isContained;
         isContained = getMenuBar()->isContained(e->getLocation(), true);
-		checkMouseEnterExit(e,e->getLocation(),getMenuBar(),isContained,e->getViewport());
-		if(isContained)
-		{
-			getMenuBar()->mouseDragged(e);
+        checkMouseEnterExit(e,e->getLocation(),getMenuBar(),isContained,e->getViewport());
+        if(isContained)
+        {
+            getMenuBar()->mouseDragged(e);
             Component::mouseDragged(e);
-			return;
-		}
+            return;
+        }
     }
-    if(getTitlebar() != NullFC)
+    if(getTitlebar() != NULL)
     {
-	    bool isContained;
+        bool isContained;
         isContained = getTitlebar()->isContained(e->getLocation(), true);
-		checkMouseEnterExit(e,e->getLocation(),getTitlebar(),isContained,e->getViewport());
-		if(isContained)
-		{
-			getTitlebar()->mouseDragged(e);
+        checkMouseEnterExit(e,e->getLocation(),getTitlebar(),isContained,e->getViewport());
+        if(isContained)
+        {
+            getTitlebar()->mouseDragged(e);
             Component::mouseDragged(e);
-			return;
-		}
+            return;
+        }
     }
     if(!getLockInput())
     {
-        Container::mouseDragged(e);
+        ComponentContainer::mouseDragged(e);
     }
 }
 
-void InternalWindow::mouseWheelMoved(const MouseWheelEventPtr e)
+void InternalWindow::mouseWheelMoved(const MouseWheelEventUnrecPtr e)
 {
     if(!getLockInput())
     {
-        Container::mouseWheelMoved(e);
+        ComponentContainer::mouseWheelMoved(e);
     }
 }
 
-void InternalWindow::drawInternal(const GraphicsPtr TheGraphics, Real32 Opacity) const
+void InternalWindow::drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opacity) const
 {
     Inherited::drawInternal(TheGraphics, Opacity);
 
     //If I have an active TitleBar then draw it
-    if(getDrawDecorations() && getDrawTitlebar() && getTitlebar() != NullFC)
+    if(getDrawDecorations() && getDrawTitlebar() && getTitlebar() != NULL)
     {
         getTitlebar()->draw(TheGraphics, Opacity*getOpacity());
     }
 
     //If I have a MenuBar then Draw it
-    if(getMenuBar() != NullFC)
+    if(getMenuBar() != NULL)
     {
         getMenuBar()->draw(TheGraphics, Opacity*getOpacity());
     }
 }
 
-void InternalWindow::drawUnclipped(const GraphicsPtr TheGraphics, Real32 Opacity) const
+void InternalWindow::drawUnclipped(const GraphicsWeakPtr TheGraphics, Real32 Opacity) const
 {
     Inherited::drawUnclipped(TheGraphics, Opacity);
-        
+
     //If I have an active tooltip then draw it
-    if(getActiveToolTip() != NullFC)
+    if(getActiveToolTip() != NULL)
     {
         getActiveToolTip()->draw(TheGraphics, Opacity*getOpacity());
     }
-    
+
     //If I have an active popupMenu then draw it
-    for(UInt32 i(0) ; i<getActivePopupMenus().size() ; ++i)
+    for(UInt32 i(0) ; i<getMFActivePopupMenus()->size() ; ++i)
     {
-        getActivePopupMenus()[i]->draw(TheGraphics, Opacity*getOpacity());
+        getActivePopupMenus(i)->draw(TheGraphics, Opacity*getOpacity());
     }
 }
 
 void InternalWindow::destroyPopupMenu(void)
 {
-    if(getActivePopupMenus().size() > 0)
+    if(getMFActivePopupMenus()->size() > 0)
     {
-        for(UInt32 i(0) ; i<getActivePopupMenus().size() ; ++i)
+        for(UInt32 i(0) ; i<getMFActivePopupMenus()->size() ; ++i)
         {
-            getActivePopupMenus()[i]->cancel();
+            getActivePopupMenus(i)->cancel();
         }
-        
-        beginEditCP(InternalWindowPtr(this), ActivePopupMenusFieldMask | LockInputFieldMask);
-            getActivePopupMenus().clear();
-            setLockInput(false);
-        endEditCP(InternalWindowPtr(this), ActivePopupMenusFieldMask | LockInputFieldMask);
+
+        clearActivePopupMenus();
+        setLockInput(false);
 
         _PopupMenuInteractionListener.disconnect();
     }
@@ -790,10 +763,10 @@ void InternalWindow::getMenuBarBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
     //Get Insets Bounds
     Pnt2f InsetsTopLeft, InsetsBottomRight;
-    Container::getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
+    ComponentContainer::getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
 
     TopLeft = InsetsTopLeft;
-    if(getMenuBar() == NullFC)
+    if(getMenuBar() == NULL)
     {
         BottomRight = TopLeft;
     }
@@ -809,10 +782,10 @@ void InternalWindow::getContentPaneBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) co
 {
     //Get Insets Bounds
     Pnt2f InsetsTopLeft, InsetsBottomRight;
-    Container::getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
+    ComponentContainer::getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
 
     BottomRight = InsetsBottomRight;
-    if(getMenuBar() == NullFC)
+    if(getMenuBar() == NULL)
     {
         TopLeft = InsetsTopLeft;
     }
@@ -832,37 +805,33 @@ void InternalWindow::getInsideInsetsBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) c
 void InternalWindow::updateLayout(void)
 {
     //If I have a MenuBar Update it's layout
-    if(getMenuBar() != NullFC)
+    if(getMenuBar() != NULL)
     {
         Pnt2f MenuTopLeft, MenuBottomRight;
         getMenuBar()->updateLayout();
         getMenuBarBounds(MenuTopLeft, MenuBottomRight);
-        beginEditCP(getMenuBar(), MenuBar::PositionFieldMask | MenuBar::SizeFieldMask);
-			getMenuBar()->setPosition(MenuTopLeft);
-			getMenuBar()->setSize(Vec2f( MenuBottomRight.x() - MenuTopLeft.x(), getMenuBar()->getPreferredSize().y()));
-        endEditCP(getMenuBar(), MenuBar::PositionFieldMask | MenuBar::SizeFieldMask);
+        getMenuBar()->setPosition(MenuTopLeft);
+        getMenuBar()->setSize(Vec2f( MenuBottomRight.x() - MenuTopLeft.x(), getMenuBar()->getPreferredSize().y()));
     }
 
     //If I have a Titlebar then update it's layout
-    if(getDrawDecorations() && getDrawTitlebar() && getTitlebar() != NullFC)
+    if(getDrawDecorations() && getDrawTitlebar() && getTitlebar() != NULL)
     {
-		Pnt2f TitlebarTopLeft, TitlebarBottomRight;
-		getTitlebarBounds(TitlebarTopLeft, TitlebarBottomRight);
-		beginEditCP(getTitlebar(), Titlebar::PositionFieldMask | Titlebar::SizeFieldMask);
-			getTitlebar()->setPosition(TitlebarTopLeft);
-			getTitlebar()->setSize(Vec2f( TitlebarBottomRight.x() - TitlebarTopLeft.x(), getTitlebar()->getPreferredSize().y()));
-		endEditCP(getTitlebar(), Titlebar::PositionFieldMask | Titlebar::SizeFieldMask);
+        Pnt2f TitlebarTopLeft, TitlebarBottomRight;
+        getTitlebarBounds(TitlebarTopLeft, TitlebarBottomRight);
+        getTitlebar()->setPosition(TitlebarTopLeft);
+        getTitlebar()->setSize(Vec2f( TitlebarBottomRight.x() - TitlebarTopLeft.x(), getTitlebar()->getPreferredSize().y()));
     }
 
-    Container::updateLayout();
+    ComponentContainer::updateLayout();
 }
 
 EventConnection InternalWindow::addKeyAccelerator(KeyEvent::Key TheKey, UInt32 Modifiers, KeyAcceleratorListenerPtr Listener)
 {
     _KeyAcceleratorMap[KeyEvent::getHashable(TheKey, Modifiers)] = Listener;
-   return EventConnection(
-       boost::bind(&InternalWindow::isKeyAcceleratorAttached, this, TheKey, Modifiers),
-       boost::bind(&InternalWindow::removeKeyAccelerator, this, TheKey, Modifiers));
+    return EventConnection(
+                           boost::bind(&InternalWindow::isKeyAcceleratorAttached, this, TheKey, Modifiers),
+                           boost::bind(&InternalWindow::removeKeyAccelerator, this, TheKey, Modifiers));
 }
 
 void InternalWindow::removeKeyAccelerator(KeyEvent::Key TheKey, UInt32 Modifiers)
@@ -878,55 +847,51 @@ void InternalWindow::removeKeyAccelerator(KeyEvent::Key TheKey, UInt32 Modifiers
 
 InternalWindow::InternalWindow(void) :
     Inherited(),
-    _PopupMenuInteractionListener(InternalWindowPtr(this)),
-	_TitlebarStartDragListener(InternalWindowPtr(this)),
-	_TitlebarDraggedListener(InternalWindowPtr(this)),
-	_BorderDraggedListener(InternalWindowPtr(this)),
-	_CloseButtonListener(InternalWindowPtr(this)),
-	_MaximizeButtonListener(InternalWindowPtr(this)),
-	_IconifyButtonListener(InternalWindowPtr(this))
+    _PopupMenuInteractionListener(this),
+	_TitlebarStartDragListener(this),
+	_TitlebarDraggedListener(this),
+	_BorderDraggedListener(this),
+	_CloseButtonListener(this),
+	_MaximizeButtonListener(this),
+	_IconifyButtonListener(this)
 {
 }
 
 InternalWindow::InternalWindow(const InternalWindow &source) :
     Inherited(source),
-    _PopupMenuInteractionListener(InternalWindowPtr(this)),
-	_TitlebarStartDragListener(InternalWindowPtr(this)),
-	_TitlebarDraggedListener(InternalWindowPtr(this)),
-	_BorderDraggedListener(InternalWindowPtr(this)),
-	_CloseButtonListener(InternalWindowPtr(this)),
-	_MaximizeButtonListener(InternalWindowPtr(this)),
-	_IconifyButtonListener(InternalWindowPtr(this))
+    _PopupMenuInteractionListener(this),
+    _TitlebarStartDragListener(this),
+    _TitlebarDraggedListener(this),
+    _BorderDraggedListener(this),
+    _CloseButtonListener(this),
+    _MaximizeButtonListener(this),
+    _IconifyButtonListener(this)
+
 {
-    if(getTitlebar() != NullFC)
+    if(getTitlebar() != NULL)
     {
-        beginEditCP(InternalWindowPtr(this), TitlebarFieldMask);
-			setTitlebar(Titlebar::Ptr::dcast(getTitlebar()->shallowCopy()));
-        endEditCP(InternalWindowPtr(this), TitlebarFieldMask);
+        FieldContainerUnrecPtr FCCopy(getTitlebar()->shallowCopy());
+        setTitlebar(dynamic_pointer_cast<Titlebar>(FCCopy));
     }
-    if(getBorder() != NullFC)
+    if(getBorder() != NULL)
     {
-        beginEditCP(InternalWindowPtr(this), BorderFieldMask);
-			setBorder(Border::Ptr::dcast(getBorder()->shallowCopy()));
-        endEditCP(InternalWindowPtr(this), BorderFieldMask);
+        FieldContainerUnrecPtr FCCopy(getBorder()->shallowCopy());
+        setBorder(dynamic_pointer_cast<Border>(FCCopy));
     }
-    if(getDisabledBorder() != NullFC)
+    if(getDisabledBorder() != NULL)
     {
-        beginEditCP(InternalWindowPtr(this), DisabledBorderFieldMask);
-			setDisabledBorder(Border::Ptr::dcast(getDisabledBorder()->shallowCopy()));
-        endEditCP(InternalWindowPtr(this), DisabledBorderFieldMask);
+        FieldContainerUnrecPtr FCCopy(getDisabledBorder()->shallowCopy());
+        setDisabledBorder(dynamic_pointer_cast<Border>(FCCopy));
     }
-    if(getFocusedBorder() != NullFC)
+    if(getFocusedBorder() != NULL)
     {
-        beginEditCP(InternalWindowPtr(this), FocusedBorderFieldMask);
-			setFocusedBorder(Border::Ptr::dcast(getFocusedBorder()->shallowCopy()));
-        endEditCP(InternalWindowPtr(this), FocusedBorderFieldMask);
+        FieldContainerUnrecPtr FCCopy(getFocusedBorder()->shallowCopy());
+        setFocusedBorder(dynamic_pointer_cast<Border>(FCCopy));
     }
-    if(getRolloverBorder() != NullFC)
+    if(getRolloverBorder() != NULL)
     {
-        beginEditCP(InternalWindowPtr(this), RolloverBorderFieldMask);
-			setRolloverBorder(Border::Ptr::dcast(getRolloverBorder()->shallowCopy()));
-        endEditCP(InternalWindowPtr(this), RolloverBorderFieldMask);
+        FieldContainerUnrecPtr FCCopy(getRolloverBorder()->shallowCopy());
+        setRolloverBorder(dynamic_pointer_cast<Border>(FCCopy));
     }
 }
 
@@ -936,49 +901,42 @@ InternalWindow::~InternalWindow(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void InternalWindow::changed(BitVector whichField, UInt32 origin)
+void InternalWindow::changed(ConstFieldMaskArg whichField, 
+                             UInt32            origin,
+                             BitVector         details)
 {
-	
-	if( ((whichField & FocusedFieldMask) ||
-		(whichField & TitlebarFieldMask))&&
-		getTitlebar() != NullFC)
-	{
-		beginEditCP(getTitlebar(), Titlebar::EnabledFieldMask);
-			getTitlebar()->setEnabled(getFocused());
-		endEditCP(getTitlebar(), Titlebar::EnabledFieldMask);
-	}
+    if( ((whichField & FocusedFieldMask) ||
+         (whichField & TitlebarFieldMask))&&
+        getTitlebar() != NULL)
+    {
+        getTitlebar()->setEnabled(getFocused());
+    }
 
     if( (whichField & ActiveToolTipFieldMask) &&
-        getActiveToolTip() != NullFC)
+        getActiveToolTip() != NULL)
     {
         getActiveToolTip()->updateClipBounds();
     }
-    
+
     if( (whichField & ActivePopupMenusFieldMask) &&
-        getActivePopupMenus().size() > 0)
+        getMFActivePopupMenus()->size() > 0)
     {
-        for(UInt32 i(0) ; i<getActivePopupMenus().size() ; ++i)
+        for(UInt32 i(0) ; i<getMFActivePopupMenus()->size() ; ++i)
         {
-            beginEditCP(getActivePopupMenus()[i], PopupMenu::ParentContainerFieldMask | PopupMenu::ParentWindowFieldMask);
-                getActivePopupMenus()[i]->setParentContainer(ContainerPtr(this));
-                getActivePopupMenus()[i]->setParentWindow(InternalWindowPtr(this));
-            endEditCP(getActivePopupMenus()[i], PopupMenu::ParentContainerFieldMask | PopupMenu::ParentWindowFieldMask);
+            getActivePopupMenus(i)->setParentContainer(ComponentContainerRefPtr(this));
+            getActivePopupMenus(i)->setParentWindow(InternalWindowRefPtr(this));
         }
-        
+
         getDrawingSurface()->getEventProducer()->addMouseListener(&_PopupMenuInteractionListener);
         getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_PopupMenuInteractionListener);
         getDrawingSurface()->getEventProducer()->addKeyListener(&_PopupMenuInteractionListener);
-        beginEditCP(InternalWindowPtr(this), LockInputFieldMask);
-            setLockInput(true);
-        endEditCP(InternalWindowPtr(this), LockInputFieldMask);
+        setLockInput(true);
     }
 
-    if( (whichField & MenuBarFieldMask) && getMenuBar() != NullFC)
+    if( (whichField & MenuBarFieldMask) && getMenuBar() != NULL)
     {
-		beginEditCP(getMenuBar(), MenuBar::ParentContainerFieldMask | MenuBar::ParentWindowFieldMask);
-            getMenuBar()->setParentContainer(ContainerPtr(this));
-            getMenuBar()->setParentWindow(InternalWindowPtr(this));
-        endEditCP(getMenuBar(), MenuBar::ParentContainerFieldMask | MenuBar::ParentWindowFieldMask);
+        getMenuBar()->setParentContainer(ComponentContainerRefPtr(this));
+        getMenuBar()->setParentWindow(InternalWindowRefPtr(this));
     }
 
     if( (whichField & MenuBarFieldMask) || (whichField & TitlebarFieldMask))
@@ -986,188 +944,179 @@ void InternalWindow::changed(BitVector whichField, UInt32 origin)
         updateLayout();
     }
 
-	if( (whichField & TitleFieldMask) && getTitlebar() != NullFC)
-	{
-		getTitlebar()->setTitle(getTitle());
-	}
-	
-    if( (whichField & TitlebarFieldMask) && getTitlebar() != NullFC)
+    if( (whichField & TitleFieldMask) && getTitlebar() != NULL)
     {
-		beginEditCP(getTitlebar(), Panel::ParentContainerFieldMask | Panel::ParentWindowFieldMask);
-            getTitlebar()->setParentContainer(ContainerPtr(this));
-            getTitlebar()->setParentWindow(InternalWindowPtr(this));
-        endEditCP(getTitlebar(), Panel::ParentContainerFieldMask | Panel::ParentWindowFieldMask);
+        getTitlebar()->setTitle(getTitle());
     }
 
-	if((whichField & TitlebarFieldMask) ||
-	   (whichField & BorderFieldMask) ||
-	   (whichField & DisabledBorderFieldMask) ||
-	   (whichField & FocusedBorderFieldMask) ||
-	   (whichField & RolloverBorderFieldMask) ||
-	   (whichField & DrawTitlebarFieldMask))
-	{
-		TitlebarPtr TheTitlebar;
-		if(getDrawTitlebar())
-		{
-			TheTitlebar = getTitlebar();
-		}
-		else
-		{
-			TheTitlebar = NullFC;
-		}
+    if( (whichField & TitlebarFieldMask) && getTitlebar() != NULL)
+    {
+        getTitlebar()->setParentContainer(ComponentContainerRefPtr(this));
+        getTitlebar()->setParentWindow(InternalWindowRefPtr(this));
+    }
 
-		if(getBorder() != NullFC && getBorder()->getType().isDerivedFrom(WindowBorder::getClassType()))
-		{
-			WindowBorder::Ptr::dcast(getBorder())->setTitlebar(TheTitlebar);
-		}
-		if(getDisabledBorder() != NullFC && getDisabledBorder()->getType().isDerivedFrom(WindowBorder::getClassType()))
-		{
-			WindowBorder::Ptr::dcast(getDisabledBorder())->setTitlebar(TheTitlebar);
-		}
-		if(getFocusedBorder() != NullFC && getFocusedBorder()->getType().isDerivedFrom(WindowBorder::getClassType()))
-		{
-			WindowBorder::Ptr::dcast(getFocusedBorder())->setTitlebar(TheTitlebar);
-		}
-		if(getRolloverBorder() != NullFC && getRolloverBorder()->getType().isDerivedFrom(WindowBorder::getClassType()))
-		{
-			WindowBorder::Ptr::dcast(getRolloverBorder())->setTitlebar(TheTitlebar);
-		}
-	}
-	
+    if((whichField & TitlebarFieldMask) ||
+       (whichField & BorderFieldMask) ||
+       (whichField & DisabledBorderFieldMask) ||
+       (whichField & FocusedBorderFieldMask) ||
+       (whichField & RolloverBorderFieldMask) ||
+       (whichField & DrawTitlebarFieldMask))
+    {
+        TitlebarRefPtr TheTitlebar;
+        if(getDrawTitlebar())
+        {
+            TheTitlebar = getTitlebar();
+        }
+        else
+        {
+            TheTitlebar = NULL;
+        }
+
+        if(getBorder() != NULL && getBorder()->getType().isDerivedFrom(WindowBorder::getClassType()))
+        {
+            dynamic_cast<WindowBorder*>(getBorder())->setTitlebar(TheTitlebar);
+        }
+        if(getDisabledBorder() != NULL && getDisabledBorder()->getType().isDerivedFrom(WindowBorder::getClassType()))
+        {
+            dynamic_cast<WindowBorder*>(getDisabledBorder())->setTitlebar(TheTitlebar);
+        }
+        if(getFocusedBorder() != NULL && getFocusedBorder()->getType().isDerivedFrom(WindowBorder::getClassType()))
+        {
+            dynamic_cast<WindowBorder*>(getFocusedBorder())->setTitlebar(TheTitlebar);
+        }
+        if(getRolloverBorder() != NULL && getRolloverBorder()->getType().isDerivedFrom(WindowBorder::getClassType()))
+        {
+            dynamic_cast<WindowBorder*>(getRolloverBorder())->setTitlebar(TheTitlebar);
+        }
+    }
+
     if( whichField & ClipBoundsFieldMask)
-	{
-		if(getTitlebar() != NullFC)
-		{
-			getTitlebar()->updateClipBounds();
-		}
-	}
+    {
+        if(getTitlebar() != NULL)
+        {
+            getTitlebar()->updateClipBounds();
+        }
+    }
 
-	if( (whichField & TitlebarFieldMask) &&
-		getTitlebar() != NullFC)
-	{
-		if(getTitlebar()->getTitleLabel() != NullFC)
-		{
-			getTitlebar()->getTitleLabel()->addMouseListener(&_TitlebarStartDragListener);
-		}
-		if(getTitlebar()->getCloseButton() != NullFC)
-		{
-			getTitlebar()->getCloseButton()->addActionListener(&_CloseButtonListener);
-		}
-		if(getTitlebar()->getMaximizeButton() != NullFC)
-		{
-			getTitlebar()->getMaximizeButton()->addActionListener(&_MaximizeButtonListener);
-		}
-		if(getTitlebar()->getIconifyButton() != NullFC)
-		{
-			getTitlebar()->getIconifyButton()->addActionListener(&_IconifyButtonListener);
-		}
-	}
+    if( (whichField & TitlebarFieldMask) &&
+        getTitlebar() != NULL)
+    {
+        if(getTitlebar()->getTitleLabel() != NULL)
+        {
+            getTitlebar()->getTitleLabel()->addMouseListener(&_TitlebarStartDragListener);
+        }
+        if(getTitlebar()->getCloseButton() != NULL)
+        {
+            getTitlebar()->getCloseButton()->addActionListener(&_CloseButtonListener);
+        }
+        if(getTitlebar()->getMaximizeButton() != NULL)
+        {
+            getTitlebar()->getMaximizeButton()->addActionListener(&_MaximizeButtonListener);
+        }
+        if(getTitlebar()->getIconifyButton() != NULL)
+        {
+            getTitlebar()->getIconifyButton()->addActionListener(&_IconifyButtonListener);
+        }
+    }
 
-	if( (whichField & IconableFieldMask) &&
-		getTitlebar() != NullFC)
-	{
-		beginEditCP(getTitlebar(), Titlebar::DrawIconifyFieldMask);
-			getTitlebar()->setDrawIconify(getIconable());
-		endEditCP(getTitlebar(), Titlebar::DrawIconifyFieldMask);
-	}
-	if( (whichField & MaximizableFieldMask) &&
-		getTitlebar() != NullFC)
-	{
-		beginEditCP(getTitlebar(), Titlebar::DrawMaximizeFieldMask);
-			getTitlebar()->setDrawMaximize(getMaximizable());
-		endEditCP(getTitlebar(), Titlebar::DrawMaximizeFieldMask);
-	}
-	if( (whichField & ClosableFieldMask) &&
-		getTitlebar() != NullFC)
-	{
-		beginEditCP(getTitlebar(), Titlebar::DrawCloseFieldMask);
-			getTitlebar()->setDrawClose(getClosable());
-		endEditCP(getTitlebar(), Titlebar::DrawCloseFieldMask);
-	}
+    if( (whichField & IconableFieldMask) &&
+        getTitlebar() != NULL)
+    {
+        getTitlebar()->setDrawIconify(getIconable());
+    }
+    if( (whichField & MaximizableFieldMask) &&
+        getTitlebar() != NULL)
+    {
+        getTitlebar()->setDrawMaximize(getMaximizable());
+    }
+    if( (whichField & ClosableFieldMask) &&
+        getTitlebar() != NULL)
+    {
+        getTitlebar()->setDrawClose(getClosable());
+    }
 
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void InternalWindow::dump(      UInt32    , 
-                         const BitVector ) const
+void InternalWindow::dump(      UInt32    ,
+                                const BitVector ) const
 {
     SLOG << "Dump InternalWindow NI" << std::endl;
 }
 
-
-void InternalWindow::PopupMenuInteractionListener::mouseClicked(const MouseEventPtr e)
+void InternalWindow::PopupMenuInteractionListener::mouseClicked(const MouseEventUnrecPtr e)
 {
-    for(Int32 i(_InternalWindow->getActivePopupMenus().size()-1) ; i>=0 ; --i)
+    for(Int32 i(_InternalWindow->getMFActivePopupMenus()->size()-1) ; i>=0 ; --i)
     {
-        bool isContained = _InternalWindow->getActivePopupMenus()[i]->isContained(e->getLocation(), true);
-		_InternalWindow->checkMouseEnterExit(e,e->getLocation(),_InternalWindow->getActivePopupMenus()[i],isContained,e->getViewport());
-		if(isContained)
+        bool isContained = _InternalWindow->getActivePopupMenus(i)->isContained(e->getLocation(), true);
+        _InternalWindow->checkMouseEnterExit(e,e->getLocation(),_InternalWindow->getActivePopupMenus(i),isContained,e->getViewport());
+        if(isContained)
         {
-			_InternalWindow->getActivePopupMenus()[i]->mouseClicked(e);
+            _InternalWindow->getActivePopupMenus(i)->mouseClicked(e);
             return;
         }
     }
-	//_InternalWindow->destroyPopupMenu();
+    //_InternalWindow->destroyPopupMenu();
 }
 
-void InternalWindow::PopupMenuInteractionListener::mousePressed(const MouseEventPtr e)
+void InternalWindow::PopupMenuInteractionListener::mousePressed(const MouseEventUnrecPtr e)
 {
-    for(Int32 i(_InternalWindow->getActivePopupMenus().size()-1) ; i>=0 ; --i)
+    for(Int32 i(_InternalWindow->getMFActivePopupMenus()->size()-1) ; i>=0 ; --i)
     {
-        bool isContained = _InternalWindow->getActivePopupMenus()[i]->isContained(e->getLocation(), true);
-		_InternalWindow->checkMouseEnterExit(e,e->getLocation(),_InternalWindow->getActivePopupMenus()[i],isContained,e->getViewport());
-		if(isContained)
+        bool isContained = _InternalWindow->getActivePopupMenus(i)->isContained(e->getLocation(), true);
+        _InternalWindow->checkMouseEnterExit(e,e->getLocation(),_InternalWindow->getActivePopupMenus(i),isContained,e->getViewport());
+        if(isContained)
         {
-			_InternalWindow->getActivePopupMenus()[i]->mousePressed(e);
+            _InternalWindow->getActivePopupMenus(i)->mousePressed(e);
             return;
         }
     }
     _InternalWindow->destroyPopupMenu();
 }
 
-void InternalWindow::PopupMenuInteractionListener::mouseReleased(const MouseEventPtr e)
+void InternalWindow::PopupMenuInteractionListener::mouseReleased(const MouseEventUnrecPtr e)
 {
-    for(Int32 i(_InternalWindow->getActivePopupMenus().size()-1) ; i>=0 ; --i)
+    for(Int32 i(_InternalWindow->getMFActivePopupMenus()->size()-1) ; i>=0 ; --i)
     {
-        bool isContained = _InternalWindow->getActivePopupMenus()[i]->isContained(e->getLocation(), true);
-		_InternalWindow->checkMouseEnterExit(e,e->getLocation(),_InternalWindow->getActivePopupMenus()[i],isContained,e->getViewport());
-		if(isContained)
-		{
-			_InternalWindow->getActivePopupMenus()[i]->mouseReleased(e);
+        bool isContained = _InternalWindow->getActivePopupMenus(i)->isContained(e->getLocation(), true);
+        _InternalWindow->checkMouseEnterExit(e,e->getLocation(),_InternalWindow->getActivePopupMenus(i),isContained,e->getViewport());
+        if(isContained)
+        {
+            _InternalWindow->getActivePopupMenus(i)->mouseReleased(e);
             return;
-		}
+        }
     }
 }
 
-void InternalWindow::PopupMenuInteractionListener::mouseMoved(const MouseEventPtr e)
+void InternalWindow::PopupMenuInteractionListener::mouseMoved(const MouseEventUnrecPtr e)
 {
-    for(Int32 i(_InternalWindow->getActivePopupMenus().size()-1) ; i>=0 ; --i)
+    for(Int32 i(_InternalWindow->getMFActivePopupMenus()->size()-1) ; i>=0 ; --i)
     {
-        bool isContained = _InternalWindow->getActivePopupMenus()[i]->isContained(e->getLocation(), true);
-		_InternalWindow->checkMouseEnterExit(e,e->getLocation(),_InternalWindow->getActivePopupMenus()[i],isContained,e->getViewport());
-		if(isContained)
-		{
-			_InternalWindow->getActivePopupMenus()[i]->mouseMoved(e);
+        bool isContained = _InternalWindow->getActivePopupMenus(i)->isContained(e->getLocation(), true);
+        _InternalWindow->checkMouseEnterExit(e,e->getLocation(),_InternalWindow->getActivePopupMenus(i),isContained,e->getViewport());
+        if(isContained)
+        {
+            _InternalWindow->getActivePopupMenus(i)->mouseMoved(e);
             return;
-		}
+        }
     }
 }
 
-void InternalWindow::PopupMenuInteractionListener::mouseDragged(const MouseEventPtr e)
+void InternalWindow::PopupMenuInteractionListener::mouseDragged(const MouseEventUnrecPtr e)
 {
-    for(Int32 i(_InternalWindow->getActivePopupMenus().size()-1) ; i>=0 ; --i)
+    for(Int32 i(_InternalWindow->getMFActivePopupMenus()->size()-1) ; i>=0 ; --i)
     {
-        bool isContained = _InternalWindow->getActivePopupMenus()[i]->isContained(e->getLocation(), true);
-		_InternalWindow->checkMouseEnterExit(e,e->getLocation(),_InternalWindow->getActivePopupMenus()[i],isContained,e->getViewport());
-		if(isContained)
-		{
-			_InternalWindow->getActivePopupMenus()[i]->mouseDragged(e);
+        bool isContained = _InternalWindow->getActivePopupMenus(i)->isContained(e->getLocation(), true);
+        _InternalWindow->checkMouseEnterExit(e,e->getLocation(),_InternalWindow->getActivePopupMenus(i),isContained,e->getViewport());
+        if(isContained)
+        {
+            _InternalWindow->getActivePopupMenus(i)->mouseDragged(e);
             return;
-		}
+        }
     }
 }
 
-void InternalWindow::PopupMenuInteractionListener::keyPressed(const KeyEventPtr e)
+void InternalWindow::PopupMenuInteractionListener::keyPressed(const KeyEventUnrecPtr e)
 {
     if(e->getKey() == KeyEvent::KEY_ESCAPE)
     {
@@ -1175,15 +1124,15 @@ void InternalWindow::PopupMenuInteractionListener::keyPressed(const KeyEventPtr 
     }
     else if(e->getKey() == KeyEvent::KEY_UP)
     {
-        _InternalWindow->getActivePopupMenus().front()->setSelection( _InternalWindow->getActivePopupMenus().front()->getSelectionIndex() -1 );
+        _InternalWindow->getMFActivePopupMenus()->front()->setSelection( _InternalWindow->getMFActivePopupMenus()->front()->getSelectionIndex() -1 );
     }
     else if(e->getKey() == KeyEvent::KEY_DOWN)
     {
-        _InternalWindow->getActivePopupMenus().front()->setSelection( _InternalWindow->getActivePopupMenus().front()->getSelectionIndex() +1 );
+        _InternalWindow->getMFActivePopupMenus()->front()->setSelection( _InternalWindow->getMFActivePopupMenus()->front()->getSelectionIndex() +1 );
     }
-    else if(e->getKey() == KeyEvent::KEY_ENTER && _InternalWindow->getActivePopupMenus().front()->getItem(_InternalWindow->getActivePopupMenus().front()->getSelectionIndex()) != NullFC)
+    else if(e->getKey() == KeyEvent::KEY_ENTER && _InternalWindow->getMFActivePopupMenus()->front()->getItem(_InternalWindow->getMFActivePopupMenus()->front()->getSelectionIndex()) != NULL)
     {
-        _InternalWindow->getActivePopupMenus().front()->getItem(_InternalWindow->getActivePopupMenus().front()->getSelectionIndex())->activate();
+        _InternalWindow->getMFActivePopupMenus()->front()->getItem(_InternalWindow->getMFActivePopupMenus()->front()->getSelectionIndex())->activate();
         _InternalWindow->destroyPopupMenu();
     }
 }
@@ -1191,7 +1140,7 @@ void InternalWindow::PopupMenuInteractionListener::keyPressed(const KeyEventPtr 
 void InternalWindow::PopupMenuInteractionListener::disconnect(void)
 {
     //Remove the listener
-    if(_InternalWindow->getDrawingSurface()->getEventProducer() != NullFC)
+    if(_InternalWindow->getDrawingSurface()->getEventProducer() != NULL)
     {
         _InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
         _InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
@@ -1199,198 +1148,157 @@ void InternalWindow::PopupMenuInteractionListener::disconnect(void)
     }
 }
 
-void InternalWindow::TitlebarStartDragListener::mousePressed(const MouseEventPtr e)
+void InternalWindow::TitlebarStartDragListener::mousePressed(const MouseEventUnrecPtr e)
 {
-	_InternalWindow->_TitlebarDraggedListener.setWindowStartPosition(_InternalWindow->getPosition());
-	_InternalWindow->_TitlebarDraggedListener.setMouseStartPosition(e->getLocation());
+    _InternalWindow->_TitlebarDraggedListener.setWindowStartPosition(_InternalWindow->getPosition());
+    _InternalWindow->_TitlebarDraggedListener.setMouseStartPosition(e->getLocation());
 
-	_InternalWindow->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&(_InternalWindow->_TitlebarDraggedListener));
-	_InternalWindow->getDrawingSurface()->getEventProducer()->addMouseListener(&(_InternalWindow->_TitlebarDraggedListener));
-	_InternalWindow->getDrawingSurface()->getEventProducer()->addKeyListener(&(_InternalWindow->_TitlebarDraggedListener));
+    _InternalWindow->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&(_InternalWindow->_TitlebarDraggedListener));
+    _InternalWindow->getDrawingSurface()->getEventProducer()->addMouseListener(&(_InternalWindow->_TitlebarDraggedListener));
+    _InternalWindow->getDrawingSurface()->getEventProducer()->addKeyListener(&(_InternalWindow->_TitlebarDraggedListener));
 }
 
-void InternalWindow::TitlebarDraggedListener::mouseReleased(const MouseEventPtr e)
+void InternalWindow::TitlebarDraggedListener::mouseReleased(const MouseEventUnrecPtr e)
 {
-	if(_InternalWindow->getDrawingSurface() != NullFC)
-	{
-		_InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_InternalWindow->_TitlebarDraggedListener));
-		_InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_InternalWindow->_TitlebarDraggedListener));
-		_InternalWindow->getDrawingSurface()->getEventProducer()->removeKeyListener(&(_InternalWindow->_TitlebarDraggedListener));
-		
-		beginEditCP(_InternalWindow, InternalWindow::LockInputFieldMask);
-			_InternalWindow->setLockInput(false);
-		endEditCP(_InternalWindow, InternalWindow::LockInputFieldMask);
-	}
+    if(_InternalWindow->getDrawingSurface() != NULL)
+    {
+        _InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_InternalWindow->_TitlebarDraggedListener));
+        _InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_InternalWindow->_TitlebarDraggedListener));
+        _InternalWindow->getDrawingSurface()->getEventProducer()->removeKeyListener(&(_InternalWindow->_TitlebarDraggedListener));
+
+        _InternalWindow->setLockInput(false);
+    }
 }
 
-void InternalWindow::TitlebarDraggedListener::mouseDragged(const MouseEventPtr e)
+void InternalWindow::TitlebarDraggedListener::mouseDragged(const MouseEventUnrecPtr e)
 {
-	beginEditCP(_InternalWindow, InternalWindow::PositionFieldMask);
-		_InternalWindow->setPosition( _WindowStartPosition - (_MouseStartPosition - e->getLocation()) );
-	endEditCP(_InternalWindow, InternalWindow::PositionFieldMask);
+    _InternalWindow->setPosition( _WindowStartPosition - (_MouseStartPosition - e->getLocation()) );
 }
 
-void InternalWindow::TitlebarDraggedListener::keyPressed(const KeyEventPtr e)
+void InternalWindow::TitlebarDraggedListener::keyPressed(const KeyEventUnrecPtr e)
 {
     if(e->getKey() == KeyEvent::KEY_ESCAPE)
     {
         disconnect();
 
-		//Reset the Window to it's original Position
-		beginEditCP(_InternalWindow, InternalWindow::PositionFieldMask);
-			_InternalWindow->setPosition(_WindowStartPosition);
-		endEditCP(_InternalWindow, InternalWindow::PositionFieldMask);
+        //Reset the Window to it's original Position
+        _InternalWindow->setPosition(_WindowStartPosition);
     }
 }
 
 void InternalWindow::TitlebarDraggedListener::disconnect(void)
 {
-	if(_InternalWindow->getParentWindow() != NullFC)
-	{
+    if(_InternalWindow->getParentWindow() != NULL)
+    {
         _InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_InternalWindow->_TitlebarDraggedListener));
         _InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_InternalWindow->_TitlebarDraggedListener));
         _InternalWindow->getDrawingSurface()->getEventProducer()->removeKeyListener(&(_InternalWindow->_TitlebarDraggedListener));
 
-        beginEditCP(_InternalWindow,InternalWindow::LockInputFieldMask);
-            _InternalWindow->setLockInput(false);
-        endEditCP(_InternalWindow, InternalWindow::LockInputFieldMask);
+        _InternalWindow->setLockInput(false);
     }
 }
 
 void InternalWindow::BorderDraggedListener::disconnect(void)
 {
-	if(_InternalWindow->getParentWindow() != NullFC)
-	{
-		_InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_InternalWindow->_BorderDraggedListener));
-		_InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_InternalWindow->_BorderDraggedListener));
-		_InternalWindow->getDrawingSurface()->getEventProducer()->removeKeyListener(&(_InternalWindow->_BorderDraggedListener));
-		
-		beginEditCP(_InternalWindow, InternalWindow::LockInputFieldMask);
-			_InternalWindow->setLockInput(false);
-		endEditCP(_InternalWindow, InternalWindow::LockInputFieldMask);
-	}
+    if(_InternalWindow->getParentWindow() != NULL)
+    {
+        _InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_InternalWindow->_BorderDraggedListener));
+        _InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_InternalWindow->_BorderDraggedListener));
+        _InternalWindow->getDrawingSurface()->getEventProducer()->removeKeyListener(&(_InternalWindow->_BorderDraggedListener));
+
+        _InternalWindow->setLockInput(false);
+    }
 }
 
-void InternalWindow::BorderDraggedListener::mouseReleased(const MouseEventPtr e)
+void InternalWindow::BorderDraggedListener::mouseReleased(const MouseEventUnrecPtr e)
 {
     disconnect();
 }
 
-void InternalWindow::BorderDraggedListener::mouseDragged(const MouseEventPtr e)
+void InternalWindow::BorderDraggedListener::mouseDragged(const MouseEventUnrecPtr e)
 {
-	Vec2f Size;
-	bool PositionChange;
-	Pnt2f Position;
-	Pnt2f BottomRight(_InternalWindow->getPosition() + _InternalWindow->getSize());
-	switch(_BorderDragged)
-	{
-	case WINDOW_LEFT_BORDER:
-		Size.setValues(BottomRight.x() - e->getLocation().x(), _InternalWindow->getPreferredSize().y());
-		PositionChange = true;
-		Position = BottomRight - Size;
-		break;
-	case WINDOW_RIGHT_BORDER:
-		PositionChange = false;
-		Size.setValues(e->getLocation().x() - _InternalWindow->getPosition().x(), _InternalWindow->getPreferredSize().y());
-		break;
-	case WINDOW_TOP_BORDER:
-		Size.setValues(_InternalWindow->getPreferredSize().x(), BottomRight.y() - e->getLocation().y());
-		PositionChange = true;
-		Position = BottomRight - Size;
-		break;
-	case WINDOW_BOTTOM_BORDER:
-		PositionChange = false;
-		Size.setValues(_InternalWindow->getPreferredSize().x(), e->getLocation().y() - _InternalWindow->getPosition().y());
-		break;
-	case WINDOW_TOP_LEFT_BORDER:
-		Size.setValues(BottomRight.x() - e->getLocation().x(), BottomRight.y() - e->getLocation().y());
-		PositionChange = true;
-		Position = BottomRight - Size;
-		break;
-	case WINDOW_BOTTOM_RIGHT_BORDER:
-		PositionChange = false;
-		Size.setValues(e->getLocation().x() - _InternalWindow->getPosition().x(), e->getLocation().y() - _InternalWindow->getPosition().y());
-		break;
-	case WINDOW_TOP_RIGHT_BORDER:
-		Size.setValues(e->getLocation().x() - _InternalWindow->getPosition().x(), BottomRight.y() - e->getLocation().y());
-		PositionChange = true;
-		Position.setValues(_InternalWindow->getPosition().x(), BottomRight.y() - Size.y());
-		break;
-	case WINDOW_BOTTOM_LEFT_BORDER:
-		Size.setValues(BottomRight.x() - e->getLocation().x(), e->getLocation().y() - _InternalWindow->getPosition().y());
-		PositionChange = true;
-		Position.setValues( BottomRight.x() - Size.x(), _InternalWindow->getPosition().y());
-		break;
-	}
+    Vec2f Size;
+    bool PositionChange;
+    Pnt2f Position;
+    Pnt2f BottomRight(_InternalWindow->getPosition() + _InternalWindow->getSize());
+    switch(_BorderDragged)
+    {
+        case WINDOW_LEFT_BORDER:
+            Size.setValues(BottomRight.x() - e->getLocation().x(), _InternalWindow->getPreferredSize().y());
+            PositionChange = true;
+            Position = BottomRight - Size;
+            break;
+        case WINDOW_RIGHT_BORDER:
+            PositionChange = false;
+            Size.setValues(e->getLocation().x() - _InternalWindow->getPosition().x(), _InternalWindow->getPreferredSize().y());
+            break;
+        case WINDOW_TOP_BORDER:
+            Size.setValues(_InternalWindow->getPreferredSize().x(), BottomRight.y() - e->getLocation().y());
+            PositionChange = true;
+            Position = BottomRight - Size;
+            break;
+        case WINDOW_BOTTOM_BORDER:
+            PositionChange = false;
+            Size.setValues(_InternalWindow->getPreferredSize().x(), e->getLocation().y() - _InternalWindow->getPosition().y());
+            break;
+        case WINDOW_TOP_LEFT_BORDER:
+            Size.setValues(BottomRight.x() - e->getLocation().x(), BottomRight.y() - e->getLocation().y());
+            PositionChange = true;
+            Position = BottomRight - Size;
+            break;
+        case WINDOW_BOTTOM_RIGHT_BORDER:
+            PositionChange = false;
+            Size.setValues(e->getLocation().x() - _InternalWindow->getPosition().x(), e->getLocation().y() - _InternalWindow->getPosition().y());
+            break;
+        case WINDOW_TOP_RIGHT_BORDER:
+            Size.setValues(e->getLocation().x() - _InternalWindow->getPosition().x(), BottomRight.y() - e->getLocation().y());
+            PositionChange = true;
+            Position.setValues(_InternalWindow->getPosition().x(), BottomRight.y() - Size.y());
+            break;
+        case WINDOW_BOTTOM_LEFT_BORDER:
+            Size.setValues(BottomRight.x() - e->getLocation().x(), e->getLocation().y() - _InternalWindow->getPosition().y());
+            PositionChange = true;
+            Position.setValues( BottomRight.x() - Size.x(), _InternalWindow->getPosition().y());
+            break;
+    }
 
-	if(PositionChange)
-	{
-		beginEditCP(_InternalWindow, InternalWindow::PreferredSizeFieldMask | InternalWindow::PositionFieldMask);
-			_InternalWindow->setPreferredSize(Size);
-			_InternalWindow->setPosition(Position);
-		endEditCP(_InternalWindow, InternalWindow::PreferredSizeFieldMask | InternalWindow::PositionFieldMask);
-	}
-	else
-	{
-		beginEditCP(_InternalWindow, InternalWindow::PreferredSizeFieldMask);
-			_InternalWindow->setPreferredSize(Size);
-		endEditCP(_InternalWindow, InternalWindow::PreferredSizeFieldMask);
-	}
+    if(PositionChange)
+    {
+        _InternalWindow->setPreferredSize(Size);
+        _InternalWindow->setPosition(Position);
+    }
+    else
+    {
+        _InternalWindow->setPreferredSize(Size);
+    }
 }
 
 
-void InternalWindow::BorderDraggedListener::keyPressed(const KeyEventPtr e)
+void InternalWindow::BorderDraggedListener::keyPressed(const KeyEventUnrecPtr e)
 {
     if(e->getKey() == KeyEvent::KEY_ESCAPE)
     {
         disconnect();
 
-		//Reset the Window to it's original Position and size
-		beginEditCP(_InternalWindow, InternalWindow::PositionFieldMask | InternalWindow::SizeFieldMask);
-			_InternalWindow->setPosition(_WindowStartPosition);
-			_InternalWindow->setSize(_WindowStartSize);
-		endEditCP(_InternalWindow, InternalWindow::PositionFieldMask | InternalWindow::SizeFieldMask);
+        //Reset the Window to it's original Position and size
+        _InternalWindow->setPosition(_WindowStartPosition);
+        _InternalWindow->setSize(_WindowStartSize);
     }
 }
 
-void InternalWindow::CloseButtonListener::actionPerformed(const ActionEventPtr e)
+void InternalWindow::CloseButtonListener::actionPerformed(const ActionEventUnrecPtr e)
 {
-	_InternalWindow->close();
+    _InternalWindow->close();
 }
 
-void InternalWindow::MaximizeButtonListener::actionPerformed(const ActionEventPtr e)
+void InternalWindow::MaximizeButtonListener::actionPerformed(const ActionEventUnrecPtr e)
 {
-	_InternalWindow->setMaximize(!_InternalWindow->getMaximize());
+    _InternalWindow->setMaximize(!_InternalWindow->getMaximize());
 }
 
-void InternalWindow::IconifyButtonListener::actionPerformed(const ActionEventPtr e)
+void InternalWindow::IconifyButtonListener::actionPerformed(const ActionEventUnrecPtr e)
 {
-	_InternalWindow->setIconify(true);
+    _InternalWindow->setIconify(true);
 }
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGINTERNALWINDOWBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGINTERNALWINDOWBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGINTERNALWINDOWFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
-

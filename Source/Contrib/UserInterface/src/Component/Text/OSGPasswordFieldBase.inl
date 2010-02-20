@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,64 +55,31 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &PasswordFieldBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 PasswordFieldBase::getClassTypeId(void) 
+OSG::UInt32 PasswordFieldBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-PasswordFieldPtr PasswordFieldBase::create(void) 
-{
-    PasswordFieldPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = PasswordFieldPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-PasswordFieldPtr PasswordFieldBase::createEmpty(void) 
-{ 
-    PasswordFieldPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 PasswordFieldBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the PasswordField::_sfEchoChar field.
-inline
-SFString *PasswordFieldBase::getSFEchoChar(void)
-{
-    return &_sfEchoChar;
-}
-
-//! Get the PasswordField::_sfEcho field.
-inline
-SFString *PasswordFieldBase::getSFEcho(void)
-{
-    return &_sfEcho;
-}
-
-
 //! Get the value of the PasswordField::_sfEchoChar field.
+
 inline
-std::string &PasswordFieldBase::getEchoChar(void)
+std::string &PasswordFieldBase::editEchoChar(void)
 {
+    editSField(EchoCharFieldMask);
+
     return _sfEchoChar.getValue();
 }
 
@@ -129,13 +94,17 @@ const std::string &PasswordFieldBase::getEchoChar(void) const
 inline
 void PasswordFieldBase::setEchoChar(const std::string &value)
 {
+    editSField(EchoCharFieldMask);
+
     _sfEchoChar.setValue(value);
 }
-
 //! Get the value of the PasswordField::_sfEcho field.
+
 inline
-std::string &PasswordFieldBase::getEcho(void)
+std::string &PasswordFieldBase::editEcho(void)
 {
+    editSField(EchoFieldMask);
+
     return _sfEcho.getValue();
 }
 
@@ -150,11 +119,37 @@ const std::string &PasswordFieldBase::getEcho(void) const
 inline
 void PasswordFieldBase::setEcho(const std::string &value)
 {
+    editSField(EchoFieldMask);
+
     _sfEcho.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void PasswordFieldBase::execSync (      PasswordFieldBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGPASSWORDFIELDBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (EchoCharFieldMask & whichField))
+        _sfEchoChar.syncWith(pFrom->_sfEchoChar);
+
+    if(FieldBits::NoField != (EchoFieldMask & whichField))
+        _sfEcho.syncWith(pFrom->_sfEcho);
+}
+#endif
+
+
+inline
+const Char8 *PasswordFieldBase::getClassname(void)
+{
+    return "PasswordField";
+}
+OSG_GEN_CONTAINERPTR(PasswordField);
+
+OSG_END_NAMESPACE
 

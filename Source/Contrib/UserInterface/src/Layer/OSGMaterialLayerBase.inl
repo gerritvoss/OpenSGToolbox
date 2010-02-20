@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,76 +55,64 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &MaterialLayerBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 MaterialLayerBase::getClassTypeId(void) 
+OSG::UInt32 MaterialLayerBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-MaterialLayerPtr MaterialLayerBase::create(void) 
-{
-    MaterialLayerPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = MaterialLayerPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-MaterialLayerPtr MaterialLayerBase::createEmpty(void) 
-{ 
-    MaterialLayerPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 MaterialLayerBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the MaterialLayer::_sfMaterial field.
-inline
-SFMaterialPtr *MaterialLayerBase::getSFMaterial(void)
-{
-    return &_sfMaterial;
-}
-
 
 //! Get the value of the MaterialLayer::_sfMaterial field.
 inline
-MaterialPtr &MaterialLayerBase::getMaterial(void)
-{
-    return _sfMaterial.getValue();
-}
-
-//! Get the value of the MaterialLayer::_sfMaterial field.
-inline
-const MaterialPtr &MaterialLayerBase::getMaterial(void) const
+Material * MaterialLayerBase::getMaterial(void) const
 {
     return _sfMaterial.getValue();
 }
 
 //! Set the value of the MaterialLayer::_sfMaterial field.
 inline
-void MaterialLayerBase::setMaterial(const MaterialPtr &value)
+void MaterialLayerBase::setMaterial(Material * const value)
 {
+    editSField(MaterialFieldMask);
+
     _sfMaterial.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void MaterialLayerBase::execSync (      MaterialLayerBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGMATERIALLAYERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (MaterialFieldMask & whichField))
+        _sfMaterial.syncWith(pFrom->_sfMaterial);
+}
+#endif
+
+
+inline
+const Char8 *MaterialLayerBase::getClassname(void)
+{
+    return "MaterialLayer";
+}
+OSG_GEN_CONTAINERPTR(MaterialLayer);
+
+OSG_END_NAMESPACE
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,54 +36,59 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGScrollBar_H_
-#define _OSGScrollBar_H_
+#ifndef _OSGSCROLLBAR_H_
+#define _OSGSCROLLBAR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGScrollBarBase.h"
-#include "Event/OSGAdjustmentListener.h"
+#include "OSGAdjustmentListener.h"
 
-#include "Event/OSGChangeListener.h"
-#include "Event/OSGActionListener.h"
-#include <OpenSG/Input/OSGMouseMotionAdapter.h>
-#include <OpenSG/Input/OSGMouseAdapter.h>
+#include "OSGChangeListener.h"
+#include "OSGActionListener.h"
+#include "OSGMouseMotionAdapter.h"
+#include "OSGMouseAdapter.h"
+#include "OSGBoundedRangeModel.h"
 
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ScrollBar class. See \ref 
-           PageUserInterfaceScrollBar for a description.
+/*! \brief ScrollBar class. See \ref
+           PageContribUserInterfaceScrollBar for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ScrollBar : public ScrollBarBase
 {
-  private:
-
-    typedef ScrollBarBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
-      enum Orientation{VERTICAL_ORIENTATION=0, HORIZONTAL_ORIENTATION};
+    enum Orientation
+    {
+        VERTICAL_ORIENTATION   = 0,
+        HORIZONTAL_ORIENTATION = 1
+    };
+
+    typedef ScrollBarBase Inherited;
+    typedef ScrollBar     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -120,26 +125,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
     void scrollBlock(const Int32 Blocks);
     
 	//Mouse Wheel Events
-    virtual void mouseWheelMoved(const MouseWheelEventPtr e);
+    virtual void mouseWheelMoved(const MouseWheelEventUnrecPtr e);
 
-    ButtonPtr &editMinButton(void);
-    const ButtonPtr &getMinButton(void) const;
-
-    ButtonPtr &editMaxButton(void);
-    const ButtonPtr &getMaxButton(void) const;
-    ButtonPtr &editScrollField(void);
-    const ButtonPtr &getScrollField(void) const;
-    ButtonPtr &editScrollBar(void);
-    const ButtonPtr &getScrollBar(void) const;
+    Button* editMinButton(void) const;
+    Button* editMaxButton(void) const;
+    Button* editScrollField(void) const;
+    Button* editScrollBar(void) const;
 
     virtual void detachFromEventProducer(void);
+    
+    void setRangeModel     (BoundedRangeModel * const value);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
-
-    Pnt2f calculateScrollBarPosition(void) const;
-    Vec2f calculateScrollBarSize(void) const;
-
-    Int32 calculateValueFromPosition(const Pnt2f Position) const;
 
     // Variables should all be in ScrollBarBase.
 
@@ -155,16 +153,35 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ScrollBar(void); 
+    virtual ~ScrollBar(void);
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const ScrollBar *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
+
+    Pnt2f calculateScrollBarPosition(void) const;
+    Vec2f calculateScrollBarSize(void) const;
+
+    Int32 calculateValueFromPosition(const Pnt2f Position) const;
 
 	typedef std::set<AdjustmentListenerPtr> AdjustmentListenerSet;
     typedef AdjustmentListenerSet::iterator AdjustmentListenerSetItor;
     typedef AdjustmentListenerSet::const_iterator AdjustmentListenerSetConstItor;
 	
     AdjustmentListenerSet       _AdjustmentListeners;
-    void produceAdjustmentValueChanged(const AdjustmentEventPtr e);
+    void produceAdjustmentValueChanged(const AdjustmentEventUnrecPtr e);
 
     void updateScrollBarLayout(void);
     
@@ -173,10 +190,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 	class BoundedRangeModelChangeListener : public ChangeListener
 	{
 	public:
-		BoundedRangeModelChangeListener(ScrollBarPtr TheScrollBar);
-        virtual void stateChanged(const ChangeEventPtr e);
+		BoundedRangeModelChangeListener(ScrollBarRefPtr TheScrollBar);
+        virtual void stateChanged(const ChangeEventUnrecPtr e);
 	private:
-		ScrollBarPtr _ScrollBar;
+		ScrollBarRefPtr _ScrollBar;
 	};
 
 	friend class BoundedRangeModelChangeListener;
@@ -189,10 +206,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 	class MinButtonActionListener : public ActionListener
 	{
 	public:
-		MinButtonActionListener(ScrollBarPtr TheScrollBar);
-        virtual void actionPerformed(const ActionEventPtr e);
+		MinButtonActionListener(ScrollBarRefPtr TheScrollBar);
+        virtual void actionPerformed(const ActionEventUnrecPtr e);
 	private:
-		ScrollBarPtr _ScrollBar;
+		ScrollBarRefPtr _ScrollBar;
 	};
 
 	friend class MinButtonActionListener;
@@ -203,10 +220,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 	class MaxButtonActionListener : public ActionListener
 	{
 	public:
-		MaxButtonActionListener(ScrollBarPtr TheScrollBar);
-        virtual void actionPerformed(const ActionEventPtr e);
+		MaxButtonActionListener(ScrollBarRefPtr TheScrollBar);
+        virtual void actionPerformed(const ActionEventUnrecPtr e);
 	private:
-		ScrollBarPtr _ScrollBar;
+		ScrollBarRefPtr _ScrollBar;
 	};
 
 	friend class MaxButtonActionListener;
@@ -217,10 +234,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 	class ScrollBarListener : public MouseAdapter
 	{
 	public :
-		ScrollBarListener(ScrollBarPtr TheScrollBar);
-		virtual void mousePressed(const MouseEventPtr e);
+		ScrollBarListener(ScrollBarRefPtr TheScrollBar);
+		virtual void mousePressed(const MouseEventUnrecPtr e);
 	protected :
-		ScrollBarPtr _ScrollBar;
+		ScrollBarRefPtr _ScrollBar;
 	};
 
 	friend class ScrollBarListener;
@@ -231,17 +248,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 	class ScrollBarDraggedListener : public MouseAdapter, public MouseMotionAdapter
 	{
 	public :
-		ScrollBarDraggedListener(ScrollBarPtr TheScrollBar);
-		virtual void mouseReleased(const MouseEventPtr e);
+		ScrollBarDraggedListener(ScrollBarRefPtr TheScrollBar);
+		virtual void mouseReleased(const MouseEventUnrecPtr e);
         
-		virtual void mouseDragged(const MouseEventPtr e);
+		virtual void mouseDragged(const MouseEventUnrecPtr e);
 
         void setInitialMousePosition(const Pnt2f& Pos);
         void setInitialScrollBarPosition(const Pnt2f& Pos);
         
         void disconnect(void);
 	protected :
-		ScrollBarPtr _ScrollBar;
+		ScrollBarRefPtr _ScrollBar;
         Pnt2f _InitialMousePosition;
         Pnt2f _InitialScrollBarPosition;
 	};
@@ -254,10 +271,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 	class ScrollFieldListener : public ActionListener
 	{
 	public :
-		ScrollFieldListener(ScrollBarPtr TheScrollBar);
-        virtual void actionPerformed(const ActionEventPtr e);
+		ScrollFieldListener(ScrollBarRefPtr TheScrollBar);
+        virtual void actionPerformed(const ActionEventUnrecPtr e);
 	protected :
-		ScrollBarPtr _ScrollBar;
+		ScrollBarRefPtr _ScrollBar;
 	};
 
 	friend class ScrollFieldListener;
@@ -267,15 +284,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
     void setMajorAxisScrollBarPosition(const Pnt2f& Pos);
     
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class ScrollBarBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const ScrollBar &source);
 };
 
@@ -286,4 +301,4 @@ OSG_END_NAMESPACE
 #include "OSGScrollBarBase.inl"
 #include "OSGScrollBar.inl"
 
-#endif /* _OSGScrollBar_H_ */
+#endif /* _OSGSCROLLBAR_H_ */

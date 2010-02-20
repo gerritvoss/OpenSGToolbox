@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,16 +55,15 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &UIViewportBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 UIViewportBase::getClassTypeId(void) 
+OSG::UInt32 UIViewportBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
+    return _type.getId();
+}
 //! access the producer type of the class
 inline
 const EventProducerType &UIViewportBase::getProducerClassType(void)
@@ -81,140 +78,110 @@ UInt32 UIViewportBase::getProducerClassTypeId(void)
     return _producerType.getId();
 }
 
-//! create a new instance of the class
 inline
-UIViewportPtr UIViewportBase::create(void) 
+OSG::UInt16 UIViewportBase::getClassGroupId(void)
 {
-    UIViewportPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = UIViewportPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getGroupId();
 }
-
-//! create an empty new instance of the class, do not copy the prototype
-inline
-UIViewportPtr UIViewportBase::createEmpty(void) 
-{ 
-    UIViewportPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
-}
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the UIViewport::_sfViewPosition field.
-inline
-const SFPnt2s *UIViewportBase::getSFViewPosition(void) const
-{
-    return &_sfViewPosition;
-}
-
-//! Get the UIViewport::_sfViewPosition field.
-inline
-SFPnt2s *UIViewportBase::editSFViewPosition(void)
-{
-    return &_sfViewPosition;
-}
-
-//! Get the UIViewport::_sfViewComponent field.
-inline
-const SFComponentPtr *UIViewportBase::getSFViewComponent(void) const
-{
-    return &_sfViewComponent;
-}
-
-//! Get the UIViewport::_sfViewComponent field.
-inline
-SFComponentPtr *UIViewportBase::editSFViewComponent(void)
-{
-    return &_sfViewComponent;
-}
-
-//! Get the UIViewport::_sfViewSize field.
-inline
-const SFVec2s *UIViewportBase::getSFViewSize(void) const
-{
-    return &_sfViewSize;
-}
-
-//! Get the UIViewport::_sfViewSize field.
-inline
-SFVec2s *UIViewportBase::editSFViewSize(void)
-{
-    return &_sfViewSize;
-}
-
-
 //! Get the value of the UIViewport::_sfViewPosition field.
+
 inline
-Pnt2s &UIViewportBase::editViewPosition(void)
+Pnt2f &UIViewportBase::editViewPosition(void)
 {
+    editSField(ViewPositionFieldMask);
+
     return _sfViewPosition.getValue();
 }
 
 //! Get the value of the UIViewport::_sfViewPosition field.
 inline
-const Pnt2s &UIViewportBase::getViewPosition(void) const
+const Pnt2f &UIViewportBase::getViewPosition(void) const
 {
     return _sfViewPosition.getValue();
 }
 
 //! Set the value of the UIViewport::_sfViewPosition field.
 inline
-void UIViewportBase::setViewPosition(const Pnt2s &value)
+void UIViewportBase::setViewPosition(const Pnt2f &value)
 {
+    editSField(ViewPositionFieldMask);
+
     _sfViewPosition.setValue(value);
 }
 
 //! Get the value of the UIViewport::_sfViewComponent field.
 inline
-ComponentPtr &UIViewportBase::editViewComponent(void)
-{
-    return _sfViewComponent.getValue();
-}
-
-//! Get the value of the UIViewport::_sfViewComponent field.
-inline
-const ComponentPtr &UIViewportBase::getViewComponent(void) const
+Component * UIViewportBase::getViewComponent(void) const
 {
     return _sfViewComponent.getValue();
 }
 
 //! Set the value of the UIViewport::_sfViewComponent field.
 inline
-void UIViewportBase::setViewComponent(const ComponentPtr &value)
+void UIViewportBase::setViewComponent(Component * const value)
 {
+    editSField(ViewComponentFieldMask);
+
     _sfViewComponent.setValue(value);
 }
-
 //! Get the value of the UIViewport::_sfViewSize field.
+
 inline
-Vec2s &UIViewportBase::editViewSize(void)
+Vec2f &UIViewportBase::editViewSize(void)
 {
+    editSField(ViewSizeFieldMask);
+
     return _sfViewSize.getValue();
 }
 
 //! Get the value of the UIViewport::_sfViewSize field.
 inline
-const Vec2s &UIViewportBase::getViewSize(void) const
+const Vec2f &UIViewportBase::getViewSize(void) const
 {
     return _sfViewSize.getValue();
 }
 
 //! Set the value of the UIViewport::_sfViewSize field.
 inline
-void UIViewportBase::setViewSize(const Vec2s &value)
+void UIViewportBase::setViewSize(const Vec2f &value)
 {
+    editSField(ViewSizeFieldMask);
+
     _sfViewSize.setValue(value);
 }
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void UIViewportBase::execSync (      UIViewportBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (ViewPositionFieldMask & whichField))
+        _sfViewPosition.syncWith(pFrom->_sfViewPosition);
+
+    if(FieldBits::NoField != (ViewComponentFieldMask & whichField))
+        _sfViewComponent.syncWith(pFrom->_sfViewComponent);
+
+    if(FieldBits::NoField != (ViewSizeFieldMask & whichField))
+        _sfViewSize.syncWith(pFrom->_sfViewSize);
+}
+#endif
+
+
+inline
+const Char8 *UIViewportBase::getClassname(void)
+{
+    return "UIViewport";
+}
+OSG_GEN_CONTAINERPTR(UIViewport);
+
 OSG_END_NAMESPACE
+

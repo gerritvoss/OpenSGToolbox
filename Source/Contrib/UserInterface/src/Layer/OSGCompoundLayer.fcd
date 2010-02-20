@@ -3,21 +3,23 @@
 <FieldContainer
 	name="CompoundLayer"
 	parent="Layer"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 UI Compound Background.
 	<Field
 		name="Backgrounds"
-		type="LayerPtr"
+		type="Layer"
+        category="pointer"
 		cardinality="multi"
 		visibility="external"
-		header="Layer/OSGLayer.h"
 		access="public"
 	>
 	</Field>

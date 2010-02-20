@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -38,28 +38,24 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 inline
-MenuPtr MenuBar::getMenu(const UInt32& Index)
+Menu* MenuBar::getMenu(const UInt32& Index)
 {
-    return Menu::Ptr::dcast(getChildren()[Index]);
+    return dynamic_cast<Menu*>(getChildren(Index));
 }
 
 inline
 UInt32 MenuBar::getNumMenus(void) const
 {
-    return getChildren().size();
+    return getMFChildren()->size();
 }
 
 inline
-MenuBar::MenuSelectionListener::MenuSelectionListener(MenuBarPtr TheMenuBar) :
+MenuBar::MenuSelectionListener::MenuSelectionListener(MenuBarRefPtr TheMenuBar) :
 									_MenuBar(TheMenuBar)
 {
 }
+
 OSG_END_NAMESPACE
-
-#define OSGMENUBAR_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
-

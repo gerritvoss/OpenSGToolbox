@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGUIDrawObjectFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class MultiColoredQuadUIDrawObject;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! MultiColoredQuadUIDrawObjectPtr
+OSG_GEN_CONTAINERPTR(MultiColoredQuadUIDrawObject);
 
-typedef FCPtr<UIDrawObjectPtr, MultiColoredQuadUIDrawObject> MultiColoredQuadUIDrawObjectPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<MultiColoredQuadUIDrawObjectPtr> : 
-    public FieldTraitsRecurseMapper<MultiColoredQuadUIDrawObjectPtr, true>
+struct FieldTraits<MultiColoredQuadUIDrawObject *> :
+    public FieldTraitsFCPtrBase<MultiColoredQuadUIDrawObject *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFMultiColoredQuadUIDrawObjectPtr"; }
-    static const char *getMName(void) { return "MFMultiColoredQuadUIDrawObjectPtr"; }
+    typedef FieldTraits<MultiColoredQuadUIDrawObject *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFMultiColoredQuadUIDrawObjectPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFMultiColoredQuadUIDrawObjectPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<MultiColoredQuadUIDrawObjectPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<MultiColoredQuadUIDrawObject *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecMultiColoredQuadUIDrawObjectPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<MultiColoredQuadUIDrawObject *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecMultiColoredQuadUIDrawObjectPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MultiColoredQuadUIDrawObject *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakMultiColoredQuadUIDrawObjectPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MultiColoredQuadUIDrawObject *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdMultiColoredQuadUIDrawObjectPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MultiColoredQuadUIDrawObject *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecMultiColoredQuadUIDrawObjectPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MultiColoredQuadUIDrawObject *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecMultiColoredQuadUIDrawObjectPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MultiColoredQuadUIDrawObject *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakMultiColoredQuadUIDrawObjectPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MultiColoredQuadUIDrawObject *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdMultiColoredQuadUIDrawObjectPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MultiColoredQuadUIDrawObject *,
+                      RecordedRefCountPolicy  > SFRecMultiColoredQuadUIDrawObjectPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MultiColoredQuadUIDrawObject *,
+                      UnrecordedRefCountPolicy> SFUnrecMultiColoredQuadUIDrawObjectPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MultiColoredQuadUIDrawObject *,
+                      WeakRefCountPolicy      > SFWeakMultiColoredQuadUIDrawObjectPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MultiColoredQuadUIDrawObject *,
+                      NoRefCountPolicy        > SFUncountedMultiColoredQuadUIDrawObjectPtr;
 
-typedef SField<MultiColoredQuadUIDrawObjectPtr> SFMultiColoredQuadUIDrawObjectPtr;
-#endif
 
-#ifndef OSG_COMPILEMULTICOLOREDQUADUIDRAWOBJECTINST
-OSG_DLLEXPORT_DECL1(SField, MultiColoredQuadUIDrawObjectPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MultiColoredQuadUIDrawObject *,
+                      RecordedRefCountPolicy  > MFRecMultiColoredQuadUIDrawObjectPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MultiColoredQuadUIDrawObject *,
+                      UnrecordedRefCountPolicy> MFUnrecMultiColoredQuadUIDrawObjectPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MultiColoredQuadUIDrawObject *,
+                      WeakRefCountPolicy      > MFWeakMultiColoredQuadUIDrawObjectPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MultiColoredQuadUIDrawObject *,
+                      NoRefCountPolicy        > MFUncountedMultiColoredQuadUIDrawObjectPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<MultiColoredQuadUIDrawObjectPtr> MFMultiColoredQuadUIDrawObjectPtr;
-#endif
 
-#ifndef OSG_COMPILEMULTICOLOREDQUADUIDRAWOBJECTINST
-OSG_DLLEXPORT_DECL1(MField, MultiColoredQuadUIDrawObjectPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecMultiColoredQuadUIDrawObjectPtr : 
+    public PointerSField<MultiColoredQuadUIDrawObject *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecMultiColoredQuadUIDrawObjectPtr : 
+    public PointerSField<MultiColoredQuadUIDrawObject *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakMultiColoredQuadUIDrawObjectPtr :
+    public PointerSField<MultiColoredQuadUIDrawObject *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedMultiColoredQuadUIDrawObjectPtr :
+    public PointerSField<MultiColoredQuadUIDrawObject *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecMultiColoredQuadUIDrawObjectPtr :
+    public PointerMField<MultiColoredQuadUIDrawObject *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecMultiColoredQuadUIDrawObjectPtr :
+    public PointerMField<MultiColoredQuadUIDrawObject *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakMultiColoredQuadUIDrawObjectPtr :
+    public PointerMField<MultiColoredQuadUIDrawObject *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedMultiColoredQuadUIDrawObjectPtr :
+    public PointerMField<MultiColoredQuadUIDrawObject *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGMULTICOLOREDQUADUIDRAWOBJECTFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGMULTICOLOREDQUADUIDRAWOBJECTFIELDS_H_ */

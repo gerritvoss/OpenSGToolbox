@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,43 +42,47 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGWindowsLookAndFeelBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief WindowsLookAndFeel class. See \ref 
-           PageUserInterfaceWindowsLookAndFeel for a description.
+/*! \brief WindowsLookAndFeel class. See \ref
+           PageContribUserInterfaceWindowsLookAndFeel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING WindowsLookAndFeel : public WindowsLookAndFeelBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING WindowsLookAndFeel : public WindowsLookAndFeelBase
 {
-  private:
-
-    typedef WindowsLookAndFeelBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef WindowsLookAndFeelBase Inherited;
+    typedef WindowsLookAndFeel     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
-	virtual void init(void);
     /*! \}                                                                 */
+
+	virtual void init(void);
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in WindowsLookAndFeelBase.
@@ -95,20 +99,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING WindowsLookAndFeel : public WindowsLookAnd
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~WindowsLookAndFeel(void); 
+    virtual ~WindowsLookAndFeel(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class WindowsLookAndFeelBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const WindowsLookAndFeel &source);
 };
 
@@ -118,7 +126,5 @@ OSG_END_NAMESPACE
 
 #include "OSGWindowsLookAndFeelBase.inl"
 #include "OSGWindowsLookAndFeel.inl"
-
-#define OSGWINDOWSLOOKANDFEEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGWINDOWSLOOKANDFEEL_H_ */

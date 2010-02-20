@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,21 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGLabel.h"
-#include "Util/OSGUIDrawUtils.h"
-#include <OpenSG/Input/OSGStringUtils.h>
+#include "OSGUIDrawUtils.h"
+#include "OSGStringUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::Label
-A UI Label. 	
-*/
+// Documentation for this class is emitted in the
+// OSGLabelBase.cpp file.
+// To modify it, please change the .fcd file (OSGLabel.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,8 +64,13 @@ A UI Label.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void Label::initMethod (void)
+void Label::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -79,7 +81,7 @@ void Label::initMethod (void)
 Vec2f Label::getContentRequestedSize(void) const
 {
     Pnt2f TextTopLeft(0.0f,0.0f), TextBottomRight(0.0f,0.0f);
-    if(getFont() != NullFC)
+    if(getFont() != NULL)
     {
         getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
     }
@@ -87,9 +89,9 @@ Vec2f Label::getContentRequestedSize(void) const
 	return (TextBottomRight - TextTopLeft) + Vec2f(2.0,2.0);
 }
 
-void Label::drawInternal(const GraphicsPtr TheGraphics, Real32 Opacity) const
+void Label::drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opacity) const
 {
-    if(getText() != "" && getFont() != NullFC)
+    if(getText() != "" && getFont() != NULL)
     {
         Pnt2f TopLeft, BottomRight;
         Pnt2f TempPos;
@@ -142,7 +144,7 @@ void Label::calculateTextBounds(const UInt32 StartIndex, const UInt32 EndIndex, 
 	BottomRight = BottomRight + Vec2f(AlignmentOffset);
 }
 
-void Label::mouseClicked(const MouseEventPtr e)
+void Label::mouseClicked(const MouseEventUnrecPtr e)
 {	
     if(getTextSelectable())
     {
@@ -163,12 +165,12 @@ void Label::mouseClicked(const MouseEventPtr e)
 
 			    //set caret position to proper place
 			    //if the mouse is to the left of the text, set it to the begining.
-			    Pnt2f temp = DrawingSurfaceToComponent(e->getLocation(), LabelPtr(this));
-			    if(DrawingSurfaceToComponent(e->getLocation(), LabelPtr(this)).x() <= TempPos.x())
+			    Pnt2f temp = DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this));
+			    if(DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x() <= TempPos.x())
 			    {
 				    Position = 0;
 			    }//if the mouse is to the right of the text, set it to the end
-			    else if(DrawingSurfaceToComponent(e->getLocation(), LabelPtr(this)).x() >= TempPos.x()+BottomRightText.x())
+			    else if(DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x() >= TempPos.x()+BottomRightText.x())
 			    {
 				    Position = getText().size();
 			    }
@@ -178,8 +180,8 @@ void Label::mouseClicked(const MouseEventPtr e)
 				    {		
 					    calculateTextBounds(0,i, TopLeftText, BottomRightText);
 					    calculateTextBounds(0,i+1, TopLeftText1, BottomRightText1);
-					    if(DrawingSurfaceToComponent(e->getLocation(), LabelPtr(this)).x()>BottomRightText.x()
-					       && DrawingSurfaceToComponent(e->getLocation(), LabelPtr(this)).x() <= BottomRightText1.x())//check to see if it's in the right spot
+					    if(DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x()>BottomRightText.x()
+					       && DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x() <= BottomRightText1.x())//check to see if it's in the right spot
 					    {
 						    Position = i;
 						    break;
@@ -220,7 +222,7 @@ void Label::mouseClicked(const MouseEventPtr e)
 }
 
 
-void Label::mousePressed(const MouseEventPtr e)
+void Label::mousePressed(const MouseEventUnrecPtr e)
 {
     if(getTextSelectable())
     {
@@ -234,12 +236,12 @@ void Label::mousePressed(const MouseEventPtr e)
 	    {
 		    //set caret position to proper place
 		    //if the mouse is to the left of the text, set it to the begining.
-		    Pnt2f temp = DrawingSurfaceToComponent(e->getLocation(), LabelPtr(this));
-		    if(DrawingSurfaceToComponent(e->getLocation(), LabelPtr(this)).x() <= TempPos.x())
+		    Pnt2f temp = DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this));
+		    if(DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x() <= TempPos.x())
 		    {
 			    setCaretPosition(0);
 		    }		//if the mouse is to the right of the text, set it to the end
-		    else if(DrawingSurfaceToComponent(e->getLocation(), LabelPtr(this)).x() >= TempPos.x()+BottomRightText.x())
+		    else if(DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x() >= TempPos.x()+BottomRightText.x())
 		    {
 			    setCaretPosition(getText().size());
 		    }
@@ -249,10 +251,10 @@ void Label::mousePressed(const MouseEventPtr e)
 			    {		
 				    calculateTextBounds(0,i, TopLeftText, BottomRightText);
 				    calculateTextBounds(0,i+1, TopLeftText1, BottomRightText1);
-				    if(DrawingSurfaceToComponent(e->getLocation(), LabelPtr(this)).x()>BottomRightText.x()
-				       && DrawingSurfaceToComponent(e->getLocation(), LabelPtr(this)).x() <= BottomRightText1.x())//check to see if it's in the right spot
+				    if(DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x()>BottomRightText.x()
+				       && DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x() <= BottomRightText1.x())//check to see if it's in the right spot
 				    {
-					    if(DrawingSurfaceToComponent(e->getLocation(), LabelPtr(this)).x() <= (BottomRightText1.x()-BottomRightText.x())/2.0+0.5 + BottomRightText.x())
+					    if(DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x() <= (BottomRightText1.x()-BottomRightText.x())/2.0+0.5 + BottomRightText.x())
 					    {
 						    setCaretPosition(i);
 						    break;
@@ -273,7 +275,7 @@ void Label::mousePressed(const MouseEventPtr e)
 	Inherited::mousePressed(e);
 }
 
-void Label::mouseDragged(const MouseEventPtr e)
+void Label::mouseDragged(const MouseEventUnrecPtr e)
 {
     if(getTextSelectable())
     {
@@ -288,12 +290,12 @@ void Label::mouseDragged(const MouseEventPtr e)
 	    {
 		    //set caret position to proper place
 		    //if the mouse is to the left of the text, set it to the begining.
-		    Pnt2f temp = DrawingSurfaceToComponent(e->getLocation(), LabelPtr(this));
-		    if(DrawingSurfaceToComponent(e->getLocation(), LabelPtr(this)).x() <= TempPos.x())
+		    Pnt2f temp = DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this));
+		    if(DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x() <= TempPos.x())
 		    {
 			    setCaretPosition(0);
 		    }		//if the mouse is to the right of the text, set it to the end
-		    else if(DrawingSurfaceToComponent(e->getLocation(), LabelPtr(this)).x() >= TempPos.x()+BottomRightText.x())
+		    else if(DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x() >= TempPos.x()+BottomRightText.x())
 		    {
 			    setCaretPosition(getText().size());
 		    }
@@ -304,10 +306,10 @@ void Label::mouseDragged(const MouseEventPtr e)
 			    {		
 				    calculateTextBounds(0,i, TopLeftText, BottomRightText);
 				    calculateTextBounds(0,i+1, TopLeftText1, BottomRightText1);
-				    if(DrawingSurfaceToComponent(e->getLocation(), LabelPtr(this)).x()>BottomRightText.x()
-				       && DrawingSurfaceToComponent(e->getLocation(), LabelPtr(this)).x() <= BottomRightText1.x())//check to see if it's in the right spot
+				    if(DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x()>BottomRightText.x()
+				       && DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x() <= BottomRightText1.x())//check to see if it's in the right spot
 				    {
-					    if(DrawingSurfaceToComponent(e->getLocation(), LabelPtr(this)).x() < (BottomRightText1.x()-BottomRightText.x())/2.0 + BottomRightText.x())
+					    if(DrawingSurfaceToComponent(e->getLocation(), LabelRefPtr(this)).x() < (BottomRightText1.x()-BottomRightText.x())/2.0 + BottomRightText.x())
 					    {
 
 						    setCaretPosition(i);
@@ -373,41 +375,17 @@ Label::~Label(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void Label::changed(BitVector whichField, UInt32 origin)
+void Label::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void Label::dump(      UInt32    , 
+void Label::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump Label NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGLABELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGLABELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGLABELFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,170 +50,249 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEROTATEDCOMPONENTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGComponent.h"               // InternalComponent Class
 
 #include "OSGRotatedComponentBase.h"
 #include "OSGRotatedComponent.h"
 
-#include <Component/Misc/OSGRotatedComponent.h>   // ResizePolicy default header
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  RotatedComponentBase::AngleFieldMask = 
-    (TypeTraits<BitVector>::One << RotatedComponentBase::AngleFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  RotatedComponentBase::InternalComponentFieldMask = 
-    (TypeTraits<BitVector>::One << RotatedComponentBase::InternalComponentFieldId);
+/*! \class OSG::RotatedComponent
+    A UI Rotated Component.
+ */
 
-const OSG::BitVector  RotatedComponentBase::ResizePolicyFieldMask = 
-    (TypeTraits<BitVector>::One << RotatedComponentBase::ResizePolicyFieldId);
-
-const OSG::BitVector RotatedComponentBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Real32          RotatedComponentBase::_sfAngle
     Angle To Rotate the internal Component CCW In Radians
 */
-/*! \var ComponentPtr    RotatedComponentBase::_sfInternalComponent
+
+/*! \var Component *     RotatedComponentBase::_sfInternalComponent
     
 */
+
 /*! \var UInt32          RotatedComponentBase::_sfResizePolicy
     
 */
 
-//! RotatedComponent description
 
-FieldDescription *RotatedComponentBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<RotatedComponent *>::_type("RotatedComponentPtr", "ComponentContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(RotatedComponent *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           RotatedComponent *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           RotatedComponent *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void RotatedComponentBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Angle", 
-                     AngleFieldId, AngleFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&RotatedComponentBase::editSFAngle)),
-    new FieldDescription(SFComponentPtr::getClassType(), 
-                     "InternalComponent", 
-                     InternalComponentFieldId, InternalComponentFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&RotatedComponentBase::editSFInternalComponent)),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "ResizePolicy", 
-                     ResizePolicyFieldId, ResizePolicyFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&RotatedComponentBase::editSFResizePolicy))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType RotatedComponentBase::_type(
-    "RotatedComponent",
-    "Container",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&RotatedComponentBase::createEmpty),
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Angle",
+        "Angle To Rotate the internal Component CCW In Radians\n",
+        AngleFieldId, AngleFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&RotatedComponent::editHandleAngle),
+        static_cast<FieldGetMethodSig >(&RotatedComponent::getHandleAngle));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecComponentPtr::Description(
+        SFUnrecComponentPtr::getClassType(),
+        "InternalComponent",
+        "",
+        InternalComponentFieldId, InternalComponentFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&RotatedComponent::editHandleInternalComponent),
+        static_cast<FieldGetMethodSig >(&RotatedComponent::getHandleInternalComponent));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "ResizePolicy",
+        "",
+        ResizePolicyFieldId, ResizePolicyFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&RotatedComponent::editHandleResizePolicy),
+        static_cast<FieldGetMethodSig >(&RotatedComponent::getHandleResizePolicy));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+RotatedComponentBase::TypeObject RotatedComponentBase::_type(
+    RotatedComponentBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&RotatedComponentBase::createEmptyLocal),
     RotatedComponent::initMethod,
-    _desc,
-    sizeof(_desc));
+    RotatedComponent::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&RotatedComponent::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"RotatedComponent\"\n"
+    "\tparent=\"ComponentContainer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Rotated Component.\n"
+    "\t<Field\n"
+    "\t\tname=\"Angle\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "    Angle To Rotate the internal Component CCW In Radians\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalComponent\"\n"
+    "\t\ttype=\"Component\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"ResizePolicy\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"RotatedComponent::RESIZE_TO_MIN\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI Rotated Component.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(RotatedComponentBase, RotatedComponentPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &RotatedComponentBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &RotatedComponentBase::getType(void) const 
+FieldContainerType &RotatedComponentBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr RotatedComponentBase::shallowCopy(void) const 
-{ 
-    RotatedComponentPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const RotatedComponent *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 RotatedComponentBase::getContainerSize(void) const 
-{ 
-    return sizeof(RotatedComponent); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void RotatedComponentBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &RotatedComponentBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<RotatedComponentBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void RotatedComponentBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 RotatedComponentBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((RotatedComponentBase *) &other, whichField, sInfo);
+    return sizeof(RotatedComponent);
 }
-void RotatedComponentBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFReal32 *RotatedComponentBase::editSFAngle(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(AngleFieldMask);
+
+    return &_sfAngle;
 }
 
-void RotatedComponentBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFReal32 *RotatedComponentBase::getSFAngle(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfAngle;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-RotatedComponentBase::RotatedComponentBase(void) :
-    _sfAngle                  (Real32(0.0)), 
-    _sfInternalComponent      (ComponentPtr(NullFC)), 
-    _sfResizePolicy           (UInt32(RotatedComponent::RESIZE_TO_MIN)), 
-    Inherited() 
+//! Get the RotatedComponent::_sfInternalComponent field.
+const SFUnrecComponentPtr *RotatedComponentBase::getSFInternalComponent(void) const
 {
+    return &_sfInternalComponent;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-RotatedComponentBase::RotatedComponentBase(const RotatedComponentBase &source) :
-    _sfAngle                  (source._sfAngle                  ), 
-    _sfInternalComponent      (source._sfInternalComponent      ), 
-    _sfResizePolicy           (source._sfResizePolicy           ), 
-    Inherited                 (source)
+SFUnrecComponentPtr *RotatedComponentBase::editSFInternalComponent(void)
 {
+    editSField(InternalComponentFieldMask);
+
+    return &_sfInternalComponent;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-RotatedComponentBase::~RotatedComponentBase(void)
+SFUInt32 *RotatedComponentBase::editSFResizePolicy(void)
 {
+    editSField(ResizePolicyFieldMask);
+
+    return &_sfResizePolicy;
 }
+
+const SFUInt32 *RotatedComponentBase::getSFResizePolicy(void) const
+{
+    return &_sfResizePolicy;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 RotatedComponentBase::getBinSize(const BitVector &whichField)
+UInt32 RotatedComponentBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -221,23 +300,20 @@ UInt32 RotatedComponentBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfAngle.getBinSize();
     }
-
     if(FieldBits::NoField != (InternalComponentFieldMask & whichField))
     {
         returnValue += _sfInternalComponent.getBinSize();
     }
-
     if(FieldBits::NoField != (ResizePolicyFieldMask & whichField))
     {
         returnValue += _sfResizePolicy.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void RotatedComponentBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void RotatedComponentBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -245,22 +321,18 @@ void RotatedComponentBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfAngle.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalComponentFieldMask & whichField))
     {
         _sfInternalComponent.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ResizePolicyFieldMask & whichField))
     {
         _sfResizePolicy.copyToBin(pMem);
     }
-
-
 }
 
-void RotatedComponentBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void RotatedComponentBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -268,84 +340,291 @@ void RotatedComponentBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfAngle.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InternalComponentFieldMask & whichField))
     {
         _sfInternalComponent.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ResizePolicyFieldMask & whichField))
     {
         _sfResizePolicy.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void RotatedComponentBase::executeSyncImpl(      RotatedComponentBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+RotatedComponentTransitPtr RotatedComponentBase::createLocal(BitVector bFlags)
 {
+    RotatedComponentTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (AngleFieldMask & whichField))
-        _sfAngle.syncWith(pOther->_sfAngle);
+        fc = dynamic_pointer_cast<RotatedComponent>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (InternalComponentFieldMask & whichField))
-        _sfInternalComponent.syncWith(pOther->_sfInternalComponent);
-
-    if(FieldBits::NoField != (ResizePolicyFieldMask & whichField))
-        _sfResizePolicy.syncWith(pOther->_sfResizePolicy);
-
-
-}
-#else
-void RotatedComponentBase::executeSyncImpl(      RotatedComponentBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (AngleFieldMask & whichField))
-        _sfAngle.syncWith(pOther->_sfAngle);
-
-    if(FieldBits::NoField != (InternalComponentFieldMask & whichField))
-        _sfInternalComponent.syncWith(pOther->_sfInternalComponent);
-
-    if(FieldBits::NoField != (ResizePolicyFieldMask & whichField))
-        _sfResizePolicy.syncWith(pOther->_sfResizePolicy);
-
-
-
+    return fc;
 }
 
-void RotatedComponentBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+RotatedComponentTransitPtr RotatedComponentBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    RotatedComponentTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<RotatedComponent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+RotatedComponentTransitPtr RotatedComponentBase::create(void)
+{
+    RotatedComponentTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<RotatedComponent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+RotatedComponent *RotatedComponentBase::createEmptyLocal(BitVector bFlags)
+{
+    RotatedComponent *returnValue;
+
+    newPtr<RotatedComponent>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+RotatedComponent *RotatedComponentBase::createEmpty(void)
+{
+    RotatedComponent *returnValue;
+
+    newPtr<RotatedComponent>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr RotatedComponentBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    RotatedComponent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const RotatedComponent *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr RotatedComponentBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    RotatedComponent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const RotatedComponent *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr RotatedComponentBase::shallowCopy(void) const
+{
+    RotatedComponent *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const RotatedComponent *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+RotatedComponentBase::RotatedComponentBase(void) :
+    Inherited(),
+    _sfAngle                  (Real32(0.0)),
+    _sfInternalComponent      (NULL),
+    _sfResizePolicy           (UInt32(RotatedComponent::RESIZE_TO_MIN))
+{
+}
+
+RotatedComponentBase::RotatedComponentBase(const RotatedComponentBase &source) :
+    Inherited(source),
+    _sfAngle                  (source._sfAngle                  ),
+    _sfInternalComponent      (NULL),
+    _sfResizePolicy           (source._sfResizePolicy           )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+RotatedComponentBase::~RotatedComponentBase(void)
+{
+}
+
+void RotatedComponentBase::onCreate(const RotatedComponent *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        RotatedComponent *pThis = static_cast<RotatedComponent *>(this);
+
+        pThis->setInternalComponent(source->getInternalComponent());
+    }
+}
+
+GetFieldHandlePtr RotatedComponentBase::getHandleAngle           (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfAngle,
+             this->getType().getFieldDesc(AngleFieldId),
+             const_cast<RotatedComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr RotatedComponentBase::editHandleAngle          (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfAngle,
+             this->getType().getFieldDesc(AngleFieldId),
+             this));
+
+
+    editSField(AngleFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr RotatedComponentBase::getHandleInternalComponent (void) const
+{
+    SFUnrecComponentPtr::GetHandlePtr returnValue(
+        new  SFUnrecComponentPtr::GetHandle(
+             &_sfInternalComponent,
+             this->getType().getFieldDesc(InternalComponentFieldId),
+             const_cast<RotatedComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr RotatedComponentBase::editHandleInternalComponent(void)
+{
+    SFUnrecComponentPtr::EditHandlePtr returnValue(
+        new  SFUnrecComponentPtr::EditHandle(
+             &_sfInternalComponent,
+             this->getType().getFieldDesc(InternalComponentFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&RotatedComponent::setInternalComponent,
+                    static_cast<RotatedComponent *>(this), _1));
+
+    editSField(InternalComponentFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr RotatedComponentBase::getHandleResizePolicy    (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfResizePolicy,
+             this->getType().getFieldDesc(ResizePolicyFieldId),
+             const_cast<RotatedComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr RotatedComponentBase::editHandleResizePolicy   (void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfResizePolicy,
+             this->getType().getFieldDesc(ResizePolicyFieldId),
+             this));
+
+
+    editSField(ResizePolicyFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void RotatedComponentBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    RotatedComponent *pThis = static_cast<RotatedComponent *>(this);
+
+    pThis->execSync(static_cast<RotatedComponent *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *RotatedComponentBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    RotatedComponent *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const RotatedComponent *>(pRefAspect),
+                  dynamic_cast<const RotatedComponent *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<RotatedComponentPtr>::_type("RotatedComponentPtr", "ContainerPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(RotatedComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(RotatedComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void RotatedComponentBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<RotatedComponent *>(this)->setInternalComponent(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-

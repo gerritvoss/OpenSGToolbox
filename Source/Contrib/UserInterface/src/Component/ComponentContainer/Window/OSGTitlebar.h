@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,38 +42,39 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGTitlebarBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Titlebar class. See \ref 
-           PageUserInterfaceTitlebar for a description.
+/*! \brief Titlebar class. See \ref
+           PageContribUserInterfaceTitlebar for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING Titlebar : public TitlebarBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Titlebar : public TitlebarBase
 {
-  private:
-
-    typedef TitlebarBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef TitlebarBase Inherited;
+    typedef Titlebar     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
@@ -83,6 +84,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Titlebar : public TitlebarBase
 	void setTitle(const std::string& Title);
 	std::string getTitle(void) const;
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in TitlebarBase.
@@ -99,20 +101,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING Titlebar : public TitlebarBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Titlebar(void); 
+    virtual ~Titlebar(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class TitlebarBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const Titlebar &source);
 };
 
@@ -120,9 +126,10 @@ typedef Titlebar *TitlebarP;
 
 OSG_END_NAMESPACE
 
+#include "OSGButton.h"
+#include "OSGLabel.h"
+
 #include "OSGTitlebarBase.inl"
 #include "OSGTitlebar.inl"
-
-#define OSGTITLEBAR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGTITLEBAR_H_ */

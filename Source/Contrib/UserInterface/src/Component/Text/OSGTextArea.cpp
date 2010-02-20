@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,34 +40,28 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGTextArea.h"
+#include "OSGInternalWindow.h"
+#include "OSGUIDrawingSurface.h"
+#include "OSGWindowEventProducer.h"
+#include "OSGStringUtils.h"
+#include "OSGUIDrawUtils.h"
+#include "OSGScrollBar.h"
+#include "OSGUIViewport.h"
 
-#include "Component/Container/Window/OSGInternalWindow.h"
-#include "UIDrawingSurface/OSGUIDrawingSurface.h"
-#include <OpenSG/Input/OSGWindowEventProducer.h>
-#include <OpenSG/Input/OSGStringUtils.h>
-#include "Util/OSGUIDrawUtils.h"
-#include "Component/Scroll/OSGScrollBar.h"
-#include "Component/Container/OSGUIViewport.h"
+#include "OSGLookAndFeelManager.h"
 
-#include "LookAndFeel/OSGLookAndFeelManager.h"
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::TextArea
-A UI TextArea 	
-*/
+// Documentation for this class is emitted in the
+// OSGTextAreaBase.cpp file.
+// To modify it, please change the .fcd file (OSGTextArea.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -77,17 +71,27 @@ A UI TextArea
  *                           Class methods                                 *
 \***************************************************************************/
 
-void TextArea::initMethod (void)
+void TextArea::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-void TextArea::drawInternal(const GraphicsPtr TheGraphics, Real32 Opacity) const
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+void TextArea::drawInternal(const GraphicsWeakPtr TheGraphics, Real32 Opacity) const
 {	
     //Text Color
     Color4f TextColor = getDrawnTextColor();
 	for(Int32 i = 0; i < _LineContents.size(); i++)//draw each line seperately
 	{	
-        if(getFont() != NullFC)
+        if(getFont() != NULL)
         {
             if(_LineContents[i]._VerticalOffset > getClipBottomRight().y() || ( i+1<_LineContents.size() && _LineContents[i+1]._VerticalOffset < getClipTopLeft().y()))
             {
@@ -147,10 +151,6 @@ void TextArea::drawInternal(const GraphicsPtr TheGraphics, Real32 Opacity) const
 	}
 }
 
-/***************************************************************************\
- *                           Instance methods                              *
-\***************************************************************************/
-
 Int32 TextArea::getCaretLine(void) const
 {
 	for(Int32 i = 0; i < _LineContents.size(); i++)//draw each line seperately
@@ -174,7 +174,7 @@ bool TextArea::isLineVisible(const UInt32& line) const
 {
 	//Get the bounds of this line
 	Pnt2f TempTopLeft, TempBottomRight;
-	Vec2f Offset = Pnt2f(_LineContents[line]._LeftHorizontalOffset, _LineContents[line]._VerticalOffset);
+	Vec2f Offset(_LineContents[line]._LeftHorizontalOffset, _LineContents[line]._VerticalOffset);
 	getFont()->getBounds(getWrappedLine(line), TempTopLeft, TempBottomRight);
 
 	TempTopLeft = TempTopLeft + Offset;
@@ -191,43 +191,43 @@ bool TextArea::isLineVisible(const UInt32& line) const
 
 void TextArea::scrollToLine(const UInt32& line)
 {
-	if(getParentContainer() != NullFC && getParentContainer()->getType().isDerivedFrom(UIViewport::getClassType()))
+	if(getParentContainer() != NULL && getParentContainer()->getType().isDerivedFrom(UIViewport::getClassType()))
 	{
 		//Get the bounds of this line
 		Pnt2f TempTopLeft, TempBottomRight;
-		Vec2f Offset = Pnt2f(_LineContents[line]._LeftHorizontalOffset, _LineContents[line]._VerticalOffset);
+		Vec2f Offset(_LineContents[line]._LeftHorizontalOffset, _LineContents[line]._VerticalOffset);
 		getFont()->getBounds(getWrappedLine(line), TempTopLeft, TempBottomRight);
 
 		TempTopLeft = TempTopLeft + Offset;
 		TempBottomRight = TempBottomRight + Offset;
 
-		UIViewportPtr::dcast(getParentContainer())->maximizeVisibility(TempTopLeft, TempBottomRight);
+		dynamic_cast<UIViewport*>(getParentContainer())->maximizeVisibility(TempTopLeft, TempBottomRight);
 	}
 }
 
-void TextArea::focusGained(const FocusEventPtr e)
+void TextArea::focusGained(const FocusEventUnrecPtr e)
 {
-	if( getParentWindow() != NullFC &&
-		getParentWindow()->getDrawingSurface() != NullFC &&
-		getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+	if( getParentWindow() != NULL &&
+		getParentWindow()->getDrawingSurface() != NULL &&
+		getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
     {
 		getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_CaretUpdateListener);
 	}
 	Inherited::focusGained(e);
 }
 
-void TextArea::focusLost(const FocusEventPtr e)
+void TextArea::focusLost(const FocusEventUnrecPtr e)
 {
-	if( getParentWindow() != NullFC &&
-		getParentWindow()->getDrawingSurface() != NullFC &&
-		getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+	if( getParentWindow() != NULL &&
+		getParentWindow()->getDrawingSurface() != NULL &&
+		getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
     {
         _CaretUpdateListener.disconnect();
 	}
 	Inherited::focusLost(e);
 }
 
-void TextArea::keyTyped(const KeyEventPtr e)//broken
+void TextArea::keyTyped(const KeyEventUnrecPtr e)//broken
 {
 	if(getEnabled() && getEditable())
 	{
@@ -287,11 +287,9 @@ void TextArea::moveCaretLine(Int32 delta)
             Int32 NewPosition(findTextPosition(Pnt2f(_LineContents[NewLine]._LeftHorizontalOffset + TempBottomRight.x(),_LineContents[NewLine]._VerticalOffset)));
             if(OriginalPosition != NewPosition)
             {
-                beginEditCP(TextAreaPtr(this), TextArea::CaretPositionFieldMask);
                     setCaretPosition(NewPosition);
-                endEditCP(TextAreaPtr(this), TextArea::CaretPositionFieldMask);
             }
-            if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&&getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC 
+            if(getParentWindow() != NULL && getParentWindow()->getDrawingSurface()!=NULL&&getParentWindow()->getDrawingSurface()->getEventProducer() != NULL 
                 && getParentWindow()->getDrawingSurface()->getEventProducer()->getKeyModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
             {
                 if(OriginalPosition == _TextSelectionEnd)
@@ -332,9 +330,7 @@ void TextArea::moveCaretToEndOfLine(void)
         CaretLine < numLines() && 
         getCaretPosition() != _LineContents[CaretLine]._EndPosition)
 	{
-		beginEditCP(EditableTextComponentPtr(this), CaretPositionFieldMask);
 			setCaretPosition(_LineContents[CaretLine]._EndPosition);
-		endEditCP(EditableTextComponentPtr(this), CaretPositionFieldMask);
 	}
 }
 
@@ -346,9 +342,7 @@ void TextArea::moveCaretToBeginOfLine(void)
         CaretLine < numLines() && 
         getCaretPosition() != _LineContents[CaretLine]._StartPosition)
 	{
-		beginEditCP(EditableTextComponentPtr(this), CaretPositionFieldMask);
 			setCaretPosition(_LineContents[CaretLine]._StartPosition);
-		endEditCP(EditableTextComponentPtr(this), CaretPositionFieldMask);
 	}
 }
 
@@ -357,7 +351,7 @@ UInt32 TextArea::numLines(void) const
     return _LineContents.size();
 }
 
-void TextArea::mouseClicked(const MouseEventPtr e)
+void TextArea::mouseClicked(const MouseEventUnrecPtr e)
 {	
 	Int32 Position(0);
 	Int32 BeginWord = 0;
@@ -369,7 +363,7 @@ void TextArea::mouseClicked(const MouseEventPtr e)
 		{
 
 			//set caret position to proper place
-			Position = findTextPosition(DrawingSurfaceToComponent(e->getLocation(), TextAreaPtr(this)));
+			Position = findTextPosition(DrawingSurfaceToComponent(e->getLocation(), TextAreaRefPtr(this)));
 			if(isPunctuationChar(getText()[Position]))
 			{
 				EndWord = Position + 1;
@@ -395,28 +389,24 @@ void TextArea::mouseClicked(const MouseEventPtr e)
 			}
 			_TextSelectionEnd = EndWord;
 			_TextSelectionStart = BeginWord;
-			beginEditCP(TextAreaPtr(this),TextArea::CaretPositionFieldMask);
 				setCaretPosition(EndWord);
-			endEditCP(TextAreaPtr(this),TextArea::CaretPositionFieldMask);
 		}
 	}
 	Inherited::mouseClicked(e);
 
 }
 
-void TextArea::mousePressed(const MouseEventPtr e)
+void TextArea::mousePressed(const MouseEventUnrecPtr e)
 {
 	if(e->getButton() == e->BUTTON1)
 	{
 		//set caret position to proper place
-		beginEditCP(TextAreaPtr(this),TextArea::CaretPositionFieldMask);
-			setCaretPosition( findTextPosition(DrawingSurfaceToComponent(e->getLocation(), TextAreaPtr(this))));
-		endEditCP(TextAreaPtr(this),TextArea::CaretPositionFieldMask);
+			setCaretPosition( findTextPosition(DrawingSurfaceToComponent(e->getLocation(), TextAreaRefPtr(this))));
 
 		_TextSelectionEnd = getCaretPosition();
 		_TextSelectionStart = getCaretPosition();
 	}
-	if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&& getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+	if(getParentWindow() != NULL && getParentWindow()->getDrawingSurface()!=NULL&& getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
 	{
         getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseDownListener);
         getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_MouseDownListener);
@@ -425,16 +415,14 @@ void TextArea::mousePressed(const MouseEventPtr e)
 	Inherited::mousePressed(e);
 }
 
-void TextArea::mouseDraggedAfterArming(const MouseEventPtr e)
+void TextArea::mouseDraggedAfterArming(const MouseEventUnrecPtr e)
 {
 	Int32 OriginalPosition = getCaretPosition();
 	if(e->getButton() == e->BUTTON1)
 	{
 		//set caret position to proper place
 		
-		beginEditCP(TextAreaPtr(this),TextArea::CaretPositionFieldMask);
-			setCaretPosition( findTextPosition(DrawingSurfaceToComponent(e->getLocation(), TextAreaPtr(this))));
-		endEditCP(TextAreaPtr(this),TextArea::CaretPositionFieldMask);
+			setCaretPosition( findTextPosition(DrawingSurfaceToComponent(e->getLocation(), TextAreaRefPtr(this))));
 		if(getCaretPosition() < OriginalPosition)
 		{
 			if(getCaretPosition() < _TextSelectionStart)
@@ -462,7 +450,7 @@ void TextArea::mouseDraggedAfterArming(const MouseEventPtr e)
 
 
 
-Int32 TextArea::findTextPosition(osg::Pnt2f Input)
+Int32 TextArea::findTextPosition(OSG::Pnt2f Input)
 {
 	//find row it belongs in
 	Int32 row(0);
@@ -535,7 +523,7 @@ bool TextArea::getScrollableWidthMinTracksViewport(void)
 
 Int32 TextArea::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
 {
-    if(getFont() != NullFC)
+    if(getFont() != NULL)
     {
         UInt16 MajorAxis;
         if(orientation == ScrollBar::VERTICAL_ORIENTATION)
@@ -573,16 +561,16 @@ void TextArea::detachFromEventProducer(void)
 TextArea::TextArea(void) :
     Inherited(),
 		_CurrentCaretBlinkElps(0.0),
-	    _CaretUpdateListener(TextAreaPtr(this)),
-		_MouseDownListener(TextAreaPtr(this))
+	    _CaretUpdateListener(this),
+		_MouseDownListener(this)
 {
 }
 
 TextArea::TextArea(const TextArea &source) :
     Inherited(source),
 		_CurrentCaretBlinkElps(0.0),
-	    _CaretUpdateListener(TextAreaPtr(this)),
-		_MouseDownListener(TextAreaPtr(this))
+	    _CaretUpdateListener(this),
+		_MouseDownListener(this)
 {
 }
 
@@ -591,16 +579,18 @@ TextArea::~TextArea(void)
 }
 
 /*----------------------------- class specific ----------------------------*/
-void TextArea::changed(BitVector whichField, UInt32 origin)
-{
 
+void TextArea::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
+{
     if((whichField & TextFieldMask ||
        whichField & LineWrapFieldMask ||
        whichField & WrapStyleWordFieldMask ||
        whichField & TabSizeFieldMask ||
        whichField & FontFieldMask ||
        whichField & SizeFieldMask) &&
-	   getFont() != NullFC)
+	   getFont() != NULL)
     {
         _LineContents.clear();
 	    Pnt2f TopLeft, BottomRight, TempPos;
@@ -704,9 +694,7 @@ void TextArea::changed(BitVector whichField, UInt32 origin)
         PreferredSize[1] = osgMax<UInt32>(getMinSize().y(), _LineContents.back()._VerticalOffset + TempBottomRight.y());
         if(getPreferredSize() != PreferredSize)
         {
-            beginEditCP(TextAreaPtr(this), PreferredSizeFieldMask);
                 setPreferredSize(PreferredSize);
-            endEditCP(TextAreaPtr(this), PreferredSizeFieldMask);
         }
     }
     
@@ -720,22 +708,22 @@ void TextArea::changed(BitVector whichField, UInt32 origin)
 		}
 	}
 
-	Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void TextArea::dump(      UInt32    , 
+void TextArea::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump TextArea NI" << std::endl;
 }
 
-void TextArea::CaretUpdateListener::update(const UpdateEventPtr e)
+void TextArea::CaretUpdateListener::update(const UpdateEventUnrecPtr e)
 {
    _TextArea->_CurrentCaretBlinkElps += e->getElapsedTime();
    if(_TextArea->_CurrentCaretBlinkElps > LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate())
    {
        Int32 Div = _TextArea->_CurrentCaretBlinkElps/LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate();
-	   _TextArea->_CurrentCaretBlinkElps -= static_cast<osg::Time>(Div)*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate();
+	   _TextArea->_CurrentCaretBlinkElps -= static_cast<OSG::Time>(Div)*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate();
    }
 }
 
@@ -746,26 +734,26 @@ void TextArea::CaretUpdateListener::disconnect(void)
 
 
 
-void TextArea::MouseDownListener::keyTyped(const KeyEventPtr e)
+void TextArea::MouseDownListener::keyTyped(const KeyEventUnrecPtr e)
 {
     if(e->getKey() == KeyEvent::KEY_ESCAPE)
     {
-	    if(_TextArea->getParentWindow() != NullFC && _TextArea->getParentWindow()->getDrawingSurface()!=NullFC&& _TextArea->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+	    if(_TextArea->getParentWindow() != NULL && _TextArea->getParentWindow()->getDrawingSurface()!=NULL&& _TextArea->getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
 	    {
             disconnect();
         }
     }
 }
 
-void TextArea::MouseDownListener::mouseReleased(const MouseEventPtr e)
+void TextArea::MouseDownListener::mouseReleased(const MouseEventUnrecPtr e)
 {
-	if(_TextArea->getParentWindow() != NullFC && _TextArea->getParentWindow()->getDrawingSurface()!=NullFC&& _TextArea->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+	if(_TextArea->getParentWindow() != NULL && _TextArea->getParentWindow()->getDrawingSurface()!=NULL&& _TextArea->getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
 	{
         disconnect();
     }
 }
 
-void TextArea::MouseDownListener::mouseDragged(const MouseEventPtr e)
+void TextArea::MouseDownListener::mouseDragged(const MouseEventUnrecPtr e)
 {
     _TextArea->mouseDraggedAfterArming(e);
 }
@@ -776,29 +764,5 @@ void TextArea::MouseDownListener::disconnect(void)
     _TextArea->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
     _TextArea->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
 }
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGTEXTAREABASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTEXTAREABASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTEXTAREAFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE

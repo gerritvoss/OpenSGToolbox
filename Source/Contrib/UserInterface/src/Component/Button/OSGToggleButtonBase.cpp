@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,170 +50,207 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILETOGGLEBUTTONINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGToggleButtonBase.h"
 #include "OSGToggleButton.h"
 
+#include <boost/bind.hpp>
+
+#include "OSGEvent.h"
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ToggleButtonBase::SelectedFieldMask = 
-    (TypeTraits<BitVector>::One << ToggleButtonBase::SelectedFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector ToggleButtonBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::ToggleButton
+    A UI Toggle Button.
+ */
 
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var bool            ToggleButtonBase::_sfSelected
     
 */
 
-//! ToggleButton description
 
-FieldDescription *ToggleButtonBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ToggleButton *>::_type("ToggleButtonPtr", "ButtonPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ToggleButton *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ToggleButton *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ToggleButton *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ToggleButtonBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFBool::getClassType(), 
-                     "Selected", 
-                     SelectedFieldId, SelectedFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&ToggleButtonBase::editSFSelected))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType ToggleButtonBase::_type(
-    "ToggleButton",
-    "Button",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&ToggleButtonBase::createEmpty),
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Selected",
+        "",
+        SelectedFieldId, SelectedFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ToggleButton::editHandleSelected),
+        static_cast<FieldGetMethodSig >(&ToggleButton::getHandleSelected));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+ToggleButtonBase::TypeObject ToggleButtonBase::_type(
+    ToggleButtonBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ToggleButtonBase::createEmptyLocal),
     ToggleButton::initMethod,
-    _desc,
-    sizeof(_desc));
+    ToggleButton::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ToggleButton::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ToggleButton\"\n"
+    "\tparent=\"Button\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    parentProducer=\"Button\"\n"
+    ">\n"
+    "A UI Toggle Button.\n"
+    "\t<Field\n"
+    "\t\tname=\"Selected\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"ButtonSelected\"\n"
+    "\t\ttype=\"ButtonSelectedEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"ButtonDeselected\"\n"
+    "\t\ttype=\"ButtonSelectedEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "</FieldContainer>\n",
+    "A UI Toggle Button.\n"
+    );
 
 //! ToggleButton Produced Methods
 
 MethodDescription *ToggleButtonBase::_methodDesc[] =
 {
     new MethodDescription("ButtonSelected", 
+                    "",
                      ButtonSelectedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("ButtonDeselected", 
+                    "",
                      ButtonDeselectedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod())
 };
 
 EventProducerType ToggleButtonBase::_producerType(
     "ToggleButtonProducerType",
     "ButtonProducerType",
-    NULL,
+    "",
     InitEventProducerFunctor(),
     _methodDesc,
     sizeof(_methodDesc));
-//OSG_FIELD_CONTAINER_DEF(ToggleButtonBase, ToggleButtonPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ToggleButtonBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ToggleButtonBase::getType(void) const 
+FieldContainerType &ToggleButtonBase::getType(void)
 {
     return _type;
-} 
+}
+
+const FieldContainerType &ToggleButtonBase::getType(void) const
+{
+    return _type;
+}
 
 const EventProducerType &ToggleButtonBase::getProducerType(void) const
 {
     return _producerType;
 }
 
-
-FieldContainerPtr ToggleButtonBase::shallowCopy(void) const 
-{ 
-    ToggleButtonPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const ToggleButton *>(this)); 
-
-    return returnValue; 
-}
-
-UInt32 ToggleButtonBase::getContainerSize(void) const 
-{ 
-    return sizeof(ToggleButton); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ToggleButtonBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+UInt32 ToggleButtonBase::getContainerSize(void) const
 {
-    this->executeSyncImpl(static_cast<ToggleButtonBase *>(&other),
-                          whichField);
+    return sizeof(ToggleButton);
 }
-#else
-void ToggleButtonBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFBool *ToggleButtonBase::editSFSelected(void)
 {
-    this->executeSyncImpl((ToggleButtonBase *) &other, whichField, sInfo);
+    editSField(SelectedFieldMask);
+
+    return &_sfSelected;
 }
-void ToggleButtonBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+const SFBool *ToggleButtonBase::getSFSelected(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfSelected;
 }
 
-void ToggleButtonBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-ToggleButtonBase::ToggleButtonBase(void) :
-    _sfSelected               (bool(false)), 
-    Inherited() 
-{
-    _Producer.setType(&_producerType);
-}
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-ToggleButtonBase::ToggleButtonBase(const ToggleButtonBase &source) :
-    _sfSelected               (source._sfSelected               ), 
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-ToggleButtonBase::~ToggleButtonBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ToggleButtonBase::getBinSize(const BitVector &whichField)
+UInt32 ToggleButtonBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -222,12 +259,11 @@ UInt32 ToggleButtonBase::getBinSize(const BitVector &whichField)
         returnValue += _sfSelected.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ToggleButtonBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ToggleButtonBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -235,12 +271,10 @@ void ToggleButtonBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfSelected.copyToBin(pMem);
     }
-
-
 }
 
-void ToggleButtonBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ToggleButtonBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -248,62 +282,214 @@ void ToggleButtonBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfSelected.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ToggleButtonBase::executeSyncImpl(      ToggleButtonBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ToggleButtonTransitPtr ToggleButtonBase::createLocal(BitVector bFlags)
 {
+    ToggleButtonTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (SelectedFieldMask & whichField))
-        _sfSelected.syncWith(pOther->_sfSelected);
+        fc = dynamic_pointer_cast<ToggleButton>(tmpPtr);
+    }
 
-
-}
-#else
-void ToggleButtonBase::executeSyncImpl(      ToggleButtonBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (SelectedFieldMask & whichField))
-        _sfSelected.syncWith(pOther->_sfSelected);
-
-
-
+    return fc;
 }
 
-void ToggleButtonBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ToggleButtonTransitPtr ToggleButtonBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ToggleButtonTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<ToggleButton>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ToggleButtonTransitPtr ToggleButtonBase::create(void)
+{
+    ToggleButtonTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<ToggleButton>(tmpPtr);
+    }
+
+    return fc;
+}
+
+ToggleButton *ToggleButtonBase::createEmptyLocal(BitVector bFlags)
+{
+    ToggleButton *returnValue;
+
+    newPtr<ToggleButton>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+ToggleButton *ToggleButtonBase::createEmpty(void)
+{
+    ToggleButton *returnValue;
+
+    newPtr<ToggleButton>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ToggleButtonBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    ToggleButton *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ToggleButton *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ToggleButtonBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    ToggleButton *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ToggleButton *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ToggleButtonBase::shallowCopy(void) const
+{
+    ToggleButton *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const ToggleButton *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ToggleButtonBase::ToggleButtonBase(void) :
+    Inherited(),
+    _sfSelected               (bool(false))
+{
+    _Producer.setType(&_producerType);
+}
+
+ToggleButtonBase::ToggleButtonBase(const ToggleButtonBase &source) :
+    Inherited(source),
+    _sfSelected               (source._sfSelected               )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ToggleButtonBase::~ToggleButtonBase(void)
+{
+}
+
+
+GetFieldHandlePtr ToggleButtonBase::getHandleSelected        (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfSelected,
+             this->getType().getFieldDesc(SelectedFieldId),
+             const_cast<ToggleButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ToggleButtonBase::editHandleSelected       (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfSelected,
+             this->getType().getFieldDesc(SelectedFieldId),
+             this));
+
+
+    editSField(SelectedFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ToggleButtonBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ToggleButton *pThis = static_cast<ToggleButton *>(this);
+
+    pThis->execSync(static_cast<ToggleButton *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ToggleButtonBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    ToggleButton *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const ToggleButton *>(pRefAspect),
+                  dynamic_cast<const ToggleButton *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ToggleButtonPtr>::_type("ToggleButtonPtr", "ButtonPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(ToggleButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ToggleButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void ToggleButtonBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

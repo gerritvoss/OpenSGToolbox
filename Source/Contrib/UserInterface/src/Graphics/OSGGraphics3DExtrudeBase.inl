@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,244 +55,223 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &Graphics3DExtrudeBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 Graphics3DExtrudeBase::getClassTypeId(void) 
+OSG::UInt32 Graphics3DExtrudeBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-Graphics3DExtrudePtr Graphics3DExtrudeBase::create(void) 
-{
-    Graphics3DExtrudePtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = Graphics3DExtrudePtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-Graphics3DExtrudePtr Graphics3DExtrudeBase::createEmpty(void) 
-{ 
-    Graphics3DExtrudePtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 Graphics3DExtrudeBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Graphics3DExtrude::_sfUIDepth field.
-inline
-SFDepthChunkPtr *Graphics3DExtrudeBase::getSFUIDepth(void)
-{
-    return &_sfUIDepth;
-}
-
-//! Get the Graphics3DExtrude::_sfExtrudeLength field.
-inline
-SFReal32 *Graphics3DExtrudeBase::getSFExtrudeLength(void)
-{
-    return &_sfExtrudeLength;
-}
-
-//! Get the Graphics3DExtrude::_sfInternalClipPlaneOffset field.
-inline
-SFReal32 *Graphics3DExtrudeBase::getSFInternalClipPlaneOffset(void)
-{
-    return &_sfInternalClipPlaneOffset;
-}
-
-//! Get the Graphics3DExtrude::_sfTextOffset field.
-inline
-SFReal32 *Graphics3DExtrudeBase::getSFTextOffset(void)
-{
-    return &_sfTextOffset;
-}
-
-//! Get the Graphics3DExtrude::_sfEnable3DText field.
-inline
-SFBool *Graphics3DExtrudeBase::getSFEnable3DText(void)
-{
-    return &_sfEnable3DText;
-}
-
-//! Get the Graphics3DExtrude::_sfEnableLighting field.
-inline
-SFBool *Graphics3DExtrudeBase::getSFEnableLighting(void)
-{
-    return &_sfEnableLighting;
-}
-
-//! Get the Graphics3DExtrude::_sfMaterial field.
-inline
-SFMaterialPtr *Graphics3DExtrudeBase::getSFMaterial(void)
-{
-    return &_sfMaterial;
-}
-
 
 //! Get the value of the Graphics3DExtrude::_sfUIDepth field.
 inline
-DepthChunkPtr &Graphics3DExtrudeBase::getUIDepth(void)
-{
-    return _sfUIDepth.getValue();
-}
-
-//! Get the value of the Graphics3DExtrude::_sfUIDepth field.
-inline
-const DepthChunkPtr &Graphics3DExtrudeBase::getUIDepth(void) const
+DepthChunk * Graphics3DExtrudeBase::getUIDepth(void) const
 {
     return _sfUIDepth.getValue();
 }
 
 //! Set the value of the Graphics3DExtrude::_sfUIDepth field.
 inline
-void Graphics3DExtrudeBase::setUIDepth(const DepthChunkPtr &value)
+void Graphics3DExtrudeBase::setUIDepth(DepthChunk * const value)
 {
+    editSField(UIDepthFieldMask);
+
     _sfUIDepth.setValue(value);
 }
-
 //! Get the value of the Graphics3DExtrude::_sfExtrudeLength field.
+
 inline
-Real32 &Graphics3DExtrudeBase::getExtrudeLength(void)
+Real32 &Graphics3DExtrudeBase::editExtrudeLength(void)
 {
+    editSField(ExtrudeLengthFieldMask);
+
     return _sfExtrudeLength.getValue();
 }
 
 //! Get the value of the Graphics3DExtrude::_sfExtrudeLength field.
 inline
-const Real32 &Graphics3DExtrudeBase::getExtrudeLength(void) const
+      Real32  Graphics3DExtrudeBase::getExtrudeLength(void) const
 {
     return _sfExtrudeLength.getValue();
 }
 
 //! Set the value of the Graphics3DExtrude::_sfExtrudeLength field.
 inline
-void Graphics3DExtrudeBase::setExtrudeLength(const Real32 &value)
+void Graphics3DExtrudeBase::setExtrudeLength(const Real32 value)
 {
+    editSField(ExtrudeLengthFieldMask);
+
     _sfExtrudeLength.setValue(value);
 }
-
 //! Get the value of the Graphics3DExtrude::_sfInternalClipPlaneOffset field.
+
 inline
-Real32 &Graphics3DExtrudeBase::getInternalClipPlaneOffset(void)
+Real32 &Graphics3DExtrudeBase::editInternalClipPlaneOffset(void)
 {
+    editSField(InternalClipPlaneOffsetFieldMask);
+
     return _sfInternalClipPlaneOffset.getValue();
 }
 
 //! Get the value of the Graphics3DExtrude::_sfInternalClipPlaneOffset field.
 inline
-const Real32 &Graphics3DExtrudeBase::getInternalClipPlaneOffset(void) const
+      Real32  Graphics3DExtrudeBase::getInternalClipPlaneOffset(void) const
 {
     return _sfInternalClipPlaneOffset.getValue();
 }
 
 //! Set the value of the Graphics3DExtrude::_sfInternalClipPlaneOffset field.
 inline
-void Graphics3DExtrudeBase::setInternalClipPlaneOffset(const Real32 &value)
+void Graphics3DExtrudeBase::setInternalClipPlaneOffset(const Real32 value)
 {
+    editSField(InternalClipPlaneOffsetFieldMask);
+
     _sfInternalClipPlaneOffset.setValue(value);
 }
-
 //! Get the value of the Graphics3DExtrude::_sfTextOffset field.
+
 inline
-Real32 &Graphics3DExtrudeBase::getTextOffset(void)
+Real32 &Graphics3DExtrudeBase::editTextOffset(void)
 {
+    editSField(TextOffsetFieldMask);
+
     return _sfTextOffset.getValue();
 }
 
 //! Get the value of the Graphics3DExtrude::_sfTextOffset field.
 inline
-const Real32 &Graphics3DExtrudeBase::getTextOffset(void) const
+      Real32  Graphics3DExtrudeBase::getTextOffset(void) const
 {
     return _sfTextOffset.getValue();
 }
 
 //! Set the value of the Graphics3DExtrude::_sfTextOffset field.
 inline
-void Graphics3DExtrudeBase::setTextOffset(const Real32 &value)
+void Graphics3DExtrudeBase::setTextOffset(const Real32 value)
 {
+    editSField(TextOffsetFieldMask);
+
     _sfTextOffset.setValue(value);
 }
-
 //! Get the value of the Graphics3DExtrude::_sfEnable3DText field.
+
 inline
-bool &Graphics3DExtrudeBase::getEnable3DText(void)
+bool &Graphics3DExtrudeBase::editEnable3DText(void)
 {
+    editSField(Enable3DTextFieldMask);
+
     return _sfEnable3DText.getValue();
 }
 
 //! Get the value of the Graphics3DExtrude::_sfEnable3DText field.
 inline
-const bool &Graphics3DExtrudeBase::getEnable3DText(void) const
+      bool  Graphics3DExtrudeBase::getEnable3DText(void) const
 {
     return _sfEnable3DText.getValue();
 }
 
 //! Set the value of the Graphics3DExtrude::_sfEnable3DText field.
 inline
-void Graphics3DExtrudeBase::setEnable3DText(const bool &value)
+void Graphics3DExtrudeBase::setEnable3DText(const bool value)
 {
+    editSField(Enable3DTextFieldMask);
+
     _sfEnable3DText.setValue(value);
 }
-
 //! Get the value of the Graphics3DExtrude::_sfEnableLighting field.
+
 inline
-bool &Graphics3DExtrudeBase::getEnableLighting(void)
+bool &Graphics3DExtrudeBase::editEnableLighting(void)
 {
+    editSField(EnableLightingFieldMask);
+
     return _sfEnableLighting.getValue();
 }
 
 //! Get the value of the Graphics3DExtrude::_sfEnableLighting field.
 inline
-const bool &Graphics3DExtrudeBase::getEnableLighting(void) const
+      bool  Graphics3DExtrudeBase::getEnableLighting(void) const
 {
     return _sfEnableLighting.getValue();
 }
 
 //! Set the value of the Graphics3DExtrude::_sfEnableLighting field.
 inline
-void Graphics3DExtrudeBase::setEnableLighting(const bool &value)
+void Graphics3DExtrudeBase::setEnableLighting(const bool value)
 {
+    editSField(EnableLightingFieldMask);
+
     _sfEnableLighting.setValue(value);
 }
 
 //! Get the value of the Graphics3DExtrude::_sfMaterial field.
 inline
-MaterialPtr &Graphics3DExtrudeBase::getMaterial(void)
-{
-    return _sfMaterial.getValue();
-}
-
-//! Get the value of the Graphics3DExtrude::_sfMaterial field.
-inline
-const MaterialPtr &Graphics3DExtrudeBase::getMaterial(void) const
+Material * Graphics3DExtrudeBase::getMaterial(void) const
 {
     return _sfMaterial.getValue();
 }
 
 //! Set the value of the Graphics3DExtrude::_sfMaterial field.
 inline
-void Graphics3DExtrudeBase::setMaterial(const MaterialPtr &value)
+void Graphics3DExtrudeBase::setMaterial(Material * const value)
 {
+    editSField(MaterialFieldMask);
+
     _sfMaterial.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void Graphics3DExtrudeBase::execSync (      Graphics3DExtrudeBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGGRAPHICS3DEXTRUDEBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (UIDepthFieldMask & whichField))
+        _sfUIDepth.syncWith(pFrom->_sfUIDepth);
+
+    if(FieldBits::NoField != (ExtrudeLengthFieldMask & whichField))
+        _sfExtrudeLength.syncWith(pFrom->_sfExtrudeLength);
+
+    if(FieldBits::NoField != (InternalClipPlaneOffsetFieldMask & whichField))
+        _sfInternalClipPlaneOffset.syncWith(pFrom->_sfInternalClipPlaneOffset);
+
+    if(FieldBits::NoField != (TextOffsetFieldMask & whichField))
+        _sfTextOffset.syncWith(pFrom->_sfTextOffset);
+
+    if(FieldBits::NoField != (Enable3DTextFieldMask & whichField))
+        _sfEnable3DText.syncWith(pFrom->_sfEnable3DText);
+
+    if(FieldBits::NoField != (EnableLightingFieldMask & whichField))
+        _sfEnableLighting.syncWith(pFrom->_sfEnableLighting);
+
+    if(FieldBits::NoField != (MaterialFieldMask & whichField))
+        _sfMaterial.syncWith(pFrom->_sfMaterial);
+}
+#endif
+
+
+inline
+const Char8 *Graphics3DExtrudeBase::getClassname(void)
+{
+    return "Graphics3DExtrude";
+}
+OSG_GEN_CONTAINERPTR(Graphics3DExtrude);
+
+OSG_END_NAMESPACE
 

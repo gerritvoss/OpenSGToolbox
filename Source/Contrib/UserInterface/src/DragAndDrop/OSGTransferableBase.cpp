@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,111 +50,125 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILETRANSFERABLEINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGTransferableBase.h"
 #include "OSGTransferable.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector TransferableBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::Transferable
+    A UI Transferable.
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
 
-FieldContainerType TransferableBase::_type(
-    "Transferable",
-    "FieldContainer",
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<Transferable *>::_type("TransferablePtr", "FieldContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(Transferable *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           Transferable *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           Transferable *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void TransferableBase::classDescInserter(TypeObject &oType)
+{
+}
+
+
+TransferableBase::TypeObject TransferableBase::_type(
+    TransferableBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
     NULL,
-    NULL, 
     Transferable::initMethod,
-    NULL,
-    0);
+    Transferable::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&Transferable::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"Transferable\"\n"
+    "\tparent=\"FieldContainer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"abstract\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Transferable.\n"
+    "</FieldContainer>\n",
+    "A UI Transferable.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(TransferableBase, TransferablePtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &TransferableBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &TransferableBase::getType(void) const 
+FieldContainerType &TransferableBase::getType(void)
 {
     return _type;
-} 
-
-
-UInt32 TransferableBase::getContainerSize(void) const 
-{ 
-    return sizeof(Transferable); 
 }
 
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TransferableBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &TransferableBase::getType(void) const
 {
-    this->executeSyncImpl((TransferableBase *) &other, whichField);
+    return _type;
 }
-#else
-void TransferableBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 TransferableBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((TransferableBase *) &other, whichField, sInfo);
-}
-void TransferableBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(Transferable);
 }
 
-void TransferableBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-TransferableBase::TransferableBase(void) :
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-TransferableBase::TransferableBase(const TransferableBase &source) :
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-TransferableBase::~TransferableBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 TransferableBase::getBinSize(const BitVector &whichField)
+UInt32 TransferableBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -162,88 +176,69 @@ UInt32 TransferableBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void TransferableBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void TransferableBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-
 }
 
-void TransferableBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void TransferableBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void TransferableBase::executeSyncImpl(      TransferableBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+TransferableBase::TransferableBase(void) :
+    Inherited()
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-
-}
-#else
-void TransferableBase::executeSyncImpl(      TransferableBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
 }
 
-void TransferableBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+TransferableBase::TransferableBase(const TransferableBase &source) :
+    Inherited(source)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
+
+/*-------------------------- destructors ----------------------------------*/
+
+TransferableBase::~TransferableBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void TransferableBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Transferable *pThis = static_cast<Transferable *>(this);
+
+    pThis->execSync(static_cast<Transferable *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+
+void TransferableBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TransferablePtr>::_type("TransferablePtr", "FieldContainerPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(TransferablePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(TransferablePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGTRANSFERABLEBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTRANSFERABLEBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTRANSFERABLEFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

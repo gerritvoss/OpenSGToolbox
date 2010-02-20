@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,64 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/Toolbox/OSGEventFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class UndoableEditEvent;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! UndoableEditEventPtr
+OSG_GEN_CONTAINERPTR(UndoableEditEvent);
 
-typedef FCPtr<EventPtr, UndoableEditEvent> UndoableEditEventPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<UndoableEditEventPtr> : 
-    public FieldTraitsRecurseMapper<UndoableEditEventPtr, true>
+struct FieldTraits<UndoableEditEvent *> :
+    public FieldTraitsFCPtrBase<UndoableEditEvent *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFUndoableEditEventPtr"; }
+    typedef FieldTraits<UndoableEditEvent *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFUndoableEditEventPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFUndoableEditEventPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<UndoableEditEventPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<UndoableEditEvent *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecUndoableEditEventPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<UndoableEditEvent *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecUndoableEditEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<UndoableEditEvent *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakUndoableEditEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<UndoableEditEvent *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdUndoableEditEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<UndoableEditEvent *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecUndoableEditEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<UndoableEditEvent *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecUndoableEditEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<UndoableEditEvent *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakUndoableEditEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<UndoableEditEvent *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdUndoableEditEventPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<UndoableEditEvent *,
+                      RecordedRefCountPolicy  > SFRecUndoableEditEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<UndoableEditEvent *,
+                      UnrecordedRefCountPolicy> SFUnrecUndoableEditEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<UndoableEditEvent *,
+                      WeakRefCountPolicy      > SFWeakUndoableEditEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<UndoableEditEvent *,
+                      NoRefCountPolicy        > SFUncountedUndoableEditEventPtr;
 
-typedef SField<UndoableEditEventPtr> SFUndoableEditEventPtr;
-#endif
 
-#ifndef OSG_COMPILEUNDOABLEEDITEVENTINST
-OSG_DLLEXPORT_DECL1(SField, UndoableEditEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<UndoableEditEvent *,
+                      RecordedRefCountPolicy  > MFRecUndoableEditEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<UndoableEditEvent *,
+                      UnrecordedRefCountPolicy> MFUnrecUndoableEditEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<UndoableEditEvent *,
+                      WeakRefCountPolicy      > MFWeakUndoableEditEventPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<UndoableEditEvent *,
+                      NoRefCountPolicy        > MFUncountedUndoableEditEventPtr;
+
+
+
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecUndoableEditEventPtr : 
+    public PointerSField<UndoableEditEvent *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecUndoableEditEventPtr : 
+    public PointerSField<UndoableEditEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakUndoableEditEventPtr :
+    public PointerSField<UndoableEditEvent *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedUndoableEditEventPtr :
+    public PointerSField<UndoableEditEvent *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecUndoableEditEventPtr :
+    public PointerMField<UndoableEditEvent *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecUndoableEditEventPtr :
+    public PointerMField<UndoableEditEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakUndoableEditEventPtr :
+    public PointerMField<UndoableEditEvent *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedUndoableEditEventPtr :
+    public PointerMField<UndoableEditEvent *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGBorderFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class MultiColorMatteBorder;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! MultiColorMatteBorderPtr
+OSG_GEN_CONTAINERPTR(MultiColorMatteBorder);
 
-typedef FCPtr<BorderPtr, MultiColorMatteBorder> MultiColorMatteBorderPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<MultiColorMatteBorderPtr> : 
-    public FieldTraitsRecurseMapper<MultiColorMatteBorderPtr, true>
+struct FieldTraits<MultiColorMatteBorder *> :
+    public FieldTraitsFCPtrBase<MultiColorMatteBorder *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFMultiColorMatteBorderPtr"; }
-    static const char *getMName(void) { return "MFMultiColorMatteBorderPtr"; }
+    typedef FieldTraits<MultiColorMatteBorder *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFMultiColorMatteBorderPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFMultiColorMatteBorderPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<MultiColorMatteBorderPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<MultiColorMatteBorder *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecMultiColorMatteBorderPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<MultiColorMatteBorder *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecMultiColorMatteBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MultiColorMatteBorder *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakMultiColorMatteBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MultiColorMatteBorder *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdMultiColorMatteBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MultiColorMatteBorder *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecMultiColorMatteBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MultiColorMatteBorder *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecMultiColorMatteBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MultiColorMatteBorder *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakMultiColorMatteBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<MultiColorMatteBorder *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdMultiColorMatteBorderPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MultiColorMatteBorder *,
+                      RecordedRefCountPolicy  > SFRecMultiColorMatteBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MultiColorMatteBorder *,
+                      UnrecordedRefCountPolicy> SFUnrecMultiColorMatteBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MultiColorMatteBorder *,
+                      WeakRefCountPolicy      > SFWeakMultiColorMatteBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<MultiColorMatteBorder *,
+                      NoRefCountPolicy        > SFUncountedMultiColorMatteBorderPtr;
 
-typedef SField<MultiColorMatteBorderPtr> SFMultiColorMatteBorderPtr;
-#endif
 
-#ifndef OSG_COMPILEMULTICOLORMATTEBORDERINST
-OSG_DLLEXPORT_DECL1(SField, MultiColorMatteBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MultiColorMatteBorder *,
+                      RecordedRefCountPolicy  > MFRecMultiColorMatteBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MultiColorMatteBorder *,
+                      UnrecordedRefCountPolicy> MFUnrecMultiColorMatteBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MultiColorMatteBorder *,
+                      WeakRefCountPolicy      > MFWeakMultiColorMatteBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<MultiColorMatteBorder *,
+                      NoRefCountPolicy        > MFUncountedMultiColorMatteBorderPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<MultiColorMatteBorderPtr> MFMultiColorMatteBorderPtr;
-#endif
 
-#ifndef OSG_COMPILEMULTICOLORMATTEBORDERINST
-OSG_DLLEXPORT_DECL1(MField, MultiColorMatteBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecMultiColorMatteBorderPtr : 
+    public PointerSField<MultiColorMatteBorder *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecMultiColorMatteBorderPtr : 
+    public PointerSField<MultiColorMatteBorder *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakMultiColorMatteBorderPtr :
+    public PointerSField<MultiColorMatteBorder *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedMultiColorMatteBorderPtr :
+    public PointerSField<MultiColorMatteBorder *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecMultiColorMatteBorderPtr :
+    public PointerMField<MultiColorMatteBorder *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecMultiColorMatteBorderPtr :
+    public PointerMField<MultiColorMatteBorder *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakMultiColorMatteBorderPtr :
+    public PointerMField<MultiColorMatteBorder *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedMultiColorMatteBorderPtr :
+    public PointerMField<MultiColorMatteBorder *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGMULTICOLORMATTEBORDERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGMULTICOLORMATTEBORDERFIELDS_H_ */

@@ -3,22 +3,25 @@
 <FieldContainer
 	name="GLViewport"
 	parent="Component"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 An OpenSG Viewport Component.
 	<Field
 		name="Port"
-		type="ViewportPtr"
+		type="Viewport"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 </FieldContainer>

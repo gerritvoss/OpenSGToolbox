@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,120 +50,124 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILECARDLAYOUTCONSTRAINTSINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGCardLayoutConstraintsBase.h"
 #include "OSGCardLayoutConstraints.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector CardLayoutConstraintsBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::CardLayoutConstraints
+    A UI CardLayout.
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
 
-FieldContainerType CardLayoutConstraintsBase::_type(
-    "CardLayoutConstraints",
-    "LayoutConstraints",
-    NULL,
-    (PrototypeCreateF) &CardLayoutConstraintsBase::createEmpty,
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<CardLayoutConstraints *>::_type("CardLayoutConstraintsPtr", "LayoutConstraintsPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(CardLayoutConstraints *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           CardLayoutConstraints *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           CardLayoutConstraints *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void CardLayoutConstraintsBase::classDescInserter(TypeObject &oType)
+{
+}
+
+
+CardLayoutConstraintsBase::TypeObject CardLayoutConstraintsBase::_type(
+    CardLayoutConstraintsBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&CardLayoutConstraintsBase::createEmptyLocal),
     CardLayoutConstraints::initMethod,
-    NULL,
-    0);
-
-//OSG_FIELD_CONTAINER_DEF(CardLayoutConstraintsBase, CardLayoutConstraintsPtr)
+    CardLayoutConstraints::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&CardLayoutConstraints::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"CardLayoutConstraints\"\n"
+    "\tparent=\"LayoutConstraints\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI CardLayout.\n"
+    "</FieldContainer>\n",
+    "A UI CardLayout.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &CardLayoutConstraintsBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &CardLayoutConstraintsBase::getType(void) const 
+FieldContainerType &CardLayoutConstraintsBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr CardLayoutConstraintsBase::shallowCopy(void) const 
-{ 
-    CardLayoutConstraintsPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const CardLayoutConstraints *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 CardLayoutConstraintsBase::getContainerSize(void) const 
-{ 
-    return sizeof(CardLayoutConstraints); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void CardLayoutConstraintsBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &CardLayoutConstraintsBase::getType(void) const
 {
-    this->executeSyncImpl((CardLayoutConstraintsBase *) &other, whichField);
+    return _type;
 }
-#else
-void CardLayoutConstraintsBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 CardLayoutConstraintsBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((CardLayoutConstraintsBase *) &other, whichField, sInfo);
-}
-void CardLayoutConstraintsBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(CardLayoutConstraints);
 }
 
-void CardLayoutConstraintsBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-CardLayoutConstraintsBase::CardLayoutConstraintsBase(void) :
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-CardLayoutConstraintsBase::CardLayoutConstraintsBase(const CardLayoutConstraintsBase &source) :
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-CardLayoutConstraintsBase::~CardLayoutConstraintsBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 CardLayoutConstraintsBase::getBinSize(const BitVector &whichField)
+UInt32 CardLayoutConstraintsBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -171,88 +175,198 @@ UInt32 CardLayoutConstraintsBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void CardLayoutConstraintsBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void CardLayoutConstraintsBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-
 }
 
-void CardLayoutConstraintsBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void CardLayoutConstraintsBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void CardLayoutConstraintsBase::executeSyncImpl(      CardLayoutConstraintsBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+CardLayoutConstraintsTransitPtr CardLayoutConstraintsBase::createLocal(BitVector bFlags)
 {
+    CardLayoutConstraintsTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
+        fc = dynamic_pointer_cast<CardLayoutConstraints>(tmpPtr);
+    }
 
-}
-#else
-void CardLayoutConstraintsBase::executeSyncImpl(      CardLayoutConstraintsBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
+    return fc;
 }
 
-void CardLayoutConstraintsBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+CardLayoutConstraintsTransitPtr CardLayoutConstraintsBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    CardLayoutConstraintsTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<CardLayoutConstraints>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+CardLayoutConstraintsTransitPtr CardLayoutConstraintsBase::create(void)
+{
+    CardLayoutConstraintsTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<CardLayoutConstraints>(tmpPtr);
+    }
+
+    return fc;
+}
+
+CardLayoutConstraints *CardLayoutConstraintsBase::createEmptyLocal(BitVector bFlags)
+{
+    CardLayoutConstraints *returnValue;
+
+    newPtr<CardLayoutConstraints>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+CardLayoutConstraints *CardLayoutConstraintsBase::createEmpty(void)
+{
+    CardLayoutConstraints *returnValue;
+
+    newPtr<CardLayoutConstraints>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr CardLayoutConstraintsBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    CardLayoutConstraints *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const CardLayoutConstraints *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr CardLayoutConstraintsBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    CardLayoutConstraints *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const CardLayoutConstraints *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr CardLayoutConstraintsBase::shallowCopy(void) const
+{
+    CardLayoutConstraints *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const CardLayoutConstraints *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+CardLayoutConstraintsBase::CardLayoutConstraintsBase(void) :
+    Inherited()
+{
+}
+
+CardLayoutConstraintsBase::CardLayoutConstraintsBase(const CardLayoutConstraintsBase &source) :
+    Inherited(source)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+CardLayoutConstraintsBase::~CardLayoutConstraintsBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void CardLayoutConstraintsBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    CardLayoutConstraints *pThis = static_cast<CardLayoutConstraints *>(this);
+
+    pThis->execSync(static_cast<CardLayoutConstraints *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *CardLayoutConstraintsBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    CardLayoutConstraints *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const CardLayoutConstraints *>(pRefAspect),
+                  dynamic_cast<const CardLayoutConstraints *>(this));
+
+    return returnValue;
+}
+#endif
+
+void CardLayoutConstraintsBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<CardLayoutConstraintsPtr>::_type("CardLayoutConstraintsPtr", "LayoutConstraintsPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(CardLayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(CardLayoutConstraintsPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGCARDLAYOUTCONSTRAINTSBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCARDLAYOUTCONSTRAINTSBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCARDLAYOUTCONSTRAINTSFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

@@ -31,26 +31,26 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGEventListener.h>
+#include "OSGEventListener.h"
 #include "OSGPopupMenuEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuListener : public EventListener
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING PopupMenuListener : public EventListener
 {
    /*=========================  PUBLIC  ===============================*/
 public:
 	//This method is called when the popup menu is canceled
-	virtual void 	popupMenuCanceled(const PopupMenuEventPtr e) = 0;
+	virtual void 	popupMenuCanceled(const PopupMenuEventUnrecPtr e) = 0;
 	//This method is called before the popup menu becomes invisible Note that a JPopupMenu can become invisible any time
-	virtual void 	popupMenuWillBecomeInvisible(const PopupMenuEventPtr e) = 0;
+	virtual void 	popupMenuWillBecomeInvisible(const PopupMenuEventUnrecPtr e) = 0;
 	//This method is called before the popup menu becomes visible
-	virtual void 	popupMenuWillBecomeVisible(const PopupMenuEventPtr e) = 0;
+	virtual void 	popupMenuWillBecomeVisible(const PopupMenuEventUnrecPtr e) = 0;
 	//This method is called before the items of the popup menu change
-	virtual void 	popupMenuContentsChanged(const PopupMenuEventPtr e) = 0;
+	virtual void 	popupMenuContentsChanged(const PopupMenuEventUnrecPtr e) = 0;
 };
 
 typedef PopupMenuListener* PopupMenuListenerPtr;

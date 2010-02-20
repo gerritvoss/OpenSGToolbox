@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGProxyLayoutSpring.h"
-#include "Layout/OSGSpringLayout.h"
+#include "OSGSpringLayout.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::ProxyLayoutSpring
-A UI Proxy LayoutSpring. 	
-*/
+// Documentation for this class is emitted in the
+// OSGProxyLayoutSpringBase.cpp file.
+// To modify it, please change the .fcd file (OSGProxyLayoutSpring.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -68,22 +63,26 @@ A UI Proxy LayoutSpring.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ProxyLayoutSpring::initMethod (void)
+void ProxyLayoutSpring::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-
-ProxyLayoutSpringPtr ProxyLayoutSpring::create (const UInt32& Edge, ComponentPtr TheComponent, SpringLayoutPtr TheLayout)
+ProxyLayoutSpringTransitPtr ProxyLayoutSpring::create (const UInt32& Edge, 
+                                                       Component* TheComponent,
+                                                       SpringLayout* TheLayout)
 {
-    ProxyLayoutSpringPtr NewSpring = createEmpty();
+    ProxyLayoutSpring* NewSpring = createEmpty();
 
-    beginEditCP(NewSpring, EdgeFieldMask | ComponentFieldMask | LayoutFieldMask);
         NewSpring->setEdge(Edge);
         NewSpring->setComponent(TheComponent);
         NewSpring->setLayout(TheLayout);
-    endEditCP(NewSpring, EdgeFieldMask | ComponentFieldMask | LayoutFieldMask);
 
-    return NewSpring;
+    return ProxyLayoutSpringTransitPtr(NewSpring);
 }
 
 /***************************************************************************\
@@ -115,7 +114,7 @@ void ProxyLayoutSpring::setValue(const Real32& value)
     return getConstraint()->setValue(value);
 }
 
-bool ProxyLayoutSpring::isCyclic(SpringLayoutPtr l) const
+bool ProxyLayoutSpring::isCyclic(const SpringLayout* l) const
 {
     return l->isCyclic(getConstraint());
 }
@@ -142,41 +141,17 @@ ProxyLayoutSpring::~ProxyLayoutSpring(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void ProxyLayoutSpring::changed(BitVector whichField, UInt32 origin)
+void ProxyLayoutSpring::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void ProxyLayoutSpring::dump(      UInt32    , 
+void ProxyLayoutSpring::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump ProxyLayoutSpring NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGPROXYLAYOUTSPRINGBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPROXYLAYOUTSPRINGBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGPROXYLAYOUTSPRINGFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

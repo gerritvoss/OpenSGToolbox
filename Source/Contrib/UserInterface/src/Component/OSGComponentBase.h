@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,186 +58,232 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include <OpenSG/OSGAttachmentContainer.h> // Parent
+#include "OSGAttachmentContainer.h" // Parent
 
-#include <OpenSG/OSGPnt2fFields.h> // Position type
-#include <OpenSG/OSGPnt4fFields.h> // ClipBounds type
-#include <OpenSG/OSGVec2fFields.h> // MinSize type
-#include <OpenSG/OSGVec2fFields.h> // MaxSize type
-#include <OpenSG/OSGVec2fFields.h> // PreferredSize type
-#include <OpenSG/OSGVec2fFields.h> // Size type
-#include <OpenSG/OSGBoolFields.h> // Visible type
-#include <OpenSG/OSGBoolFields.h> // Enabled type
-#include <OpenSG/OSGBoolFields.h> // Focused type
-#include "Layout/OSGLayoutConstraints.h" // Constraints type
-#include "Border/OSGBorder.h" // Border type
-#include "Layer/OSGLayer.h" // Background type
-#include "Border/OSGBorder.h" // DisabledBorder type
-#include "Layer/OSGLayer.h" // DisabledBackground type
-#include <OpenSG/OSGBoolFields.h> // DragEnabled type
-#include "DragAndDrop/OSGTransferHandlerFields.h" // TransferHandler type
-#include "Border/OSGBorder.h" // FocusedBorder type
-#include "Layer/OSGLayer.h" // FocusedBackground type
-#include "Border/OSGBorder.h" // RolloverBorder type
-#include "Layer/OSGLayer.h" // RolloverBackground type
-#include <OpenSG/OSGStringFields.h> // ToolTipText type
-#include <OpenSG/OSGReal32Fields.h> // Opacity type
-#include "Component/Container/OSGContainerFields.h" // ParentContainer type
-#include "Component/Container/Window/OSGInternalWindowFields.h" // ParentWindow type
-#include <OpenSG/OSGBoolFields.h> // Clipping type
-#include "Component/Menu/OSGPopupMenuFields.h" // PopupMenu type
-#include "Layer/OSGLayer.h" // FocusedForeground type
-#include "Layer/OSGLayer.h" // RolloverForeground type
-#include "Layer/OSGLayer.h" // DisabledForeground type
-#include "Layer/OSGLayer.h" // Foreground type
-#include <OpenSG/OSGUInt32Fields.h> // Cursor type
+#include "OSGVecFields.h"               // Position type
+#include "OSGSysFields.h"               // Visible type
+#include "OSGLayoutConstraintsFields.h" // Constraints type
+#include "OSGBorderFields.h"            // Border type
+#include "OSGLayerFields.h"             // Background type
+#include "OSGTransferHandlerFields.h"   // TransferHandler type
+#include "OSGBaseFields.h"              // ToolTipText type
+#include "OSGComponentContainerFields.h" // ParentContainer type
+#include "OSGInternalWindowFields.h"    // ParentWindow type
+#include "OSGPopupMenuFields.h"         // PopupMenu type
 
 #include "OSGComponentFields.h"
-#include <OpenSG/Toolbox/OSGEventProducer.h>
-#include <OpenSG/Toolbox/OSGEventProducerType.h>
-#include <OpenSG/Toolbox/OSGMethodDescription.h>
-#include <OpenSG/Toolbox/OSGEventProducerPtrType.h>
+
+//Event Producer Headers
+#include "OSGEventProducer.h"
+#include "OSGEventProducerType.h"
+#include "OSGMethodDescription.h"
+#include "OSGEventProducerPtrType.h"
 
 OSG_BEGIN_NAMESPACE
 
 class Component;
-class BinaryDataHandler;
 
 //! \brief Component Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentContainer
 {
-  private:
-
-    typedef AttachmentContainer    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ComponentPtr  Ptr;
+    typedef AttachmentContainer Inherited;
+    typedef AttachmentContainer ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(Component);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        PositionFieldId           = Inherited::NextFieldId,
-        ClipBoundsFieldId         = PositionFieldId           + 1,
-        MinSizeFieldId            = ClipBoundsFieldId         + 1,
-        MaxSizeFieldId            = MinSizeFieldId            + 1,
-        PreferredSizeFieldId      = MaxSizeFieldId            + 1,
-        SizeFieldId               = PreferredSizeFieldId      + 1,
-        VisibleFieldId            = SizeFieldId               + 1,
-        EnabledFieldId            = VisibleFieldId            + 1,
-        FocusedFieldId            = EnabledFieldId            + 1,
-        ConstraintsFieldId        = FocusedFieldId            + 1,
-        BorderFieldId             = ConstraintsFieldId        + 1,
-        BackgroundFieldId         = BorderFieldId             + 1,
-        DisabledBorderFieldId     = BackgroundFieldId         + 1,
-        DisabledBackgroundFieldId = DisabledBorderFieldId     + 1,
-        DragEnabledFieldId        = DisabledBackgroundFieldId + 1,
-        TransferHandlerFieldId    = DragEnabledFieldId        + 1,
-        FocusedBorderFieldId      = TransferHandlerFieldId    + 1,
-        FocusedBackgroundFieldId  = FocusedBorderFieldId      + 1,
-        RolloverBorderFieldId     = FocusedBackgroundFieldId  + 1,
-        RolloverBackgroundFieldId = RolloverBorderFieldId     + 1,
-        ToolTipTextFieldId        = RolloverBackgroundFieldId + 1,
-        OpacityFieldId            = ToolTipTextFieldId        + 1,
-        ParentContainerFieldId    = OpacityFieldId            + 1,
-        ParentWindowFieldId       = ParentContainerFieldId    + 1,
-        ClippingFieldId           = ParentWindowFieldId       + 1,
-        PopupMenuFieldId          = ClippingFieldId           + 1,
-        FocusedForegroundFieldId  = PopupMenuFieldId          + 1,
-        RolloverForegroundFieldId = FocusedForegroundFieldId  + 1,
+        PositionFieldId = Inherited::NextFieldId,
+        ClipBoundsFieldId = PositionFieldId + 1,
+        MinSizeFieldId = ClipBoundsFieldId + 1,
+        MaxSizeFieldId = MinSizeFieldId + 1,
+        PreferredSizeFieldId = MaxSizeFieldId + 1,
+        SizeFieldId = PreferredSizeFieldId + 1,
+        VisibleFieldId = SizeFieldId + 1,
+        EnabledFieldId = VisibleFieldId + 1,
+        FocusedFieldId = EnabledFieldId + 1,
+        ConstraintsFieldId = FocusedFieldId + 1,
+        BorderFieldId = ConstraintsFieldId + 1,
+        BackgroundFieldId = BorderFieldId + 1,
+        DisabledBorderFieldId = BackgroundFieldId + 1,
+        DisabledBackgroundFieldId = DisabledBorderFieldId + 1,
+        DragEnabledFieldId = DisabledBackgroundFieldId + 1,
+        TransferHandlerFieldId = DragEnabledFieldId + 1,
+        FocusedBorderFieldId = TransferHandlerFieldId + 1,
+        FocusedBackgroundFieldId = FocusedBorderFieldId + 1,
+        RolloverBorderFieldId = FocusedBackgroundFieldId + 1,
+        RolloverBackgroundFieldId = RolloverBorderFieldId + 1,
+        ToolTipTextFieldId = RolloverBackgroundFieldId + 1,
+        OpacityFieldId = ToolTipTextFieldId + 1,
+        ParentContainerFieldId = OpacityFieldId + 1,
+        ParentWindowFieldId = ParentContainerFieldId + 1,
+        ClippingFieldId = ParentWindowFieldId + 1,
+        PopupMenuFieldId = ClippingFieldId + 1,
+        FocusedForegroundFieldId = PopupMenuFieldId + 1,
+        RolloverForegroundFieldId = FocusedForegroundFieldId + 1,
         DisabledForegroundFieldId = RolloverForegroundFieldId + 1,
-        ForegroundFieldId         = DisabledForegroundFieldId + 1,
-        CursorFieldId             = ForegroundFieldId         + 1,
-        EventProducerFieldId      = CursorFieldId             + 1,
-        NextFieldId               = EventProducerFieldId      + 1
+        ForegroundFieldId = DisabledForegroundFieldId + 1,
+        CursorFieldId = ForegroundFieldId + 1,
+        EventProducerFieldId = CursorFieldId + 1,
+        NextFieldId = EventProducerFieldId + 1
     };
 
-    static const OSG::BitVector PositionFieldMask;
-    static const OSG::BitVector ClipBoundsFieldMask;
-    static const OSG::BitVector MinSizeFieldMask;
-    static const OSG::BitVector MaxSizeFieldMask;
-    static const OSG::BitVector PreferredSizeFieldMask;
-    static const OSG::BitVector SizeFieldMask;
-    static const OSG::BitVector VisibleFieldMask;
-    static const OSG::BitVector EnabledFieldMask;
-    static const OSG::BitVector FocusedFieldMask;
-    static const OSG::BitVector ConstraintsFieldMask;
-    static const OSG::BitVector BorderFieldMask;
-    static const OSG::BitVector BackgroundFieldMask;
-    static const OSG::BitVector DisabledBorderFieldMask;
-    static const OSG::BitVector DisabledBackgroundFieldMask;
-    static const OSG::BitVector DragEnabledFieldMask;
-    static const OSG::BitVector TransferHandlerFieldMask;
-    static const OSG::BitVector FocusedBorderFieldMask;
-    static const OSG::BitVector FocusedBackgroundFieldMask;
-    static const OSG::BitVector RolloverBorderFieldMask;
-    static const OSG::BitVector RolloverBackgroundFieldMask;
-    static const OSG::BitVector ToolTipTextFieldMask;
-    static const OSG::BitVector OpacityFieldMask;
-    static const OSG::BitVector ParentContainerFieldMask;
-    static const OSG::BitVector ParentWindowFieldMask;
-    static const OSG::BitVector ClippingFieldMask;
-    static const OSG::BitVector PopupMenuFieldMask;
-    static const OSG::BitVector FocusedForegroundFieldMask;
-    static const OSG::BitVector RolloverForegroundFieldMask;
-    static const OSG::BitVector DisabledForegroundFieldMask;
-    static const OSG::BitVector ForegroundFieldMask;
-    static const OSG::BitVector CursorFieldMask;
-    static const OSG::BitVector EventProducerFieldMask;
-
+    static const OSG::BitVector PositionFieldMask =
+        (TypeTraits<BitVector>::One << PositionFieldId);
+    static const OSG::BitVector ClipBoundsFieldMask =
+        (TypeTraits<BitVector>::One << ClipBoundsFieldId);
+    static const OSG::BitVector MinSizeFieldMask =
+        (TypeTraits<BitVector>::One << MinSizeFieldId);
+    static const OSG::BitVector MaxSizeFieldMask =
+        (TypeTraits<BitVector>::One << MaxSizeFieldId);
+    static const OSG::BitVector PreferredSizeFieldMask =
+        (TypeTraits<BitVector>::One << PreferredSizeFieldId);
+    static const OSG::BitVector SizeFieldMask =
+        (TypeTraits<BitVector>::One << SizeFieldId);
+    static const OSG::BitVector VisibleFieldMask =
+        (TypeTraits<BitVector>::One << VisibleFieldId);
+    static const OSG::BitVector EnabledFieldMask =
+        (TypeTraits<BitVector>::One << EnabledFieldId);
+    static const OSG::BitVector FocusedFieldMask =
+        (TypeTraits<BitVector>::One << FocusedFieldId);
+    static const OSG::BitVector ConstraintsFieldMask =
+        (TypeTraits<BitVector>::One << ConstraintsFieldId);
+    static const OSG::BitVector BorderFieldMask =
+        (TypeTraits<BitVector>::One << BorderFieldId);
+    static const OSG::BitVector BackgroundFieldMask =
+        (TypeTraits<BitVector>::One << BackgroundFieldId);
+    static const OSG::BitVector DisabledBorderFieldMask =
+        (TypeTraits<BitVector>::One << DisabledBorderFieldId);
+    static const OSG::BitVector DisabledBackgroundFieldMask =
+        (TypeTraits<BitVector>::One << DisabledBackgroundFieldId);
+    static const OSG::BitVector DragEnabledFieldMask =
+        (TypeTraits<BitVector>::One << DragEnabledFieldId);
+    static const OSG::BitVector TransferHandlerFieldMask =
+        (TypeTraits<BitVector>::One << TransferHandlerFieldId);
+    static const OSG::BitVector FocusedBorderFieldMask =
+        (TypeTraits<BitVector>::One << FocusedBorderFieldId);
+    static const OSG::BitVector FocusedBackgroundFieldMask =
+        (TypeTraits<BitVector>::One << FocusedBackgroundFieldId);
+    static const OSG::BitVector RolloverBorderFieldMask =
+        (TypeTraits<BitVector>::One << RolloverBorderFieldId);
+    static const OSG::BitVector RolloverBackgroundFieldMask =
+        (TypeTraits<BitVector>::One << RolloverBackgroundFieldId);
+    static const OSG::BitVector ToolTipTextFieldMask =
+        (TypeTraits<BitVector>::One << ToolTipTextFieldId);
+    static const OSG::BitVector OpacityFieldMask =
+        (TypeTraits<BitVector>::One << OpacityFieldId);
+    static const OSG::BitVector ParentContainerFieldMask =
+        (TypeTraits<BitVector>::One << ParentContainerFieldId);
+    static const OSG::BitVector ParentWindowFieldMask =
+        (TypeTraits<BitVector>::One << ParentWindowFieldId);
+    static const OSG::BitVector ClippingFieldMask =
+        (TypeTraits<BitVector>::One << ClippingFieldId);
+    static const OSG::BitVector PopupMenuFieldMask =
+        (TypeTraits<BitVector>::One << PopupMenuFieldId);
+    static const OSG::BitVector FocusedForegroundFieldMask =
+        (TypeTraits<BitVector>::One << FocusedForegroundFieldId);
+    static const OSG::BitVector RolloverForegroundFieldMask =
+        (TypeTraits<BitVector>::One << RolloverForegroundFieldId);
+    static const OSG::BitVector DisabledForegroundFieldMask =
+        (TypeTraits<BitVector>::One << DisabledForegroundFieldId);
+    static const OSG::BitVector ForegroundFieldMask =
+        (TypeTraits<BitVector>::One << ForegroundFieldId);
+    static const OSG::BitVector CursorFieldMask =
+        (TypeTraits<BitVector>::One << CursorFieldId);
+    static const OSG::BitVector EventProducerFieldMask =
+        (TypeTraits<BitVector>::One << EventProducerFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFPnt2f           SFPositionType;
+    typedef SFPnt4f           SFClipBoundsType;
+    typedef SFVec2f           SFMinSizeType;
+    typedef SFVec2f           SFMaxSizeType;
+    typedef SFVec2f           SFPreferredSizeType;
+    typedef SFVec2f           SFSizeType;
+    typedef SFBool            SFVisibleType;
+    typedef SFBool            SFEnabledType;
+    typedef SFBool            SFFocusedType;
+    typedef SFUnrecLayoutConstraintsPtr SFConstraintsType;
+    typedef SFUnrecBorderPtr  SFBorderType;
+    typedef SFUnrecLayerPtr   SFBackgroundType;
+    typedef SFUnrecBorderPtr  SFDisabledBorderType;
+    typedef SFUnrecLayerPtr   SFDisabledBackgroundType;
+    typedef SFBool            SFDragEnabledType;
+    typedef SFUnrecTransferHandlerPtr SFTransferHandlerType;
+    typedef SFUnrecBorderPtr  SFFocusedBorderType;
+    typedef SFUnrecLayerPtr   SFFocusedBackgroundType;
+    typedef SFUnrecBorderPtr  SFRolloverBorderType;
+    typedef SFUnrecLayerPtr   SFRolloverBackgroundType;
+    typedef SFString          SFToolTipTextType;
+    typedef SFReal32          SFOpacityType;
+    typedef SFUnrecComponentContainerPtr SFParentContainerType;
+    typedef SFUnrecInternalWindowPtr SFParentWindowType;
+    typedef SFBool            SFClippingType;
+    typedef SFUnrecPopupMenuPtr SFPopupMenuType;
+    typedef SFUnrecLayerPtr   SFFocusedForegroundType;
+    typedef SFUnrecLayerPtr   SFRolloverForegroundType;
+    typedef SFUnrecLayerPtr   SFDisabledForegroundType;
+    typedef SFUnrecLayerPtr   SFForegroundType;
+    typedef SFUInt32          SFCursorType;
+    typedef SFEventProducerPtr          SFEventProducerType;
 
     enum
     {
-        MouseMovedMethodId        = 1,
-        MouseDraggedMethodId      = MouseMovedMethodId        + 1,
-        MouseClickedMethodId      = MouseDraggedMethodId      + 1,
-        MouseEnteredMethodId      = MouseClickedMethodId      + 1,
-        MouseExitedMethodId       = MouseEnteredMethodId      + 1,
-        MousePressedMethodId      = MouseExitedMethodId       + 1,
-        MouseReleasedMethodId     = MousePressedMethodId      + 1,
-        MouseWheelMovedMethodId   = MouseReleasedMethodId     + 1,
-        KeyPressedMethodId        = MouseWheelMovedMethodId   + 1,
-        KeyReleasedMethodId       = KeyPressedMethodId        + 1,
-        KeyTypedMethodId          = KeyReleasedMethodId       + 1,
-        FocusGainedMethodId       = KeyTypedMethodId          + 1,
-        FocusLostMethodId         = FocusGainedMethodId       + 1,
-        ComponentHiddenMethodId   = FocusLostMethodId         + 1,
-        ComponentVisibleMethodId  = ComponentHiddenMethodId   + 1,
-        ComponentMovedMethodId    = ComponentVisibleMethodId  + 1,
-        ComponentResizedMethodId  = ComponentMovedMethodId    + 1,
-        ComponentEnabledMethodId  = ComponentResizedMethodId  + 1,
-        ComponentDisabledMethodId = ComponentEnabledMethodId  + 1,
-        NextMethodId              = ComponentDisabledMethodId + 1
+        MouseMovedMethodId = 1,
+        MouseDraggedMethodId = MouseMovedMethodId + 1,
+        MouseClickedMethodId = MouseDraggedMethodId + 1,
+        MouseEnteredMethodId = MouseClickedMethodId + 1,
+        MouseExitedMethodId = MouseEnteredMethodId + 1,
+        MousePressedMethodId = MouseExitedMethodId + 1,
+        MouseReleasedMethodId = MousePressedMethodId + 1,
+        MouseWheelMovedMethodId = MouseReleasedMethodId + 1,
+        KeyPressedMethodId = MouseWheelMovedMethodId + 1,
+        KeyReleasedMethodId = KeyPressedMethodId + 1,
+        KeyTypedMethodId = KeyReleasedMethodId + 1,
+        FocusGainedMethodId = KeyTypedMethodId + 1,
+        FocusLostMethodId = FocusGainedMethodId + 1,
+        ComponentHiddenMethodId = FocusLostMethodId + 1,
+        ComponentVisibleMethodId = ComponentHiddenMethodId + 1,
+        ComponentMovedMethodId = ComponentVisibleMethodId + 1,
+        ComponentResizedMethodId = ComponentMovedMethodId + 1,
+        ComponentEnabledMethodId = ComponentResizedMethodId + 1,
+        ComponentDisabledMethodId = ComponentEnabledMethodId + 1,
+        NextProducedMethodId = ComponentDisabledMethodId + 1
     };
-
-
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
-    static const  EventProducerType  &getProducerClassType  (void); 
-    static        UInt32              getProducerClassTypeId(void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
+    static const  EventProducerType  &getProducerClassType  (void);
+    static        UInt32              getProducerClassTypeId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -248,245 +294,196 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
 
 
     virtual       SFPnt2f             *editSFPosition       (void);
-    virtual const SFPnt2f             *getSFPosition       (void) const;
+    virtual const SFPnt2f             *getSFPosition        (void) const;
 
     virtual       SFVec2f             *editSFMinSize        (void);
-    virtual const SFVec2f             *getSFMinSize        (void) const;
+    virtual const SFVec2f             *getSFMinSize         (void) const;
 
     virtual       SFVec2f             *editSFMaxSize        (void);
-    virtual const SFVec2f             *getSFMaxSize        (void) const;
+    virtual const SFVec2f             *getSFMaxSize         (void) const;
 
     virtual       SFVec2f             *editSFPreferredSize  (void);
-    virtual const SFVec2f             *getSFPreferredSize  (void) const;
+    virtual const SFVec2f             *getSFPreferredSize   (void) const;
 
     virtual       SFVec2f             *editSFSize           (void);
-    virtual const SFVec2f             *getSFSize           (void) const;
+    virtual const SFVec2f             *getSFSize            (void) const;
 
     virtual       SFBool              *editSFVisible        (void);
-    virtual const SFBool              *getSFVisible        (void) const;
+    virtual const SFBool              *getSFVisible         (void) const;
 
     virtual       SFBool              *editSFEnabled        (void);
-    virtual const SFBool              *getSFEnabled        (void) const;
+    virtual const SFBool              *getSFEnabled         (void) const;
 
     virtual       SFBool              *editSFFocused        (void);
-    virtual const SFBool              *getSFFocused        (void) const;
-
-    virtual       SFLayoutConstraintsPtr *editSFConstraints    (void);
-    virtual const SFLayoutConstraintsPtr *getSFConstraints    (void) const;
-
-    virtual       SFBorderPtr         *editSFBorder         (void);
-    virtual const SFBorderPtr         *getSFBorder         (void) const;
-
-    virtual       SFLayerPtr          *editSFBackground     (void);
-    virtual const SFLayerPtr          *getSFBackground     (void) const;
-
-    virtual       SFBorderPtr         *editSFDisabledBorder (void);
-    virtual const SFBorderPtr         *getSFDisabledBorder (void) const;
-
-    virtual       SFLayerPtr          *editSFDisabledBackground(void);
-    virtual const SFLayerPtr          *getSFDisabledBackground(void) const;
+    virtual const SFBool              *getSFFocused         (void) const;
+    virtual const SFUnrecLayoutConstraintsPtr *getSFConstraints    (void) const;
+    virtual       SFUnrecLayoutConstraintsPtr *editSFConstraints    (void);
+    virtual const SFUnrecBorderPtr    *getSFBorder         (void) const;
+    virtual       SFUnrecBorderPtr    *editSFBorder         (void);
+    virtual const SFUnrecLayerPtr     *getSFBackground     (void) const;
+    virtual       SFUnrecLayerPtr     *editSFBackground     (void);
+    virtual const SFUnrecBorderPtr    *getSFDisabledBorder (void) const;
+    virtual       SFUnrecBorderPtr    *editSFDisabledBorder (void);
+    virtual const SFUnrecLayerPtr     *getSFDisabledBackground(void) const;
+    virtual       SFUnrecLayerPtr     *editSFDisabledBackground(void);
 
     virtual       SFBool              *editSFDragEnabled    (void);
-    virtual const SFBool              *getSFDragEnabled    (void) const;
-
-    virtual       SFTransferHandlerPtr *editSFTransferHandler(void);
-    virtual const SFTransferHandlerPtr *getSFTransferHandler(void) const;
-
-    virtual       SFBorderPtr         *editSFFocusedBorder  (void);
-    virtual const SFBorderPtr         *getSFFocusedBorder  (void) const;
-
-    virtual       SFLayerPtr          *editSFFocusedBackground(void);
-    virtual const SFLayerPtr          *getSFFocusedBackground(void) const;
-
-    virtual       SFBorderPtr         *editSFRolloverBorder (void);
-    virtual const SFBorderPtr         *getSFRolloverBorder (void) const;
-
-    virtual       SFLayerPtr          *editSFRolloverBackground(void);
-    virtual const SFLayerPtr          *getSFRolloverBackground(void) const;
+    virtual const SFBool              *getSFDragEnabled     (void) const;
+    virtual const SFUnrecTransferHandlerPtr *getSFTransferHandler(void) const;
+    virtual       SFUnrecTransferHandlerPtr *editSFTransferHandler(void);
+    virtual const SFUnrecBorderPtr    *getSFFocusedBorder  (void) const;
+    virtual       SFUnrecBorderPtr    *editSFFocusedBorder  (void);
+    virtual const SFUnrecLayerPtr     *getSFFocusedBackground(void) const;
+    virtual       SFUnrecLayerPtr     *editSFFocusedBackground(void);
+    virtual const SFUnrecBorderPtr    *getSFRolloverBorder (void) const;
+    virtual       SFUnrecBorderPtr    *editSFRolloverBorder (void);
+    virtual const SFUnrecLayerPtr     *getSFRolloverBackground(void) const;
+    virtual       SFUnrecLayerPtr     *editSFRolloverBackground(void);
 
     virtual       SFString            *editSFToolTipText    (void);
-    virtual const SFString            *getSFToolTipText    (void) const;
+    virtual const SFString            *getSFToolTipText     (void) const;
 
     virtual       SFReal32            *editSFOpacity        (void);
-    virtual const SFReal32            *getSFOpacity        (void) const;
-
-    virtual       SFContainerPtr      *editSFParentContainer(void);
-    virtual const SFContainerPtr      *getSFParentContainer(void) const;
-
-    virtual       SFInternalWindowPtr *editSFParentWindow   (void);
-    virtual const SFInternalWindowPtr *getSFParentWindow   (void) const;
+    virtual const SFReal32            *getSFOpacity         (void) const;
+    virtual const SFUnrecComponentContainerPtr *getSFParentContainer(void) const;
+    virtual       SFUnrecComponentContainerPtr *editSFParentContainer(void);
+    virtual const SFUnrecInternalWindowPtr *getSFParentWindow   (void) const;
+    virtual       SFUnrecInternalWindowPtr *editSFParentWindow   (void);
 
     virtual       SFBool              *editSFClipping       (void);
-    virtual const SFBool              *getSFClipping       (void) const;
-
-    virtual       SFPopupMenuPtr      *editSFPopupMenu      (void);
-    virtual const SFPopupMenuPtr      *getSFPopupMenu      (void) const;
-
-    virtual       SFLayerPtr          *editSFFocusedForeground(void);
-    virtual const SFLayerPtr          *getSFFocusedForeground(void) const;
-
-    virtual       SFLayerPtr          *editSFRolloverForeground(void);
-    virtual const SFLayerPtr          *getSFRolloverForeground(void) const;
-
-    virtual       SFLayerPtr          *editSFDisabledForeground(void);
-    virtual const SFLayerPtr          *getSFDisabledForeground(void) const;
-
-    virtual       SFLayerPtr          *editSFForeground     (void);
-    virtual const SFLayerPtr          *getSFForeground     (void) const;
+    virtual const SFBool              *getSFClipping        (void) const;
+    virtual const SFUnrecPopupMenuPtr *getSFPopupMenu      (void) const;
+    virtual       SFUnrecPopupMenuPtr *editSFPopupMenu      (void);
+    virtual const SFUnrecLayerPtr     *getSFFocusedForeground(void) const;
+    virtual       SFUnrecLayerPtr     *editSFFocusedForeground(void);
+    virtual const SFUnrecLayerPtr     *getSFRolloverForeground(void) const;
+    virtual       SFUnrecLayerPtr     *editSFRolloverForeground(void);
+    virtual const SFUnrecLayerPtr     *getSFDisabledForeground(void) const;
+    virtual       SFUnrecLayerPtr     *editSFDisabledForeground(void);
+    virtual const SFUnrecLayerPtr     *getSFForeground     (void) const;
+    virtual       SFUnrecLayerPtr     *editSFForeground     (void);
 
     virtual       SFUInt32            *editSFCursor         (void);
-    virtual const SFUInt32            *getSFCursor         (void) const;
+    virtual const SFUInt32            *getSFCursor          (void) const;
 
 
     virtual       Pnt2f               &editPosition       (void);
-    virtual const Pnt2f               &getPosition       (void) const;
-
+    virtual const Pnt2f               &getPosition        (void) const;
 
     virtual       Vec2f               &editMinSize        (void);
-    virtual const Vec2f               &getMinSize        (void) const;
+    virtual const Vec2f               &getMinSize         (void) const;
 
     virtual       Vec2f               &editMaxSize        (void);
-    virtual const Vec2f               &getMaxSize        (void) const;
+    virtual const Vec2f               &getMaxSize         (void) const;
 
     virtual       Vec2f               &editPreferredSize  (void);
-    virtual const Vec2f               &getPreferredSize  (void) const;
+    virtual const Vec2f               &getPreferredSize   (void) const;
 
     virtual       Vec2f               &editSize           (void);
-    virtual const Vec2f               &getSize           (void) const;
+    virtual const Vec2f               &getSize            (void) const;
 
     virtual       bool                &editVisible        (void);
-    virtual const bool                &getVisible        (void) const;
+    virtual       bool                 getVisible         (void) const;
 
     virtual       bool                &editEnabled        (void);
-    virtual const bool                &getEnabled        (void) const;
+    virtual       bool                 getEnabled         (void) const;
 
     virtual       bool                &editFocused        (void);
-    virtual const bool                &getFocused        (void) const;
+    virtual       bool                 getFocused         (void) const;
 
-    virtual       LayoutConstraintsPtr &editConstraints    (void);
-    virtual const LayoutConstraintsPtr &getConstraints    (void) const;
+    virtual       LayoutConstraints * getConstraints    (void) const;
 
-    virtual       BorderPtr           &editBorder         (void);
-    virtual const BorderPtr           &getBorder         (void) const;
+    virtual       Border * getBorder         (void) const;
 
-    virtual       LayerPtr            &editBackground     (void);
-    virtual const LayerPtr            &getBackground     (void) const;
+    virtual       Layer * getBackground     (void) const;
 
-    virtual       BorderPtr           &editDisabledBorder (void);
-    virtual const BorderPtr           &getDisabledBorder (void) const;
+    virtual       Border * getDisabledBorder (void) const;
 
-    virtual       LayerPtr            &editDisabledBackground(void);
-    virtual const LayerPtr            &getDisabledBackground(void) const;
+    virtual       Layer * getDisabledBackground(void) const;
 
     virtual       bool                &editDragEnabled    (void);
-    virtual const bool                &getDragEnabled    (void) const;
+    virtual       bool                 getDragEnabled     (void) const;
 
-    virtual       TransferHandlerPtr  &editTransferHandler(void);
-    virtual const TransferHandlerPtr  &getTransferHandler(void) const;
+    virtual       TransferHandler * getTransferHandler(void) const;
 
-    virtual       BorderPtr           &editFocusedBorder  (void);
-    virtual const BorderPtr           &getFocusedBorder  (void) const;
+    virtual       Border * getFocusedBorder  (void) const;
 
-    virtual       LayerPtr            &editFocusedBackground(void);
-    virtual const LayerPtr            &getFocusedBackground(void) const;
+    virtual       Layer * getFocusedBackground(void) const;
 
-    virtual       BorderPtr           &editRolloverBorder (void);
-    virtual const BorderPtr           &getRolloverBorder (void) const;
+    virtual       Border * getRolloverBorder (void) const;
 
-    virtual       LayerPtr            &editRolloverBackground(void);
-    virtual const LayerPtr            &getRolloverBackground(void) const;
+    virtual       Layer * getRolloverBackground(void) const;
 
     virtual       std::string         &editToolTipText    (void);
-    virtual const std::string         &getToolTipText    (void) const;
+    virtual const std::string         &getToolTipText     (void) const;
 
     virtual       Real32              &editOpacity        (void);
-    virtual const Real32              &getOpacity        (void) const;
+    virtual       Real32               getOpacity         (void) const;
 
-    virtual       ContainerPtr        &editParentContainer(void);
-    virtual const ContainerPtr        &getParentContainer(void) const;
+    virtual       ComponentContainer * getParentContainer(void) const;
 
-    virtual       InternalWindowPtr   &editParentWindow   (void);
-    virtual const InternalWindowPtr   &getParentWindow   (void) const;
+    virtual       InternalWindow * getParentWindow   (void) const;
 
     virtual       bool                &editClipping       (void);
-    virtual const bool                &getClipping       (void) const;
+    virtual       bool                 getClipping        (void) const;
 
-    virtual       PopupMenuPtr        &editPopupMenu      (void);
-    virtual const PopupMenuPtr        &getPopupMenu      (void) const;
+    virtual       PopupMenu * getPopupMenu      (void) const;
 
-    virtual       LayerPtr            &editFocusedForeground(void);
-    virtual const LayerPtr            &getFocusedForeground(void) const;
+    virtual       Layer * getFocusedForeground(void) const;
 
-    virtual       LayerPtr            &editRolloverForeground(void);
-    virtual const LayerPtr            &getRolloverForeground(void) const;
+    virtual       Layer * getRolloverForeground(void) const;
 
-    virtual       LayerPtr            &editDisabledForeground(void);
-    virtual const LayerPtr            &getDisabledForeground(void) const;
+    virtual       Layer * getDisabledForeground(void) const;
 
-    virtual       LayerPtr            &editForeground     (void);
-    virtual const LayerPtr            &getForeground     (void) const;
+    virtual       Layer * getForeground     (void) const;
 
     virtual       UInt32              &editCursor         (void);
-    virtual const UInt32              &getCursor         (void) const;
+    virtual       UInt32               getCursor          (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-    virtual void setPosition       ( const Pnt2f &value );
-    virtual void setMinSize        ( const Vec2f &value );
-    virtual void setMaxSize        ( const Vec2f &value );
-    virtual void setPreferredSize  ( const Vec2f &value );
-    virtual void setSize           ( const Vec2f &value );
-    virtual void setVisible        ( const bool &value );
-    virtual void setEnabled        ( const bool &value );
-    virtual void setFocused        ( const bool &value );
-    virtual void setConstraints    ( const LayoutConstraintsPtr &value );
-    virtual void setBorder         ( const BorderPtr &value );
-    virtual void setBackground     ( const LayerPtr &value );
-    virtual void setDisabledBorder ( const BorderPtr &value );
-    virtual void setDisabledBackground( const LayerPtr &value );
-    virtual void setDragEnabled    ( const bool &value );
-    virtual void setTransferHandler( const TransferHandlerPtr &value );
-    virtual void setFocusedBorder  ( const BorderPtr &value );
-    virtual void setFocusedBackground( const LayerPtr &value );
-    virtual void setRolloverBorder ( const BorderPtr &value );
-    virtual void setRolloverBackground( const LayerPtr &value );
-    virtual void setToolTipText    ( const std::string &value );
-    virtual void setOpacity        ( const Real32 &value );
-    virtual void setParentContainer( const ContainerPtr &value );
-    virtual void setParentWindow   ( const InternalWindowPtr &value );
-    virtual void setClipping       ( const bool &value );
-    virtual void setPopupMenu      ( const PopupMenuPtr &value );
-    virtual void setFocusedForeground( const LayerPtr &value );
-    virtual void setRolloverForeground( const LayerPtr &value );
-    virtual void setDisabledForeground( const LayerPtr &value );
-    virtual void setForeground     ( const LayerPtr &value );
-    virtual void setCursor         ( const UInt32 &value );
+    virtual void setPosition       (const Pnt2f &value);
+    virtual void setMinSize        (const Vec2f &value);
+    virtual void setMaxSize        (const Vec2f &value);
+    virtual void setPreferredSize  (const Vec2f &value);
+    virtual void setSize           (const Vec2f &value);
+    virtual void setVisible        (const bool value);
+    virtual void setEnabled        (const bool value);
+    virtual void setFocused        (const bool value);
+    virtual void setConstraints    (LayoutConstraints * const value);
+    virtual void setBorder         (Border * const value);
+    virtual void setBackground     (Layer * const value);
+    virtual void setDisabledBorder (Border * const value);
+    virtual void setDisabledBackground(Layer * const value);
+    virtual void setDragEnabled    (const bool value);
+    virtual void setTransferHandler(TransferHandler * const value);
+    virtual void setFocusedBorder  (Border * const value);
+    virtual void setFocusedBackground(Layer * const value);
+    virtual void setRolloverBorder (Border * const value);
+    virtual void setRolloverBackground(Layer * const value);
+    virtual void setToolTipText    (const std::string &value);
+    virtual void setOpacity        (const Real32 value);
+    virtual void setParentContainer(ComponentContainer * const value);
+    virtual void setParentWindow   (InternalWindow * const value);
+    virtual void setClipping       (const bool value);
+    virtual void setPopupMenu      (PopupMenu * const value);
+    virtual void setFocusedForeground(Layer * const value);
+    virtual void setRolloverForeground(Layer * const value);
+    virtual void setDisabledForeground(Layer * const value);
+    virtual void setForeground     (Layer * const value);
+    virtual void setCursor         (const UInt32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                Method Produced Get                           */
+    /*! \name                Ptr Field Set                                 */
     /*! \{                                                                 */
 
-    virtual const EventProducerType &getProducerType(void) const; 
-    EventConnection attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
-    bool isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const;
-    UInt32 getNumActivitiesAttached(UInt32 ProducedEventId) const;
-    ActivityPtr getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const;
-    void detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
-    UInt32 getNumProducedEvents(void) const;
-    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
-    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
-    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
-
-    SFEventProducerPtr *editSFEventProducer(void);
-    EventProducerPtr &editEventProducer(void);
-
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -494,57 +491,91 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
+
+    EventConnection          attachActivity             (ActivityRefPtr TheActivity,
+                                                         UInt32 ProducedEventId);
+    bool                     isActivityAttached         (ActivityRefPtr TheActivity,
+                                                         UInt32 ProducedEventId) const;
+    UInt32                   getNumActivitiesAttached   (UInt32 ProducedEventId) const;
+    ActivityRefPtr           getAttachedActivity        (UInt32 ProducedEventId,
+                                                         UInt32 ActivityIndex) const;
+    void                     detachActivity             (ActivityRefPtr TheActivity,
+                                                         UInt32 ProducedEventId);
+    UInt32                   getNumProducedEvents       (void) const;
+    const MethodDescription *getProducedEventDescription(const std::string &ProducedEventName) const;
+    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
+    UInt32                   getProducedEventId         (const std::string &ProducedEventName) const;
+
+    SFEventProducerPtr *editSFEventProducer(void);
+    EventProducerPtr   &editEventProducer  (void);
+
+    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Event Producer                            */
+    /*! \{                                                                 */
     EventProducer _Producer;
 
+    /*! \}                                                                 */
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFPnt2f             _sfPosition;
-    SFPnt4f             _sfClipBounds;
-    SFVec2f             _sfMinSize;
-    SFVec2f             _sfMaxSize;
-    SFVec2f             _sfPreferredSize;
-    SFVec2f             _sfSize;
-    SFBool              _sfVisible;
-    SFBool              _sfEnabled;
-    SFBool              _sfFocused;
-    SFLayoutConstraintsPtr   _sfConstraints;
-    SFBorderPtr         _sfBorder;
-    SFLayerPtr          _sfBackground;
-    SFBorderPtr         _sfDisabledBorder;
-    SFLayerPtr          _sfDisabledBackground;
-    SFBool              _sfDragEnabled;
-    SFTransferHandlerPtr   _sfTransferHandler;
-    SFBorderPtr         _sfFocusedBorder;
-    SFLayerPtr          _sfFocusedBackground;
-    SFBorderPtr         _sfRolloverBorder;
-    SFLayerPtr          _sfRolloverBackground;
-    SFString            _sfToolTipText;
-    SFReal32            _sfOpacity;
-    SFContainerPtr      _sfParentContainer;
-    SFInternalWindowPtr   _sfParentWindow;
-    SFBool              _sfClipping;
-    SFPopupMenuPtr      _sfPopupMenu;
-    SFLayerPtr          _sfFocusedForeground;
-    SFLayerPtr          _sfRolloverForeground;
-    SFLayerPtr          _sfDisabledForeground;
-    SFLayerPtr          _sfForeground;
-    SFUInt32            _sfCursor;
+    SFPnt2f           _sfPosition;
+    SFPnt4f           _sfClipBounds;
+    SFVec2f           _sfMinSize;
+    SFVec2f           _sfMaxSize;
+    SFVec2f           _sfPreferredSize;
+    SFVec2f           _sfSize;
+    SFBool            _sfVisible;
+    SFBool            _sfEnabled;
+    SFBool            _sfFocused;
+    SFUnrecLayoutConstraintsPtr _sfConstraints;
+    SFUnrecBorderPtr  _sfBorder;
+    SFUnrecLayerPtr   _sfBackground;
+    SFUnrecBorderPtr  _sfDisabledBorder;
+    SFUnrecLayerPtr   _sfDisabledBackground;
+    SFBool            _sfDragEnabled;
+    SFUnrecTransferHandlerPtr _sfTransferHandler;
+    SFUnrecBorderPtr  _sfFocusedBorder;
+    SFUnrecLayerPtr   _sfFocusedBackground;
+    SFUnrecBorderPtr  _sfRolloverBorder;
+    SFUnrecLayerPtr   _sfRolloverBackground;
+    SFString          _sfToolTipText;
+    SFReal32          _sfOpacity;
+    SFUnrecComponentContainerPtr _sfParentContainer;
+    SFUnrecInternalWindowPtr _sfParentWindow;
+    SFBool            _sfClipping;
+    SFUnrecPopupMenuPtr _sfPopupMenu;
+    SFUnrecLayerPtr   _sfFocusedForeground;
+    SFUnrecLayerPtr   _sfRolloverForeground;
+    SFUnrecLayerPtr   _sfDisabledForeground;
+    SFUnrecLayerPtr   _sfForeground;
+    SFUInt32          _sfCursor;
+    SFEventProducerPtr _sfEventProducer;
 
     /*! \}                                                                 */
-    SFEventProducerPtr _sfEventProducer;
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -557,18 +588,95 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ComponentBase(void); 
+    virtual ~ComponentBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const Component *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandlePosition        (void) const;
+    EditFieldHandlePtr editHandlePosition       (void);
+    GetFieldHandlePtr  getHandleClipBounds      (void) const;
+    EditFieldHandlePtr editHandleClipBounds     (void);
+    GetFieldHandlePtr  getHandleMinSize         (void) const;
+    EditFieldHandlePtr editHandleMinSize        (void);
+    GetFieldHandlePtr  getHandleMaxSize         (void) const;
+    EditFieldHandlePtr editHandleMaxSize        (void);
+    GetFieldHandlePtr  getHandlePreferredSize   (void) const;
+    EditFieldHandlePtr editHandlePreferredSize  (void);
+    GetFieldHandlePtr  getHandleSize            (void) const;
+    EditFieldHandlePtr editHandleSize           (void);
+    GetFieldHandlePtr  getHandleVisible         (void) const;
+    EditFieldHandlePtr editHandleVisible        (void);
+    GetFieldHandlePtr  getHandleEnabled         (void) const;
+    EditFieldHandlePtr editHandleEnabled        (void);
+    GetFieldHandlePtr  getHandleFocused         (void) const;
+    EditFieldHandlePtr editHandleFocused        (void);
+    GetFieldHandlePtr  getHandleConstraints     (void) const;
+    EditFieldHandlePtr editHandleConstraints    (void);
+    GetFieldHandlePtr  getHandleBorder          (void) const;
+    EditFieldHandlePtr editHandleBorder         (void);
+    GetFieldHandlePtr  getHandleBackground      (void) const;
+    EditFieldHandlePtr editHandleBackground     (void);
+    GetFieldHandlePtr  getHandleDisabledBorder  (void) const;
+    EditFieldHandlePtr editHandleDisabledBorder (void);
+    GetFieldHandlePtr  getHandleDisabledBackground (void) const;
+    EditFieldHandlePtr editHandleDisabledBackground(void);
+    GetFieldHandlePtr  getHandleDragEnabled     (void) const;
+    EditFieldHandlePtr editHandleDragEnabled    (void);
+    GetFieldHandlePtr  getHandleTransferHandler (void) const;
+    EditFieldHandlePtr editHandleTransferHandler(void);
+    GetFieldHandlePtr  getHandleFocusedBorder   (void) const;
+    EditFieldHandlePtr editHandleFocusedBorder  (void);
+    GetFieldHandlePtr  getHandleFocusedBackground (void) const;
+    EditFieldHandlePtr editHandleFocusedBackground(void);
+    GetFieldHandlePtr  getHandleRolloverBorder  (void) const;
+    EditFieldHandlePtr editHandleRolloverBorder (void);
+    GetFieldHandlePtr  getHandleRolloverBackground (void) const;
+    EditFieldHandlePtr editHandleRolloverBackground(void);
+    GetFieldHandlePtr  getHandleToolTipText     (void) const;
+    EditFieldHandlePtr editHandleToolTipText    (void);
+    GetFieldHandlePtr  getHandleOpacity         (void) const;
+    EditFieldHandlePtr editHandleOpacity        (void);
+    GetFieldHandlePtr  getHandleParentContainer (void) const;
+    EditFieldHandlePtr editHandleParentContainer(void);
+    GetFieldHandlePtr  getHandleParentWindow    (void) const;
+    EditFieldHandlePtr editHandleParentWindow   (void);
+    GetFieldHandlePtr  getHandleClipping        (void) const;
+    EditFieldHandlePtr editHandleClipping       (void);
+    GetFieldHandlePtr  getHandlePopupMenu       (void) const;
+    EditFieldHandlePtr editHandlePopupMenu      (void);
+    GetFieldHandlePtr  getHandleFocusedForeground (void) const;
+    EditFieldHandlePtr editHandleFocusedForeground(void);
+    GetFieldHandlePtr  getHandleRolloverForeground (void) const;
+    EditFieldHandlePtr editHandleRolloverForeground(void);
+    GetFieldHandlePtr  getHandleDisabledForeground (void) const;
+    EditFieldHandlePtr editHandleDisabledForeground(void);
+    GetFieldHandlePtr  getHandleForeground      (void) const;
+    EditFieldHandlePtr editHandleForeground     (void);
+    GetFieldHandlePtr  getHandleCursor          (void) const;
+    EditFieldHandlePtr editHandleCursor         (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+
     virtual       SFPnt4f             *editSFClipBounds     (void);
-    virtual const SFPnt4f             *getSFClipBounds     (void) const;
+    virtual const SFPnt4f             *getSFClipBounds      (void) const;
+
 
     virtual       Pnt4f               &editClipBounds     (void);
-    virtual const Pnt4f               &getClipBounds     (void) const;
+    virtual const Pnt4f               &getClipBounds      (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -579,65 +687,63 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ComponentBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      ComponentBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      ComponentBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
+    /*---------------------------------------------------------------------*/
     static MethodDescription   *_methodDesc[];
     static EventProducerType _producerType;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const ComponentBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef ComponentBase *ComponentBaseP;
-
-typedef osgIF<ComponentBase::isNodeCore,
-              CoredNodePtr<Component>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ComponentNodePtr;
-
-typedef RefPtr<ComponentPtr> ComponentRefPtr;
 
 OSG_END_NAMESPACE
 

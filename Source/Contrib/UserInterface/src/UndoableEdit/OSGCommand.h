@@ -31,10 +31,10 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGIntrusivePtrImplBase.h>
+#include <boost/shared_ptr.hpp>
 #include "OSGCommandType.h"
 #include "OSGCommandManagerFields.h"
 #include <string>
@@ -43,15 +43,14 @@ OSG_BEGIN_NAMESPACE
  
 
 class Command;
-typedef boost::intrusive_ptr<Command> CommandPtr;
+typedef boost::shared_ptr<Command> CommandPtr;
 
-class OSG_USERINTERFACELIB_DLLMAPPING Command : public virtual IntrusivePtrImplBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Command
 {
    /*=========================  PUBLIC  ===============================*/
 protected:
 	friend class CommandManager;
 
-	typedef IntrusivePtrImplBase Inherited;
     typedef CommandPtr  Ptr;
     typedef Command  Self;
 

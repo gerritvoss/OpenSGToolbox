@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,89 +58,105 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGUIDrawObject.h" // Parent
 
-#include <OpenSG/OSGPnt2fFields.h> // Point1 type
-#include <OpenSG/OSGPnt2fFields.h> // Point2 type
-#include <OpenSG/OSGPnt2fFields.h> // Point3 type
-#include <OpenSG/OSGPnt2fFields.h> // Point4 type
-#include <OpenSG/OSGVec2fFields.h> // TexCoord1 type
-#include <OpenSG/OSGVec2fFields.h> // TexCoord2 type
-#include <OpenSG/OSGVec2fFields.h> // TexCoord3 type
-#include <OpenSG/OSGVec2fFields.h> // TexCoord4 type
-#include <OpenSG/OSGTextureChunkFields.h> // Texture type
-#include <OpenSG/OSGReal32Fields.h> // Opacity type
+#include "OSGVecFields.h"               // Point1 type
+#include "OSGTextureObjChunkFields.h"   // Texture type
+#include "OSGSysFields.h"               // Opacity type
 
 #include "OSGTexturedQuadUIDrawObjectFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class TexturedQuadUIDrawObject;
-class BinaryDataHandler;
 
 //! \brief TexturedQuadUIDrawObject Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING TexturedQuadUIDrawObjectBase : public UIDrawObject
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TexturedQuadUIDrawObjectBase : public UIDrawObject
 {
-  private:
-
-    typedef UIDrawObject    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef TexturedQuadUIDrawObjectPtr  Ptr;
+    typedef UIDrawObject Inherited;
+    typedef UIDrawObject ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(TexturedQuadUIDrawObject);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        Point1FieldId    = Inherited::NextFieldId,
-        Point2FieldId    = Point1FieldId    + 1,
-        Point3FieldId    = Point2FieldId    + 1,
-        Point4FieldId    = Point3FieldId    + 1,
-        TexCoord1FieldId = Point4FieldId    + 1,
+        Point1FieldId = Inherited::NextFieldId,
+        Point2FieldId = Point1FieldId + 1,
+        Point3FieldId = Point2FieldId + 1,
+        Point4FieldId = Point3FieldId + 1,
+        TexCoord1FieldId = Point4FieldId + 1,
         TexCoord2FieldId = TexCoord1FieldId + 1,
         TexCoord3FieldId = TexCoord2FieldId + 1,
         TexCoord4FieldId = TexCoord3FieldId + 1,
-        TextureFieldId   = TexCoord4FieldId + 1,
-        OpacityFieldId   = TextureFieldId   + 1,
-        NextFieldId      = OpacityFieldId   + 1
+        TextureFieldId = TexCoord4FieldId + 1,
+        OpacityFieldId = TextureFieldId + 1,
+        NextFieldId = OpacityFieldId + 1
     };
 
-    static const OSG::BitVector Point1FieldMask;
-    static const OSG::BitVector Point2FieldMask;
-    static const OSG::BitVector Point3FieldMask;
-    static const OSG::BitVector Point4FieldMask;
-    static const OSG::BitVector TexCoord1FieldMask;
-    static const OSG::BitVector TexCoord2FieldMask;
-    static const OSG::BitVector TexCoord3FieldMask;
-    static const OSG::BitVector TexCoord4FieldMask;
-    static const OSG::BitVector TextureFieldMask;
-    static const OSG::BitVector OpacityFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector Point1FieldMask =
+        (TypeTraits<BitVector>::One << Point1FieldId);
+    static const OSG::BitVector Point2FieldMask =
+        (TypeTraits<BitVector>::One << Point2FieldId);
+    static const OSG::BitVector Point3FieldMask =
+        (TypeTraits<BitVector>::One << Point3FieldId);
+    static const OSG::BitVector Point4FieldMask =
+        (TypeTraits<BitVector>::One << Point4FieldId);
+    static const OSG::BitVector TexCoord1FieldMask =
+        (TypeTraits<BitVector>::One << TexCoord1FieldId);
+    static const OSG::BitVector TexCoord2FieldMask =
+        (TypeTraits<BitVector>::One << TexCoord2FieldId);
+    static const OSG::BitVector TexCoord3FieldMask =
+        (TypeTraits<BitVector>::One << TexCoord3FieldId);
+    static const OSG::BitVector TexCoord4FieldMask =
+        (TypeTraits<BitVector>::One << TexCoord4FieldId);
+    static const OSG::BitVector TextureFieldMask =
+        (TypeTraits<BitVector>::One << TextureFieldId);
+    static const OSG::BitVector OpacityFieldMask =
+        (TypeTraits<BitVector>::One << OpacityFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFPnt2f           SFPoint1Type;
+    typedef SFPnt2f           SFPoint2Type;
+    typedef SFPnt2f           SFPoint3Type;
+    typedef SFPnt2f           SFPoint4Type;
+    typedef SFVec2f           SFTexCoord1Type;
+    typedef SFVec2f           SFTexCoord2Type;
+    typedef SFVec2f           SFTexCoord3Type;
+    typedef SFVec2f           SFTexCoord4Type;
+    typedef SFUnrecTextureObjChunkPtr SFTextureType;
+    typedef SFReal32          SFOpacityType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -149,57 +165,90 @@ class OSG_USERINTERFACELIB_DLLMAPPING TexturedQuadUIDrawObjectBase : public UIDr
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFPnt2f             *getSFPoint1         (void);
-           SFPnt2f             *getSFPoint2         (void);
-           SFPnt2f             *getSFPoint3         (void);
-           SFPnt2f             *getSFPoint4         (void);
-           SFVec2f             *getSFTexCoord1      (void);
-           SFVec2f             *getSFTexCoord2      (void);
-           SFVec2f             *getSFTexCoord3      (void);
-           SFVec2f             *getSFTexCoord4      (void);
-           SFTextureChunkPtr   *getSFTexture        (void);
-           SFReal32            *getSFOpacity        (void);
 
-           Pnt2f               &getPoint1         (void);
-     const Pnt2f               &getPoint1         (void) const;
-           Pnt2f               &getPoint2         (void);
-     const Pnt2f               &getPoint2         (void) const;
-           Pnt2f               &getPoint3         (void);
-     const Pnt2f               &getPoint3         (void) const;
-           Pnt2f               &getPoint4         (void);
-     const Pnt2f               &getPoint4         (void) const;
-           Vec2f               &getTexCoord1      (void);
-     const Vec2f               &getTexCoord1      (void) const;
-           Vec2f               &getTexCoord2      (void);
-     const Vec2f               &getTexCoord2      (void) const;
-           Vec2f               &getTexCoord3      (void);
-     const Vec2f               &getTexCoord3      (void) const;
-           Vec2f               &getTexCoord4      (void);
-     const Vec2f               &getTexCoord4      (void) const;
-           TextureChunkPtr     &getTexture        (void);
-     const TextureChunkPtr     &getTexture        (void) const;
-           Real32              &getOpacity        (void);
-     const Real32              &getOpacity        (void) const;
+                  SFPnt2f             *editSFPoint1         (void);
+            const SFPnt2f             *getSFPoint1          (void) const;
+
+                  SFPnt2f             *editSFPoint2         (void);
+            const SFPnt2f             *getSFPoint2          (void) const;
+
+                  SFPnt2f             *editSFPoint3         (void);
+            const SFPnt2f             *getSFPoint3          (void) const;
+
+                  SFPnt2f             *editSFPoint4         (void);
+            const SFPnt2f             *getSFPoint4          (void) const;
+
+                  SFVec2f             *editSFTexCoord1      (void);
+            const SFVec2f             *getSFTexCoord1       (void) const;
+
+                  SFVec2f             *editSFTexCoord2      (void);
+            const SFVec2f             *getSFTexCoord2       (void) const;
+
+                  SFVec2f             *editSFTexCoord3      (void);
+            const SFVec2f             *getSFTexCoord3       (void) const;
+
+                  SFVec2f             *editSFTexCoord4      (void);
+            const SFVec2f             *getSFTexCoord4       (void) const;
+            const SFUnrecTextureObjChunkPtr *getSFTexture        (void) const;
+                  SFUnrecTextureObjChunkPtr *editSFTexture        (void);
+
+                  SFReal32            *editSFOpacity        (void);
+            const SFReal32            *getSFOpacity         (void) const;
+
+
+                  Pnt2f               &editPoint1         (void);
+            const Pnt2f               &getPoint1          (void) const;
+
+                  Pnt2f               &editPoint2         (void);
+            const Pnt2f               &getPoint2          (void) const;
+
+                  Pnt2f               &editPoint3         (void);
+            const Pnt2f               &getPoint3          (void) const;
+
+                  Pnt2f               &editPoint4         (void);
+            const Pnt2f               &getPoint4          (void) const;
+
+                  Vec2f               &editTexCoord1      (void);
+            const Vec2f               &getTexCoord1       (void) const;
+
+                  Vec2f               &editTexCoord2      (void);
+            const Vec2f               &getTexCoord2       (void) const;
+
+                  Vec2f               &editTexCoord3      (void);
+            const Vec2f               &getTexCoord3       (void) const;
+
+                  Vec2f               &editTexCoord4      (void);
+            const Vec2f               &getTexCoord4       (void) const;
+
+                  TextureObjChunk * getTexture        (void) const;
+
+                  Real32              &editOpacity        (void);
+                  Real32               getOpacity         (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setPoint1         ( const Pnt2f &value );
-     void setPoint2         ( const Pnt2f &value );
-     void setPoint3         ( const Pnt2f &value );
-     void setPoint4         ( const Pnt2f &value );
-     void setTexCoord1      ( const Vec2f &value );
-     void setTexCoord2      ( const Vec2f &value );
-     void setTexCoord3      ( const Vec2f &value );
-     void setTexCoord4      ( const Vec2f &value );
-     void setTexture        ( const TextureChunkPtr &value );
-     void setOpacity        ( const Real32 &value );
+            void setPoint1         (const Pnt2f &value);
+            void setPoint2         (const Pnt2f &value);
+            void setPoint3         (const Pnt2f &value);
+            void setPoint4         (const Pnt2f &value);
+            void setTexCoord1      (const Vec2f &value);
+            void setTexCoord2      (const Vec2f &value);
+            void setTexCoord3      (const Vec2f &value);
+            void setTexCoord4      (const Vec2f &value);
+            void setTexture        (TextureObjChunk * const value);
+            void setOpacity        (const Real32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -207,11 +256,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING TexturedQuadUIDrawObjectBase : public UIDr
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -219,35 +268,52 @@ class OSG_USERINTERFACELIB_DLLMAPPING TexturedQuadUIDrawObjectBase : public UIDr
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  TexturedQuadUIDrawObjectPtr      create          (void); 
-    static  TexturedQuadUIDrawObjectPtr      createEmpty     (void); 
+    static  TexturedQuadUIDrawObjectTransitPtr  create          (void);
+    static  TexturedQuadUIDrawObject           *createEmpty     (void);
+
+    static  TexturedQuadUIDrawObjectTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  TexturedQuadUIDrawObject            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  TexturedQuadUIDrawObjectTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFPnt2f             _sfPoint1;
-    SFPnt2f             _sfPoint2;
-    SFPnt2f             _sfPoint3;
-    SFPnt2f             _sfPoint4;
-    SFVec2f             _sfTexCoord1;
-    SFVec2f             _sfTexCoord2;
-    SFVec2f             _sfTexCoord3;
-    SFVec2f             _sfTexCoord4;
-    SFTextureChunkPtr   _sfTexture;
-    SFReal32            _sfOpacity;
+    SFPnt2f           _sfPoint1;
+    SFPnt2f           _sfPoint2;
+    SFPnt2f           _sfPoint3;
+    SFPnt2f           _sfPoint4;
+    SFVec2f           _sfTexCoord1;
+    SFVec2f           _sfTexCoord2;
+    SFVec2f           _sfTexCoord3;
+    SFVec2f           _sfTexCoord4;
+    SFUnrecTextureObjChunkPtr _sfTexture;
+    SFReal32          _sfOpacity;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -262,69 +328,98 @@ class OSG_USERINTERFACELIB_DLLMAPPING TexturedQuadUIDrawObjectBase : public UIDr
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TexturedQuadUIDrawObjectBase(void); 
+    virtual ~TexturedQuadUIDrawObjectBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const TexturedQuadUIDrawObject *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandlePoint1          (void) const;
+    EditFieldHandlePtr editHandlePoint1         (void);
+    GetFieldHandlePtr  getHandlePoint2          (void) const;
+    EditFieldHandlePtr editHandlePoint2         (void);
+    GetFieldHandlePtr  getHandlePoint3          (void) const;
+    EditFieldHandlePtr editHandlePoint3         (void);
+    GetFieldHandlePtr  getHandlePoint4          (void) const;
+    EditFieldHandlePtr editHandlePoint4         (void);
+    GetFieldHandlePtr  getHandleTexCoord1       (void) const;
+    EditFieldHandlePtr editHandleTexCoord1      (void);
+    GetFieldHandlePtr  getHandleTexCoord2       (void) const;
+    EditFieldHandlePtr editHandleTexCoord2      (void);
+    GetFieldHandlePtr  getHandleTexCoord3       (void) const;
+    EditFieldHandlePtr editHandleTexCoord3      (void);
+    GetFieldHandlePtr  getHandleTexCoord4       (void) const;
+    EditFieldHandlePtr editHandleTexCoord4      (void);
+    GetFieldHandlePtr  getHandleTexture         (void) const;
+    EditFieldHandlePtr editHandleTexture        (void);
+    GetFieldHandlePtr  getHandleOpacity         (void) const;
+    EditFieldHandlePtr editHandleOpacity        (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      TexturedQuadUIDrawObjectBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      TexturedQuadUIDrawObjectBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      TexturedQuadUIDrawObjectBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const TexturedQuadUIDrawObjectBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef TexturedQuadUIDrawObjectBase *TexturedQuadUIDrawObjectBaseP;
 
-typedef osgIF<TexturedQuadUIDrawObjectBase::isNodeCore,
-              CoredNodePtr<TexturedQuadUIDrawObject>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet TexturedQuadUIDrawObjectNodePtr;
-
-typedef RefPtr<TexturedQuadUIDrawObjectPtr> TexturedQuadUIDrawObjectRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGTEXTUREDQUADUIDRAWOBJECTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGTEXTUREDQUADUIDRAWOBJECTBASE_H_ */

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,156 +50,206 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEUIFOREGROUNDINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGUIDrawingSurface.h"        // DrawingSurface Class
+#include "OSGUIForegroundMouseTransformFunctor.h" // MouseTransformFunctor Class
 
 #include "OSGUIForegroundBase.h"
 #include "OSGUIForeground.h"
 
-#include <UIDrawingSurface/Foreground/OSGUIForegroundMouseTransformFunctor.h>   // MouseTransformFunctor default header
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  UIForegroundBase::DrawingSurfaceFieldMask = 
-    (TypeTraits<BitVector>::One << UIForegroundBase::DrawingSurfaceFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  UIForegroundBase::MouseTransformFunctorFieldMask = 
-    (TypeTraits<BitVector>::One << UIForegroundBase::MouseTransformFunctorFieldId);
+/*! \class OSG::UIForeground
+    A Foreground for rendering a UI on.
+ */
 
-const OSG::BitVector UIForegroundBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-
-// Field descriptions
-
-/*! \var UIDrawingSurfacePtr UIForegroundBase::_sfDrawingSurface
-    
-*/
-/*! \var UIForegroundMouseTransformFunctorPtr UIForegroundBase::_sfMouseTransformFunctor
+/*! \var UIDrawingSurface * UIForegroundBase::_sfDrawingSurface
     
 */
 
-//! UIForeground description
+/*! \var UIForegroundMouseTransformFunctor * UIForegroundBase::_sfMouseTransformFunctor
+    
+*/
 
-FieldDescription *UIForegroundBase::_desc[] = 
+
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<UIForeground *>::_type("UIForegroundPtr", "ForegroundPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(UIForeground *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           UIForeground *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           UIForeground *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void UIForegroundBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFUIDrawingSurfacePtr::getClassType(), 
-                     "DrawingSurface", 
-                     DrawingSurfaceFieldId, DrawingSurfaceFieldMask,
-                     false,
-                     (FieldAccessMethod) &UIForegroundBase::getSFDrawingSurface),
-    new FieldDescription(SFUIForegroundMouseTransformFunctorPtr::getClassType(), 
-                     "MouseTransformFunctor", 
-                     MouseTransformFunctorFieldId, MouseTransformFunctorFieldMask,
-                     false,
-                     (FieldAccessMethod) &UIForegroundBase::getSFMouseTransformFunctor)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType UIForegroundBase::_type(
-    "UIForeground",
-    "Foreground",
-    NULL,
-    (PrototypeCreateF) &UIForegroundBase::createEmpty,
+    pDesc = new SFUnrecUIDrawingSurfacePtr::Description(
+        SFUnrecUIDrawingSurfacePtr::getClassType(),
+        "DrawingSurface",
+        "",
+        DrawingSurfaceFieldId, DrawingSurfaceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&UIForeground::editHandleDrawingSurface),
+        static_cast<FieldGetMethodSig >(&UIForeground::getHandleDrawingSurface));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecUIForegroundMouseTransformFunctorPtr::Description(
+        SFUnrecUIForegroundMouseTransformFunctorPtr::getClassType(),
+        "MouseTransformFunctor",
+        "",
+        MouseTransformFunctorFieldId, MouseTransformFunctorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&UIForeground::editHandleMouseTransformFunctor),
+        static_cast<FieldGetMethodSig >(&UIForeground::getHandleMouseTransformFunctor));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+UIForegroundBase::TypeObject UIForegroundBase::_type(
+    UIForegroundBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&UIForegroundBase::createEmptyLocal),
     UIForeground::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(UIForegroundBase, UIForegroundPtr)
+    UIForeground::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&UIForeground::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"UIForeground\"\n"
+    "\tparent=\"Foreground\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A Foreground for rendering a UI on.\n"
+    "\t<Field\n"
+    "\t\tname=\"DrawingSurface\"\n"
+    "\t\ttype=\"UIDrawingSurface\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MouseTransformFunctor\"\n"
+    "\t\ttype=\"UIForegroundMouseTransformFunctor\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A Foreground for rendering a UI on.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &UIForegroundBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &UIForegroundBase::getType(void) const 
+FieldContainerType &UIForegroundBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr UIForegroundBase::shallowCopy(void) const 
-{ 
-    UIForegroundPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const UIForeground *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 UIForegroundBase::getContainerSize(void) const 
-{ 
-    return sizeof(UIForeground); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void UIForegroundBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &UIForegroundBase::getType(void) const
 {
-    this->executeSyncImpl((UIForegroundBase *) &other, whichField);
+    return _type;
 }
-#else
-void UIForegroundBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 UIForegroundBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((UIForegroundBase *) &other, whichField, sInfo);
+    return sizeof(UIForeground);
 }
-void UIForegroundBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the UIForeground::_sfDrawingSurface field.
+const SFUnrecUIDrawingSurfacePtr *UIForegroundBase::getSFDrawingSurface(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfDrawingSurface;
 }
 
-void UIForegroundBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecUIDrawingSurfacePtr *UIForegroundBase::editSFDrawingSurface (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(DrawingSurfaceFieldMask);
 
+    return &_sfDrawingSurface;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-UIForegroundBase::UIForegroundBase(void) :
-    _sfDrawingSurface         (), 
-    _sfMouseTransformFunctor  (UIForegroundMouseTransformFunctorPtr(UIForegroundMouseTransformFunctor::create())), 
-    Inherited() 
+//! Get the UIForeground::_sfMouseTransformFunctor field.
+const SFUnrecUIForegroundMouseTransformFunctorPtr *UIForegroundBase::getSFMouseTransformFunctor(void) const
 {
+    return &_sfMouseTransformFunctor;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-UIForegroundBase::UIForegroundBase(const UIForegroundBase &source) :
-    _sfDrawingSurface         (source._sfDrawingSurface         ), 
-    _sfMouseTransformFunctor  (UIForegroundMouseTransformFunctorPtr(UIForegroundMouseTransformFunctor::create())), 
-    Inherited                 (source)
+SFUnrecUIForegroundMouseTransformFunctorPtr *UIForegroundBase::editSFMouseTransformFunctor(void)
 {
+    editSField(MouseTransformFunctorFieldMask);
+
+    return &_sfMouseTransformFunctor;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-UIForegroundBase::~UIForegroundBase(void)
-{
-}
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 UIForegroundBase::getBinSize(const BitVector &whichField)
+UInt32 UIForegroundBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -207,18 +257,16 @@ UInt32 UIForegroundBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfDrawingSurface.getBinSize();
     }
-
     if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
     {
         returnValue += _sfMouseTransformFunctor.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void UIForegroundBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void UIForegroundBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -226,17 +274,14 @@ void UIForegroundBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfDrawingSurface.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
     {
         _sfMouseTransformFunctor.copyToBin(pMem);
     }
-
-
 }
 
-void UIForegroundBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void UIForegroundBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -244,93 +289,267 @@ void UIForegroundBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfDrawingSurface.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
     {
         _sfMouseTransformFunctor.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void UIForegroundBase::executeSyncImpl(      UIForegroundBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+UIForegroundTransitPtr UIForegroundBase::createLocal(BitVector bFlags)
 {
+    UIForegroundTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
-        _sfDrawingSurface.syncWith(pOther->_sfDrawingSurface);
+        fc = dynamic_pointer_cast<UIForeground>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
-        _sfMouseTransformFunctor.syncWith(pOther->_sfMouseTransformFunctor);
-
-
-}
-#else
-void UIForegroundBase::executeSyncImpl(      UIForegroundBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
-        _sfDrawingSurface.syncWith(pOther->_sfDrawingSurface);
-
-    if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
-        _sfMouseTransformFunctor.syncWith(pOther->_sfMouseTransformFunctor);
-
-
-
+    return fc;
 }
 
-void UIForegroundBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+UIForegroundTransitPtr UIForegroundBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    UIForegroundTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<UIForeground>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+UIForegroundTransitPtr UIForegroundBase::create(void)
+{
+    UIForegroundTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<UIForeground>(tmpPtr);
+    }
+
+    return fc;
+}
+
+UIForeground *UIForegroundBase::createEmptyLocal(BitVector bFlags)
+{
+    UIForeground *returnValue;
+
+    newPtr<UIForeground>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+UIForeground *UIForegroundBase::createEmpty(void)
+{
+    UIForeground *returnValue;
+
+    newPtr<UIForeground>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr UIForegroundBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    UIForeground *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const UIForeground *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr UIForegroundBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    UIForeground *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const UIForeground *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr UIForegroundBase::shallowCopy(void) const
+{
+    UIForeground *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const UIForeground *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+UIForegroundBase::UIForegroundBase(void) :
+    Inherited(),
+    _sfDrawingSurface         (NULL),
+    _sfMouseTransformFunctor  (NULL)
+{
+}
+
+UIForegroundBase::UIForegroundBase(const UIForegroundBase &source) :
+    Inherited(source),
+    _sfDrawingSurface         (NULL),
+    _sfMouseTransformFunctor  (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+UIForegroundBase::~UIForegroundBase(void)
+{
+}
+
+void UIForegroundBase::onCreate(const UIForeground *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        UIForeground *pThis = static_cast<UIForeground *>(this);
+
+        pThis->setDrawingSurface(source->getDrawingSurface());
+
+        pThis->setMouseTransformFunctor(source->getMouseTransformFunctor());
+    }
+}
+
+GetFieldHandlePtr UIForegroundBase::getHandleDrawingSurface  (void) const
+{
+    SFUnrecUIDrawingSurfacePtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawingSurfacePtr::GetHandle(
+             &_sfDrawingSurface,
+             this->getType().getFieldDesc(DrawingSurfaceFieldId),
+             const_cast<UIForegroundBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr UIForegroundBase::editHandleDrawingSurface (void)
+{
+    SFUnrecUIDrawingSurfacePtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawingSurfacePtr::EditHandle(
+             &_sfDrawingSurface,
+             this->getType().getFieldDesc(DrawingSurfaceFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&UIForeground::setDrawingSurface,
+                    static_cast<UIForeground *>(this), _1));
+
+    editSField(DrawingSurfaceFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr UIForegroundBase::getHandleMouseTransformFunctor (void) const
+{
+    SFUnrecUIForegroundMouseTransformFunctorPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIForegroundMouseTransformFunctorPtr::GetHandle(
+             &_sfMouseTransformFunctor,
+             this->getType().getFieldDesc(MouseTransformFunctorFieldId),
+             const_cast<UIForegroundBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr UIForegroundBase::editHandleMouseTransformFunctor(void)
+{
+    SFUnrecUIForegroundMouseTransformFunctorPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIForegroundMouseTransformFunctorPtr::EditHandle(
+             &_sfMouseTransformFunctor,
+             this->getType().getFieldDesc(MouseTransformFunctorFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&UIForeground::setMouseTransformFunctor,
+                    static_cast<UIForeground *>(this), _1));
+
+    editSField(MouseTransformFunctorFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void UIForegroundBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    UIForeground *pThis = static_cast<UIForeground *>(this);
+
+    pThis->execSync(static_cast<UIForeground *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *UIForegroundBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    UIForeground *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const UIForeground *>(pRefAspect),
+                  dynamic_cast<const UIForeground *>(this));
+
+    return returnValue;
+}
+#endif
+
+void UIForegroundBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<UIForeground *>(this)->setDrawingSurface(NULL);
+
+    static_cast<UIForeground *>(this)->setMouseTransformFunctor(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<UIForegroundPtr>::_type("UIForegroundPtr", "ForegroundPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(UIForegroundPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(UIForegroundPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGUIFOREGROUNDBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGUIFOREGROUNDBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGUIFOREGROUNDFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

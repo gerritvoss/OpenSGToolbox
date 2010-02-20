@@ -3,18 +3,21 @@
 <FieldContainer
 	name="FlowLayout"
 	parent="Layout"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI FlowLayout.
 	<Field
 		name="Orientation"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="FlowLayout::HORIZONTAL_ORIENTATION"
@@ -24,6 +27,7 @@ A UI FlowLayout.
 	<Field
 		name="HorizontalGap"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="10"
@@ -33,6 +37,7 @@ A UI FlowLayout.
 	<Field
 		name="VerticalGap"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="10"
@@ -42,6 +47,7 @@ A UI FlowLayout.
 	<Field
 		name="MajorAxisAlignment"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.5f"
@@ -51,6 +57,7 @@ A UI FlowLayout.
 	<Field
 		name="MinorAxisAlignment"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.5f"
@@ -60,6 +67,7 @@ A UI FlowLayout.
 	<Field
 		name="ComponentAlignment"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.5f"

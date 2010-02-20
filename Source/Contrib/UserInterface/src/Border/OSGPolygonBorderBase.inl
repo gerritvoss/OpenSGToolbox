@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,99 +55,56 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &PolygonBorderBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 PolygonBorderBase::getClassTypeId(void) 
+OSG::UInt32 PolygonBorderBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-PolygonBorderPtr PolygonBorderBase::create(void) 
-{
-    PolygonBorderPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = PolygonBorderPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-PolygonBorderPtr PolygonBorderBase::createEmpty(void) 
-{ 
-    PolygonBorderPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 PolygonBorderBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the PolygonBorder::_sfWidth field.
-inline
-SFReal32 *PolygonBorderBase::getSFWidth(void)
-{
-    return &_sfWidth;
-}
-
-//! Get the PolygonBorder::_sfColor field.
-inline
-SFColor4f *PolygonBorderBase::getSFColor(void)
-{
-    return &_sfColor;
-}
-
-//! Get the PolygonBorder::_mfVertices field.
-inline
-MFPnt2f *PolygonBorderBase::getMFVertices(void)
-{
-    return &_mfVertices;
-}
-
-//! Get the PolygonBorder::_mfDrawnQuads field.
-inline
-MFPnt2f *PolygonBorderBase::getMFDrawnQuads(void)
-{
-    return &_mfDrawnQuads;
-}
-
-
 //! Get the value of the PolygonBorder::_sfWidth field.
+
 inline
-Real32 &PolygonBorderBase::getWidth(void)
+Real32 &PolygonBorderBase::editWidth(void)
 {
+    editSField(WidthFieldMask);
+
     return _sfWidth.getValue();
 }
 
 //! Get the value of the PolygonBorder::_sfWidth field.
 inline
-const Real32 &PolygonBorderBase::getWidth(void) const
+      Real32  PolygonBorderBase::getWidth(void) const
 {
     return _sfWidth.getValue();
 }
 
 //! Set the value of the PolygonBorder::_sfWidth field.
 inline
-void PolygonBorderBase::setWidth(const Real32 &value)
+void PolygonBorderBase::setWidth(const Real32 value)
 {
+    editSField(WidthFieldMask);
+
     _sfWidth.setValue(value);
 }
-
 //! Get the value of the PolygonBorder::_sfColor field.
+
 inline
-Color4f &PolygonBorderBase::getColor(void)
+Color4f &PolygonBorderBase::editColor(void)
 {
+    editSField(ColorFieldMask);
+
     return _sfColor.getValue();
 }
 
@@ -164,53 +119,81 @@ const Color4f &PolygonBorderBase::getColor(void) const
 inline
 void PolygonBorderBase::setColor(const Color4f &value)
 {
+    editSField(ColorFieldMask);
+
     _sfColor.setValue(value);
 }
 
-
 //! Get the value of the \a index element the PolygonBorder::_mfVertices field.
 inline
-Pnt2f &PolygonBorderBase::getVertices(const UInt32 index)
+const Pnt2f &PolygonBorderBase::getVertices(const UInt32 index) const
 {
     return _mfVertices[index];
 }
 
-//! Get the PolygonBorder::_mfVertices field.
 inline
-MFPnt2f &PolygonBorderBase::getVertices(void)
+Pnt2f &PolygonBorderBase::editVertices(const UInt32 index)
 {
-    return _mfVertices;
+    editMField(VerticesFieldMask, _mfVertices);
+
+    return _mfVertices[index];
 }
 
-//! Get the PolygonBorder::_mfVertices field.
-inline
-const MFPnt2f &PolygonBorderBase::getVertices(void) const
-{
-    return _mfVertices;
-}
 
 //! Get the value of the \a index element the PolygonBorder::_mfDrawnQuads field.
 inline
-Pnt2f &PolygonBorderBase::getDrawnQuads(const UInt32 index)
+const Pnt2f &PolygonBorderBase::getDrawnQuads(const UInt32 index) const
 {
     return _mfDrawnQuads[index];
 }
 
-//! Get the PolygonBorder::_mfDrawnQuads field.
 inline
-MFPnt2f &PolygonBorderBase::getDrawnQuads(void)
+Pnt2f &PolygonBorderBase::editDrawnQuads(const UInt32 index)
 {
-    return _mfDrawnQuads;
+    editMField(DrawnQuadsFieldMask, _mfDrawnQuads);
+
+    return _mfDrawnQuads[index];
 }
 
-//! Get the PolygonBorder::_mfDrawnQuads field.
+
+
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-const MFPnt2f &PolygonBorderBase::getDrawnQuads(void) const
+void PolygonBorderBase::execSync (      PolygonBorderBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfDrawnQuads;
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (WidthFieldMask & whichField))
+        _sfWidth.syncWith(pFrom->_sfWidth);
+
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+        _sfColor.syncWith(pFrom->_sfColor);
+
+    if(FieldBits::NoField != (VerticesFieldMask & whichField))
+        _mfVertices.syncWith(pFrom->_mfVertices,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (DrawnQuadsFieldMask & whichField))
+        _mfDrawnQuads.syncWith(pFrom->_mfDrawnQuads,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
 }
+#endif
+
+
+inline
+const Char8 *PolygonBorderBase::getClassname(void)
+{
+    return "PolygonBorder";
+}
+OSG_GEN_CONTAINERPTR(PolygonBorder);
 
 OSG_END_NAMESPACE
-
-#define OSGPOLYGONBORDERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

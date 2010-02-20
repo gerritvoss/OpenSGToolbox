@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGTextLayoutParam.h>
-#include <OpenSG/OSGTextLayoutResult.h>
-#include <OpenSG/OSGTextureChunk.h>
+#include <OSGConfig.h>
 
 #include "OSGTextUIDrawObject.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::TextUIDrawObject
-A UI TextUIDrawObject. 	
-*/
+// Documentation for this class is emitted in the
+// OSGTextUIDrawObjectBase.cpp file.
+// To modify it, please change the .fcd file (OSGTextUIDrawObject.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -68,8 +62,13 @@ A UI TextUIDrawObject.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void TextUIDrawObject::initMethod (void)
+void TextUIDrawObject::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -77,7 +76,7 @@ void TextUIDrawObject::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void TextUIDrawObject::draw(const GraphicsPtr Graphics, Real32 Opacity) const
+void TextUIDrawObject::draw(const GraphicsWeakPtr Graphics, Real32 Opacity) const
 {
 	Graphics->drawText(getPosition(), getText(), getFont(), getColor(), getOpacity()*Opacity);
 }
@@ -112,41 +111,17 @@ TextUIDrawObject::~TextUIDrawObject(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void TextUIDrawObject::changed(BitVector whichField, UInt32 origin)
+void TextUIDrawObject::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void TextUIDrawObject::dump(      UInt32    , 
+void TextUIDrawObject::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump TextUIDrawObject NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGTEXTUIDRAWOBJECTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTEXTUIDRAWOBJECTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTEXTUIDRAWOBJECTFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

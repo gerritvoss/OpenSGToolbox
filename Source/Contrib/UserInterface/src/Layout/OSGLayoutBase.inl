@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,50 +55,64 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &LayoutBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 LayoutBase::getClassTypeId(void) 
+OSG::UInt32 LayoutBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
+    return _type.getId();
+}
 
+inline
+OSG::UInt16 LayoutBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
+}
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Layout::_sfParentContainer field.
-inline
-SFAttachmentContainerPtr *LayoutBase::getSFParentContainer(void)
-{
-    return &_sfParentContainer;
-}
-
 
 //! Get the value of the Layout::_sfParentContainer field.
 inline
-AttachmentContainerPtr &LayoutBase::getParentContainer(void)
-{
-    return _sfParentContainer.getValue();
-}
-
-//! Get the value of the Layout::_sfParentContainer field.
-inline
-const AttachmentContainerPtr &LayoutBase::getParentContainer(void) const
+ComponentContainer * LayoutBase::getParentContainer(void) const
 {
     return _sfParentContainer.getValue();
 }
 
 //! Set the value of the Layout::_sfParentContainer field.
 inline
-void LayoutBase::setParentContainer(const AttachmentContainerPtr &value)
+void LayoutBase::setParentContainer(ComponentContainer * const value)
 {
+    editSField(ParentContainerFieldMask);
+
     _sfParentContainer.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void LayoutBase::execSync (      LayoutBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGLAYOUTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
+        _sfParentContainer.syncWith(pFrom->_sfParentContainer);
+}
+#endif
+
+
+inline
+const Char8 *LayoutBase::getClassname(void)
+{
+    return "Layout";
+}
+OSG_GEN_CONTAINERPTR(Layout);
+
+OSG_END_NAMESPACE
 

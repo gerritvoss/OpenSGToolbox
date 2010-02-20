@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,32 +40,29 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGBackground.h>
-#include <OpenSG/OSGCamera.h>
-#include <OpenSG/OSGTransform.h>
-#include <OpenSG/OSGPerspectiveCamera.h>
-#include <OpenSG/OSGMatrixUtility.h>
-#include "Component/Container/Window/OSGInternalWindow.h"
+#include <OSGConfig.h>
 
 #include "OSGGLViewport.h"
-#include "Util/OSGUIDrawUtils.h"
-#include <OpenSG/Toolbox/OSGCameraUtils.h>
+#include "OSGBackground.h"
+#include "OSGCamera.h"
+#include "OSGTransform.h"
+#include "OSGPerspectiveCamera.h"
+#include "OSGMatrixUtility.h"
+#include "OSGInternalWindow.h"
+
+#include "OSGGLViewport.h"
+#include "OSGUIDrawUtils.h"
+#include "OSGCameraUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::GLViewport
-An OpenSG Viewport Component. 	
-*/
+// Documentation for this class is emitted in the
+// OSGGLViewportBase.cpp file.
+// To modify it, please change the .fcd file (OSGGLViewport.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -75,167 +72,168 @@ An OpenSG Viewport Component.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void GLViewport::initMethod (void)
+void GLViewport::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-void GLViewport::drawInternal(const GraphicsPtr Graphics, Real32 Opacity) const
+
+void GLViewport::drawInternal(const GraphicsWeakPtr Graphics, Real32 Opacity) const
 {
-	if(getPort() != NullFC &&
-		getPort()->getRoot() != NullFC &&
-		getPort()->getBackground() != NullFC &&
-		getPort()->getCamera() != NullFC)
-	{
-		Pnt2f InsideInsetTopLeft, InsideInsetBottomRight;
-		getInsideBorderBounds(InsideInsetTopLeft,InsideInsetBottomRight);
-		
-		//Clamp Viewport Bounds with Window clip planes
-		Pnt2f InsideInsetTopLeftToWindow, InsideInsetBottomRightToWindow;
-		quadIntersection(InsideInsetTopLeft, InsideInsetBottomRight,
-						getClipTopLeft(), getClipBottomRight(),
-						InsideInsetTopLeftToWindow, InsideInsetBottomRightToWindow);
+    if(getPort() != NULL &&
+       getPort()->getRoot() != NULL &&
+       getPort()->getBackground() != NULL &&
+       getPort()->getCamera() != NULL)
+    {
+        Pnt2f InsideInsetTopLeft, InsideInsetBottomRight;
+        getInsideBorderBounds(InsideInsetTopLeft,InsideInsetBottomRight);
+
+        //Clamp Viewport Bounds with Window clip planes
+        Pnt2f InsideInsetTopLeftToWindow, InsideInsetBottomRightToWindow;
+        quadIntersection(InsideInsetTopLeft, InsideInsetBottomRight,
+                         getClipTopLeft(), getClipBottomRight(),
+                         InsideInsetTopLeftToWindow, InsideInsetBottomRightToWindow);
 
 
-		InsideInsetTopLeftToWindow = ComponentToWindow(InsideInsetTopLeftToWindow,GLViewportPtr(this), ViewportPtr(Graphics->getDrawAction()->getViewport()));
-		InsideInsetBottomRightToWindow = ComponentToWindow(InsideInsetBottomRightToWindow,GLViewportPtr(this), ViewportPtr(Graphics->getDrawAction()->getViewport()));
+        InsideInsetTopLeftToWindow = ComponentToWindow(InsideInsetTopLeftToWindow,this, Graphics->getDrawEnv()->getAction()->getViewport());
+        InsideInsetBottomRightToWindow = ComponentToWindow(InsideInsetBottomRightToWindow,this, Graphics->getDrawEnv()->getAction()->getViewport());
 
 
 
-		if( getParentWindow() != NullFC &&
-			getParentWindow()->getDrawingSurface() != NullFC &&
-			getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC &&
-			getParentWindow()->getDrawingSurface()->getEventProducer()->getWindow() != NullFC)
-		{
+        if( getParentWindow() != NULL &&
+            getParentWindow()->getDrawingSurface() != NULL &&
+            getParentWindow()->getDrawingSurface()->getEventProducer() != NULL &&
+            getParentWindow()->getDrawingSurface()->getEventProducer() != NULL)
+        {
 
-			WindowPtr TheWindow = getParentWindow()->getDrawingSurface()->getEventProducer()->getWindow();
+            WindowRefPtr TheWindow = getParentWindow()->getDrawingSurface()->getEventProducer();
 
-			//Clamp Viewport Bounds with Window size
-			if(InsideInsetTopLeftToWindow.x() < 0)
-			{
-				InsideInsetTopLeftToWindow[0] = 0.0f;
-			}
-			if(InsideInsetTopLeftToWindow.y() > TheWindow->getHeight())
-			{
-				InsideInsetTopLeftToWindow[1] = TheWindow->getHeight();
-			}
+            //Clamp Viewport Bounds with Window size
+            if(InsideInsetTopLeftToWindow.x() < 0)
+            {
+                InsideInsetTopLeftToWindow[0] = 0.0f;
+            }
+            if(InsideInsetTopLeftToWindow.y() > TheWindow->getHeight())
+            {
+                InsideInsetTopLeftToWindow[1] = TheWindow->getHeight();
+            }
 
-			if(InsideInsetBottomRightToWindow.x() > TheWindow->getWidth())
-			{
-				InsideInsetBottomRightToWindow[0] = TheWindow->getWidth();
-			}
-			if(InsideInsetBottomRightToWindow.y() < 0)
-			{
-				InsideInsetBottomRightToWindow[1] = 0.0f;
-			}
+            if(InsideInsetBottomRightToWindow.x() > TheWindow->getWidth())
+            {
+                InsideInsetBottomRightToWindow[0] = TheWindow->getWidth();
+            }
+            if(InsideInsetBottomRightToWindow.y() < 0)
+            {
+                InsideInsetBottomRightToWindow[1] = 0.0f;
+            }
 
-			//Update the camera if Perspective
-			if(getPort()->getCamera()->getType().isDerivedFrom(PerspectiveCamera::getClassType()))
-			{
-				if(abs(InsideInsetTopLeftToWindow.y() - InsideInsetBottomRightToWindow.y()) < getSize().y())
-				{
-					beginEditCP(getPort()->getCamera(), PerspectiveCamera::FovFieldMask);
-						PerspectiveCamera::Ptr::dcast(getPort()->getCamera())->setFov(
-							60.0f *
-							(abs(InsideInsetTopLeftToWindow.y() - InsideInsetBottomRightToWindow.y())/getSize().y())
-							);
-					endEditCP(getPort()->getCamera(), PerspectiveCamera::FovFieldMask);
-				}
-			}
+            //Update the camera if Perspective
+            if(getPort()->getCamera()->getType().isDerivedFrom(PerspectiveCamera::getClassType()))
+            {
+                if(abs(InsideInsetTopLeftToWindow.y() - InsideInsetBottomRightToWindow.y()) < getSize().y())
+                {
+                    dynamic_cast<PerspectiveCamera*>(getPort()->getCamera())->setFov(
+                                                                                     60.0f *
+                                                                                     (abs(InsideInsetTopLeftToWindow.y() - InsideInsetBottomRightToWindow.y())/getSize().y())
+                                                                                    );
+                }
+            }
 
-			
-		
-			beginEditCP(getPort(), Viewport::LeftFieldMask | Viewport::RightFieldMask | Viewport::TopFieldMask | Viewport::BottomFieldMask);
-				getPort()->setSize(InsideInsetTopLeftToWindow.x(), InsideInsetBottomRightToWindow.y()+1, InsideInsetBottomRightToWindow.x()-1, InsideInsetTopLeftToWindow.y());
-			endEditCP(getPort(), Viewport::LeftFieldMask | Viewport::RightFieldMask | Viewport::TopFieldMask | Viewport::BottomFieldMask);
+
+
+            getPort()->setSize(InsideInsetTopLeftToWindow.x(), InsideInsetBottomRightToWindow.y()+1, InsideInsetBottomRightToWindow.x()-1, InsideInsetTopLeftToWindow.y());
 
 
             if(_Navigator.getMode() != Navigator::NONE)
             {
-			    _Navigator.updateCameraTransformation();
+                _Navigator.updateCameraTransformation();
             }
 
-			beginEditCP(getPort(), Viewport::ParentFieldMask);
-				getPort()->setParent(getParentWindow()->getDrawingSurface()->getEventProducer()->getWindow());
-			endEditCP(getPort(), Viewport::ParentFieldMask);
-			
+            getParentWindow()->getDrawingSurface()->getEventProducer()->addPort(getPort());
+            
+            _Action->setWindow(getPort()->getParent());
 
-			_Action->setWindow(getPort()->getParent().getCPtr());
-			
-			glPushAttrib(GL_ALL_ATTRIB_BITS);
+            glPushAttrib(GL_ALL_ATTRIB_BITS);
 
-			GLdouble ModelViewMat[16];
-			glGetDoublev(GL_MODELVIEW_MATRIX, ModelViewMat);
-			GLdouble ProjectionMat[16];
-			glGetDoublev(GL_PROJECTION_MATRIX, ProjectionMat);
+            GLdouble ModelViewMat[16];
+            glGetDoublev(GL_MODELVIEW_MATRIX, ModelViewMat);
+            GLdouble ProjectionMat[16];
+            glGetDoublev(GL_PROJECTION_MATRIX, ProjectionMat);
 
-			GLint MaxClipPlanes;
-			glGetIntegerv(GL_MAX_CLIP_PLANES, &MaxClipPlanes);
-			for(UInt8 i = 0;i <MaxClipPlanes ;++i)
-				glDisable(GL_CLIP_PLANE0 + i);
+            GLint MaxClipPlanes;
+            glGetIntegerv(GL_MAX_CLIP_PLANES, &MaxClipPlanes);
+            for(UInt8 i = 0;i <MaxClipPlanes ;++i)
+                glDisable(GL_CLIP_PLANE0 + i);
 
-			glDepthMask(true);
+            glDepthMask(true);
 
-			getPort()->render(_Action);
+            getPort()->render(_Action);
 
-			
-			Graphics->getDrawAction()->getViewport()->activate();
 
-			glMatrixMode(GL_MODELVIEW);
-			glLoadIdentity();
-			glMultMatrixd(ModelViewMat);
+            Graphics->getDrawEnv()->getAction()->getViewport()->activate();
 
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			glMultMatrixd(ProjectionMat);
-			
-			glMatrixMode(GL_MODELVIEW);
+            glMatrixMode(GL_MODELVIEW);
+            glLoadIdentity();
+            glMultMatrixd(ModelViewMat);
 
-			glPopAttrib();
-		}
+            glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            glMultMatrixd(ProjectionMat);
 
-	}
+            glMatrixMode(GL_MODELVIEW);
+
+            glPopAttrib();
+
+            getParentWindow()->getDrawingSurface()->getEventProducer()->subPortByObj(getPort());
+        }
+
+    }
 }
 
-void GLViewport::mousePressed(const MouseEventPtr e)
+void GLViewport::mousePressed(const MouseEventUnrecPtr e)
 {
-	Inherited::mousePressed(e);
-	
+    Inherited::mousePressed(e);
+
     if(_Navigator.getMode() != Navigator::NONE)
     {
-	    UInt16 MouseButtons;
-	    switch(e->getButton())
-	    {
-	    case MouseEvent::BUTTON1:
-		    _MouseControlListener.setInitialMat(_Navigator.getMatrix());
-		    _Navigator.buttonPress(Navigator::LEFT_MOUSE,e->getLocation().x(),e->getLocation().y());
-		    getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
-		    getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
-		    getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
-    				
-		    MouseButtons = 1;
-		    break;
-	    case MouseEvent::BUTTON2:
-		    _MouseControlListener.setInitialMat(_Navigator.getMatrix());
-		    _Navigator.buttonPress(Navigator::MIDDLE_MOUSE,e->getLocation().x(),e->getLocation().y());
-		    getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
-		    getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
-		    getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
-		    MouseButtons = 2;
-		    break;
-	    case MouseEvent::BUTTON3:
-		    _MouseControlListener.setInitialMat(_Navigator.getMatrix());
-		    _Navigator.buttonPress(Navigator::RIGHT_MOUSE,e->getLocation().x(),e->getLocation().y());
-		    getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
-		    getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
-		    getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
-		    MouseButtons = 4;
-		    break;
-	    }
-	    _Navigator.idle(MouseButtons,e->getLocation().x(),e->getLocation().y());
+        UInt16 MouseButtons;
+        switch(e->getButton())
+        {
+            case MouseEvent::BUTTON1:
+                _MouseControlListener.setInitialMat(_Navigator.getMatrix());
+                _Navigator.buttonPress(Navigator::LEFT_MOUSE,e->getLocation().x(),e->getLocation().y());
+                getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
+                getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
+                getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
+
+                MouseButtons = 1;
+                break;
+            case MouseEvent::BUTTON2:
+                _MouseControlListener.setInitialMat(_Navigator.getMatrix());
+                _Navigator.buttonPress(Navigator::MIDDLE_MOUSE,e->getLocation().x(),e->getLocation().y());
+                getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
+                getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
+                getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
+                MouseButtons = 2;
+                break;
+            case MouseEvent::BUTTON3:
+                _MouseControlListener.setInitialMat(_Navigator.getMatrix());
+                _Navigator.buttonPress(Navigator::RIGHT_MOUSE,e->getLocation().x(),e->getLocation().y());
+                getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
+                getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
+                getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
+                MouseButtons = 4;
+                break;
+        }
+        _Navigator.idle(MouseButtons,e->getLocation().x(),e->getLocation().y());
     }
     else
     {
@@ -243,9 +241,9 @@ void GLViewport::mousePressed(const MouseEventPtr e)
         _InitialYaw = _Yaw;
         _InitialPitch = _Pitch;
         _InitialRoll = _Roll;
-	    getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
-	    getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
-	    getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
+        getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
+        getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
+        getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
     }
 }
 
@@ -255,75 +253,75 @@ void GLViewport::detachFromEventProducer(void)
     _MouseControlListener.disconnect();
 }
 
-void GLViewport::keyTyped(const KeyEventPtr e)
+void GLViewport::keyTyped(const KeyEventUnrecPtr e)
 {
-	Inherited::keyTyped(e);
+    Inherited::keyTyped(e);
     if(_Navigator.getMode() != Navigator::NONE)
     {
-	    switch ( e->getKey() )
-	    {
-	    case KeyEvent::KEY_J:
-	    case KeyEvent::KEY_LEFT:
-		    _Navigator.keyPress(Navigator::LEFT,0,0);
-		    break;
-	    case KeyEvent::KEY_G:
-	    case KeyEvent::KEY_RIGHT:
-			    _Navigator.keyPress(Navigator::RIGHT,0,0);
-			    break;
-	    case KeyEvent::KEY_U:
-			    _Navigator.keyPress(Navigator::LEFTROT,0,0);
-			    break;
-	    case KeyEvent::KEY_T:
-			    _Navigator.keyPress(Navigator::RIGHTROT,0,0);
-			    break;
-	    case KeyEvent::KEY_Y:
-	    case KeyEvent::KEY_UP:
-			    _Navigator.keyPress(Navigator::FORWARDS,0,0);
-			    break;
-	    case KeyEvent::KEY_H:
-	    case KeyEvent::KEY_DOWN:
-			    _Navigator.keyPress(Navigator::BACKWARDS,0,0);
-			    break;
-	    }
+        switch ( e->getKey() )
+        {
+            case KeyEvent::KEY_J:
+            case KeyEvent::KEY_LEFT:
+                _Navigator.keyPress(Navigator::LEFT,0,0);
+                break;
+            case KeyEvent::KEY_G:
+            case KeyEvent::KEY_RIGHT:
+                _Navigator.keyPress(Navigator::RIGHT,0,0);
+                break;
+            case KeyEvent::KEY_U:
+                _Navigator.keyPress(Navigator::LEFTROT,0,0);
+                break;
+            case KeyEvent::KEY_T:
+                _Navigator.keyPress(Navigator::RIGHTROT,0,0);
+                break;
+            case KeyEvent::KEY_Y:
+            case KeyEvent::KEY_UP:
+                _Navigator.keyPress(Navigator::FORWARDS,0,0);
+                break;
+            case KeyEvent::KEY_H:
+            case KeyEvent::KEY_DOWN:
+                _Navigator.keyPress(Navigator::BACKWARDS,0,0);
+                break;
+        }
     }
     else
     {
-	    switch ( e->getKey() )
-	    {
-        case KeyEvent::KEY_PLUS:
-        case KeyEvent::KEY_EQUALS:
-	    case KeyEvent::KEY_UP:
-		    setOffset(Vec3f(_Offset.x(),_Offset.y(),_Offset.z()-_OffsetMultipliers.z() ));
-		    break;
-	    case KeyEvent::KEY_MINUS:
-        case KeyEvent::KEY_UNDERSCORE:
-	    case KeyEvent::KEY_DOWN:
-		    setOffset(Vec3f(_Offset.x(),_Offset.y(),_Offset.z()+_OffsetMultipliers.z() ));
-		    break;
+        switch ( e->getKey() )
+        {
+            case KeyEvent::KEY_PLUS:
+            case KeyEvent::KEY_EQUALS:
+            case KeyEvent::KEY_UP:
+                setOffset(Vec3f(_Offset.x(),_Offset.y(),_Offset.z()-_OffsetMultipliers.z() ));
+                break;
+            case KeyEvent::KEY_MINUS:
+            case KeyEvent::KEY_UNDERSCORE:
+            case KeyEvent::KEY_DOWN:
+                setOffset(Vec3f(_Offset.x(),_Offset.y(),_Offset.z()+_OffsetMultipliers.z() ));
+                break;
         }
     }
 }
 
-void GLViewport::mouseWheelMoved(const MouseWheelEventPtr e)
+void GLViewport::mouseWheelMoved(const MouseWheelEventUnrecPtr e)
 {
     if(_Navigator.getMode() != Navigator::NONE)
     {
-	    if(e->getUnitsToScroll() > 0)
-	    {
-		    for(UInt32 i(0) ; i<e->getUnitsToScroll() ;++i)
-		    {
-			    _Navigator.buttonPress(Navigator::UP_MOUSE,e->getLocation().x(),e->getLocation().y());
-			    _Navigator.buttonRelease(Navigator::UP_MOUSE,e->getLocation().x(),e->getLocation().y());
-		    }
-	    }
-	    else if(e->getUnitsToScroll() < 0)
-	    {
-		    for(UInt32 i(0) ; i<abs(e->getUnitsToScroll()) ;++i)
-		    {
-			    _Navigator.buttonPress(Navigator::DOWN_MOUSE,e->getLocation().x(),e->getLocation().y());
-			    _Navigator.buttonRelease(Navigator::DOWN_MOUSE,e->getLocation().x(),e->getLocation().y());
-		    }
-	    }
+        if(e->getUnitsToScroll() > 0)
+        {
+            for(UInt32 i(0) ; i<e->getUnitsToScroll() ;++i)
+            {
+                _Navigator.buttonPress(Navigator::UP_MOUSE,e->getLocation().x(),e->getLocation().y());
+                _Navigator.buttonRelease(Navigator::UP_MOUSE,e->getLocation().x(),e->getLocation().y());
+            }
+        }
+        else if(e->getUnitsToScroll() < 0)
+        {
+            for(UInt32 i(0) ; i<abs(e->getUnitsToScroll()) ;++i)
+            {
+                _Navigator.buttonPress(Navigator::DOWN_MOUSE,e->getLocation().x(),e->getLocation().y());
+                _Navigator.buttonRelease(Navigator::DOWN_MOUSE,e->getLocation().x(),e->getLocation().y());
+            }
+        }
     }
     else
     {
@@ -338,14 +336,12 @@ void GLViewport::lookAt(const Pnt3f& From, const Pnt3f& At, const Vec3f& Up)
         if(getPort()->getCamera()->getBeacon()->getCore()->getType().isDerivedFrom(Transform::getClassType()))
         {
             MatrixLookAt(_DefaultView, From, At, Up);
-            beginEditCP(getPort()->getCamera()->getBeacon()->getCore(), Transform::MatrixFieldMask);
-                Transform::Ptr::dcast(getPort()->getCamera()->getBeacon()->getCore())->setMatrix(_DefaultView);
-            endEditCP(getPort()->getCamera()->getBeacon()->getCore(), Transform::MatrixFieldMask);
+            dynamic_cast<Transform*>(getPort()->getCamera()->getBeacon()->getCore())->setMatrix(_DefaultView);
 
-			//Extract the new yaw pitch and roll
-			setYaw(0.0);
-			setPitch(0.0);
-			setRoll(0.0);
+            //Extract the new yaw pitch and roll
+            setYaw(0.0);
+            setPitch(0.0);
+            setRoll(0.0);
         }
     }
     else
@@ -356,14 +352,14 @@ void GLViewport::lookAt(const Pnt3f& From, const Pnt3f& At, const Vec3f& Up)
 
 void GLViewport::showAll(void)
 {
-    if(getPort() == NullFC ||
-		getPort()->getRoot() == NullFC ||
-		getPort()->getCamera() == NullFC ||
-		!getPort()->getCamera()->getType().isDerivedFrom(PerspectiveCamera::getClassType()))
+    if(getPort() == NULL ||
+       getPort()->getRoot() == NULL ||
+       getPort()->getCamera() == NULL ||
+       !getPort()->getCamera()->getType().isDerivedFrom(PerspectiveCamera::getClassType()))
         return;
 
-	//
-	::osg::showAll(getPort()->getCamera(), getPort()->getRoot());
+    //
+    ::OSG::showAll(getPort()->getCamera(), getPort()->getRoot());
     if(_Navigator.getMode() == Navigator::NONE)
     {
     }
@@ -406,9 +402,7 @@ void GLViewport::updateView(void)
             View.mult(PitchRot);
             View.mult(RollRot);
             View.mult(OffsetMat);
-            beginEditCP(getPort()->getCamera()->getBeacon()->getCore(), Transform::MatrixFieldMask);
-                Transform::Ptr::dcast(getPort()->getCamera()->getBeacon()->getCore())->setMatrix(View);
-            endEditCP(getPort()->getCamera()->getBeacon()->getCore(), Transform::MatrixFieldMask);
+            dynamic_cast<Transform*>(getPort()->getCamera()->getBeacon()->getCore())->setMatrix(View);
         }
     }
 }
@@ -445,10 +439,10 @@ void GLViewport::setPitch(Real32 Pitch)
 void GLViewport::setOffset(const Vec3f& Offset)
 {
     _Offset.setValues(
-        osgClamp(_MinOffset.x(), Offset.x(), _MaxOffset.x()),
-        osgClamp(_MinOffset.y(), Offset.y(), _MaxOffset.y()),
-        osgClamp(_MinOffset.z(), Offset.z(), _MaxOffset.z()));
-    
+                      osgClamp(_MinOffset.x(), Offset.x(), _MaxOffset.x()),
+                      osgClamp(_MinOffset.y(), Offset.y(), _MaxOffset.y()),
+                      osgClamp(_MinOffset.z(), Offset.z(), _MaxOffset.z()));
+
     updateView();
 }
 
@@ -456,11 +450,10 @@ void GLViewport::setOffset(const Vec3f& Offset)
 
 void GLViewport::updateNavigatorConnections(void)
 {
-		//Set up Navigator
-		_Navigator.setViewport(getPort());
-		_Navigator.setCameraTransformation(getPort()->getCamera()->getBeacon());
+    //Set up Navigator
+    _Navigator.setViewport(getPort());
+    _Navigator.setCameraTransformation(getPort()->getCamera()->getBeacon());
 }
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -469,7 +462,7 @@ void GLViewport::updateNavigatorConnections(void)
 
 GLViewport::GLViewport(void) :
     Inherited(),
-		_MouseControlListener(GLViewportPtr(this)),
+		_MouseControlListener(this),
         _Yaw(0.0f), _Pitch(0.0f), _Roll(0.0f),
         _InitialYaw(0.0f), _InitialPitch(0.0f), _InitialRoll(0.0f),
         _YawMultiplier(1.0f), _PitchMultiplier(1.0f), _RollMultiplier(1.0f),
@@ -486,7 +479,7 @@ GLViewport::GLViewport(void) :
 
 GLViewport::GLViewport(const GLViewport &source) :
     Inherited(source),
-		_MouseControlListener(GLViewportPtr(this)),
+		_MouseControlListener(this),
         _Yaw(source._Yaw), _Pitch(source._Pitch), _Roll(source._Roll),
         _InitialYaw(source._InitialYaw), _InitialPitch(source._InitialPitch), _InitialRoll(source._InitialRoll),
         _YawMultiplier(source._YawMultiplier), _PitchMultiplier(source._PitchMultiplier), _RollMultiplier(source._RollMultiplier),
@@ -503,14 +496,15 @@ GLViewport::GLViewport(const GLViewport &source) :
 
 GLViewport::~GLViewport(void)
 {
-	delete _Action;
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void GLViewport::changed(BitVector whichField, UInt32 origin)
+void GLViewport::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 
 	if(whichField & PortFieldMask)
 	{
@@ -518,12 +512,11 @@ void GLViewport::changed(BitVector whichField, UInt32 origin)
 	}
 }
 
-void GLViewport::dump(      UInt32    , 
+void GLViewport::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump GLViewport NI" << std::endl;
 }
-
 
 void GLViewport::MouseControlListener::disconnect(void)
 {
@@ -532,7 +525,7 @@ void GLViewport::MouseControlListener::disconnect(void)
     _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
 }
 
-void GLViewport::MouseControlListener::mouseReleased(const MouseEventPtr e)
+void GLViewport::MouseControlListener::mouseReleased(const MouseEventUnrecPtr e)
 {
 	
     if(_GLViewport->_Navigator.getMode() != Navigator::NONE)
@@ -569,7 +562,7 @@ void GLViewport::MouseControlListener::mouseReleased(const MouseEventPtr e)
     disconnect();
 }
 
-void GLViewport::MouseControlListener::mouseDragged(const MouseEventPtr e)
+void GLViewport::MouseControlListener::mouseDragged(const MouseEventUnrecPtr e)
 {
 
     if(_GLViewport->_Navigator.getMode() != Navigator::NONE)
@@ -614,7 +607,7 @@ void GLViewport::MouseControlListener::setInitialMat(const Matrix& Mat)
 	_InitialMat = Mat;
 }
 
-void GLViewport::MouseControlListener::keyPressed(const KeyEventPtr e)
+void GLViewport::MouseControlListener::keyPressed(const KeyEventUnrecPtr e)
 {
     if(_GLViewport->_Navigator.getMode() != Navigator::NONE)
     {
@@ -629,29 +622,4 @@ void GLViewport::MouseControlListener::keyPressed(const KeyEventPtr e)
     }
 }
 
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGGLVIEWPORTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGGLVIEWPORTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGGLVIEWPORTFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

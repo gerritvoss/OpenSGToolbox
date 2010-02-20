@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,46 +42,48 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGPopupMenuEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief PopupMenuEvent class. See \ref 
-           PageUserInterfacePopupMenuEvent for a description.
+/*! \brief PopupMenuEvent class. See \ref
+           PageContribUserInterfacePopupMenuEvent for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuEvent : public PopupMenuEventBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING PopupMenuEvent : public PopupMenuEventBase
 {
-  private:
-
-    typedef PopupMenuEventBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef PopupMenuEventBase Inherited;
+    typedef PopupMenuEvent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
 
-    static  PopupMenuEventPtr      create(  FieldContainerPtr Source,
-                                        Time TimeStamp); 
+    static  PopupMenuEventTransitPtr      create(  FieldContainerRefPtr Source,
+                                                   Time TimeStamp); 
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in PopupMenuEventBase.
@@ -98,20 +100,24 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuEvent : public PopupMenuEventBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~PopupMenuEvent(void); 
+    virtual ~PopupMenuEvent(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class PopupMenuEventBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const PopupMenuEvent &source);
 };
 

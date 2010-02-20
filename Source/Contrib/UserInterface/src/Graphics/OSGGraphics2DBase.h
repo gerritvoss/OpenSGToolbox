@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,80 +58,98 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGGraphics.h" // Parent
 
-#include <OpenSG/OSGDepthChunkFields.h> // UIDepth type
+#include "OSGDepthChunkFields.h"        // UIDepth type
+#include "OSGColorMaskChunkFields.h"    // ColorMask type
+#include "OSGStencilChunkFields.h"      // StenciledAreaSetup type
 
 #include "OSGGraphics2DFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class Graphics2D;
-class BinaryDataHandler;
 
 //! \brief Graphics2D Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING Graphics2DBase : public Graphics
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Graphics2DBase : public Graphics
 {
-  private:
-
-    typedef Graphics    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef Graphics2DPtr  Ptr;
+    typedef Graphics Inherited;
+    typedef Graphics ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(Graphics2D);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
         UIDepthFieldId = Inherited::NextFieldId,
-        NextFieldId    = UIDepthFieldId + 1
+        ColorMaskFieldId = UIDepthFieldId + 1,
+        StenciledAreaSetupFieldId = ColorMaskFieldId + 1,
+        StenciledAreaCleanupFieldId = StenciledAreaSetupFieldId + 1,
+        StenciledAreaTestFieldId = StenciledAreaCleanupFieldId + 1,
+        NextFieldId = StenciledAreaTestFieldId + 1
     };
 
-    static const OSG::BitVector UIDepthFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector UIDepthFieldMask =
+        (TypeTraits<BitVector>::One << UIDepthFieldId);
+    static const OSG::BitVector ColorMaskFieldMask =
+        (TypeTraits<BitVector>::One << ColorMaskFieldId);
+    static const OSG::BitVector StenciledAreaSetupFieldMask =
+        (TypeTraits<BitVector>::One << StenciledAreaSetupFieldId);
+    static const OSG::BitVector StenciledAreaCleanupFieldMask =
+        (TypeTraits<BitVector>::One << StenciledAreaCleanupFieldId);
+    static const OSG::BitVector StenciledAreaTestFieldMask =
+        (TypeTraits<BitVector>::One << StenciledAreaTestFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecDepthChunkPtr SFUIDepthType;
+    typedef SFUnrecColorMaskChunkPtr SFColorMaskType;
+    typedef SFUnrecStencilChunkPtr SFStenciledAreaSetupType;
+    typedef SFUnrecStencilChunkPtr SFStenciledAreaCleanupType;
+    typedef SFUnrecStencilChunkPtr SFStenciledAreaTestType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
-    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -139,26 +157,47 @@ class OSG_USERINTERFACELIB_DLLMAPPING Graphics2DBase : public Graphics
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  Graphics2DPtr      create          (void); 
-    static  Graphics2DPtr      createEmpty     (void); 
+    static  Graphics2DTransitPtr  create          (void);
+    static  Graphics2D           *createEmpty     (void);
+
+    static  Graphics2DTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  Graphics2D            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  Graphics2DTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFDepthChunkPtr     _sfUIDepth;
+    SFUnrecDepthChunkPtr _sfUIDepth;
+    SFUnrecColorMaskChunkPtr _sfColorMask;
+    SFUnrecStencilChunkPtr _sfStenciledAreaSetup;
+    SFUnrecStencilChunkPtr _sfStenciledAreaCleanup;
+    SFUnrecStencilChunkPtr _sfStenciledAreaTest;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -173,86 +212,131 @@ class OSG_USERINTERFACELIB_DLLMAPPING Graphics2DBase : public Graphics
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Graphics2DBase(void); 
+    virtual ~Graphics2DBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const Graphics2D *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleUIDepth         (void) const;
+    EditFieldHandlePtr editHandleUIDepth        (void);
+    GetFieldHandlePtr  getHandleColorMask       (void) const;
+    EditFieldHandlePtr editHandleColorMask      (void);
+    GetFieldHandlePtr  getHandleStenciledAreaSetup (void) const;
+    EditFieldHandlePtr editHandleStenciledAreaSetup(void);
+    GetFieldHandlePtr  getHandleStenciledAreaCleanup (void) const;
+    EditFieldHandlePtr editHandleStenciledAreaCleanup(void);
+    GetFieldHandlePtr  getHandleStenciledAreaTest (void) const;
+    EditFieldHandlePtr editHandleStenciledAreaTest(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFDepthChunkPtr     *getSFUIDepth        (void);
+            const SFUnrecDepthChunkPtr *getSFUIDepth         (void) const;
+                  SFUnrecDepthChunkPtr *editSFUIDepth        (void);
+            const SFUnrecColorMaskChunkPtr *getSFColorMask       (void) const;
+                  SFUnrecColorMaskChunkPtr *editSFColorMask      (void);
+            const SFUnrecStencilChunkPtr *getSFStenciledAreaSetup (void) const;
+                  SFUnrecStencilChunkPtr *editSFStenciledAreaSetup(void);
+            const SFUnrecStencilChunkPtr *getSFStenciledAreaCleanup (void) const;
+                  SFUnrecStencilChunkPtr *editSFStenciledAreaCleanup(void);
+            const SFUnrecStencilChunkPtr *getSFStenciledAreaTest (void) const;
+                  SFUnrecStencilChunkPtr *editSFStenciledAreaTest(void);
 
-           DepthChunkPtr       &getUIDepth        (void);
-     const DepthChunkPtr       &getUIDepth        (void) const;
+
+                  DepthChunk * getUIDepth        (void) const;
+
+                  ColorMaskChunk * getColorMask      (void) const;
+
+                  StencilChunk * getStenciledAreaSetup(void) const;
+
+                  StencilChunk * getStenciledAreaCleanup(void) const;
+
+                  StencilChunk * getStenciledAreaTest(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setUIDepth        (const DepthChunkPtr &value);
+            void setUIDepth        (DepthChunk * const value);
+            void setColorMask      (ColorMaskChunk * const value);
+            void setStenciledAreaSetup(StencilChunk * const value);
+            void setStenciledAreaCleanup(StencilChunk * const value);
+            void setStenciledAreaTest(StencilChunk * const value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      Graphics2DBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      Graphics2DBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      Graphics2DBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const Graphics2DBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef Graphics2DBase *Graphics2DBaseP;
 
-typedef osgIF<Graphics2DBase::isNodeCore,
-              CoredNodePtr<Graphics2D>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet Graphics2DNodePtr;
-
-typedef RefPtr<Graphics2DPtr> Graphics2DRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGGRAPHICS2DBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGGRAPHICS2DBASE_H_ */

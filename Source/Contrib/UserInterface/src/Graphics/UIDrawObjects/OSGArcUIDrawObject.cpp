@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,22 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include <OSGConfig.h>
+
 #include "OSGArcUIDrawObject.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::ArcUIDrawObject
-A UI ArcUIDrawObject. 	
-*/
+// Documentation for this class is emitted in the
+// OSGArcUIDrawObjectBase.cpp file.
+// To modify it, please change the .fcd file (OSGArcUIDrawObject.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -65,8 +62,13 @@ A UI ArcUIDrawObject.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ArcUIDrawObject::initMethod (void)
+void ArcUIDrawObject::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -74,7 +76,7 @@ void ArcUIDrawObject::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ArcUIDrawObject::draw(const GraphicsPtr Graphics, Real32 Opacity) const
+void ArcUIDrawObject::draw(const GraphicsWeakPtr Graphics, Real32 Opacity) const
 {
 	Graphics->drawArc(getCenter(),getWidth(),getHeight(), getStartAngleRad(), getEndAngleRad(), getLineWidth(), getSubDivisions(), getColor(),getOpacity()*Opacity);
 }
@@ -84,6 +86,7 @@ void ArcUIDrawObject::getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 	TopLeft = Pnt2f(getCenter().x()-getWidth(), getCenter().y()-getHeight());
 	BottomRight = Pnt2f(getCenter().x()+getWidth(), getCenter().y()+getHeight());
 }
+
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -107,41 +110,17 @@ ArcUIDrawObject::~ArcUIDrawObject(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void ArcUIDrawObject::changed(BitVector whichField, UInt32 origin)
+void ArcUIDrawObject::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void ArcUIDrawObject::dump(      UInt32    , 
+void ArcUIDrawObject::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump ArcUIDrawObject NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGARCUIDRAWOBJECTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGARCUIDRAWOBJECTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGARCUIDRAWOBJECTFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

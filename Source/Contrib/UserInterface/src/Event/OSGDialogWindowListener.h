@@ -31,21 +31,21 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGEventListener.h>
+#include "OSGEventListener.h"
 #include "OSGDialogWindowEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowListener : public EventListener
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DialogWindowListener : public EventListener
 {
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void dialogClosing(const DialogWindowEventPtr e) = 0;
-   virtual void dialogClosed(const DialogWindowEventPtr e) = 0;
+   virtual void dialogClosing(const DialogWindowEventUnrecPtr e) = 0;
+   virtual void dialogClosed(const DialogWindowEventUnrecPtr e) = 0;
 };
 
 typedef DialogWindowListener* DialogWindowListenerPtr;

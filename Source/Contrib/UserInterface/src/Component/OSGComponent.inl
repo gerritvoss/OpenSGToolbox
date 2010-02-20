@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -37,8 +37,6 @@
 //---------------------------------------------------------------------------
 //  Includes
 //---------------------------------------------------------------------------
-
-#include <OpenSG/OSGConfig.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -99,22 +97,21 @@ bool Component::getMouseContained(void)
 }
 
 inline
-Component::ComponentUpdater::ComponentUpdater(ComponentPtr TheComponent) :
+Component::ComponentUpdater::ComponentUpdater(ComponentRefPtr TheComponent) :
     _Component(TheComponent)
 {
 }
 
 inline
-Component::ActivateToolTipListener::ActivateToolTipListener(ComponentPtr TheComponent) :
+Component::ActivateToolTipListener::ActivateToolTipListener(ComponentRefPtr TheComponent) :
     _Component(TheComponent)
 {
 }
 
 inline
-Component::DeactivateToolTipListener::DeactivateToolTipListener(ComponentPtr TheComponent) :
+Component::DeactivateToolTipListener::DeactivateToolTipListener(ComponentRefPtr TheComponent) :
     _Component(TheComponent)
 {
 }
 
 OSG_END_NAMESPACE
-

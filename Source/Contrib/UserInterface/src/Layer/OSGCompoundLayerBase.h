@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,62 +58,67 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGLayer.h" // Parent
 
-#include "Layer/OSGLayer.h" // Backgrounds type
+#include "OSGLayerFields.h"             // Backgrounds type
 
 #include "OSGCompoundLayerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class CompoundLayer;
-class BinaryDataHandler;
 
 //! \brief CompoundLayer Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING CompoundLayerBase : public Layer
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING CompoundLayerBase : public Layer
 {
-  private:
-
-    typedef Layer    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef CompoundLayerPtr  Ptr;
+    typedef Layer Inherited;
+    typedef Layer ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(CompoundLayer);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
         BackgroundsFieldId = Inherited::NextFieldId,
-        NextFieldId        = BackgroundsFieldId + 1
+        NextFieldId = BackgroundsFieldId + 1
     };
 
-    static const OSG::BitVector BackgroundsFieldMask;
-
-
-    static const OSG::BitVector MTInfluenceMask;
+    static const OSG::BitVector BackgroundsFieldMask =
+        (TypeTraits<BitVector>::One << BackgroundsFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef MFUnrecLayerPtr   MFBackgroundsType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -122,11 +127,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING CompoundLayerBase : public Layer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFLayerPtr   *getMFBackgrounds    (void);
+            const MFUnrecLayerPtr     *getMFBackgrounds    (void) const;
+                  MFUnrecLayerPtr     *editMFBackgrounds    (void);
 
-           LayerPtr     &getBackgrounds    (const UInt32 index);
-           MFLayerPtr   &getBackgrounds    (void);
-     const MFLayerPtr   &getBackgrounds    (void) const;
+
+                  Layer * getBackgrounds    (const UInt32 index) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -136,19 +141,30 @@ class OSG_USERINTERFACELIB_DLLMAPPING CompoundLayerBase : public Layer
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
     /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    void pushToBackgrounds           (Layer * const value   );
+    void assignBackgrounds          (const MFUnrecLayerPtr   &value);
+    void removeFromBackgrounds (UInt32               uiIndex );
+    void removeObjFromBackgrounds(Layer * const value   );
+    void clearBackgrounds            (void                         );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
@@ -156,26 +172,43 @@ class OSG_USERINTERFACELIB_DLLMAPPING CompoundLayerBase : public Layer
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  CompoundLayerPtr      create          (void); 
-    static  CompoundLayerPtr      createEmpty     (void); 
+    static  CompoundLayerTransitPtr  create          (void);
+    static  CompoundLayer           *createEmpty     (void);
+
+    static  CompoundLayerTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  CompoundLayer            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  CompoundLayerTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    MFLayerPtr   _mfBackgrounds;
+    MFUnrecLayerPtr   _mfBackgrounds;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -190,69 +223,80 @@ class OSG_USERINTERFACELIB_DLLMAPPING CompoundLayerBase : public Layer
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~CompoundLayerBase(void); 
+    virtual ~CompoundLayerBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const CompoundLayer *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleBackgrounds     (void) const;
+    EditFieldHandlePtr editHandleBackgrounds    (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      CompoundLayerBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      CompoundLayerBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      CompoundLayerBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const CompoundLayerBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef CompoundLayerBase *CompoundLayerBaseP;
 
-typedef osgIF<CompoundLayerBase::isNodeCore,
-              CoredNodePtr<CompoundLayer>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet CompoundLayerNodePtr;
-
-typedef RefPtr<CompoundLayerPtr> CompoundLayerRefPtr;
-
 OSG_END_NAMESPACE
-
-#define OSGCOMPOUNDLAYERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGCOMPOUNDLAYERBASE_H_ */

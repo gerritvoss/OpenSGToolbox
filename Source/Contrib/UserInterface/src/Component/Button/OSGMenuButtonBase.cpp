@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,192 +50,278 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEMENUBUTTONINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGListModel.h"               // Model Class
+#include "OSGComponentGenerator.h"      // CellGenerator Class
+#include "OSGListGeneratedPopupMenu.h"  // MenuButtonPopupMenu Class
 
 #include "OSGMenuButtonBase.h"
 #include "OSGMenuButton.h"
 
+#include <boost/bind.hpp>
+
+#include "OSGEvent.h"
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  MenuButtonBase::ModelFieldMask = 
-    (TypeTraits<BitVector>::One << MenuButtonBase::ModelFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  MenuButtonBase::CellGeneratorFieldMask = 
-    (TypeTraits<BitVector>::One << MenuButtonBase::CellGeneratorFieldId);
+/*! \class OSG::MenuButton
+    A UI MenuButton
+ */
 
-const OSG::BitVector  MenuButtonBase::MenuButtonPopupMenuFieldMask = 
-    (TypeTraits<BitVector>::One << MenuButtonBase::MenuButtonPopupMenuFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector MenuButtonBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var ListModelPtr    MenuButtonBase::_sfModel
-    
-*/
-/*! \var ComponentGeneratorPtr MenuButtonBase::_sfCellGenerator
-    
-*/
-/*! \var ListGeneratedPopupMenuPtr MenuButtonBase::_sfMenuButtonPopupMenu
+/*! \var ListModel *     MenuButtonBase::_sfModel
     
 */
 
-//! MenuButton description
+/*! \var ComponentGenerator * MenuButtonBase::_sfCellGenerator
+    
+*/
 
-FieldDescription *MenuButtonBase::_desc[] = 
+/*! \var ListGeneratedPopupMenu * MenuButtonBase::_sfMenuButtonPopupMenu
+    
+*/
+
+
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<MenuButton *>::_type("MenuButtonPtr", "ToggleButtonPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(MenuButton *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           MenuButton *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           MenuButton *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void MenuButtonBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFListModelPtr::getClassType(), 
-                     "Model", 
-                     ModelFieldId, ModelFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&MenuButtonBase::editSFModel)),
-    new FieldDescription(SFComponentGeneratorPtr::getClassType(), 
-                     "CellGenerator", 
-                     CellGeneratorFieldId, CellGeneratorFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&MenuButtonBase::editSFCellGenerator)),
-    new FieldDescription(SFListGeneratedPopupMenuPtr::getClassType(), 
-                     "MenuButtonPopupMenu", 
-                     MenuButtonPopupMenuFieldId, MenuButtonPopupMenuFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&MenuButtonBase::editSFMenuButtonPopupMenu))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType MenuButtonBase::_type(
-    "MenuButton",
-    "ToggleButton",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&MenuButtonBase::createEmpty),
+    pDesc = new SFUnrecListModelPtr::Description(
+        SFUnrecListModelPtr::getClassType(),
+        "Model",
+        "",
+        ModelFieldId, ModelFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MenuButton::editHandleModel),
+        static_cast<FieldGetMethodSig >(&MenuButton::getHandleModel));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecComponentGeneratorPtr::Description(
+        SFUnrecComponentGeneratorPtr::getClassType(),
+        "CellGenerator",
+        "",
+        CellGeneratorFieldId, CellGeneratorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MenuButton::editHandleCellGenerator),
+        static_cast<FieldGetMethodSig >(&MenuButton::getHandleCellGenerator));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecListGeneratedPopupMenuPtr::Description(
+        SFUnrecListGeneratedPopupMenuPtr::getClassType(),
+        "MenuButtonPopupMenu",
+        "",
+        MenuButtonPopupMenuFieldId, MenuButtonPopupMenuFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MenuButton::editHandleMenuButtonPopupMenu),
+        static_cast<FieldGetMethodSig >(&MenuButton::getHandleMenuButtonPopupMenu));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+MenuButtonBase::TypeObject MenuButtonBase::_type(
+    MenuButtonBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&MenuButtonBase::createEmptyLocal),
     MenuButton::initMethod,
-    _desc,
-    sizeof(_desc));
+    MenuButton::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&MenuButton::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"MenuButton\"\n"
+    "\tparent=\"ToggleButton\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    parentProducer=\"ToggleButton\"\n"
+    ">\n"
+    "A UI MenuButton\n"
+    "\t<Field\n"
+    "\t\tname=\"Model\"\n"
+    "\t\ttype=\"ListModel\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "      visibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"CellGenerator\"\n"
+    "\t\ttype=\"ComponentGenerator\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "      visibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "   </Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MenuButtonPopupMenu\"\n"
+    "\t\ttype=\"ListGeneratedPopupMenu\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"MenuActionPerformed\"\n"
+    "\t\ttype=\"ActionEventPtr\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "</FieldContainer>\n",
+    "A UI MenuButton\n"
+    );
 
 //! MenuButton Produced Methods
 
 MethodDescription *MenuButtonBase::_methodDesc[] =
 {
     new MethodDescription("MenuActionPerformed", 
+                    "",
                      MenuActionPerformedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod())
 };
 
 EventProducerType MenuButtonBase::_producerType(
     "MenuButtonProducerType",
     "ToggleButtonProducerType",
-    NULL,
+    "",
     InitEventProducerFunctor(),
     _methodDesc,
     sizeof(_methodDesc));
-//OSG_FIELD_CONTAINER_DEF(MenuButtonBase, MenuButtonPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &MenuButtonBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &MenuButtonBase::getType(void) const 
+FieldContainerType &MenuButtonBase::getType(void)
 {
     return _type;
-} 
+}
+
+const FieldContainerType &MenuButtonBase::getType(void) const
+{
+    return _type;
+}
 
 const EventProducerType &MenuButtonBase::getProducerType(void) const
 {
     return _producerType;
 }
 
-
-FieldContainerPtr MenuButtonBase::shallowCopy(void) const 
-{ 
-    MenuButtonPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const MenuButton *>(this)); 
-
-    return returnValue; 
-}
-
-UInt32 MenuButtonBase::getContainerSize(void) const 
-{ 
-    return sizeof(MenuButton); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void MenuButtonBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+UInt32 MenuButtonBase::getContainerSize(void) const
 {
-    this->executeSyncImpl(static_cast<MenuButtonBase *>(&other),
-                          whichField);
+    return sizeof(MenuButton);
 }
-#else
-void MenuButtonBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the MenuButton::_sfModel field.
+const SFUnrecListModelPtr *MenuButtonBase::getSFModel(void) const
 {
-    this->executeSyncImpl((MenuButtonBase *) &other, whichField, sInfo);
+    return &_sfModel;
 }
-void MenuButtonBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+SFUnrecListModelPtr *MenuButtonBase::editSFModel          (void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(ModelFieldMask);
+
+    return &_sfModel;
 }
 
-void MenuButtonBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+//! Get the MenuButton::_sfCellGenerator field.
+const SFUnrecComponentGeneratorPtr *MenuButtonBase::getSFCellGenerator(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfCellGenerator;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-MenuButtonBase::MenuButtonBase(void) :
-    _sfModel                  (ListModelPtr(NullFC)), 
-    _sfCellGenerator          (ComponentGeneratorPtr(NullFC)), 
-    _sfMenuButtonPopupMenu    (ListGeneratedPopupMenuPtr(NullFC)), 
-    Inherited() 
+SFUnrecComponentGeneratorPtr *MenuButtonBase::editSFCellGenerator  (void)
 {
-    _Producer.setType(&_producerType);
+    editSField(CellGeneratorFieldMask);
+
+    return &_sfCellGenerator;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-MenuButtonBase::MenuButtonBase(const MenuButtonBase &source) :
-    _sfModel                  (source._sfModel                  ), 
-    _sfCellGenerator          (source._sfCellGenerator          ), 
-    _sfMenuButtonPopupMenu    (source._sfMenuButtonPopupMenu    ), 
-    Inherited                 (source)
+//! Get the MenuButton::_sfMenuButtonPopupMenu field.
+const SFUnrecListGeneratedPopupMenuPtr *MenuButtonBase::getSFMenuButtonPopupMenu(void) const
 {
+    return &_sfMenuButtonPopupMenu;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-MenuButtonBase::~MenuButtonBase(void)
+SFUnrecListGeneratedPopupMenuPtr *MenuButtonBase::editSFMenuButtonPopupMenu(void)
 {
+    editSField(MenuButtonPopupMenuFieldMask);
+
+    return &_sfMenuButtonPopupMenu;
 }
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 MenuButtonBase::getBinSize(const BitVector &whichField)
+UInt32 MenuButtonBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -243,23 +329,20 @@ UInt32 MenuButtonBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfModel.getBinSize();
     }
-
     if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
     {
         returnValue += _sfCellGenerator.getBinSize();
     }
-
     if(FieldBits::NoField != (MenuButtonPopupMenuFieldMask & whichField))
     {
         returnValue += _sfMenuButtonPopupMenu.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void MenuButtonBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void MenuButtonBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -267,22 +350,18 @@ void MenuButtonBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfModel.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
     {
         _sfCellGenerator.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MenuButtonPopupMenuFieldMask & whichField))
     {
         _sfMenuButtonPopupMenu.copyToBin(pMem);
     }
-
-
 }
 
-void MenuButtonBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void MenuButtonBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -290,84 +369,306 @@ void MenuButtonBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfModel.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
     {
         _sfCellGenerator.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MenuButtonPopupMenuFieldMask & whichField))
     {
         _sfMenuButtonPopupMenu.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void MenuButtonBase::executeSyncImpl(      MenuButtonBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+MenuButtonTransitPtr MenuButtonBase::createLocal(BitVector bFlags)
 {
+    MenuButtonTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (ModelFieldMask & whichField))
-        _sfModel.syncWith(pOther->_sfModel);
+        fc = dynamic_pointer_cast<MenuButton>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
-        _sfCellGenerator.syncWith(pOther->_sfCellGenerator);
-
-    if(FieldBits::NoField != (MenuButtonPopupMenuFieldMask & whichField))
-        _sfMenuButtonPopupMenu.syncWith(pOther->_sfMenuButtonPopupMenu);
-
-
-}
-#else
-void MenuButtonBase::executeSyncImpl(      MenuButtonBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ModelFieldMask & whichField))
-        _sfModel.syncWith(pOther->_sfModel);
-
-    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
-        _sfCellGenerator.syncWith(pOther->_sfCellGenerator);
-
-    if(FieldBits::NoField != (MenuButtonPopupMenuFieldMask & whichField))
-        _sfMenuButtonPopupMenu.syncWith(pOther->_sfMenuButtonPopupMenu);
-
-
-
+    return fc;
 }
 
-void MenuButtonBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+MenuButtonTransitPtr MenuButtonBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    MenuButtonTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<MenuButton>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+MenuButtonTransitPtr MenuButtonBase::create(void)
+{
+    MenuButtonTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<MenuButton>(tmpPtr);
+    }
+
+    return fc;
+}
+
+MenuButton *MenuButtonBase::createEmptyLocal(BitVector bFlags)
+{
+    MenuButton *returnValue;
+
+    newPtr<MenuButton>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+MenuButton *MenuButtonBase::createEmpty(void)
+{
+    MenuButton *returnValue;
+
+    newPtr<MenuButton>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr MenuButtonBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    MenuButton *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const MenuButton *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr MenuButtonBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    MenuButton *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const MenuButton *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr MenuButtonBase::shallowCopy(void) const
+{
+    MenuButton *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const MenuButton *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+MenuButtonBase::MenuButtonBase(void) :
+    Inherited(),
+    _sfModel                  (NULL),
+    _sfCellGenerator          (NULL),
+    _sfMenuButtonPopupMenu    (NULL)
+{
+    _Producer.setType(&_producerType);
+}
+
+MenuButtonBase::MenuButtonBase(const MenuButtonBase &source) :
+    Inherited(source),
+    _sfModel                  (NULL),
+    _sfCellGenerator          (NULL),
+    _sfMenuButtonPopupMenu    (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+MenuButtonBase::~MenuButtonBase(void)
+{
+}
+
+void MenuButtonBase::onCreate(const MenuButton *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        MenuButton *pThis = static_cast<MenuButton *>(this);
+
+        pThis->setModel(source->getModel());
+
+        pThis->setCellGenerator(source->getCellGenerator());
+
+        pThis->setMenuButtonPopupMenu(source->getMenuButtonPopupMenu());
+    }
+}
+
+GetFieldHandlePtr MenuButtonBase::getHandleModel           (void) const
+{
+    SFUnrecListModelPtr::GetHandlePtr returnValue(
+        new  SFUnrecListModelPtr::GetHandle(
+             &_sfModel,
+             this->getType().getFieldDesc(ModelFieldId),
+             const_cast<MenuButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MenuButtonBase::editHandleModel          (void)
+{
+    SFUnrecListModelPtr::EditHandlePtr returnValue(
+        new  SFUnrecListModelPtr::EditHandle(
+             &_sfModel,
+             this->getType().getFieldDesc(ModelFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&MenuButton::setModel,
+                    static_cast<MenuButton *>(this), _1));
+
+    editSField(ModelFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MenuButtonBase::getHandleCellGenerator   (void) const
+{
+    SFUnrecComponentGeneratorPtr::GetHandlePtr returnValue(
+        new  SFUnrecComponentGeneratorPtr::GetHandle(
+             &_sfCellGenerator,
+             this->getType().getFieldDesc(CellGeneratorFieldId),
+             const_cast<MenuButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MenuButtonBase::editHandleCellGenerator  (void)
+{
+    SFUnrecComponentGeneratorPtr::EditHandlePtr returnValue(
+        new  SFUnrecComponentGeneratorPtr::EditHandle(
+             &_sfCellGenerator,
+             this->getType().getFieldDesc(CellGeneratorFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&MenuButton::setCellGenerator,
+                    static_cast<MenuButton *>(this), _1));
+
+    editSField(CellGeneratorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MenuButtonBase::getHandleMenuButtonPopupMenu (void) const
+{
+    SFUnrecListGeneratedPopupMenuPtr::GetHandlePtr returnValue(
+        new  SFUnrecListGeneratedPopupMenuPtr::GetHandle(
+             &_sfMenuButtonPopupMenu,
+             this->getType().getFieldDesc(MenuButtonPopupMenuFieldId),
+             const_cast<MenuButtonBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MenuButtonBase::editHandleMenuButtonPopupMenu(void)
+{
+    SFUnrecListGeneratedPopupMenuPtr::EditHandlePtr returnValue(
+        new  SFUnrecListGeneratedPopupMenuPtr::EditHandle(
+             &_sfMenuButtonPopupMenu,
+             this->getType().getFieldDesc(MenuButtonPopupMenuFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&MenuButton::setMenuButtonPopupMenu,
+                    static_cast<MenuButton *>(this), _1));
+
+    editSField(MenuButtonPopupMenuFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void MenuButtonBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    MenuButton *pThis = static_cast<MenuButton *>(this);
+
+    pThis->execSync(static_cast<MenuButton *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *MenuButtonBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    MenuButton *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const MenuButton *>(pRefAspect),
+                  dynamic_cast<const MenuButton *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<MenuButtonPtr>::_type("MenuButtonPtr", "ToggleButtonPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(MenuButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(MenuButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+void MenuButtonBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<MenuButton *>(this)->setModel(NULL);
+
+    static_cast<MenuButton *>(this)->setCellGenerator(NULL);
+
+    static_cast<MenuButton *>(this)->setMenuButtonPopupMenu(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-

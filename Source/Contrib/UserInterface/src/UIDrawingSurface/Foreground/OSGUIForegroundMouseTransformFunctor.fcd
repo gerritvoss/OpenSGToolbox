@@ -3,22 +3,24 @@
 <FieldContainer
 	name="UIForegroundMouseTransformFunctor"
 	parent="UIDrawingSurfaceMouseTransformFunctor"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI UIDrawingSurfaceMouseTransformFunctor.
 	<Field
 		name="Parent"
-		type="UIForegroundPtr"
+		type="UIForeground"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NullFC"
-		header="UIDrawingSurface/Foreground/OSGUIForegroundFields.h"
+		defaultValue="NULL"
 		access="protected"
 	>
 	</Field>

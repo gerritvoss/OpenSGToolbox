@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,221 +50,403 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEUIRECTANGLEINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGUIDrawingSurface.h"        // DrawingSurface Class
+#include "OSGColorMaskChunk.h"          // RectColorMask Class
+#include "OSGPolygonChunk.h"            // RectPolygon Class
+#include "OSGUIRectangleMouseTransformFunctor.h" // MouseTransformFunctor Class
 
 #include "OSGUIRectangleBase.h"
 #include "OSGUIRectangle.h"
 
-#include "UIDrawingSurface/NodeCore/OSGUIRectangleMouseTransformFunctor.h"   // MouseTransformFunctor default header
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  UIRectangleBase::PointFieldMask = 
-    (TypeTraits<BitVector>::One << UIRectangleBase::PointFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  UIRectangleBase::WidthFieldMask = 
-    (TypeTraits<BitVector>::One << UIRectangleBase::WidthFieldId);
+/*! \class OSG::UIRectangle
+    A UI Rectangle.
+ */
 
-const OSG::BitVector  UIRectangleBase::HeightFieldMask = 
-    (TypeTraits<BitVector>::One << UIRectangleBase::HeightFieldId);
-
-const OSG::BitVector  UIRectangleBase::DrawingSurfaceFieldMask = 
-    (TypeTraits<BitVector>::One << UIRectangleBase::DrawingSurfaceFieldId);
-
-const OSG::BitVector  UIRectangleBase::RectColorMaskFieldMask = 
-    (TypeTraits<BitVector>::One << UIRectangleBase::RectColorMaskFieldId);
-
-const OSG::BitVector  UIRectangleBase::RectPolygonFieldMask = 
-    (TypeTraits<BitVector>::One << UIRectangleBase::RectPolygonFieldId);
-
-const OSG::BitVector  UIRectangleBase::MouseTransformFunctorFieldMask = 
-    (TypeTraits<BitVector>::One << UIRectangleBase::MouseTransformFunctorFieldId);
-
-const OSG::BitVector UIRectangleBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Pnt3f           UIRectangleBase::_sfPoint
     
 */
+
 /*! \var Real32          UIRectangleBase::_sfWidth
     
 */
+
 /*! \var Real32          UIRectangleBase::_sfHeight
     
 */
-/*! \var UIDrawingSurfacePtr UIRectangleBase::_sfDrawingSurface
-    
-*/
-/*! \var ColorMaskChunkPtr UIRectangleBase::_sfRectColorMask
-    
-*/
-/*! \var PolygonChunkPtr UIRectangleBase::_sfRectPolygon
-    
-*/
-/*! \var UIRectangleMouseTransformFunctorPtr UIRectangleBase::_sfMouseTransformFunctor
+
+/*! \var UIDrawingSurface * UIRectangleBase::_sfDrawingSurface
     
 */
 
-//! UIRectangle description
+/*! \var ColorMaskChunk * UIRectangleBase::_sfRectColorMask
+    
+*/
 
-FieldDescription *UIRectangleBase::_desc[] = 
+/*! \var PolygonChunk *  UIRectangleBase::_sfRectPolygon
+    
+*/
+
+/*! \var UIRectangleMouseTransformFunctor * UIRectangleBase::_sfMouseTransformFunctor
+    
+*/
+
+
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<UIRectangle *>::_type("UIRectanglePtr", "DrawablePtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(UIRectangle *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           UIRectangle *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           UIRectangle *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void UIRectangleBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFPnt3f::getClassType(), 
-                     "Point", 
-                     PointFieldId, PointFieldMask,
-                     false,
-                     (FieldAccessMethod) &UIRectangleBase::getSFPoint),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Width", 
-                     WidthFieldId, WidthFieldMask,
-                     false,
-                     (FieldAccessMethod) &UIRectangleBase::getSFWidth),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Height", 
-                     HeightFieldId, HeightFieldMask,
-                     false,
-                     (FieldAccessMethod) &UIRectangleBase::getSFHeight),
-    new FieldDescription(SFUIDrawingSurfacePtr::getClassType(), 
-                     "DrawingSurface", 
-                     DrawingSurfaceFieldId, DrawingSurfaceFieldMask,
-                     false,
-                     (FieldAccessMethod) &UIRectangleBase::getSFDrawingSurface),
-    new FieldDescription(SFColorMaskChunkPtr::getClassType(), 
-                     "RectColorMask", 
-                     RectColorMaskFieldId, RectColorMaskFieldMask,
-                     true,
-                     (FieldAccessMethod) &UIRectangleBase::getSFRectColorMask),
-    new FieldDescription(SFPolygonChunkPtr::getClassType(), 
-                     "RectPolygon", 
-                     RectPolygonFieldId, RectPolygonFieldMask,
-                     true,
-                     (FieldAccessMethod) &UIRectangleBase::getSFRectPolygon),
-    new FieldDescription(SFUIRectangleMouseTransformFunctorPtr::getClassType(), 
-                     "MouseTransformFunctor", 
-                     MouseTransformFunctorFieldId, MouseTransformFunctorFieldMask,
-                     false,
-                     (FieldAccessMethod) &UIRectangleBase::getSFMouseTransformFunctor)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType UIRectangleBase::_type(
-    "UIRectangle",
-    "Drawable",
-    NULL,
-    (PrototypeCreateF) &UIRectangleBase::createEmpty,
+    pDesc = new SFPnt3f::Description(
+        SFPnt3f::getClassType(),
+        "Point",
+        "",
+        PointFieldId, PointFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&UIRectangle::editHandlePoint),
+        static_cast<FieldGetMethodSig >(&UIRectangle::getHandlePoint));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Width",
+        "",
+        WidthFieldId, WidthFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&UIRectangle::editHandleWidth),
+        static_cast<FieldGetMethodSig >(&UIRectangle::getHandleWidth));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Height",
+        "",
+        HeightFieldId, HeightFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&UIRectangle::editHandleHeight),
+        static_cast<FieldGetMethodSig >(&UIRectangle::getHandleHeight));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecUIDrawingSurfacePtr::Description(
+        SFUnrecUIDrawingSurfacePtr::getClassType(),
+        "DrawingSurface",
+        "",
+        DrawingSurfaceFieldId, DrawingSurfaceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&UIRectangle::editHandleDrawingSurface),
+        static_cast<FieldGetMethodSig >(&UIRectangle::getHandleDrawingSurface));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecColorMaskChunkPtr::Description(
+        SFUnrecColorMaskChunkPtr::getClassType(),
+        "RectColorMask",
+        "",
+        RectColorMaskFieldId, RectColorMaskFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&UIRectangle::editHandleRectColorMask),
+        static_cast<FieldGetMethodSig >(&UIRectangle::getHandleRectColorMask));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecPolygonChunkPtr::Description(
+        SFUnrecPolygonChunkPtr::getClassType(),
+        "RectPolygon",
+        "",
+        RectPolygonFieldId, RectPolygonFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&UIRectangle::editHandleRectPolygon),
+        static_cast<FieldGetMethodSig >(&UIRectangle::getHandleRectPolygon));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecUIRectangleMouseTransformFunctorPtr::Description(
+        SFUnrecUIRectangleMouseTransformFunctorPtr::getClassType(),
+        "MouseTransformFunctor",
+        "",
+        MouseTransformFunctorFieldId, MouseTransformFunctorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&UIRectangle::editHandleMouseTransformFunctor),
+        static_cast<FieldGetMethodSig >(&UIRectangle::getHandleMouseTransformFunctor));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+UIRectangleBase::TypeObject UIRectangleBase::_type(
+    UIRectangleBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&UIRectangleBase::createEmptyLocal),
     UIRectangle::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(UIRectangleBase, UIRectanglePtr)
+    UIRectangle::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&UIRectangle::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"UIRectangle\"\n"
+    "\tparent=\"Drawable\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "A UI Rectangle.\n"
+    "\t<Field\n"
+    "\t\tname=\"Point\"\n"
+    "\t\ttype=\"Pnt3f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Width\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Height\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"DrawingSurface\"\n"
+    "\t\ttype=\"UIDrawingSurface\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"RectColorMask\"\n"
+    "\t\ttype=\"ColorMaskChunk\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"RectPolygon\"\n"
+    "\t\ttype=\"PolygonChunk\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"MouseTransformFunctor\"\n"
+    "\t\ttype=\"UIRectangleMouseTransformFunctor\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI Rectangle.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &UIRectangleBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &UIRectangleBase::getType(void) const 
+FieldContainerType &UIRectangleBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr UIRectangleBase::shallowCopy(void) const 
-{ 
-    UIRectanglePtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const UIRectangle *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 UIRectangleBase::getContainerSize(void) const 
-{ 
-    return sizeof(UIRectangle); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void UIRectangleBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &UIRectangleBase::getType(void) const
 {
-    this->executeSyncImpl((UIRectangleBase *) &other, whichField);
+    return _type;
 }
-#else
-void UIRectangleBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 UIRectangleBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((UIRectangleBase *) &other, whichField, sInfo);
+    return sizeof(UIRectangle);
 }
-void UIRectangleBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFPnt3f *UIRectangleBase::editSFPoint(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(PointFieldMask);
+
+    return &_sfPoint;
 }
 
-void UIRectangleBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFPnt3f *UIRectangleBase::getSFPoint(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfPoint;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-UIRectangleBase::UIRectangleBase(void) :
-    _sfPoint                  (Pnt3f(0.0,0.0,0.0)), 
-    _sfWidth                  (Real32(1.0)), 
-    _sfHeight                 (Real32(1.0)), 
-    _sfDrawingSurface         (UIDrawingSurfacePtr(NullFC)), 
-    _sfRectColorMask          (ColorMaskChunkPtr(NullFC)), 
-    _sfRectPolygon            (PolygonChunkPtr(NullFC)), 
-    _sfMouseTransformFunctor  (UIRectangleMouseTransformFunctorPtr(UIRectangleMouseTransformFunctor::create())), 
-    Inherited() 
+SFReal32 *UIRectangleBase::editSFWidth(void)
 {
+    editSField(WidthFieldMask);
+
+    return &_sfWidth;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-UIRectangleBase::UIRectangleBase(const UIRectangleBase &source) :
-    _sfPoint                  (source._sfPoint                  ), 
-    _sfWidth                  (source._sfWidth                  ), 
-    _sfHeight                 (source._sfHeight                 ), 
-    _sfDrawingSurface         (source._sfDrawingSurface         ), 
-    _sfRectColorMask          (source._sfRectColorMask          ), 
-    _sfRectPolygon            (source._sfRectPolygon            ), 
-    _sfMouseTransformFunctor  (UIRectangleMouseTransformFunctorPtr(UIRectangleMouseTransformFunctor::create())), 
-    Inherited                 (source)
+const SFReal32 *UIRectangleBase::getSFWidth(void) const
 {
+    return &_sfWidth;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-UIRectangleBase::~UIRectangleBase(void)
+SFReal32 *UIRectangleBase::editSFHeight(void)
 {
+    editSField(HeightFieldMask);
+
+    return &_sfHeight;
 }
+
+const SFReal32 *UIRectangleBase::getSFHeight(void) const
+{
+    return &_sfHeight;
+}
+
+
+//! Get the UIRectangle::_sfDrawingSurface field.
+const SFUnrecUIDrawingSurfacePtr *UIRectangleBase::getSFDrawingSurface(void) const
+{
+    return &_sfDrawingSurface;
+}
+
+SFUnrecUIDrawingSurfacePtr *UIRectangleBase::editSFDrawingSurface (void)
+{
+    editSField(DrawingSurfaceFieldMask);
+
+    return &_sfDrawingSurface;
+}
+
+//! Get the UIRectangle::_sfRectColorMask field.
+const SFUnrecColorMaskChunkPtr *UIRectangleBase::getSFRectColorMask(void) const
+{
+    return &_sfRectColorMask;
+}
+
+SFUnrecColorMaskChunkPtr *UIRectangleBase::editSFRectColorMask  (void)
+{
+    editSField(RectColorMaskFieldMask);
+
+    return &_sfRectColorMask;
+}
+
+//! Get the UIRectangle::_sfRectPolygon field.
+const SFUnrecPolygonChunkPtr *UIRectangleBase::getSFRectPolygon(void) const
+{
+    return &_sfRectPolygon;
+}
+
+SFUnrecPolygonChunkPtr *UIRectangleBase::editSFRectPolygon    (void)
+{
+    editSField(RectPolygonFieldMask);
+
+    return &_sfRectPolygon;
+}
+
+//! Get the UIRectangle::_sfMouseTransformFunctor field.
+const SFUnrecUIRectangleMouseTransformFunctorPtr *UIRectangleBase::getSFMouseTransformFunctor(void) const
+{
+    return &_sfMouseTransformFunctor;
+}
+
+SFUnrecUIRectangleMouseTransformFunctorPtr *UIRectangleBase::editSFMouseTransformFunctor(void)
+{
+    editSField(MouseTransformFunctorFieldMask);
+
+    return &_sfMouseTransformFunctor;
+}
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 UIRectangleBase::getBinSize(const BitVector &whichField)
+UInt32 UIRectangleBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -272,43 +454,36 @@ UInt32 UIRectangleBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfPoint.getBinSize();
     }
-
     if(FieldBits::NoField != (WidthFieldMask & whichField))
     {
         returnValue += _sfWidth.getBinSize();
     }
-
     if(FieldBits::NoField != (HeightFieldMask & whichField))
     {
         returnValue += _sfHeight.getBinSize();
     }
-
     if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
     {
         returnValue += _sfDrawingSurface.getBinSize();
     }
-
     if(FieldBits::NoField != (RectColorMaskFieldMask & whichField))
     {
         returnValue += _sfRectColorMask.getBinSize();
     }
-
     if(FieldBits::NoField != (RectPolygonFieldMask & whichField))
     {
         returnValue += _sfRectPolygon.getBinSize();
     }
-
     if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
     {
         returnValue += _sfMouseTransformFunctor.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void UIRectangleBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void UIRectangleBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -316,42 +491,34 @@ void UIRectangleBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfPoint.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (WidthFieldMask & whichField))
     {
         _sfWidth.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (HeightFieldMask & whichField))
     {
         _sfHeight.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
     {
         _sfDrawingSurface.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (RectColorMaskFieldMask & whichField))
     {
         _sfRectColorMask.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (RectPolygonFieldMask & whichField))
     {
         _sfRectPolygon.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
     {
         _sfMouseTransformFunctor.copyToBin(pMem);
     }
-
-
 }
 
-void UIRectangleBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void UIRectangleBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -359,148 +526,436 @@ void UIRectangleBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfPoint.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (WidthFieldMask & whichField))
     {
         _sfWidth.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (HeightFieldMask & whichField))
     {
         _sfHeight.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
     {
         _sfDrawingSurface.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (RectColorMaskFieldMask & whichField))
     {
         _sfRectColorMask.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (RectPolygonFieldMask & whichField))
     {
         _sfRectPolygon.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
     {
         _sfMouseTransformFunctor.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void UIRectangleBase::executeSyncImpl(      UIRectangleBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+UIRectangleTransitPtr UIRectangleBase::createLocal(BitVector bFlags)
 {
+    UIRectangleTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (PointFieldMask & whichField))
-        _sfPoint.syncWith(pOther->_sfPoint);
+        fc = dynamic_pointer_cast<UIRectangle>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (WidthFieldMask & whichField))
-        _sfWidth.syncWith(pOther->_sfWidth);
-
-    if(FieldBits::NoField != (HeightFieldMask & whichField))
-        _sfHeight.syncWith(pOther->_sfHeight);
-
-    if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
-        _sfDrawingSurface.syncWith(pOther->_sfDrawingSurface);
-
-    if(FieldBits::NoField != (RectColorMaskFieldMask & whichField))
-        _sfRectColorMask.syncWith(pOther->_sfRectColorMask);
-
-    if(FieldBits::NoField != (RectPolygonFieldMask & whichField))
-        _sfRectPolygon.syncWith(pOther->_sfRectPolygon);
-
-    if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
-        _sfMouseTransformFunctor.syncWith(pOther->_sfMouseTransformFunctor);
-
-
-}
-#else
-void UIRectangleBase::executeSyncImpl(      UIRectangleBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (PointFieldMask & whichField))
-        _sfPoint.syncWith(pOther->_sfPoint);
-
-    if(FieldBits::NoField != (WidthFieldMask & whichField))
-        _sfWidth.syncWith(pOther->_sfWidth);
-
-    if(FieldBits::NoField != (HeightFieldMask & whichField))
-        _sfHeight.syncWith(pOther->_sfHeight);
-
-    if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
-        _sfDrawingSurface.syncWith(pOther->_sfDrawingSurface);
-
-    if(FieldBits::NoField != (RectColorMaskFieldMask & whichField))
-        _sfRectColorMask.syncWith(pOther->_sfRectColorMask);
-
-    if(FieldBits::NoField != (RectPolygonFieldMask & whichField))
-        _sfRectPolygon.syncWith(pOther->_sfRectPolygon);
-
-    if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
-        _sfMouseTransformFunctor.syncWith(pOther->_sfMouseTransformFunctor);
-
-
-
+    return fc;
 }
 
-void UIRectangleBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+UIRectangleTransitPtr UIRectangleBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    UIRectangleTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<UIRectangle>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+UIRectangleTransitPtr UIRectangleBase::create(void)
+{
+    UIRectangleTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<UIRectangle>(tmpPtr);
+    }
+
+    return fc;
+}
+
+UIRectangle *UIRectangleBase::createEmptyLocal(BitVector bFlags)
+{
+    UIRectangle *returnValue;
+
+    newPtr<UIRectangle>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+UIRectangle *UIRectangleBase::createEmpty(void)
+{
+    UIRectangle *returnValue;
+
+    newPtr<UIRectangle>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr UIRectangleBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    UIRectangle *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const UIRectangle *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr UIRectangleBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    UIRectangle *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const UIRectangle *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr UIRectangleBase::shallowCopy(void) const
+{
+    UIRectangle *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const UIRectangle *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+UIRectangleBase::UIRectangleBase(void) :
+    Inherited(),
+    _sfPoint                  (Pnt3f(0.0,0.0,0.0)),
+    _sfWidth                  (Real32(1.0)),
+    _sfHeight                 (Real32(1.0)),
+    _sfDrawingSurface         (NULL),
+    _sfRectColorMask          (NULL),
+    _sfRectPolygon            (NULL),
+    _sfMouseTransformFunctor  (NULL)
+{
+}
+
+UIRectangleBase::UIRectangleBase(const UIRectangleBase &source) :
+    Inherited(source),
+    _sfPoint                  (source._sfPoint                  ),
+    _sfWidth                  (source._sfWidth                  ),
+    _sfHeight                 (source._sfHeight                 ),
+    _sfDrawingSurface         (NULL),
+    _sfRectColorMask          (NULL),
+    _sfRectPolygon            (NULL),
+    _sfMouseTransformFunctor  (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+UIRectangleBase::~UIRectangleBase(void)
+{
+}
+
+void UIRectangleBase::onCreate(const UIRectangle *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        UIRectangle *pThis = static_cast<UIRectangle *>(this);
+
+        pThis->setDrawingSurface(source->getDrawingSurface());
+
+        pThis->setRectColorMask(source->getRectColorMask());
+
+        pThis->setRectPolygon(source->getRectPolygon());
+
+        pThis->setMouseTransformFunctor(source->getMouseTransformFunctor());
+    }
+}
+
+GetFieldHandlePtr UIRectangleBase::getHandlePoint           (void) const
+{
+    SFPnt3f::GetHandlePtr returnValue(
+        new  SFPnt3f::GetHandle(
+             &_sfPoint,
+             this->getType().getFieldDesc(PointFieldId),
+             const_cast<UIRectangleBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr UIRectangleBase::editHandlePoint          (void)
+{
+    SFPnt3f::EditHandlePtr returnValue(
+        new  SFPnt3f::EditHandle(
+             &_sfPoint,
+             this->getType().getFieldDesc(PointFieldId),
+             this));
+
+
+    editSField(PointFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr UIRectangleBase::getHandleWidth           (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfWidth,
+             this->getType().getFieldDesc(WidthFieldId),
+             const_cast<UIRectangleBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr UIRectangleBase::editHandleWidth          (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfWidth,
+             this->getType().getFieldDesc(WidthFieldId),
+             this));
+
+
+    editSField(WidthFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr UIRectangleBase::getHandleHeight          (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfHeight,
+             this->getType().getFieldDesc(HeightFieldId),
+             const_cast<UIRectangleBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr UIRectangleBase::editHandleHeight         (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfHeight,
+             this->getType().getFieldDesc(HeightFieldId),
+             this));
+
+
+    editSField(HeightFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr UIRectangleBase::getHandleDrawingSurface  (void) const
+{
+    SFUnrecUIDrawingSurfacePtr::GetHandlePtr returnValue(
+        new  SFUnrecUIDrawingSurfacePtr::GetHandle(
+             &_sfDrawingSurface,
+             this->getType().getFieldDesc(DrawingSurfaceFieldId),
+             const_cast<UIRectangleBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr UIRectangleBase::editHandleDrawingSurface (void)
+{
+    SFUnrecUIDrawingSurfacePtr::EditHandlePtr returnValue(
+        new  SFUnrecUIDrawingSurfacePtr::EditHandle(
+             &_sfDrawingSurface,
+             this->getType().getFieldDesc(DrawingSurfaceFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&UIRectangle::setDrawingSurface,
+                    static_cast<UIRectangle *>(this), _1));
+
+    editSField(DrawingSurfaceFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr UIRectangleBase::getHandleRectColorMask   (void) const
+{
+    SFUnrecColorMaskChunkPtr::GetHandlePtr returnValue(
+        new  SFUnrecColorMaskChunkPtr::GetHandle(
+             &_sfRectColorMask,
+             this->getType().getFieldDesc(RectColorMaskFieldId),
+             const_cast<UIRectangleBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr UIRectangleBase::editHandleRectColorMask  (void)
+{
+    SFUnrecColorMaskChunkPtr::EditHandlePtr returnValue(
+        new  SFUnrecColorMaskChunkPtr::EditHandle(
+             &_sfRectColorMask,
+             this->getType().getFieldDesc(RectColorMaskFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&UIRectangle::setRectColorMask,
+                    static_cast<UIRectangle *>(this), _1));
+
+    editSField(RectColorMaskFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr UIRectangleBase::getHandleRectPolygon     (void) const
+{
+    SFUnrecPolygonChunkPtr::GetHandlePtr returnValue(
+        new  SFUnrecPolygonChunkPtr::GetHandle(
+             &_sfRectPolygon,
+             this->getType().getFieldDesc(RectPolygonFieldId),
+             const_cast<UIRectangleBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr UIRectangleBase::editHandleRectPolygon    (void)
+{
+    SFUnrecPolygonChunkPtr::EditHandlePtr returnValue(
+        new  SFUnrecPolygonChunkPtr::EditHandle(
+             &_sfRectPolygon,
+             this->getType().getFieldDesc(RectPolygonFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&UIRectangle::setRectPolygon,
+                    static_cast<UIRectangle *>(this), _1));
+
+    editSField(RectPolygonFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr UIRectangleBase::getHandleMouseTransformFunctor (void) const
+{
+    SFUnrecUIRectangleMouseTransformFunctorPtr::GetHandlePtr returnValue(
+        new  SFUnrecUIRectangleMouseTransformFunctorPtr::GetHandle(
+             &_sfMouseTransformFunctor,
+             this->getType().getFieldDesc(MouseTransformFunctorFieldId),
+             const_cast<UIRectangleBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr UIRectangleBase::editHandleMouseTransformFunctor(void)
+{
+    SFUnrecUIRectangleMouseTransformFunctorPtr::EditHandlePtr returnValue(
+        new  SFUnrecUIRectangleMouseTransformFunctorPtr::EditHandle(
+             &_sfMouseTransformFunctor,
+             this->getType().getFieldDesc(MouseTransformFunctorFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&UIRectangle::setMouseTransformFunctor,
+                    static_cast<UIRectangle *>(this), _1));
+
+    editSField(MouseTransformFunctorFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void UIRectangleBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    UIRectangle *pThis = static_cast<UIRectangle *>(this);
+
+    pThis->execSync(static_cast<UIRectangle *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *UIRectangleBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    UIRectangle *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const UIRectangle *>(pRefAspect),
+                  dynamic_cast<const UIRectangle *>(this));
+
+    return returnValue;
+}
+#endif
+
+void UIRectangleBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<UIRectangle *>(this)->setDrawingSurface(NULL);
+
+    static_cast<UIRectangle *>(this)->setRectColorMask(NULL);
+
+    static_cast<UIRectangle *>(this)->setRectPolygon(NULL);
+
+    static_cast<UIRectangle *>(this)->setMouseTransformFunctor(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<UIRectanglePtr>::_type("UIRectanglePtr", "DrawablePtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(UIRectanglePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(UIRectanglePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGUIRECTANGLEBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGUIRECTANGLEBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGUIRECTANGLEFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

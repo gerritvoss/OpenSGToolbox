@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGAbstractWindowFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class InternalWindow;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! InternalWindowPtr
+OSG_GEN_CONTAINERPTR(InternalWindow);
 
-typedef FCPtr<AbstractWindowPtr, InternalWindow> InternalWindowPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<InternalWindowPtr> : 
-    public FieldTraitsRecurseMapper<InternalWindowPtr, true>
+struct FieldTraits<InternalWindow *> :
+    public FieldTraitsFCPtrBase<InternalWindow *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFInternalWindowPtr"; }
-    static const char *getMName(void) { return "MFInternalWindowPtr"; }
+    typedef FieldTraits<InternalWindow *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFInternalWindowPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFInternalWindowPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<InternalWindowPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<InternalWindow *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecInternalWindowPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<InternalWindow *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecInternalWindowPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<InternalWindow *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakInternalWindowPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<InternalWindow *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdInternalWindowPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<InternalWindow *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecInternalWindowPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<InternalWindow *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecInternalWindowPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<InternalWindow *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakInternalWindowPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<InternalWindow *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdInternalWindowPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<InternalWindow *,
+                      RecordedRefCountPolicy  > SFRecInternalWindowPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<InternalWindow *,
+                      UnrecordedRefCountPolicy> SFUnrecInternalWindowPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<InternalWindow *,
+                      WeakRefCountPolicy      > SFWeakInternalWindowPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<InternalWindow *,
+                      NoRefCountPolicy        > SFUncountedInternalWindowPtr;
 
-typedef SField<InternalWindowPtr> SFInternalWindowPtr;
-#endif
 
-#ifndef OSG_COMPILEINTERNALWINDOWINST
-OSG_DLLEXPORT_DECL1(SField, InternalWindowPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<InternalWindow *,
+                      RecordedRefCountPolicy  > MFRecInternalWindowPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<InternalWindow *,
+                      UnrecordedRefCountPolicy> MFUnrecInternalWindowPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<InternalWindow *,
+                      WeakRefCountPolicy      > MFWeakInternalWindowPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<InternalWindow *,
+                      NoRefCountPolicy        > MFUncountedInternalWindowPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<InternalWindowPtr> MFInternalWindowPtr;
-#endif
 
-#ifndef OSG_COMPILEINTERNALWINDOWINST
-OSG_DLLEXPORT_DECL1(MField, InternalWindowPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecInternalWindowPtr : 
+    public PointerSField<InternalWindow *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecInternalWindowPtr : 
+    public PointerSField<InternalWindow *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakInternalWindowPtr :
+    public PointerSField<InternalWindow *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedInternalWindowPtr :
+    public PointerSField<InternalWindow *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecInternalWindowPtr :
+    public PointerMField<InternalWindow *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecInternalWindowPtr :
+    public PointerMField<InternalWindow *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakInternalWindowPtr :
+    public PointerMField<InternalWindow *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedInternalWindowPtr :
+    public PointerMField<InternalWindow *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGINTERNALWINDOWFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGINTERNALWINDOWFIELDS_H_ */

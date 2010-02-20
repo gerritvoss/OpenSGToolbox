@@ -3,13 +3,15 @@
 <FieldContainer
 	name="ListComponentGenerator"
 	parent="ComponentGenerator"
-	library="UserInterface"
+	library="ContribUserInterface"
 	pointerfieldtypes="both"
 	structure="abstract"
-	systemcomponent="false"
-	parentsystemcomponent="false"
+	systemcomponent="true"
+	parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="true"
+	useLocalIncludes="false"
+	isNodeCore="false"
+	authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI List ComponentGenerator.
 </FieldContainer>

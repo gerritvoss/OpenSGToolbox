@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,188 +55,152 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &MenuBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 MenuBase::getClassTypeId(void) 
+OSG::UInt32 MenuBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-MenuPtr MenuBase::create(void) 
-{
-    MenuPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = MenuPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-MenuPtr MenuBase::createEmpty(void) 
-{ 
-    MenuPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 MenuBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Menu::_sfInternalPopupMenu field.
-inline
-SFPopupMenuPtr *MenuBase::getSFInternalPopupMenu(void)
-{
-    return &_sfInternalPopupMenu;
-}
-
-//! Get the Menu::_sfSubMenuDelay field.
-inline
-SFReal32 *MenuBase::getSFSubMenuDelay(void)
-{
-    return &_sfSubMenuDelay;
-}
-
-//! Get the Menu::_sfTopLevelMenu field.
-inline
-SFBool *MenuBase::getSFTopLevelMenu(void)
-{
-    return &_sfTopLevelMenu;
-}
-
-//! Get the Menu::_sfExpandDrawObject field.
-inline
-SFUIDrawObjectCanvasPtr *MenuBase::getSFExpandDrawObject(void)
-{
-    return &_sfExpandDrawObject;
-}
-
-//! Get the Menu::_mfMenuItems field.
-inline
-MFMenuItemPtr *MenuBase::getMFMenuItems(void)
-{
-    return &_mfMenuItems;
-}
-
 
 //! Get the value of the Menu::_sfInternalPopupMenu field.
 inline
-PopupMenuPtr &MenuBase::getInternalPopupMenu(void)
-{
-    return _sfInternalPopupMenu.getValue();
-}
-
-//! Get the value of the Menu::_sfInternalPopupMenu field.
-inline
-const PopupMenuPtr &MenuBase::getInternalPopupMenu(void) const
+PopupMenu * MenuBase::getInternalPopupMenu(void) const
 {
     return _sfInternalPopupMenu.getValue();
 }
 
 //! Set the value of the Menu::_sfInternalPopupMenu field.
 inline
-void MenuBase::setInternalPopupMenu(const PopupMenuPtr &value)
+void MenuBase::setInternalPopupMenu(PopupMenu * const value)
 {
+    editSField(InternalPopupMenuFieldMask);
+
     _sfInternalPopupMenu.setValue(value);
 }
-
 //! Get the value of the Menu::_sfSubMenuDelay field.
+
 inline
-Real32 &MenuBase::getSubMenuDelay(void)
+Real32 &MenuBase::editSubMenuDelay(void)
 {
+    editSField(SubMenuDelayFieldMask);
+
     return _sfSubMenuDelay.getValue();
 }
 
 //! Get the value of the Menu::_sfSubMenuDelay field.
 inline
-const Real32 &MenuBase::getSubMenuDelay(void) const
+      Real32  MenuBase::getSubMenuDelay(void) const
 {
     return _sfSubMenuDelay.getValue();
 }
 
 //! Set the value of the Menu::_sfSubMenuDelay field.
 inline
-void MenuBase::setSubMenuDelay(const Real32 &value)
+void MenuBase::setSubMenuDelay(const Real32 value)
 {
+    editSField(SubMenuDelayFieldMask);
+
     _sfSubMenuDelay.setValue(value);
 }
-
 //! Get the value of the Menu::_sfTopLevelMenu field.
+
 inline
-bool &MenuBase::getTopLevelMenu(void)
+bool &MenuBase::editTopLevelMenu(void)
 {
+    editSField(TopLevelMenuFieldMask);
+
     return _sfTopLevelMenu.getValue();
 }
 
 //! Get the value of the Menu::_sfTopLevelMenu field.
 inline
-const bool &MenuBase::getTopLevelMenu(void) const
+      bool  MenuBase::getTopLevelMenu(void) const
 {
     return _sfTopLevelMenu.getValue();
 }
 
 //! Set the value of the Menu::_sfTopLevelMenu field.
 inline
-void MenuBase::setTopLevelMenu(const bool &value)
+void MenuBase::setTopLevelMenu(const bool value)
 {
+    editSField(TopLevelMenuFieldMask);
+
     _sfTopLevelMenu.setValue(value);
 }
 
 //! Get the value of the Menu::_sfExpandDrawObject field.
 inline
-UIDrawObjectCanvasPtr &MenuBase::getExpandDrawObject(void)
-{
-    return _sfExpandDrawObject.getValue();
-}
-
-//! Get the value of the Menu::_sfExpandDrawObject field.
-inline
-const UIDrawObjectCanvasPtr &MenuBase::getExpandDrawObject(void) const
+UIDrawObjectCanvas * MenuBase::getExpandDrawObject(void) const
 {
     return _sfExpandDrawObject.getValue();
 }
 
 //! Set the value of the Menu::_sfExpandDrawObject field.
 inline
-void MenuBase::setExpandDrawObject(const UIDrawObjectCanvasPtr &value)
+void MenuBase::setExpandDrawObject(UIDrawObjectCanvas * const value)
 {
+    editSField(ExpandDrawObjectFieldMask);
+
     _sfExpandDrawObject.setValue(value);
 }
 
-
 //! Get the value of the \a index element the Menu::_mfMenuItems field.
 inline
-MenuItemPtr &MenuBase::getMenuItems(const UInt32 index)
+MenuItem * MenuBase::getMenuItems(const UInt32 index) const
 {
     return _mfMenuItems[index];
 }
 
-//! Get the Menu::_mfMenuItems field.
-inline
-MFMenuItemPtr &MenuBase::getMenuItems(void)
-{
-    return _mfMenuItems;
-}
 
-//! Get the Menu::_mfMenuItems field.
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-const MFMenuItemPtr &MenuBase::getMenuItems(void) const
+void MenuBase::execSync (      MenuBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfMenuItems;
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (InternalPopupMenuFieldMask & whichField))
+        _sfInternalPopupMenu.syncWith(pFrom->_sfInternalPopupMenu);
+
+    if(FieldBits::NoField != (SubMenuDelayFieldMask & whichField))
+        _sfSubMenuDelay.syncWith(pFrom->_sfSubMenuDelay);
+
+    if(FieldBits::NoField != (TopLevelMenuFieldMask & whichField))
+        _sfTopLevelMenu.syncWith(pFrom->_sfTopLevelMenu);
+
+    if(FieldBits::NoField != (ExpandDrawObjectFieldMask & whichField))
+        _sfExpandDrawObject.syncWith(pFrom->_sfExpandDrawObject);
+
+    if(FieldBits::NoField != (MenuItemsFieldMask & whichField))
+        _mfMenuItems.syncWith(pFrom->_mfMenuItems,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
 }
+#endif
+
+
+inline
+const Char8 *MenuBase::getClassname(void)
+{
+    return "Menu";
+}
+OSG_GEN_CONTAINERPTR(Menu);
 
 OSG_END_NAMESPACE
-
-#define OSGMENUBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

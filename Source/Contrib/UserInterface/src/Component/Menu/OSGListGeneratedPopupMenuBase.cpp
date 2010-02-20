@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,155 +50,206 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILELISTGENERATEDPOPUPMENUINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGListModel.h"               // Model Class
+#include "OSGComponentGenerator.h"      // CellGenerator Class
 
 #include "OSGListGeneratedPopupMenuBase.h"
 #include "OSGListGeneratedPopupMenu.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ListGeneratedPopupMenuBase::ModelFieldMask = 
-    (TypeTraits<BitVector>::One << ListGeneratedPopupMenuBase::ModelFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  ListGeneratedPopupMenuBase::CellGeneratorFieldMask = 
-    (TypeTraits<BitVector>::One << ListGeneratedPopupMenuBase::CellGeneratorFieldId);
+/*! \class OSG::ListGeneratedPopupMenu
+    A UI List Generated PopupMenu.
+ */
 
-const OSG::BitVector ListGeneratedPopupMenuBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-
-// Field descriptions
-
-/*! \var ListModelPtr    ListGeneratedPopupMenuBase::_sfModel
-    
-*/
-/*! \var ComponentGeneratorPtr ListGeneratedPopupMenuBase::_sfCellGenerator
+/*! \var ListModel *     ListGeneratedPopupMenuBase::_sfModel
     
 */
 
-//! ListGeneratedPopupMenu description
+/*! \var ComponentGenerator * ListGeneratedPopupMenuBase::_sfCellGenerator
+    
+*/
 
-FieldDescription *ListGeneratedPopupMenuBase::_desc[] = 
+
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ListGeneratedPopupMenu *>::_type("ListGeneratedPopupMenuPtr", "PopupMenuPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ListGeneratedPopupMenu *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ListGeneratedPopupMenu *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ListGeneratedPopupMenu *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ListGeneratedPopupMenuBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFListModelPtr::getClassType(), 
-                     "Model", 
-                     ModelFieldId, ModelFieldMask,
-                     false,
-                     (FieldAccessMethod) &ListGeneratedPopupMenuBase::getSFModel),
-    new FieldDescription(SFComponentGeneratorPtr::getClassType(), 
-                     "CellGenerator", 
-                     CellGeneratorFieldId, CellGeneratorFieldMask,
-                     false,
-                     (FieldAccessMethod) &ListGeneratedPopupMenuBase::getSFCellGenerator)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType ListGeneratedPopupMenuBase::_type(
-    "ListGeneratedPopupMenu",
-    "PopupMenu",
-    NULL,
-    (PrototypeCreateF) &ListGeneratedPopupMenuBase::createEmpty,
+    pDesc = new SFUnrecListModelPtr::Description(
+        SFUnrecListModelPtr::getClassType(),
+        "Model",
+        "",
+        ModelFieldId, ModelFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ListGeneratedPopupMenu::editHandleModel),
+        static_cast<FieldGetMethodSig >(&ListGeneratedPopupMenu::getHandleModel));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecComponentGeneratorPtr::Description(
+        SFUnrecComponentGeneratorPtr::getClassType(),
+        "CellGenerator",
+        "",
+        CellGeneratorFieldId, CellGeneratorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ListGeneratedPopupMenu::editHandleCellGenerator),
+        static_cast<FieldGetMethodSig >(&ListGeneratedPopupMenu::getHandleCellGenerator));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+ListGeneratedPopupMenuBase::TypeObject ListGeneratedPopupMenuBase::_type(
+    ListGeneratedPopupMenuBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ListGeneratedPopupMenuBase::createEmptyLocal),
     ListGeneratedPopupMenu::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//OSG_FIELD_CONTAINER_DEF(ListGeneratedPopupMenuBase, ListGeneratedPopupMenuPtr)
+    ListGeneratedPopupMenu::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ListGeneratedPopupMenu::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ListGeneratedPopupMenu\"\n"
+    "\tparent=\"PopupMenu\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "\t>\n"
+    "\tA UI List Generated PopupMenu.\n"
+    "\t<Field\n"
+    "\t\tname=\"Model\"\n"
+    "\t\ttype=\"ListModel\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"CellGenerator\"\n"
+    "\t\ttype=\"ComponentGenerator\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "A UI List Generated PopupMenu.\n"
+    );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ListGeneratedPopupMenuBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ListGeneratedPopupMenuBase::getType(void) const 
+FieldContainerType &ListGeneratedPopupMenuBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr ListGeneratedPopupMenuBase::shallowCopy(void) const 
-{ 
-    ListGeneratedPopupMenuPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const ListGeneratedPopupMenu *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 ListGeneratedPopupMenuBase::getContainerSize(void) const 
-{ 
-    return sizeof(ListGeneratedPopupMenu); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ListGeneratedPopupMenuBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &ListGeneratedPopupMenuBase::getType(void) const
 {
-    this->executeSyncImpl((ListGeneratedPopupMenuBase *) &other, whichField);
+    return _type;
 }
-#else
-void ListGeneratedPopupMenuBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 ListGeneratedPopupMenuBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((ListGeneratedPopupMenuBase *) &other, whichField, sInfo);
+    return sizeof(ListGeneratedPopupMenu);
 }
-void ListGeneratedPopupMenuBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the ListGeneratedPopupMenu::_sfModel field.
+const SFUnrecListModelPtr *ListGeneratedPopupMenuBase::getSFModel(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfModel;
 }
 
-void ListGeneratedPopupMenuBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecListModelPtr *ListGeneratedPopupMenuBase::editSFModel          (void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(ModelFieldMask);
 
+    return &_sfModel;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-ListGeneratedPopupMenuBase::ListGeneratedPopupMenuBase(void) :
-    _sfModel                  (ListModelPtr(NullFC)), 
-    _sfCellGenerator          (ComponentGeneratorPtr(NullFC)), 
-    Inherited() 
+//! Get the ListGeneratedPopupMenu::_sfCellGenerator field.
+const SFUnrecComponentGeneratorPtr *ListGeneratedPopupMenuBase::getSFCellGenerator(void) const
 {
+    return &_sfCellGenerator;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-ListGeneratedPopupMenuBase::ListGeneratedPopupMenuBase(const ListGeneratedPopupMenuBase &source) :
-    _sfModel                  (source._sfModel                  ), 
-    _sfCellGenerator          (source._sfCellGenerator          ), 
-    Inherited                 (source)
+SFUnrecComponentGeneratorPtr *ListGeneratedPopupMenuBase::editSFCellGenerator  (void)
 {
+    editSField(CellGeneratorFieldMask);
+
+    return &_sfCellGenerator;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-ListGeneratedPopupMenuBase::~ListGeneratedPopupMenuBase(void)
-{
-}
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ListGeneratedPopupMenuBase::getBinSize(const BitVector &whichField)
+UInt32 ListGeneratedPopupMenuBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -206,18 +257,16 @@ UInt32 ListGeneratedPopupMenuBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfModel.getBinSize();
     }
-
     if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
     {
         returnValue += _sfCellGenerator.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ListGeneratedPopupMenuBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ListGeneratedPopupMenuBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -225,17 +274,14 @@ void ListGeneratedPopupMenuBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfModel.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
     {
         _sfCellGenerator.copyToBin(pMem);
     }
-
-
 }
 
-void ListGeneratedPopupMenuBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ListGeneratedPopupMenuBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -243,93 +289,267 @@ void ListGeneratedPopupMenuBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfModel.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
     {
         _sfCellGenerator.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ListGeneratedPopupMenuBase::executeSyncImpl(      ListGeneratedPopupMenuBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ListGeneratedPopupMenuTransitPtr ListGeneratedPopupMenuBase::createLocal(BitVector bFlags)
 {
+    ListGeneratedPopupMenuTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (ModelFieldMask & whichField))
-        _sfModel.syncWith(pOther->_sfModel);
+        fc = dynamic_pointer_cast<ListGeneratedPopupMenu>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
-        _sfCellGenerator.syncWith(pOther->_sfCellGenerator);
-
-
-}
-#else
-void ListGeneratedPopupMenuBase::executeSyncImpl(      ListGeneratedPopupMenuBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ModelFieldMask & whichField))
-        _sfModel.syncWith(pOther->_sfModel);
-
-    if(FieldBits::NoField != (CellGeneratorFieldMask & whichField))
-        _sfCellGenerator.syncWith(pOther->_sfCellGenerator);
-
-
-
+    return fc;
 }
 
-void ListGeneratedPopupMenuBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ListGeneratedPopupMenuTransitPtr ListGeneratedPopupMenuBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ListGeneratedPopupMenuTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<ListGeneratedPopupMenu>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ListGeneratedPopupMenuTransitPtr ListGeneratedPopupMenuBase::create(void)
+{
+    ListGeneratedPopupMenuTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<ListGeneratedPopupMenu>(tmpPtr);
+    }
+
+    return fc;
+}
+
+ListGeneratedPopupMenu *ListGeneratedPopupMenuBase::createEmptyLocal(BitVector bFlags)
+{
+    ListGeneratedPopupMenu *returnValue;
+
+    newPtr<ListGeneratedPopupMenu>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+ListGeneratedPopupMenu *ListGeneratedPopupMenuBase::createEmpty(void)
+{
+    ListGeneratedPopupMenu *returnValue;
+
+    newPtr<ListGeneratedPopupMenu>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ListGeneratedPopupMenuBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    ListGeneratedPopupMenu *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ListGeneratedPopupMenu *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ListGeneratedPopupMenuBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    ListGeneratedPopupMenu *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ListGeneratedPopupMenu *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ListGeneratedPopupMenuBase::shallowCopy(void) const
+{
+    ListGeneratedPopupMenu *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const ListGeneratedPopupMenu *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ListGeneratedPopupMenuBase::ListGeneratedPopupMenuBase(void) :
+    Inherited(),
+    _sfModel                  (NULL),
+    _sfCellGenerator          (NULL)
+{
+}
+
+ListGeneratedPopupMenuBase::ListGeneratedPopupMenuBase(const ListGeneratedPopupMenuBase &source) :
+    Inherited(source),
+    _sfModel                  (NULL),
+    _sfCellGenerator          (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ListGeneratedPopupMenuBase::~ListGeneratedPopupMenuBase(void)
+{
+}
+
+void ListGeneratedPopupMenuBase::onCreate(const ListGeneratedPopupMenu *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        ListGeneratedPopupMenu *pThis = static_cast<ListGeneratedPopupMenu *>(this);
+
+        pThis->setModel(source->getModel());
+
+        pThis->setCellGenerator(source->getCellGenerator());
+    }
+}
+
+GetFieldHandlePtr ListGeneratedPopupMenuBase::getHandleModel           (void) const
+{
+    SFUnrecListModelPtr::GetHandlePtr returnValue(
+        new  SFUnrecListModelPtr::GetHandle(
+             &_sfModel,
+             this->getType().getFieldDesc(ModelFieldId),
+             const_cast<ListGeneratedPopupMenuBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ListGeneratedPopupMenuBase::editHandleModel          (void)
+{
+    SFUnrecListModelPtr::EditHandlePtr returnValue(
+        new  SFUnrecListModelPtr::EditHandle(
+             &_sfModel,
+             this->getType().getFieldDesc(ModelFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ListGeneratedPopupMenu::setModel,
+                    static_cast<ListGeneratedPopupMenu *>(this), _1));
+
+    editSField(ModelFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ListGeneratedPopupMenuBase::getHandleCellGenerator   (void) const
+{
+    SFUnrecComponentGeneratorPtr::GetHandlePtr returnValue(
+        new  SFUnrecComponentGeneratorPtr::GetHandle(
+             &_sfCellGenerator,
+             this->getType().getFieldDesc(CellGeneratorFieldId),
+             const_cast<ListGeneratedPopupMenuBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ListGeneratedPopupMenuBase::editHandleCellGenerator  (void)
+{
+    SFUnrecComponentGeneratorPtr::EditHandlePtr returnValue(
+        new  SFUnrecComponentGeneratorPtr::EditHandle(
+             &_sfCellGenerator,
+             this->getType().getFieldDesc(CellGeneratorFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&ListGeneratedPopupMenu::setCellGenerator,
+                    static_cast<ListGeneratedPopupMenu *>(this), _1));
+
+    editSField(CellGeneratorFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ListGeneratedPopupMenuBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ListGeneratedPopupMenu *pThis = static_cast<ListGeneratedPopupMenu *>(this);
+
+    pThis->execSync(static_cast<ListGeneratedPopupMenu *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ListGeneratedPopupMenuBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    ListGeneratedPopupMenu *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const ListGeneratedPopupMenu *>(pRefAspect),
+                  dynamic_cast<const ListGeneratedPopupMenu *>(this));
+
+    return returnValue;
+}
+#endif
+
+void ListGeneratedPopupMenuBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<ListGeneratedPopupMenu *>(this)->setModel(NULL);
+
+    static_cast<ListGeneratedPopupMenu *>(this)->setCellGenerator(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ListGeneratedPopupMenuPtr>::_type("ListGeneratedPopupMenuPtr", "PopupMenuPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(ListGeneratedPopupMenuPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ListGeneratedPopupMenuPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGLISTGENERATEDPOPUPMENUBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGLISTGENERATEDPOPUPMENUBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGLISTGENERATEDPOPUPMENUFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

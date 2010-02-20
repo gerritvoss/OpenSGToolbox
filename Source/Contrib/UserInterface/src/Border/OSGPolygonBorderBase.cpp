@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,183 +50,287 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEPOLYGONBORDERINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGPolygonBorderBase.h"
 #include "OSGPolygonBorder.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  PolygonBorderBase::WidthFieldMask = 
-    (TypeTraits<BitVector>::One << PolygonBorderBase::WidthFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  PolygonBorderBase::ColorFieldMask = 
-    (TypeTraits<BitVector>::One << PolygonBorderBase::ColorFieldId);
+/*! \class OSG::PolygonBorder
+    UI Polygon Border.
+ */
 
-const OSG::BitVector  PolygonBorderBase::VerticesFieldMask = 
-    (TypeTraits<BitVector>::One << PolygonBorderBase::VerticesFieldId);
-
-const OSG::BitVector  PolygonBorderBase::DrawnQuadsFieldMask = 
-    (TypeTraits<BitVector>::One << PolygonBorderBase::DrawnQuadsFieldId);
-
-const OSG::BitVector PolygonBorderBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Real32          PolygonBorderBase::_sfWidth
     
 */
+
 /*! \var Color4f         PolygonBorderBase::_sfColor
     
 */
+
 /*! \var Pnt2f           PolygonBorderBase::_mfVertices
     
 */
+
 /*! \var Pnt2f           PolygonBorderBase::_mfDrawnQuads
     
 */
 
-//! PolygonBorder description
 
-FieldDescription *PolygonBorderBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<PolygonBorder *>::_type("PolygonBorderPtr", "BorderPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(PolygonBorder *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           PolygonBorder *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           PolygonBorder *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void PolygonBorderBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Width", 
-                     WidthFieldId, WidthFieldMask,
-                     false,
-                     (FieldAccessMethod) &PolygonBorderBase::getSFWidth),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "Color", 
-                     ColorFieldId, ColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &PolygonBorderBase::getSFColor),
-    new FieldDescription(MFPnt2f::getClassType(), 
-                     "Vertices", 
-                     VerticesFieldId, VerticesFieldMask,
-                     false,
-                     (FieldAccessMethod) &PolygonBorderBase::getMFVertices),
-    new FieldDescription(MFPnt2f::getClassType(), 
-                     "DrawnQuads", 
-                     DrawnQuadsFieldId, DrawnQuadsFieldMask,
-                     false,
-                     (FieldAccessMethod) &PolygonBorderBase::getMFDrawnQuads)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType PolygonBorderBase::_type(
-    "PolygonBorder",
-    "Border",
-    NULL,
-    (PrototypeCreateF) &PolygonBorderBase::createEmpty,
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Width",
+        "",
+        WidthFieldId, WidthFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&PolygonBorder::editHandleWidth),
+        static_cast<FieldGetMethodSig >(&PolygonBorder::getHandleWidth));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "Color",
+        "",
+        ColorFieldId, ColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&PolygonBorder::editHandleColor),
+        static_cast<FieldGetMethodSig >(&PolygonBorder::getHandleColor));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFPnt2f::Description(
+        MFPnt2f::getClassType(),
+        "Vertices",
+        "",
+        VerticesFieldId, VerticesFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&PolygonBorder::editHandleVertices),
+        static_cast<FieldGetMethodSig >(&PolygonBorder::getHandleVertices));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFPnt2f::Description(
+        MFPnt2f::getClassType(),
+        "DrawnQuads",
+        "",
+        DrawnQuadsFieldId, DrawnQuadsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&PolygonBorder::editHandleDrawnQuads),
+        static_cast<FieldGetMethodSig >(&PolygonBorder::getHandleDrawnQuads));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+PolygonBorderBase::TypeObject PolygonBorderBase::_type(
+    PolygonBorderBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&PolygonBorderBase::createEmptyLocal),
     PolygonBorder::initMethod,
-    _desc,
-    sizeof(_desc));
+    PolygonBorder::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&PolygonBorder::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"PolygonBorder\"\n"
+    "\tparent=\"Border\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "UI Polygon Border.\n"
+    "\t<Field\n"
+    "\t\tname=\"Width\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Color\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Vertices\"\n"
+    "\t\ttype=\"Pnt2f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"DrawnQuads\"\n"
+    "\t\ttype=\"Pnt2f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "UI Polygon Border.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(PolygonBorderBase, PolygonBorderPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &PolygonBorderBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &PolygonBorderBase::getType(void) const 
+FieldContainerType &PolygonBorderBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr PolygonBorderBase::shallowCopy(void) const 
-{ 
-    PolygonBorderPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const PolygonBorder *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 PolygonBorderBase::getContainerSize(void) const 
-{ 
-    return sizeof(PolygonBorder); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void PolygonBorderBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &PolygonBorderBase::getType(void) const
 {
-    this->executeSyncImpl((PolygonBorderBase *) &other, whichField);
+    return _type;
 }
-#else
-void PolygonBorderBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 PolygonBorderBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((PolygonBorderBase *) &other, whichField, sInfo);
+    return sizeof(PolygonBorder);
 }
-void PolygonBorderBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFReal32 *PolygonBorderBase::editSFWidth(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(WidthFieldMask);
+
+    return &_sfWidth;
 }
 
-void PolygonBorderBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFReal32 *PolygonBorderBase::getSFWidth(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
-    _mfVertices.terminateShare(uiAspect, this->getContainerSize());
-    _mfDrawnQuads.terminateShare(uiAspect, this->getContainerSize());
+    return &_sfWidth;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-PolygonBorderBase::PolygonBorderBase(void) :
-    _sfWidth                  (Real32(1)), 
-    _sfColor                  (Color4f(0.0,0.0,0.0,1.0)), 
-    _mfVertices               (), 
-    _mfDrawnQuads             (), 
-    Inherited() 
+SFColor4f *PolygonBorderBase::editSFColor(void)
 {
+    editSField(ColorFieldMask);
+
+    return &_sfColor;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-PolygonBorderBase::PolygonBorderBase(const PolygonBorderBase &source) :
-    _sfWidth                  (source._sfWidth                  ), 
-    _sfColor                  (source._sfColor                  ), 
-    _mfVertices               (source._mfVertices               ), 
-    _mfDrawnQuads             (source._mfDrawnQuads             ), 
-    Inherited                 (source)
+const SFColor4f *PolygonBorderBase::getSFColor(void) const
 {
+    return &_sfColor;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-PolygonBorderBase::~PolygonBorderBase(void)
+MFPnt2f *PolygonBorderBase::editMFVertices(void)
 {
+    editMField(VerticesFieldMask, _mfVertices);
+
+    return &_mfVertices;
 }
+
+const MFPnt2f *PolygonBorderBase::getMFVertices(void) const
+{
+    return &_mfVertices;
+}
+
+
+MFPnt2f *PolygonBorderBase::editMFDrawnQuads(void)
+{
+    editMField(DrawnQuadsFieldMask, _mfDrawnQuads);
+
+    return &_mfDrawnQuads;
+}
+
+const MFPnt2f *PolygonBorderBase::getMFDrawnQuads(void) const
+{
+    return &_mfDrawnQuads;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 PolygonBorderBase::getBinSize(const BitVector &whichField)
+UInt32 PolygonBorderBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -234,28 +338,24 @@ UInt32 PolygonBorderBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfWidth.getBinSize();
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         returnValue += _sfColor.getBinSize();
     }
-
     if(FieldBits::NoField != (VerticesFieldMask & whichField))
     {
         returnValue += _mfVertices.getBinSize();
     }
-
     if(FieldBits::NoField != (DrawnQuadsFieldMask & whichField))
     {
         returnValue += _mfDrawnQuads.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void PolygonBorderBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void PolygonBorderBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -263,27 +363,22 @@ void PolygonBorderBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfWidth.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         _sfColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (VerticesFieldMask & whichField))
     {
         _mfVertices.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawnQuadsFieldMask & whichField))
     {
         _mfDrawnQuads.copyToBin(pMem);
     }
-
-
 }
 
-void PolygonBorderBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void PolygonBorderBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -291,121 +386,319 @@ void PolygonBorderBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfWidth.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         _sfColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (VerticesFieldMask & whichField))
     {
         _mfVertices.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (DrawnQuadsFieldMask & whichField))
     {
         _mfDrawnQuads.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void PolygonBorderBase::executeSyncImpl(      PolygonBorderBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+PolygonBorderTransitPtr PolygonBorderBase::createLocal(BitVector bFlags)
 {
+    PolygonBorderTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (WidthFieldMask & whichField))
-        _sfWidth.syncWith(pOther->_sfWidth);
+        fc = dynamic_pointer_cast<PolygonBorder>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
-
-    if(FieldBits::NoField != (VerticesFieldMask & whichField))
-        _mfVertices.syncWith(pOther->_mfVertices);
-
-    if(FieldBits::NoField != (DrawnQuadsFieldMask & whichField))
-        _mfDrawnQuads.syncWith(pOther->_mfDrawnQuads);
-
-
-}
-#else
-void PolygonBorderBase::executeSyncImpl(      PolygonBorderBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (WidthFieldMask & whichField))
-        _sfWidth.syncWith(pOther->_sfWidth);
-
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
-
-
-    if(FieldBits::NoField != (VerticesFieldMask & whichField))
-        _mfVertices.syncWith(pOther->_mfVertices, sInfo);
-
-    if(FieldBits::NoField != (DrawnQuadsFieldMask & whichField))
-        _mfDrawnQuads.syncWith(pOther->_mfDrawnQuads, sInfo);
-
-
+    return fc;
 }
 
-void PolygonBorderBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+PolygonBorderTransitPtr PolygonBorderBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    PolygonBorderTransitPtr fc;
 
-    if(FieldBits::NoField != (VerticesFieldMask & whichField))
-        _mfVertices.beginEdit(uiAspect, uiContainerSize);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
-    if(FieldBits::NoField != (DrawnQuadsFieldMask & whichField))
-        _mfDrawnQuads.beginEdit(uiAspect, uiContainerSize);
+        fc = dynamic_pointer_cast<PolygonBorder>(tmpPtr);
+    }
 
+    return fc;
+}
+
+//! create a new instance of the class
+PolygonBorderTransitPtr PolygonBorderBase::create(void)
+{
+    PolygonBorderTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<PolygonBorder>(tmpPtr);
+    }
+
+    return fc;
+}
+
+PolygonBorder *PolygonBorderBase::createEmptyLocal(BitVector bFlags)
+{
+    PolygonBorder *returnValue;
+
+    newPtr<PolygonBorder>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+PolygonBorder *PolygonBorderBase::createEmpty(void)
+{
+    PolygonBorder *returnValue;
+
+    newPtr<PolygonBorder>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr PolygonBorderBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    PolygonBorder *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const PolygonBorder *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr PolygonBorderBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    PolygonBorder *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const PolygonBorder *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr PolygonBorderBase::shallowCopy(void) const
+{
+    PolygonBorder *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const PolygonBorder *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+PolygonBorderBase::PolygonBorderBase(void) :
+    Inherited(),
+    _sfWidth                  (Real32(1)),
+    _sfColor                  (Color4f(0.0,0.0,0.0,1.0)),
+    _mfVertices               (),
+    _mfDrawnQuads             ()
+{
+}
+
+PolygonBorderBase::PolygonBorderBase(const PolygonBorderBase &source) :
+    Inherited(source),
+    _sfWidth                  (source._sfWidth                  ),
+    _sfColor                  (source._sfColor                  ),
+    _mfVertices               (source._mfVertices               ),
+    _mfDrawnQuads             (source._mfDrawnQuads             )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+PolygonBorderBase::~PolygonBorderBase(void)
+{
+}
+
+
+GetFieldHandlePtr PolygonBorderBase::getHandleWidth           (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfWidth,
+             this->getType().getFieldDesc(WidthFieldId),
+             const_cast<PolygonBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr PolygonBorderBase::editHandleWidth          (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfWidth,
+             this->getType().getFieldDesc(WidthFieldId),
+             this));
+
+
+    editSField(WidthFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr PolygonBorderBase::getHandleColor           (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfColor,
+             this->getType().getFieldDesc(ColorFieldId),
+             const_cast<PolygonBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr PolygonBorderBase::editHandleColor          (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfColor,
+             this->getType().getFieldDesc(ColorFieldId),
+             this));
+
+
+    editSField(ColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr PolygonBorderBase::getHandleVertices        (void) const
+{
+    MFPnt2f::GetHandlePtr returnValue(
+        new  MFPnt2f::GetHandle(
+             &_mfVertices,
+             this->getType().getFieldDesc(VerticesFieldId),
+             const_cast<PolygonBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr PolygonBorderBase::editHandleVertices       (void)
+{
+    MFPnt2f::EditHandlePtr returnValue(
+        new  MFPnt2f::EditHandle(
+             &_mfVertices,
+             this->getType().getFieldDesc(VerticesFieldId),
+             this));
+
+
+    editMField(VerticesFieldMask, _mfVertices);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr PolygonBorderBase::getHandleDrawnQuads      (void) const
+{
+    MFPnt2f::GetHandlePtr returnValue(
+        new  MFPnt2f::GetHandle(
+             &_mfDrawnQuads,
+             this->getType().getFieldDesc(DrawnQuadsFieldId),
+             const_cast<PolygonBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr PolygonBorderBase::editHandleDrawnQuads     (void)
+{
+    MFPnt2f::EditHandlePtr returnValue(
+        new  MFPnt2f::EditHandle(
+             &_mfDrawnQuads,
+             this->getType().getFieldDesc(DrawnQuadsFieldId),
+             this));
+
+
+    editMField(DrawnQuadsFieldMask, _mfDrawnQuads);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void PolygonBorderBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    PolygonBorder *pThis = static_cast<PolygonBorder *>(this);
+
+    pThis->execSync(static_cast<PolygonBorder *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *PolygonBorderBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    PolygonBorder *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const PolygonBorder *>(pRefAspect),
+                  dynamic_cast<const PolygonBorder *>(this));
+
+    return returnValue;
+}
+#endif
+
+void PolygonBorderBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+#ifdef OSG_MT_CPTR_ASPECT
+    AspectOffsetStore oOffsets;
+
+    _pAspectStore->fillOffsetArray(oOffsets, this);
+#endif
+
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfVertices.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfDrawnQuads.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<PolygonBorderPtr>::_type("PolygonBorderPtr", "BorderPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(PolygonBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(PolygonBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGPOLYGONBORDERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPOLYGONBORDERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGPOLYGONBORDERFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGBorderFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class WindowBorder;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! WindowBorderPtr
+OSG_GEN_CONTAINERPTR(WindowBorder);
 
-typedef FCPtr<BorderPtr, WindowBorder> WindowBorderPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<WindowBorderPtr> : 
-    public FieldTraitsRecurseMapper<WindowBorderPtr, true>
+struct FieldTraits<WindowBorder *> :
+    public FieldTraitsFCPtrBase<WindowBorder *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFWindowBorderPtr"; }
-    static const char *getMName(void) { return "MFWindowBorderPtr"; }
+    typedef FieldTraits<WindowBorder *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFWindowBorderPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFWindowBorderPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<WindowBorderPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<WindowBorder *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecWindowBorderPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<WindowBorder *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecWindowBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<WindowBorder *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakWindowBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<WindowBorder *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdWindowBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<WindowBorder *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecWindowBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<WindowBorder *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecWindowBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<WindowBorder *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakWindowBorderPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<WindowBorder *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdWindowBorderPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<WindowBorder *,
+                      RecordedRefCountPolicy  > SFRecWindowBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<WindowBorder *,
+                      UnrecordedRefCountPolicy> SFUnrecWindowBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<WindowBorder *,
+                      WeakRefCountPolicy      > SFWeakWindowBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<WindowBorder *,
+                      NoRefCountPolicy        > SFUncountedWindowBorderPtr;
 
-typedef SField<WindowBorderPtr> SFWindowBorderPtr;
-#endif
 
-#ifndef OSG_COMPILEWINDOWBORDERINST
-OSG_DLLEXPORT_DECL1(SField, WindowBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<WindowBorder *,
+                      RecordedRefCountPolicy  > MFRecWindowBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<WindowBorder *,
+                      UnrecordedRefCountPolicy> MFUnrecWindowBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<WindowBorder *,
+                      WeakRefCountPolicy      > MFWeakWindowBorderPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<WindowBorder *,
+                      NoRefCountPolicy        > MFUncountedWindowBorderPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<WindowBorderPtr> MFWindowBorderPtr;
-#endif
 
-#ifndef OSG_COMPILEWINDOWBORDERINST
-OSG_DLLEXPORT_DECL1(MField, WindowBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecWindowBorderPtr : 
+    public PointerSField<WindowBorder *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecWindowBorderPtr : 
+    public PointerSField<WindowBorder *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakWindowBorderPtr :
+    public PointerSField<WindowBorder *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedWindowBorderPtr :
+    public PointerSField<WindowBorder *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecWindowBorderPtr :
+    public PointerMField<WindowBorder *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecWindowBorderPtr :
+    public PointerMField<WindowBorder *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakWindowBorderPtr :
+    public PointerMField<WindowBorder *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedWindowBorderPtr :
+    public PointerMField<WindowBorder *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGWINDOWBORDERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGWINDOWBORDERFIELDS_H_ */

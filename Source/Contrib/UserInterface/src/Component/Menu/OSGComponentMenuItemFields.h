@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGMenuItemFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class ComponentMenuItem;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! ComponentMenuItemPtr
+OSG_GEN_CONTAINERPTR(ComponentMenuItem);
 
-typedef FCPtr<MenuItemPtr, ComponentMenuItem> ComponentMenuItemPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<ComponentMenuItemPtr> : 
-    public FieldTraitsRecurseMapper<ComponentMenuItemPtr, true>
+struct FieldTraits<ComponentMenuItem *> :
+    public FieldTraitsFCPtrBase<ComponentMenuItem *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFComponentMenuItemPtr"; }
-    static const char *getMName(void) { return "MFComponentMenuItemPtr"; }
+    typedef FieldTraits<ComponentMenuItem *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFComponentMenuItemPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFComponentMenuItemPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<ComponentMenuItemPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<ComponentMenuItem *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecComponentMenuItemPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<ComponentMenuItem *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecComponentMenuItemPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ComponentMenuItem *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakComponentMenuItemPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ComponentMenuItem *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdComponentMenuItemPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ComponentMenuItem *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecComponentMenuItemPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ComponentMenuItem *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecComponentMenuItemPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ComponentMenuItem *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakComponentMenuItemPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ComponentMenuItem *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdComponentMenuItemPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ComponentMenuItem *,
+                      RecordedRefCountPolicy  > SFRecComponentMenuItemPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ComponentMenuItem *,
+                      UnrecordedRefCountPolicy> SFUnrecComponentMenuItemPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ComponentMenuItem *,
+                      WeakRefCountPolicy      > SFWeakComponentMenuItemPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ComponentMenuItem *,
+                      NoRefCountPolicy        > SFUncountedComponentMenuItemPtr;
 
-typedef SField<ComponentMenuItemPtr> SFComponentMenuItemPtr;
-#endif
 
-#ifndef OSG_COMPILECOMPONENTMENUITEMINST
-OSG_DLLEXPORT_DECL1(SField, ComponentMenuItemPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ComponentMenuItem *,
+                      RecordedRefCountPolicy  > MFRecComponentMenuItemPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ComponentMenuItem *,
+                      UnrecordedRefCountPolicy> MFUnrecComponentMenuItemPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ComponentMenuItem *,
+                      WeakRefCountPolicy      > MFWeakComponentMenuItemPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ComponentMenuItem *,
+                      NoRefCountPolicy        > MFUncountedComponentMenuItemPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<ComponentMenuItemPtr> MFComponentMenuItemPtr;
-#endif
 
-#ifndef OSG_COMPILECOMPONENTMENUITEMINST
-OSG_DLLEXPORT_DECL1(MField, ComponentMenuItemPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecComponentMenuItemPtr : 
+    public PointerSField<ComponentMenuItem *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecComponentMenuItemPtr : 
+    public PointerSField<ComponentMenuItem *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakComponentMenuItemPtr :
+    public PointerSField<ComponentMenuItem *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedComponentMenuItemPtr :
+    public PointerSField<ComponentMenuItem *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecComponentMenuItemPtr :
+    public PointerMField<ComponentMenuItem *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecComponentMenuItemPtr :
+    public PointerMField<ComponentMenuItem *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakComponentMenuItemPtr :
+    public PointerMField<ComponentMenuItem *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedComponentMenuItemPtr :
+    public PointerMField<ComponentMenuItem *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGCOMPONENTMENUITEMFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGCOMPONENTMENUITEMFIELDS_H_ */

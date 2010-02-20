@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,142 +50,167 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILECOLORLAYERINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGColorLayerBase.h"
 #include "OSGColorLayer.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ColorLayerBase::ColorFieldMask = 
-    (TypeTraits<BitVector>::One << ColorLayerBase::ColorFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector ColorLayerBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::ColorLayer
+    UI Color Background.
+ */
 
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Color4f         ColorLayerBase::_sfColor
     
 */
 
-//! ColorLayer description
 
-FieldDescription *ColorLayerBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<ColorLayer *>::_type("ColorLayerPtr", "LayerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(ColorLayer *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           ColorLayer *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           ColorLayer *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void ColorLayerBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "Color", 
-                     ColorFieldId, ColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &ColorLayerBase::getSFColor)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType ColorLayerBase::_type(
-    "ColorLayer",
-    "Layer",
-    NULL,
-    (PrototypeCreateF) &ColorLayerBase::createEmpty,
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "Color",
+        "",
+        ColorFieldId, ColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&ColorLayer::editHandleColor),
+        static_cast<FieldGetMethodSig >(&ColorLayer::getHandleColor));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+ColorLayerBase::TypeObject ColorLayerBase::_type(
+    ColorLayerBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&ColorLayerBase::createEmptyLocal),
     ColorLayer::initMethod,
-    _desc,
-    sizeof(_desc));
+    ColorLayer::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&ColorLayer::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"ColorLayer\"\n"
+    "\tparent=\"Layer\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "UI Color Background.\n"
+    "\t<Field\n"
+    "\t\tname=\"Color\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "UI Color Background.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(ColorLayerBase, ColorLayerPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &ColorLayerBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &ColorLayerBase::getType(void) const 
+FieldContainerType &ColorLayerBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr ColorLayerBase::shallowCopy(void) const 
-{ 
-    ColorLayerPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const ColorLayer *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 ColorLayerBase::getContainerSize(void) const 
-{ 
-    return sizeof(ColorLayer); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ColorLayerBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &ColorLayerBase::getType(void) const
 {
-    this->executeSyncImpl((ColorLayerBase *) &other, whichField);
+    return _type;
 }
-#else
-void ColorLayerBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 ColorLayerBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((ColorLayerBase *) &other, whichField, sInfo);
+    return sizeof(ColorLayer);
 }
-void ColorLayerBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFColor4f *ColorLayerBase::editSFColor(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(ColorFieldMask);
+
+    return &_sfColor;
 }
 
-void ColorLayerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFColor4f *ColorLayerBase::getSFColor(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-ColorLayerBase::ColorLayerBase(void) :
-    _sfColor                  (Color4f(0.0,0.0,0.0,1.0)), 
-    Inherited() 
-{
+    return &_sfColor;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-ColorLayerBase::ColorLayerBase(const ColorLayerBase &source) :
-    _sfColor                  (source._sfColor                  ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-ColorLayerBase::~ColorLayerBase(void)
-{
-}
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 ColorLayerBase::getBinSize(const BitVector &whichField)
+UInt32 ColorLayerBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -194,12 +219,11 @@ UInt32 ColorLayerBase::getBinSize(const BitVector &whichField)
         returnValue += _sfColor.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void ColorLayerBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void ColorLayerBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -207,12 +231,10 @@ void ColorLayerBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfColor.copyToBin(pMem);
     }
-
-
 }
 
-void ColorLayerBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void ColorLayerBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -220,82 +242,213 @@ void ColorLayerBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfColor.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void ColorLayerBase::executeSyncImpl(      ColorLayerBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+ColorLayerTransitPtr ColorLayerBase::createLocal(BitVector bFlags)
 {
+    ColorLayerTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
+        fc = dynamic_pointer_cast<ColorLayer>(tmpPtr);
+    }
 
-
-}
-#else
-void ColorLayerBase::executeSyncImpl(      ColorLayerBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
-
-
-
+    return fc;
 }
 
-void ColorLayerBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+ColorLayerTransitPtr ColorLayerBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    ColorLayerTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<ColorLayer>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+ColorLayerTransitPtr ColorLayerBase::create(void)
+{
+    ColorLayerTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<ColorLayer>(tmpPtr);
+    }
+
+    return fc;
+}
+
+ColorLayer *ColorLayerBase::createEmptyLocal(BitVector bFlags)
+{
+    ColorLayer *returnValue;
+
+    newPtr<ColorLayer>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+ColorLayer *ColorLayerBase::createEmpty(void)
+{
+    ColorLayer *returnValue;
+
+    newPtr<ColorLayer>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr ColorLayerBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    ColorLayer *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ColorLayer *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ColorLayerBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    ColorLayer *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const ColorLayer *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr ColorLayerBase::shallowCopy(void) const
+{
+    ColorLayer *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const ColorLayer *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+ColorLayerBase::ColorLayerBase(void) :
+    Inherited(),
+    _sfColor                  (Color4f(0.0,0.0,0.0,1.0))
+{
+}
+
+ColorLayerBase::ColorLayerBase(const ColorLayerBase &source) :
+    Inherited(source),
+    _sfColor                  (source._sfColor                  )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+ColorLayerBase::~ColorLayerBase(void)
+{
+}
+
+
+GetFieldHandlePtr ColorLayerBase::getHandleColor           (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfColor,
+             this->getType().getFieldDesc(ColorFieldId),
+             const_cast<ColorLayerBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ColorLayerBase::editHandleColor          (void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfColor,
+             this->getType().getFieldDesc(ColorFieldId),
+             this));
+
+
+    editSField(ColorFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void ColorLayerBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    ColorLayer *pThis = static_cast<ColorLayer *>(this);
+
+    pThis->execSync(static_cast<ColorLayer *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *ColorLayerBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    ColorLayer *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const ColorLayer *>(pRefAspect),
+                  dynamic_cast<const ColorLayer *>(this));
+
+    return returnValue;
+}
+#endif
+
+void ColorLayerBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<ColorLayerPtr>::_type("ColorLayerPtr", "LayerPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(ColorLayerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(ColorLayerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGCOLORLAYERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCOLORLAYERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCOLORLAYERFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

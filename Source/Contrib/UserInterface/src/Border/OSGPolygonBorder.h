@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,48 +42,76 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGPolygonBorderBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief PolygonBorder class. See \ref 
-           PageUserInterfacePolygonBorder for a description.
+/*! \brief PolygonBorder class. See \ref
+           PageContribUserInterfacePolygonBorder for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING PolygonBorder : public PolygonBorderBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING PolygonBorder : public PolygonBorderBase
 {
-  private:
-
-    typedef PolygonBorderBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef PolygonBorderBase Inherited;
+    typedef PolygonBorder     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual void draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity, bool Clipping = true) const;
-	virtual void activateInternalDrawConstraints(const GraphicsPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const;
-	virtual void deactivateInternalDrawConstraints(const GraphicsPtr g, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const;
-	virtual bool isContained(const Pnt2f& p, const Real32& x, const Real32& y , const Real32& Width, const Real32& Height) const;
-	virtual void getInsets(Real32& Left, Real32& Right,Real32& Top,Real32& Bottom) const;
+
+	virtual void draw(const GraphicsWeakPtr g,
+                      const Real32 x,
+                      const Real32 y ,
+                      const Real32 Width,
+                      const Real32 Height,
+                      const Real32 Opacity,
+                      bool Clipping = true) const;
+
+	virtual void getInsets(Real32& Left,
+                           Real32& Right,
+                           Real32& Top,
+                           Real32& Bottom) const;
+
+	virtual void activateInternalDrawConstraints(const GraphicsWeakPtr g,
+                                                 const Real32& x,
+                                                 const Real32& y ,
+                                                 const Real32& Width,
+                                                 const Real32& Height) const;
+
+	virtual void deactivateInternalDrawConstraints(const GraphicsWeakPtr g,
+                                                   const Real32& x,
+                                                   const Real32& y ,
+                                                   const Real32& Width,
+                                                   const Real32& Height) const;
+
+	virtual bool isContained(const Pnt2f& p,
+                             const Real32& x,
+                             const Real32& y ,
+                             const Real32& Width,
+                             const Real32& Height) const;
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in PolygonBorderBase.
@@ -100,23 +128,28 @@ class OSG_USERINTERFACELIB_DLLMAPPING PolygonBorder : public PolygonBorderBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~PolygonBorder(void); 
+    virtual ~PolygonBorder(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
 
 	void scaleUp(Pnt2f& TheVector, const Vec2f& Scale) const;
 	void scaleUp(Vec2f& TheVector, const Vec2f& Scale) const;
-    
+
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class PolygonBorderBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const PolygonBorder &source);
 };
 
@@ -126,7 +159,5 @@ OSG_END_NAMESPACE
 
 #include "OSGPolygonBorderBase.inl"
 #include "OSGPolygonBorder.inl"
-
-#define OSGPOLYGONBORDER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGPOLYGONBORDER_H_ */

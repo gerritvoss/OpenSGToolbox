@@ -26,25 +26,24 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
 OSG_BEGIN_NAMESPACE
 
 inline
-UndoableEdit::UndoableEdit(void) : Inherited()
+UndoableEdit::UndoableEdit(void)
 {
 }
 
 inline
-UndoableEdit::UndoableEdit(const UndoableEdit& source) : Inherited(source)
+UndoableEdit::UndoableEdit(const UndoableEdit& source)
 {
 }
     
-
 inline
 void UndoableEdit::operator=(const UndoableEdit& source)
 {
-	Inherited::operator=(source);
 }
+
 OSG_END_NAMESPACE

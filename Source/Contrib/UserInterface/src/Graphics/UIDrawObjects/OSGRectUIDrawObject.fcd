@@ -3,18 +3,21 @@
 <FieldContainer
 	name="RectUIDrawObject"
 	parent="UIDrawObject"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI RectUIDrawObject.
 	<Field
 		name="TopLeft"
 		type="Pnt2f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -24,6 +27,7 @@ A UI RectUIDrawObject.
 	<Field
 		name="BottomRight"
 		type="Pnt2f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -33,6 +37,7 @@ A UI RectUIDrawObject.
 	<Field
 		name="Color"
 		type="Color4f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -42,6 +47,7 @@ A UI RectUIDrawObject.
 	<Field
 		name="Opacity"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"

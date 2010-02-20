@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,26 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEUSERINTERFACELIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGDefaultSingleSelectionModel.h"
-
 #include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::DefaultSingleSelectionModel
-A UI DefaultSingleSelectionModel. 
-*/
+// Documentation for this class is emitted in the
+// OSGDefaultSingleSelectionModelBase.cpp file.
+// To modify it, please change the .fcd file (OSGDefaultSingleSelectionModel.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -69,8 +63,13 @@ A UI DefaultSingleSelectionModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DefaultSingleSelectionModel::initMethod (void)
+void DefaultSingleSelectionModel::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -119,9 +118,7 @@ void DefaultSingleSelectionModel::setSelectedIndex(Int32 index)
     if(getInternalSelectedIndex() != index)
     {
         Int32 PreviousSelection(getSelectedIndex());
-        beginEditCP(DefaultSingleSelectionModelPtr(this), InternalSelectedIndexFieldMask);
-            setInternalSelectedIndex(index);
-        endEditCP(DefaultSingleSelectionModelPtr(this), InternalSelectedIndexFieldMask);
+        setInternalSelectedIndex(index);
 
         produceSelectionChanged(getSelectedIndex(), PreviousSelection);
     }
@@ -140,7 +137,7 @@ void DefaultSingleSelectionModel::produceSelectionChanged(const Int32& SelectedI
         PreviouslySelected.push_back(PreviouslySelectedIndex);
     }
 
-    const SelectionEventPtr TheEvent = SelectionEvent::create(DefaultSingleSelectionModelPtr(this), getTimeStamp(), Selected, PreviouslySelected, false);
+    const SelectionEventUnrecPtr TheEvent = SelectionEvent::create(DefaultSingleSelectionModelRefPtr(this), getTimeStamp(), Selected, PreviouslySelected, false);
 
     SelectionListenerSet Listeners(_SelectionListeners);
    for(SelectionListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
@@ -149,6 +146,7 @@ void DefaultSingleSelectionModel::produceSelectionChanged(const Int32& SelectedI
    }
    _Producer.produceEvent(SelectionChangedMethodId,TheEvent);
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -171,41 +169,17 @@ DefaultSingleSelectionModel::~DefaultSingleSelectionModel(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void DefaultSingleSelectionModel::changed(BitVector whichField, UInt32 origin)
+void DefaultSingleSelectionModel::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void DefaultSingleSelectionModel::dump(      UInt32    , 
+void DefaultSingleSelectionModel::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump DefaultSingleSelectionModel NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGDEFAULTSINGLESELECTIONMODELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDEFAULTSINGLESELECTIONMODELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDEFAULTSINGLESELECTIONMODELFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

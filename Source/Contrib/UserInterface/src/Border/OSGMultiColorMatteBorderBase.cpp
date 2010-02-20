@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,285 +50,607 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEMULTICOLORMATTEBORDERINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGMultiColorMatteBorderBase.h"
 #include "OSGMultiColorMatteBorder.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  MultiColorMatteBorderBase::LeftWidthFieldMask = 
-    (TypeTraits<BitVector>::One << MultiColorMatteBorderBase::LeftWidthFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  MultiColorMatteBorderBase::RightWidthFieldMask = 
-    (TypeTraits<BitVector>::One << MultiColorMatteBorderBase::RightWidthFieldId);
+/*! \class OSG::MultiColorMatteBorder
+    UI MultiColor Matte Border. Creates a matte-look border using a different color for each side. (The difference between this border and a line border is that you can specify the individual border dimensions as well as colors.)
+ */
 
-const OSG::BitVector  MultiColorMatteBorderBase::TopWidthFieldMask = 
-    (TypeTraits<BitVector>::One << MultiColorMatteBorderBase::TopWidthFieldId);
-
-const OSG::BitVector  MultiColorMatteBorderBase::BottomWidthFieldMask = 
-    (TypeTraits<BitVector>::One << MultiColorMatteBorderBase::BottomWidthFieldId);
-
-const OSG::BitVector  MultiColorMatteBorderBase::LeftLineTopColorFieldMask = 
-    (TypeTraits<BitVector>::One << MultiColorMatteBorderBase::LeftLineTopColorFieldId);
-
-const OSG::BitVector  MultiColorMatteBorderBase::LeftLineBottomColorFieldMask = 
-    (TypeTraits<BitVector>::One << MultiColorMatteBorderBase::LeftLineBottomColorFieldId);
-
-const OSG::BitVector  MultiColorMatteBorderBase::TopLineLeftColorFieldMask = 
-    (TypeTraits<BitVector>::One << MultiColorMatteBorderBase::TopLineLeftColorFieldId);
-
-const OSG::BitVector  MultiColorMatteBorderBase::TopLineRightColorFieldMask = 
-    (TypeTraits<BitVector>::One << MultiColorMatteBorderBase::TopLineRightColorFieldId);
-
-const OSG::BitVector  MultiColorMatteBorderBase::RightLineTopColorFieldMask = 
-    (TypeTraits<BitVector>::One << MultiColorMatteBorderBase::RightLineTopColorFieldId);
-
-const OSG::BitVector  MultiColorMatteBorderBase::RightLineBottomColorFieldMask = 
-    (TypeTraits<BitVector>::One << MultiColorMatteBorderBase::RightLineBottomColorFieldId);
-
-const OSG::BitVector  MultiColorMatteBorderBase::BottomLineLeftColorFieldMask = 
-    (TypeTraits<BitVector>::One << MultiColorMatteBorderBase::BottomLineLeftColorFieldId);
-
-const OSG::BitVector  MultiColorMatteBorderBase::BottomLineRightColorFieldMask = 
-    (TypeTraits<BitVector>::One << MultiColorMatteBorderBase::BottomLineRightColorFieldId);
-
-const OSG::BitVector MultiColorMatteBorderBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Real32          MultiColorMatteBorderBase::_sfLeftWidth
     
 */
+
 /*! \var Real32          MultiColorMatteBorderBase::_sfRightWidth
     
 */
+
 /*! \var Real32          MultiColorMatteBorderBase::_sfTopWidth
     
 */
+
 /*! \var Real32          MultiColorMatteBorderBase::_sfBottomWidth
     
 */
+
 /*! \var Color4f         MultiColorMatteBorderBase::_sfLeftLineTopColor
     
 */
+
 /*! \var Color4f         MultiColorMatteBorderBase::_sfLeftLineBottomColor
     
 */
+
 /*! \var Color4f         MultiColorMatteBorderBase::_sfTopLineLeftColor
     
 */
+
 /*! \var Color4f         MultiColorMatteBorderBase::_sfTopLineRightColor
     
 */
+
 /*! \var Color4f         MultiColorMatteBorderBase::_sfRightLineTopColor
     
 */
+
 /*! \var Color4f         MultiColorMatteBorderBase::_sfRightLineBottomColor
     
 */
+
 /*! \var Color4f         MultiColorMatteBorderBase::_sfBottomLineLeftColor
     
 */
+
 /*! \var Color4f         MultiColorMatteBorderBase::_sfBottomLineRightColor
     
 */
 
-//! MultiColorMatteBorder description
 
-FieldDescription *MultiColorMatteBorderBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<MultiColorMatteBorder *>::_type("MultiColorMatteBorderPtr", "BorderPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(MultiColorMatteBorder *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           MultiColorMatteBorder *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           MultiColorMatteBorder *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void MultiColorMatteBorderBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "LeftWidth", 
-                     LeftWidthFieldId, LeftWidthFieldMask,
-                     false,
-                     (FieldAccessMethod) &MultiColorMatteBorderBase::getSFLeftWidth),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "RightWidth", 
-                     RightWidthFieldId, RightWidthFieldMask,
-                     false,
-                     (FieldAccessMethod) &MultiColorMatteBorderBase::getSFRightWidth),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "TopWidth", 
-                     TopWidthFieldId, TopWidthFieldMask,
-                     false,
-                     (FieldAccessMethod) &MultiColorMatteBorderBase::getSFTopWidth),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "BottomWidth", 
-                     BottomWidthFieldId, BottomWidthFieldMask,
-                     false,
-                     (FieldAccessMethod) &MultiColorMatteBorderBase::getSFBottomWidth),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "LeftLineTopColor", 
-                     LeftLineTopColorFieldId, LeftLineTopColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &MultiColorMatteBorderBase::getSFLeftLineTopColor),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "LeftLineBottomColor", 
-                     LeftLineBottomColorFieldId, LeftLineBottomColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &MultiColorMatteBorderBase::getSFLeftLineBottomColor),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "TopLineLeftColor", 
-                     TopLineLeftColorFieldId, TopLineLeftColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &MultiColorMatteBorderBase::getSFTopLineLeftColor),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "TopLineRightColor", 
-                     TopLineRightColorFieldId, TopLineRightColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &MultiColorMatteBorderBase::getSFTopLineRightColor),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "RightLineTopColor", 
-                     RightLineTopColorFieldId, RightLineTopColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &MultiColorMatteBorderBase::getSFRightLineTopColor),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "RightLineBottomColor", 
-                     RightLineBottomColorFieldId, RightLineBottomColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &MultiColorMatteBorderBase::getSFRightLineBottomColor),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "BottomLineLeftColor", 
-                     BottomLineLeftColorFieldId, BottomLineLeftColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &MultiColorMatteBorderBase::getSFBottomLineLeftColor),
-    new FieldDescription(SFColor4f::getClassType(), 
-                     "BottomLineRightColor", 
-                     BottomLineRightColorFieldId, BottomLineRightColorFieldMask,
-                     false,
-                     (FieldAccessMethod) &MultiColorMatteBorderBase::getSFBottomLineRightColor)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType MultiColorMatteBorderBase::_type(
-    "MultiColorMatteBorder",
-    "Border",
-    NULL,
-    (PrototypeCreateF) &MultiColorMatteBorderBase::createEmpty,
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "LeftWidth",
+        "",
+        LeftWidthFieldId, LeftWidthFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MultiColorMatteBorder::editHandleLeftWidth),
+        static_cast<FieldGetMethodSig >(&MultiColorMatteBorder::getHandleLeftWidth));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "RightWidth",
+        "",
+        RightWidthFieldId, RightWidthFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MultiColorMatteBorder::editHandleRightWidth),
+        static_cast<FieldGetMethodSig >(&MultiColorMatteBorder::getHandleRightWidth));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "TopWidth",
+        "",
+        TopWidthFieldId, TopWidthFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MultiColorMatteBorder::editHandleTopWidth),
+        static_cast<FieldGetMethodSig >(&MultiColorMatteBorder::getHandleTopWidth));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "BottomWidth",
+        "",
+        BottomWidthFieldId, BottomWidthFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MultiColorMatteBorder::editHandleBottomWidth),
+        static_cast<FieldGetMethodSig >(&MultiColorMatteBorder::getHandleBottomWidth));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "LeftLineTopColor",
+        "",
+        LeftLineTopColorFieldId, LeftLineTopColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MultiColorMatteBorder::editHandleLeftLineTopColor),
+        static_cast<FieldGetMethodSig >(&MultiColorMatteBorder::getHandleLeftLineTopColor));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "LeftLineBottomColor",
+        "",
+        LeftLineBottomColorFieldId, LeftLineBottomColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MultiColorMatteBorder::editHandleLeftLineBottomColor),
+        static_cast<FieldGetMethodSig >(&MultiColorMatteBorder::getHandleLeftLineBottomColor));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "TopLineLeftColor",
+        "",
+        TopLineLeftColorFieldId, TopLineLeftColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MultiColorMatteBorder::editHandleTopLineLeftColor),
+        static_cast<FieldGetMethodSig >(&MultiColorMatteBorder::getHandleTopLineLeftColor));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "TopLineRightColor",
+        "",
+        TopLineRightColorFieldId, TopLineRightColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MultiColorMatteBorder::editHandleTopLineRightColor),
+        static_cast<FieldGetMethodSig >(&MultiColorMatteBorder::getHandleTopLineRightColor));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "RightLineTopColor",
+        "",
+        RightLineTopColorFieldId, RightLineTopColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MultiColorMatteBorder::editHandleRightLineTopColor),
+        static_cast<FieldGetMethodSig >(&MultiColorMatteBorder::getHandleRightLineTopColor));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "RightLineBottomColor",
+        "",
+        RightLineBottomColorFieldId, RightLineBottomColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MultiColorMatteBorder::editHandleRightLineBottomColor),
+        static_cast<FieldGetMethodSig >(&MultiColorMatteBorder::getHandleRightLineBottomColor));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "BottomLineLeftColor",
+        "",
+        BottomLineLeftColorFieldId, BottomLineLeftColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MultiColorMatteBorder::editHandleBottomLineLeftColor),
+        static_cast<FieldGetMethodSig >(&MultiColorMatteBorder::getHandleBottomLineLeftColor));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "BottomLineRightColor",
+        "",
+        BottomLineRightColorFieldId, BottomLineRightColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MultiColorMatteBorder::editHandleBottomLineRightColor),
+        static_cast<FieldGetMethodSig >(&MultiColorMatteBorder::getHandleBottomLineRightColor));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+MultiColorMatteBorderBase::TypeObject MultiColorMatteBorderBase::_type(
+    MultiColorMatteBorderBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&MultiColorMatteBorderBase::createEmptyLocal),
     MultiColorMatteBorder::initMethod,
-    _desc,
-    sizeof(_desc));
+    MultiColorMatteBorder::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&MultiColorMatteBorder::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"MultiColorMatteBorder\"\n"
+    "\tparent=\"Border\"\n"
+    "    library=\"ContribUserInterface\"\n"
+    "    pointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "UI MultiColor Matte Border. Creates a matte-look border using a different color for each side. (The difference between this border and a line border is that you can specify the individual border dimensions as well as colors.)\n"
+    "\t<Field\n"
+    "\t\tname=\"LeftWidth\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"RightWidth\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TopWidth\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"BottomWidth\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"1\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"LeftLineTopColor\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"LeftLineBottomColor\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TopLineLeftColor\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"TopLineRightColor\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"RightLineTopColor\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"RightLineBottomColor\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"BottomLineLeftColor\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"BottomLineRightColor\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "UI MultiColor Matte Border. Creates a matte-look border using a different color for each side. (The difference between this border and a line border is that you can specify the individual border dimensions as well as colors.)\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(MultiColorMatteBorderBase, MultiColorMatteBorderPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &MultiColorMatteBorderBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &MultiColorMatteBorderBase::getType(void) const 
+FieldContainerType &MultiColorMatteBorderBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr MultiColorMatteBorderBase::shallowCopy(void) const 
-{ 
-    MultiColorMatteBorderPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const MultiColorMatteBorder *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 MultiColorMatteBorderBase::getContainerSize(void) const 
-{ 
-    return sizeof(MultiColorMatteBorder); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void MultiColorMatteBorderBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &MultiColorMatteBorderBase::getType(void) const
 {
-    this->executeSyncImpl((MultiColorMatteBorderBase *) &other, whichField);
+    return _type;
 }
-#else
-void MultiColorMatteBorderBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 MultiColorMatteBorderBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((MultiColorMatteBorderBase *) &other, whichField, sInfo);
+    return sizeof(MultiColorMatteBorder);
 }
-void MultiColorMatteBorderBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFReal32 *MultiColorMatteBorderBase::editSFLeftWidth(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(LeftWidthFieldMask);
+
+    return &_sfLeftWidth;
 }
 
-void MultiColorMatteBorderBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFReal32 *MultiColorMatteBorderBase::getSFLeftWidth(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
+    return &_sfLeftWidth;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-MultiColorMatteBorderBase::MultiColorMatteBorderBase(void) :
-    _sfLeftWidth              (Real32(1)), 
-    _sfRightWidth             (Real32(1)), 
-    _sfTopWidth               (Real32(1)), 
-    _sfBottomWidth            (Real32(1)), 
-    _sfLeftLineTopColor       (Color4f(0.0,0.0,0.0,1.0)), 
-    _sfLeftLineBottomColor    (Color4f(0.0,0.0,0.0,1.0)), 
-    _sfTopLineLeftColor       (Color4f(0.0,0.0,0.0,1.0)), 
-    _sfTopLineRightColor      (Color4f(0.0,0.0,0.0,1.0)), 
-    _sfRightLineTopColor      (Color4f(0.0,0.0,0.0,1.0)), 
-    _sfRightLineBottomColor   (Color4f(0.0,0.0,0.0,1.0)), 
-    _sfBottomLineLeftColor    (Color4f(0.0,0.0,0.0,1.0)), 
-    _sfBottomLineRightColor   (Color4f(0.0,0.0,0.0,1.0)), 
-    Inherited() 
+SFReal32 *MultiColorMatteBorderBase::editSFRightWidth(void)
 {
+    editSField(RightWidthFieldMask);
+
+    return &_sfRightWidth;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-MultiColorMatteBorderBase::MultiColorMatteBorderBase(const MultiColorMatteBorderBase &source) :
-    _sfLeftWidth              (source._sfLeftWidth              ), 
-    _sfRightWidth             (source._sfRightWidth             ), 
-    _sfTopWidth               (source._sfTopWidth               ), 
-    _sfBottomWidth            (source._sfBottomWidth            ), 
-    _sfLeftLineTopColor       (source._sfLeftLineTopColor       ), 
-    _sfLeftLineBottomColor    (source._sfLeftLineBottomColor    ), 
-    _sfTopLineLeftColor       (source._sfTopLineLeftColor       ), 
-    _sfTopLineRightColor      (source._sfTopLineRightColor      ), 
-    _sfRightLineTopColor      (source._sfRightLineTopColor      ), 
-    _sfRightLineBottomColor   (source._sfRightLineBottomColor   ), 
-    _sfBottomLineLeftColor    (source._sfBottomLineLeftColor    ), 
-    _sfBottomLineRightColor   (source._sfBottomLineRightColor   ), 
-    Inherited                 (source)
+const SFReal32 *MultiColorMatteBorderBase::getSFRightWidth(void) const
 {
+    return &_sfRightWidth;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-MultiColorMatteBorderBase::~MultiColorMatteBorderBase(void)
+SFReal32 *MultiColorMatteBorderBase::editSFTopWidth(void)
 {
+    editSField(TopWidthFieldMask);
+
+    return &_sfTopWidth;
 }
+
+const SFReal32 *MultiColorMatteBorderBase::getSFTopWidth(void) const
+{
+    return &_sfTopWidth;
+}
+
+
+SFReal32 *MultiColorMatteBorderBase::editSFBottomWidth(void)
+{
+    editSField(BottomWidthFieldMask);
+
+    return &_sfBottomWidth;
+}
+
+const SFReal32 *MultiColorMatteBorderBase::getSFBottomWidth(void) const
+{
+    return &_sfBottomWidth;
+}
+
+
+SFColor4f *MultiColorMatteBorderBase::editSFLeftLineTopColor(void)
+{
+    editSField(LeftLineTopColorFieldMask);
+
+    return &_sfLeftLineTopColor;
+}
+
+const SFColor4f *MultiColorMatteBorderBase::getSFLeftLineTopColor(void) const
+{
+    return &_sfLeftLineTopColor;
+}
+
+
+SFColor4f *MultiColorMatteBorderBase::editSFLeftLineBottomColor(void)
+{
+    editSField(LeftLineBottomColorFieldMask);
+
+    return &_sfLeftLineBottomColor;
+}
+
+const SFColor4f *MultiColorMatteBorderBase::getSFLeftLineBottomColor(void) const
+{
+    return &_sfLeftLineBottomColor;
+}
+
+
+SFColor4f *MultiColorMatteBorderBase::editSFTopLineLeftColor(void)
+{
+    editSField(TopLineLeftColorFieldMask);
+
+    return &_sfTopLineLeftColor;
+}
+
+const SFColor4f *MultiColorMatteBorderBase::getSFTopLineLeftColor(void) const
+{
+    return &_sfTopLineLeftColor;
+}
+
+
+SFColor4f *MultiColorMatteBorderBase::editSFTopLineRightColor(void)
+{
+    editSField(TopLineRightColorFieldMask);
+
+    return &_sfTopLineRightColor;
+}
+
+const SFColor4f *MultiColorMatteBorderBase::getSFTopLineRightColor(void) const
+{
+    return &_sfTopLineRightColor;
+}
+
+
+SFColor4f *MultiColorMatteBorderBase::editSFRightLineTopColor(void)
+{
+    editSField(RightLineTopColorFieldMask);
+
+    return &_sfRightLineTopColor;
+}
+
+const SFColor4f *MultiColorMatteBorderBase::getSFRightLineTopColor(void) const
+{
+    return &_sfRightLineTopColor;
+}
+
+
+SFColor4f *MultiColorMatteBorderBase::editSFRightLineBottomColor(void)
+{
+    editSField(RightLineBottomColorFieldMask);
+
+    return &_sfRightLineBottomColor;
+}
+
+const SFColor4f *MultiColorMatteBorderBase::getSFRightLineBottomColor(void) const
+{
+    return &_sfRightLineBottomColor;
+}
+
+
+SFColor4f *MultiColorMatteBorderBase::editSFBottomLineLeftColor(void)
+{
+    editSField(BottomLineLeftColorFieldMask);
+
+    return &_sfBottomLineLeftColor;
+}
+
+const SFColor4f *MultiColorMatteBorderBase::getSFBottomLineLeftColor(void) const
+{
+    return &_sfBottomLineLeftColor;
+}
+
+
+SFColor4f *MultiColorMatteBorderBase::editSFBottomLineRightColor(void)
+{
+    editSField(BottomLineRightColorFieldMask);
+
+    return &_sfBottomLineRightColor;
+}
+
+const SFColor4f *MultiColorMatteBorderBase::getSFBottomLineRightColor(void) const
+{
+    return &_sfBottomLineRightColor;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 MultiColorMatteBorderBase::getBinSize(const BitVector &whichField)
+UInt32 MultiColorMatteBorderBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -336,68 +658,56 @@ UInt32 MultiColorMatteBorderBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfLeftWidth.getBinSize();
     }
-
     if(FieldBits::NoField != (RightWidthFieldMask & whichField))
     {
         returnValue += _sfRightWidth.getBinSize();
     }
-
     if(FieldBits::NoField != (TopWidthFieldMask & whichField))
     {
         returnValue += _sfTopWidth.getBinSize();
     }
-
     if(FieldBits::NoField != (BottomWidthFieldMask & whichField))
     {
         returnValue += _sfBottomWidth.getBinSize();
     }
-
     if(FieldBits::NoField != (LeftLineTopColorFieldMask & whichField))
     {
         returnValue += _sfLeftLineTopColor.getBinSize();
     }
-
     if(FieldBits::NoField != (LeftLineBottomColorFieldMask & whichField))
     {
         returnValue += _sfLeftLineBottomColor.getBinSize();
     }
-
     if(FieldBits::NoField != (TopLineLeftColorFieldMask & whichField))
     {
         returnValue += _sfTopLineLeftColor.getBinSize();
     }
-
     if(FieldBits::NoField != (TopLineRightColorFieldMask & whichField))
     {
         returnValue += _sfTopLineRightColor.getBinSize();
     }
-
     if(FieldBits::NoField != (RightLineTopColorFieldMask & whichField))
     {
         returnValue += _sfRightLineTopColor.getBinSize();
     }
-
     if(FieldBits::NoField != (RightLineBottomColorFieldMask & whichField))
     {
         returnValue += _sfRightLineBottomColor.getBinSize();
     }
-
     if(FieldBits::NoField != (BottomLineLeftColorFieldMask & whichField))
     {
         returnValue += _sfBottomLineLeftColor.getBinSize();
     }
-
     if(FieldBits::NoField != (BottomLineRightColorFieldMask & whichField))
     {
         returnValue += _sfBottomLineRightColor.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void MultiColorMatteBorderBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void MultiColorMatteBorderBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -405,67 +715,54 @@ void MultiColorMatteBorderBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfLeftWidth.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (RightWidthFieldMask & whichField))
     {
         _sfRightWidth.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TopWidthFieldMask & whichField))
     {
         _sfTopWidth.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (BottomWidthFieldMask & whichField))
     {
         _sfBottomWidth.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (LeftLineTopColorFieldMask & whichField))
     {
         _sfLeftLineTopColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (LeftLineBottomColorFieldMask & whichField))
     {
         _sfLeftLineBottomColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TopLineLeftColorFieldMask & whichField))
     {
         _sfTopLineLeftColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (TopLineRightColorFieldMask & whichField))
     {
         _sfTopLineRightColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (RightLineTopColorFieldMask & whichField))
     {
         _sfRightLineTopColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (RightLineBottomColorFieldMask & whichField))
     {
         _sfRightLineBottomColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (BottomLineLeftColorFieldMask & whichField))
     {
         _sfBottomLineLeftColor.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (BottomLineRightColorFieldMask & whichField))
     {
         _sfBottomLineRightColor.copyToBin(pMem);
     }
-
-
 }
 
-void MultiColorMatteBorderBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void MultiColorMatteBorderBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -473,203 +770,554 @@ void MultiColorMatteBorderBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfLeftWidth.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (RightWidthFieldMask & whichField))
     {
         _sfRightWidth.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TopWidthFieldMask & whichField))
     {
         _sfTopWidth.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (BottomWidthFieldMask & whichField))
     {
         _sfBottomWidth.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (LeftLineTopColorFieldMask & whichField))
     {
         _sfLeftLineTopColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (LeftLineBottomColorFieldMask & whichField))
     {
         _sfLeftLineBottomColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TopLineLeftColorFieldMask & whichField))
     {
         _sfTopLineLeftColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (TopLineRightColorFieldMask & whichField))
     {
         _sfTopLineRightColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (RightLineTopColorFieldMask & whichField))
     {
         _sfRightLineTopColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (RightLineBottomColorFieldMask & whichField))
     {
         _sfRightLineBottomColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (BottomLineLeftColorFieldMask & whichField))
     {
         _sfBottomLineLeftColor.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (BottomLineRightColorFieldMask & whichField))
     {
         _sfBottomLineRightColor.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void MultiColorMatteBorderBase::executeSyncImpl(      MultiColorMatteBorderBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+MultiColorMatteBorderTransitPtr MultiColorMatteBorderBase::createLocal(BitVector bFlags)
 {
+    MultiColorMatteBorderTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (LeftWidthFieldMask & whichField))
-        _sfLeftWidth.syncWith(pOther->_sfLeftWidth);
+        fc = dynamic_pointer_cast<MultiColorMatteBorder>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (RightWidthFieldMask & whichField))
-        _sfRightWidth.syncWith(pOther->_sfRightWidth);
-
-    if(FieldBits::NoField != (TopWidthFieldMask & whichField))
-        _sfTopWidth.syncWith(pOther->_sfTopWidth);
-
-    if(FieldBits::NoField != (BottomWidthFieldMask & whichField))
-        _sfBottomWidth.syncWith(pOther->_sfBottomWidth);
-
-    if(FieldBits::NoField != (LeftLineTopColorFieldMask & whichField))
-        _sfLeftLineTopColor.syncWith(pOther->_sfLeftLineTopColor);
-
-    if(FieldBits::NoField != (LeftLineBottomColorFieldMask & whichField))
-        _sfLeftLineBottomColor.syncWith(pOther->_sfLeftLineBottomColor);
-
-    if(FieldBits::NoField != (TopLineLeftColorFieldMask & whichField))
-        _sfTopLineLeftColor.syncWith(pOther->_sfTopLineLeftColor);
-
-    if(FieldBits::NoField != (TopLineRightColorFieldMask & whichField))
-        _sfTopLineRightColor.syncWith(pOther->_sfTopLineRightColor);
-
-    if(FieldBits::NoField != (RightLineTopColorFieldMask & whichField))
-        _sfRightLineTopColor.syncWith(pOther->_sfRightLineTopColor);
-
-    if(FieldBits::NoField != (RightLineBottomColorFieldMask & whichField))
-        _sfRightLineBottomColor.syncWith(pOther->_sfRightLineBottomColor);
-
-    if(FieldBits::NoField != (BottomLineLeftColorFieldMask & whichField))
-        _sfBottomLineLeftColor.syncWith(pOther->_sfBottomLineLeftColor);
-
-    if(FieldBits::NoField != (BottomLineRightColorFieldMask & whichField))
-        _sfBottomLineRightColor.syncWith(pOther->_sfBottomLineRightColor);
-
-
-}
-#else
-void MultiColorMatteBorderBase::executeSyncImpl(      MultiColorMatteBorderBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (LeftWidthFieldMask & whichField))
-        _sfLeftWidth.syncWith(pOther->_sfLeftWidth);
-
-    if(FieldBits::NoField != (RightWidthFieldMask & whichField))
-        _sfRightWidth.syncWith(pOther->_sfRightWidth);
-
-    if(FieldBits::NoField != (TopWidthFieldMask & whichField))
-        _sfTopWidth.syncWith(pOther->_sfTopWidth);
-
-    if(FieldBits::NoField != (BottomWidthFieldMask & whichField))
-        _sfBottomWidth.syncWith(pOther->_sfBottomWidth);
-
-    if(FieldBits::NoField != (LeftLineTopColorFieldMask & whichField))
-        _sfLeftLineTopColor.syncWith(pOther->_sfLeftLineTopColor);
-
-    if(FieldBits::NoField != (LeftLineBottomColorFieldMask & whichField))
-        _sfLeftLineBottomColor.syncWith(pOther->_sfLeftLineBottomColor);
-
-    if(FieldBits::NoField != (TopLineLeftColorFieldMask & whichField))
-        _sfTopLineLeftColor.syncWith(pOther->_sfTopLineLeftColor);
-
-    if(FieldBits::NoField != (TopLineRightColorFieldMask & whichField))
-        _sfTopLineRightColor.syncWith(pOther->_sfTopLineRightColor);
-
-    if(FieldBits::NoField != (RightLineTopColorFieldMask & whichField))
-        _sfRightLineTopColor.syncWith(pOther->_sfRightLineTopColor);
-
-    if(FieldBits::NoField != (RightLineBottomColorFieldMask & whichField))
-        _sfRightLineBottomColor.syncWith(pOther->_sfRightLineBottomColor);
-
-    if(FieldBits::NoField != (BottomLineLeftColorFieldMask & whichField))
-        _sfBottomLineLeftColor.syncWith(pOther->_sfBottomLineLeftColor);
-
-    if(FieldBits::NoField != (BottomLineRightColorFieldMask & whichField))
-        _sfBottomLineRightColor.syncWith(pOther->_sfBottomLineRightColor);
-
-
-
+    return fc;
 }
 
-void MultiColorMatteBorderBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+MultiColorMatteBorderTransitPtr MultiColorMatteBorderBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    MultiColorMatteBorderTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<MultiColorMatteBorder>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+MultiColorMatteBorderTransitPtr MultiColorMatteBorderBase::create(void)
+{
+    MultiColorMatteBorderTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<MultiColorMatteBorder>(tmpPtr);
+    }
+
+    return fc;
+}
+
+MultiColorMatteBorder *MultiColorMatteBorderBase::createEmptyLocal(BitVector bFlags)
+{
+    MultiColorMatteBorder *returnValue;
+
+    newPtr<MultiColorMatteBorder>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+MultiColorMatteBorder *MultiColorMatteBorderBase::createEmpty(void)
+{
+    MultiColorMatteBorder *returnValue;
+
+    newPtr<MultiColorMatteBorder>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr MultiColorMatteBorderBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    MultiColorMatteBorder *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const MultiColorMatteBorder *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr MultiColorMatteBorderBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    MultiColorMatteBorder *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const MultiColorMatteBorder *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr MultiColorMatteBorderBase::shallowCopy(void) const
+{
+    MultiColorMatteBorder *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const MultiColorMatteBorder *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+MultiColorMatteBorderBase::MultiColorMatteBorderBase(void) :
+    Inherited(),
+    _sfLeftWidth              (Real32(1)),
+    _sfRightWidth             (Real32(1)),
+    _sfTopWidth               (Real32(1)),
+    _sfBottomWidth            (Real32(1)),
+    _sfLeftLineTopColor       (Color4f(0.0,0.0,0.0,1.0)),
+    _sfLeftLineBottomColor    (Color4f(0.0,0.0,0.0,1.0)),
+    _sfTopLineLeftColor       (Color4f(0.0,0.0,0.0,1.0)),
+    _sfTopLineRightColor      (Color4f(0.0,0.0,0.0,1.0)),
+    _sfRightLineTopColor      (Color4f(0.0,0.0,0.0,1.0)),
+    _sfRightLineBottomColor   (Color4f(0.0,0.0,0.0,1.0)),
+    _sfBottomLineLeftColor    (Color4f(0.0,0.0,0.0,1.0)),
+    _sfBottomLineRightColor   (Color4f(0.0,0.0,0.0,1.0))
+{
+}
+
+MultiColorMatteBorderBase::MultiColorMatteBorderBase(const MultiColorMatteBorderBase &source) :
+    Inherited(source),
+    _sfLeftWidth              (source._sfLeftWidth              ),
+    _sfRightWidth             (source._sfRightWidth             ),
+    _sfTopWidth               (source._sfTopWidth               ),
+    _sfBottomWidth            (source._sfBottomWidth            ),
+    _sfLeftLineTopColor       (source._sfLeftLineTopColor       ),
+    _sfLeftLineBottomColor    (source._sfLeftLineBottomColor    ),
+    _sfTopLineLeftColor       (source._sfTopLineLeftColor       ),
+    _sfTopLineRightColor      (source._sfTopLineRightColor      ),
+    _sfRightLineTopColor      (source._sfRightLineTopColor      ),
+    _sfRightLineBottomColor   (source._sfRightLineBottomColor   ),
+    _sfBottomLineLeftColor    (source._sfBottomLineLeftColor    ),
+    _sfBottomLineRightColor   (source._sfBottomLineRightColor   )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+MultiColorMatteBorderBase::~MultiColorMatteBorderBase(void)
+{
+}
+
+
+GetFieldHandlePtr MultiColorMatteBorderBase::getHandleLeftWidth       (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfLeftWidth,
+             this->getType().getFieldDesc(LeftWidthFieldId),
+             const_cast<MultiColorMatteBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MultiColorMatteBorderBase::editHandleLeftWidth      (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfLeftWidth,
+             this->getType().getFieldDesc(LeftWidthFieldId),
+             this));
+
+
+    editSField(LeftWidthFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MultiColorMatteBorderBase::getHandleRightWidth      (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfRightWidth,
+             this->getType().getFieldDesc(RightWidthFieldId),
+             const_cast<MultiColorMatteBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MultiColorMatteBorderBase::editHandleRightWidth     (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfRightWidth,
+             this->getType().getFieldDesc(RightWidthFieldId),
+             this));
+
+
+    editSField(RightWidthFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MultiColorMatteBorderBase::getHandleTopWidth        (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfTopWidth,
+             this->getType().getFieldDesc(TopWidthFieldId),
+             const_cast<MultiColorMatteBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MultiColorMatteBorderBase::editHandleTopWidth       (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfTopWidth,
+             this->getType().getFieldDesc(TopWidthFieldId),
+             this));
+
+
+    editSField(TopWidthFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MultiColorMatteBorderBase::getHandleBottomWidth     (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfBottomWidth,
+             this->getType().getFieldDesc(BottomWidthFieldId),
+             const_cast<MultiColorMatteBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MultiColorMatteBorderBase::editHandleBottomWidth    (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfBottomWidth,
+             this->getType().getFieldDesc(BottomWidthFieldId),
+             this));
+
+
+    editSField(BottomWidthFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MultiColorMatteBorderBase::getHandleLeftLineTopColor (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfLeftLineTopColor,
+             this->getType().getFieldDesc(LeftLineTopColorFieldId),
+             const_cast<MultiColorMatteBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MultiColorMatteBorderBase::editHandleLeftLineTopColor(void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfLeftLineTopColor,
+             this->getType().getFieldDesc(LeftLineTopColorFieldId),
+             this));
+
+
+    editSField(LeftLineTopColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MultiColorMatteBorderBase::getHandleLeftLineBottomColor (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfLeftLineBottomColor,
+             this->getType().getFieldDesc(LeftLineBottomColorFieldId),
+             const_cast<MultiColorMatteBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MultiColorMatteBorderBase::editHandleLeftLineBottomColor(void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfLeftLineBottomColor,
+             this->getType().getFieldDesc(LeftLineBottomColorFieldId),
+             this));
+
+
+    editSField(LeftLineBottomColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MultiColorMatteBorderBase::getHandleTopLineLeftColor (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfTopLineLeftColor,
+             this->getType().getFieldDesc(TopLineLeftColorFieldId),
+             const_cast<MultiColorMatteBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MultiColorMatteBorderBase::editHandleTopLineLeftColor(void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfTopLineLeftColor,
+             this->getType().getFieldDesc(TopLineLeftColorFieldId),
+             this));
+
+
+    editSField(TopLineLeftColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MultiColorMatteBorderBase::getHandleTopLineRightColor (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfTopLineRightColor,
+             this->getType().getFieldDesc(TopLineRightColorFieldId),
+             const_cast<MultiColorMatteBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MultiColorMatteBorderBase::editHandleTopLineRightColor(void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfTopLineRightColor,
+             this->getType().getFieldDesc(TopLineRightColorFieldId),
+             this));
+
+
+    editSField(TopLineRightColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MultiColorMatteBorderBase::getHandleRightLineTopColor (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfRightLineTopColor,
+             this->getType().getFieldDesc(RightLineTopColorFieldId),
+             const_cast<MultiColorMatteBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MultiColorMatteBorderBase::editHandleRightLineTopColor(void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfRightLineTopColor,
+             this->getType().getFieldDesc(RightLineTopColorFieldId),
+             this));
+
+
+    editSField(RightLineTopColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MultiColorMatteBorderBase::getHandleRightLineBottomColor (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfRightLineBottomColor,
+             this->getType().getFieldDesc(RightLineBottomColorFieldId),
+             const_cast<MultiColorMatteBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MultiColorMatteBorderBase::editHandleRightLineBottomColor(void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfRightLineBottomColor,
+             this->getType().getFieldDesc(RightLineBottomColorFieldId),
+             this));
+
+
+    editSField(RightLineBottomColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MultiColorMatteBorderBase::getHandleBottomLineLeftColor (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfBottomLineLeftColor,
+             this->getType().getFieldDesc(BottomLineLeftColorFieldId),
+             const_cast<MultiColorMatteBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MultiColorMatteBorderBase::editHandleBottomLineLeftColor(void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfBottomLineLeftColor,
+             this->getType().getFieldDesc(BottomLineLeftColorFieldId),
+             this));
+
+
+    editSField(BottomLineLeftColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MultiColorMatteBorderBase::getHandleBottomLineRightColor (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfBottomLineRightColor,
+             this->getType().getFieldDesc(BottomLineRightColorFieldId),
+             const_cast<MultiColorMatteBorderBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MultiColorMatteBorderBase::editHandleBottomLineRightColor(void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfBottomLineRightColor,
+             this->getType().getFieldDesc(BottomLineRightColorFieldId),
+             this));
+
+
+    editSField(BottomLineRightColorFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void MultiColorMatteBorderBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    MultiColorMatteBorder *pThis = static_cast<MultiColorMatteBorder *>(this);
+
+    pThis->execSync(static_cast<MultiColorMatteBorder *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *MultiColorMatteBorderBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    MultiColorMatteBorder *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const MultiColorMatteBorder *>(pRefAspect),
+                  dynamic_cast<const MultiColorMatteBorder *>(this));
+
+    return returnValue;
+}
+#endif
+
+void MultiColorMatteBorderBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<MultiColorMatteBorderPtr>::_type("MultiColorMatteBorderPtr", "BorderPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(MultiColorMatteBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(MultiColorMatteBorderPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGMULTICOLORMATTEBORDERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGMULTICOLORMATTEBORDERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGMULTICOLORMATTEBORDERFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

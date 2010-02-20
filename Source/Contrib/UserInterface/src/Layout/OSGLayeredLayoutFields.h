@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,75 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGLayoutFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class LayeredLayout;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! LayeredLayoutPtr
+OSG_GEN_CONTAINERPTR(LayeredLayout);
 
-typedef FCPtr<LayoutPtr, LayeredLayout> LayeredLayoutPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<LayeredLayoutPtr> : 
-    public FieldTraitsRecurseMapper<LayeredLayoutPtr, true>
+struct FieldTraits<LayeredLayout *> :
+    public FieldTraitsFCPtrBase<LayeredLayout *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFLayeredLayoutPtr"; }
-    static const char *getMName(void) { return "MFLayeredLayoutPtr"; }
+    typedef FieldTraits<LayeredLayout *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFLayeredLayoutPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFLayeredLayoutPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<LayeredLayoutPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<LayeredLayout *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecLayeredLayoutPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<LayeredLayout *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecLayeredLayoutPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<LayeredLayout *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakLayeredLayoutPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<LayeredLayout *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdLayeredLayoutPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<LayeredLayout *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecLayeredLayoutPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<LayeredLayout *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecLayeredLayoutPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<LayeredLayout *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakLayeredLayoutPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<LayeredLayout *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdLayeredLayoutPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<LayeredLayout *,
+                      RecordedRefCountPolicy  > SFRecLayeredLayoutPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<LayeredLayout *,
+                      UnrecordedRefCountPolicy> SFUnrecLayeredLayoutPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<LayeredLayout *,
+                      WeakRefCountPolicy      > SFWeakLayeredLayoutPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<LayeredLayout *,
+                      NoRefCountPolicy        > SFUncountedLayeredLayoutPtr;
 
-typedef SField<LayeredLayoutPtr> SFLayeredLayoutPtr;
-#endif
 
-#ifndef OSG_COMPILELAYEREDLAYOUTINST
-OSG_DLLEXPORT_DECL1(SField, LayeredLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<LayeredLayout *,
+                      RecordedRefCountPolicy  > MFRecLayeredLayoutPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<LayeredLayout *,
+                      UnrecordedRefCountPolicy> MFUnrecLayeredLayoutPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<LayeredLayout *,
+                      WeakRefCountPolicy      > MFWeakLayeredLayoutPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<LayeredLayout *,
+                      NoRefCountPolicy        > MFUncountedLayeredLayoutPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<LayeredLayoutPtr> MFLayeredLayoutPtr;
-#endif
 
-#ifndef OSG_COMPILELAYEREDLAYOUTINST
-OSG_DLLEXPORT_DECL1(MField, LayeredLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecLayeredLayoutPtr : 
+    public PointerSField<LayeredLayout *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecLayeredLayoutPtr : 
+    public PointerSField<LayeredLayout *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakLayeredLayoutPtr :
+    public PointerSField<LayeredLayout *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedLayeredLayoutPtr :
+    public PointerSField<LayeredLayout *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecLayeredLayoutPtr :
+    public PointerMField<LayeredLayout *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecLayeredLayoutPtr :
+    public PointerMField<LayeredLayout *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakLayeredLayoutPtr :
+    public PointerMField<LayeredLayout *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedLayeredLayoutPtr :
+    public PointerMField<LayeredLayout *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

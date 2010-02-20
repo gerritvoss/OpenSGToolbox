@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,78 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGContribUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "ComponentGenerators/OSGComponentGeneratorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class ListComponentGenerator;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! ListComponentGeneratorPtr
+OSG_GEN_CONTAINERPTR(ListComponentGenerator);
 
-typedef FCPtr<ComponentGeneratorPtr, ListComponentGenerator> ListComponentGeneratorPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpContribUserInterfaceFieldTraits
+    \ingroup GrpLibOSGContribUserInterface
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<ListComponentGeneratorPtr> : 
-    public FieldTraitsRecurseMapper<ListComponentGeneratorPtr, true>
+struct FieldTraits<ListComponentGenerator *> :
+    public FieldTraitsFCPtrBase<ListComponentGenerator *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFListComponentGeneratorPtr"; }
-    static const char *getMName(void) { return "MFListComponentGeneratorPtr"; }
+    typedef FieldTraits<ListComponentGenerator *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFListComponentGeneratorPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFListComponentGeneratorPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<ListComponentGeneratorPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<ListComponentGenerator *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecListComponentGeneratorPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<ListComponentGenerator *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecListComponentGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ListComponentGenerator *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakListComponentGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ListComponentGenerator *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdListComponentGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ListComponentGenerator *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecListComponentGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ListComponentGenerator *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecListComponentGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ListComponentGenerator *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakListComponentGeneratorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<ListComponentGenerator *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdListComponentGeneratorPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ListComponentGenerator *,
+                      RecordedRefCountPolicy  > SFRecListComponentGeneratorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ListComponentGenerator *,
+                      UnrecordedRefCountPolicy> SFUnrecListComponentGeneratorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ListComponentGenerator *,
+                      WeakRefCountPolicy      > SFWeakListComponentGeneratorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldSFields */
+typedef PointerSField<ListComponentGenerator *,
+                      NoRefCountPolicy        > SFUncountedListComponentGeneratorPtr;
 
-typedef SField<ListComponentGeneratorPtr> SFListComponentGeneratorPtr;
-#endif
 
-#ifndef OSG_COMPILELISTCOMPONENTGENERATORINST
-OSG_DLLEXPORT_DECL1(SField, ListComponentGeneratorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ListComponentGenerator *,
+                      RecordedRefCountPolicy  > MFRecListComponentGeneratorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ListComponentGenerator *,
+                      UnrecordedRefCountPolicy> MFUnrecListComponentGeneratorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ListComponentGenerator *,
+                      WeakRefCountPolicy      > MFWeakListComponentGeneratorPtr;
+/*! \ingroup GrpContribUserInterfaceFieldMFields */
+typedef PointerMField<ListComponentGenerator *,
+                      NoRefCountPolicy        > MFUncountedListComponentGeneratorPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
 
-typedef MField<ListComponentGeneratorPtr> MFListComponentGeneratorPtr;
-#endif
 
-#ifndef OSG_COMPILELISTCOMPONENTGENERATORINST
-OSG_DLLEXPORT_DECL1(MField, ListComponentGeneratorPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFRecListComponentGeneratorPtr : 
+    public PointerSField<ListComponentGenerator *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUnrecListComponentGeneratorPtr : 
+    public PointerSField<ListComponentGenerator *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFWeakListComponentGeneratorPtr :
+    public PointerSField<ListComponentGenerator *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldSFields \ingroup GrpLibOSGContribUserInterface */
+struct SFUncountedListComponentGeneratorPtr :
+    public PointerSField<ListComponentGenerator *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFRecListComponentGeneratorPtr :
+    public PointerMField<ListComponentGenerator *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUnrecListComponentGeneratorPtr :
+    public PointerMField<ListComponentGenerator *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFWeakListComponentGeneratorPtr :
+    public PointerMField<ListComponentGenerator *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpContribUserInterfaceFieldMFields \ingroup GrpLibOSGContribUserInterface */
+struct MFUncountedListComponentGeneratorPtr :
+    public PointerMField<ListComponentGenerator *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
-
-#define OSGLISTCOMPONENTGENERATORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGLISTCOMPONENTGENERATORFIELDS_H_ */

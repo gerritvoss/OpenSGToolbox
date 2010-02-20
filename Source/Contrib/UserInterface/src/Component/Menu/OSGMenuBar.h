@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,60 +42,63 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
 #include "OSGMenuBarBase.h"
-#include "OSGMenu.h"
+#include "OSGSingleSelectionModel.h"
 
-#include "Event/OSGPopupMenuListener.h"
-#include <OpenSG/Input/OSGKeyAdapter.h>
+#include "OSGPopupMenuListener.h"
+#include "OSGKeyAdapter.h"
+#include "OSGMenu.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief MenuBar class. See \ref 
-           PageUserInterfaceMenuBar for a description.
+/*! \brief MenuBar class. See \ref
+           PageContribUserInterfaceMenuBar for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING MenuBar : public MenuBarBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuBar : public MenuBarBase
 {
-  private:
-
-    typedef MenuBarBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef MenuBarBase Inherited;
+    typedef MenuBar     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
-    void addMenu(MenuPtr Menu);
-    void addMenu(MenuPtr Menu, const UInt32& Index);
-    void removeMenu(MenuPtr Menu);
+    /*! \}                                                                 */
+
+    void addMenu(MenuRefPtr Menu);
+    void addMenu(MenuRefPtr Menu, const UInt32& Index);
+    void removeMenu(MenuRefPtr Menu);
     void removeMenu(const UInt32& Index);
-    MenuPtr getMenu(const UInt32& Index);
+    Menu* getMenu(const UInt32& Index);
     UInt32 getNumMenus(void) const;
     
-    virtual void mousePressed(const MouseEventPtr e);
+    virtual void mousePressed(const MouseEventUnrecPtr e);
     
     virtual void updateLayout(void);
 	virtual void updateClipBounds(void);
 
     virtual void detachFromEventProducer(void);
-    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in MenuBarBase.
@@ -112,7 +115,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBar : public MenuBarBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~MenuBar(void); 
+    virtual ~MenuBar(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const MenuBar *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
     
 	class MenuSelectionListener : public SelectionListener, 
                                   public MouseMotionListener, 
@@ -120,35 +139,31 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBar : public MenuBarBase
                                   public KeyAdapter
 	{
 	public:
-		MenuSelectionListener(MenuBarPtr ThePopupMenu);
-        virtual void selectionChanged(const SelectionEventPtr e);
-        virtual void mouseMoved(const MouseEventPtr e);
-        virtual void mouseDragged(const MouseEventPtr e);
-        virtual void popupMenuCanceled(const PopupMenuEventPtr e);
-        virtual void popupMenuWillBecomeInvisible(const PopupMenuEventPtr e);
-        virtual void popupMenuWillBecomeVisible(const PopupMenuEventPtr e);
-		virtual void popupMenuContentsChanged(const PopupMenuEventPtr e);
-        virtual void keyTyped(const KeyEventPtr e);
+		MenuSelectionListener(MenuBarRefPtr ThePopupMenu);
+        virtual void selectionChanged(const SelectionEventUnrecPtr e);
+        virtual void mouseMoved(const MouseEventUnrecPtr e);
+        virtual void mouseDragged(const MouseEventUnrecPtr e);
+        virtual void popupMenuCanceled(const PopupMenuEventUnrecPtr e);
+        virtual void popupMenuWillBecomeInvisible(const PopupMenuEventUnrecPtr e);
+        virtual void popupMenuWillBecomeVisible(const PopupMenuEventUnrecPtr e);
+		virtual void popupMenuContentsChanged(const PopupMenuEventUnrecPtr e);
+        virtual void keyTyped(const KeyEventUnrecPtr e);
 	private:
-		MenuBarPtr _MenuBar;
+		MenuBarRefPtr _MenuBar;
 	};
 
 	friend class MenuSelectionListener;
 
 	MenuSelectionListener _MenuSelectionListener;
     EventConnection _SelectionMouseEventConnection;
-    /*! \}                                                                 */
-    
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class MenuBarBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const MenuBar &source);
 };
 
@@ -158,7 +173,5 @@ OSG_END_NAMESPACE
 
 #include "OSGMenuBarBase.inl"
 #include "OSGMenuBar.inl"
-
-#define OSGMENUBAR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGMENUBAR_H_ */

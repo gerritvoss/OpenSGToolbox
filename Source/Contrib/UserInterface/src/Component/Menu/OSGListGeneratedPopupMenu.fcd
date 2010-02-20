@@ -3,33 +3,35 @@
 <FieldContainer
 	name="ListGeneratedPopupMenu"
 	parent="PopupMenu"
-	library="UserInterface"
-	pointerfieldtypes="both"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
-	decoratable="false"
-	useLocalIncludes="true"
->
-A UI List Generated PopupMenu.
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
+	>
+	A UI List Generated PopupMenu.
 	<Field
 		name="Model"
-		type="ListModelPtr"
+		type="ListModel"
+		category="pointer"
 		cardinality="single"
-                visibility="external"
-                header="Component/List/Models/OSGListModelFields.h"
-		defaultValue="NullFC"
+		visibility="external"
+		defaultValue="NULL"
 		access="public"
-	>
-        </Field>
+		>
+	</Field>
 	<Field
 		name="CellGenerator"
-		type="ComponentGeneratorPtr"
+		type="ComponentGenerator"
+		category="pointer"
 		cardinality="single"
-                visibility="external"
-                header="ComponentGenerators/OSGComponentGeneratorFields.h"
-		defaultValue="NullFC"
+		visibility="external"
+		defaultValue="NULL"
 		access="public"
-	>
-        </Field>
+		>
+	</Field>
 </FieldContainer>
