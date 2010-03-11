@@ -143,10 +143,10 @@ public:
         Filters.push_back(WindowEventProducer::FileDialogFilter("Lua File Type","lua"));
         Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
 
-		Path SavePath = TutorialWindow->saveFileDialog("Save Lua Script to?",
+		BoostPath SavePath = TutorialWindow->saveFileDialog("Save Lua Script to?",
 			Filters,
 			std::string("LuaScript.lua"),
-			Path("Data"),
+			BoostPath("Data"),
 			true);
         
         //Try to write the file
@@ -171,10 +171,10 @@ public:
         Filters.push_back(WindowEventProducer::FileDialogFilter("Lua File Type","lua"));
         Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
 
-		std::vector<Path> FilesToOpen;
+		std::vector<BoostPath> FilesToOpen;
 		FilesToOpen = TutorialWindow->openFileDialog("Open Lua Script File.",
 			Filters,
-			Path("Data"),
+			BoostPath("Data"),
 			false);
 
         //Try to open the file
@@ -290,7 +290,7 @@ int main(int argc, char **argv)
     // Make Torus Node (creates Torus in background of scene)
     GeometryRefPtr TorusGeometry = makeTorusGeo(.5, 2, 16, 16);
     setName(TorusGeometry,"Torus Geometry");
-    calcVertexTangents(TorusGeometry,0,Geometry::TexCoords7FieldId, Geometry::TexCoords6FieldId);
+    //calcVertexTangents(TorusGeometry,0,Geometry::TexCoords7FieldId, Geometry::TexCoords6FieldId);
 
 
     NodeRefPtr TorusGeometryNode = Node::create();
