@@ -122,6 +122,8 @@ void UIForeground::draw(DrawEnv * env, Viewport * port)
 
 void UIForeground::onCreate(const UIForeground * Id)
 {
+	Inherited::onCreate(Id);
+
     UIForegroundMouseTransformFunctorUnrecPtr TheTransFunc(UIForegroundMouseTransformFunctor::create());
 	setMouseTransformFunctor(TheTransFunc);
     if(getMouseTransformFunctor() != NULL)

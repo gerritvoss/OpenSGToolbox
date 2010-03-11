@@ -55,7 +55,7 @@
 #endif
 
 #include "OSGConfig.h"
-#include "OSGDynamicsDef.h"
+#include "OSGTBAnimationDef.h"
 
 #include "OSGFieldContainerFields.h"
 #include "OSGPointerSField.h"
@@ -85,7 +85,7 @@ struct FieldTraits<Joint *> :
 
     enum                        { Convertible = NotConvertible };
 
-    static OSG_DYNAMICS_DLLMAPPING DataType &getType(void);
+    static OSG_TBANIMATION_DLLMAPPING DataType &getType(void);
 
     template<typename RefCountPolicy> inline
     static const Char8    *getSName     (void);

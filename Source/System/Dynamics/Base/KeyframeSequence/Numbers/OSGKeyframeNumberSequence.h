@@ -51,7 +51,7 @@ OSG_BEGIN_NAMESPACE
            PageDynamicsKeyframeNumberSequence for a description.
 */
 
-class OSG_DYNAMICS_DLLMAPPING KeyframeNumberSequence : public KeyframeNumberSequenceBase
+class OSG_TBANIMATION_DLLMAPPING KeyframeNumberSequence : public KeyframeNumberSequenceBase
 {
   protected:
 

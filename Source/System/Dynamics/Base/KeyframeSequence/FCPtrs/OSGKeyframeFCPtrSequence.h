@@ -51,7 +51,7 @@ OSG_BEGIN_NAMESPACE
            PageDynamicsKeyframeFCPtrSequence for a description.
 */
 
-class OSG_DYNAMICS_DLLMAPPING KeyframeFCPtrSequence : public KeyframeFCPtrSequenceBase
+class OSG_TBANIMATION_DLLMAPPING KeyframeFCPtrSequence : public KeyframeFCPtrSequenceBase
 {
   protected:
 

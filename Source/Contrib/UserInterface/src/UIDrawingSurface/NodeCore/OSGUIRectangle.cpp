@@ -212,6 +212,8 @@ void UIRectangle::fill(DrawableStatsAttachment *pStat)
 
 void UIRectangle::onCreate(const UIRectangle * Id)
 {
+	Inherited::onCreate(Id);
+
     ColorMaskChunkUnrecPtr TheMask(ColorMaskChunk::create());
 	setRectColorMask(TheMask);
 	getRectColorMask()->setMaskR(false);

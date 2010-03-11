@@ -66,7 +66,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 bool PhysicsSpace::registerXMLHandler(void)
 {
-        XMLFCFileType::the()->registerHandler(&PhysicsSpace::getClassType(),boost::bind(&OSG::PhysicsSpace::xmlReadHandler,_1,_2,_3),boost::bind(&OSG::PhysicsSpace::xmlWriteHandler,_1));
+        return XMLFCFileType::the()->registerHandler(&PhysicsSpace::getClassType(),boost::bind(&OSG::PhysicsSpace::xmlReadHandler,_1,_2,_3),boost::bind(&OSG::PhysicsSpace::xmlWriteHandler,_1));
 }
 
 void PhysicsSpace::initMethod(InitPhase ePhase)

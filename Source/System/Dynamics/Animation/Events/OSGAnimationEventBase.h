@@ -59,7 +59,7 @@
 
 
 #include "OSGConfig.h"
-#include "OSGDynamicsDef.h"
+#include "OSGTBAnimationDef.h"
 
 //#include "OSGBaseTypes.h"
 
@@ -74,7 +74,7 @@ class AnimationEvent;
 
 //! \brief AnimationEvent Base Class.
 
-class OSG_DYNAMICS_DLLMAPPING AnimationEventBase : public Event
+class OSG_TBANIMATION_DLLMAPPING AnimationEventBase : public Event
 {
   public:
 

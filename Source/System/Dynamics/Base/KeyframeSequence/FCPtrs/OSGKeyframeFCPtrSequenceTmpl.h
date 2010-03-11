@@ -42,7 +42,7 @@
 #pragma once
 #endif
 
-#include "OSGDynamicsDef.h"
+#include "OSGTBAnimationDef.h"
 #include "OSGImage.h"
 #include "OSGStateChunk.h"
 #include "OSGFieldContainer.h"

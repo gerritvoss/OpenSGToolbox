@@ -77,7 +77,7 @@ struct FieldTraits<KeyframeNumberSequenceUInt8 *> :
 
     enum                        { StringConvertable = 0x00 };
 
-    static OSG_DYNAMICS_DLLMAPPING 
+    static OSG_TBANIMATION_DLLMAPPING 
                      DataType &getType (void);
 
     template<typename RefCountPolicy> inline
@@ -123,7 +123,7 @@ struct FieldTraits<KeyframeNumberSequenceUInt16 *> :
 
     enum                        { StringConvertable = 0x00 };
 
-    static OSG_DYNAMICS_DLLMAPPING 
+    static OSG_TBANIMATION_DLLMAPPING 
                      DataType &getType (void);
 
     template<typename RefCountPolicy> inline
@@ -169,7 +169,7 @@ struct FieldTraits<KeyframeNumberSequenceUInt32 *> :
 
     enum                        { StringConvertable = 0x00 };
 
-    static OSG_DYNAMICS_DLLMAPPING 
+    static OSG_TBANIMATION_DLLMAPPING 
                      DataType &getType (void);
 
     template<typename RefCountPolicy> inline
@@ -215,7 +215,7 @@ struct FieldTraits<KeyframeNumberSequenceUInt64 *> :
 
     enum                        { StringConvertable = 0x00 };
 
-    static OSG_DYNAMICS_DLLMAPPING 
+    static OSG_TBANIMATION_DLLMAPPING 
                      DataType &getType (void);
 
     template<typename RefCountPolicy> inline
@@ -263,7 +263,7 @@ struct FieldTraits<KeyframeNumberSequenceInt8 *> :
 
     enum                        { StringConvertable = 0x00 };
 
-    static OSG_DYNAMICS_DLLMAPPING 
+    static OSG_TBANIMATION_DLLMAPPING 
                      DataType &getType (void);
 
     template<typename RefCountPolicy> inline
@@ -309,7 +309,7 @@ struct FieldTraits<KeyframeNumberSequenceInt16 *> :
 
     enum                        { StringConvertable = 0x00 };
 
-    static OSG_DYNAMICS_DLLMAPPING 
+    static OSG_TBANIMATION_DLLMAPPING 
                      DataType &getType (void);
 
     template<typename RefCountPolicy> inline
@@ -355,7 +355,7 @@ struct FieldTraits<KeyframeNumberSequenceInt32 *> :
 
     enum                        { StringConvertable = 0x00 };
 
-    static OSG_DYNAMICS_DLLMAPPING 
+    static OSG_TBANIMATION_DLLMAPPING 
                      DataType &getType (void);
 
     template<typename RefCountPolicy> inline
@@ -401,7 +401,7 @@ struct FieldTraits<KeyframeNumberSequenceInt64 *> :
 
     enum                        { StringConvertable = 0x00 };
 
-    static OSG_DYNAMICS_DLLMAPPING 
+    static OSG_TBANIMATION_DLLMAPPING 
                      DataType &getType (void);
 
     template<typename RefCountPolicy> inline
@@ -450,7 +450,7 @@ struct FieldTraits<KeyframeNumberSequenceReal16 *> :
 
     enum                        { StringConvertable = 0x00 };
 
-    static OSG_DYNAMICS_DLLMAPPING 
+    static OSG_TBANIMATION_DLLMAPPING 
                      DataType &getType (void);
 
     template<typename RefCountPolicy> inline
@@ -496,7 +496,7 @@ struct FieldTraits<KeyframeNumberSequenceReal32 *> :
 
     enum                        { StringConvertable = 0x00 };
 
-    static OSG_DYNAMICS_DLLMAPPING 
+    static OSG_TBANIMATION_DLLMAPPING 
                      DataType &getType (void);
 
     template<typename RefCountPolicy> inline
@@ -542,7 +542,7 @@ struct FieldTraits<KeyframeNumberSequenceFixed32 *> :
 
     enum                        { StringConvertable = 0x00 };
 
-    static OSG_DYNAMICS_DLLMAPPING 
+    static OSG_TBANIMATION_DLLMAPPING 
                      DataType &getType (void);
 
     template<typename RefCountPolicy> inline
@@ -588,7 +588,7 @@ struct FieldTraits<KeyframeNumberSequenceReal64 *> :
 
     enum                        { StringConvertable = 0x00 };
 
-    static OSG_DYNAMICS_DLLMAPPING 
+    static OSG_TBANIMATION_DLLMAPPING 
                      DataType &getType (void);
 
     template<typename RefCountPolicy> inline

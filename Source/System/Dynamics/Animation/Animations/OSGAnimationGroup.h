@@ -52,7 +52,7 @@ OSG_BEGIN_NAMESPACE
            PageDynamicsAnimationGroup for a description.
 */
 
-class OSG_DYNAMICS_DLLMAPPING AnimationGroup : public AnimationGroupBase, public EventListener
+class OSG_TBANIMATION_DLLMAPPING AnimationGroup : public AnimationGroupBase, public EventListener
 {
   protected:
 

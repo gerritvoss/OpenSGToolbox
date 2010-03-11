@@ -4445,34 +4445,34 @@ SWIGINTERN OSG::EventProducerPtr OSG_FieldContainerRefPtr_getEventProducer(OSG::
             
         }
 SWIGINTERN OSG::AttachmentRefPtr OSG_AttachmentRefPtr_dcast(OSG::FieldContainerRefPtr const oIn){
-            OSG::dynamic_pointer_cast<OSG::Attachment>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::Attachment>(oIn);
         }
 SWIGINTERN OSG::AttachmentContainerRefPtr OSG_AttachmentContainerRefPtr_dcast(OSG::FieldContainerRefPtr const oIn){
-            OSG::dynamic_pointer_cast<OSG::AttachmentContainer>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::AttachmentContainer>(oIn);
         }
 SWIGINTERN OSG::NodeCoreRefPtr OSG_NodeCoreRefPtr_dcast(OSG::FieldContainerRefPtr const oIn){
-            OSG::dynamic_pointer_cast<OSG::NodeCore>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::NodeCore>(oIn);
         }
 SWIGINTERN OSG::GeometryRefPtr OSG_GeometryRefPtr_dcast(OSG::FieldContainerRefPtr const oIn){
-            OSG::dynamic_pointer_cast<OSG::Geometry>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::Geometry>(oIn);
         }
 SWIGINTERN OSG::NodeRefPtr OSG_NodeRefPtr_dcast(OSG::FieldContainerRefPtr const oIn){
-            OSG::dynamic_pointer_cast<OSG::Node>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::Node>(oIn);
         }
 SWIGINTERN OSG::ViewportRefPtr OSG_ViewportRefPtr_dcast(OSG::FieldContainerRefPtr const oIn){
-            OSG::dynamic_pointer_cast<OSG::Viewport>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::Viewport>(oIn);
         }
 SWIGINTERN OSG::CameraRefPtr OSG_CameraRefPtr_dcast(OSG::FieldContainerRefPtr const oIn){
-            OSG::dynamic_pointer_cast<OSG::Camera>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::Camera>(oIn);
         }
 SWIGINTERN bool OSG_Camera_calcViewRay__SWIG_0(OSG::Camera *self,OSG::Line &line,OSG::Int32 x,OSG::Int32 y,OSG::ViewportRefPtr const port,OSG::Real32 *t=NULL){
             return (self)->calcViewRay(line, x, y, (*port), t);
         }
 SWIGINTERN OSG::ImageRefPtr OSG_ImageRefPtr_dcast(OSG::FieldContainerRefPtr const oIn){
-            OSG::dynamic_pointer_cast<OSG::Image>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::Image>(oIn);
         }
 SWIGINTERN OSG::TextureObjChunkRefPtr OSG_TextureObjChunkRefPtr_dcast(OSG::FieldContainerRefPtr const oIn){
-            OSG::dynamic_pointer_cast<OSG::TextureObjChunk>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::TextureObjChunk>(oIn);
         }
 #ifdef __cplusplus
 extern "C" {

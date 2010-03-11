@@ -23,6 +23,7 @@ OSG_STORE_PROJECT_DEPENDENCIES()
 # collect sources
 ##############################################################################
 
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}")
 OSG_ADD_DIRECTORY("Base")
 OSG_ADD_DIRECTORY("Base/KeyframeSequence")
 OSG_ADD_DIRECTORY("Base/KeyframeSequence/Positions")

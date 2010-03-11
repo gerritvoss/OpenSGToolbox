@@ -59,7 +59,7 @@
 
 
 #include "OSGConfig.h"
-#include "OSGDynamicsDef.h"
+#include "OSGTBAnimationDef.h"
 
 //#include "OSGBaseTypes.h"
 
@@ -76,7 +76,7 @@ class SkeletonBlendedAnimation;
 
 //! \brief SkeletonBlendedAnimation Base Class.
 
-class OSG_DYNAMICS_DLLMAPPING SkeletonBlendedAnimationBase : public Animation
+class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedAnimationBase : public Animation
 {
   public:
 

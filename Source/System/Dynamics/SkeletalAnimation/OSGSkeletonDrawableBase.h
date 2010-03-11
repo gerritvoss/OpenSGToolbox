@@ -59,7 +59,7 @@
 
 
 #include "OSGConfig.h"
-#include "OSGDynamicsDef.h"
+#include "OSGTBAnimationDef.h"
 
 //#include "OSGBaseTypes.h"
 
@@ -77,7 +77,7 @@ class SkeletonDrawable;
 
 //! \brief SkeletonDrawable Base Class.
 
-class OSG_DYNAMICS_DLLMAPPING SkeletonDrawableBase : public MaterialDrawable
+class OSG_TBANIMATION_DLLMAPPING SkeletonDrawableBase : public MaterialDrawable
 {
   public:
 

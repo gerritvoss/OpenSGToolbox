@@ -1,7 +1,7 @@
 #ifndef _OPENSG_KEYFRAME_INTERPOLATIONS_H_
 #define _OPENSG_KEYFRAME_INTERPOLATIONS_H_
 
-#include "OSGDynamicsDef.h"
+#include "OSGTBAnimationDef.h"
 
 #include "OSGField.h"
 #include "OSGBaseFields.h"
@@ -25,9 +25,9 @@ typedef boost::function<bool (RawInterpFuncion&,
                               UInt32,
                               Real32)> ReplacementFuncion;
 
-bool OSG_DYNAMICS_DLLMAPPING getInterpolationIndexes(const MFReal32& Keys, const Real32& time, UInt32& LastKeyframeIndex, UInt32& NextKeyframeIndex, Real32& t, bool isCyclic=false);
+bool OSG_TBANIMATION_DLLMAPPING getInterpolationIndexes(const MFReal32& Keys, const Real32& time, UInt32& LastKeyframeIndex, UInt32& NextKeyframeIndex, Real32& t, bool isCyclic=false);
 
-bool OSG_DYNAMICS_DLLMAPPING getInterpolationIndex(const MFReal32& Keys, const Real32& time, UInt32& Index, Real32& t, bool isCyclic=false);
+bool OSG_TBANIMATION_DLLMAPPING getInterpolationIndex(const MFReal32& Keys, const Real32& time, UInt32& Index, Real32& t, bool isCyclic=false);
 
 template <class ValueTypeT,
           UInt32 SizeI     > inline
@@ -104,7 +104,7 @@ bool replacement(RawInterpFuncion& InterpFunc,
 
 //Matrix Replace
 template<class SFieldTypeT>
-bool OSG_DYNAMICS_DLLMAPPING matrixReplacement(RawInterpFuncion& InterpFunc,
+bool OSG_TBANIMATION_DLLMAPPING matrixReplacement(RawInterpFuncion& InterpFunc,
                               const Real32& time,
                               const Real32& prevtime,
                               const UInt32& ReplacePolicy,
@@ -176,13 +176,13 @@ bool OSG_DYNAMICS_DLLMAPPING matrixReplacement(RawInterpFuncion& InterpFunc,
 }
 
 //String Linear Interpolation
-std::string OSG_DYNAMICS_DLLMAPPING lerp( const std::string& From, const std::string& To, const Real32& t);
-std::string OSG_DYNAMICS_DLLMAPPING lerpFromSide( const std::string& From, const std::string& To, const Real32& t);
-std::string OSG_DYNAMICS_DLLMAPPING lerpAll( const std::string& From, const std::string& To, const Real32& t);
+std::string OSG_TBANIMATION_DLLMAPPING lerp( const std::string& From, const std::string& To, const Real32& t);
+std::string OSG_TBANIMATION_DLLMAPPING lerpFromSide( const std::string& From, const std::string& To, const Real32& t);
+std::string OSG_TBANIMATION_DLLMAPPING lerpAll( const std::string& From, const std::string& To, const Real32& t);
 
 //Generic Overwrite-only replace
 template<class SFieldTypeT,class MFieldTypeT>
-bool OSG_DYNAMICS_DLLMAPPING replacementOverwriteOnly(RawInterpFuncion& InterpFunc,
+bool OSG_TBANIMATION_DLLMAPPING replacementOverwriteOnly(RawInterpFuncion& InterpFunc,
                               const Real32& time,
                               const Real32& prevtime,
                               const UInt32& ReplacePolicy,
@@ -223,7 +223,7 @@ bool OSG_DYNAMICS_DLLMAPPING replacementOverwriteOnly(RawInterpFuncion& InterpFu
 
 //String Replace
 template<>
-bool OSG_DYNAMICS_DLLMAPPING replacement<SFString>(RawInterpFuncion& InterpFunc,
+bool OSG_TBANIMATION_DLLMAPPING replacement<SFString>(RawInterpFuncion& InterpFunc,
                               const Real32& time,
                               const Real32& prevtime,
                               const UInt32& ReplacePolicy,
@@ -234,7 +234,7 @@ bool OSG_DYNAMICS_DLLMAPPING replacement<SFString>(RawInterpFuncion& InterpFunc,
 
 //BoxVolume Replace
 template<>
-bool OSG_DYNAMICS_DLLMAPPING replacement<SFBoxVolume>(RawInterpFuncion& InterpFunc,
+bool OSG_TBANIMATION_DLLMAPPING replacement<SFBoxVolume>(RawInterpFuncion& InterpFunc,
                               const Real32& time,
                               const Real32& prevtime,
                               const UInt32& ReplacePolicy,

@@ -76,7 +76,7 @@ struct FieldTraits<KeyframeRotationSequenceQuaternion *> :
 
     enum                        { StringConvertable = 0x00 };
 
-    static OSG_DYNAMICS_DLLMAPPING 
+    static OSG_TBANIMATION_DLLMAPPING 
                      DataType &getType (void);
 
     template<typename RefCountPolicy> inline
@@ -122,7 +122,7 @@ struct FieldTraits<KeyframeRotationSequenceQuaternionfx *> :
 
     enum                        { StringConvertable = 0x00 };
 
-    static OSG_DYNAMICS_DLLMAPPING 
+    static OSG_TBANIMATION_DLLMAPPING 
                      DataType &getType (void);
 
     template<typename RefCountPolicy> inline
@@ -170,7 +170,7 @@ OSG_FIELDCONTAINER_FIELDS_INST(KeyframeRotationSequenceQuaternionfx *, KeyframeR
 
     //enum                        { StringConvertable = 0x00 };
 
-    //static OSG_DYNAMICS_DLLMAPPING 
+    //static OSG_TBANIMATION_DLLMAPPING 
                      //DataType &getType (void);
 
     //template<typename RefCountPolicy> inline

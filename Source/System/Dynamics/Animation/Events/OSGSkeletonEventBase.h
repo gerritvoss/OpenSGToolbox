@@ -59,7 +59,7 @@
 
 
 #include "OSGConfig.h"
-#include "OSGDynamicsDef.h"
+#include "OSGTBAnimationDef.h"
 
 //#include "OSGBaseTypes.h"
 
@@ -74,7 +74,7 @@ class SkeletonEvent;
 
 //! \brief SkeletonEvent Base Class.
 
-class OSG_DYNAMICS_DLLMAPPING SkeletonEventBase : public Event
+class OSG_TBANIMATION_DLLMAPPING SkeletonEventBase : public Event
 {
   public:
 

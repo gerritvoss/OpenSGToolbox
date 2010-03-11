@@ -180,6 +180,8 @@ void MenuButton::produceMenuActionPerformed(void)
 
 void MenuButton::onCreate(const MenuButton *Id)
 {
+	Inherited::onCreate(Id);
+
     ListGeneratedPopupMenuUnrecPtr Menu(ListGeneratedPopupMenu::create());
     setMenuButtonPopupMenu(Menu);
 }

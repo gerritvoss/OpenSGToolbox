@@ -54,7 +54,7 @@ OSG_BEGIN_NAMESPACE
            PageDynamicsSkeletonBlendedGeometry for a description.
 */
 
-class OSG_DYNAMICS_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlendedGeometryBase, public SkeletonListener
+class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlendedGeometryBase, public SkeletonListener
 {
   protected:
 

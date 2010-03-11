@@ -53,7 +53,7 @@ OSG_BEGIN_NAMESPACE
            PageDynamicsKeyframeAnimator for a description.
 */
 
-class OSG_DYNAMICS_DLLMAPPING KeyframeAnimator : public KeyframeAnimatorBase
+class OSG_TBANIMATION_DLLMAPPING KeyframeAnimator : public KeyframeAnimatorBase
 {
   protected:
 

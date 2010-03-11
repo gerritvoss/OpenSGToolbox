@@ -23,7 +23,7 @@
 #define _OPENSG_TOOLBOX_FIELD_CONATINER_GATHER_UTILS_H_
 
 #include "OSGConfig.h"
-#include "OSGBaseDef.h"
+#include "OSGTBFileIODef.h"
 
 #include "OSGFieldContainer.h"
 #include "OSGEventProducerType.h"
@@ -32,7 +32,7 @@
 
 OSG_BEGIN_NAMESPACE
 
-std::set<FieldContainerUnrecPtr> OSG_BASE_DLLMAPPING getAllDependantFCs(const std::set<FieldContainerUnrecPtr>& Containers, const std::set<FieldContainerUnrecPtr>& IgnoreContainers, const std::vector<UInt32>& IgnoreTypes);
+std::set<FieldContainerUnrecPtr> OSG_TBFILEIO_DLLMAPPING getAllDependantFCs(const std::set<FieldContainerUnrecPtr>& Containers, const std::set<FieldContainerUnrecPtr>& IgnoreContainers, const std::vector<UInt32>& IgnoreTypes);
 
 OSG_END_NAMESPACE
 

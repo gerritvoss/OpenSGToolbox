@@ -59,7 +59,7 @@
 
 
 #include "OSGConfig.h"
-#include "OSGDynamicsDef.h"
+#include "OSGTBAnimationDef.h"
 
 //#include "OSGBaseTypes.h"
 
@@ -78,7 +78,7 @@ class Joint;
 
 //! \brief Joint Base Class.
 
-class OSG_DYNAMICS_DLLMAPPING JointBase : public AttachmentContainer
+class OSG_TBANIMATION_DLLMAPPING JointBase : public AttachmentContainer
 {
   public:
 
