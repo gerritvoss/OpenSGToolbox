@@ -787,6 +787,8 @@ Graphics3DExtrude::~Graphics3DExtrude(void)
 }
 void Graphics3DExtrude::onCreate(const Graphics3DExtrude *Id)
 {
+	Inherited::onCreate(Id);
+
     //Depth Chunk
     DepthChunkUnrecPtr TheChunk(DepthChunk::create());
     setUIDepth(TheChunk);

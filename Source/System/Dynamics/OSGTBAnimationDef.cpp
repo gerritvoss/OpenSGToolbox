@@ -36,36 +36,23 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGKEYFRAMESEQUENCES_H_
-#define _OSGKEYFRAMESEQUENCES_H_
-#ifdef __sgi
-#pragma once
-#endif
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
 
 #include "OSGConfig.h"
-#include "OSGTBAnimationDef.h"
+#include "OSGBaseInitFunctions.h"
 
-/*! \file OSGKeyframeSequence.h
+#define SVN_REVISION "382"
 
-    Helper header to include all properties in one go.    
+/*! Append our version to the library versions string 
 */
+static bool versionAdder(void)
+{
+    OSG::addLibraryVersion("OSGTBAnimation:           " OSG_VERSION_STRING 
+                           "\tRev: "               SVN_REVISION );    
+    return true;
+}
 
-#include "OSGKeyframePositionSequence.h"
-#include "OSGKeyframePositionSequenceTmpl.h"
-#include "OSGKeyframeVectorSequence.h"
-#include "OSGKeyframeVectorSequenceTmpl.h"
-#include "OSGKeyframeRotationSequence.h"
-#include "OSGKeyframeRotationSequenceTmpl.h"
-#include "OSGKeyframeColorSequence.h"
-#include "OSGKeyframeColorSequenceTmpl.h"
-#include "OSGKeyframeTransformationSequence.h"
-#include "OSGKeyframeTransformationSequenceTmpl.h"
-#include "OSGKeyframeNumberSequence.h"
-#include "OSGKeyframeNumberSequenceTmpl.h"
-#include "OSGKeyframeBasicSequence.h"
-#include "OSGKeyframeBasicSequenceTmpl.h"
-#include "OSGKeyframeFCPtrSequence.h"
-#include "OSGKeyframeFCPtrSequenceTmpl.h"
-
-#endif /* _OSGKEYFRAMESEQUENCES_H_ */
-
+static OSG::StaticInitFuncWrapper versionAdderWrapper(versionAdder);

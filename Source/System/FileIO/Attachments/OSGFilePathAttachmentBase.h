@@ -59,7 +59,7 @@
 
 
 #include "OSGConfig.h"
-#include "OSGFileIODef.h"
+#include "OSGTBFileIODef.h"
 
 //#include "OSGBaseTypes.h"
 
@@ -75,7 +75,7 @@ class FilePathAttachment;
 
 //! \brief FilePathAttachment Base Class.
 
-class OSG_FILEIO_DLLMAPPING FilePathAttachmentBase : public Attachment
+class OSG_TBFILEIO_DLLMAPPING FilePathAttachmentBase : public Attachment
 {
   public:
 

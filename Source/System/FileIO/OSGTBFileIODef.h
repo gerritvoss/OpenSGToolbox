@@ -36,36 +36,30 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGKEYFRAMESEQUENCES_H_
-#define _OSGKEYFRAMESEQUENCES_H_
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
+#ifndef _OSGTBFILEIODEF_H_
+#define _OSGTBFILEIODEF_H_
 #ifdef __sgi
 #pragma once
 #endif
 
-#include "OSGConfig.h"
-#include "OSGTBAnimationDef.h"
+//---------------------------------------------------------------------------
+//  Defines
+//---------------------------------------------------------------------------
+#if defined(WIN32)
+#   ifdef OSG_COMPILETBFILEIOLIB
+#       define OSG_TBFILEIO_DLLMAPPING  __declspec(dllexport)
+#       define OSG_TBFILEIO_EXPIMP_TMPL 
+#   else
+#       define OSG_TBFILEIO_DLLMAPPING  __declspec(dllimport)
+#       define OSG_TBFILEIO_EXPIMP_TMPL   extern
+#   endif
+#else
+#define OSG_TBFILEIO_DLLMAPPING
+#define OSG_TBFILEIO_EXPIMP_TMPL
+#endif
 
-/*! \file OSGKeyframeSequence.h
-
-    Helper header to include all properties in one go.    
-*/
-
-#include "OSGKeyframePositionSequence.h"
-#include "OSGKeyframePositionSequenceTmpl.h"
-#include "OSGKeyframeVectorSequence.h"
-#include "OSGKeyframeVectorSequenceTmpl.h"
-#include "OSGKeyframeRotationSequence.h"
-#include "OSGKeyframeRotationSequenceTmpl.h"
-#include "OSGKeyframeColorSequence.h"
-#include "OSGKeyframeColorSequenceTmpl.h"
-#include "OSGKeyframeTransformationSequence.h"
-#include "OSGKeyframeTransformationSequenceTmpl.h"
-#include "OSGKeyframeNumberSequence.h"
-#include "OSGKeyframeNumberSequenceTmpl.h"
-#include "OSGKeyframeBasicSequence.h"
-#include "OSGKeyframeBasicSequenceTmpl.h"
-#include "OSGKeyframeFCPtrSequence.h"
-#include "OSGKeyframeFCPtrSequenceTmpl.h"
-
-#endif /* _OSGKEYFRAMESEQUENCES_H_ */
-
+#endif /* _OSGTBFILEIODEF_H_ */

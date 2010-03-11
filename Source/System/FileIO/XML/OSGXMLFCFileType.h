@@ -33,7 +33,7 @@
 #endif
 
 #include "OSGConfig.h"
-#include "OSGFileIODef.h"
+#include "OSGTBFileIODef.h"
 
 #include <boost/function.hpp>
 #include <utility>
@@ -59,7 +59,7 @@ class parse_error;
 OSG_BEGIN_NAMESPACE
 
 
-class OSG_FILEIO_DLLMAPPING XMLFCFileType : public FCFileType
+class OSG_TBFILEIO_DLLMAPPING XMLFCFileType : public FCFileType
 {
 /*==========================  PUBLIC  =================================*/
 public:

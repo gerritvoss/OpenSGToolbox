@@ -50,7 +50,7 @@ OSG_BEGIN_NAMESPACE
            PageDynamicsFieldAnimation for a description.
 */
 
-class OSG_DYNAMICS_DLLMAPPING FieldAnimation : public FieldAnimationBase
+class OSG_TBANIMATION_DLLMAPPING FieldAnimation : public FieldAnimationBase
 {
   protected:
 

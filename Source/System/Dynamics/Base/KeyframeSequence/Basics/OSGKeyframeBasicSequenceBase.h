@@ -59,7 +59,7 @@
 
 
 #include "OSGConfig.h"
-#include "OSGDynamicsDef.h"
+#include "OSGTBAnimationDef.h"
 
 //#include "OSGBaseTypes.h"
 
@@ -74,7 +74,7 @@ class KeyframeBasicSequence;
 
 //! \brief KeyframeBasicSequence Base Class.
 
-class OSG_DYNAMICS_DLLMAPPING KeyframeBasicSequenceBase : public KeyframeSequence
+class OSG_TBANIMATION_DLLMAPPING KeyframeBasicSequenceBase : public KeyframeSequence
 {
   public:
 

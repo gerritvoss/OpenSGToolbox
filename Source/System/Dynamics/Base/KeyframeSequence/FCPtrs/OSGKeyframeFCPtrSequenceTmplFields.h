@@ -76,7 +76,7 @@ struct FieldTraits<KeyframeFCPtrSequenceImage *> :
 
     enum                        { StringConvertable = 0x00 };
 
-    static OSG_DYNAMICS_DLLMAPPING 
+    static OSG_TBANIMATION_DLLMAPPING 
                      DataType &getType (void);
 
     template<typename RefCountPolicy> inline
@@ -122,7 +122,7 @@ struct FieldTraits<KeyframeFCPtrSequenceStateChunk *> :
 
     enum                        { StringConvertable = 0x00 };
 
-    static OSG_DYNAMICS_DLLMAPPING 
+    static OSG_TBANIMATION_DLLMAPPING 
                      DataType &getType (void);
 
     template<typename RefCountPolicy> inline

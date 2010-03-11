@@ -59,7 +59,7 @@
 
 
 #include "OSGConfig.h"
-#include "OSGDynamicsDef.h"
+#include "OSGTBAnimationDef.h"
 
 //#include "OSGBaseTypes.h"
 
@@ -78,7 +78,7 @@ class FieldAnimation;
 
 //! \brief FieldAnimation Base Class.
 
-class OSG_DYNAMICS_DLLMAPPING FieldAnimationBase : public Animation
+class OSG_TBANIMATION_DLLMAPPING FieldAnimationBase : public Animation
 {
   public:
 

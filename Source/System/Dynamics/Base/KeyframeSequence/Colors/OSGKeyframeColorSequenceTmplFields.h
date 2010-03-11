@@ -77,7 +77,7 @@ struct FieldTraits<KeyframeColorSequenceColor3ub *> :
 
     enum                        { StringConvertable = 0x00 };
 
-    static OSG_DYNAMICS_DLLMAPPING 
+    static OSG_TBANIMATION_DLLMAPPING 
                      DataType &getType (void);
 
     template<typename RefCountPolicy> inline
@@ -123,7 +123,7 @@ struct FieldTraits<KeyframeColorSequenceColor4ub *> :
 
     enum                        { StringConvertable = 0x00 };
 
-    static OSG_DYNAMICS_DLLMAPPING 
+    static OSG_TBANIMATION_DLLMAPPING 
                      DataType &getType (void);
 
     template<typename RefCountPolicy> inline
@@ -170,7 +170,7 @@ struct FieldTraits<KeyframeColorSequenceColor3f *> :
 
     enum                        { StringConvertable = 0x00 };
 
-    static OSG_DYNAMICS_DLLMAPPING 
+    static OSG_TBANIMATION_DLLMAPPING 
                      DataType &getType (void);
 
     template<typename RefCountPolicy> inline
@@ -216,7 +216,7 @@ struct FieldTraits<KeyframeColorSequenceColor4f *> :
 
     enum                        { StringConvertable = 0x00 };
 
-    static OSG_DYNAMICS_DLLMAPPING 
+    static OSG_TBANIMATION_DLLMAPPING 
                      DataType &getType (void);
 
     template<typename RefCountPolicy> inline
@@ -263,7 +263,7 @@ struct FieldTraits<KeyframeColorSequenceColor3fx *> :
 
     enum                        { StringConvertable = 0x00 };
 
-    static OSG_DYNAMICS_DLLMAPPING 
+    static OSG_TBANIMATION_DLLMAPPING 
                      DataType &getType (void);
 
     template<typename RefCountPolicy> inline
@@ -309,7 +309,7 @@ struct FieldTraits<KeyframeColorSequenceColor4fx *> :
 
     enum                        { StringConvertable = 0x00 };
 
-    static OSG_DYNAMICS_DLLMAPPING 
+    static OSG_TBANIMATION_DLLMAPPING 
                      DataType &getType (void);
 
     template<typename RefCountPolicy> inline

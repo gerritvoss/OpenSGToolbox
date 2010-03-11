@@ -50,7 +50,7 @@ OSG_BEGIN_NAMESPACE
            PageDynamicsBlendedKeyframeAnimator for a description.
 */
 
-class OSG_DYNAMICS_DLLMAPPING BlendedKeyframeAnimator : public BlendedKeyframeAnimatorBase
+class OSG_TBANIMATION_DLLMAPPING BlendedKeyframeAnimator : public BlendedKeyframeAnimatorBase
 {
   protected:
 

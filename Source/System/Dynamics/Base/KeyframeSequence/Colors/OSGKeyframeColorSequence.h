@@ -51,7 +51,7 @@ OSG_BEGIN_NAMESPACE
            PageDynamicsKeyframeColorSequence for a description.
 */
 
-class OSG_DYNAMICS_DLLMAPPING KeyframeColorSequence : public KeyframeColorSequenceBase
+class OSG_TBANIMATION_DLLMAPPING KeyframeColorSequence : public KeyframeColorSequenceBase
 {
   protected:
 

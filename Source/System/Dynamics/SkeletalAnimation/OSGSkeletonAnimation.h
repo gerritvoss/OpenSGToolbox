@@ -53,7 +53,7 @@ OSG_BEGIN_NAMESPACE
            PageDynamicsSkeletonAnimation for a description.
 */
 
-class OSG_DYNAMICS_DLLMAPPING SkeletonAnimation : public SkeletonAnimationBase
+class OSG_TBANIMATION_DLLMAPPING SkeletonAnimation : public SkeletonAnimationBase
 {
   protected:
 

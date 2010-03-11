@@ -34,7 +34,7 @@
 #endif
 
 #include <OSGConfig.h>
-#include "OSGDynamicsDef.h"
+#include "OSGTBAnimationDef.h"
 
 #include "OSGEventListener.h"
 #include "OSGAnimationEvent.h"
@@ -42,7 +42,7 @@
 OSG_BEGIN_NAMESPACE
 
 class AnimationEvent;
-class OSG_DYNAMICS_DLLMAPPING AnimationListener : public EventListener
+class OSG_TBANIMATION_DLLMAPPING AnimationListener : public EventListener
 {
    /*=========================  PUBLIC  ===============================*/
 public:

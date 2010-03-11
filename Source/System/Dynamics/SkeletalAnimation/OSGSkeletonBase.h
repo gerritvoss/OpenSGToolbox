@@ -59,7 +59,7 @@
 
 
 #include "OSGConfig.h"
-#include "OSGDynamicsDef.h"
+#include "OSGTBAnimationDef.h"
 
 //#include "OSGBaseTypes.h"
 
@@ -81,7 +81,7 @@ class Skeleton;
 
 //! \brief Skeleton Base Class.
 
-class OSG_DYNAMICS_DLLMAPPING SkeletonBase : public AttachmentContainer
+class OSG_TBANIMATION_DLLMAPPING SkeletonBase : public AttachmentContainer
 {
   public:
 

@@ -59,7 +59,7 @@
 
 
 #include "OSGConfig.h"
-#include "OSGDynamicsDef.h"
+#include "OSGTBAnimationDef.h"
 
 //#include "OSGBaseTypes.h"
 
@@ -74,7 +74,7 @@ class Animator;
 
 //! \brief Animator Base Class.
 
-class OSG_DYNAMICS_DLLMAPPING AnimatorBase : public FieldContainer
+class OSG_TBANIMATION_DLLMAPPING AnimatorBase : public FieldContainer
 {
   public:
 

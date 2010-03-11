@@ -3207,7 +3207,7 @@ namespace OSG {
     {
         static AttachmentRefPtr dcast(const FieldContainerRefPtr oIn)
         {
-            OSG::dynamic_pointer_cast<OSG::Attachment>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::Attachment>(oIn);
         }
     };
 
@@ -3244,7 +3244,7 @@ namespace OSG {
     {
         static AttachmentContainerRefPtr dcast(const FieldContainerRefPtr oIn)
         {
-            OSG::dynamic_pointer_cast<OSG::AttachmentContainer>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::AttachmentContainer>(oIn);
         }
     };
 
@@ -3306,7 +3306,7 @@ namespace OSG {
     {
         static NodeCoreRefPtr dcast(const FieldContainerRefPtr oIn)
         {
-            OSG::dynamic_pointer_cast<OSG::NodeCore>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::NodeCore>(oIn);
         }
     };
 
@@ -3343,7 +3343,7 @@ namespace OSG {
     {
         static GeometryRefPtr dcast(const FieldContainerRefPtr oIn)
         {
-            OSG::dynamic_pointer_cast<OSG::Geometry>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::Geometry>(oIn);
         }
     };
     
@@ -3365,7 +3365,7 @@ namespace OSG {
     {
         static NodeRefPtr dcast(const FieldContainerRefPtr oIn)
         {
-            OSG::dynamic_pointer_cast<OSG::Node>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::Node>(oIn);
         }
     };
 
@@ -3459,7 +3459,7 @@ namespace OSG {
     {
         static ViewportRefPtr dcast(const FieldContainerRefPtr oIn)
         {
-            OSG::dynamic_pointer_cast<OSG::Viewport>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::Viewport>(oIn);
         }
     };
 
@@ -3518,7 +3518,7 @@ namespace OSG {
     {
         static CameraRefPtr dcast(const FieldContainerRefPtr oIn)
         {
-            OSG::dynamic_pointer_cast<OSG::Camera>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::Camera>(oIn);
         }
     };
     
@@ -3580,7 +3580,7 @@ namespace OSG {
     {
         static ImageRefPtr dcast(const FieldContainerRefPtr oIn)
         {
-            OSG::dynamic_pointer_cast<OSG::Image>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::Image>(oIn);
         }
     };
     
@@ -3789,7 +3789,7 @@ namespace OSG {
     {
         static TextureObjChunkRefPtr dcast(const FieldContainerRefPtr oIn)
         {
-            OSG::dynamic_pointer_cast<OSG::TextureObjChunk>(oIn);
+            return OSG::dynamic_pointer_cast<OSG::TextureObjChunk>(oIn);
         }
     };
     

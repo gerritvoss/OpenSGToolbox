@@ -495,14 +495,14 @@ template<> inline
 KeyframeBasicSequenceTmpl<KeyframeBasicSequenceGLenumDescBase>::GenericType 
       KeyframeBasicSequenceTmpl<KeyframeBasicSequenceGLenumDescBase>::getKeyValue (const UInt32       index ) const
 {
-    GLDefineMapper::the()->toString(_field[index]);
+    return GLDefineMapper::the()->toString(_field[index]);
 }
 
 template<> inline 
 KeyframeBasicSequenceTmpl<KeyframeBasicSequenceGLenumDescBase>::GenericType 
       KeyframeBasicSequenceTmpl<KeyframeBasicSequenceGLenumDescBase>::getKeyValue (const UInt32       index )
 {
-    GLDefineMapper::the()->toString(_field[index]);
+    return GLDefineMapper::the()->toString(_field[index]);
 }
 
 template<> inline 

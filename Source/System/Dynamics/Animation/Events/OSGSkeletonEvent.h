@@ -50,7 +50,7 @@ OSG_BEGIN_NAMESPACE
            PageDynamicsSkeletonEvent for a description.
 */
 
-class OSG_DYNAMICS_DLLMAPPING SkeletonEvent : public SkeletonEventBase
+class OSG_TBANIMATION_DLLMAPPING SkeletonEvent : public SkeletonEventBase
 {
   protected:
 

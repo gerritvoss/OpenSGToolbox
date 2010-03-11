@@ -660,6 +660,8 @@ Graphics2D::~Graphics2D(void)
 
 void Graphics2D::onCreate(const Graphics2D *Id)
 {
+	Inherited::onCreate(Id);
+
     //Depth Chunk
     DepthChunkUnrecPtr TheChunk(DepthChunk::create());
     setUIDepth(TheChunk);

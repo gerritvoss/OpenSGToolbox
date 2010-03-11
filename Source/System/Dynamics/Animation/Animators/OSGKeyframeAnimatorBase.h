@@ -59,7 +59,7 @@
 
 
 #include "OSGConfig.h"
-#include "OSGDynamicsDef.h"
+#include "OSGTBAnimationDef.h"
 
 //#include "OSGBaseTypes.h"
 
@@ -75,7 +75,7 @@ class KeyframeAnimator;
 
 //! \brief KeyframeAnimator Base Class.
 
-class OSG_DYNAMICS_DLLMAPPING KeyframeAnimatorBase : public Animator
+class OSG_TBANIMATION_DLLMAPPING KeyframeAnimatorBase : public Animator
 {
   public:
 

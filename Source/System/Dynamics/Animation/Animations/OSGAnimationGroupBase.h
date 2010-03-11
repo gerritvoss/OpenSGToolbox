@@ -59,7 +59,7 @@
 
 
 #include "OSGConfig.h"
-#include "OSGDynamicsDef.h"
+#include "OSGTBAnimationDef.h"
 
 //#include "OSGBaseTypes.h"
 
@@ -82,7 +82,7 @@ class AnimationGroup;
 
 //! \brief AnimationGroup Base Class.
 
-class OSG_DYNAMICS_DLLMAPPING AnimationGroupBase : public AttachmentContainer
+class OSG_TBANIMATION_DLLMAPPING AnimationGroupBase : public AttachmentContainer
 {
   public:
 

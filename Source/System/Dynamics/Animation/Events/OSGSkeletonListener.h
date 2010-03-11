@@ -34,7 +34,7 @@
 #endif
 
 #include "OSGConfig.h"
-#include "OSGDynamicsDef.h"
+#include "OSGTBAnimationDef.h"
 
 #include "OSGEventListener.h"
 #include "OSGSkeletonEvent.h"
@@ -42,7 +42,7 @@
 OSG_BEGIN_NAMESPACE
 
 class SkeletonEvent;
-class OSG_DYNAMICS_DLLMAPPING SkeletonListener : public EventListener
+class OSG_TBANIMATION_DLLMAPPING SkeletonListener : public EventListener
 {
    /*=========================  PUBLIC  ===============================*/
 public:

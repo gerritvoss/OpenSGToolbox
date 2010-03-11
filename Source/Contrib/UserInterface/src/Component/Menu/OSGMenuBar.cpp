@@ -248,6 +248,8 @@ void MenuBar::detachFromEventProducer(void)
 
 void MenuBar::onCreate(const MenuBar * Id)
 {
+	Inherited::onCreate(Id);
+
     DefaultSingleSelectionModelUnrecPtr TheModel(DefaultSingleSelectionModel::create());
     setSelectionModel(TheModel);
 }

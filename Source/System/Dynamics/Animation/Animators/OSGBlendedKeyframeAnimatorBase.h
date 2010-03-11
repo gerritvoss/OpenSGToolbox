@@ -59,7 +59,7 @@
 
 
 #include "OSGConfig.h"
-#include "OSGDynamicsDef.h"
+#include "OSGTBAnimationDef.h"
 
 //#include "OSGBaseTypes.h"
 
@@ -76,7 +76,7 @@ class BlendedKeyframeAnimator;
 
 //! \brief BlendedKeyframeAnimator Base Class.
 
-class OSG_DYNAMICS_DLLMAPPING BlendedKeyframeAnimatorBase : public Animator
+class OSG_TBANIMATION_DLLMAPPING BlendedKeyframeAnimatorBase : public Animator
 {
   public:
 

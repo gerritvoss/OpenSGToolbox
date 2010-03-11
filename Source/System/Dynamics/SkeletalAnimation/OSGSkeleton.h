@@ -54,7 +54,7 @@ OSG_BEGIN_NAMESPACE
            PageDynamicsSkeleton for a description.
 */
 
-class OSG_DYNAMICS_DLLMAPPING Skeleton : public SkeletonBase
+class OSG_TBANIMATION_DLLMAPPING Skeleton : public SkeletonBase
 {
   protected:
 

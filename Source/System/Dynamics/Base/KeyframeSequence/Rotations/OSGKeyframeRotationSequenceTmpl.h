@@ -42,7 +42,7 @@
 #pragma once
 #endif
 
-#include "OSGDynamicsDef.h"
+#include "OSGTBAnimationDef.h"
 #include "OSGMathFields.h"
 #include "OSGKeyframeRotationSequence.h"
 

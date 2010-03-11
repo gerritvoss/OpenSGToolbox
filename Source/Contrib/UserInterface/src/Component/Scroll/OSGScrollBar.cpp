@@ -396,6 +396,8 @@ void ScrollBar::setRangeModel(BoundedRangeModel * const value)
 
 void ScrollBar::onCreate(const ScrollBar * Id)
 {
+	Inherited::onCreate(Id);
+
     DefaultBoundedRangeModelUnrecPtr TheModel(DefaultBoundedRangeModel::create());
     setRangeModel(TheModel);
 }

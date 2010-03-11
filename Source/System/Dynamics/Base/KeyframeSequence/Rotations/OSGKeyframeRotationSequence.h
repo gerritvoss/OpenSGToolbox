@@ -51,7 +51,7 @@ OSG_BEGIN_NAMESPACE
            PageDynamicsKeyframeRotationSequence for a description.
 */
 
-class OSG_DYNAMICS_DLLMAPPING KeyframeRotationSequence : public KeyframeRotationSequenceBase
+class OSG_TBANIMATION_DLLMAPPING KeyframeRotationSequence : public KeyframeRotationSequenceBase
 {
   protected:
 

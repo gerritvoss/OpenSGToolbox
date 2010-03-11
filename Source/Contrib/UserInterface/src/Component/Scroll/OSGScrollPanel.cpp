@@ -359,6 +359,8 @@ void ScrollPanel::mouseWheelMoved(const MouseWheelEventUnrecPtr e)
 
 void ScrollPanel::onCreate(const ScrollPanel * Id)
 {
+	Inherited::onCreate(Id);
+
     ScrollBarRefPtr NewVerticalScrollBar = ScrollBar::create();
     if(NewVerticalScrollBar != NULL)
     {

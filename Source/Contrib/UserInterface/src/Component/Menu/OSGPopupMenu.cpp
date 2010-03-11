@@ -489,6 +489,8 @@ void PopupMenu::producePopupMenuContentsChanged(const PopupMenuEventUnrecPtr e)
 
 void PopupMenu::onCreate(const PopupMenu * Id)
 {
+	Inherited::onCreate(Id);
+
     DefaultSingleSelectionModelUnrecPtr TheModel(DefaultSingleSelectionModel::create());
     setSelectionModel(TheModel);
 }

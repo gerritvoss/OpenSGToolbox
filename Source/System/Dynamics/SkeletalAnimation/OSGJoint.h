@@ -50,7 +50,7 @@ OSG_BEGIN_NAMESPACE
            PageDynamicsJoint for a description.
 */
 
-class OSG_DYNAMICS_DLLMAPPING Joint : public JointBase
+class OSG_TBANIMATION_DLLMAPPING Joint : public JointBase
 {
   protected:
 

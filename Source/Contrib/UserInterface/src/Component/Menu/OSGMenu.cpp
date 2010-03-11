@@ -212,6 +212,8 @@ void Menu::detachFromEventProducer(void)
 
 void Menu::onCreate(const Menu * Id)
 {
+	Inherited::onCreate(Id);
+
     PopupMenuUnrecPtr ThePopupMenu(PopupMenu::create());
     setInternalPopupMenu(ThePopupMenu);
 
@@ -291,7 +293,7 @@ void Menu::changed(ConstFieldMaskArg whichField,
         getExpandDrawObject()->setSize(getExpandDrawObject()->getRequestedSize());
     }
 
-    if(whichField & SizeFieldMask)
+    if((whichField & SizeFieldMask) && getExpandDrawObject() != NULL)
     {
         getExpandDrawObject()->setSize(getExpandDrawObject()->getRequestedSize());
 

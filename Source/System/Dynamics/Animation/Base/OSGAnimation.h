@@ -55,7 +55,7 @@ OSG_BEGIN_NAMESPACE
            PageDynamicsAnimation for a description.
 */
 
-class OSG_DYNAMICS_DLLMAPPING Animation : public AnimationBase
+class OSG_TBANIMATION_DLLMAPPING Animation : public AnimationBase
 {
   protected:
 

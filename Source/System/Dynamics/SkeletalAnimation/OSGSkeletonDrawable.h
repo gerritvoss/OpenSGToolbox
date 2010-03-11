@@ -54,7 +54,7 @@ OSG_BEGIN_NAMESPACE
            PageDynamicsSkeletonDrawable for a description.
 */
 
-class OSG_DYNAMICS_DLLMAPPING SkeletonDrawable : public SkeletonDrawableBase
+class OSG_TBANIMATION_DLLMAPPING SkeletonDrawable : public SkeletonDrawableBase
 {
   protected:
 
